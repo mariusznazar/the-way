@@ -1468,34 +1468,47 @@ spreads one change over several commits.
 
 An invariant's method of checking reads `test` once a test of the product's test suite, written in
 the product's language and run by the command that runs the product's tests, cites it, and `review`
-until then, and it names no command and no script. A test checks what its invariant's sentence is
-about, as it stands on the commit being checked, so a test fed input made up for it is the method of
-a sentence about the check it exercises, never of one about the data that check reads.
+until then, and it names no command and no script. The method is held on the finished change: an
+invariant whose test a later slice of the same change writes may read `test` from its writing on. A
+test checks what its invariant's sentence is about, as it stands on the commit being checked, so a
+test fed input made up for it is the method of a sentence about the check it exercises, never of one
+about the data that check reads.
 
 - **Scope:** invariants, gate, decisions, part-map, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-08 · derives from WAY-16 ·
   derives from WAY-54 · derives from WAY-07 · derives from WAY-38 ·
   derives from WAY-60
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** invariants: test-method-citation. For the rest, an agent compares the change
+  with the decision:
   - complies: a sentence about the instruction files of the repository is kept by a test running
     its check on those files; a sentence about the loader is kept by a test handing it a save of
     another version; a sentence on whether an image's text alternative describes it reads `review`;
-    an invariant written before its test reads `review`, and the change that adds a test citing it
-    turns its method to `test`;
+    an invariant written by one slice of a change, whose test a later slice of the same change
+    writes, reads `test` from its writing on; an invariant that no test of the finished change
+    cites reads `review`;
   - violates: a sentence about the real instruction files names as its test the check's own test,
     which feeds it made-up files; an invariant's test is a script beside the product's suite, which
-    the command running the product's tests does not run; an invariant reads `test` while no test
-    cites it; an entry names `python -B tools/check_saves.py` as its method.
+    the command running the product's tests does not run; an invariant reads `test` on the finished
+    change while no test cites it; an entry names `python -B tools/check_saves.py` as its method.
 - **Origin:** none
 
 *Rationale:* the command that runs the product's tests already runs on every change, so an
 invariant's test runs with them, in the product's language; one run serves many invariants, each
-needing an outcome of its own; a check that sees nothing passes quietly (WAY-38). An invariant may
-be written before its test, and its method then says what keeps it meanwhile: the review.
+needing an outcome of its own; a check that sees nothing passes quietly (WAY-38). A change is
+judged as a whole, once finished, so an invariant written before its test within one change may read
+`test` from its writing, and a later slice that writes the test leaves the entry as it is. An
+invariant that no test of the finished change cites has the review to keep it, and its method says
+so. The price taken: between the writing of the entry and the slice that writes its test, the task's
+branch, a blocked draft request included, says `test` while no test cites it; the branch reaches the
+main branch only with the test, which the check in WAY-321 enforces.
 *Rejected:* a command per invariant that a gate of its own runs, recording a verdict for each entry
 — a second runner beside the product's tests; `TODO` as the method until the test exists — it
-names nothing that keeps the rule meanwhile; a kind named beside the method — a second value that
+names nothing that keeps the rule meanwhile; a sentence in the text of the planning skill saying
+that an entry reads `review` and the slice that writes its test turns it to `test` — a fourth place
+for the same rule, which agents knew and passed over on purpose, and several independent slices
+would change the one file of invariants, which the plan's rule that two slices change the same file
+only where one depends on the other forbids; a kind named beside the method — a second value that
 can disagree (WAY-54); the run's exit code as each invariant's result — one broken rule fails all, a
 skipped one passes; a check's tests on made-up input as the method of a sentence about real data —
 they show the check works, not that the data holds.
@@ -10254,6 +10267,43 @@ a marked line passes too; no exceptions, with the examples rewritten so that the
 find them — every example to rewrite, the tests and the description of the script harder to read,
 and every later author of a test has to remember it; a check that skips all test files and both
 scripts — a path in any test of the-way passes.
+
+### WAY-321 — When does the check of a foundation report an invariant that reads `test` and has no test citing it?
+
+`elements/common/foundation_check.py` reports an invariant whose method reads `test` and which no
+line `invariant: <identifier>` in a file git tracks other than Markdown cites, in every run but the
+one made right after an entry is written, which passes the switch `--skip-test-citations` and so
+skips this report and no other. The one command that runs a product's tests runs the script without
+that switch (WAY-16).
+
+- **Scope:** elements-common, invariants, gate, installation
+- **Based on:** none
+- **Relations:** derives from WAY-61 · derives from WAY-63 · derives from WAY-16
+- **Verification:** invariants: test-method-citation. For the switch, an agent compares the change
+  with the decision:
+  - complies: the run right after an invariant that reads `test` is written, whose test a later
+    slice of the same change writes, passes the switch and reports nothing; the product's one
+    command of tests runs the script with no switch and reports that invariant while no test
+    cites it;
+  - violates: the product's one command of tests runs the script with the switch; a skill has the
+    run after writing an entry leave the switch out; the report stands in a mode of the script
+    that a product has to add to its own command, or in a second script.
+- **Origin:** none
+
+*Rationale:* the one command that runs a product's tests is the run every change meets before it
+is merged (WAY-16), so a report that stands in it needs no line added to the command of any
+product, and a test forgotten after the entry was written shows as an error, where an invariant
+that no test cites would otherwise get no result and say nothing (WAY-63). The run right after an
+entry is written is the one run in which the test of a later slice does not exist yet, so it alone
+is the exception. The price taken: one switch to remember when an entry is written; an agent that
+forgets it sees an error and may turn the method back to `review`, which is the safe direction.
+*Rejected:* a separate mode of the script that a product adds to its own command of tests — the
+installer and its tests change, and the command is changed by hand in each product and in every
+later one; a product that does not add it has no check and nothing says so; a step of the task
+cycle in which the orchestrator checks the entries before the request opens — a change made outside
+a cycle stays unchecked, the cycle gets one more step, and the rule lives in the text of a skill,
+which agents can knowingly pass over; no check, only the change of WAY-61 — it costs nothing today,
+but a forgotten test leaves a false `test` in the foundation with no signal.
 
 ## Withdrawn identifiers
 

@@ -70,8 +70,10 @@ the two submodule paths; review and stage the other files in the product's norma
 
 The installer does not change the product's tests. The product adds
 `python -B .the-way/elements/common/foundation_check.py`, run from its root, to the one command
-that runs all its tests (WAY-16). Until it does, the guidance in `AGENTS.md` tells the agent to run
-the check on its own and to report that the one command leaves it unchecked.
+that runs all its tests (WAY-16), without the switch `--skip-test-citations`, so that the command
+reports an invariant that reads `test` and which no test cites (WAY-321). Until it does, the
+guidance in `AGENTS.md` tells the agent to run the check on its own and to report that the one
+command leaves it unchecked.
 
 ## Moving the pin
 

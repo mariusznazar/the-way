@@ -56,8 +56,11 @@ gives (WAY-64).
 
 - *Method* reads `test` where a test of the product's test suite checks the sentence, and `review`
   where no cheap test can: then the review of each change the invariant reaches, by an agent that
-  did not make the change, compares the change with the sentence (WAY-08). An invariant whose test
-  is not written yet reads `review` (WAY-61).
+  did not make the change, compares the change with the sentence (WAY-08). The method is held on
+  the finished change: an invariant whose test a later slice of the same change writes may read
+  `test` from its writing on, and one that no test of the finished change cites reads `review`
+  (WAY-61). `elements/common/foundation_check.py` reports an invariant that reads `test` and which
+  no test cites, in every run but the one right after an entry is written (WAY-321).
 - An invariant's test is a test of the product's own suite, in the product's language, run by the
   command that runs the product's tests (WAY-61).
 - A test checks what its sentence is about, as it stands on the commit being checked: a test fed
@@ -175,7 +178,7 @@ read`).
 |---|---|
 | identifier (heading) | a test citing the invariant; `elements/common/foundation_check.py`, which finds every citation and link naming it |
 | sentence | the agent making or reviewing a change the invariant reaches |
-| Method | the agent making a change the invariant reaches, which runs its test or keeps to its sentence; the agent reviewing that change |
+| Method | the agent making a change the invariant reaches, which runs its test or keeps to its sentence; the agent reviewing that change; `foundation_check.py`, which reports a `test` that no test cites |
 | Rests on | the author of a change to a fact it names, through the search of the foundation; `foundation_check.py` |
 | Derives from | the author of a change to a decision it names, through the search of the foundation; the human weighing a change to a recovered invariant or to one taken from a source outside the log; `foundation_check.py`, which reports a decision number the log does not hold, outside a quoted source |
 | Part | the agent selecting the invariants its change reaches; `foundation_check.py` |

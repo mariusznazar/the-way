@@ -153,6 +153,16 @@ Every part map identifier a field of a foundation entry names is an entry of the
 - **Part:** every
 - **Violated:** no
 
+## test-method-citation
+
+Every invariant whose method is `test` is cited by a comment line `invariant: <its identifier>` in a file git tracks other than a Markdown file.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-61 · WAY-321
+- **Part:** every
+- **Violated:** no
+
 ## generated-overview
 
 No file generated for an agent holds an overview of the repository's directories.

@@ -2,11 +2,16 @@
 
 Usage, from anywhere:
 
-    python -B <the-way>/elements/common/foundation_check.py [ROOT]
+    python -B <the-way>/elements/common/foundation_check.py [--skip-test-citations] [ROOT]
 
 ROOT is a directory of the product's git repository, the working directory by default; the whole
 repository it lies in is checked: the files of `foundations/`, the files of `guidelines/` and
 every other file git tracks. The script reads files and asks git; it writes nothing.
+
+The switch `--skip-test-citations` skips the last report named below, the invariant that reads
+`test` and has no citing line. It is for the run made right after an entry is written, when the
+test of an invariant that reads `test` may be written by a later slice of the same change (WAY-61).
+Any other run, the one command that runs a product's tests included, leaves it out.
 
 What it reports, each as `path:line: message`:
 
@@ -47,7 +52,10 @@ What it reports, each as `path:line: message`:
 - a path pattern of a part's *Files* or *Trust boundary* that matches no file git tracks;
 - a file git tracks that no part's *Files* claims, or that two parts claim, by path patterns git
   itself matches, letter case counting, unless the map lists it under `Files left out on purpose`;
-  and a file on that list that a part claims.
+  and a file on that list that a part claims;
+- an invariant whose *Method* reads `test` and that no comment line `invariant: <identifier>`
+  names in a file git tracks other than Markdown: no test cites it (WAY-61). A line in a Markdown
+  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`.
 
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT lies in no git repository,
 or git cannot list or match its files.
@@ -70,6 +78,7 @@ VIOLATED = "foundations/violated_invariants.md"
 GUIDELINES = re.compile(r"^guidelines/[^/]+\.md$")
 WITHDRAWN = "Withdrawn identifiers"
 LEFT_OUT = "Files left out on purpose"
+SKIP_TEST_CITATIONS = "--skip-test-citations"
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -237,6 +246,7 @@ class Foundation:
         self.entries = {}    # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
+        self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
 
     # --- identifiers ----------------------------------------------------------------------------
 
@@ -481,6 +491,17 @@ class Foundation:
                                   % (match.group(1), value))
             else:
                 self.refer(path, number, value, match.group(1))
+                named = NAMED.fullmatch(value)
+                if named:
+                    self.cited.add(named.group(1))
+
+    def check_test_citations(self):
+        """Report each invariant that reads `test` and no line `check_citations` read cites."""
+        for name, (_, found) in self.entries[INVARIANTS].items():
+            if found.get("Method", ("",))[0] == "test" and name not in self.cited:
+                self.report.error(INVARIANTS, found["Method"][1][0],
+                                  "`%s` reads `test` and no test cites it: no file git tracks "
+                                  "other than Markdown holds a line `invariant: %s`" % (name, name))
 
     def check_guidelines(self, path, lines):
         fenced, kind = None, None
@@ -566,7 +587,7 @@ class Foundation:
         return True
 
 
-def run(root):
+def run(root, skip_test_citations=False):
     """The report's lines and the exit code."""
     code, top = git(root, "rev-parse", "--show-toplevel")
     if code is None:
@@ -594,6 +615,8 @@ def run(root):
             foundation.check_citations(path, lines)
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
+    if not skip_test_citations:
+        foundation.check_test_citations()
     if not foundation.check_files(tracked):
         return ["git cannot match the path patterns of the part map"], 2
     lines = list(report.errors)
@@ -603,11 +626,13 @@ def run(root):
 
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
-    if len(argv) > 1:
-        print("usage: foundation_check.py [ROOT]")
+    skip = SKIP_TEST_CITATIONS in argv
+    roots = [argument for argument in argv if argument != SKIP_TEST_CITATIONS]
+    if len(roots) > 1 or any(root.startswith("--") for root in roots):
+        print("usage: foundation_check.py [%s] [ROOT]" % SKIP_TEST_CITATIONS)
         return 2
     sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
-    lines, code = run(argv[0] if argv else ".")
+    lines, code = run(roots[0] if roots else ".", skip)
     for line in lines:
         print(line)
     return code
