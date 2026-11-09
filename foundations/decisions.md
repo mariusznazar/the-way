@@ -9034,9 +9034,10 @@ the human's yes — the cycle's choices beyond the task's content, the steps ski
 not run, the unfixed findings the product's user or the human working with the process will feel,
 the decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
-makes to a product's logging scope, and the foundation entries the human did not see at the task
-document — and its `none` says that nothing else in the request waits for the human's yes. A blocked
-request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
+makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
+(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
+entries the human did not see at the task document — and its `none` says that nothing else in the
+request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
 plain words, in that section, while each remaining finding stands with its place in the code in the
 lower part.
 
@@ -9046,8 +9047,9 @@ lower part.
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request whose cycle chose the place of a new file the task left open, skipped the
     return step on the human's word and left a finding a player would feel puts all three in the
-    section, each with its question, and the lower part keeps their evidence; a request a remaining
-    finding blocks says in that section, in plain words, what the human is to decide about it, while
+    section, each with its question, and the lower part keeps their evidence; a request whose
+    cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
+    in that section; a request a remaining finding blocks says in that section, in plain words, what the human is to decide about it, while
     the finding's place and reason stand in the lower part;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
@@ -9225,8 +9227,8 @@ reads the task document as English, holds the block to `none`.
 - **Relations:** narrows WAY-288 · narrows WAY-114 · narrows WAY-290
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request of a task written in English keeps the block, its summary followed by
-    `none`, and the form check passes it; the form check reports a block that repeats the top part
-    for an English task;
+    `none`, and the form check passes it; wherever the form check reads the task document as
+    English, it reports a block that repeats the top part;
   - violates: a request of an English task drops the block; its block repeats the top part in
     English; a request of a Polish task holds `none` in its block.
 - **Origin:** none
