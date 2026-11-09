@@ -146,9 +146,12 @@ to a different part, list it beside findings outside the task's scope (WAY-261).
 as evidence with the check, not as a separate record of selected parts. For an invariant's test the
 change writes, record its failing run and its passing run as the author reports them.
 For a UI change, record the author's or executor's state check and screenshot inspection: affected
-components and states, method, observed result and evidence. Carry a screenshot unchecked for no
-settled route, or a failed settled route with its actual result, to the request; code inspection
-does not establish rendered appearance.
+components and states, method, observed result and evidence. The evidence of a screenshot is the
+address of the place where it lies, never the file, which the record's copy must not hold
+(WAY-316); where the foundation settles no place for screenshots, record that the screenshot was
+inspected and kept nowhere (WAY-317). Carry a screenshot unchecked for no settled route, or a failed
+settled route with its actual result, to the request; code inspection does not establish rendered
+appearance.
 
 ## Return step
 

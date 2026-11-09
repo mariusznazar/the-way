@@ -9,8 +9,8 @@ file.
   into tasks, or that adds something the product has to run, pay for or back up
   (WAY-121).
 - Then, where the project brings behaviour a user sees in the running product, take the look at
-  its logs, its interface and its development data that `running_product.md` beside this file
-  gives, and list each matter as it says.
+  its logs, its interface, its development data and the place of its screenshots that
+  `running_product.md` beside this file gives, and list each matter as it says.
 - Then, unless the definition, or a decision of the foundation, keeps the product on the machine on
   which it is made, take the look at how a human learns of a failure that `failure_notice.md`
   beside this file gives, and list the matter as it says.
@@ -21,7 +21,7 @@ file.
 - For each, find what settles it: a decision of the product's foundation, `held by`; a projected
   decision of this definition, `projected`; nothing, `open`. A decision that settles the choice in
   a sentence about something else still holds it; name that decision. A decision that leaves part
-  of what one of the three matters of `running_product.md` asks unanswered does not hold it: the
+  of what one of the four matters of `running_product.md` asks unanswered does not hold it: the
   item stands `— open`, with that decision nested under it as `running_product.md` gives. A decision
   of the foundation is material here, not a limit (WAY-313): where you see a reason to change the
   decision that holds a choice, the item stands `— open` with that decision nested under it as

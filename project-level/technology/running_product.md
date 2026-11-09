@@ -1,19 +1,19 @@
 # The look at an agent's way to the running product
 
-The look of the skill `settle-technology` at the logs, the interface and the development data,
-whose `SKILL.md` lies beside this file. The step "List the choices" takes it for a new list, and
-the step "Start or resume" for a list already written.
+The look of the skill `settle-technology` at the logs, the interface, the development data and the
+place of the screenshots, whose `SKILL.md` lies beside this file. The step "List the choices" takes
+it for a new list, and the step "Start or resume" for a list already written.
 
-Where the project brings behaviour a user sees in the running product, look at the three matters
-of an agent's way to the running product — its logs, its interface and its development data — by
-the exception the template's Technology section, in `project-level/definition_template.md`, gives.
-For each, look for a decision of the
+Where the project brings behaviour a user sees in the running product, look at the four matters
+of an agent's way to the running product — its logs, its interface, its development data and the
+place of its screenshots — by the exception the template's Technology section, in
+`project-level/definition_template.md`, gives. For each, look for a decision of the
 foundation that settles it for that behaviour: it settles the matter only where it answers
 everything the matter asks as the template gives it (WAY-165), and a decision that answers part of
 it, such as where the logs go and how an agent reads them but not how long the record lives, settles
 nothing. The test is whether the entry says it, not whether its answer is good: "the record lives
 until the next deployment" answers the question. The same reading holds for a projected decision of
-the definition, for a new list and for a list already written, and for each of the three matters.
+the definition, for a new list and for a list already written, and for each of the four matters.
 Where a decision settles the matter, it is not listed; otherwise list it as a choice of its
 own, even where its answer adds nothing to run, pay for or back up, or the product has none of what
 the matter names. A matter listed is settled like any other choice from here on
@@ -23,7 +23,7 @@ the matter names. A matter listed is settled like any other choice from here on
 
 A new list nests the entry too: an item `— open` over a decision silent on part of the matter holds
 that decision as `Changes: <PREFIX>-<NN>`, or `Changes: <its question>` for a projected decision. For
-a list already written, an item of one of the three matters ends with the marker it was given, and
+a list already written, an item of one of the four matters ends with the marker it was given, and
 the marker may no longer be true when the entry it names is read as above:
 
 - An item `— held by: <PREFIX>-<NN>` whose decision is silent on part of what the matter asks ends

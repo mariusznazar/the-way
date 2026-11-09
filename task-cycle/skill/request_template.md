@@ -36,7 +36,7 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
 5. Publish the file that passed, with `gh pr create --body-file` or `gh pr edit --body-file`, or the
    host's equivalent. Each later edit of the description — the record's link by its SHA, a
    correction — is checked again by both checks before it is published. The edit that adds the
-   record's link also fills in *Checks* with the runs of the two checks on the copy of the record,
+   record's link also fills in *Checks* with the runs of the three checks on the copy of the record,
    which did not exist when the description was first written. Record the last run of
    each, command and exit code, with the number of runs, in the record's *Request handoff*
    (*Description*).
@@ -151,8 +151,14 @@ sections of its own, omit this heading altogether: it is not written with `none`
 the line names. After the dash, why, in one sentence; for `ready`, whether anything waits below.
 
 **What you will see.** The whole change in plain words, what the task announced included: in a
-product, what its user sees, with screenshots; in the-way, how the work with the process changes.
-*Underneath*: one or two sentences on what is under the change.
+product, what its user sees; in the-way, how the work with the process changes. Where the change
+alters what a screen shows, the screenshots that the author or the reviewer shows the human stand
+here as images, each from the place the product's foundation settles for screenshots, which the
+reports name; no file of the repository or of the record's copy is linked as an image (WAY-316).
+Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so
+(WAY-317). Of the artifacts of the check only screenshots reach the description: describe motion in
+words, and leave logs and outputs in the reports (WAY-318). *Underneath*: one or two sentences on
+what is under the change.
 
 **For you to decide.** Everything whose merge needs the human's yes, and nothing else: its `none`
 means that nothing below waits for a yes (WAY-287). Each item says in plain words what the human
@@ -224,6 +230,12 @@ order:
     `Project relation:` line of the task copy and the cycle cleaned it: in plain words which of the
     two lines it was, never its text, that the reader of a project plan's state may now report a
     conflict for this task, and "Merge as it stands?".
+13. *No screenshot of a changed screen* (WAY-317), where the change alters what a screen shows, the
+    author inspected a screenshot, and the product's foundation settles no place for screenshots, so
+    the request shows none: in plain words that the screen was looked at and is not shown, that the
+    product has settled no place for screenshots, and "Merge without seeing the screen?". A
+    screenshot left unchecked for want of a settled way to the running product stands in item 4 and
+    takes no item here.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
@@ -251,7 +263,8 @@ passed and its rerun's result (WAY-160, WAY-261); what each own-work check showe
 user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
 failure of a settled one included (WAY-219); the form check's last run; the check of private
 paths' last run on the description and its last run on the copy of the record, each with its
-command and exit code (WAY-309); the remarks check's last run on the original and on the copy,
+command and exit code (WAY-309); the image check's last run on the copy of the record, with its
+command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
 and where it listed an item the cycle holds wrong, its command, exit code and listed line
 (WAY-295).
 
