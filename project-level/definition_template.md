@@ -23,11 +23,13 @@ decisions that set the rules below are cited beside them.
   ```markdown
   ## Backlog
 
-  - Projects: <a path or a tool>
-  - Tasks: <a path or a tool>
+  - Projects: <a path from the root of the repository, a tool, or the entry of the locations file>
+  - Tasks: <a path from the root of the repository, a tool, or the entry of the locations file>
   ```
 
-  (WAY-101; WAY-107.)
+  A place on the user's disk outside every repository stands in the section as an entry of the
+  locations file, never as a path; `backlog_place.md` beside this file says how it is read
+  (WAY-101; WAY-107; WAY-320.)
 - The text of the definition, its title included, is in the language the human opened the
   conversation in. The headings, the status line, the markers below and the projected entries
   are in English, whatever that language (WAY-72 for the entries;

@@ -14,11 +14,11 @@ because a project definition is a source.
   `python -B <the-way>/project-level/readiness_check.py <definition>` before relying on its
   approval; a finding returns to `define-project`.
 
-Read the product root `AGENTS.md` section `## Backlog` to find the task system. Check whether it
-can hold the whole document. If it holds short task entries only, create a separate Markdown
-document in the product's task area and link it from that entry; do not paste the document into a
-checklist item. If the document's location is unclear, ask once and offer to record it in the
-backlog guidance.
+Read the product root `AGENTS.md` section `## Backlog` to find the task system, as
+`project-level/backlog_place.md` gives. Check whether it can hold the whole document. If it holds
+short task entries only, create a separate Markdown document in the product's task area and link it
+from that entry; do not paste the document into a checklist item. If the document's location is
+unclear, ask once and offer to record it as that file gives.
 
 Check that this is one task. If it joins independent outcomes, identify the split. For a project
 member, update its plan through the owning workflow before refining either new item; for another

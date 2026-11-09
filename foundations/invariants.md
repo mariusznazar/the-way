@@ -75,11 +75,21 @@ No CI configuration git tracks runs a checking command other than `python -B gat
 
 ## outbound-link-reach
 
-No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection, other than a link in the `## Backlog` section of the root `AGENTS.md` to the place of the repository's tasks.
+No file git tracks contains a link into a repository that a reader not signed in to its host cannot open, or into a private note collection.
 
 - **Method:** review
 - **Rests on:** none
 - **Derives from:** WAY-27
+- **Part:** every
+- **Violated:** no
+
+## tracked-file-private-paths
+
+No file git tracks, other than `task-cycle/private_paths_check.py`, `task-cycle/test_private_paths_check.py`, `instruction-files/check_instructions.py` and `instruction-files/test_check_instructions.py`, contains an absolute path or a note link as WAY-309 names them.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-320 · WAY-309
 - **Part:** every
 - **Violated:** no
 

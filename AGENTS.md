@@ -17,9 +17,10 @@ tests report a skill a session would not see.
 
 ## Backlog
 
-- Tasks: `C:\Storage\The Brain\The Brain\Notes\Projects\(P) Proces pracy nad produktem\_tasks_active.md`.
-  A task's description is a document in the `_zadania\` folder beside it, linked from the task's
-  line. Both are in the author's private notes; an agent that cannot open them asks the human.
+- Tasks: the entry `tasks` under `the-way` in the locations file `~/.the-way/locations.json`, which
+  lies on the author's disk outside every repository. A task's description is a document in the
+  `_zadania` folder beside the file the entry names, linked from the task's line. Both are in the
+  author's private notes. Where the file or the entry is missing, or an agent cannot open them, it
+  asks the human and offers to add the entry to the file.
 - When a task document first reaches `Status: ready for cycle`, set the task's line to Ready,
-  [/], and remove its date, as the section "Zadania agentowe" of
-  `C:\Storage\The Brain\The Brain\Notes\Resources\(R) Obsidian\obsidian_rulebook.md` gives.
+  [/], and remove its date, as the author's rules for agent tasks in his notes give.
