@@ -42,6 +42,9 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(cloned.returncode, 0, cloned.stderr)
         self.commit = command("git", "rev-parse", "HEAD", cwd=self.source).stdout.strip()
         self.installer = self.source / "installation" / "install.py"
+        # The installer under test is the one in the working tree, committed or not; the clone
+        # supplies the source that is installed, whose commit the installer pins.
+        shutil.copyfile(SOURCE / "installation" / "install.py", self.installer)
 
     def install(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
         return command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
