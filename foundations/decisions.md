@@ -9267,19 +9267,19 @@ record* is no exclusion.
 *Rationale:* without a recorded precedence, a cycle meets a task or spec that says "no entry" beside
 a rule that a choice binding after the merge becomes an entry, and beside WAY-22 and WAY-18, which
 give every choice that records a rule a place in the one log; the agent that meets the collision
-may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the exception
-is limited to what was said and the default stays: a choice that binds after the merge enters the
-log. The choice is not lost, since its row stays in the questions table, and the request puts it
-before the human in the section for the human's decisions where it changes what the human meets when
-working with the process. The price is that the reasons for rejecting the other ways of such a
-choice go with the spec; that a later change can rework its rule without contradicting any entry;
-and that the human sees, at the merge, the choice itself but no line saying it has no entry.
+may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the
+exception is limited to what was said and the default stays: a choice that binds after the merge
+enters the log. The choice is not lost, since its row stays in the questions table, and the section
+for the human's decisions puts the cycle's choices beyond the task before the human (WAY-287). The
+price is that the reasons for rejecting the other ways of such a choice
+go with the spec; that a later change can rework its rule without contradicting any entry; and that
+nothing in the foundation says the choice has no entry.
 *Rejected:* an exception for every choice written in the text of a skill or template, with no entry,
 unless the task or spec asks for one — the reasons and rejected ways of such a choice are lost with
 the spec, a later change can rework the rule without contradicting any entry, and the exception goes
-against WAY-22 and WAY-18; no change, which withdraws the rule — small remarks keep coming in
-requests and the choice is weighed again at each stage that meets it, with no harm to the product;
-letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
+against WAY-22 and WAY-18; no change — the return step is left without a precedence between the
+exclusion and the rule that a choice binding after the merge is written into the foundation, and the
+choice is weighed again at each stage that meets it; letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
 several choices, the cycle writes a decision for every one of them and the log grows.
 
 ### WAY-294 — How does the cycle make sure its process remarks hold every item its stage reports give?
