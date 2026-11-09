@@ -11,6 +11,7 @@ most a check of what the human says.
    is no answer; do not fill it from the code.
 3. Lay the files out by "One layout for three tools" and the file of their kind, for the tools in
    use.
-4. Name the file's sections in the words its readers use for the product, such as `Where things
-   are`, `Before you release`, `Rules`, written in the language of the repository.
+4. Name the file's sections in the words its readers use for the product, as the rule "A rule
+   names things in the words its readers use for the product" of `SKILL.md` gives, written in the
+   language of the repository.
 5. Show the files and write them only after approval.

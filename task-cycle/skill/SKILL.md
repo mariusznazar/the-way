@@ -116,7 +116,7 @@ set the task's state.
    document does not name joins that list for the human to place, and opens the request the same
    way.
    In the-way itself, first bring the checkout the session works in up to the remote target branch,
-   the one change the cycle makes outside the task's worktree: fetch, and where it stands behind,
+   the one change the cycle makes to a checkout outside the task's worktree: fetch, and where it stands behind,
    fast-forward it when it is on that branch with a clean tree and no local commits, then start
    again from the entry point that started the cycle; where it cannot fast-forward, stop and say
    so.
@@ -190,7 +190,7 @@ sleep between checks. Record the mechanism and any limit.
 
 Each agent writes its full report to its report path as its method gives it and returns its status,
 its commits, a one-line check result naming what failed or did not run (an agent of `write-spec`
-runs no test or other check of the product and returns no check result), and the report's path; its
+runs no test or other check and returns no check result), and the report's path; its
 questions and concerns, each reach beyond its handoff, and **Searches not found or unclear** — each
 thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
 every report read its checks, reaches and searches; read the rest of it where the status is other

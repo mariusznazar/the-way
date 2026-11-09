@@ -364,7 +364,7 @@ class CommandTest(unittest.TestCase):
                              {"01-report.md": section(repeated), "02-report.md": section(repeated)})
         self.assertEqual(run_main([record])[0], 0)
 
-    def test_only_files_whose_name_ends_in_report_are_read(self) -> None:
+    def test_files_that_are_no_reports_are_not_read(self) -> None:
         text = section("an item in a file that is no report")
         record = self.record(cycle_with("none"), {
             "01-author-handoff.md": text, "handoff_author.md": text,
