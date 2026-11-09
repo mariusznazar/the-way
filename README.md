@@ -46,8 +46,10 @@ The process is designed to give a product:
   operation that cannot be undone gets a review aimed at that risk, and a human performs that
   operation;
 - sources outside the product that a rule rests on, recorded with their address, the passage
-  quoted word for word and the date it was read; the foundation says no more than its sources, and
-  what is not known stands as unknown or goes to a human as a question;
+  quoted word for word and the date it was read; a state of a host that the product's people run,
+  which only those with access to the host can read, is recorded as a reading: the command, the
+  host, the tool with its version, its output and the date it was run; the foundation says no more
+  than its sources, and what is not known stands as unknown or goes to a human as a question;
 - promises to someone outside the product — an API, a file format, a command — named in the part
   map with who relies on them, and named in the request of a change that alters them;
 - in the task cycle, an orchestrator that decides what each agent reads — the foundation entries by
@@ -72,7 +74,7 @@ changes at once; `installation/README.md` describes how.
 | `decisions.md` | Choices that bind later work, one entry for each, edited in place, with its scope, the sources it rests on, the decisions it narrows or derives from, the invariants that check it, its rationale and the options it rejected | A later change reads what binds today and why, without treating a rejected option as open; where two decisions collide, the entry says which prevails. |
 | `invariants.md` | Rules the product must keep, each one sentence with its method — `test` or `review` — the decisions or sources it derives from, the facts it rests on, the parts in which a change can break it, and the mark *Violated* | A rule is checked by a test in the product's own suite or by review, not by a status written into the entry. |
 | `part_map.md` | Parts with their files, the parts each may depend on and its trust boundary, and surfaces: promises to someone outside the product, with who relies on each | A change finds the parts it touches and the rules that reach them; a change at a trust boundary gets a review aimed at that risk, and one that alters a surface is named in its request. |
-| `environment_facts.md` | Facts about the world outside the product that a rule rests on, each one sentence with its source: the address, the passage quoted word for word and the date it was read | A rule's outside premise can be compared with its source again when the world changes. |
+| `environment_facts.md` | Facts about the world outside the product that a rule rests on, each one sentence with its source: the address, the passage quoted word for word and the date it was read; for a state of a host the product's people run, the command, the host, the tool, its output and the date it was run | A rule's outside premise can be compared with its source again when the world changes. |
 | `glossary.md` | Words that mean in the product something other than a reader of its field takes them to mean, each with a definition of one sentence and the meanings it no longer carries | A changed meaning reaches the sentences that use the word, through the author of the change. |
 
 Where the product does not meet a rule today, its invariant reads `Violated: yes` openly, instead
