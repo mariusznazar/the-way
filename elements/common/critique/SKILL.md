@@ -34,4 +34,4 @@ At the independent check, the author and the critic each read `check.md` beside 
 
 ## Settle the review
 
-When settling the review, the author reads `settle.md` beside this skill.
+When settling the review, the author reads `settle_review.md` beside this skill.

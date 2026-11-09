@@ -137,11 +137,14 @@ log by its number instead of copying it.
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
-  - complies: a new field enters the template together with the reader named in its table; a
-    rationale gives '12 loops fit in a save with the longest program, 16 and 19 with shorter ones';
-  - violates: a "notes" or "related artifacts" field that nothing reads; a rationale gives 'at most
-    12 loops' with no conditions, or how many entries the log held when the decision was taken.
+- **Verification:** for the fields, an agent compares the change with the decision:
+  - complies: a new field enters the template together with the reader named in its table;
+  - violates: a "notes" or "related artifacts" field that nothing reads.
+  For the rationale, an agent compares the change with the decision:
+  - complies: a rationale gives '12 loops fit in a save with the longest program, 16 and 19 with
+    shorter ones';
+  - violates: a rationale gives 'at most 12 loops' with no conditions, or how many entries the log
+    held when the decision was taken.
 - **Origin:** none
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
@@ -3251,7 +3254,8 @@ skill proposes or such a change adds stands where what calls for it reaches the 
 some files in a file the tools load with those files, a rule for an activity in the steps of the
 skill that carries out that activity or in the file that leads it, and knowledge needed now and
 then in a file such a step or line points to. Lines that stand unchanged are not bound by it, and
-the lines of process skills and their entry points answer to WAY-35, WAY-127 and WAY-256 instead.
+the lines of process skills and their entry points answer to WAY-35, WAY-127, WAY-256 and WAY-259
+instead.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** context-file-effect · claude-code-path-rules ·
@@ -3766,16 +3770,20 @@ logs; how long the record lives, between deployments too; and how a human learns
 a task's outcome deploys the product or changes how or where it runs, the-way's skill `refine-task`
 checks, while it refines the task, that the product has a deployment skill covering every item of
 the list, and where it has none or an item is missing, the task gains an item of its To do for that
-work or the human splits that work into a task of its own. For the two items on the record's life
-and on a failure, the check quotes the answer a decision of the foundation or an approved
-definition the task carries already gives, and the task gains the item that writes it into the
-skill; otherwise it asks the human whether to run the step that settles technology at the task
+work or the human splits that work into a task of its own. For the items on how to read the logs, on
+the record's life and on a failure, the check quotes the answer a decision of the foundation or an
+approved definition the task carries already gives, and the task gains the item that writes it into
+the skill, a decision silent on how an agent reads the logs or on how long the record lives
+answering nothing for the item on that; where nothing answers the item on how to read the logs, it
+goes as the other items of the list do, and where nothing answers the item on the record's life or
+on a failure, the check asks the human whether to run the step that settles technology at the task
 (WAY-267), with a note on what the skill leaves unsaid, instead of filling the item in, and a skill
 that records the human's refusal covers the item, so the question does not return.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270
+- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270 · derives from
+  WAY-165
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
@@ -3783,13 +3791,20 @@ that records the human's refusal covers the item, so the question does not retur
     splits writing one into a task of its own; a task that moves the product to a server, whose
     deployment skill says nothing of how long the record lives, finds that a decision of the
     foundation already answers it, quotes the decision and asks nothing, and the task gains the
-    item that writes the answer into the skill; the same task, with no decision or approved
+    item that writes the answer into the skill; a task that moves the product to a server, whose
+    deployment skill says nothing of how to read the logs, finds that the decision on the product's
+    logs says how an agent reads them, quotes it and asks nothing, and the task gains the item that
+    writes the answer into the skill; the same task, with a logs decision silent on how an agent
+    reads them, treats the item as any other of the list, so that the task gains an item of its To
+    do for it or the human splits that work off; the same task, with no decision or approved
     definition answering how a human learns of a failure, asks the human once whether to run the
     step that settles technology at the task, and a refusal is recorded in the skill, which then
     covers the item at every later deployment; a task that changes the text of a page is refined
     without the check;
   - violates: the-way carries a deployment skill for one kind of host; the check fills in how a
-    human learns of a failure with no choice of the human's and no entry that answers it; the
+    human learns of a failure with no choice of the human's and no entry that answers it; the check
+    quotes a logs decision silent on how an agent reads the logs as the answer to the item on
+    reading them, or asks the human whether to run the step for that item; the
     question returns at each later deployment after a refusal recorded in the skill; a task that changes where
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
@@ -3807,9 +3822,16 @@ human learns of a failure are two items of the list because a skill that says on
 are leaves a product whose record dies with each deployment, and whose maker learns of a failure
 from its users, looking complete; the choice stays the human's, so the check asks the human before
 the step runs and does not fill the item in, and where an entry already holds the answer the human
-meets it as a quotation in the task document. The step's own look at the logs stays as it is
+meets it as a quotation in the task document. How to read the logs is answered once for the product
+by its decision on the logs (WAY-165), which says how an agent reads them, and the skill repeats
+that answer, so that the two do not give an agent different instructions; where no decision answers
+it, the item stays an ordinary item of the list. The price is that the skill keeps the text of the
+decision, so a change of the decision is followed by a rewrite of the skill. The step's own look at the logs stays as it is
 (WAY-121): this list reaches a product whose definition is already approved, when a task deploys it.
-*Rejected:* a deployment skill carried by the-way — what to run and where differs for every
+*Rejected:* the skill saying how a human reads the logs and the decision how an agent reads them —
+two answers that are usually the same and can drift apart; the item on how to read the logs left as
+it was — the drift shows only when an agent meets two different instructions; a deployment skill
+carried by the-way — what to run and where differs for every
 product; a document of operations kept beside the product — no step reads it, so it goes stale
 unread; the list in a template alone — nothing binds the refinement to check it; adding the logs
 and the failure choice to the step at a task that chooses a place to run — the question comes in
@@ -4120,8 +4142,8 @@ already holds.
 
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
 directory, while its messages carry routing, the stage's status, commits, a one-line check result
-naming what failed or did not run, where the stage runs a test or another check of the product,
-and the report's path, while the agent's questions, concerns and each reach beyond its handoff stand
+naming what failed or did not run, where the stage runs a test or another check, and the report's
+path, while the agent's questions, concerns and each reach beyond its handoff stand
 in its report. The handoff names what the agent reads, as the
 orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
 it may carry a section of the plan, spec or task copied word for word, never restated in other
@@ -4162,12 +4184,19 @@ log, with no method of the cycle keeping a log of its own beside it.
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
 the next action visible, but an omitted failure can hide behind brevity, so relevant evidence
-remains part of a decision and an incomplete report blocks dependent work. Questions kept in the
+remains part of a decision and an incomplete report blocks dependent work. A check that any stage
+runs can fail or go unrun, so every stage that runs one gives the line, not only a stage that checks
+the product, and the orchestrator learns of a path left unchecked without reading the full report;
+the price is that a stage that runs no check gives no line. Questions kept in the
 report survive an interrupted session without being copied anywhere. A passage copied word for word
 carries the requirement as its author wrote it, so the agent reads it without opening the whole
 file, while a restatement is a second account of it that drifts from its source unseen. The cycle
 record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
-*Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
+*Rejected:* the line of the check result dropped from the skill of the stage that plans — the
+orchestrator learns of a path left unchecked only from the full report, which routine progression
+does not read; the line asked only of a stage that checks the product — whether a stage gives it
+then depends on whether the agent reads its skill or the decision, and a reviewer comparing with
+the decision reports the gap again; full handoffs and reports repeated in messages — coordination accumulates material
 it need not reread; short summaries as the only record — lost evidence cannot be recovered on
 resumption; a second universal brief and report contract — duplicated obligations drift without
 proving completeness; a slice method's own ledger of progress beside the record — it repeats the
@@ -4761,9 +4790,9 @@ product answers. The development data asks where the data comes from on which an
 product's behaviour outside production, and how an agent brings that data to the state a check
 needs, and the place of the screenshots asks where the files of the screenshots that an agent takes
 to show the human lie, outside the product's repository, and how the description of a request shows
-each as an image. Data set up from scratch and a dedicated test environment that persists are both
-options of the development data, and an entry, a decision of the foundation or a projected decision
-of a definition, that leaves part of what a matter asks unanswered does not settle that matter at a
+each as an image. Data set up from scratch and a dedicated test environment that persists are
+examples of options of the development data, none of them ruled out, and an entry, a decision of
+the foundation or a projected decision of a definition, that leaves part of what a matter asks unanswered does not settle that matter at a
 project definition; in a run at a task (WAY-267) the step may open a decision of the foundation that
 leaves part of it unanswered as it may open any such decision (WAY-313), the list shown to the
 human saying in one sentence what that decision leaves unsaid.
@@ -4807,9 +4836,9 @@ human saying in one sentence what that decision leaves unsaid.
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
 The logs tell the agent what the product did, and the answer says where that record lands and how
 long it lives, since an agent reads only what it can reach: a record that dies with each deployment
-serves a check made right after one and no diagnosis of a failure from before it. An entry that
-answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
-nothing at a definition, whether its answer is good or not (WAY-270); at a task the step may open
+serves a check made right after one and no diagnosis of a failure from before it (WAY-270). An entry
+that answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
+nothing at a definition, whether its answer is good or not; at a task the step may open
 such a decision as it may open any decision before the cycle starts (WAY-313), the silence being
 reason enough, and the human's choice among the options, the decision's present answer among them,
 is the consent to the change (WAY-314). The word is "may" on purpose, as in WAY-313: the step is
@@ -4820,8 +4849,9 @@ the check see what a user sees, while reading the store of data past the applica
 no user meets and skips the code in between. A check needs the data in a given state, so the answer
 says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
-set up from scratch for every change, though it brings costs of its own, so neither is ruled out
-and the step weighs them by their consequences (WAY-123). In a run at a task the list shown to the
+set up from scratch for every change, though it brings costs of its own, so neither is ruled out;
+the options of a run are those its research finds (WAY-122), and the step weighs them by their
+consequences (WAY-123). In a run at a task the list shown to the
 human says in one sentence what a silent decision leaves unsaid, since an item that reads as
 settled gives the human no sign that something is left for them to say. The screenshots an agent
 takes to show the human are the evidence of its check, and the human sees them in the description
@@ -4841,7 +4871,9 @@ project settles its technology.
 In a choice of an agent's way to the running product, whether an agent can use an option is a
 consequence for the product: an option an agent cannot use stays in the comparison with that lack
 said as "an agent does not check the running product this way", and the recommendation passes over
-it.
+it. Where no option can be used by an agent, the recommendation goes by the other consequences and
+says in one sentence that no option lets an agent check the running product this way, so the check
+stays with the human.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
@@ -4850,22 +4882,38 @@ it.
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
     check the running product this way", and the step recommends reading the output of the
-    server's container;
+    server's container, kept in a store that outlives a redeployment; a host whose every option for
+    the logs is a panel behind the human's login has the options compared by their cost and upkeep,
+    the one that wins recommended, and the message says in one sentence that no option lets an agent
+    check the running product this way, so the check stays with the human;
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
-    read its logs; the message shows the service with no word on whether an agent can use it.
+    read its logs; the message shows the service with no word on whether an agent can use it; on a
+    host where no option can be used by an agent, the step recommends nothing, or recommends by
+    cost and upkeep with no word that the check stays with the human.
 - **Origin:** none
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
 what a user sees in the running product; an option the agent cannot use leaves that check undone,
 and the product's behaviour reaches the human unchecked, which is a consequence the product bears
 rather than the agent's convenience. Kept in the comparison with its lack, the option stays open to
-the human, who chooses between consequences (WAY-123). For a place to run, how well an agent works
+the human, who chooses between consequences (WAY-123). Where every option is one an agent cannot
+use, passing over them all would leave the step with nothing to recommend, though the human is owed
+a recommendation (WAY-113); the step recommends by the other consequences and says in one sentence
+that the check stays with the human, so that the lack reaches the human at the choice. The price is
+that the step does not look again for an option an agent can use: the lack comes out before the
+choice, and the human answers it. For a place to run, how well an agent works
 with an option still decides only a tie (WAY-137): there the agent's convenience is not what the
 product needs from the choice, while here the agent's use of an option is what the choice is for.
 *Rejected:* nothing added to the usual weighing of consequences — the step could recommend a
 cheaper service an agent cannot use, since how well an agent works with an option decides only a
-tie, and the choice would pass with an answer that gives the agent nothing.
+tie, and the choice would pass with an answer that gives the agent nothing; the step looking
+further first for an option an agent can use, such as sending the logs to a place an agent reads,
+and going the way chosen only when that yields nothing — a longer research on every such matter,
+often one more service to pay for, while the options already come from research (WAY-122); the step
+recommending nothing where no option can be used by an agent — an exception to WAY-113, and the
+human answers with no hint; the case left unsaid — it shows at the first product with such hosting,
+and each agent resolves it in its own way.
 
 ### WAY-167 — Where do a product's guidelines stand, and what are their files named?
 
@@ -8986,9 +9034,10 @@ the human's yes — the cycle's choices beyond the task's content, the steps ski
 not run, the unfixed findings the product's user or the human working with the process will feel,
 the decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
-makes to a product's logging scope, and the foundation entries the human did not see at the task
-document — and its `none` says that nothing else in the request waits for the human's yes. A blocked
-request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
+makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
+(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
+entries the human did not see at the task document — and its `none` says that nothing else in the
+request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
 plain words, in that section, while each remaining finding stands with its place in the code in the
 lower part.
 
@@ -8998,8 +9047,9 @@ lower part.
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request whose cycle chose the place of a new file the task left open, skipped the
     return step on the human's word and left a finding a player would feel puts all three in the
-    section, each with its question, and the lower part keeps their evidence; a request a remaining
-    finding blocks says in that section, in plain words, what the human is to decide about it, while
+    section, each with its question, and the lower part keeps their evidence; a request whose
+    cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
+    in that section; a request a remaining finding blocks says in that section, in plain words, what the human is to decide about it, while
     the finding's place and reason stand in the lower part;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
@@ -9177,8 +9227,8 @@ reads the task document as English, holds the block to `none`.
 - **Relations:** narrows WAY-288 · narrows WAY-114 · narrows WAY-290
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request of a task written in English keeps the block, its summary followed by
-    `none`, and the form check passes it; the form check reports a block that repeats the top part
-    for an English task;
+    `none`, and the form check passes it; wherever the form check reads the task document as
+    English, it reports a block that repeats the top part;
   - violates: a request of an English task drops the block; its block repeats the top part in
     English; a request of a Polish task holds `none` in its block.
 - **Origin:** none
@@ -9217,27 +9267,28 @@ record* is no exclusion.
 *Rationale:* without a recorded precedence, a cycle meets a task or spec that says "no entry" beside
 a rule that a choice binding after the merge becomes an entry, and beside WAY-22 and WAY-18, which
 give every choice that records a rule a place in the one log; the agent that meets the collision
-may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the exception
-is limited to what was said and the default stays: a choice that binds after the merge enters the
-log. The choice is not lost, since its row stays in the questions table, and the request puts it
-before the human in the section for the human's decisions where it changes what the human meets when
-working with the process. The price is that the reasons for rejecting the other ways of such a
-choice go with the spec; that a later change can rework its rule without contradicting any entry;
-and that the human sees, at the merge, the choice itself but no line saying it has no entry.
+may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the
+exception is limited to what was said and the default stays: a choice that binds after the merge
+enters the log. The choice is not lost, since its row stays in the questions table, and the section
+for the human's decisions puts the cycle's choices beyond the task before the human (WAY-287). The
+price is that the reasons for rejecting the other ways of such a choice
+go with the spec; that a later change can rework its rule without contradicting any entry; and that
+nothing in the foundation says the choice has no entry.
 *Rejected:* an exception for every choice written in the text of a skill or template, with no entry,
 unless the task or spec asks for one — the reasons and rejected ways of such a choice are lost with
 the spec, a later change can rework the rule without contradicting any entry, and the exception goes
-against WAY-22 and WAY-18; no change, which withdraws the rule — small remarks keep coming in
-requests and the choice is weighed again at each stage that meets it, with no harm to the product;
-letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
+against WAY-22 and WAY-18; no change — the return step is left without a precedence between the
+exclusion and the rule that a choice binding after the merge is written into the foundation, and the
+choice is weighed again at each stage that meets it; letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
 several choices, the cycle writes a decision for every one of them and the log grows.
 
 ### WAY-294 — How does the cycle make sure its process remarks hold every item its stage reports give?
 
 Before every commit that adds the cycle record to the product's repository, the orchestrator runs
 the-way's script that lists each item other than `none` under **Searches not found or unclear** in
-the record's stage reports that the record's process remarks do not hold word for word, appends each
-listed item word for word with its stage name and full report path, and runs the script again until
+the record's stage reports — the `.md` files of the cycle's `reports/` directory whose name holds
+neither `handoff` nor `findings` — that the record's process remarks do not hold word for word,
+appends each listed item word for word with its stage name and full report path, and runs the script again until
 it lists nothing. The commits that add the record are its copy for a request, the repetition of that
 copy in a correction after review, and the copy of a request blocked for any cause. The script only
 lists, and an item that two reports give is listed again until the remarks hold it twice.
@@ -9249,10 +9300,14 @@ lists, and an item that two reports give is listed again until the remarks hold 
   - complies: a stage report that works after the request opened gives one item beside three lines
     reading `none found`; the script lists that item with its report path, the orchestrator appends
     it and runs the script again, which lists nothing, and only then the record is committed; a
-    correction runs the script over the reports of the correction too;
+    correction runs the script over the reports of the correction too; a report named
+    `review_whole.md` and one named `report-planner.md` are read, while `01-author-handoff.md`,
+    `slice-1-findings.md`, `notes.txt` and `gate.log` are not;
   - violates: a record is committed without the script having been run on it; the orchestrator
     stops after a run that listed items; it appends an item in other words, or leaves it out
-    because it looks small; an item that two reports give stands once in the remarks.
+    because it looks small; an item that two reports give stands once in the remarks; a `.md` file
+    of `reports/` whose name holds neither word is left unread, or a handoff or a file of findings
+    is read as a report.
 - **Origin:** none
 
 *Rationale:* the orchestrator copies an item when it has a report in front of it, and in the cycles
@@ -9264,9 +9319,16 @@ dozens of reports is where a reader's care already failed. The nightly review of
 cases from the record alone, so an item that is not in the record never reaches the human who
 improves the process. The price is a script with tests, a longer end of every cycle, a section the
 script must recognise in the two forms reports give it, and a literal reading of "other than
-`none`": a line that reads `none found` enters the remarks, so the review gets more noise.
-*Rejected:* the orchestrator appends items to the remarks right after each report, a correction
-included — a few sentences in the skill, but it does not close the gaps for items standing beside
+`none`": a line that reads `none found` enters the remarks, so the review gets more noise. A report
+is told by its name lacking the two words that mark the files the cycle names otherwise, a handoff
+and a file of findings, so a report under any other name is read and none is passed over unseen; the
+price is that a handoff or findings file written under a name without those words is read as a
+report.
+*Rejected:* an exit code of 2 where no report is read — it does not catch the case where some of
+the reports are read and others are not, and it goes against the rule of the cycle that exit 2
+means no listing was made; a line in the listing that marks a file not read — it looks like an item
+to append to the remarks; the orchestrator appends items to the remarks right after each report, a
+correction included — a few sentences in the skill, but it does not close the gaps for items standing beside
 `none` lines, which arose while the orchestrator had the report in front of it; a pass of the
 orchestrator through all reports before every archive, skipping only a section that reads `none`
 throughout — a few sentences that close both causes, but it still rests on a model reading with
@@ -9377,7 +9439,7 @@ so. A correction after review begins the same way in the-way itself — it fast-
 checkout, or, where the session works in the request's worktree, merges the remote target branch
 into it, and, where something came in, starts again from the entry point — and the merge of the
 target branch it makes takes the remote branch, in a product as well. The fast-forward is the one
-change the cycle makes outside the task's worktree.
+change the cycle makes to a checkout outside the task's worktree.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -10304,6 +10366,40 @@ cycle in which the orchestrator checks the entries before the request opens — 
 a cycle stays unchecked, the cycle gets one more step, and the rule lives in the text of a skill,
 which agents can knowingly pass over; no check, only the change of WAY-61 — it costs nothing today,
 but a forgotten test leaves a false `test` in the foundation with no signal.
+
+### WAY-322 — May a human strike from the list of the technology step a matter of an agent's way to the running product or of how a human learns of a failure?
+
+A matter of an agent's way to the running product that the step that settles technology lists
+(WAY-121), and the matter of how a human learns of a failure of the running product (WAY-270), stay
+on the list the step shows until the human's answer settles them, and the human cannot strike them
+from it. A human to whom such a matter does not apply answers it like any choice, and that answer
+settles the matter, so a run that resumes the step does not find it open again.
+
+- **Scope:** project-level, decisions
+- **Based on:** none
+- **Relations:** derives from WAY-121 · derives from WAY-165 · derives from WAY-270
+- **Verification:** an agent compares the work with the decision:
+  - complies: for a command-line tool that keeps no log file, the human, shown the list with the
+    logs matter on it, answers "the tool prints to the console, the record lives as long as the
+    run, an agent reads it from the terminal" instead of striking the matter; the answer settles it,
+    and a run that resumes the step lists no logs item as open; for a product run on a server, the
+    human who has no tool to learn of a failure answers the matter with a deliberate absence;
+  - violates: the step strikes the logs matter at the human's word, so that nothing says how an
+    agent reads the logs; a matter the human struck stands open on the list of the next run, and the
+    human strikes it again.
+- **Origin:** none
+
+*Rationale:* a matter struck from the list is settled with no answer, and the agent of the cycle
+then guesses where it reads the logs or how it operates the product, which is what an answer to
+each matter exists to prevent (WAY-165). A sentence such as "the tool prints to the console, the
+record lives as long as the run, an agent reads it from the terminal" is the answer the agent
+needs, and it settles the matter like any other choice.
+The price is that a human of a product to which a matter does not apply writes one sentence of an
+answer instead of a strike.
+*Rejected:* a struck matter staying on the list with a new mark, `— struck` — a new mark in the
+templates and in the readiness check, and the matter stands settled with no answer, against
+WAY-165, so the agent of the cycle guesses where it reads the logs; the case left as it is — at each
+resumption the human strikes the same matter again and looks at the list twice.
 
 ## Withdrawn identifiers
 

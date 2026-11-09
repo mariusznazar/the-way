@@ -27,6 +27,10 @@ The bullet of `start.md` on reading the foundation stands. In place of its other
 - Where the section holds a list and the run has a note the section does not yet hold, write the
   note and follow *List* below for it first, whatever the items already there end with. Only then do
   the bullets below apply.
+- Where the section holds a list and a note it already holds has no item of the list for the choice
+  it names, the earlier run was interrupted between writing the note and writing its item: follow
+  *List* below for that note first, as for a note just given, whatever the items already there end
+  with. Only then do the bullets below apply.
 - Where the section holds a list, read its notes and items. An item ending `— open` is looked for
   under *Questions to settle* first; where a question written for that choice stands, the item ends
   `— settled: <question>`. Then, unless *List* has just shown it, show the list and ask whether it
@@ -34,7 +38,8 @@ The bullet of `start.md` on reading the foundation stands. In place of its other
   step "Settle the open choices" with the open items, their preferences and what they wait for. A
   report `.runs/technology/<choice>.md` that reads `critique: passed` and names this document at its
   head is reused, and any other starts its research again.
-- Where the list holds no open item, go to *Close* below.
+- Where the list holds no open item and every note of the section has the item of its choice, go to
+  *Close* below.
 
 The looks of `running_product.md` and `failure_notice.md` are not taken, here or at *List*: a matter
 of an agent's way to the running product, or the matter of how a human learns of a failure, enters
@@ -96,7 +101,7 @@ the table accepted and marked, and the human strikes it or leaves it (`find_sett
 
 In place of `close.md`:
 
-- No item of the section ends `— open`.
+- No item of the section ends `— open`, and every note of the section has the item of its choice.
 - No readiness check runs.
 - Set `Status: refining` and return to the step of `refine-task` that called the run, or, for a run
   the human started, to its step 3, so that its steps 4 to 6 run on the whole document and the human

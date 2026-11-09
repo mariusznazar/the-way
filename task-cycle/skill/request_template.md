@@ -168,7 +168,7 @@ number, such as "(Minor findings, 3)", never a file name or an identifier. The i
 order:
 
 1. *What a blocked request needs to go on*, from the cause that blocked it (the variants below).
-2. *Questions*: only those the foundation step allows, and a reserved choice, each with its options
+2. *Questions*: only those the foundation step allows, which `task-cycle/skill/foundation_step.md` says, and a reserved choice, each with its options
    and a recommendation where one exists, from the report of the agent that returned `blocked` or
    `reserved`.
 3. *Human actions*: each action the task document places in the cycle, as the document names it,
@@ -222,7 +222,8 @@ order:
     it wrong, and "Merge as it stands?". The script is not changed in the cycle, and the archive is
     written; the case also stands in the record's process remarks, as `SKILL.md` ("The process
     remarks check") gives.
-11. *Additions to a product's logging scope*: each item the change adds to the list of what the
+11. *Additions to a product's logging scope*: the author finds them in the diff of the change to the
+    product's logging-scope rule (WAY-274); each item the change adds to the list of what the
     product logs, in plain words — what it is and which log line carries it — with "Accept it?".
     A change that adds nothing to that list has no such item.
 12. *A relation line the cleaning rewrote* (`SKILL.md`, "The record before it is committed",

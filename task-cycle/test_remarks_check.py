@@ -144,6 +144,11 @@ class SectionFormsTest(unittest.TestCase):
         report = "## Searches not found or unclear\n\nFirst line\nof one.\n\nSecond item.\n"
         self.assertEqual(items(report), ["First line of one.", "Second item."])
 
+    def test_a_paragraph_after_a_list_is_an_item_of_its_own(self) -> None:
+        report = ("## Searches not found or unclear\n\n- one\n- two\n\n"
+                  "A paragraph after the list.\n")
+        self.assertEqual(items(report), ["one", "two", "A paragraph after the list."])
+
     def test_sub_bullets_belong_to_their_item(self) -> None:
         report = ("## Searches not found or unclear\n\n- Parent item:\n  - child one\n"
                   "  - child two\n- Next item\n")
@@ -359,12 +364,28 @@ class CommandTest(unittest.TestCase):
                              {"01-report.md": section(repeated), "02-report.md": section(repeated)})
         self.assertEqual(run_main([record])[0], 0)
 
-    def test_only_files_whose_name_ends_in_report_are_read(self) -> None:
+    def test_files_that_are_no_reports_are_not_read(self) -> None:
         text = section("an item in a file that is no report")
         record = self.record(cycle_with("none"), {
-            "01-author-handoff.md": text, "slice-1-findings.md": text, "notes.txt": text,
-            "gate.log": text, "01-report.md": section("none"), "02-report.md.bak": text})
+            "01-author-handoff.md": text, "handoff_author.md": text,
+            "slice-1-findings.md": text, "notes.txt": text, "gate.log": text,
+            "02-report.md.bak": text, "01-report.md": section("none")})
         self.assertEqual(run_main([record])[0], 0)
+
+    def test_every_md_file_whose_name_holds_neither_handoff_nor_findings_is_read(self) -> None:
+        record = self.record(cycle_with("none"), {
+            "review_whole.md": section("read in review whole"),
+            "report-planner.md": section("read in report planner"),
+            "01-author-handoff.md": section("not read in author handoff"),
+            "handoff_author.md": section("not read in handoff author"),
+            "slice-1-findings.md": section("not read in slice findings"),
+            "notes.txt": section("not read in notes"),
+            "gate.log": section("not read in gate log")})
+        code, out, _ = run_main([record])
+        self.assertEqual(code, 1)
+        self.assertEqual(self.listing(out), [
+            f"{Path(record).as_posix()}/reports/report-planner.md: read in report planner",
+            f"{Path(record).as_posix()}/reports/review_whole.md: read in review whole"])
 
     def test_reports_are_read_in_the_order_of_their_names(self) -> None:
         record = self.record("# Record\n", {"10-b-report.md": section("second"),

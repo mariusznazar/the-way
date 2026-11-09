@@ -32,7 +32,10 @@ waits, so that a resumed step finds it.
    where more than one option is the simplest and cheapest, recommend of those the one an agent
    works with best, by the template's rule (WAY-137). In a
    choice of an agent's way to the running product, the recommendation passes over an option an
-   agent cannot use (WAY-166). Then give one
+   agent cannot use (WAY-166). Where no option can be used by an agent, the recommendation goes by
+   the other consequences and says in one sentence that no option lets an agent check the running
+   product this way, so the check stays with the human; the step does not look again for an option
+   an agent can use (WAY-166). Then give one
    fresh agent for the wave the option recommended for every choice of the wave, one a constraint
    of the document settles included, with the document and the comparisons, and ask it to run
    on each a devil's advocate, a pre-mortem and a search for unknown unknowns: what choosing that

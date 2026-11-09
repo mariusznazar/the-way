@@ -65,7 +65,8 @@ with the evidence and stop.
    variant that names the file comes; you read this skill and no method you do not conduct. Without
    subagents this cycle cannot run in that harness.
 
-The cycle writes only in the task's worktree and changes nothing outside the product repository;
+The cycle writes only in the task's worktree and changes nothing outside the product repository,
+except the fast-forward of the checkout in step 4 and the account of the request named below;
 reading outside it stays with the agent (WAY-140). A remark about the-way, the user's agent
 instructions or another repository goes into the record's process remarks, never into the request.
 For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
@@ -73,9 +74,9 @@ those remarks, with the stage name and full report path; keep repeated items sep
 The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296), and before every
 commit that adds the record, "The record before it is committed" below compares them with the
 reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309, WAY-316).
-The one exception is the cycle's own account of its request: in the task's entry in the backlog the
-product names (WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the
-request link and set the task's state.
+The account of its request is the cycle's own: in the task's entry in the backlog the product names
+(WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the request link and
+set the task's state.
 
 ## Start and record
 
@@ -115,7 +116,7 @@ request link and set the task's state.
    document does not name joins that list for the human to place, and opens the request the same
    way.
    In the-way itself, first bring the checkout the session works in up to the remote target branch,
-   the one change the cycle makes outside the task's worktree: fetch, and where it stands behind,
+   the one change the cycle makes to a checkout outside the task's worktree: fetch, and where it stands behind,
    fast-forward it when it is on that branch with a clean tree and no local commits, then start
    again from the entry point that started the cycle; where it cannot fast-forward, stop and say
    so.
@@ -125,7 +126,9 @@ request link and set the task's state.
    once. Record the base commit and the checks already failing on it. Run those checks on the base
    alone: finish them before anything changes a tracked file of the worktree, or run them in a
    separate checkout of the base commit under the worktree's ignored `.runs/`, deleted when they
-   end. Keep a frozen copy of the task document with its original path and its approval date or
+   end. In a product that checkout gets its dependencies installed, as the product's own rules give,
+   and its `.the-way` populated before the checks run; otherwise they fail for that reason and not on
+   the base. Keep a frozen copy of the task document with its original path and its approval date or
    source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.
 5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
    any other, the name the cycle gives it. Create the ignored record
@@ -138,8 +141,8 @@ request link and set the task's state.
    option rejected, its cost if wrong and what used it; no hidden reasoning and no output bearing
    secrets. The record stays out of commits until step 12.
 
-Write each dispatch's full handoff to a file in `reports/`; the message names that file and only
-what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
+Write each dispatch's full handoff to a file in `reports/` whose name holds `handoff`; the message
+names that file and only what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
 the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
 and commits of the frozen task and of the spec and plan where they exist, the answers of step 4,
 and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
@@ -187,7 +190,7 @@ sleep between checks. Record the mechanism and any limit.
 
 Each agent writes its full report to its report path as its method gives it and returns its status,
 its commits, a one-line check result naming what failed or did not run (an agent of `write-spec`
-runs no test or other check of the product and returns no check result), and the report's path; its
+runs no test or other check and returns no check result), and the report's path; its
 questions and concerns, each reach beyond its handoff, and **Searches not found or unclear** — each
 thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
 every report read its checks, reaches and searches; read the rest of it where the status is other
@@ -414,7 +417,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 ## Request and handoff
 
 12. A request that a remaining blocking finding blocks follows "The end of a code review" instead.
-    Otherwise merge the current target branch into the task branch; where that changes the reviewed
+    Otherwise merge the remote target branch into the task branch; where that changes the reviewed
     code, have a fresh reviewer review the merge with `review-change`, with a dispatch that asks
     whether the two sides still hold together and names the foundation entries the merge brought in
     that bear on the parts the change touches (WAY-150), and have the agents that own the affected
@@ -473,8 +476,9 @@ The copy is given in the place of the original, `docs/task-cycles/<task-slug>`, 
 same way.
 
 It reads the **Searches not found or unclear** section of every report in the record's `reports/`,
-in either of the forms the reports give it, and lists each item other than `none` that the record's
-process remarks do not hold word for word, with the path of its report. It only lists, and it
+a file whose name holds neither `handoff` nor `findings`, in either of the forms the reports give
+it, and lists each item other than `none` that the record's process remarks do not hold word for
+word, with the path of its report. It only lists, and it
 judges no content. On the original, exit 1 lists each item as `<report path>: <item>`:
 
 1. Append each listed item to the process remarks word for word, as an entry in the form

@@ -6,8 +6,9 @@ human's remarks.
 In the-way itself, before anything else, fetch, and bring what the session works in up to the remote
 target branch. Where the session works in a copy of the target branch, fast-forward it as step 4 of
 `implement-task` gives, or stop and say so; where it works in the request's worktree, merge the
-remote target branch into it. In both cases, where something came in, start again from the entry
-point that started the cycle.
+remote target branch into it and, where that merge changes code the cycle reviewed, have it reviewed
+and its affected checks run as the merge in the paragraph below is (WAY-306). In both cases, where
+something came in, start again from the entry point that started the cycle.
 
 Then read the field *Reserved choice* of the request's record, in the kept worktree or in the
 commit the request links. Where it reads `none`, or the record holds no such field, go on below.
@@ -24,7 +25,11 @@ choice:
 
 Take a link to the request, or to a comment holding the human's remarks, as the input. Work on that
 request's branch and in its worktree. First merge, never rebase, the remote target branch, the
-the-way pin included, and verify that the pinned checkout matches the product's gitlink. The remarks
+the-way pin included, and verify that the pinned checkout matches the product's gitlink. Where that
+merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `review-change`, with
+a dispatch that asks whether the two sides still hold together and names the foundation entries the
+merge brought in that bear on the parts the change touches, as step 12 of `implement-task` gives
+(WAY-306, WAY-150), and the agents that own the checks the merge touches run them again. The remarks
 bind; record them as new events. Keep the recorded route for the affected work: dispatch the
 correction with `make-change`, resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code

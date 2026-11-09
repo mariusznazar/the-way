@@ -204,8 +204,8 @@ the body; the project orchestrator changes only `Status:` after final acceptance
   meaning cannot hold; a row its search of the whole foundation finds already stated becomes no
   second entry, and the request names the row with that entry (WAY-134). Until the
   candidates are cut, the section reads `TODO`; with no row accepted, `none` stands below the line.
-- **Out of scope:** only task-bound exclusions. A lasting exclusion belongs in a projected or
-  current decision, or in a row of *Settlements to record*, not here.
+- **Out of scope:** only task-bound exclusions. A lasting exclusion that later work builds on is a
+  decision candidate: a row of *Settlements to record* or a projected or current decision, not here.
 
 The title is one descriptive line without a final period. Each fact has one home in the document; a
 row of *Settlements to record* restates in one sentence what its *Source* names, since the cycle

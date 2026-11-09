@@ -182,8 +182,8 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   terminal — and how it sees what the product answers;
   the development data asks where the data comes from on which an agent checks the product's
   behaviour outside production, and how an agent brings that data to the state a check needs. Data
-  set up from scratch and a dedicated test environment that persists are both options of that
-  choice; the place of the screenshots asks where the files of the screenshots that an agent takes
+  set up from scratch and a dedicated test environment that persists are examples of options of
+  that choice, none of them ruled out; the place of the screenshots asks where the files of the screenshots that an agent takes
   to show the human lie, outside the product's repository, and how the description of a request
   shows each as an image
   (WAY-165, WAY-316).
@@ -249,7 +249,9 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 - In a choice of an agent's way to the running product, whether an agent can use an option is a
   consequence for the product: an option an agent cannot use stays in the comparison with that lack
   said as "an agent does not check the running product this way", and the recommendation passes
-  over it
+  over it. Where no option can be used by an agent, the recommendation goes by the other
+  consequences and says in one sentence that no option lets an agent check the running product
+  this way, so the check stays with the human
   (WAY-166).
 - Where the options of a place to run differ in no consequence for the product and more than one
   of them is the simplest and cheapest, the step recommends, of those, the one an agent works with

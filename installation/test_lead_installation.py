@@ -1,6 +1,7 @@
 """Product installation checks for the pinned project-leading entry point."""
 
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -29,8 +30,17 @@ class LeadInstallationTest(unittest.TestCase):
         self.git("init", "-q")
         self.git("config", "user.email", "test@example.invalid")
         self.git("config", "user.name", "Lead Installation Test")
-        self.commit = self.git("rev-parse", "HEAD", cwd=SOURCE).stdout.strip()
-        available = self.git("cat-file", "-e", f"{self.commit}:{LEAD_SOURCE}", cwd=SOURCE)
+        # The tests install from this clone, not from the live repository: a commit made to the-way
+        # while the run goes on cannot change the commit the installer pins or the one expected.
+        self.source = self.root / "source"
+        cloned = command("git", "clone", "-q", str(SOURCE), str(self.source), cwd=SOURCE)
+        self.assertEqual(cloned.returncode, 0, cloned.stderr)
+        self.commit = self.git("rev-parse", "HEAD", cwd=self.source).stdout.strip()
+        self.installer = self.source / "installation" / "install.py"
+        # The installer under test is the one in the working tree, committed or not; the clone
+        # supplies the source that is installed, whose commit the installer pins.
+        shutil.copyfile(INSTALL, self.installer)
+        available = self.git("cat-file", "-e", f"{self.commit}:{LEAD_SOURCE}", cwd=self.source)
         self.assertEqual(available.returncode, 0)
 
     def git(self, *args: str, cwd: Path | None = None):
@@ -39,8 +49,8 @@ class LeadInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str):
-        return command(sys.executable, "-B", str(INSTALL), str(self.product),
-                       "--url", str(SOURCE), *args, cwd=self.product, input_text="y\n")
+        return command(sys.executable, "-B", str(self.installer), str(self.product),
+                       "--url", str(self.source), *args, cwd=self.product, input_text="y\n")
 
     def product_files(self):
         return {path.relative_to(self.product).as_posix(): path.read_bytes()
@@ -115,7 +125,7 @@ class LeadInstallationTest(unittest.TestCase):
                  "--", ".the-way", cwd=clone)
         self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD",
                                   cwd=clone).stdout.strip(), self.commit)
-        expected = self.git("show", f"{self.commit}:{LEAD_SOURCE}", cwd=SOURCE).stdout
+        expected = self.git("show", f"{self.commit}:{LEAD_SOURCE}", cwd=self.source).stdout
         self.assertEqual((clone / ".the-way" / LEAD_SOURCE).read_text(encoding="utf-8"),
                          expected)
         self.assertEqual((clone / WRAPPERS[0]).read_bytes(), (clone / WRAPPERS[1]).read_bytes())
@@ -141,7 +151,7 @@ class LeadInstallationTest(unittest.TestCase):
         # A gitlink and a checkout that disagree leave no pin to move from.
         applied = self.install("--apply")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
-        other_commit = self.git("rev-parse", "HEAD^", cwd=SOURCE).stdout.strip()
+        other_commit = self.git("rev-parse", "HEAD^", cwd=self.source).stdout.strip()
         self.git("update-index", "--cacheinfo", "160000", other_commit, ".the-way")
         before = self.product_files()
         index = self.git("ls-files", "--stage").stdout

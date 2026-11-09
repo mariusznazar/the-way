@@ -12,7 +12,6 @@ import unittest
 
 
 SOURCE = Path(__file__).resolve().parent.parent
-INSTALL = SOURCE / "installation" / "install.py"
 sys.path.insert(0, str(SOURCE / "installation"))
 import install  # noqa: E402
 
@@ -36,11 +35,20 @@ class InstallTest(unittest.TestCase):
                                  cwd=self.product).returncode, 0)
         self.assertEqual(command("git", "config", "user.name", "Install Test",
                                  cwd=self.product).returncode, 0)
-        self.commit = command("git", "rev-parse", "HEAD", cwd=SOURCE).stdout.strip()
+        # The tests install from this clone, not from the live repository: a commit made to the-way
+        # while the run goes on cannot change the commit the installer pins or the one expected.
+        self.source = Path(self.temporary.name) / "source"
+        cloned = command("git", "clone", "-q", str(SOURCE), str(self.source), cwd=SOURCE)
+        self.assertEqual(cloned.returncode, 0, cloned.stderr)
+        self.commit = command("git", "rev-parse", "HEAD", cwd=self.source).stdout.strip()
+        self.installer = self.source / "installation" / "install.py"
+        # The installer under test is the one in the working tree, committed or not; the clone
+        # supplies the source that is installed, whose commit the installer pins.
+        shutil.copyfile(SOURCE / "installation" / "install.py", self.installer)
 
     def install(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-        return command(sys.executable, "-B", str(INSTALL), str(self.product), "--url", str(SOURCE),
-                       *args, cwd=self.product, input_text=input_text)
+        return command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
+                       str(self.source), *args, cwd=self.product, input_text=input_text)
 
     def test_preview_apply_rerun_and_preserve_foundation(self) -> None:
         foundations = self.product / "foundations"
@@ -65,7 +73,7 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
                                  cwd=self.product).stdout.strip(), self.commit)
         self.assertEqual((self.product / ".the-way" / "README.md").read_text(encoding="utf-8"),
-                         command("git", "show", f"{self.commit}:README.md", cwd=SOURCE).stdout)
+                         command("git", "show", f"{self.commit}:README.md", cwd=self.source).stdout)
         staged = command("git", "ls-files", "--stage", "--", ".the-way", cwd=self.product)
         self.assertIn("160000 " + self.commit, staged.stdout)
         for path, name in NAMES:
@@ -139,20 +147,21 @@ class InstallTest(unittest.TestCase):
         paths = re.findall(r"\.the-way/([\w./-]+\.py)", install.product_guidance())
         self.assertTrue(paths)
         for path in paths:
-            found = command("git", "cat-file", "-e", f"{self.commit}:{path}", cwd=SOURCE)
+            found = command("git", "cat-file", "-e", f"{self.commit}:{path}", cwd=self.source)
             self.assertEqual(found.returncode, 0, f"{path} is not in {self.commit}")
 
     def installed_from_a_remote(self) -> Path:
         """Install from a bare remote of the-way, commit the product and return the remote."""
         remote = Path(self.temporary.name) / "remote.git"
-        cloned = command("git", "clone", "-q", "--bare", str(SOURCE), str(remote), cwd=SOURCE)
+        cloned = command("git", "clone", "-q", "--bare", str(self.source), str(remote),
+                         cwd=self.source)
         self.assertEqual(cloned.returncode, 0, cloned.stderr)
         agents = self.product / "AGENTS.md"
         agents.write_bytes(b"# Product rules\r\n")
         mine = self.product / ".claude/skills/the-way-mine/SKILL.md"
         mine.parent.mkdir(parents=True)
         mine.write_bytes(b"---\nname: the-way-mine\n---\n\nThe product's own skill.\n")
-        applied = command(sys.executable, "-B", str(INSTALL), str(self.product), "--url",
+        applied = command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
                           str(remote), "--apply", cwd=self.product, input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
         agents.write_bytes(agents.read_bytes() + b"\r\nMore rules.\r\n")
@@ -167,9 +176,9 @@ class InstallTest(unittest.TestCase):
         """A later commit of the-way, published to the remote unless told otherwise: the
         installer under test, which the first run used too, and whatever `change` does."""
         later = Path(self.temporary.name) / "later"
-        cloned = command("git", "clone", "-q", str(remote), str(later), cwd=SOURCE)
+        cloned = command("git", "clone", "-q", str(remote), str(later), cwd=self.source)
         self.assertEqual(cloned.returncode, 0, cloned.stderr)
-        shutil.copyfile(INSTALL, later / "installation" / "install.py")
+        shutil.copyfile(self.installer, later / "installation" / "install.py")
         change(later)
         for args in (("add", "-A"),
                      ("-c", "user.email=test@example.invalid", "-c", "user.name=Later", "commit",
@@ -222,7 +231,7 @@ class InstallTest(unittest.TestCase):
                                  cwd=self.product).returncode, 0)
 
         # Back to the earlier commit: the preview says the pin goes back.
-        back = command(sys.executable, "-B", str(INSTALL), str(self.product), "--url",
+        back = command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
                        str(remote), cwd=self.product)
         self.assertEqual(back.returncode, 0, back.stdout + back.stderr)
         self.assertIn(f"MOVE .the-way from {moved} to {self.commit} (older than the pin)",

@@ -17,7 +17,11 @@ the definition, for a new list and for a list already written, and for each of t
 Where a decision settles the matter, it is not listed; otherwise list it as a choice of its
 own, even where its answer adds nothing to run, pay for or back up, or the product has none of what
 the matter names. A matter listed is settled like any other choice from here on
-(WAY-121).
+(WAY-121), and the human cannot strike it from the list: a human to whom a matter does not apply
+answers it like any choice, giving every part the matter asks — "the tool prints to the console,
+the record lives as long as the run, an agent reads it from the terminal" for the logs, for
+instance — and that answer settles it, so a run that resumes the step does not find it open again
+(WAY-322).
 
 ## The entry nested under an item
 

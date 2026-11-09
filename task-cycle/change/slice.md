@@ -8,6 +8,9 @@ What a slice, or the retry of a slice, reads, and what it does when the plan and
   names, which the dispatch carries word for word, each with its file as its address; you open
   neither the whole plan nor the whole task. The task binds where the plan says less: the passages
   of the task your dispatch gives bind where your section says less.
+- The dispatch gives the ranges of lines beside the copied passages and files, as they stand in the
+  worktree when it is made. Where a range differs from the plan's, the dispatch's current range holds,
+  as `task-cycle/skill/planning.md` ("A slice's handoff") gives the orchestrator.
 - For the retry of a slice, the failed executor's report and what failed; the branch is back at the
   slice's base, so its commits are not yours to continue.
 
