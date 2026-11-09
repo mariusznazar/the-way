@@ -9439,7 +9439,7 @@ so. A correction after review begins the same way in the-way itself — it fast-
 checkout, or, where the session works in the request's worktree, merges the remote target branch
 into it, and, where something came in, starts again from the entry point — and the merge of the
 target branch it makes takes the remote branch, in a product as well. The fast-forward is the one
-change the cycle makes outside the task's worktree.
+change the cycle makes to a checkout outside the task's worktree.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -10391,8 +10391,9 @@ settles the matter, so a run that resumes the step does not find it open again.
 
 *Rationale:* a matter struck from the list is settled with no answer, and the agent of the cycle
 then guesses where it reads the logs or how it operates the product, which is what an answer to
-each matter exists to prevent (WAY-165). A sentence such as "the tool has no logs, an agent reads
-the console output" is the answer the agent needs, and it settles the matter like any other choice.
+each matter exists to prevent (WAY-165). A sentence such as "the tool prints to the console, the
+record lives as long as the run, an agent reads it from the terminal" is the answer the agent
+needs, and it settles the matter like any other choice.
 The price is that a human of a product to which a matter does not apply writes one sentence of an
 answer instead of a strike.
 *Rejected:* a struck matter staying on the list with a new mark, `— struck` — a new mark in the
