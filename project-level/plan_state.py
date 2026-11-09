@@ -151,13 +151,20 @@ def record_requests(git, commit, paths):
 
     Returns the sorted pull-request pointers as (source, link) and the sorted record paths whose
     field `Request URL and status` reads exactly BLOCKED_DRAFT; nothing else of a record is kept.
+
+    Limit: the lines are read as text, with no Markdown structure, so a pointer or the wording
+    inside a fenced code block is read as the field; the pointer lines have the same limit. Lines
+    end at `\\n` only; a lone `\\r` is part of its line, so a line that carries anything
+    after the wording but spaces, tabs and the `\\r` of a CRLF ending is not the field.
     """
+    # BLOCKED_DRAFT holds no ERE metacharacter, so it is its own pattern: `re.escape` would add
+    # backslashes before `-` and a space, which POSIX ERE leaves undefined.
     result = git.run("grep", "-I", "-z", "-n", "-E",
                      "-e", r"https?://[^ ]+/(pull|merge_requests)/[0-9]+",
-                     "-e", re.escape(BLOCKED_DRAFT), commit, "--",
+                     "-e", BLOCKED_DRAFT, commit, "--",
                      *(":(literal)" + path for path in paths), allowed=(0, 1))
     pointers, blocked = [], []
-    for row in result.stdout.splitlines():
+    for row in result.stdout.split(b"\n"):
         parts = row.split(b"\0", 2)
         if len(parts) == 3:
             source = parts[0].decode("utf-8")
