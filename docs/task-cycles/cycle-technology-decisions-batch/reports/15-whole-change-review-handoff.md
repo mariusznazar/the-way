@@ -1,0 +1,29 @@
+# Handoff — review of the whole change
+
+You review the whole change of a the-way task cycle as an agent that made none of it. The requester of
+the cycle delegated intermediate choices to the orchestrator; you never ask the human — questions go
+back to the orchestrator in your report.
+
+- Worktree (read-only, work from its root): `the task's worktree root`, branch `task/cycle-technology-decisions-batch`. The-way itself; no pinned process, no move of the pin.
+- Method: `task-cycle/review/SKILL.md` whole, and `task-cycle/review/whole_change.md` (this is the review of the whole change; you select your own foundation and guidelines as the method gives — the-way has no `guidelines/` directory, the task's question 6 says so).
+- Range: base `f238e4ffdfc2396ae0009fefa90b3af8d1e931e1` to head `6349019` (compute `git diff f238e4f..6349019` and `git log` yourself; confirm `git rev-parse HEAD` is `6349019`).
+- Answers of step 4: trust boundary **yes** — `project-level/plan_state.py` (slice 3; check crafted input at that boundary); irreversible operation no.
+- Frozen task, whole: `.runs/task-cycles/cycle-technology-decisions-batch/task.md` (Polish; 30 items of *To do*, 5 rows of *Settlements to record*, 6 answered questions). Plan, whole: `.runs/task-cycles/cycle-technology-decisions-batch/plan.md` (11 slices + 12 foundation entries; the planner's drift remark: the task's line numbers are 46 commits old). No spec.
+- Check **coverage** of every item 1–30, every row 1–5 of *Settlements to record* (all are decisions; the cycle's foundation step wrote them) and the questions 1–6 answers, and source fidelity (nothing invented). Items 17–23 are rewordings in place, accepted with the task (WAY-30); item 24 is row 4. Where the base text already said what an item asks, the agent changed nothing and said so: judge whether that is true (items 17 second point, 25, 27 first point).
+- Slices (base → head; class; own review):
+  - Foundation entries (10 commits, `foundations/decisions.md`): `f238e4f` → `f3b90d5`; same class; no own review — report `reports/02-foundation-entries-report.md`. Row 1 became a **new decision WAY-322** that also covers the fifth matter (place of the screenshots) the base holds; the orchestrator accepted this as an autonomous choice (judge whether it goes beyond row 1).
+  - Slice 1: `f3b90d5` → `361c9fb`; cheaper; report `reports/03-slice-1-report.md`; no own review.
+  - Slice 2: `361c9fb` → `7b04db0`; cheaper; `reports/04-slice-2-report.md`; no own review.
+  - Slice 3: `7b04db0` → `8b5662d`; same; **own review** `reports/06-slice-3-review-report.md` (PASS, 0 blocking, 2 Minor) and report `reports/05-slice-3-report.md`.
+  - Slice 4: `8b5662d` → `491f048`; cheaper; `reports/07-slice-4-report.md`; no own review.
+  - Slice 5: `491f048` → `815294c`; cheaper; `reports/08-slice-5-report.md`; no own review.
+  - Slice 6: `815294c` → `f3bf7b6`; same; `reports/09-slice-6-report.md`; no own review.
+  - Slice 7: `f3bf7b6` → `22c626c`; cheaper; `reports/10-slice-7-report.md`; no own review.
+  - Slice 8: `22c626c` → `eac1751`; cheaper; `reports/11-slice-8-report.md`; no own review.
+  - Slice 9: `eac1751` → `da8c818`; cheaper; `reports/12-slice-9-report.md`; no own review.
+  - Slice 10: `da8c818` → `fcb701e`; cheaper; `reports/13-slice-10-report.md`; no own review.
+  - Slice 11: `fcb701e` → `6349019`; cheaper; `reports/14-slice-11-report.md`; no own review.
+  The reports are the executors' claims to verify, not evidence. The orchestrator's mechanical check passed all of them; it passed these mismatches or notes on to you as information: slice 1 — the sentence of item 3 now names two exceptions (the fast-forward and the backlog account) while step 4 and WAY-298 call the fast-forward "the one change the cycle makes outside the task's worktree"; slice 2 — the template's *Questions* item now names a file (`foundation_step.md`) in the top part, WAY-286 bans file names in a description; slice 4 — the old test name `test_only_files_whose_name_ends_in_report_are_read` kept, an `is_file()` filter added, some wrapped lines longer than their neighbours; slice 5 — the installer tests now install from a clone taken in `setUp` (the committed installer, not uncommitted edits), and two sibling files keep the old pattern; slice 6 — five matters instead of four (WAY-322 family), `definition_template.md` got no no-strike clause; slice 10 — the new bullet in `instruction-files/SKILL.md` repeats the names rule and an example that `instruction-files/writing.md` step 4 holds (the "one place" rule); slice 11 — no test pins the new dependency.
+- Minor findings of slice reviews, to grade as findings of this review (word for word from `reports/06-slice-3-review-report.md`): (1) `project-level/plan_state.py:166-169` `record_requests`: a line with the wording, then a lone `\r`, then more text is cut by `splitlines()` to the wording and recognised; (2) the wording inside a fenced block is read as the field, the same limit the pull-request pointer lines have, and the limit is written in no foundation entry.
+- Checks you may run (focused, never the whole gate): `python -B elements/common/foundation_check.py --skip-test-citations`, `python -B gate/run_tests.py <directory>` for the directories the change touches (`task-cycle`, `project-level`, `installation`, `elements/common`, `instruction-files`, `elements/part-map`), `python -B agent-instructions/skill_entry_points.py` (no `--write`). The orchestrator runs the whole gate itself afterwards.
+- Your report (full, as the method gives it; first line `PASS <sha>` or `FAIL <sha>` or `questions`): `.runs/task-cycles/cycle-technology-decisions-batch/reports/15-whole-change-review-report.md`. List each Minor finding with its place and its own words, say where a Minor finding lies outside the task, and for each blocking finding name the slice it comes from or that it comes from none. Return the first line, a one-line check result and the report path.
