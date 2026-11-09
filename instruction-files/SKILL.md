@@ -227,8 +227,12 @@ Pitfalls:
 - **A rule names a kind of situation, not the event it came from.** No date, no course of an
   incident, no abandoned variants; an example only when the reach of the rule is unclear without
   one, and then two or three deliberately different ones.
+- **A rule names things in the words its readers use for the product.** Sections, places and
+  activities are called as the people who work on the product call them, such as `Where things
+  are` or `Before you release`, not as the author of the rule would name them.
 - **Emphasis ("IMPORTANT", "YOU MUST") on one rule per file at most.** Everything emphasised means
-  nothing emphasised; piled-on emphasis makes a current model over-apply the rule
+  nothing emphasised; the Claude Code documentation says piled-on emphasis mostly makes Claude
+  over-apply the rule, and that older models sometimes needed the emphasis
   (https://code.claude.com/docs/en/best-practices § What you can stop doing).
 - **A rule has one place.** When two routes need it, it lives in one file and the other route
   points to it.
