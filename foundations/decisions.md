@@ -9807,7 +9807,8 @@ item it lists is made to read the same in the report and in the remarks, not app
 - **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
 - **Relations:** derives from WAY-308 · narrows WAY-294
-- **Verification:** an agent compares a cycle, its record and its request with the decision:
+- **Verification:** invariants: tracked-file-private-paths. For the cycle's use of the script, an
+  agent compares a cycle, its record and its request with the decision:
   - complies: the script lists the path of a worktree in a report of the copy, the orchestrator
     replaces it by the same words in every file of the copy where it stands, the script lists
     nothing on the next run, and only then the copy is committed; the edit of a description that
