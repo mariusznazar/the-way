@@ -1,9 +1,0 @@
-# Handoff — review of the return step's commits
-
-You review the commits of the return step of a the-way task cycle as an agent that made none of the change. The requester delegated intermediate choices to the orchestrator; never ask the human — questions go back to the orchestrator in your report.
-
-- Worktree (read-only, from its root): `the task's worktree root`. Range: `75fe0e37597b7f1b6d4a5b98f57ab5e4796d77a2..5b3eb46` (compute `git diff 75fe0e3..5b3eb46` and `git log` yourself; confirm `git rev-parse HEAD` is `5b3eb46…`).
-- Method: `task-cycle/review/SKILL.md` whole (section 2: the return step's commits are reviewed against the task and the foundation entries the return step writes or corrects). Read `task-cycle/skill/return_step.md` for what the return step is.
-- The return step's report (claims to verify): `.runs/task-cycles/cycle-technology-decisions-batch/reports/19-return-step-report.md`. Frozen task: `.runs/task-cycles/cycle-technology-decisions-batch/task.md`. The entries it corrects: WAY-298 (last sentence) and WAY-322 (*Rationale*) in `foundations/decisions.md`, each whole; read also WAY-140, WAY-107, WAY-165, WAY-306, WAY-05 (rules for an entry's wording) in their current text.
-- Judge: whether each correction is true to the code and the other entries, whether it changes the meaning of an approved decision beyond what the task settles (WAY-114) — WAY-298 is a decision the task cites as a basis and did not open — whether the foundation check still passes (`python -B elements/common/foundation_check.py --skip-test-citations`), and whether the return step missed an entry the change makes untrue. Trust boundary: no file of this range is one. Focused checks only, never the whole gate.
-- Report: `.runs/task-cycles/cycle-technology-decisions-batch/reports/20-return-review-report.md`, first line `PASS <sha>` or `FAIL <sha>`, with **Searches not found or unclear**. Return the first line, a one-line check result and the report path.
