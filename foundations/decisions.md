@@ -4124,8 +4124,8 @@ already holds.
 
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
 directory, while its messages carry routing, the stage's status, commits, a one-line check result
-naming what failed or did not run, where the stage runs a test or another check of the product,
-and the report's path, while the agent's questions, concerns and each reach beyond its handoff stand
+naming what failed or did not run, where the stage runs a test or another check, and the report's
+path, while the agent's questions, concerns and each reach beyond its handoff stand
 in its report. The handoff names what the agent reads, as the
 orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
 it may carry a section of the plan, spec or task copied word for word, never restated in other
@@ -4166,12 +4166,19 @@ log, with no method of the cycle keeping a log of its own beside it.
 *Rationale:* full material kept outside routine coordination avoids repeated context while
 preserving evidence a ruling needs and a place from which work can resume. Short returns make
 the next action visible, but an omitted failure can hide behind brevity, so relevant evidence
-remains part of a decision and an incomplete report blocks dependent work. Questions kept in the
+remains part of a decision and an incomplete report blocks dependent work. A check that any stage
+runs can fail or go unrun, so every stage that runs one gives the line, not only a stage that checks
+the product, and the orchestrator learns of a path left unchecked without reading the full report;
+the price is that a stage that runs no check gives no line. Questions kept in the
 report survive an interrupted session without being copied anywhere. A passage copied word for word
 carries the requirement as its author wrote it, so the agent reads it without opening the whole
 file, while a restatement is a second account of it that drifts from its source unseen. The cycle
 record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
-*Rejected:* full handoffs and reports repeated in messages — coordination accumulates material
+*Rejected:* the line of the check result dropped from the skill of the stage that plans — the
+orchestrator learns of a path left unchecked only from the full report, which routine progression
+does not read; the line asked only of a stage that checks the product — whether a stage gives it
+then depends on whether the agent reads its skill or the decision, and a reviewer comparing with
+the decision reports the gap again; full handoffs and reports repeated in messages — coordination accumulates material
 it need not reread; short summaries as the only record — lost evidence cannot be recovered on
 resumption; a second universal brief and report contract — duplicated obligations drift without
 proving completeness; a slice method's own ledger of progress beside the record — it repeats the
