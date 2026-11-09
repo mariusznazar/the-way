@@ -3770,16 +3770,20 @@ logs; how long the record lives, between deployments too; and how a human learns
 a task's outcome deploys the product or changes how or where it runs, the-way's skill `refine-task`
 checks, while it refines the task, that the product has a deployment skill covering every item of
 the list, and where it has none or an item is missing, the task gains an item of its To do for that
-work or the human splits that work into a task of its own. For the two items on the record's life
-and on a failure, the check quotes the answer a decision of the foundation or an approved
-definition the task carries already gives, and the task gains the item that writes it into the
-skill; otherwise it asks the human whether to run the step that settles technology at the task
+work or the human splits that work into a task of its own. For the items on how to read the logs, on
+the record's life and on a failure, the check quotes the answer a decision of the foundation or an
+approved definition the task carries already gives, and the task gains the item that writes it into
+the skill, a decision silent on how an agent reads the logs or on how long the record lives
+answering nothing for the item on that; where nothing answers the item on how to read the logs, it
+goes as the other items of the list do, and where nothing answers the item on the record's life or
+on a failure, the check asks the human whether to run the step that settles technology at the task
 (WAY-267), with a note on what the skill leaves unsaid, instead of filling the item in, and a skill
 that records the human's refusal covers the item, so the question does not return.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270
+- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270 · derives from
+  WAY-165
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
@@ -3787,13 +3791,20 @@ that records the human's refusal covers the item, so the question does not retur
     splits writing one into a task of its own; a task that moves the product to a server, whose
     deployment skill says nothing of how long the record lives, finds that a decision of the
     foundation already answers it, quotes the decision and asks nothing, and the task gains the
-    item that writes the answer into the skill; the same task, with no decision or approved
+    item that writes the answer into the skill; a task that moves the product to a server, whose
+    deployment skill says nothing of how to read the logs, finds that the decision on the product's
+    logs says how an agent reads them, quotes it and asks nothing, and the task gains the item that
+    writes the answer into the skill; the same task, with a logs decision silent on how an agent
+    reads them, treats the item as any other of the list, so that the task gains an item of its To
+    do for it or the human splits that work off; the same task, with no decision or approved
     definition answering how a human learns of a failure, asks the human once whether to run the
     step that settles technology at the task, and a refusal is recorded in the skill, which then
     covers the item at every later deployment; a task that changes the text of a page is refined
     without the check;
   - violates: the-way carries a deployment skill for one kind of host; the check fills in how a
-    human learns of a failure with no choice of the human's and no entry that answers it; the
+    human learns of a failure with no choice of the human's and no entry that answers it; the check
+    quotes a logs decision silent on how an agent reads the logs as the answer to the item on
+    reading them, or asks the human whether to run the step for that item; the
     question returns at each later deployment after a refusal recorded in the skill; a task that changes where
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
@@ -3811,9 +3822,16 @@ human learns of a failure are two items of the list because a skill that says on
 are leaves a product whose record dies with each deployment, and whose maker learns of a failure
 from its users, looking complete; the choice stays the human's, so the check asks the human before
 the step runs and does not fill the item in, and where an entry already holds the answer the human
-meets it as a quotation in the task document. The step's own look at the logs stays as it is
+meets it as a quotation in the task document. How to read the logs is answered once for the product
+by its decision on the logs (WAY-165), which says how an agent reads them, and the skill repeats
+that answer, so that the two do not give an agent different instructions; where no decision answers
+it, the item stays an ordinary item of the list. The price is that the skill keeps the text of the
+decision, so a change of the decision is followed by a rewrite of the skill. The step's own look at the logs stays as it is
 (WAY-121): this list reaches a product whose definition is already approved, when a task deploys it.
-*Rejected:* a deployment skill carried by the-way — what to run and where differs for every
+*Rejected:* the skill saying how a human reads the logs and the decision how an agent reads them —
+two answers that are usually the same and can drift apart; the item on how to read the logs left as
+it was — the drift shows only when an agent meets two different instructions; a deployment skill
+carried by the-way — what to run and where differs for every
 product; a document of operations kept beside the product — no step reads it, so it goes stale
 unread; the list in a template alone — nothing binds the refinement to check it; adding the logs
 and the failure choice to the step at a task that chooses a place to run — the question comes in
