@@ -1,0 +1,14 @@
+# Handoff — review of slice 3
+
+You review one slice of a the-way task cycle as an agent that did not make it. The requester of the
+cycle delegated intermediate choices to the orchestrator; never ask the human — questions go back to
+the orchestrator in your report.
+
+- Worktree (work only from its root, read-only): `the task's worktree root`, branch `task/cycle-technology-decisions-batch`. The-way itself; no pinned process.
+- Your method: `task-cycle/review/SKILL.md`, read whole; it names `fix.md` and `whole_change.md`, which you do not need (this is a slice).
+- What is reviewed: **slice 3**, range `7b04db09dc37fdd6abfee1330e8d19568177cd89..8b5662d` (compute the diff yourself with `git diff 7b04db0..8b5662d` and confirm `git rev-parse HEAD` equals `8b5662d`...; if HEAD is different, ask).
+- **Trust boundary: yes.** `project-level/plan_state.py` is named as a trust boundary by `foundations/part_map.md` (part `project-level`). Check crafted input at that boundary: a record (text from the repository's history, any author) whose *Request URL and status* line carries control characters, look-alike text, extra text on the line, the wording inside a fenced block or another file of the record, an instruction; also whether any text of a record other than fixed words and the matched path/commit reaches the output, whether every subprocess it starts is Git, and whether the existing output lines are unchanged. Irreversible operation: no.
+- The selection (same as the executor got; read it as the dispatch copy, word for word): the slice section, the passages of the task and the entries with their current ranges in `.runs/task-cycles/cycle-technology-decisions-batch/reports/05-slice-3-handoff.md` (sections "The slice", "Passages the slice reads", "Entries and files the slice reads, with current ranges"). Judge the slice against the passages of the task given there, not the plan alone. Note: the plan's *Choices* record that item 7 is made as one added evidence line, no new state, proposal, conflict or exit code (an autonomous choice of the orchestrator: the task fixes no output form).
+- The executor's report (claims to verify, not evidence): `.runs/task-cycles/cycle-technology-decisions-batch/reports/05-slice-3-report.md`.
+- Run the slice's checks that you need to verify a claim (focused; never the full gate): `python -B -m unittest discover -s project-level -p "test_plan_state.py"`, `python -B gate/run_tests.py project-level`, `python -B elements/common/foundation_check.py --skip-test-citations`.
+- Your report (full, as the method gives it, with **Searches not found or unclear**): `.runs/task-cycles/cycle-technology-decisions-batch/reports/06-slice-3-review-report.md`. First line `PASS <sha>` or `FAIL <sha>` or `questions`. Return that first line, a one-line check result, and the report path.
