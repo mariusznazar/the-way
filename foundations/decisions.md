@@ -4772,9 +4772,9 @@ product answers. The development data asks where the data comes from on which an
 product's behaviour outside production, and how an agent brings that data to the state a check
 needs, and the place of the screenshots asks where the files of the screenshots that an agent takes
 to show the human lie, outside the product's repository, and how the description of a request shows
-each as an image. Data set up from scratch and a dedicated test environment that persists are both
-options of the development data, and an entry, a decision of the foundation or a projected decision
-of a definition, that leaves part of what a matter asks unanswered does not settle that matter at a
+each as an image. Data set up from scratch and a dedicated test environment that persists are
+examples of options of the development data, none of them ruled out, and an entry, a decision of
+the foundation or a projected decision of a definition, that leaves part of what a matter asks unanswered does not settle that matter at a
 project definition; in a run at a task (WAY-267) the step may open a decision of the foundation that
 leaves part of it unanswered as it may open any such decision (WAY-313), the list shown to the
 human saying in one sentence what that decision leaves unsaid.
@@ -4818,9 +4818,9 @@ human saying in one sentence what that decision leaves unsaid.
 *Rationale:* each answer serves an agent that checks behaviour a user sees in the running product.
 The logs tell the agent what the product did, and the answer says where that record lands and how
 long it lives, since an agent reads only what it can reach: a record that dies with each deployment
-serves a check made right after one and no diagnosis of a failure from before it. An entry that
-answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
-nothing at a definition, whether its answer is good or not (WAY-270); at a task the step may open
+serves a check made right after one and no diagnosis of a failure from before it (WAY-270). An entry
+that answers part of what a matter asks leaves the rest to be improvised in the cycle, so it settles
+nothing at a definition, whether its answer is good or not; at a task the step may open
 such a decision as it may open any decision before the cycle starts (WAY-313), the silence being
 reason enough, and the human's choice among the options, the decision's present answer among them,
 is the consent to the change (WAY-314). The word is "may" on purpose, as in WAY-313: the step is
@@ -4831,8 +4831,9 @@ the check see what a user sees, while reading the store of data past the applica
 no user meets and skips the code in between. A check needs the data in a given state, so the answer
 says both where the data comes from and how the agent brings it to that state; otherwise the agent of the
 cycle improvises it. A dedicated test environment that persists is in many cases better than data
-set up from scratch for every change, though it brings costs of its own, so neither is ruled out
-and the step weighs them by their consequences (WAY-123). In a run at a task the list shown to the
+set up from scratch for every change, though it brings costs of its own, so neither is ruled out;
+the options of a run are those its research finds (WAY-122), and the step weighs them by their
+consequences (WAY-123). In a run at a task the list shown to the
 human says in one sentence what a silent decision leaves unsaid, since an item that reads as
 settled gives the human no sign that something is left for them to say. The screenshots an agent
 takes to show the human are the evidence of its check, and the human sees them in the description
