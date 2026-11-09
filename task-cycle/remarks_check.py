@@ -9,9 +9,9 @@ In a product, the path starts with `.the-way/`. RECORD is the cycle-record direc
 `.runs/task-cycles/<task-slug>/` or its committed copy under `docs/task-cycles/`: it holds
 `cycle.md` and `reports/`.
 
-The reports are the files `reports/*report.md`, read in the order of their names; a handoff, a
-findings file and a log are not read. A report gives its section in either of two forms, and may
-give both:
+The reports are the `.md` files of `reports/` whose name holds neither `handoff` nor `findings`,
+read in the order of their names; a handoff, a findings file and a log are not read. A report gives
+its section in either of two forms, and may give both:
 
 - a heading, at any level, whose text is `Searches not found or unclear`, with an optional trailing
   colon, emphasis or parenthesis; the section runs to the next heading of the same or a higher
@@ -24,7 +24,8 @@ give both:
 
 A mention of the name inside a sentence, a section inside fenced code, and a report with no
 section are not read. The items of a section are its list items, each with the lines that continue
-it and its sub-items, and, where it is no list, its paragraphs; a sub-heading is no item. An item
+it and its sub-items, and its paragraphs, a paragraph after a list included, so that nothing written
+in the section goes unread; a sub-heading is no item. An item
 reads `none` when, with emphasis marks, backticks and a final full stop taken off, it is `none` in
 any case; every other item is listed, `none found` and `None unresolved. Unclear: ...` among them.
 
@@ -123,6 +124,12 @@ def fenced_flags(lines: list[str]) -> list[bool]:
 def names_section(heading_text: str) -> bool:
     text = re.sub(r"[*_`]", "", heading_text).strip().rstrip(":").strip().casefold()
     return text.startswith(SECTION) and not text[len(SECTION):len(SECTION) + 1].isalnum()
+
+
+def is_report(path: Path) -> bool:
+    """A file of `reports/` the script reads: a `.md` file whose name holds neither word."""
+    return (path.is_file() and path.name.endswith(".md")
+            and "handoff" not in path.name and "findings" not in path.name)
 
 
 def reads_none(item: str) -> bool:
@@ -315,7 +322,7 @@ def check(record: Path) -> Result:
     remarks = collapse(BLOCK_SEPARATOR.join(remark_blocks(read(cycle))))
     result = Result()
     reports_dir = record / "reports"
-    names = sorted(path.name for path in reports_dir.glob("*report.md")) \
+    names = sorted(path.name for path in reports_dir.glob("*.md") if is_report(path)) \
         if reports_dir.is_dir() else []
     held: dict[str, int] = {}
     seen: Counter[str] = Counter()

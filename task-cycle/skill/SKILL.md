@@ -141,8 +141,8 @@ set the task's state.
    option rejected, its cost if wrong and what used it; no hidden reasoning and no output bearing
    secrets. The record stays out of commits until step 12.
 
-Write each dispatch's full handoff to a file in `reports/`; the message names that file and only
-what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
+Write each dispatch's full handoff to a file in `reports/` whose name holds `handoff`; the message
+names that file and only what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
 the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
 and commits of the frozen task and of the spec and plan where they exist, the answers of step 4,
 and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
@@ -476,8 +476,9 @@ The copy is given in the place of the original, `docs/task-cycles/<task-slug>`, 
 same way.
 
 It reads the **Searches not found or unclear** section of every report in the record's `reports/`,
-in either of the forms the reports give it, and lists each item other than `none` that the record's
-process remarks do not hold word for word, with the path of its report. It only lists, and it
+a file whose name holds neither `handoff` nor `findings`, in either of the forms the reports give
+it, and lists each item other than `none` that the record's process remarks do not hold word for
+word, with the path of its report. It only lists, and it
 judges no content. On the original, exit 1 lists each item as `<report path>: <item>`:
 
 1. Append each listed item to the process remarks word for word, as an entry in the form
