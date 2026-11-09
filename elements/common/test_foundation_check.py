@@ -213,10 +213,14 @@ class FoundationCheckTest(unittest.TestCase):
 
     def run_on(self, **changes):
         """Run the script on the good product with some files replaced, added or (None) left out."""
+        return self.run_with((), **changes)
+
+    def run_with(self, arguments, **changes):
+        """The same, with the arguments given to the script."""
         files = dict(FILES)
         files.update({path.replace("__", "/").replace("_dot_", "."): text
                       for path, text in changes.items()})
-        return Product(self, files).check()
+        return Product(self, files).check(*arguments)
 
     def assertPasses(self, result):
         code, report = result
@@ -778,12 +782,68 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
                          "src/game.py", "no part")
 
+    # --- an invariant that reads `test` is cited by a test ------------------------------------
+
+    # In the good product `save-round-trip` reads `test` and tests/test_saving.py cites it;
+    # `clock-steady` reads `review` and nothing cites it. These tests move the citation.
+    UNCITED = "foundations/invariants.md:7:"
+
+    def other_citation(self):
+        """tests/test_saving.py citing the review invariant instead of the test one."""
+        return self.edit(FILES["tests/test_saving.py"], "save-round-trip/1", "clock-steady")
+
+    def test_invariant_reading_test_that_no_test_cites_is_reported(self):
+        self.assertFails(self.run_on(tests__test_saving_dot_py=self.other_citation()),
+                         self.UNCITED, "`save-round-trip`", "1 error")
+
+    def test_invariant_reading_test_cited_in_another_file_passes(self):
+        tests = "// invariant: save-round-trip\n"
+        self.assertPasses(self.run_on(tests__test_saving_dot_py=self.other_citation(),
+                                      tests__saving_dot_test_dot_js=tests))
+
+    def test_citation_in_markdown_does_not_count(self):
+        readme = "# The game\n\nSaves follow ABC-01.\n\n<!-- invariant: save-round-trip -->\n"
+        self.assertFails(self.run_on(tests__test_saving_dot_py=self.other_citation(),
+                                     README_dot_md=readme),
+                         self.UNCITED, "`save-round-trip`")
+
+    def test_citation_in_a_file_git_does_not_track_does_not_count(self):
+        files = dict(FILES, **{"tests/test_saving.py": self.other_citation()})
+        product = Product(self, files)
+        with open(os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8",
+                  newline="\n") as handle:
+            handle.write("// invariant: save-round-trip\n")
+        self.assertFails(product.check(), self.UNCITED, "`save-round-trip`")
+
+    def test_skip_switch_skips_the_report_of_an_uncited_test_invariant(self):
+        self.assertPasses(self.run_with(("--skip-test-citations",),
+                                        tests__test_saving_dot_py=self.other_citation()))
+
+    def test_skip_switch_before_or_after_the_root(self):
+        files = dict(FILES, **{"tests/test_saving.py": self.other_citation()})
+        product = Product(self, files)
+        self.assertPasses(product.check("--skip-test-citations", product.root, cwd=HERE))
+        self.assertPasses(product.check(product.root, "--skip-test-citations", cwd=HERE))
+
+    def test_skip_switch_skips_no_other_error(self):
+        readme = "# The game\n\nSee ABC-07.\n"
+        self.assertFails(self.run_with(("--skip-test-citations",),
+                                       tests__test_saving_dot_py=self.other_citation(),
+                                       README_dot_md=readme),
+                         "`ABC-07` names no decision of the log", "1 error")
+
+    def test_unknown_switch_cannot_run(self):
+        code, report = self.run_with(("--skip-everything",))
+        self.assertEqual(code, 2, report)
+        self.assertIn("usage: foundation_check.py", report)
+
     # --- the-way's own foundation -------------------------------------------------------------
 
     def test_the_way_foundation_passes(self):
         result = subprocess.run([sys.executable, "-B", SCRIPT, THE_WAY], capture_output=True,
                                 text=True, encoding="utf-8")
         # invariant: map-reference-target
+        # invariant: test-method-citation
         self.assertPasses((result.returncode, result.stdout + result.stderr))
 
 

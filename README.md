@@ -78,8 +78,8 @@ changes at once; `installation/README.md` describes how.
 Where the product does not meet a rule today, its invariant reads `Violated: yes` openly, instead
 of the rule being weakened, and its test stands in the product's suite as an expected failure.
 `elements/common/foundation_check.py` checks that every identifier stands once, every reference
-names an existing entry, every entry has the fields its template gives, and every file belongs to
-one part.
+names an existing entry, every entry has the fields its template gives, every invariant that reads
+`test` has a test citing it, and every file belongs to one part.
 
 ## What else is here
 

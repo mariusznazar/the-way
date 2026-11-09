@@ -146,8 +146,11 @@ looks for in its element. The search is not repeated before the merge and leaves
    gate for a projected entry, with the task document for an entry written whole from an accepted
    row of its *Settlements to record*, and at the merge for any other entry (WAY-114).
 3. Write the entry in its place in the file and run `elements/common/foundation_check.py` with
-   `python -B` from the product's repository root. Fix what the entry broke and run it again; an
-   error the entry did not cause goes to the human.
+   `python -B` from the product's repository root, passing the switch `--skip-test-citations`: an
+   invariant written here may read `test` while a later slice of the same change writes its test,
+   and the switch skips the report of an invariant that reads `test` and which no test cites
+   (WAY-321). Fix what the entry broke and run it again; an error the entry did not cause goes to
+   the human.
 4. What follows from the entry goes through these steps one at a time, each through the skill of
    its element
    (`TODO — decision pending: which decision sets that the entries following from one entry are
