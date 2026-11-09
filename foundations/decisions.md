@@ -137,11 +137,14 @@ log by its number instead of copying it.
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
-  - complies: a new field enters the template together with the reader named in its table; a
-    rationale gives '12 loops fit in a save with the longest program, 16 and 19 with shorter ones';
-  - violates: a "notes" or "related artifacts" field that nothing reads; a rationale gives 'at most
-    12 loops' with no conditions, or how many entries the log held when the decision was taken.
+- **Verification:** for the fields, an agent compares the change with the decision:
+  - complies: a new field enters the template together with the reader named in its table;
+  - violates: a "notes" or "related artifacts" field that nothing reads.
+  For the rationale, an agent compares the change with the decision:
+  - complies: a rationale gives '12 loops fit in a save with the longest program, 16 and 19 with
+    shorter ones';
+  - violates: a rationale gives 'at most 12 loops' with no conditions, or how many entries the log
+    held when the decision was taken.
 - **Origin:** none
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
