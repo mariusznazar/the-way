@@ -3254,7 +3254,8 @@ skill proposes or such a change adds stands where what calls for it reaches the 
 some files in a file the tools load with those files, a rule for an activity in the steps of the
 skill that carries out that activity or in the file that leads it, and knowledge needed now and
 then in a file such a step or line points to. Lines that stand unchanged are not bound by it, and
-the lines of process skills and their entry points answer to WAY-35, WAY-127 and WAY-256 instead.
+the lines of process skills and their entry points answer to WAY-35, WAY-127, WAY-256 and WAY-259
+instead.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** context-file-effect · claude-code-path-rules ·
