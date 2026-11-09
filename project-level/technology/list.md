@@ -39,9 +39,10 @@ file.
   `failure_notice.md` beside this file give, where the list holds them — the logs, the interface,
   the development data, the place of the screenshots and how a human learns of a failure — cannot
   be struck from it, and the message says so in one sentence. A human to whom such a matter does
-  not apply answers it like any choice, "the tool prints to the console, an agent reads the
-  terminal" for instance, and that answer settles the matter, so it does not come back open when
-  the step is resumed (WAY-322). In the same message ask, as one question of
+  not apply answers it like any choice, giving every part the matter asks as the template gives it
+  — "the tool prints to the console, the record lives as long as the run, an agent reads it from
+  the terminal" for the logs, for instance — and that answer settles the matter, so it does not come
+  back open when the step is resumed (WAY-322). In the same message ask, as one question of
   assessment for the whole list, whether the human has a preference or a constraint for any open
   choice; "I do not know" is an answer. Write the answers, a preference as a nested item under its
   choice.

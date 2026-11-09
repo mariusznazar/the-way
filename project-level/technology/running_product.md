@@ -18,8 +18,10 @@ Where a decision settles the matter, it is not listed; otherwise list it as a ch
 own, even where its answer adds nothing to run, pay for or back up, or the product has none of what
 the matter names. A matter listed is settled like any other choice from here on
 (WAY-121), and the human cannot strike it from the list: a human to whom a matter does not apply
-answers it like any choice — "the tool prints to the console, an agent reads the terminal" — and
-that answer settles it, so a run that resumes the step does not find it open again (WAY-322).
+answers it like any choice, giving every part the matter asks — "the tool prints to the console,
+the record lives as long as the run, an agent reads it from the terminal" for the logs, for
+instance — and that answer settles it, so a run that resumes the step does not find it open again
+(WAY-322).
 
 ## The entry nested under an item
 
@@ -35,8 +37,6 @@ the marker may no longer be true when the entry it names is read as above:
 - An item that ends `— open` stays open.
 - A matter with no item, and a decision silent on part of it, is found missing by the look above and
   listed `— open`, with that decision nested the same way.
-- An item the human's answer settled, because the matter did not apply to the product, ends
-  `— projected` and is not looked at again as open (WAY-322).
 - An item whose entry answers all the matter asks stays as it is.
 
 The item changes because the decision does not settle the matter, and the decision changes only
