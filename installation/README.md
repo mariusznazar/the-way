@@ -76,8 +76,9 @@ guidance in `AGENTS.md` tells the agent to run the check on its own and to repor
 command leaves it unchecked.
 
 A product whose repository is public adds a second check, that no file git tracks holds an absolute
-path on the author's disk or a link to a private note (WAY-324). The installer writes none of it;
-the product writes two things, and its one command of tests then runs the check:
+path on the author's disk or, in a Markdown file, a link to a private note (WAY-324). The
+installer writes none of it; the product writes two things, and its one command of tests then runs
+the check:
 
 1. An invariant in `foundations/invariants.md` with the method `test`, whose sentence says that no
    file git tracks, other than the files it names, holds an absolute path or, in a Markdown file, a
@@ -118,9 +119,10 @@ lists any, and 2 with `Error: <message>` on stderr when it cannot check: the ide
 given once, the directory lies in no git repository, `foundations/invariants.md` or the invariant
 is not there, the sentence names a file git does not track, or a tracked file is not UTF-8 text
 (a file with a NUL byte near its start is counted as binary and not read). The test runs the
-command and does not import its functions: the command keeps its name, argument and exit codes, the functions
-are not promised. A product that does not write the invariant and the test has no such check, and
-nothing in the product says so.
+command and does not import its functions: the command keeps its path, its argument, the meaning of
+the backticked texts of the sentence and its exit codes (the surface `tracked-private-paths-command`
+of the-way's part map), and its functions are not promised. A product that does not write the
+invariant and the test has no such check, and nothing in the product says so.
 
 ## Moving the pin
 

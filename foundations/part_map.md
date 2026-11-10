@@ -210,10 +210,10 @@ plan and task documents.
 
 ## tracked-private-paths-command
 
-The command that checks the files git tracks in the repository where it is run for absolute paths
-and note links, and skips the files that the sentence of the invariant named by its argument lists,
-keeps its path, its argument, the meaning of the backticked texts in that sentence and its exit
-codes.
+The command that checks the files git tracks in the repository where it is run for absolute paths,
+and for note links in Markdown files, and skips the files that the sentence of the invariant named
+by its argument lists, keeps its path, its argument, the meaning of the backticked texts in that
+sentence and its exit codes.
 
 - **Relied on by:** a product pinned to a commit of the-way
 
