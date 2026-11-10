@@ -10468,7 +10468,8 @@ files that the sentence of the invariant named by its argument lists. A product 
 repository is public adds the check with an invariant of that kind, whose method is `test`, and a
 short test that runs the command with the identifier of the invariant and cites it; the test of the
 invariant `tracked-file-private-paths` in the-way runs the same command and keeps no list of its
-own.
+own. Every text between backticks in the sentence names a file the command skips, and a name of a
+file that git does not track is an error.
 
 - **Scope:** task-cycle, installation
 - **Based on:** none
