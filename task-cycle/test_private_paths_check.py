@@ -66,6 +66,32 @@ class WindowsPathTest(unittest.TestCase):
                      "Note: a / b", "see Q: and A: b", "https://host/C:/x", "key:" + BS + "n and ab:" + BS + "x"):
             self.assertEqual(hits(text), [], text)
 
+    def test_a_letter_after_a_backslash_starts_no_drive(self) -> None:
+        # `\d\d:\d\d` of a regular expression holds the letters `d:` and a backslash.
+        text = "re.compile(r'" + BS + "d" + BS + "d:" + BS + "d" + BS + "d')"
+        self.assertEqual(hits(text), [])
+
+    def test_a_hit_that_is_only_escape_sequences_after_the_letter_is_no_path(self) -> None:
+        # The end of a message such as "... within 5 s:" and a newline in a Python string.
+        for sequence in ("n", "n" + BS + "n", "t", "r", "r" + BS + "n"):
+            text = 'wait = f"... within {limit} s:' + BS + sequence + '"'
+            self.assertEqual(hits(text), [], text)
+            self.assertEqual(hits("s:" + BS + sequence), [], sequence)
+
+    def test_a_real_path_that_starts_like_an_escape_sequence_is_still_listed(self) -> None:
+        for text in ("C:" + BS + "new" + BS + "dir", "C:" + BS + "n" + BS + "dir",
+                     "C:" + BS + "tmp", "C:" + BS + "n/x"):
+            self.assertEqual(shown('p = "' + text + '"'), [text], text)
+
+    def test_text_stuck_to_an_escape_sequence_is_still_listed(self) -> None:
+        text = '"... s:' + BS + 'nWynik"'
+        self.assertEqual(shown(text), ["s:" + BS + "nWynik"])
+
+    def test_the_rule_of_escape_sequences_leaves_other_forms_of_a_path_alone(self) -> None:
+        # Only a path that starts with a letter and a colon can be such a sequence.
+        self.assertEqual(shown("/c/n/x and /mnt/c/n"), ["/c/n/x", "/mnt/c/n"])
+        self.assertEqual(shown("C:/n"), ["C:/n"])
+
 
 class PosixPathTest(unittest.TestCase):
     def test_the_posix_form_of_a_drive_is_listed(self) -> None:
@@ -125,6 +151,23 @@ class NoteLinkTest(unittest.TestCase):
 
     def test_single_brackets_and_markdown_links_are_no_hit(self) -> None:
         self.assertEqual(hits("[a note](notes/a.md) and [b] and [[c]"), [])
+
+    def test_a_link_stuck_to_a_letter_a_digit_a_dot_or_an_underscore_is_no_hit(self) -> None:
+        # `p.[[PromiseResult]]` is the internal slot of a specification, `a[[0]]` an index.
+        for text in ("p.[[PromiseResult]]", "a[[0]]", "rows[[1, 2]]", "x_[[Note]]", "v2[[Note]]",
+                     "zob.[[Notatka]]", "Zażółć[[Note]]"):
+            self.assertEqual(hits(text), [], text)
+
+    def test_a_link_after_a_space_a_mark_or_the_start_of_the_line_is_listed(self) -> None:
+        for text in ("see [[Note]]", "[[Note]]", '"[[Note]]"', "(see [[Note]])", "-[[Note]]",
+                     "|[[Note]]", "![[Note]]", "x [[Note]]", "[[A]][[B]]"):
+            self.assertTrue(hits(text), text)
+
+    def test_links_are_not_looked_for_when_the_caller_asks_for_paths_only(self) -> None:
+        text = "see [[Note]] and C:/Work/proj and [[Other]]"
+        self.assertEqual(private_paths_check.find_in_text(text, note_links=False),
+                         [(1, "absolute path", "C:/Work/proj")])
+        self.assertEqual(shown(text), ["[[Note]]", "C:/Work/proj", "[[Other]]"])
 
 
 class PlaceTest(unittest.TestCase):
@@ -204,6 +247,26 @@ class CommandTest(unittest.TestCase):
         code, out, _ = run_main([str(path)])
         self.assertEqual(code, 1)
         self.assertEqual(self.listing(out), [f"{path.as_posix()}:6: note link: [[Notatka zadania]]"])
+
+    def test_a_file_checked_without_links_lists_its_paths_under_the_name_given(self) -> None:
+        path = self.write("a/code.py", "x = [[address, 1]]\ny = 'C:/Work/proj'\n")
+        result = private_paths_check.Result()
+        private_paths_check.check_file(path, result, note_links=False, name="shown/code.py")
+        self.assertEqual(result.listed, [("shown/code.py", 2, "absolute path", "C:/Work/proj")])
+        self.assertEqual(result.files, 1)
+        every = private_paths_check.Result()
+        private_paths_check.check_file(path, every)
+        self.assertEqual([(entry[0], entry[1], entry[2]) for entry in every.listed],
+                         [(path.as_posix(), 1, "note link"), (path.as_posix(), 2, "absolute path")])
+
+    def test_the_command_still_lists_a_link_in_a_file_of_any_kind(self) -> None:
+        # A copy of a record holds reports in `.txt` and `.jsonl`; a link there is a leak too.
+        self.write("record/report.txt", "see [[Note]]\n")
+        self.write("record/log.jsonl", '{"text": "see [[Other]]"}\n')
+        code, out, _ = run_main([str(self.root / "record")])
+        self.assertEqual(code, 1)
+        self.assertEqual([line.rsplit(": ", 1)[1] for line in self.listing(out)],
+                         ["[[Other]]", "[[Note]]"])
 
     def test_a_text_that_is_not_ascii_is_listed_as_it_stands(self) -> None:
         path = self.write("request.md", "zob. [[Zażółć gęślą]] i C:/Praca/żółw\n")

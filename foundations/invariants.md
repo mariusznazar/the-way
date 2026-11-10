@@ -85,11 +85,11 @@ No file git tracks contains a link into a repository that a reader not signed in
 
 ## tracked-file-private-paths
 
-No file git tracks, other than `task-cycle/private_paths_check.py`, `task-cycle/test_private_paths_check.py`, `instruction-files/check_instructions.py` and `instruction-files/test_check_instructions.py`, contains an absolute path or a note link as WAY-309 names them.
+No file git tracks, other than `task-cycle/private_paths_check.py`, `task-cycle/test_private_paths_check.py`, `instruction-files/check_instructions.py` and `instruction-files/test_check_instructions.py`, contains an absolute path or, in a Markdown file, a note link, as WAY-309 and WAY-323 name them.
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-320 · WAY-309
+- **Derives from:** WAY-320 · WAY-309 · WAY-323 · WAY-324
 - **Part:** every
 - **Violated:** no
 
