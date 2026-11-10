@@ -153,6 +153,22 @@ class SectionFormsTest(unittest.TestCase):
         for report in forms:
             self.assertEqual(items(report), ["the first search"], report)
 
+    def test_an_unread_material_bullet_after_a_non_list_searches_label_is_an_item(self) -> None:
+        # Recorded behaviour, not a wish: a report that writes the Searches label outside a list and
+        # then **Unread material** as a list item, against the order the methods give, has the
+        # bullet read as an item of the Searches section. The script lists, and judges nothing.
+        report = ("**Searches not found or unclear:**\n\n- item one\n\n"
+                  "- **Unread material:** the file\n")
+        self.assertEqual(items(report), ["item one", "**Unread material:** the file"])
+        report = "**Searches not found or unclear:** none\n\n- **Unread material:** the file\n"
+        self.assertEqual(items(report), ["**Unread material:** the file"])
+        # The same two sections in the other forms stay apart.
+        report = "**Searches not found or unclear:**\n- item one\n\n**Unread material:** the file\n"
+        self.assertEqual(items(report), ["item one"])
+        report = ("- **Searches not found or unclear:**\n  - item one\n"
+                  "- **Unread material:** the file\n")
+        self.assertEqual(items(report), ["item one"])
+
     def test_the_unread_material_section_never_gives_an_item_when_searches_read_none(self) -> None:
         forms = (
             "- **Unread material:** the guidelines file, read in part\n"

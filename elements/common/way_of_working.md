@@ -79,9 +79,9 @@ gives.
    take each `- **Scope:**` line with the indented lines that continue it, and keep the entries
    where the part's identifier stands as a whole item. *Scope* names parts by identifier alone, as
    `elements/common/foundation_check.py` holds it to. Add those the task's *Decisions in play* or
-   the work's source names. Read each decision found whole, save as the reviewer of the whole change
-   reads them below, as the range of lines from its heading to the next heading (`###` in the
-   decision log, `##` in the other foundation files), with its rationale and *Rejected*: a search
+   the work's source names. Read each decision found whole, as the range of lines from its heading to
+   the next heading (`###` in the decision log, `##` in the other foundation files), with its
+   rationale and *Rejected*, except as the reviewer of the whole change reads them below: a search
    hit or a binding sentence locates an entry, never replaces it. The log beyond the decisions found
    is not read. The reviewer of the whole change, selecting for its own review in a task cycle,
    reads whole the decisions found that concern the change's topic, skims the rest by title, opens

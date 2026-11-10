@@ -4223,10 +4223,11 @@ Outside the task cycle the agent doing the work selects its own reading, while i
 the orchestrator selects for its own judgments and for each handoff, which names the foundation
 entries by identifier; the reviewer of the whole change selects for its own review, and an agent
 writing a foundation entry through an element's skill for the entry it writes; and every other agent
-of the cycle reads what its handoff names and reaches for what is missing selectively — a search for an identifier or a word and a read of the passage found,
-never of a whole file of the foundation — naming each such reach in its report. The selection is
-neither recorded nor compared with every *Scope* of the log, and the search of the whole foundation
-(WAY-33) and the whole reading of templates, rules and examples keep their domain.
+of the cycle reads what its handoff names and reaches for what is missing selectively — a search for
+an identifier or a word and a read of the passage found, never of a whole file of the foundation —
+naming each such reach in its report. The selection is neither recorded nor compared with every
+*Scope* of the log, and the search of the whole foundation (WAY-33) and the whole reading of
+templates, rules and examples keep their domain.
 
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
@@ -9056,8 +9057,9 @@ The section of a request's description for the human's decisions holds everythin
 the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks
 not run, the incomplete reading of the review of the whole change where its reviewer did not run
 through the rest of its selection by title or itself named a decision concerning the change as
-unread, and the gap was not closed on the way, the unfixed findings the product's user or the human working with the process will feel,
-the decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
+unread, and the gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
+unread, the unfixed findings the product's user or the human working with the process will feel, the
+decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
 makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
 (WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
@@ -10589,7 +10591,9 @@ that stayed unread or was read in part, with what the agent read of it, or `none
 the reviewer of the whole change also holds the counts WAY-150 gives. The section is separate from
 the account of what the agent looked for and did not find (WAY-260), the orchestrator reads it in
 every report whatever the report's status, and a report without it returns to its agent for repair,
-as a report without the account of WAY-260 does.
+as a report without the account of WAY-260 does, save a report that returns `questions`. A decision
+the reviewer of the whole change read by title as WAY-150 gives is no gap and stands in the section
+only in the counts.
 
 - **Scope:** task-cycle
 - **Based on:** none
