@@ -83,7 +83,13 @@ the product writes two things, and its one command of tests then runs the check:
    file git tracks, other than the files it names, holds an absolute path or, in a Markdown file, a
    note link, as WAY-309 and WAY-323 name them. The files it names are those that write example
    paths on purpose; each stands between backticks, as git writes its path, and the command skips
-   exactly the files so written. `tracked-file-private-paths` in the-way is such an invariant.
+   exactly the files so written. Every text between backticks in the sentence is read as the path
+   of such a file, so the sentence holds no other backticked text. `tracked-file-private-paths` in
+   the-way is such an invariant. Its *Derives from* names a decision of the product's own log that
+   records the choice (the repository is public, so no tracked file holds such a path or link), or,
+   where the product has no such decision, the source of the rule as the invariant template's
+   "Links" gives; a decision of the-way is no decision entry of the product, so WAY-324 is not
+   written there.
 2. A short test, a `test_*.py` file that `gate/run_tests.py` finds, that runs the command from the
    product's root with the identifier of the invariant, expects exit code 0 and cites the invariant
    in a comment line `invariant: <identifier>` at the test:
@@ -108,9 +114,11 @@ the product writes two things, and its one command of tests then runs the check:
 
 The command checks the repository in which it is run. It lists, as `<file>:<line>: <kind>: <text>`,
 each absolute path in a file of any kind and each note link in a Markdown file, and exits 1 when it
-lists any, and 2 with `Error: <message>` on stderr when the identifier is missing from the
-invariants file or the sentence names a file git does not track. The test runs the command and
-does not import its functions: the command keeps its name, argument and exit codes, the functions
+lists any, and 2 with `Error: <message>` on stderr when it cannot check: the identifier is not
+given once, the directory lies in no git repository, `foundations/invariants.md` or the invariant
+is not there, the sentence names a file git does not track, or a tracked file is not UTF-8 text
+(a file with a NUL byte near its start is counted as binary and not read). The test runs the
+command and does not import its functions: the command keeps its name, argument and exit codes, the functions
 are not promised. A product that does not write the invariant and the test has no such check, and
 nothing in the product says so.
 

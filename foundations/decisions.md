@@ -10315,7 +10315,7 @@ but those that must write example paths, and the list of those files stands in t
 adding a file to it shows in the change; a real path pasted into a file on the list passes. A note
 link is text of a note, so it counts in a Markdown file; in code the same brackets are an array
 inside an array or a test of the shell, and a run of the check over every tracked file of one public
-product on 2026-11-09 listed 73 such texts among 88 findings. A link in a report of the copy of a
+product on 2026-11-09 listed 71 such texts in code among 88 findings. A link in a report of the copy of a
 cycle's record, of any kind of file, is still a leak, so the copy and the description keep the
 check of WAY-309 in every file.
 *Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
