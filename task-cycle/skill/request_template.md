@@ -237,6 +237,15 @@ order:
     product has settled no place for screenshots, and "Merge without seeing the screen?". A
     screenshot left unchecked for want of a settled way to the running product stands in item 4 and
     takes no item here.
+14. *An incomplete reading by the review of the whole change* (WAY-326, WAY-287), from the
+    **Unread material** of that review's report and of its fix review's, and from the record: where
+    the reviewer did not run through the rest of its selection by title, or itself named a decision
+    concerning the change as unread, and the gap was not closed on the way, by the reviewer or a
+    fresh one reading what stayed unread: in plain words how much of what it selected it read whole,
+    with "Merge anyway?", such as "The review of the whole change read 40 of 151 selected decisions
+    whole; merge anyway?". A reviewer that read whole the decisions concerning the change, ran
+    through the rest by title and named none unread gives no item, since that reading is the
+    practice (WAY-150).
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.

@@ -4215,15 +4215,19 @@ the decisions whose *Scope* names it and the invariants whose *Part* names it or
 the invariants a test the work alters cites, the decisions the task's *Decisions in play* or the
 work's source names, the touched parts' entries of the map and the entries these link to as far as
 the work needs; and reads each selected entry whole, reading more entries where relevance is
-uncertain and a whole file only where it is short. Outside the task cycle the agent doing the work
-selects its own reading, while in the task cycle the orchestrator selects for its own judgments and
-for each handoff, which names the foundation entries by identifier; the reviewer of the whole change
-selects for its own review, and an agent writing a foundation entry through an element's skill for
-the entry it writes; and every other agent of the cycle reads what its handoff names and reaches for
-what is missing selectively — a search for an identifier or a word and a read of the passage found,
-never of a whole file of the foundation — naming each such reach in its report. The selection is
-neither recorded nor compared with every *Scope* of the log, and the search of the whole foundation
-(WAY-33) and the whole reading of templates, rules and examples keep their domain.
+uncertain and a whole file only where it is short, save that the reviewer of the whole change reads
+whole the decisions of its selection that concern the change's topic, skims the rest of the
+decisions of its selection by title and opens every one whose title points to a bearing on the
+change, and states in its report how many decisions it read whole and how many by title only.
+Outside the task cycle the agent doing the work selects its own reading, while in the task cycle
+the orchestrator selects for its own judgments and for each handoff, which names the foundation
+entries by identifier; the reviewer of the whole change selects for its own review, and an agent
+writing a foundation entry through an element's skill for the entry it writes; and every other agent
+of the cycle reads what its handoff names and reaches for what is missing selectively — a search for
+an identifier or a word and a read of the passage found, never of a whole file of the foundation —
+naming each such reach in its report. The selection is neither recorded nor compared with every
+*Scope* of the log, and the search of the whole foundation (WAY-33) and the whole reading of
+templates, rules and examples keep their domain.
 
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
@@ -4236,13 +4240,20 @@ neither recorded nor compared with every *Scope* of the log, and the search of t
     changes; the search of the whole foundation finds a conflict outside those parts and the
     reading widens; in a task cycle the executor of a slice reads the entries its handoff names,
     searches for a decision it finds missing by its identifier and names that reach in its report,
-    while the reviewer of the whole change selects its own reading;
+    while the reviewer of the whole change selects its own reading, reads whole the decisions of
+    its selection that concern the change's topic, runs through the titles of the rest, opens the
+    one whose title points to a bearing on the change and reports "40 read whole, 111 by title
+    only";
   - violates: only decisions already named by the task are read; a search hit replaces its whole
     entry; a template is reduced to selected excerpts; the work records its selection and compares
     it with every *Scope* of the log; the whole decision log is read to find the decisions of a few
     parts; an invariant a test the change alters cites is left out because its *Part* names another
     part; an executor of a slice or a reviewer of a slice selects its own foundation reading, or
-    reaches beyond its handoff without naming the reach in its report.
+    reaches beyond its handoff without naming the reach in its report; the reviewer of the whole
+    change leaves decisions of its selection neither read whole nor run through by title, skips a
+    decision whose title points to a bearing on the change, or leaves out of its report how many
+    it read whole and how many by title only; an agent other than the reviewer of the whole change
+    skims the decisions its handoff names by title.
 - **Origin:** none
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
@@ -4255,7 +4266,14 @@ which every agent of the cycle would otherwise pay for again. An agent writing a
 searches the whole foundation for it anyway (WAY-33), so it keeps the selection its element's skill
 gives. A reach named in the report shows where the selection fell short, and the reviewer of the
 whole change, selecting for itself, finds a governing rule the orchestrator missed before the
-request.
+request. The selection of the reviewer of the whole change by *Scope* runs to more decisions than
+bear on a change, so the reviewer reads whole those that concern the change's topic and runs
+through the rest by title, as any reader of a long log does. Writing the practice down as a rule
+lets its report's count of decisions read whole and read by title only show the human and the
+orchestrator how much was read, where unsaid it passes for a full reading. The screening works
+inside the selection by *Scope*, not in its place, and the count records how much was read, never
+which decisions. The price is that a decision with an unremarkable title that bears on the
+change can pass unopened, as it can where no rule names the screening.
 *Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
 selection only from known links or keywords — a governing decision can remain unseen; a fixed
 reading limit — a difficult case loses needed context; a separate maintained index — a second
@@ -4264,7 +4282,13 @@ every *Scope* of the log — it costs every piece of work and records reading, n
 each agent of a task cycle selecting for itself — every agent pays for the same reading again;
 the orchestrator's selection with no reach left to the agent — a missing entry is guessed at
 instead of read; the reviewer of the whole change reading only the orchestrator's selection — a
-gap in the selection would reach the request unchecked.
+gap in the selection would reach the request unchecked; a separate task for the screening after a
+measure of how many selected decisions concern a change — until then the request would carry the
+line of the incomplete reading in nearly every cycle, and the screening only shows the gap; a
+narrower selection for the reviewer of the whole change with no measure, such as the decisions of
+the change's topic alone — a narrower selection may lose a decision that matters; no screening at
+all — the line of the incomplete reading stays in every request, and the sentence that the whole
+log is not read goes on contradicting the reviewer's practice.
 
 ### WAY-151 — How much of large project definitions and existing plans does plan-project read?
 
@@ -9031,8 +9055,11 @@ much it matters before the place in the code.
 
 The section of a request's description for the human's decisions holds everything whose merge needs
 the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks
-not run, the unfixed findings the product's user or the human working with the process will feel,
-the decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
+not run, the incomplete reading of the review of the whole change where its reviewer did not run
+through the rest of its selection by title or itself named a decision concerning the change as
+unread, and the gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
+unread, the unfixed findings the product's user or the human working with the process will feel, the
+decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
 makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
 (WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
@@ -9049,11 +9076,17 @@ lower part.
     return step on the human's word and left a finding a player would feel puts all three in the
     section, each with its question, and the lower part keeps their evidence; a request whose
     cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
-    in that section; a request a remaining finding blocks says in that section, in plain words, what the human is to decide about it, while
-    the finding's place and reason stand in the lower part;
+    in that section; a request a remaining finding blocks says in that section, in plain words,
+    what the human is to decide about it, while the finding's place and reason stand in the lower
+    part; a request whose review of the whole change read 40 of 151 selected decisions whole and
+    ran through none of the other 111 by title asks in that section whether to merge anyway, while
+    a request whose reviewer read 40 whole, ran through the other 111 by title and named no
+    decision of the change as unread has no such question;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
-    request is written in a shape of its own.
+    request is written in a shape of its own; the incomplete reading of the review of the whole
+    change stands only in the lower part, or stands in the section in every request whatever the
+    reviewer did.
 - **Origin:** none
 
 *Rationale:* the human merges once the section that asks for decisions reads `none`, so a matter that
@@ -9061,7 +9094,11 @@ needs a yes and stands in another section passes without the human's knowledge. 
 holds every such matter makes its `none` a statement the human can merge on. A blocked request that
 keeps the skeleton is read the way every other request is read, and what the cycle needs is the
 question it asks. Additions to a product's logging scope come here because WAY-274 counts on the
-human seeing them at the merge, and this section is where the merge shows them.
+human seeing them at the merge, and this section is where the merge shows them. A review of the
+whole change that read only part of what it selected, and did not run through the rest by title,
+passes as a full review unless the human is told, and the human is the one who can decide to merge
+on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
+the section keeps its `none` for requests that can be merged.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
@@ -9070,7 +9107,11 @@ knowledge, and WAY-274 describes a mechanism the product does not have; a review
 change with WAY-274 would count its complies as met. A general item for everything a decision asks
 the human to see at the merge. It would encourage moving everything into the section, though its
 `none` is to mean the request can be merged. A search of the log by the words "at the merge",
-"sees" and "merges" found no second such case; that is a word search, not proof.
+"sees" and "merges" found no second such case; that is a word search, not proof. A sentence of
+the top part outside this section on the incomplete reading — an incomplete review would pass
+without the human's yes, with a note in a place the template gives to something else; the lower
+part, in the section of the checks — the human does not read it, so would still not know that the
+review was incomplete.
 
 ### WAY-288 — In what language is a request's description written?
 
@@ -10509,6 +10550,80 @@ pinned checkout that the-way does not promise to keep, and the test breaks or ch
 when the pin moves; the instruction for installing saying that a product which wants the check adds
 it — a public product that does not think of it stays without the check, as one did before a path
 reached its repository on 2026-11-06.
+
+### WAY-325 — What does the orchestrator of a task cycle do when a stage report says material its handoff names stayed unread?
+
+Where a stage report says that something its handoff names stayed unread or was read in part, the
+orchestrator decides before it acts on the report's status: it resumes the agent to read it, carries
+the gap into the handoff of the next agent able to judge it, or records an autonomous choice saying
+why the gap bears on nothing the agent judged.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148 · derives from WAY-150
+- **Verification:** an agent compares the orchestrator's conduct after a report with the decision:
+  - complies: a report of `PASS` says that a guidelines file of the change's part was read to its
+    second heading, and the orchestrator resumes the reviewer to read the file whole; a report of
+    `done` says that a decision of the task's parts stayed unread, and the orchestrator names that
+    decision in the handoff of the reviewer of the whole change; a report says that a decision of
+    another part stayed unread, the agent having judged nothing that part's decision could bear on,
+    and the orchestrator records that as an autonomous choice with the reason;
+  - violates: the orchestrator goes on at a status of `done` or `PASS` while the report names
+    unread material and no choice is recorded; the autonomous choice is recorded with no reason, or
+    with a reason that leaves out what the agent judged; the gap stays in the report and in no
+    handoff or record.
+- **Origin:** none
+
+*Rationale:* a report that admits a gap and a status of `done` or `PASS` look the same to an
+orchestrator that goes on at the status, so an unread decision passes through a stage that looks
+complete, and an error hidden in it reaches the request. The three ways cost differently: resuming
+the agent closes the gap at the price of a round; carrying the gap to a later agent lets one able to
+judge it do so without a round of its own; the autonomous choice spares the round where the
+material bears on nothing the agent judged, and its written reason lets the human and a later
+reader check the choice.
+*Rejected:* unknown
+
+### WAY-326 — What does a task-cycle stage report about the material its handoff names that stayed unread?
+
+Every task-cycle stage's report holds, as a section of its own named **Unread material**, each
+thing its handoff names — for the reviewer of the whole change, each thing of its own selection —
+that stayed unread or was read in part, with what the agent read of it, or `none`; the section of
+the reviewer of the whole change also holds the counts WAY-150 gives. The section is separate from
+the account of what the agent looked for and did not find (WAY-260), the orchestrator reads it in
+every report whatever the report's status, and a report without it returns to its agent for repair,
+as a report without the account of WAY-260 does, save a report that returns `questions`. A decision
+the reviewer of the whole change read by title as WAY-150 gives is no gap and stands in the section
+only in the counts.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148 · derives from WAY-150
+- **Verification:** an agent compares a stage report and the orchestrator's reading with the
+  decision:
+  - complies: a report of a slice's executor with the status `done` holds **Unread material** naming
+    the guidelines file it read in part, beside its **Searches not found or unclear**, which reads
+    `none`; a report that read all it was handed holds the section reading `none`; the orchestrator
+    returns a report with no such section to its agent for repair;
+  - violates: the gap stands among the items of the account of WAY-260, so that the process remarks
+    take it; a report leaves the section out because its status is `done` or `PASS`; the
+    orchestrator reads the section only in reports of a status other than `done`.
+- **Origin:** none
+
+*Rationale:* the account of WAY-260 reaches the process remarks word for word, and an unread file
+usually concerns one change, so a gap written there would fill the remarks of the process with
+matter that is not about the process. The orchestrator reads only the checks, the reaches and the
+accounts in a report of `done` or `PASS`, and a gap that stands in the rest of the report is read
+only if the orchestrator reads more than its routine requires, so the section is a place the
+orchestrator always reads. The section holds what the agent itself admits and records no selection,
+which WAY-150 does not ask of any agent. The price is that a gap the agent does not notice or does
+not admit shows nowhere.
+*Rejected:* writing the gap into the account of what the agent looked for and did not find — that
+account goes word for word into the process remarks (WAY-260), and an unread file usually concerns
+one change, so the remarks would gain noise; the orchestrator's choice of WAY-325 alone, with no
+section — in a report of `done` or `PASS` the orchestrator reads no more than its routine requires,
+so the choice would take effect only when it read more than it must; a record of every agent's
+selection compared with every *Scope* of the log — WAY-150 rejects it, as it costs every piece of
+work and records reading, not understanding.
 
 ## Withdrawn identifiers
 
