@@ -10283,10 +10283,11 @@ A user's places on their own disk that lie outside every repository, such as the
 product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
 found at that place for every user and through no environment variable: a JSON object whose keys are
 repository names, each holding entries by name, such as `tasks` and `projects`, whose values are
-paths on the user's disk. No file the repository tracks holds an absolute path or a note link,
-other than the files that the invariant `tracked-file-private-paths` names, which write example
-paths in order to find or to test them; a file that points to such a place names its entry in the
-locations file.
+paths on the user's disk. No file the repository tracks holds an absolute path, or a note link in a
+Markdown file, other than the files that the invariant `tracked-file-private-paths` names, which
+write example paths in order to find or to test them; a file that points to such a place names its
+entry in the locations file. The copy of a task cycle's record and the description of a request are
+checked for a note link in every file, as WAY-309 gives.
 
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle
 - **Based on:** none
@@ -10297,9 +10298,9 @@ locations file.
     product's name in `~/.the-way/locations.json`; a file the repository tracks says "the entry
     `tasks` under `the-way`" where it means a place on the user's disk;
   - violates: a skill reads the location from an environment variable; a tracked file the
-    invariant does not name holds the path of a directory on the user's disk, or a link to a
-    private note; the locations file is put in a repository, or holds an entry of one repository
-    under the name of another.
+    invariant does not name holds the path of a directory on the user's disk, or a Markdown file it
+    does not name holds a link to a private note; the locations file is put in a repository, or
+    holds an entry of one repository under the name of another.
 - **Origin:** none
 
 *Rationale:* the repository of the-way is public, so an absolute path written in one of its files
@@ -10311,7 +10312,12 @@ the user's home finds the file whether or not a variable was set for it. The pri
 creates the file once on each machine, and an agent that finds no file asks the human; a session
 that runs in the cloud has no such file and asks too. The check for paths reads every tracked file
 but those that must write example paths, and the list of those files stands in the invariant, so
-adding a file to it shows in the change; a real path pasted into a file on the list passes.
+adding a file to it shows in the change; a real path pasted into a file on the list passes. A note
+link is text of a note, so it counts in a Markdown file; in code the same brackets are an array
+inside an array or a test of the shell, and a run of the check over every tracked file of one public
+product on 2026-11-09 listed 71 such texts in code among 88 findings. A link in a report of the copy of a
+cycle's record, of any kind of file, is still a leak, so the copy and the description keep the
+check of WAY-309 in every file.
 *Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
 of the tasks file left in the root `AGENTS.md` — a path in the repository is the problem ("there
 should be no such paths in the repository, and that they are there is the problem"); the place
@@ -10328,7 +10334,13 @@ lines marked as examples — every example line to mark and the code of the mark
 a marked line passes too; no exceptions, with the examples rewritten so that the pattern does not
 find them — every example to rewrite, the tests and the description of the script harder to read,
 and every later author of a test has to remember it; a check that skips all test files and both
-scripts — a path in any test of the-way passes.
+scripts — a path in any test of the-way passes; a note link counted in a Markdown file only, also
+in the copy of the record and in the description — a link in a report of the copy kept as a text
+or a log file passes, and an agent quoting a task document carries its links into a report, and it
+changes WAY-309; a note link counted in every file but the files of code recognised by their
+extension — a list of extensions to extend with each new language of a product, and a script with
+no extension still gives false hits; no change to the rule for a link — false hits for every array
+inside an array in code and a long list of files to except.
 
 ### WAY-321 — When does the check of a foundation report an invariant that reads `test` and has no test citing it?
 
@@ -10400,6 +10412,103 @@ answer instead of a strike.
 templates and in the readiness check, and the matter stands settled with no answer, against
 WAY-165, so the agent of the cycle guesses where it reads the logs; the case left as it is — at each
 resumption the human strikes the same matter again and looks at the list twice.
+
+### WAY-323 — What does the script of WAY-309 take for an absolute path and for a note link?
+
+The script of WAY-309 takes no `[[...]]` for a note link when its first bracket stands against a
+letter, a digit, a dot or an underscore on its left, and no letter for the start of a drive when a
+backslash stands before it. It takes no text for an absolute path when all that follows the drive
+letter and its colon is escape sequences of a newline, a tab or a carriage return (`\n`, `\t`,
+`\r`), so a message ending in a letter, a colon and such a sequence is not listed; a path written
+with a real name, a Git Bash path, a link after a space or a mark and a text stuck to such a
+sequence stay listed.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-309
+- **Verification:** invariants: tracked-file-private-paths. For the rules themselves, an agent
+  compares the change with the decision:
+  - complies: the script lists a path through a directory named `new`, written after a drive letter
+    in a string of code, and a note link that follows a space; it lists nothing for a slot of a
+    specification written with a dot before its brackets, for an array inside an array in code, for
+    the end of a message in a string of code that ends in a letter, a colon and a newline sequence,
+    or for the letters of a regular expression that stand after a backslash;
+  - violates: the script lists the slot of a specification; the script lists the end of a message
+    that ends in a newline sequence; the script lists nothing for a path through a directory named
+    `new` written in a string of code; the script lists nothing for a link to a note after a space.
+- **Origin:** none
+
+*Rationale:* the patterns of WAY-309 were written for the prose a cycle publishes, and code holds
+shapes that look like their targets and are not. A trial on every tracked file of one public
+product on 2026-11-09, with these rules and the rule of WAY-320 that a note link counts only in a
+Markdown file, listed exactly the nine real paths and the one example of a Git Bash path written on
+purpose, where the patterns without them had also listed 78 texts that were neither: 73 of them
+`[[...]]`, among them an array inside an array in code, a character class of the shell and slots
+of a specification quoted word for word, and 5 the end of a message or a regular expression. Each
+rule is narrow, so that what a real path or link can look like stays listed. The price taken: a
+directory of the root of a disk with a one-letter name, written `n`, `t` or `r` and standing alone
+after the colon, is not listed; a link stuck to a word, which Obsidian renders as a link, is not
+listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
+by rewriting the string.
+*Rejected:* the product lists the Markdown file holding the quoted specification among the skipped
+files — every real path later written in that file of its foundation passes; no change to the rule
+for a link — the check of that product fails while the quoted fact stands in its foundation, and
+the quote cannot be reworded, since an environment fact quotes its source word for word; a small
+letter for a drive in code starts no path — it passes every path written with a small letter,
+the home directory of a user in the form some tools print it included; recognising strings and
+regular expressions for each language — a parser for each language a product adds, out of
+proportion to the few texts it frees; no change to the rule for a drive — the product rewrites each
+such string and every later message of that form hits again, or lists its files and a real path in
+them passes.
+
+### WAY-324 — How does a product check the files it tracks for private paths and notes?
+
+A command of the-way checks the files git tracks in the repository where it is run and skips the
+files that the sentence of the invariant named by its argument lists. A product whose
+repository is public adds the check with an invariant of that kind, whose method is `test`, and a
+short test that runs the command with the identifier of the invariant and cites it; the test of the
+invariant `tracked-file-private-paths` in the-way runs the same command and keeps no list of its
+own. Every text between backticks in the sentence names a file the command skips, and a name of a
+file that git does not track is an error.
+
+- **Scope:** task-cycle, installation
+- **Based on:** none
+- **Relations:** derives from WAY-320 · derives from WAY-16 · derives from WAY-34 ·
+  derives from WAY-321
+- **Verification:** invariants: tracked-file-private-paths. For the rest, an agent compares the
+  change with the decision:
+  - complies: the instruction for installing the-way in a product tells a product with a public
+    repository to write the invariant and the short test that runs the command; a product moves its
+    pin and its test runs the command of the new commit unchanged; the list of files that write
+    example paths stands in the sentence of the invariant and nowhere else;
+  - violates: the installer copies a test file into the product; the check of a foundation reads the
+    tracked files of every product for paths; a product's test imports the functions of the script
+    instead of running the command; the list of skipped files stands in a test of the product beside
+    the sentence of its invariant.
+- **Origin:** none
+
+*Rationale:* a product reaches the check by running a command of the commit it pins (WAY-34), so the
+check changes with the pin and no copy of it stands in the product; the product's test runs in its
+one command of tests (WAY-16) and a test that no invariant's citation reaches is reported by the
+check of the foundation (WAY-321), so the check needs no line in the product's command. The list of
+files that write example paths belongs to the product, and the sentence of its invariant is where a
+reader of the foundation and the command both find it. The way WAY-321 rejected for its report, a
+mode that a product adds to its own command of tests, is not this one: here the product writes an
+invariant and a test, and the command is one of the-way that the test runs. The price WAY-321
+named stays: a public product that does not read the instruction for installing has no check, and
+nothing says so. It is taken because the check does not bind each product, a private repository
+publishing nothing.
+*Rejected:* the installer copies the test file into the product — the copy drifts from the-way
+(WAY-34), is rewritten whenever the pin moves, which widens what the installer promises, and the
+list of files cannot stand in a file the installer overwrites; the check of the foundation reads the
+tracked files of every product, with the list from the invariant of the product when it has one —
+the check of the form of a foundation gets work that is not its own, the patterns move to the part
+shared by the elements, and every product, a private one too, has failing tests after a move of the
+pin until it removes or lists its paths; no change — the product writes its test on functions of the
+pinned checkout that the-way does not promise to keep, and the test breaks or changes what it finds
+when the pin moves; the instruction for installing saying that a product which wants the check adds
+it — a public product that does not think of it stays without the check, as one did before a path
+reached its repository on 2026-11-06.
 
 ## Withdrawn identifiers
 

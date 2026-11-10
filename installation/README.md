@@ -75,6 +75,55 @@ reports an invariant that reads `test` and which no test cites (WAY-321). Until 
 guidance in `AGENTS.md` tells the agent to run the check on its own and to report that the one
 command leaves it unchecked.
 
+A product whose repository is public adds a second check, that no file git tracks holds an absolute
+path on the author's disk or, in a Markdown file, a link to a private note (WAY-324). The
+installer writes none of it; the product writes two things, and its one command of tests then runs
+the check:
+
+1. An invariant in `foundations/invariants.md` with the method `test`, whose sentence says that no
+   file git tracks, other than the files it names, holds an absolute path or, in a Markdown file, a
+   note link, as WAY-309 and WAY-323 name them. The files it names are those that write example
+   paths on purpose; each stands between backticks, as git writes its path, and the command skips
+   exactly the files so written. Every text between backticks in the sentence is read as the path
+   of such a file, so the sentence holds no other backticked text. `tracked-file-private-paths` in
+   the-way is such an invariant. Its *Derives from* names a decision of the product's own log that
+   records the choice (the repository is public, so no tracked file holds such a path or link), or,
+   where the product has no such decision, the source of the rule as the invariant template's
+   "Links" gives; a decision of the-way is no decision entry of the product, so WAY-324 is not
+   written there.
+2. A short test, a `test_*.py` file that `gate/run_tests.py` finds, that runs the command from the
+   product's root with the identifier of the invariant, expects exit code 0 and cites the invariant
+   in a comment line `invariant: <identifier>` at the test:
+
+   ```python
+   import subprocess
+   import sys
+   import unittest
+   from pathlib import Path
+
+   ROOT = Path(__file__).resolve().parent.parent  # the product's root; adjust to where this lies
+   COMMAND = ROOT / ".the-way" / "task-cycle" / "tracked_private_paths_check.py"
+
+
+   class TrackedFilesTest(unittest.TestCase):
+       # invariant: tracked-file-private-paths
+       def test_no_tracked_file_holds_a_private_path(self) -> None:
+           run = subprocess.run([sys.executable, "-B", str(COMMAND), "tracked-file-private-paths"],
+                                cwd=ROOT, capture_output=True, encoding="utf-8")
+           self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+   ```
+
+The command checks the repository in which it is run. It lists, as `<file>:<line>: <kind>: <text>`,
+each absolute path in a file of any kind and each note link in a Markdown file, and exits 1 when it
+lists any, and 2 with `Error: <message>` on stderr when it cannot check: the identifier is not
+given once, the directory lies in no git repository, `foundations/invariants.md` or the invariant
+is not there, the sentence names a file git does not track, or a tracked file is not UTF-8 text
+(a file with a NUL byte near its start is counted as binary and not read). The test runs the
+command and does not import its functions: the command keeps its path, its argument, the meaning of
+the backticked texts of the sentence and its exit codes (the surface `tracked-private-paths-command`
+of the-way's part map), and its functions are not promised. A product that does not write the
+invariant and the test has no such check, and nothing in the product says so.
+
 ## Moving the pin
 
 A later version of the process enters the product only when the product moves its pin (WAY-34).
