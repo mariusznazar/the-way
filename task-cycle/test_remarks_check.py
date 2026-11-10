@@ -140,6 +140,29 @@ class SectionFormsTest(unittest.TestCase):
             "**What Strych does at its limit:** still no source.",
         ])
 
+    def test_the_unread_material_section_before_the_searches_is_no_item(self) -> None:
+        # The report methods put **Unread material** before **Searches not found or unclear**.
+        forms = (
+            "- **Unread material:** the guidelines file, read in part\n"
+            "- **Searches not found or unclear:**\n  - the first search\n",
+            "**Unread material:** the guidelines file, read in part\n\n"
+            "**Searches not found or unclear:**\n- the first search\n",
+            "## Unread material\n\nthe guidelines file, read in part\n\n"
+            "## Searches not found or unclear\n\n- the first search\n",
+        )
+        for report in forms:
+            self.assertEqual(items(report), ["the first search"], report)
+
+    def test_the_unread_material_section_never_gives_an_item_when_searches_read_none(self) -> None:
+        forms = (
+            "- **Unread material:** the guidelines file, read in part\n"
+            "- **Searches not found or unclear:** none\n",
+            "**Unread material:** a decision, read by title only\n\n"
+            "**Searches not found or unclear:** none\n",
+        )
+        for report in forms:
+            self.assertEqual(items(report), [], report)
+
     def test_paragraphs_separated_by_blank_lines_are_separate_items(self) -> None:
         report = "## Searches not found or unclear\n\nFirst line\nof one.\n\nSecond item.\n"
         self.assertEqual(items(report), ["First line of one.", "Second item."])

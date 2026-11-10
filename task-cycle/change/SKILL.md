@@ -134,6 +134,8 @@ Write the full report to the dispatch's report path:
 - the own-work check of section 3: the requirement, the check and what it showed; when a check
   failed and passed when run again, both runs as command and exit code (WAY-262);
 - each reach beyond the dispatch (section 1): what, where and why;
+- **Unread material:** each file, foundation entry or passage your dispatch names that you did not
+  read whole or read in part, with what you read of it, or `none`;
 - **Searches not found or unclear:** each thing you looked for and did not find, or that was
   unclear, wherever it arose — in the
   instructions, handoff, task, foundation or product code — or `none`;

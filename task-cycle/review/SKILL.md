@@ -25,7 +25,12 @@ worktree the session works in; in a product, it is the product's pinned `.the-wa
   what you check besides section 2. You alone among the reviewers select your
   own foundation and guidelines: the entries of the parts the change touches by "Reading the
   foundation" in `elements/common/way_of_working.md`, and the guidelines of those parts by
-  `product-guidelines/reading.md`, each entry and guideline file whole (WAY-150, WAY-213).
+  `product-guidelines/reading.md`. Read each guideline file whole (WAY-213), and each entry of the
+  selection whole except the decisions that do not concern the change's topic: read whole those
+  that do, skim the rest by title, open every one whose title points to a bearing on the change,
+  and count how many you read whole and how many by title only, for your report (WAY-150). The
+  screening is for decisions only; the invariants, the part-map entries and the glossary entries
+  you selected are read whole.
 - For any other review — of a slice, a fix, the return step's commits, the reconciliation with the
   target branch or a correction — what the dispatch names, as the orchestrator selected it
   (WAY-150): the passages of the task, spec and plan it carries word for word, each with its file
@@ -141,6 +146,12 @@ Write the full report to the dispatch's report path. Its first line is `PASS <he
 - each check you ran, as its command and exit code or, for a manual check, its method and what it
   showed; each check you could not run, with the reason;
 - each reach beyond the dispatch (section 1): what, where and why.
+- **Unread material:** what of the dispatch — in the review of the whole change, of your own
+  selection — you did not read whole, with what you read of it, or `none`. In the review of the
+  whole change the section opens with the counts of section 1, how many decisions of your selection
+  you read whole and how many by title only, and goes on with each decision you did not run
+  through by title, each decision that bears on the change and stayed unread, and each guideline
+  file you did not read whole, or `none` after the counts. Keep it apart from the next section.
 - **Searches not found or unclear:** each thing you looked for and did not find, or that was
   unclear, wherever it arose — in the
   instructions, handoff, task, foundation or product code — or `none`.

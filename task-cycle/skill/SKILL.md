@@ -191,21 +191,26 @@ sleep between checks. Record the mechanism and any limit.
 Each agent writes its full report to its report path as its method gives it and returns its status,
 its commits, a one-line check result naming what failed or did not run (an agent of `write-spec`
 runs no test or other check and returns no check result), and the report's path; its
-questions and concerns, each reach beyond its handoff, and **Searches not found or unclear** — each
-thing looked for and not found or unclear, or `none` — stand in the report (WAY-148, WAY-260). In
-every report read its checks, reaches and searches; read the rest of it where the status is other
+questions and concerns, each reach beyond its handoff, its **Unread material** — what its handoff
+names, or for the reviewer of the whole change its own selection, that stayed unread or was read in
+part, or `none` — and **Searches not found or unclear** — each thing looked for and not found or
+unclear, or `none` — stand in the report (WAY-148, WAY-260, WAY-325, WAY-326). In every report read
+its checks, reaches, unread material and searches; read the rest of it where the status is other
 than `done`. A reach shows where your selection fell short: add what it found to the handoffs that
-follow. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
-`reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
-`returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
-`FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
-`reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and
-exit code; a report missing either returns to its agent for repair before dependent work, and a
-claim that tests passed does not repair it (WAY-159). A report that lacks its **Searches not found
-or unclear** (WAY-260), save one returning `questions`, or a `make-change` report of `done` or
-`done with concerns` without its own-work check (WAY-164), returns to its agent for repair the same
-way (WAY-148); `none` is an answer, a missing section is not. An agent that returns `questions`
-gets your answers as step 6 answers the designer's — from an approved source, otherwise, except for
+follow. Where a report says that something its handoff names stayed unread or was read in part,
+decide before you act on its status: resume the agent to read it, carry the gap into the handoff of
+the next agent able to judge it, or record an autonomous choice saying why it bears on nothing the
+agent judged. Under `make-change` the status is `done`, `done with concerns`, `questions`,
+`returned`, `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`,
+`questions`, `returned` or `reserved`; under `review-change` it is the report's first line,
+`PASS <sha>`, `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`,
+`done` or `reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its
+command and exit code; a report missing either returns to its agent for repair before dependent
+work, and a claim that tests passed does not repair it (WAY-159). A report that lacks its **Unread
+material** (WAY-326) or its **Searches not found or unclear** (WAY-260), save one returning
+`questions`, or a `make-change` report of `done` or `done with concerns` without its own-work check
+(WAY-164), returns to its agent for repair the same way (WAY-148); `none` is an answer, a missing
+section is not. An agent that returns `questions` gets your answers as step 6 answers the designer's — from an approved source, otherwise, except for
 a reserved choice, the smallest reversible reading that fulfils the task, recorded as an autonomous
 choice — and is resumed, with no mechanical check and no review until it returns its work. `blocked`
 is for a missing fact or permission, and for a question the foundation step leaves to the human:
@@ -302,11 +307,11 @@ contradicts a decision.
         non-empty range from the base to its head, the changed files against the slice's *Change*
         (each path pattern there covers every changed file it matches)
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
-        command and exit code, its **Searches not found or unclear** and its own-work check.
-        Uncommitted work returns to the executor to commit, and a check without its command or exit
-        code, or a report missing either section, returns the report for repair (WAY-148, WAY-159,
-        WAY-164, WAY-260); any other mismatch goes as information to the review that judges the
-        slice and does not return it.
+        command and exit code, its **Unread material**, its **Searches not found or unclear** and
+        its own-work check. Uncommitted work returns to the executor to commit, and a check without
+        its command or exit code, or a report missing one of these sections, returns the report for
+        repair (WAY-148, WAY-159, WAY-164, WAY-260, WAY-326); any other mismatch goes as
+        information to the review that judges the slice and does not return it.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a

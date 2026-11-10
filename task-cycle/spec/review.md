@@ -21,6 +21,8 @@ and report only what the revision broke besides.
 
 ## Return
 
-The reviewer writes its report, each reach included, and **Searches not found or unclear:** each
-thing it looked for and did not find or that was unclear — in the instructions, handoff, task,
-foundation or product code — or `none`, to its own path and returns its first line and that path.
+The reviewer writes its report, each reach included, **Unread material:** each file, foundation
+entry or passage its dispatch names that it did not read whole or read in part, with what it read of
+it, or `none`, and **Searches not found or unclear:** each thing it looked for and did not find or
+that was unclear — in the instructions, handoff, task, foundation or product code — or `none`, to
+its own path and returns its first line and that path.
