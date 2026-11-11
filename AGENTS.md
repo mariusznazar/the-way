@@ -22,5 +22,6 @@ tests report a skill a session would not see.
   `_zadania` folder beside the file the entry names, linked from the task's line. Both are in the
   author's private notes. Where the file or the entry is missing, or an agent cannot open them, it
   asks the human and offers to add the entry to the file.
-- When a task document first reaches `Status: ready for cycle`, set the task's line to Ready,
-  [/], and remove its date, as the author's rules for agent tasks in his notes give.
+- Task rules: the entry `task-rules` under `the-way` in the same locations file. It names the
+  author's rules for a task's line: its status when new, its move to ready, its dependencies. A
+  missing entry or file is handled as for the tasks.

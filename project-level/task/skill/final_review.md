@@ -24,6 +24,7 @@ that document, then wait. Acceptance of candidates, Human-action placement or an
 not this acceptance. Keep `Status: waiting for human` until it is given, including a task with no
 candidates. Apply requested changes and show the complete revised document again. In manual mode
 mark `Status: ready for cycle` only after this acceptance and all applicable checks pass
-(WAY-124), then update the task's entry in the backlog as the section `## Backlog` of the
-product root `AGENTS.md` gives, found as `project-level/backlog_place.md` gives. For the orchestrated handoff and status, follow `orchestrated_mode.md`. No definition
-awaiting its gate permits readiness.
+(WAY-124), then move the task's entry in the backlog to ready as `project-level/task_line.md`
+gives, by the rules of the task place that the section `## Backlog` of the product root
+`AGENTS.md` names, found as `project-level/backlog_place.md` gives. For the orchestrated handoff
+and status, follow `orchestrated_mode.md`. No definition awaiting its gate permits readiness.

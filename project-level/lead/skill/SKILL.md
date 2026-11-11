@@ -18,8 +18,9 @@ project skill with the `the-way-` prefix, never a personal copy.
 
 ## 0. Read and recover
 
-- Resolve the product repository, its root `AGENTS.md` and `## Backlog` locations (a place in the
-  locations file as `project-level/backlog_place.md` gives), the original
+- Resolve the product repository, its root `AGENTS.md` and `## Backlog` locations, the rules of the
+  task place included (a place in the locations file as `project-level/backlog_place.md` gives),
+  the original
   plan, its definition and linked task documents. Do not infer the product from the plan's parent
   directory or the process checkout. Read `project-level/plan/template.md`,
   `project-level/task/template.md`, `project-level/lead/conversation_template.md`,
@@ -100,7 +101,10 @@ project skill with the `the-way-` prefix, never a personal copy.
    on separate task documents/conversations. Supply only its conversation path and minimal
    actor/stage routing. Requirements and answers travel through files, never relayed in prompts.
    Permit one writer per file; refiners edit no shared plan, definition or foundation and launch
-   no children. You perform all child dispatches their borrowed workflows request.
+   no children. The one file that several refiners write in the same minutes is the task place:
+   each makes its task's line in the turn that first creates its document, as
+   `project-level/task_line.md` gives, and you set no order between those writes (WAY-154). You
+   perform all child dispatches their borrowed workflows request.
    For a refiner's *Child-work request* for a run of the step that settles technology (WAY-267),
    in any turn of a round, one resumed from the conversation files included, read
    `technology_run.md` beside this skill.
@@ -164,10 +168,12 @@ do not repeat an already settled human choice unless its meaning or source chang
   present the complete revised document again, never edit its body yourself.
 - Record the human's acceptance in its conversation first, with path and revision/content identity
   of the exact complete document. Only then change its `Status:` to `ready for cycle`, update the
-  plan State and Document link, and log the acceptance with reason (WAY-154). Check the resulting
-  link and run `plan_check.py`. If interrupted between writes, compare recorded acceptance with
-  the actual document, allowing only the intended Status change; finish missing writes only if
-  that acceptance still applies and the readiness checks still hold. A changed body needs renewed
+  plan State and Document link, move the task's line in the task place to ready as
+  `project-level/task_line.md` gives, and log the acceptance with reason (WAY-154). Check the
+  resulting link and run `plan_check.py`. If interrupted between writes, compare recorded
+  acceptance with the actual document, allowing only the intended Status change; finish missing
+  writes, the line's among them, only if that acceptance still applies and the readiness checks
+  still hold. A changed body needs renewed
   acceptance, not a reconstructed approval.
 - Before deleting the exact conversation file, verify all resolved answers, original sources,
   the ways the human did not choose, accepted candidate meanings and required information survive

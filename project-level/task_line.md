@@ -27,7 +27,8 @@ The rules give the form of the identifier — its characters, and that it is una
 place. The-way gives its derivation, so that a refiner can write the identifier of another task
 before that task's line exists, from the plan and the task's name in the plan alone: the plan's file
 name without its extension, joined by `-` to the task's name in the plan, in lower case, each run of
-other characters than lower-case letters, digits and `-` turned into one `-`, none at either end.
+characters other than lower-case letters and digits, hyphens included, turned into one `-`, none at
+either end.
 The task `forest-on-hex-grid` of the plan file `player-game.md` has the identifier
 `player-game-forest-on-hex-grid`. A task that belongs to no plan has no identifier from the-way; a
 line of it takes one only where the rules require it.

@@ -19,9 +19,11 @@ examples and recommendations are never human decisions. Sections without materia
 - A refiner follows `project-level/task/skill/SKILL.md` in orchestrated mode. Only it creates or
   changes this task document's body. It writes its numbered turn, questions and human material,
   checks sources and copies resolved answers with provenance and the ways the human did not choose
-  into the task's Questions to settle.
+  into the task's Questions to settle. In the turn that first creates the document it also makes
+  the task's line in the backlog, where none stands, as `project-level/task_line.md` gives, in
+  parallel with the other refiners and with no queue of writes (WAY-154).
   It never writes the shared plan, definition or foundation, asks the human, starts a child agent,
-  launches implementation or records its own recommendation as acceptance.
+  launches implementation, moves a line to ready or records its own recommendation as acceptance.
 - The answering agent follows `project-level/lead/answering.md`. It fills answers below questions
   and prepares human questions in these files; it edits no task document, plan or foundation.
 - The project orchestrator records the human's words, question IDs and explicit acceptance or
@@ -139,7 +141,8 @@ a refiner result or claiming readiness.
 
 Record human acceptance of the exact complete document before any final status writes. The
 project orchestrator then changes only its `Status:` line to `ready for cycle`, updates the plan's
-State/Document cells and logs acceptance; it changes no task body. A requested correction returns
+State/Document cells, moves the task's line in the backlog to ready and logs acceptance; it changes
+no task body. A requested correction returns
 to a fresh refiner and a changed document needs renewed complete-document acceptance. No task
 becomes ready while a definition gate is open or a required refinement check remains unmet.
 
