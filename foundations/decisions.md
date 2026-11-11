@@ -4445,19 +4445,21 @@ changes the task document's body and transfers settled answers with their source
 human did not choose (WAY-134) into Questions to settle, and it writes besides what the project
 orchestrator's order asks of it: in the turn in which it first creates the task document, or in the
 first later turn that can where that turn could not, the line of its task in the backlog the product
-names (WAY-107), where none stands, with the dependencies the plan gives the task, at the same time
-as the other refiners of the round and with no queue between their writes; the plan, the definition
-and the foundation stay outside a refiner, and no agent other than the project orchestrator, after
-the human's word, takes a step that belongs to acceptance, which is moving the line to ready and
-`ready for cycle`; the project orchestrator records human answers in conversations, owns ordinary
-plan updates and their log, brings the dependencies in the task lines in step with the plan when the
-plan's dependencies change, and after the human has accepted a complete task document, one document
-at a time, changes that document's Status line and moves the task's line to ready, making it already
-ready where none stands. Agent turns, questions and explicit waits keep the plan task to refine, a
-presented human package or ready for approval makes it waiting for human, and final acceptance makes
-both document and plan ready for cycle and removes only that conversation after all settled answers,
-their sources and the ways not chosen survive in the task document; an explicit wait is logged and
-its task is proposed again when the named prerequisite is done.
+names (WAY-107), where none stands, with the dependencies the plan gives the task, and, as the rules
+of the task place give, brings the lines of the tasks tied to its task into agreement with the
+plan's dependencies, at the same time as the other refiners of the round and with no queue between
+their writes; the plan, the definition and the foundation stay outside a refiner, and no agent other
+than the project orchestrator, after the human's word, takes a step that belongs to acceptance,
+which is moving the line to ready and `ready for cycle`; the project orchestrator records human
+answers in conversations, owns ordinary plan updates and their log, brings the dependencies in the
+task lines in step with the plan when the plan's dependencies change, and after the human has
+accepted a complete task document, one document at a time, changes that document's Status line and
+moves the task's line to ready, making it already ready where none stands. Agent turns, questions
+and explicit waits keep the plan task to refine, a presented human package or ready for approval
+makes it waiting for human, and final acceptance makes both document and plan ready for cycle and
+removes only that conversation after all settled answers, their sources and the ways not chosen
+survive in the task document; an explicit wait is logged and its task is proposed again when the
+named prerequisite is done.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -4467,15 +4469,19 @@ its task is proposed again when the named prerequisite is done.
   - complies: parallel refiners write separate documents, and each, in its first turn that creates
     its document, also writes its task's line, with the dependencies of the plan's row, while the
     others do the same; a refiner whose first turn ended on a question about the task place's rules
-    writes the line in the first later turn that can; a fresh refiner keeps each settled answer and
-    source; the project orchestrator, on the human's acceptance of a document, changes its Status
-    line, the plan's row and the task's line together, making the line, already ready, where none
-    stands; and interrupted acceptance resumes without guessing human agreement;
+    writes the line in the first later turn that can; a refiner that finds the line of a task
+    waiting on its own task without the dependency on it brings that line into agreement as the
+    rules of the task place give, and one that finds no line for a tied task makes none; a fresh
+    refiner keeps each settled answer and source; the project orchestrator, on the human's
+    acceptance of a document, changes its Status line, the plan's row and the task's line together,
+    making the line, already ready, where none stands; and interrupted acceptance resumes without
+    guessing human agreement;
   - violates: the project orchestrator rewrites a task body or carries questions in prompts, an
     agent's readiness stands for human acceptance, a refiner moves its line to ready or writes
     `ready for cycle`, a refiner writes the plan, the definition or the foundation because a
-    dispatch asked it to, a round's refiners wait for one another to write their lines, or cleanup
-    loses the only settled answer or the only record of the ways the human did not choose.
+    dispatch asked it to, a round's refiners wait for one another to write their lines, a refiner
+    makes the line of a tied task that has none, or cleanup loses the only settled answer or the
+    only record of the ways the human did not choose.
 - **Origin:** none
 
 *Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
@@ -4487,11 +4493,12 @@ that makes the document, where the context for it is at hand, and the human's wo
 line to ready. The price taken: the rule is no longer checked by asking whether a refiner wrote
 outside its document, but by what the orchestrator ordered, so a line is lost silently when an order
 leaves it out. The refiners of a round write their lines in the same minutes, and two writes to the
-one backlog file in the same instant can lose a line, a risk accepted because it is small and shows
-afterwards as a task with no line. The dependencies a line carries are a second copy of the plan's,
-which WAY-144 calls a copy that drifts as soon as one dependency changes, and the project
-orchestrator keeps it in step with the plan; that cost is accepted so that the view of tasks shows
-what waits on what.
+one backlog file in the same instant can lose a line, or two refiners that bring the same tied line
+into agreement can leave one write of it, a risk accepted because it is small and shows afterwards
+as a task with no line or a line missing a field. The dependencies a line carries are a second copy
+of the plan's, which WAY-144 calls a copy that drifts as soon as one dependency changes, and the
+project orchestrator keeps it in step with the plan; that cost is accepted so that the view of tasks
+shows what waits on what.
 *Rejected:* conversation contents relayed in prompts — each transfer repeats context and can lose
 answers; retaining the temporary exchange as the task result — later work reconstructs settlements
 from discussion; deleting the exchange before durable transfer — provenance disappears; the project
