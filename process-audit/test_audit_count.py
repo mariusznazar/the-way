@@ -19,6 +19,31 @@ GIT_ENV = dict(os.environ, GIT_AUTHOR_NAME="Tester", GIT_AUTHOR_EMAIL="tester@ex
 PIN = "0123456789abcdef0123456789abcdef01234567"
 BASE = "89abcdef0123456789abcdef0123456789abcdef"
 
+# The register of problems, as the template gives it; the tests add rows under its headers.
+TEMPLATE = (HERE / "problem_register.md").read_text(encoding="utf-8")
+CLASSES_HEADER = "| Class | Meaning | Added | Withdrawn |\n|---|---|---|---|\n"
+ISSUES_HEADER = "| Issue | What | Fate | Fix |\n|---|---|---|---|\n"
+PROBLEMS_HEADER = ("| Repository | Record | Stages | What | Class | Weight | Issue |\n"
+                   "|---|---|---|---|---|---|---|\n")
+
+
+def register_text(classes=(), issues=(), problems=()) -> str:
+    """The template of the register with rows added under the headers of its tables."""
+    text = TEMPLATE
+    for header, rows in ((CLASSES_HEADER, classes), (ISSUES_HEADER, issues),
+                         (PROBLEMS_HEADER, problems)):
+        assert text.count(header) == 1, header
+        text = text.replace(header, header + "".join(row + "\n" for row in rows))
+    return text
+
+
+def issue_row(name, fate="open", fix="none") -> str:
+    return f"| {name} | the matter | {fate} | {fix} |"
+
+
+def problem_row(repository, record, issue="none", cls="process-remark", weight="Minor") -> str:
+    return f"| {repository} | {record} | author · reviewer | a lapse | {cls} | {weight} | {issue} |"
+
 
 def record(pin_line=f"- Process pin: `{PIN}`", remarks="- Process remarks on the-way: none",
            extra=""):
@@ -131,7 +156,7 @@ class AuditCountCase(unittest.TestCase):
         self.results = self.home / "results"
         self.results.mkdir()
         self.register = self.home / "register.md"
-        self.register.write_text("# Register of problems\n", encoding="utf-8")
+        self.register.write_text(TEMPLATE, encoding="utf-8")
         self.locations = self.home / "locations.json"
 
     def tearDown(self):
@@ -936,6 +961,242 @@ class Cost(AuditCountCase):
         self.assertEqual(2, done.returncode, done.stdout + done.stderr)
         self.assertIn("twice", done.stderr.decode("utf-8"))
         self.assertEqual([], list(self.results.iterdir()))
+
+
+class RegisterCount(AuditCountCase):
+    """The register of problems counted against the cycles (WAY-329, WAY-332 to WAY-335)."""
+
+    def use_register(self, **rows) -> None:
+        self.register.write_text(register_text(**rows), encoding="utf-8")
+
+    def the_way_with_a_fix(self):
+        """A checkout of the-way: the fix commit, a commit that holds it, and one that does not."""
+        way = self.repository("the-way")
+        start = way.commit({"README.md": "the-way\n"}, "Start")
+        fix = way.commit({"README.md": "the-way, fixed\n"}, "Fix the process", start)
+        with_fix = way.commit({"README.md": "the-way, later\n"}, "Later change", fix)
+        without = way.commit({"README.md": "the-way, other\n"}, "Other change", start)
+        way.branch("main", with_fix)
+        return way, fix, with_fix, without
+
+    def test_a_fixed_issue_counts_apart_the_cycles_whose_pin_holds_the_fix(self):
+        way, fix, with_fix, without = self.the_way_with_a_fix()
+        product = self.repository()
+        holding, removed = product.cycle(
+            "holds-task", {"cycle.md": record(pin_line=f"- Process pin: `{with_fix}`")})
+        lacking, _ = product.cycle(
+            "lacks-task", {"cycle.md": record(pin_line=f"- Process pin: `{without}`")},
+            parent=removed)
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", holding, "fixed-one"),
+                                    problem_row("product", lacking, "fixed-one")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "1", "1", "0", "0"]], self.rows("Fixed issues"))
+
+    def test_the_template_with_no_rows_counts_nothing_and_refuses_nothing(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
+        self.assertEqual([], self.rows("Fixed issues"))
+        self.assertEqual([], [row for row in self.rows("Unknown values")
+                              if row[2].startswith("row ")])
+
+    def test_a_problem_whose_repository_is_not_read_stays_unknown(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(problems=[problem_row("ghost", added)])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertIn(["ghost", added, "row 1 of `Problems`"],
+                      [row[:3] for row in self.rows("Unknown values")])
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
+
+    def test_crafted_rows_of_the_register_are_refused_with_a_reason_and_the_rest_counted(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(
+            classes=["| Not Lower | x | start | none |", "| dated-class | x | 2026-02-30 | none |",
+                     "| evil\x1b[2J-class | x | start | none |",
+                     "| " + "a" * 200_000 + " | x | start | none |"],
+            issues=[issue_row("good-issue"), "| bad-fix | the matter | fixed | 1234567 |"],
+            problems=[problem_row("product", added, "good-issue"),
+                      problem_row("product", added, "good-issue", cls="no-such-class"),
+                      problem_row("product", "nothex", "good-issue"),
+                      problem_row("product", added, "good-issue", weight="Blocker"),
+                      problem_row("product", added, "bad-fix"),
+                      problem_row("product", added, "missing-issue"),
+                      problem_row("r" * 200_000, added, "good-issue")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        unknown = self.rows("Unknown values")
+        self.assertEqual([f"row {number} of `Classes`" for number in range(1, 5)],
+                         [row[2] for row in unknown if row[2].endswith("`Classes`")])
+        self.assertIn("row 2 of `Issues`", [row[2] for row in unknown])
+        self.assertEqual([f"row {number} of `Problems`" for number in range(2, 8)],
+                         [row[2] for row in unknown if row[2].endswith("`Problems`")])
+        self.assertTrue(all(len(cell) < 1000 for row in unknown for cell in row), unknown)
+        self.assertEqual([[ "product", added, "process-remark", "0", "1", "0", "0"]],
+                         self.rows("Problems by cycle"))
+        self.assertEqual(["good-issue"], [row[0] for row in self.rows("Open issues")])
+
+    def test_a_class_named_in_two_rows_refuses_both_and_its_problems_with_it(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(classes=["| process-remark | again | start | none |"],
+                          problems=[problem_row("product", added)])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(["row 1 of `Classes`", "row 8 of `Classes`"],
+                         [row[2] for row in self.rows("Unknown values")
+                          if row[2].endswith("`Classes`")])
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
+        self.assertIn(["product", added, "row 1 of `Problems`",
+                       "the class is not in the list of classes"],
+                      [row[:4] for row in self.rows("Unknown values")])
+
+    def test_a_long_run_of_blanks_in_a_class_name_does_not_stall_the_count(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(classes=["| a" + " " * 150_000 + "b | x | start | none |"])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11", timeout=60)
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
+
+    def test_a_table_missing_from_the_register_is_an_error_of_the_register(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.assertEqual(1, TEMPLATE.count("## Issues\n"))
+        self.register.write_text(TEMPLATE.replace("## Issues\n", "## Issue list\n"), encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(1, done.returncode, done.stderr)
+        error = done.stderr.decode("utf-8")
+        self.assertIn("Error: the register of problems", error)
+        self.assertIn("## Issues", error)
+        self.assertIn(["the-way", "none", "table `Issues`"],
+                      [row[:3] for row in self.rows("Unknown values")])
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
+
+    def test_a_register_larger_than_the_cap_stops_the_run_with_nothing_written(self):
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record()})
+        self.register.write_text(TEMPLATE + "x" * 4_200_000, encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(2, done.returncode)
+        self.assertIn(b"Error: ", done.stderr)
+        self.assertEqual([], list(self.results.iterdir()))
+
+    def test_open_issues_wait_from_the_cycle_commit_to_the_day_of_the_run(self):
+        product = self.repository()
+        start = product.commit({"README.md": "a product\n"}, "Start")
+        # 1760000000 is 2025-10-09 in UTC.
+        added = product.commit_dated({"README.md": "a product\n",
+                                      "docs/task-cycles/slow-task/cycle.md": record()},
+                                     start, "1760000000")
+        removed = product.commit({"README.md": "a product\n"}, "Remove the record", added)
+        product.branch("main", removed)
+        self.use_register(issues=[issue_row("slow-one")],
+                          problems=[problem_row("product", added, "slow-one")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2025-10-19")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["slow-one", "1", "1", "0", "10"]], self.rows("Open issues"))
+        done = self.run_count("--today", "2025-10-08")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual("unknown", self.rows("Open issues")[0][4])
+
+    def test_open_issues_are_listed_in_the_register_order_not_by_their_returns(self):
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record()})
+        second, removed = product.cycle("b-task", {"cycle.md": record()}, parent=removed)
+        third, _ = product.cycle("c-task", {"cycle.md": record()}, parent=removed)
+        self.use_register(issues=[issue_row("first-issue"), issue_row("second-issue")],
+                          problems=[problem_row("product", first, "first-issue"),
+                                    problem_row("product", second, "second-issue"),
+                                    problem_row("product", third, "second-issue")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["first-issue", "1", "1", "0"], ["second-issue", "2", "2", "0"]],
+                         [row[:4] for row in self.rows("Open issues")])
+
+    def test_a_cycle_committed_again_counts_its_problem_once(self):
+        product = self.repository()
+        first, removed = product.cycle("fixed-task", {"cycle.md": record()})
+        again, _ = product.cycle("fixed-task", {"cycle.md": record(
+            remarks="- Process remarks on the-way:\n  - author: one\n")}, parent=removed)
+        self.use_register(problems=[problem_row("product", again)])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", first, "process-remark", "0", "1", "0", "0"]],
+                         self.rows("Problems by cycle"))
+
+    def test_an_unknown_pin_or_a_pin_the_history_lacks_is_unknown_for_its_side(self):
+        way, fix, with_fix, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        no_pin, removed = product.cycle("no-pin-task",
+                                        {"cycle.md": record(pin_line="- Process pin: none")})
+        lacking, removed = product.cycle(
+            "lacking-task", {"cycle.md": record(
+                pin_line="- Process pin: `fedcba9876543210fedcba9876543210fedcba98`")},
+            parent=removed)
+        holding, _ = product.cycle("holding-task",
+                                   {"cycle.md": record(pin_line=f"- Process pin: `{with_fix}`")},
+                                   parent=removed)
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", no_pin, "fixed-one"),
+                                    problem_row("product", lacking, "fixed-one"),
+                                    problem_row("product", holding, "fixed-one")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "1", "0", "2", "0"]], self.rows("Fixed issues"))
+        reasons = [row[3] for row in self.rows("Unknown values")
+                   if row[:3] == ["product", lacking, "Process pin"]]
+        self.assertEqual(1, len(reasons), reasons)
+        self.assertIn("lacks commit", reasons[0])
+
+    def test_a_fix_the_history_lacks_leaves_its_issue_unknown(self):
+        way, _, with_fix, _ = self.the_way_with_a_fix()
+        missing = "1234567890abcdef1234567890abcdef12345678"
+        product = self.repository()
+        holding, _ = product.cycle("holding-task",
+                                   {"cycle.md": record(pin_line=f"- Process pin: `{with_fix}`")})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", missing)],
+                          problems=[problem_row("product", holding, "fixed-one")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", missing, "unknown", "unknown", "0", "0"]],
+                         self.rows("Fixed issues"))
+        reasons = [row[3] for row in self.rows("Unknown values")
+                   if row[2] == "the fix of issue `fixed-one`"]
+        self.assertEqual(1, len(reasons), reasons)
+        self.assertIn("lacks commit", reasons[0])
 
 
 class Run(AuditCountCase):

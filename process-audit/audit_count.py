@@ -1,14 +1,17 @@
 """The counting command of the audit of the process: the cycles whose records the user's
 repositories hold in their history, and for each the version of the-way it ran on, its number of
-process remarks and its times (WAY-329, WAY-331, WAY-337, WAY-340).
+process remarks and its times (WAY-329, WAY-331, WAY-337, WAY-340); and the problems of the user's
+register of problems counted against those cycles (WAY-329, WAY-332 to WAY-335).
 
 Usage:
 
-    python -B process-audit/audit_count.py [--locations FILE] [--repository KEY ...]
+    python -B process-audit/audit_count.py [--locations FILE] [--repository KEY ...] [--today DATE]
 
 In a product, the path starts with `.the-way/`. The command asks nothing and reads nothing from
 stdin, and git runs with its terminal prompt off, so that a system scheduler can start it with no
-human present and stdin closed or empty.
+human present and stdin closed or empty. DATE, written YYYY-MM-DD, is the day of the run, which
+the days of waiting count to; the default is today in UTC, so that the same input and the same
+DATE give the same bytes.
 
 The places it needs are entries of the user's locations file (WAY-320), read as
 `project-level/backlog_place.md` reads an entry; FILE defaults to `~/.the-way/locations.json`:
@@ -77,7 +80,27 @@ their text reaches the result only as a commit, a number or a time it was read a
 a key on one line with each control character and each bar written as `\\x..`, so that no cell of
 a table holds a bar; no path written in them is followed, and nothing of them is run. A commit
 dated outside the years the platform reads gives *Committed* `unknown`. Git runs only to read:
-`rev-parse`, `log`, `diff-tree`, `ls-tree` and `cat-file`.
+`rev-parse`, `log`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
+
+The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
+gives: four tables, *Classes*, *Weights*, *Issues* and *Problems*, found by their headings and header
+rows. A table missing, a row that does not read, an unknown class or weight, an issue in no row of
+*Issues*, a doubled name, a *Fix* that is no commit or a date that is no date refuses that row or
+table with a reason, and what depends on it is `unknown`; a table missing is an `Error:` of the
+register on stderr, with exit 1. A problem whose cycle no named repository holds is `unknown`, not
+dropped. A problem is counted once, by its row (WAY-333); a cycle copied again after a correction
+is one cycle, and its problems are counted once.
+
+For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
+problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
+does not hold it, never by date: the holding is `git merge-base --is-ancestor <fix> <pin>` in the
+checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
+short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a pin
+`unknown` gives `unknown` with its reason (WAY-334). For each issue whose *Fate* is `open`, the number
+of cycles in which its problems stand, and the days it has waited: from the commit date of the
+earliest of those cycles to the day of the run, `unknown` where a problem's cycle is not read. An
+issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
+register, never ranked by their counts (WAY-335).
 
 The result is Markdown in UTF-8 with LF line ends, the same bytes for the same input, written to
 `count-<YYYY-MM-DD>.md`, the date of the run, and `count-latest.md` in the directory of
@@ -85,14 +108,16 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
-number of fix rounds and the share of the cost in them. On stdout it names the two files and the
-counts.
+number of fix rounds and the share of the cost in them. The sections *Problems by cycle*, *Fixed
+issues*, *Open issues* and *Dropped issues* give the register's counts, and sit before *Unknown
+values*. On stdout it names the two files and the counts.
 
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
-read, named in the result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and
-nothing written, when an argument is wrong, the locations file, the price list or an entry it needs
-is missing or wrong, the result directory lies inside a repository to read, or the result cannot be
-written.
+read, or a table of the register missing, named in the result and in an `Error:` line on stderr; 2
+with `Error: <message>` on stderr and nothing written, when an argument is wrong, the locations
+file, the price list, the register or an entry it needs is missing or wrong, the register is larger
+than 4 MiB or not UTF-8, the result directory lies inside a repository to read, or the result cannot
+be written.
 
 Standard library only.
 """
@@ -105,6 +130,7 @@ import os
 import re
 import subprocess
 import sys
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -305,21 +331,28 @@ class Git:
     def __init__(self, repository: Path):
         self.repository = repository
 
-    def run(self, *arguments: str) -> bytes:
+    def execute(self, arguments: tuple[str, ...]) -> subprocess.CompletedProcess:
         environment = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never",
                            GIT_OPTIONAL_LOCKS="0")
         try:
-            result = subprocess.run(
+            return subprocess.run(
                 ["git", "--no-pager", "-c", "core.fsmonitor=false", "-C", str(self.repository),
                  *arguments], stdin=subprocess.DEVNULL, capture_output=True,
                 timeout=GIT_TIMEOUT, env=environment)
         except (OSError, subprocess.TimeoutExpired) as error:
             raise GitError(f"git {arguments[0]}: {display(error)}") from None
+
+    def run(self, *arguments: str) -> bytes:
+        result = self.execute(arguments)
         if result.returncode != 0:
             detail = result.stderr.decode("utf-8", errors="replace").strip()
             raise GitError(f"git {arguments[0]} failed ({result.returncode}): "
                            f"{display(detail)}")
         return result.stdout
+
+    def code(self, *arguments: str) -> int:
+        """The exit code of git run to read, for a command whose exit code is its answer."""
+        return self.execute(arguments).returncode
 
 
 # Reading a cycle
@@ -922,6 +955,400 @@ def read_repository(key: str, path: Path, prices: Prices) -> Read:
     return result
 
 
+# The register of problems
+
+# The four tables of the register, each under its heading, with the header row the template gives.
+REGISTER_TABLES = (
+    ("Classes", ["Class", "Meaning", "Added", "Withdrawn"]),
+    ("Weights", ["Weight", "Meaning"]),
+    ("Issues", ["Issue", "What", "Fate", "Fix"]),
+    ("Problems", ["Repository", "Record", "Stages", "What", "Class", "Weight", "Issue"]),
+)
+# The scale of weight has these four levels and no other (WAY-332).
+LEVELS = ["no problem", "Minor", "Important", "Critical"]
+FATES = ["open", "fixed", "dropped"]
+FIXED = "fixed"
+START = "start"
+NONE = "none"
+NAME_LENGTH = 80
+# Lower-case letters and digits in words joined by single hyphens: each hyphen must stand between
+# two runs of them, so the pattern takes one way through any text and cannot backtrack.
+NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+DATE_TEXT = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+FULL_HASH = re.compile(r"[0-9a-fA-F]{40}")
+# A commit as the records write it, in lower-case hexadecimal characters only, so that no value
+# given to git begins with `-`.
+SHORT_HASH = re.compile(r"[0-9a-f]{7,40}")
+# A text copied from the register into the result is cut to this many characters.
+TEXT_CAP = 200
+
+
+@dataclass
+class Problem:
+    """A row of the table *Problems* that the checks accept."""
+    number: int
+    repository: str
+    record: str
+    cls: str
+    weight: str
+    issue: str
+
+
+@dataclass
+class Register:
+    """What the register gives: its classes and issues in the order of their tables, the problems
+    that pass the checks, and each refused row or table with its reason."""
+    classes: list[str] = field(default_factory=list)
+    issues: list[tuple[str, str, str]] = field(default_factory=list)
+    problems: list[Problem] = field(default_factory=list)
+    refused: list[tuple[str, str, str, str]] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
+
+    def refuse(self, value: str, why: str, repository: str = THE_WAY, record: str = "none") -> None:
+        self.refused.append(tuple(text[:TEXT_CAP] for text in (repository, record, value, why)))
+
+
+def valid_name(text: str) -> bool:
+    return len(text) <= NAME_LENGTH and NAME.fullmatch(text) is not None
+
+
+def valid_date(text: str) -> bool:
+    if DATE_TEXT.fullmatch(text) is None:
+        return False
+    try:
+        date.fromisoformat(text)
+    except ValueError:
+        return False
+    return True
+
+
+def check_class(cells: list[str]) -> tuple[str, str | None]:
+    name = cells[0]
+    if not valid_name(name) or name == NONE:
+        return name, "the class name is not lower-case letters, digits and hyphens, or it is `none`"
+    if cells[2] != START and not valid_date(cells[2]):
+        return name, "the column Added is neither `start` nor a date written YYYY-MM-DD"
+    if cells[3] != NONE and not valid_date(cells[3]):
+        return name, "the column Withdrawn is neither `none` nor a date written YYYY-MM-DD"
+    return name, None
+
+
+def check_weight(cells: list[str]) -> tuple[str, str | None]:
+    if cells[0] not in LEVELS:
+        return cells[0], "the weight is not one of the four levels"
+    return cells[0], None
+
+
+def check_issue(cells: list[str]) -> tuple[str, str | None]:
+    name, fate, fix = cells[0], cells[2], cells[3]
+    if not valid_name(name) or name == NONE:
+        return name, "the issue name is not lower-case letters, digits and hyphens, or it is `none`"
+    if fate not in FATES:
+        return name, "the fate is not `open`, `fixed` or `dropped`"
+    if fate == FIXED and FULL_HASH.fullmatch(fix) is None:
+        return name, "the Fix of a fixed issue is no commit of 40 hexadecimal characters"
+    if fate != FIXED and fix != NONE:
+        return name, "the Fix of an issue that is not fixed must read `none`"
+    return name, None
+
+
+def named_rows(register: Register, title: str, rows: list[list[str]], width: int,
+               check) -> list[tuple[str, int, list[str]]]:
+    """The rows of one table that pass `check`, as (name, row number, cells) in table order. A row
+    of the wrong width or refused by `check` is refused with its reason; a name written in two
+    rows refuses both of them."""
+    kept = []
+    for number, cells in enumerate(rows, 1):
+        value = f"row {number} of `{title}`"
+        if len(cells) != width:
+            register.refuse(value, f"the row has {len(cells)} cells, not {width}")
+            continue
+        name, why = check(cells)
+        if why:
+            register.refuse(value, why)
+            continue
+        kept.append((name, number, cells))
+    count = Counter(name for name, _, _ in kept)
+    valid = []
+    for name, number, cells in kept:
+        if count[name] > 1:
+            register.refuse(f"row {number} of `{title}`", "the name is written in two rows")
+        else:
+            valid.append((name, number, cells))
+    return valid
+
+
+def register_table(lines: list[str], fenced: list[bool], title: str,
+                   columns: list[str]) -> tuple[list[list[str]] | None, str | None]:
+    """The rows of the table under the heading `## <title>`, or None with the reason. The table
+    starts at the first line that begins with `|` before the next heading, and its header row must
+    be `columns`; its rows run on until a line that does not begin with `|`."""
+    headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
+                if not inside and line.strip() == f"## {title}"]
+    if len(headings) != 1:
+        return None, (f"the register holds the heading `## {title}` "
+                      + ("more than once" if headings else "not at all"))
+    start = None
+    for index in range(headings[0] + 1, len(lines)):
+        if fenced[index]:
+            continue
+        if lines[index].startswith("## "):
+            break
+        if lines[index].startswith("|"):
+            start = index
+            break
+    if start is None:
+        return None, f"the table `{title}` is missing"
+    if table_cells(lines[start]) != columns:
+        return None, f"the table `{title}` does not have the header row the template gives"
+    separator = start + 1
+    if (separator >= len(lines) or not lines[separator].startswith("|")
+            or not is_separator(table_cells(lines[separator]))):
+        return None, f"the table `{title}` lacks its separator row"
+    rows = []
+    for index in range(separator + 1, len(lines)):
+        if fenced[index] or not lines[index].startswith("|"):
+            break
+        rows.append(table_cells(lines[index]))
+    return rows, None
+
+
+def read_register(path: Path) -> Register:
+    """The register of problems at `path`, read as untrusted input. A file larger than the cap, or
+    not UTF-8, stops the run with nothing written. A table or a row that does not read is refused
+    with its reason, and what depends on it is unknown; a missing table is also an error of the
+    register."""
+    try:
+        with open(path, "rb") as handle:
+            raw = handle.read(MAX_BYTES + 1)
+    except OSError as error:
+        raise AuditCountError("cannot read the register of problems: "
+                              f"{display(error.strerror or error)}") from None
+    if len(raw) > MAX_BYTES:
+        raise AuditCountError(f"the register of problems is larger than {MAX_BYTES} bytes")
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        raise AuditCountError("the register of problems is not UTF-8") from None
+    lines = remarks_check.split_lines(text)
+    fenced = remarks_check.fenced_flags(lines)
+    register = Register()
+    tables: dict[str, list[list[str]] | None] = {}
+    for title, columns in REGISTER_TABLES:
+        rows, why = register_table(lines, fenced, title, columns)
+        if why:
+            register.errors.append(why)
+            register.refuse(f"table `{title}`", why)
+        tables[title] = rows
+    if tables["Classes"] is not None:
+        register.classes = [name for name, _, _ in
+                            named_rows(register, "Classes", tables["Classes"], 4, check_class)]
+    if tables["Weights"] is not None:
+        weights = named_rows(register, "Weights", tables["Weights"], 2, check_weight)
+        if sorted(name for name, _, _ in weights) != sorted(LEVELS):
+            why = "the table `Weights` must name the four levels, each once"
+            register.errors.append(why)
+            register.refuse("table `Weights`", why)
+    if tables["Issues"] is not None:
+        register.issues = [(name, cells[2], cells[3].lower()) for name, _, cells in
+                           named_rows(register, "Issues", tables["Issues"], 4, check_issue)]
+    if tables["Problems"] is not None:
+        class_names = set(register.classes)
+        issue_names = {name for name, _, _ in register.issues}
+        for number, cells in enumerate(tables["Problems"], 1):
+            value = f"row {number} of `Problems`"
+            if len(cells) != 7:
+                register.refuse(value, f"the row has {len(cells)} cells, not 7",
+                                cells[0] if cells else "", cells[1] if len(cells) > 1 else "")
+                continue
+            repository, record, _, _, cls, weight, issue = cells
+            why = None
+            if not repository:
+                why = "the row names no repository"
+            elif FULL_HASH.fullmatch(record) is None:
+                why = "the Record is no commit of 40 hexadecimal characters"
+            elif cls not in class_names:
+                why = "the class is not in the list of classes"
+            elif weight not in LEVELS:
+                why = "the weight is not one of the four levels"
+            elif issue != NONE and issue not in issue_names:
+                why = "the issue is in no valid row of Issues"
+            if why:
+                register.refuse(value, why, repository, record)
+                continue
+            register.problems.append(Problem(number, repository, record.lower(), cls, weight,
+                                             issue))
+    return register
+
+
+class Ancestry:
+    """Whether the checkout of the-way holds a version: the answer of `git merge-base
+    --is-ancestor`, asked of the checkout the entry `repository` under `the-way` names (WAY-334).
+    A git that cannot read the checkout makes every answer unknown, with the reason."""
+
+    def __init__(self, git: Git):
+        self.git = git
+        self.failure: str | None = None
+        self.shallow = False
+        self.commits: dict[str, tuple[str | None, str | None]] = {}
+        self.holdings: dict[tuple[str, str], tuple[bool | None, str | None]] = {}
+        try:
+            self.shallow = git.run("rev-parse", "--is-shallow-repository").strip() == b"true"
+        except GitError as error:
+            self.failure = str(error)
+
+    def commit(self, text: str) -> tuple[str | None, str | None]:
+        """The full hash of the commit that `text` names in the checkout, or None with the reason:
+        the checkout lacks it, a short hash is ambiguous, or it is no commit."""
+        if text not in self.commits:
+            self.commits[text] = self.resolve(text)
+        return self.commits[text]
+
+    def resolve(self, text: str) -> tuple[str | None, str | None]:
+        if self.failure is not None:
+            return None, f"the checkout of the-way could not be read by git: {self.failure}"
+        if SHORT_HASH.fullmatch(text) is None:
+            return None, "the commit is no hexadecimal name of a commit"
+        shallow = " (the checkout is a shallow clone, which may lack it)" if self.shallow else ""
+        try:
+            names = self.git.run("rev-parse", f"--disambiguate={text}").decode("ascii").split()
+            if not names:
+                return None, f"the-way's history lacks commit {text}{shallow}"
+            if len(names) > 1:
+                return None, f"the short hash {text} is ambiguous in the-way's history"
+            if self.git.code("rev-parse", "--verify", "--quiet", f"{names[0]}^{{commit}}") != 0:
+                return None, f"{text} is no commit of the-way's history"
+        except GitError as error:
+            return None, f"git could not read the-way's history: {error}"
+        return names[0], None
+
+    def holds(self, pin: str, fix: str) -> tuple[bool | None, str | None]:
+        """Whether the version `pin` holds the commit `fix`, or None with the reason."""
+        if (pin, fix) not in self.holdings:
+            self.holdings[(pin, fix)] = self.compare(pin, fix)
+        return self.holdings[(pin, fix)]
+
+    def compare(self, pin: str, fix: str) -> tuple[bool | None, str | None]:
+        version, why = self.commit(pin)
+        if version is None:
+            return None, why
+        fixed, why = self.commit(fix)
+        if fixed is None:
+            return None, why
+        try:
+            code = self.git.code("merge-base", "--is-ancestor", fixed, version)
+        except GitError as error:
+            return None, f"git could not compare the version {pin} with the fix: {error}"
+        if code == 0:
+            return True, None
+        if code == 1:
+            if self.shallow:
+                return None, ("the version lacks the fix in a shallow clone of the-way, which may "
+                              "lack its history")
+            return False, None
+        return None, f"git could not compare the version {pin} with the fix (exit code {code})"
+
+
+@dataclass
+class Analysis:
+    """The tables the register adds to the result, as rows of text, and the values it leaves
+    unknown as (repository, record, value, why)."""
+    cycle_rows: list[list[str]]
+    fixed_rows: list[list[str]]
+    open_rows: list[list[str]]
+    dropped_rows: list[list[str]]
+    unknown: list[tuple[str, str, str, str]]
+
+
+def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
+            today: date) -> Analysis:
+    """Count the register's problems against the cycles the reads found: per cycle by class and
+    weight (WAY-333), per fixed issue by whether the pin of its cycles holds the fix (WAY-334), and
+    per open issue the cycles it came back in and the days it has waited (WAY-335)."""
+    cycles = [cycle for read in reads for cycle in read.cycles]
+    index: dict[tuple[str, str], Cycle] = {}
+    for cycle in cycles:
+        index[(cycle.repository, cycle.record)] = cycle
+        for later in cycle.later:
+            index[(cycle.repository, later)] = cycle
+    found = [(problem, index.get((problem.repository, problem.record)))
+             for problem in register.problems]
+    unknown = list(register.refused)
+    counts: dict[tuple[str, str], Counter] = {}
+    for problem, cycle in found:
+        if cycle is None:
+            unknown.append((problem.repository[:TEXT_CAP], problem.record,
+                            f"row {problem.number} of `Problems`",
+                            "no named repository holds the cycle of its record; name its key "
+                            "with --repository"))
+        else:
+            tally = counts.setdefault((cycle.repository, cycle.record), Counter())
+            tally[(problem.cls, problem.weight)] += 1
+    cycle_rows = []
+    for cycle in cycles:
+        mine = counts.get((cycle.repository, cycle.record), Counter())
+        head = [cycle.repository, cycle.record]
+        if not mine:
+            cycle_rows.append(head + [NONE, "0", "0", "0", "0"])
+        for cls in register.classes:
+            tally = [mine[(cls, weight)] for weight in LEVELS]
+            if any(tally):
+                cycle_rows.append(head + [cls] + [str(count) for count in tally])
+    fixed_rows, open_rows, dropped_rows = [], [], []
+    for name, fate, fix in register.issues:
+        members = [(problem, cycle) for problem, cycle in found if problem.issue == name]
+        hit = {(cycle.repository, cycle.record): cycle for _, cycle in members
+               if cycle is not None}
+        not_read = sum(1 for _, cycle in members if cycle is None)
+        if fate == FIXED:
+            fixed, why = ancestry.commit(fix)
+            if fixed is None:
+                unknown.append((THE_WAY, NONE, f"the fix of issue `{name}`", why))
+            holding = lacking = pin_unknown = 0
+            for _, cycle in members:
+                if cycle is None:
+                    continue
+                if cycle.pin is None:
+                    pin_unknown += 1
+                elif fixed is not None:
+                    holds, why = ancestry.holds(cycle.pin, fix)
+                    if holds is None:
+                        pin_unknown += 1
+                        unknown.append((cycle.repository, cycle.record, "Process pin", why))
+                    elif holds:
+                        holding += 1
+                    else:
+                        lacking += 1
+            shown = ["unknown", "unknown"] if fixed is None else [str(holding), str(lacking)]
+            fixed_rows.append([name, fix] + shown + [str(pin_unknown), str(not_read)])
+        elif fate == "open":
+            if not members:
+                days = "—"
+            elif not_read:
+                days = UNKNOWN
+                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
+                                "a problem's cycle is not in the named repositories, so the day "
+                                "it came back first is not known"))
+            elif UNKNOWN in [cycle.committed for cycle in hit.values()]:
+                days = UNKNOWN
+                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
+                                "the commit date of one of its cycles is unknown"))
+            else:
+                first = min(cycle.committed for cycle in hit.values())
+                waited = (today - date.fromisoformat(first)).days
+                if waited < 0:
+                    days = UNKNOWN
+                    unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
+                                    "its earliest cycle is dated after the day of the run"))
+                else:
+                    days = str(waited)
+            open_rows.append([name, str(len(hit)), str(len(members)), str(not_read), days])
+        else:
+            dropped_rows.append([name, str(len(hit)), str(len(members)), str(not_read)])
+    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows,
+                    list(dict.fromkeys(unknown)))
+
+
 # The result
 
 
@@ -949,7 +1376,14 @@ def share_text(value: Decimal | None) -> str:
     return UNKNOWN if value is None else f"{value.quantize(SHARE)}%"
 
 
-def render(reads: list[Read], prices: Prices) -> str:
+def table(header: list[str], rows: list[list[str]]) -> list[str]:
+    """A Markdown table of the header and the rows, every cell written through `cell`."""
+    lines = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
+    lines += ["| " + " | ".join(cell(text) for text in row) + " |" for row in rows]
+    return lines
+
+
+def render(reads: list[Read], prices: Prices, analysis: Analysis) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
         "# Count of the audit of the process",
@@ -1008,6 +1442,50 @@ def render(reads: list[Read], prices: Prices) -> str:
             f"| {share_text(cycle.share)} |")
     lines += [
         "",
+        "## Problems by cycle",
+        "",
+        "The problems of the register by class and weight, each problem once (WAY-333); a cycle "
+        "with no problem has one row, `none`. Problems whose cycle no named repository holds are "
+        "in *Unknown values*.",
+        "",
+    ]
+    lines += table(["Repository", "Record", "Class", "No problem", "Minor", "Important",
+                    "Critical"], analysis.cycle_rows)
+    lines += [
+        "",
+        "## Fixed issues",
+        "",
+        "A fixed issue's problems count apart by whether the *Process pin* of their cycle holds "
+        "the fix, by the commit and never by date (WAY-334). `unknown` where the fix is not in the "
+        "checkout of the-way, and the reasons are in *Unknown values*.",
+        "",
+    ]
+    lines += table(["Issue", "Fix", "Problems in cycles whose pin holds the fix",
+                    "Problems in cycles whose pin lacks it", "Problems with an unknown pin",
+                    "Problems whose cycle is not read"], analysis.fixed_rows)
+    lines += [
+        "",
+        "## Open issues",
+        "",
+        "An open issue's cycles are those its problems stand in. *Days waiting* counts from the "
+        "commit date of the earliest of them to the day of the run; `—` where the issue has no "
+        "problem yet. The issues are in the order of the register, never ranked by their counts "
+        "(WAY-335), and the weighing is the human's.",
+        "",
+    ]
+    lines += table(["Issue", "Cycles in which its problem came back", "Problems",
+                    "Problems whose cycle is not read", "Days waiting"], analysis.open_rows)
+    lines += [
+        "",
+        "## Dropped issues",
+        "",
+        "A dropped issue's problems are counted apart; it has no waiting.",
+        "",
+    ]
+    lines += table(["Issue", "Cycles", "Problems", "Problems whose cycle is not read"],
+                   analysis.dropped_rows)
+    lines += [
+        "",
         "## Unknown values",
         "",
         "| Repository | Record | Value | Why |",
@@ -1016,6 +1494,8 @@ def render(reads: list[Read], prices: Prices) -> str:
     for cycle in cycles:
         for value, why in cycle.unknown:
             lines.append(f"| {cell(cycle.repository)} | {cycle.record} | {value} | {cell(why)} |")
+    for repository, record, value, why in analysis.unknown:
+        lines.append(f"| {cell(repository)} | {cell(record)} | {cell(value)} | {cell(why)} |")
     return "\n".join(lines) + "\n"
 
 
@@ -1032,6 +1512,16 @@ def write(folder: Path, name: str, text: str) -> None:
                               f"{display(error.strerror or error)}") from None
 
 
+def day_of(text: str) -> date:
+    """A day written YYYY-MM-DD, for `--today`."""
+    if DATE_TEXT.fullmatch(text) is None:
+        raise argparse.ArgumentTypeError("the day is not written YYYY-MM-DD")
+    try:
+        return date.fromisoformat(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError("the day is no date") from None
+
+
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -1040,10 +1530,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--locations", default=DEFAULT_LOCATIONS, metavar="FILE")
     parser.add_argument("--repository", action="append", default=[], metavar="KEY")
     parser.add_argument("--prices", default=str(PRICES), metavar="FILE")
+    parser.add_argument("--today", type=day_of, default=None, metavar="YYYY-MM-DD")
     try:
         args = parser.parse_args(argv)
+        today = args.today if args.today is not None else datetime.now(timezone.utc).date()
         locations = read_locations(args.locations)
-        entry_path(locations, THE_WAY, REGISTER_ENTRY, "file")
+        register_path = entry_path(locations, THE_WAY, REGISTER_ENTRY, "file")
         results = entry_path(locations, THE_WAY, RESULTS_ENTRY, "directory")
         named = repositories(locations, args.repository)
         for key, path in named.items():
@@ -1053,9 +1545,12 @@ def main(argv: list[str] | None = None) -> int:
                                       f"`{display(key)}`; the result is never written into a "
                                       f"repository")
         prices = read_prices(args.prices)
+        register = read_register(register_path)
+        ancestry = Ancestry(Git(the_way_checkout(locations)))
         reads = [read_repository(key, path, prices) for key, path in named.items()]
-        text = render(reads, prices)
-        dated = f"count-{date.today().isoformat()}.md"
+        analysis = analyse(reads, register, ancestry, today)
+        text = render(reads, prices, analysis)
+        dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)
         write(results, LATEST, text)
     except AuditCountError as error:
@@ -1064,10 +1559,12 @@ def main(argv: list[str] | None = None) -> int:
     failed = [read for read in reads if read.error]
     for read in failed:
         print(f"Error: repository `{display(read.key)}`: {read.error}", file=sys.stderr)
+    for why in register.errors:
+        print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
     count = sum(len(read.cycles) for read in reads)
     print(f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
           f"{len(reads)} repositories.")
-    return 1 if failed else 0
+    return 1 if failed or register.errors else 0
 
 
 if __name__ == "__main__":
