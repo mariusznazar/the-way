@@ -842,9 +842,10 @@ class CodexFilesNamedTest(unittest.TestCase):
             context("10:40:00", "r1", "model-f"),
             {"timestamp": at("10:40:00"), "type": "response_item", "payload": {
                 "type": "message", "role": "user", "content": [
-                    {"type": "input_text", "text": "# AGENTS.md instructions for C:\\repo\n\n"
-                                                   "<INSTRUCTIONS>\nread reports/x.md\n"},
-                    {"type": "input_text", "text": "<environment_context>\n  <cwd>C:\\repo</cwd>"}]}},
+                    {"type": "input_text", "text": "# AGENTS.md instructions for the repository"
+                                                   "\n\n<INSTRUCTIONS>\nread reports/x.md\n"},
+                    {"type": "input_text", "text": "<environment_context>\n  <cwd>the repository"
+                                                   "</cwd>"}]}},
             user_message("10:40:01", "Fix the findings in reports/review_findings.md."),
             tokens("10:41:00", "fresh", "r1", 50, 0, 5),
             complete("10:42:00", "r1"),
