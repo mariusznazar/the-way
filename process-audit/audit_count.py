@@ -837,6 +837,10 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
         if findings:
             return None, "a review round names findings, and their content is not in the record"
         return "no", None
+    if reads_none_first(text):
+        # `none` followed by more words, such as `none — no open design choice`, is not read as a
+        # discarded open design choice either way.
+        return None, "the item `Discarded attempt` opens with none and holds more text"
     if DESIGN_CHOICE in text.casefold():
         return "yes", None
     return None, "the item `Discarded attempt` names neither none nor an open design choice"

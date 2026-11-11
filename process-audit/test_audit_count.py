@@ -1431,6 +1431,19 @@ class ProcessVersions(AuditCountCase):
         plan_reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"]
         self.assertEqual(["the record holds the item `Plan` more than once"], plan_reasons)
 
+    def test_a_discarded_attempt_opening_with_none_is_not_read_as_a_design_choice(self):
+        # `none` with more words names the phrase, but it says nothing was discarded: unknown.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("opens", process_record(v1, discarded="none — no open design choice was discarded"),
+             1_000_000)])
+        self.run_versions(way, product)
+        self.assertEqual("unknown", self.series(1)[0][5])
+        self.assertIn("opens with none",
+                      self.reasons_of(self.rows("Unknown values"), "Discarded attempt"))
+
     def test_a_review_round_with_discarded_none_leaves_the_question_unknown(self):
         # The findings of a round are not in the record, so `none` discarded is not `no`.
         way = self.the_way()
