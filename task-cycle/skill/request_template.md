@@ -246,6 +246,11 @@ order:
     whole; merge anyway?". A reviewer that read whole the decisions concerning the change, ran
     through the rest by title and named none unread gives no item, since that reading is the
     practice (WAY-150).
+15. *A fact an invariant rests on that the foundation does not hold yet* (WAY-71, WAY-287), from the
+    change's diff of the invariants file: each `TODO — <the fact, with its source>` in an
+    invariant's *Rests on* that the change writes, or keeps in an entry it edits, one item in plain
+    words — the rule the invariant states and the fact the foundation lacks — with "Merge with the
+    gap?". A `TODO` in an entry the change does not touch is not the change's and gives no item.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.

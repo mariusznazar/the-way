@@ -323,7 +323,7 @@ contradicts a decision.
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
-        change as step 10 gives, run `task-cycle/cycle_stages.py`, prepare the record's copy as
+        change as step 10 gives, at once, since no return step runs, run `task-cycle/cycle_stages.py`, prepare the record's copy as
         "The record before it is committed" gives and commit it and its removal as step 12 gives,
         then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
@@ -356,7 +356,10 @@ contradicts a decision.
 10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
     included, or the code a revert of that fix leaves, and record its command, exit
     code and the failures it names under *Verification*, with each check that failed or did not
-    run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
+    run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
+    any review of it are done, on the tree they leave: the return step needs no result of the gate,
+    so one run covers both. Where the gate then fails and its fix changes code, the return step
+    compares that fix's range too. The authors' focused checks are not
     rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
     checks again, by the agent that owns them. A check that fails in a cycle run and passes when run
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
