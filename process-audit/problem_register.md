@@ -1,6 +1,6 @@
 # Register of problems
 
-This is the template of the register of problems that the audit of the process reads (WAY-327).
+This is the template of the register of problems that the audit of the process reads (WAY-329).
 Copy it to a place of your own, adapt it to your needs, and let your own tool fill it.
 
 ## How the register is kept
@@ -9,11 +9,11 @@ Copy it to a place of your own, adapt it to your needs, and let your own tool fi
   `the-way` in your locations file, `~/.the-way/locations.json`, names (WAY-320). It never lies in a
   repository: it carries the names of your products and what their cycles reported.
 - Your own tool fills it: a review of the reports of your cycles, made by an agent or by hand. The
-  audit reads the register and gives no problem a class or a weight itself (WAY-327).
+  audit reads the register and gives no problem a class or a weight itself (WAY-329).
 - You adapt the template to your needs: the meaning of a class, the list of classes, the words of
   this text. What the counting command of the audit reads keeps the form the next section gives.
 - A problem is a lapse that the process let through in one cycle. A problem that several stages of
-  one cycle report is one problem: one row, which names every stage that reported it (WAY-331).
+  one cycle report is one problem: one row, which names every stage that reported it (WAY-333).
 - An issue is the one matter that like problems of several cycles make: the problems that one fix of
   the process would remove belong to one issue.
 
@@ -51,10 +51,10 @@ stand, with the columns in their order.
   its row, so that the problems given it earlier stay readable.
 
 The list widens: where a problem fits no class, the list gains one, with the date it is added, and
-the problem is never given the nearest class instead (WAY-330). A change of what a class means is
+the problem is never given the nearest class instead (WAY-332). A change of what a class means is
 written as that class withdrawn and a new class, under a new name, added on the same date. Each date
 in *Added* or *Withdrawn* starts a new series of measures, and the audit compares measures only
-within one series (WAY-336).
+within one series (WAY-338).
 
 ## Weights
 
@@ -66,7 +66,7 @@ within one series (WAY-336).
 | Critical | as the review of a cycle grades a finding Critical: a bug, a security hole, data loss, broken functionality |
 
 The scale has these four levels and gains no other: Minor, Important and Critical are the grades of
-the review of a cycle (WAY-161), and no problem is the level below them (WAY-330). Adapt the
+the review of a cycle (WAY-161), and no problem is the level below them (WAY-332). Adapt the
 meanings, never the levels.
 
 ## Issues
@@ -79,7 +79,7 @@ meanings, never the levels.
 - *Fate*: `open` while no fix is in place, `fixed` once a fix is in the-way, or `dropped` once you
   decide to leave the matter without a fix.
 - *Fix*: for a `fixed` issue, the commit of the-way that holds the fix; otherwise `none`. A cycle
-  whose version of the-way contains that commit ran with the fix, whatever its date (WAY-332).
+  whose version of the-way contains that commit ran with the fix, whatever its date (WAY-334).
 
 ## Problems
 

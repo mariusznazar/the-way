@@ -1,6 +1,6 @@
 """The counting command of the audit of the process: the cycles whose records the user's
 repositories hold in their history, and for each the version of the-way it ran on, its number of
-process remarks and its times (WAY-327, WAY-329, WAY-335, WAY-338).
+process remarks and its times (WAY-329, WAY-331, WAY-337, WAY-340).
 
 Usage:
 
@@ -29,7 +29,7 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
 per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price (WAY-334, WAY-336).
+*Output*, per million tokens; a price cell `—` is a model with no price (WAY-336, WAY-338).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -569,7 +569,7 @@ def token_count(text: str) -> int | None:
 def stage_tokens(lines: list[str],
                  fenced: list[bool]) -> tuple[list[StageTokens] | None, str | None]:
     """The rows of the section of `stages.md` that gives each stage's tokens by model, or None
-    with the reason: an earlier form has no such section (WAY-334)."""
+    with the reason: an earlier form has no such section (WAY-336)."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == STAGES_HEADING]
     if not headings:
@@ -964,7 +964,7 @@ def render(reads: list[Read], prices: Prices) -> str:
         "## Cost",
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
-        "list starts a new one (WAY-336). *Fix rounds* is the number of fix reports the record "
+        "list starts a new one (WAY-338). *Fix rounds* is the number of fix reports the record "
         "names; *Share of the cost in fix rounds* is the cost of the fix stages and of the review "
         "of each fix over the cycle's cost. `unknown` has its reason in *Unknown values*.",
         "",
