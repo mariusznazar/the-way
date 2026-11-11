@@ -1858,7 +1858,7 @@ class ProcessVersions(AuditCountCase):
     def test_a_denial_stands_only_where_it_comes_just_before_the_phrase(self):
         sys.path.insert(0, str(HERE))
         import audit_count
-        import remarks_check
+        remarks_check = audit_count.remarks_check
 
         def read(discarded: str) -> str | None:
             lines = remarks_check.split_lines(f"- Discarded attempt: {discarded}\n")
@@ -1884,7 +1884,7 @@ class ProcessVersions(AuditCountCase):
     def test_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
         sys.path.insert(0, str(HERE))
         import audit_count
-        import remarks_check
+        remarks_check = audit_count.remarks_check
         crafted = (
             ("very long", "open design choice " * 20_000),
             ("very long before", "no " * 200_000 + "open design choice"),
