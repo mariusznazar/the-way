@@ -1,6 +1,7 @@
 """The form of the description of a request a task cycle opens: the headings of
 `task-cycle/skill/request_template.md` in their order and level, content or `none` in each section,
-and the collapsed block that repeats the top part in the task document's language.
+the three group headings of the section for the human's decisions, and the collapsed block that
+repeats the top part in the task document's language.
 
 Usage:
 
@@ -26,7 +27,10 @@ The description is read as the template gives it:
 - a line in fenced code or inside any `<details>` element is never a heading, and only ATX
   headings count;
 - a section, `### Underneath` and the block each hold content: a line that is not blank and not
-  only an HTML comment, `none` included.
+  only an HTML comment, `none` included;
+- `## For you to decide` reads `none` alone, or holds the three `###` headings of DECISION_GROUPS,
+  once each and in that order, each with content or `none`, and no content before the first; it
+  holds no other `###` heading. The block is not held to these headings.
 
 The language of a text is measured by the share of its words that are English function words, from
 a list that leaves out every word that is also a common Polish word; code, URLs, link targets,
@@ -42,9 +46,10 @@ TASK is English, the block reads `none` (WAY-292); where it is not, the block do
 and its text is not English. Where TASK or the block is not judged, no error follows from its
 language.
 
-The script judges no content: not whether the decision section is complete or true, not the plain
-words of the top part, not whether the block says what the top part says or which language other
-than English it is in, not the items of the lower part and not the task's own sections.
+The script judges no content: not whether the decision section is complete or true, not which group
+an item stands in or whether it carries what its group asks, not the plain words of the top part,
+not whether the block says what the top part says or which language other than English it is in,
+not the items of the lower part and not the task's own sections.
 
 Each problem is printed on stdout as `line <n>: <what is wrong and what to write>`, in the order of
 the file, then one summary line naming the sections found and the reading of the languages. Exit
@@ -67,6 +72,9 @@ TOP_HEADINGS = ("What you will see", "For you to decide", "Cost", "How to merge"
 LOWER_HEADINGS = ("Technical changes", "Checks", "Foundation entries", "Minor findings",
                   "Findings outside the task's scope", "Course of the cycle")
 UNDERNEATH = "Underneath"
+# `## For you to decide` reads `none` alone, or holds these three `###` headings in this order.
+DECISIONS = TOP_HEADINGS[1]
+DECISION_GROUPS = ("Needed from you", "Fix or let through", "You accept by merging")
 # The heading the template's skeleton gives in the place of the task's own sections.
 OWN_SECTIONS_PLACEHOLDER = "<…>"
 HEADINGS = TOP_HEADINGS + LOWER_HEADINGS
@@ -250,6 +258,70 @@ def scan_description(text: str) -> list[Line]:
 
 def has_content(text: str) -> bool:
     return any(line.strip() for line in COMMENT.sub("", text).splitlines())
+
+
+def first_content_line(lines: list[Line]) -> int | None:
+    """The number of the first of `lines` that holds content: not blank, not only a comment."""
+    text = "\n".join(line.text for line in lines)
+    text = COMMENT.sub(lambda match: "\n" * match.group().count("\n"), text)
+    for line, kept in zip(lines, text.split("\n")):
+        if kept.strip():
+            return line.number
+    return None
+
+
+def check_decision_groups(lines: list[Line], section: Heading, stop: int,
+                          body: list[Line], problems: list[tuple[int, str]]) -> None:
+    """The form of `## For you to decide`: `none` alone, or the three groups in order, each with
+    content or `none`, with nothing before the first. `body` is the section without its heading
+    and without the block; `stop` is the line that ends the section."""
+    if reads_none("\n".join(line.text for line in body)):
+        return
+    names = " / ".join(f"`### {group}`" for group in DECISION_GROUPS)
+    found = [heading for heading in headings(lines)
+             if heading.level == 3 and section.number < heading.number < stop]
+    if not found:
+        problems.append((section.number, f"`## {section.text}` holds neither `none` alone nor the "
+                                         f"groups; write `none`, or {names}, each with its items "
+                                         f"or `none`"))
+        return
+    before = first_content_line([line for line in body if line.number < found[0].number])
+    if before is not None:
+        problems.append((before, f"text before the first group of `## {section.text}`; write "
+                                 f"the items under a group, and `none` alone only where no "
+                                 f"group has an item"))
+    seen: dict[str, Heading] = {}
+    last = -1
+    for heading in found:
+        name = display(heading.text)
+        if heading.text not in DECISION_GROUPS:
+            problems.append((heading.number, f"`### {name}` is no group of `## {section.text}`; "
+                                             f"the groups are {names}"))
+            continue
+        index = DECISION_GROUPS.index(heading.text)
+        if heading.text in seen:
+            problems.append((heading.number, f"`### {name}` is repeated; it stands once, at line "
+                                             f"{seen[heading.text].number}"))
+            continue
+        if index < last:
+            problems.append((heading.number, f"`### {name}` is out of order; move it before "
+                                             f"`### {DECISION_GROUPS[last]}`"))
+        else:
+            last = index
+        seen[heading.text] = heading
+        later = min((other.number for other in found if other.number > heading.number),
+                    default=stop)
+        group_body = [line for line in body if heading.number < line.number < later]
+        if not has_content("\n".join(line.text for line in group_body)):
+            problems.append((heading.number, f"`### {name}` has no content; write its items, or "
+                                             f"`none`"))
+    for index, name in enumerate(DECISION_GROUPS):
+        if name not in seen:
+            following = [seen[later].number for later in DECISION_GROUPS[index + 1:]
+                         if later in seen]
+            problems.append((min(following, default=stop),
+                             f"`### {name}` is missing from `## {section.text}`; write it there, "
+                             f"with its items or `none`"))
 
 
 def block_content(lines: list[Line], element: Element) -> str:
@@ -439,6 +511,8 @@ def check(description: str, task: str) -> Result:
                 continue
         if not has_content("\n".join(line.text for line in body)):
             problems.append((heading.number, f"`## {name}` has no content; write it, or `none`"))
+        elif heading.text == DECISIONS:
+            check_decision_groups(lines, heading, stop, body, problems)
 
     # The languages of the task and of the block.
     result.task_language, result.task_words = language(task_text(task))
