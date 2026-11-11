@@ -717,11 +717,11 @@ precedence can be recorded between them.
 
 ### WAY-27 — Where may this repository point for its reasoning?
 
-Nothing in this repository points to a source outside it that its readers cannot reach: every
-entry carries its whole reasoning, and what is seen only in such a source is described in the
-entry instead of being pointed to. The one exception is the place of its tasks, named in the
-`## Backlog` section of its root `AGENTS.md` and nowhere else, by an entry of the locations file of
-WAY-320 and never by a path.
+Nothing in this repository points to a source outside it that its readers cannot reach: every entry
+carries its whole reasoning, and what is seen only in such a source is described in the entry
+instead of being pointed to. The one exception is the place of its tasks and the rules of that
+place, named in the `## Backlog` section of its root `AGENTS.md` and nowhere else, each by an entry
+of the locations file of WAY-320 and never by a path.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, agent-instructions, instruction-files, product-guidelines, task-cycle
@@ -731,8 +731,8 @@ WAY-320 and never by a path.
   compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
-    `AGENTS.md` names, in `## Backlog`, the entry of the locations file where the place of its tasks
-    is kept;
+    `AGENTS.md` names, in `## Backlog`, the entries of the locations file where the place of its
+    tasks and the rules of that place are kept;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
     without saying what was seen; the `## Backlog` section holds the path of the place of the
     tasks.
@@ -741,7 +741,8 @@ WAY-320 and never by a path.
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
 to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
-an agent there; named in that one section, it stays a place to find work and never becomes a
+an agent there, to the rules by which the lines of that place are written as well; named in that one
+section, it stays a place to find work and never becomes a
 source an entry points to. Named by an entry of the locations file, it adds no path to a public
 repository, which would tell every reader how one user's disk is laid out.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
@@ -2434,12 +2435,19 @@ the plan and change as the plan changes.
 ### WAY-107 — Where does a product tell the project level where its backlog stands?
 
 A product names where it keeps projects and tasks in a `## Backlog` section of its root `AGENTS.md`,
-outside the block the-way's installer owns. A place on the user's disk outside every repository
-stands there as an entry of the locations file of WAY-320, never as a path; a directory of the
-repository or the address of a public tracker stands there as it is. A project definition stands in
-the named project place; when the place is unnamed, or the file or the entry it names is missing,
-the agent asks the human and offers to record the answer where it fits: the entry in the file for a
-place on the user's disk, the section otherwise.
+outside the block the-way's installer owns, a place on the user's disk outside every repository
+standing there as an entry of the locations file of WAY-320, never as a path, and a directory of the
+repository or the address of a public tracker as it is. A project definition stands in the named
+project place; when the place is unnamed, or the file or the entry it names is missing, the agent
+asks the human and offers to record the answer where it fits: the entry in the file for a place on
+the user's disk, the section otherwise. How a task's line is handled — the status of a new line, its
+move to ready, the form of its dependencies and of its identifier, how a line is found and kept one
+to a task, which fields an agent may change, the agreement of the lines at both ends of a
+dependency, a clash of identifiers — is taken from the rules of the task place itself, never from
+text written at the product or in the-way's skills; the section names, beside the place of the
+tasks, the entry `task-rules` of the locations file under the product's name, whose value is the
+path of those rules, and where that entry or the file it names is missing, the agent asks the human
+once and offers to add the entry, as for a missing place.
 
 - **Scope:** project-level, installation, foundation-review, product-guidelines
 - **Based on:** none
@@ -2448,11 +2456,17 @@ place on the user's disk, the section otherwise.
   - complies: a product names a directory of its repository for projects and a public tracker for
     tasks in its own backlog section, and the project definition is written in that directory; a
     product whose tasks lie in its user's private notes names, in the section, the entry of the
-    locations file that holds their place, and an agent that finds no such entry asks the human and
-    offers to add it to the file;
-  - violates: the project skill assumes one backlog service for every product, or puts the
-    product's paths inside the installer's marked block; the section holds the path of a place on
-    the user's disk; an agent that finds the entry missing writes the path into the section.
+    locations file that holds their place and the entry `task-rules` that holds the path of the
+    rules of that place, and an agent that finds either entry missing asks the human once and offers
+    to add it to the file; an agent that makes a task's new line takes its status from those rules,
+    and the same agent in a refinement made by hand and in one led through a plan takes the move to
+    ready, the form of the dependencies and how a line already there is handled from them as well;
+  - violates: the project skill assumes one backlog service for every product, or puts the product's
+    paths inside the installer's marked block; the section holds the path of a place on the user's
+    disk; an agent that finds the entry missing writes the path into the section; a skill of the-way
+    writes a status of a task's line, the symbol of a dependency, or a rule of how a line is found
+    or changed, into its own text, or an agent takes the status of a new line from text the product
+    keeps in its section or from the default of the tool that holds the tasks.
 - **Origin:** none
 
 *Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
@@ -2460,14 +2474,26 @@ place to find it. Keeping the place outside the generated block lets the product
 editing the process's installed guidance. A place on the user's disk is the user's own, so it stands
 in the user's file and the section names the entry, which reads alike for every user; a place every
 member of the team can reach stands in the section, where a new member finds it. The price taken: a
-backlog can be named in two ways, and the agent that records a missing place judges which fits.
-*Rejected:* a fixed backlog location for all products — it would require moving an existing
-backlog; asking for the location in every project conversation — the answer would be lost between
-sessions; the file for every place, the section only naming the entry — every user of every
-product creates the file, also where the backlog is public or lies in the repository, and a new
-member of a team finds no tasks until writing the path everyone else knows; the place described in
-words in the section, with its path in the user's global instructions — those instructions are not a
-place for such things.
+backlog can be named in two ways, and the agent that records a missing place judges which fits. The
+rules by which a line of a task is handled belong to the place of the tasks, not to the product that
+names it, so they are read from there and not copied beside the product, and the place can change
+them without a change of the-way; the price is that the path to them stands in the user's file once
+for each product, the same path repeated.
+*Rejected:* a fixed backlog location for all products — it would require moving an existing backlog;
+asking for the location in every project conversation — the answer would be lost between sessions;
+the file for every place, the section only naming the entry — every user of every product creates
+the file, also where the backlog is public or lies in the repository, and a new member of a team
+finds no tasks until writing the path everyone else knows; the place described in words in the
+section, with its path in the user's global instructions — those instructions are not a place for
+such things; the rules of the task place written at the product, its section giving the status of a
+new line when none is given — the human's word was that the rules be taken from the task place and
+not be written anywhere at the product, and no cost of this way is kept (`unknown`); a new line left
+in the default state of the tool that holds the tasks — its status is wrong from the first moment
+and the check of the notes against the lines reports a mismatch; a status of a line fixed in
+the-way's skills — a skill of the-way would assume one tool for the backlog, against WAY-101; the
+agent finding the rules through the user's global instructions — it does not work in a session that
+does not load them, such as one in the cloud, and stands against the user's sentence that global
+instructions are not the place for such things.
 
 ### WAY-108 — What form does a project definition take?
 
@@ -4410,40 +4436,85 @@ automatically normalizing conflicts — a plausible state hides the discrepancy 
 
 ### WAY-154 — How do agents exchange a project task refinement and keep its result?
 
-Project refinement resumes from the plan, task documents and one ignored conversation file per
-task at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the
-answering agent and the project orchestrator take serialized turns on each file; the project
-orchestrator hands agents only its path and routing, never relays its contents, and each refiner
-ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan change` or
-`obstacle`. Only a refiner changes the task document's body and transfers settled answers with
-their sources and the ways the human did not choose (WAY-134) into Questions to settle; the project
-orchestrator records human answers in
-conversations, owns ordinary plan updates and their log, and changes only the task document's
-Status line after the human has accepted that complete document, one document at a time. Agent
-turns, questions and explicit waits keep the plan task to refine, a presented human package or
-ready for approval makes it waiting for human, and final acceptance makes both document and plan
-ready for cycle and removes only that conversation after all settled answers, their sources and
-the ways not chosen survive in the task document; an explicit wait is logged and its task is
-proposed again when the named prerequisite is done.
+Project refinement resumes from the plan, task documents and one ignored conversation file per task
+at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the answering
+agent and the project orchestrator take serialized turns on each file; the project orchestrator
+hands agents only its path and routing, never relays its contents, and each refiner ends its turn as
+`questions`, `waits for task <n>`, `ready for approval`, `plan change` or `obstacle`. Only a refiner
+changes the task document's body and transfers settled answers with their sources and the ways the
+human did not choose (WAY-134) into Questions to settle, and it writes besides what the project
+orchestrator's order asks of it: in the turn in which it first creates the task document, or in the
+first later turn that can where that turn could not, the line of its task in the backlog the product
+names (WAY-107), where none stands, with the dependencies the plan gives the task, and, as the rules
+of the task place give, brings the lines of the tasks tied to its task into agreement with the
+plan's dependencies, at the same time as the other refiners of the round and with no queue between
+their writes; the plan, the definition and the foundation stay outside a refiner, and no agent other
+than the project orchestrator, after the human's word, takes a step that belongs to acceptance,
+which is moving the line to ready and `ready for cycle`; the project orchestrator records human
+answers in conversations, owns ordinary plan updates and their log, brings the dependencies in the
+task lines in step with the plan when the plan's dependencies change, and after the human has
+accepted a complete task document, one document at a time, changes that document's Status line and
+moves the task's line to ready, making it already ready where none stands. Agent turns, questions
+and explicit waits keep the plan task to refine, a presented human package or ready for approval
+makes it waiting for human, and final acceptance makes both document and plan ready for cycle and
+removes only that conversation after all settled answers, their sources and the ways not chosen
+survive in the task document; an explicit wait is logged and its task is proposed again when the
+named prerequisite is done.
 
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** derives from WAY-124 · derives from WAY-142 · derives from
-  WAY-144 · derives from WAY-147
-- **Verification:** an agent compares the turns, task documents and plan with the decision:
-  - complies: parallel refiners write separate documents, a fresh refiner keeps each settled
-    answer and source, and interrupted acceptance resumes without guessing human agreement;
-  - violates: the project orchestrator rewrites a task body or carries questions in prompts,
-    an agent's readiness stands for human acceptance, or cleanup loses the only settled answer or
-    the only record of the ways the human did not choose.
+  WAY-144 · derives from WAY-147 · derives from WAY-107
+- **Verification:** an agent compares the turns, task documents, plan and backlog with the decision:
+  - complies: parallel refiners write separate documents, and each, in its first turn that creates
+    its document, also writes its task's line, with the dependencies of the plan's row, while the
+    others do the same; a refiner whose first turn ended on a question about the task place's rules
+    writes the line in the first later turn that can; a refiner that finds the line of a task
+    waiting on its own task without the dependency on it brings that line into agreement as the
+    rules of the task place give, and one that finds no line for a tied task makes none; a fresh
+    refiner keeps each settled answer and source; the project orchestrator, on the human's
+    acceptance of a document, changes its Status line, the plan's row and the task's line together,
+    making the line, already ready, where none stands; and interrupted acceptance resumes without
+    guessing human agreement;
+  - violates: the project orchestrator rewrites a task body or carries questions in prompts, an
+    agent's readiness stands for human acceptance, a refiner moves its line to ready or writes
+    `ready for cycle`, a refiner writes the plan, the definition or the foundation because a
+    dispatch asked it to, a round's refiners wait for one another to write their lines, a refiner
+    makes the line of a tied task that has none, or cleanup loses the only settled answer or the
+    only record of the ways the human did not choose.
 - **Origin:** none
 
 *Rationale:* a file-mediated exchange keeps the project orchestrator from becoming a content relay
 and lets another session resume. The retained task document carries the result that later work
-needs; ownership and serialized turns cost explicit coordination but prevent competing edits.
+needs; ownership and serialized turns cost explicit coordination but prevent competing edits. What
+the rule protects is the step of acceptance and the shared plan, definition and foundation, not the
+document alone: a refiner that writes only what its order asks does the work of the line in the turn
+that makes the document, where the context for it is at hand, and the human's word still moves the
+line to ready. The price taken: the rule is no longer checked by asking whether a refiner wrote
+outside its document, but by what the orchestrator ordered, so a line is lost silently when an order
+leaves it out. The refiners of a round write their lines in the same minutes, and two writes to the
+one backlog file in the same instant can lose a line, or two refiners that bring the same tied line
+into agreement can leave one write of it, a risk accepted because it is small and shows afterwards
+as a task with no line or a line missing a field. The dependencies a line carries are a second copy
+of the plan's, which WAY-144 calls a copy that drifts as soon as one dependency changes, and the
+project orchestrator keeps it in step with the plan; that cost is accepted so that the view of tasks
+shows what waits on what.
 *Rejected:* conversation contents relayed in prompts — each transfer repeats context and can lose
 answers; retaining the temporary exchange as the task result — later work reconstructs settlements
-from discussion; deleting the exchange before durable transfer — provenance disappears.
+from discussion; deleting the exchange before durable transfer — provenance disappears; the project
+orchestrator taking the whole backlog and the rule staying as it was — the refiner leaves undone
+what it could do and the orchestrator gains one more duty to remember; refiners writing their lines
+with no queue but by one append to the end of the file and a check — a technical requirement to
+enforce in every order, which lowers the risk of a collision and does not remove it, since the
+editor of the notes or its synchronisation can write to the file at the same moment; no change —
+each following round leaves its tasks with no line to be added by hand; the first turns of the
+refiners one after another to order the writes — the first turn of a round lasts as long as all of
+them together; the first turns in parallel and the orchestrator then resuming each refiner for a
+short request for its line — several short resumptions, a new refiner reading the whole skill when a
+session breaks off on the way, and an exception to the new refiner of each turn; a new refiner for
+each turn as before — the most expensive way in tokens; no dependencies in the lines — the order is
+read from the plan, and the view of tasks shows none of what waits on what; the dependencies as a
+separate task — one more full cycle, and until then they are added by hand.
 
 ### WAY-155 — What may the answering agent settle during a refinement round?
 
@@ -10415,12 +10486,12 @@ directory returns to the busy profile.
 A user's places on their own disk that lie outside every repository, such as the place of a
 product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
 found at that place for every user and through no environment variable: a JSON object whose keys are
-repository names, each holding entries by name, such as `tasks` and `projects`, whose values are
-paths on the user's disk. No file the repository tracks holds an absolute path, or a note link in a
-Markdown file, other than the files that the invariant `tracked-file-private-paths` names, which
-write example paths in order to find or to test them; a file that points to such a place names its
-entry in the locations file. The copy of a task cycle's record and the description of a request are
-checked for a note link in every file, as WAY-309 gives.
+repository names, each holding entries by name, such as `tasks`, `projects` and `task-rules`, whose
+values are paths on the user's disk. No file the repository tracks holds an absolute path, or a note
+link in a Markdown file, other than the files that the invariant `tracked-file-private-paths` names,
+which write example paths in order to find or to test them; a file that points to such a place names
+its entry in the locations file. The copy of a task cycle's record and the description of a request
+are checked for a note link in every file, as WAY-309 gives.
 
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle
 - **Based on:** none
@@ -10428,12 +10499,14 @@ checked for a note link in every file, as WAY-309 gives.
 - **Verification:** invariants: tracked-file-private-paths. For the place and the form of the file,
   an agent compares the change with the decision:
   - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
-    product's name in `~/.the-way/locations.json`; a file the repository tracks says "the entry
+    product's name in `~/.the-way/locations.json`, and one that needs the rules of that place reads
+    the entry `task-rules` under the same name; a file the repository tracks says "the entry
     `tasks` under `the-way`" where it means a place on the user's disk;
   - violates: a skill reads the location from an environment variable; a tracked file the
     invariant does not name holds the path of a directory on the user's disk, or a Markdown file it
     does not name holds a link to a private note; the locations file is put in a repository, or
-    holds an entry of one repository under the name of another.
+    holds an entry of one repository under the name of another, or a single entry for the rules of
+    the task place at the top level of the file, shared by every product.
 - **Origin:** none
 
 *Rationale:* the repository of the-way is public, so an absolute path written in one of its files
@@ -10462,10 +10535,13 @@ not see the variable does not find the backlog; a local file in the repository t
 such as `CLAUDE.local.md` — the worktree in which a cycle runs has no such file, and Codex does not
 read `AGENTS.local.md`; introducing nothing and correcting only the line that names the rulebook —
 the path of the tasks file stays in the repository, and the next path written is stopped only by a
-careful review; for the files that write example paths by their nature, a check that skips only the
-lines marked as examples — every example line to mark and the code of the marks, and a real path in
-a marked line passes too; no exceptions, with the examples rewritten so that the pattern does not
-find them — every example to rewrite, the tests and the description of the script harder to read,
+careful review; one entry for the rules of the task place shared by all products, at the top level
+of the file — the keys of the file would no longer be only repository names, and a product whose
+tasks lie elsewhere would silently take the rules of another place; for the files that write example
+paths by their nature, a check that skips only the lines marked as examples — every example line to
+mark and the code of the marks, and a real path in a marked line passes too; no exceptions, with the
+examples rewritten so that the pattern does not find them — every example to rewrite, the tests and
+the description of the script harder to read,
 and every later author of a test has to remember it; a check that skips all test files and both
 scripts — a path in any test of the-way passes; a note link counted in a Markdown file only, also
 in the copy of the record and in the description — a link in a report of the copy kept as a text
@@ -10821,6 +10897,44 @@ with no decision in its own log, the same effect as the way chosen in a worse pl
 the parts that hold code today — the first script or test in another part would raise the question
 again and force an extension of the decision; a decision with no sentence that adds a new part to its
 *Scope* — the first script in a new part would raise the question of missing guidelines again.
+
+### WAY-329 — How is the identifier of a project task's line in the backlog derived?
+
+The identifier of the line of a task of a project plan is the plan's file name without its
+extension, joined by `-` to the task's name in the plan (WAY-147), in lower case, each run of
+characters other than lower-case letters and digits, hyphens included, turned into one `-`, none at
+either end, so that a refiner computes it from the plan and the task's name alone, and writes it in
+the dependency of another task's line before that task's line exists. The identifier is unambiguous
+in the place of the tasks only while the plan file names of the place differ and no two pairs of a
+plan file name and a task name join to one text.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-147 · derives from WAY-107 · derives from WAY-154
+- **Verification:** an agent compares the line of a task and the derivation with the decision:
+  - complies: the task `forest-on-hex-grid` of the plan file `player-game.md` has the identifier
+    `player-game-forest-on-hex-grid`, and a refiner writes it into the dependencies of a task that
+    waits on it before the line of `forest-on-hex-grid` exists; the plan file `MVP2 plan (v2).md`
+    gives `mvp2-plan-v2-forest-on-hex-grid`; the plan `a-b.md` with the task `c` and the plan `a.md`
+    with the task `b-c` both give `a-b-c`, which the derivation does not tell apart;
+  - violates: an identifier counted when a line is made; an identifier that is the task's name
+    alone, taken for unique across plans; a derivation that leaves a double hyphen or a hyphen at an
+    end.
+- **Origin:** none
+
+*Rationale:* the refiner of a dependent task needs the identifier of the task it waits on while that
+task's line may not exist, so it has to be a function of what the plan already holds: the plan and
+the task's name, which stays with the task while the plan changes (WAY-147). The form of an
+identifier, and that it is unambiguous in the whole place of the tasks, are the rules of that place
+(WAY-107); the derivation yields lower-case letters, digits and hyphens. A run of other characters
+becoming one hyphen keeps a file name with spaces and brackets from leaving a double hyphen or a
+hyphen at an end. The price taken: the derivation guarantees uniqueness only under the two
+conditions the sentence names, so two plans of one place with the same file name, or two pairs that
+join alike, clash, and what is done with a clash is for the rules of the task place (WAY-107).
+*Rejected:* the plan's name alone — it is not unique across plans; a number counted when the line is
+made — a refiner cannot know it before the other task's line exists; one hyphen for each character
+other than a letter, a digit or a hyphen, instead of one for each run — a double hyphen where a file
+name holds a space beside a bracket.
 
 ## Withdrawn identifiers
 

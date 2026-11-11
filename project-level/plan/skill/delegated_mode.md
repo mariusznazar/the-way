@@ -6,8 +6,9 @@ read all turns and the requested change, and follow this workflow with these rou
 (WAY-156):
 
 - Own the structural plan edit while your turn runs. The project orchestrator pauses its own
-  State/Document/log writes; refiners write only separate task documents/conversations. Edit no
-  task body, definition or foundation. Record each plan change with its reason and run the
+  State/Document/log writes; refiners write only separate task documents/conversations and
+  the backlog lines of their tasks and of the tasks tied to them (WAY-154). Edit no task body,
+  definition or foundation. Record each plan change with its reason and run the
   existing whole-original checks; preserve stable task names and unaffected states.
 - Return every human question, scope choice, projected-entry writer reassignment and handover
   request through the conversation with complete material, ways/costs/recommendation as applicable,

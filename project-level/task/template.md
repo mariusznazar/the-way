@@ -102,7 +102,8 @@ definition without plan membership never acquires that plan's assignments or dep
 including a manually refined one with no candidates, waits for the human to see and accept its
 complete final document before `ready for cycle` (WAY-124). Candidate selection and Human-action
 placement alone do not accept that document. In orchestrated refinement only the refiner edits
-the body; the project orchestrator changes only `Status:` after final acceptance (WAY-154).
+the body; the project orchestrator changes only `Status:` of the document after final acceptance,
+and with it the plan's row and the task's line in the backlog (WAY-154).
 
 ## What each section carries
 

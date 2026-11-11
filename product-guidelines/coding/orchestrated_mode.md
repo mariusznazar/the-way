@@ -6,5 +6,5 @@ every choice shown by its effect go into the conversation turn as `refine-task` 
 the skill ends the turn rather than asking the human. The research agents, the critiques and the
 fresh agent that judges the trial run's reports are requested from the project orchestrator, which
 starts them, the turn naming the paths of their reports under `.runs/coding/`. The skill starts no
-child agent and edits only the task document, its turn and the trial run's output under
-`.runs/coding/`.
+child agent and edits only the task document, its turn, the task's line in the backlog, as `refine-task` gives,
+and the trial run's output under `.runs/coding/`.
