@@ -62,8 +62,8 @@ that end a sentence after it left out; it is written as `reports/<name>`, each o
 turn, with a warning where a turn names more. The text is data: no path in it is followed. A message whose payload is encrypted,
 as Codex writes another agent's message, or a turn with no message found, names files
 `unknown`. The audit of the process ties a turn to the fix round whose findings file it names
-(WAY-336). The column *Files named* is a form of this report of its own: the reports that hold it
-start a series of the audit's measures apart from the earlier ones (WAY-338).
+(WAY-337). The column *Files named* is a form of this report of its own: the reports that hold it
+start a series of the audit's measures apart from the earlier ones (WAY-339).
 
 A stage with no token usage has the model `—` and zero counts in the section of the stages where
 its agent's transcript holds token usage elsewhere; where that transcript holds none at all, so that

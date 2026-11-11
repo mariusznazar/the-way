@@ -291,7 +291,7 @@ product's screens built on a meaning nobody approved, guidelines telling agents 
 not those of instruction files; the review of a product's foundation answers neither the question
 of a task cycle nor that of an element, so its skill stands apart from both; the audit of the process
 over many cycles answers neither of those questions either, so its template, command and skill stand
-in a directory of their own (WAY-330).
+in a directory of their own (WAY-331).
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/` directory
 for everything shared — it matches no part and grows into a store; one set of template, skill and
@@ -10830,7 +10830,7 @@ the parts that hold code today — the first script or test in another part woul
 again and force an extension of the decision; a decision with no sentence that adds a new part to its
 *Scope* — the first script in a new part would raise the question of missing guidelines again.
 
-### WAY-329 — Where does the audit of the process get the class and weight of each problem, and the tie of a problem to the fix meant to remove it?
+### WAY-330 — Where does the audit of the process get the class and weight of each problem, and the tie of a problem to the fix meant to remove it?
 
 The-way gives a template of a register of problems, which holds for each problem the cycle it comes
 from, its class and weight, the issue it belongs to — the one matter that like problems of several
@@ -10860,7 +10860,7 @@ same remarks would be judged by two agents, who may judge differently, and the t
 its fix would have to be rebuilt each time; the-way taking over the review of the remarks of cycles
 — the largest change, and the remarks would turn into issues once a week instead of every night.
 
-### WAY-330 — Where in the repository does the audit of the process stand?
+### WAY-331 — Where in the repository does the audit of the process stand?
 
 The audit of the process is a part of the-way of its own, `process-audit`, with a directory of its
 own, `process-audit/`, apart from the part of the task cycle. The audit answers how the process fares
@@ -10884,7 +10884,7 @@ time, as the review of a product's foundation answers neither a cycle's question
 process over time, a different question from carrying out one task, and every agent of the cycle
 reads its decisions.
 
-### WAY-331 — Where do the results of the audit lie?
+### WAY-332 — Where do the results of the audit lie?
 
 The results of the audit lie at a place on the user's disk outside every repository, which an entry
 of the locations file (WAY-320) names. No repository, the repository of the-way included, holds them.
@@ -10906,7 +10906,7 @@ gives for every place outside the repositories.
 *Rejected:* the results in the repository of the-way — the repository is public, and the results
 carry the names of products and the content of remarks from their cycles.
 
-### WAY-332 — How is a problem that the audit counts graded and classed?
+### WAY-333 — How is a problem that the audit counts graded and classed?
 
 Each problem the audit counts has a weight on a scale of four levels — no problem, Minor, Important
 and Critical — and a class from a list that the template of the register starts and the audit
@@ -10915,7 +10915,7 @@ problem is the level below them.
 
 - **Scope:** process-audit
 - **Based on:** none
-- **Relations:** derives from WAY-329
+- **Relations:** derives from WAY-330
 - **Verification:** an agent compares a change with the decision:
   - complies: a problem is graded Minor and given a class that the list holds; the count refuses a
     problem whose class the list lacks until the list holds it, and a session of the audit that
@@ -10932,14 +10932,14 @@ scale. A list that the audit widens follows what the sessions find, where a clos
 problem it lacks a class for a wrong class.
 *Rejected:* unknown
 
-### WAY-333 — What does the audit count, remarks or problems?
+### WAY-334 — What does the audit count, remarks or problems?
 
 The audit counts problems, not remarks: a problem that several stages of one cycle report is one
 problem.
 
 - **Scope:** process-audit
 - **Based on:** none
-- **Relations:** derives from WAY-329
+- **Relations:** derives from WAY-330
 - **Verification:** an agent compares a change with the decision:
   - complies: a lack that three stages of a cycle report counts once, and the register keeps the
     stages that reported it;
@@ -10952,7 +10952,7 @@ rather than the number of lapses of the process, and the register keeps the stag
 problem, so counting it once loses nothing.
 *Rejected:* unknown
 
-### WAY-334 — What decides whether a fix of the process works?
+### WAY-335 — What decides whether a fix of the process works?
 
 Whether a fix works is decided by the cycles that ran on a version of the-way that holds the fix,
 compared with the cycles that ran on a version without it, and never by the date on which the fix was
@@ -10973,7 +10973,7 @@ process at the commit it pins (WAY-34), so a cycle made after the date of a fix 
 version without it. The version tells whether the cycle had the fix; the date does not.
 *Rejected:* unknown
 
-### WAY-335 — Does how often an issue comes back set its priority?
+### WAY-336 — Does how often an issue comes back set its priority?
 
 How often an issue comes back is material that the audit shows the human to weigh; the audit sets no
 priority from it and ranks no issue by the number of its returns.
@@ -10995,7 +10995,7 @@ would put the order of the work into a count.
 being frequent makes a priority rise automatically and answered that it does not, so it is weighed
 every time.
 
-### WAY-336 — How is the cost of a cycle measured?
+### WAY-337 — How is the cost of a cycle measured?
 
 A cycle's cost is two numbers, neither divided by a measure of the size of the task: its cost at
 constant prices, computed from a price list of models that carries a date, and the share of that
@@ -11036,7 +11036,7 @@ round by its time against the times of the record — the record and the report 
 write times in different forms and zones; the share given only as zero or unknown until the report
 of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round.
 
-### WAY-337 — What is the time of a cycle?
+### WAY-338 — What is the time of a cycle?
 
 A cycle's time is two measures: the working time of its agents, with neither the wait for the human
 nor the wait for tools in it, and, apart from it, the time its agents wait for tools, from each call
@@ -11063,7 +11063,7 @@ that a faster tool would shorten.
 *Rejected:* the wait for the human counted in the time of a cycle — the human said that waiting for
 them is not counted.
 
-### WAY-338 — When do the measures of the audit stop being comparable?
+### WAY-339 — When do the measures of the audit stop being comparable?
 
 A new price list, or a change of the form of a stage report, of the list of classes or of the
 instructions of the reviewer, starts a new series of measures. The audit compares measures only
@@ -11088,7 +11088,7 @@ and what is found. A number from before such a change says something about the c
 about the process.
 *Rejected:* unknown
 
-### WAY-339 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
+### WAY-340 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
 
 The audit replays no frozen earlier tasks on an old and a new version of the process; it judges a
 version of the process by the cycles that ran on it.
@@ -11108,7 +11108,7 @@ a replay would cost a cycle for each task and each version.
 *Rejected:* a set of frozen earlier tasks run on the old and the new version of the process — the
 human struck it, and the source keeps no reason beside it.
 
-### WAY-340 — How often does the audit run, and what starts it?
+### WAY-341 — How often does the audit run, and what starts it?
 
 The audit runs once a week, in a session of its own apart from the user's weekly review. The counting
 runs without a human on the night from Friday to Saturday, and a weekly task in the user's backlog
@@ -11130,7 +11130,7 @@ no human present for it.
 *Rejected:* the audit as a part of the weekly review — the human prefers a dedicated task for the
 audit and would not mix it with that review.
 
-### WAY-341 — Which entries of the locations file does the audit of the process read?
+### WAY-342 — Which entries of the locations file does the audit of the process read?
 
 The audit reads, in the locations file of WAY-320, under the key `the-way` the entry
 `problem_register`, the file of the register of problems, and the entry `audit_results`, the
@@ -11143,7 +11143,7 @@ the checkout of the-way that holds the counting command run.
 
 - **Scope:** process-audit
 - **Based on:** none
-- **Relations:** derives from WAY-320 · derives from WAY-329 · derives from WAY-331
+- **Relations:** derives from WAY-320 · derives from WAY-330 · derives from WAY-332
 - **Verification:** an agent compares a change with the decision:
   - complies: the counting started by a scheduler with no option reads the register the entry
     `problem_register` under `the-way` names, writes its result into the directory of
@@ -11164,7 +11164,7 @@ in no file a repository tracks (WAY-320). The price taken: a user writes each re
 into the file once, beside the places the file was first made for.
 *Rejected:* unknown
 
-### WAY-342 — Which version of the-way did a cycle of the-way itself run on?
+### WAY-343 — Which version of the-way did a cycle of the-way itself run on?
 
 A cycle of the-way's own repository, whose record pins no commit of the-way, ran on the version of
 the-way at the commit its task branch started from, which the record's line *Target branch and
@@ -11173,7 +11173,7 @@ version, and the audit counts it under no version.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-334
+- **Relations:** derives from WAY-335
 - **Verification:** an agent compares a change with the decision:
   - complies: a cycle of the-way whose record says the pin does not apply and names the commit its
     branch started from counts under that commit, and a fix that is an ancestor of it counts the

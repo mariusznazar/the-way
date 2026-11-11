@@ -655,7 +655,7 @@ class Locations(AuditCountCase):
 
     def test_a_result_directory_inside_the_way_not_read_in_the_run(self):
         # No repository holds the results, the-way's included, whether or not the run reads it
-        # (WAY-331).
+        # (WAY-332).
         product = self.product()
         way = self.repository("the-way")
         way.branch("main", way.commit({"README.md": "the-way\n"}, "Start"))
@@ -1110,7 +1110,7 @@ class Cost(AuditCountCase):
 
 
 class RegisterCount(AuditCountCase):
-    """The register of problems counted against the cycles (WAY-329, WAY-332 to WAY-335)."""
+    """The register of problems counted against the cycles (WAY-330, WAY-333 to WAY-336)."""
 
     def use_register(self, **rows) -> None:
         self.register.write_text(register_text(**rows), encoding="utf-8")
@@ -1625,7 +1625,7 @@ def process_record(pin, discarded="none", plan="none on the one-author route", t
 
 
 class ProcessVersions(AuditCountCase):
-    """The process versions, their series and the three questions (WAY-338, WAY-340)."""
+    """The process versions, their series and the three questions (WAY-339, WAY-341)."""
 
     FIRST = 1759968000    # 2025-10-09, UTC midnight
     LATER = 1760054400    # 2025-10-10

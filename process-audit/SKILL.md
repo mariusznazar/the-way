@@ -6,7 +6,7 @@ description: Use when the weekly audit of the process has to be led with the hum
 # Audit the process
 
 Leads the weekly audit of the process with a human, in one session of its own, apart from any
-weekly review (WAY-340). It reads the latest result of the counting command, `audit_count.py` beside
+weekly review (WAY-341). It reads the latest result of the counting command, `audit_count.py` beside
 this file, puts before the human the matters to weigh, and writes down what the human decided to
 weigh and what the human set aside. It changes nothing in any repository; in the register of problems
 it changes nothing but the list of classes, which it widens on the human's yes (step 3). A matter the
@@ -22,12 +22,12 @@ with `process-audit/` starts at that root, and the command runs from there.
 - **The register of problems.** The user's own tool fills it, from the template
   `process-audit/problem_register.md`, which the user copies to a place of their own and adapts to
   their needs. The audit gives no problem a class or a weight itself and reads the register that an
-  entry of the locations file names (WAY-329).
+  entry of the locations file names (WAY-330).
 - **The counting.** `python -B process-audit/audit_count.py` asks nothing and reads nothing from
   stdin, so a system scheduler can start it with no one present. It runs on the night from Friday to
-  Saturday, and the session finds its result ready (WAY-340).
+  Saturday, and the session finds its result ready (WAY-341).
 - **The weekly task.** A task the human keeps in the backlog, once a week, starts the session
-  (WAY-340).
+  (WAY-341).
 - Setting up the scheduler and adding the weekly task are human actions (WAY-140). Where either is
   missing, say so to the human and do neither.
 
@@ -35,29 +35,29 @@ with `process-audit/` starts at that root, and the command runs from there.
 
 These hold at every step.
 
-- **How often an issue comes back is material, never a priority** (WAY-335). An issue is the one
+- **How often an issue comes back is material, never a priority** (WAY-336). An issue is the one
   matter that like problems of several cycles make. Give no issue a priority, an order of urgency or
   a recommended rank from how often it returned or how long it has waited, and list issues in the
   order the count gives, which is the register's. The human weighs what a return costs and what its
   fix costs.
-- **Measures are compared inside a series only** (WAY-338). WAY-338 starts a new series at a new
+- **Measures are compared inside a series only** (WAY-339). WAY-339 starts a new series at a new
   price list, or at a change of the form of a stage report, of the list of classes or of the
   instructions of the reviewer. The count splits more often than that: at a new price list, at a
   date of the register's list of classes, and at any change of the files of the-way under
   `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec` or of
   `task-cycle/cycle_stages.py`, whatever the change, so that it compares less and never across a
-  change WAY-338 names. Set no number of one series beside a number of another, and no week's count
+  change WAY-339 names. Set no number of one series beside a number of another, and no week's count
   beside the week before; a version of the process is judged by the cycles that ran on it.
-- **No frozen earlier tasks are replayed on an old and a new version** (WAY-339). Where the human
+- **No frozen earlier tasks are replayed on an old and a new version** (WAY-340). Where the human
   asks for such a comparison, say that the audit holds no such set and judges a version by its own
   cycles.
-- **Whether a fix works is read from the version, never from the date** (WAY-334): the count sets the
+- **Whether a fix works is read from the version, never from the date** (WAY-335): the count sets the
   problems of the cycles whose version of the-way holds the fix apart from those of the cycles whose
   version lacks it. Do not set problems before a fix's date against problems after it.
 - **`unknown` stays `unknown`, and `at least n` stays `at least n`.** Do not read either as zero or
   as `n`, and do not fill a value from another source. A `—` in *Days waiting* means the issue has no
   problem yet.
-- **The results lie outside every repository** (WAY-331). Write the audit's result nowhere else, and
+- **The results lie outside every repository** (WAY-332). Write the audit's result nowhere else, and
   write no path an entry of the locations file holds, nor its content, into a file of a repository
   or a report: name the entry (WAY-320).
 
@@ -148,12 +148,12 @@ two outcomes: the human weighs it further, or sets it aside.
 
 **A class the list lacks.** Where a row refused for its class, or the human's own reading of a
 problem, shows a problem that no class of the register's *Classes* fits, the list widens; the
-problem is never given the nearest class instead (WAY-332). Read that row of the register, and put
+problem is never given the nearest class instead (WAY-333). Read that row of the register, and put
 before the human a new class: its name, lower-case letters, digits and hyphens, the refused row's
 class where it is one; what it means; and the day of the session as the date it is added. On the
 human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register
 that the entry `problem_register` names, which lies in the user's place and never in a repository,
-and change nothing else of it. Adding a class gives no problem a class (WAY-329): a problem's class
+and change nothing else of it. Adding a class gives no problem a class (WAY-330): a problem's class
 in *Problems* stays the user's tool's to write. The date starts a new series of measures, and the
 next count reads the class; offer to run the count again as step 2 gives. Where the human says no,
 or names a class the list already holds, the problem's row is a correction for the user's tool.
