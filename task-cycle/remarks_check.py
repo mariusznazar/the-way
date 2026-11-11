@@ -13,9 +13,9 @@ The reports are the `.md` files of `reports/` whose name holds neither `handoff`
 read in the order of their names; a handoff, a findings file and a log are not read. A report gives
 its section in either of two forms, and may give both:
 
-- a heading, at any level, whose text is `Searches not found or unclear`, with an optional trailing
-  colon, emphasis or parenthesis; the section runs to the next heading of the same or a higher
-  level;
+- a heading, at any level, whose text is `Searches not found or unclear`, after an optional section
+  number such as `12.`, with an optional trailing colon, emphasis or parenthesis; the section runs
+  to the next heading of the same or a higher level;
 - a bold label `**Searches not found or unclear**`, its colon inside or outside the bold or absent,
   at the start of a line or of a list item; the text after the label on its line belongs to the
   section. A label that is a list item ends at the next line indented no deeper than its marker. A
@@ -60,6 +60,8 @@ SECTION = "searches not found or unclear"
 REMARKS_PREFIXES = ("process remark", "process improvements", "other process remarks",
                     "searches not found")
 
+# The number a report may put before a section's name: `12.`, `12)`, `3.1`, `3.1.`.
+SECTION_NUMBER = re.compile(r"\d+(?:\.\d+)*[.)]?[ \t]+")
 HEADING = re.compile(r" {0,3}(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*")
 FENCE = re.compile(r" {0,3}(`{3,}|~{3,})")
 LABEL = re.compile(r"(?P<indent>[ \t]*)(?:(?P<marker>[-*+]|\d+[.)])[ \t]+)?"
@@ -123,6 +125,8 @@ def fenced_flags(lines: list[str]) -> list[bool]:
 
 def names_section(heading_text: str) -> bool:
     text = re.sub(r"[*_`]", "", heading_text).strip().rstrip(":").strip().casefold()
+    number = SECTION_NUMBER.match(text)
+    text = text[number.end():] if number else text
     return text.startswith(SECTION) and not text[len(SECTION):len(SECTION) + 1].isalnum()
 
 

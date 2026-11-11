@@ -45,9 +45,9 @@ with the evidence and stop.
    `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
    comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
    so each handoff has the agent work from the worktree's root and names its stage's method by its
-   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives; a
-   check that fails there and passed on the base is work the task carries, made under the new
-   pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
+   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives, at
+   once; a check that fails there and passed on the base is work the task carries, made under the
+   new pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
    check their coverage as they check its items. Every reset of the task branch to its base stops
    at that commit. The review of the whole change checks that commit: it holds only the gitlink, at
    the commit the task names, and what the installer owns: the `the-way-*` entry points in
@@ -323,7 +323,8 @@ contradicts a decision.
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
-        change as step 10 gives, run `task-cycle/cycle_stages.py`, prepare the record's copy as
+        change as step 10 gives (at once, since no return step runs), run
+        `task-cycle/cycle_stages.py`, prepare the record's copy as
         "The record before it is committed" gives and commit it and its removal as step 12 gives,
         then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
@@ -356,8 +357,11 @@ contradicts a decision.
 10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
     included, or the code a revert of that fix leaves, and record its command, exit
     code and the failures it names under *Verification*, with each check that failed or did not
-    run by name; an unrun check is unchecked, never passed. The authors' focused checks are not
-    rerun merely to go on (WAY-159); a change, a failure or disputed evidence calls for the affected
+    run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
+    any review of it are done, on the tree they leave: the return step needs no result of the gate,
+    so one run covers both. Where the gate then fails and its fix changes code, the return step
+    compares that fix's range too. The authors' focused checks are not rerun merely to go on
+    (WAY-159); a change, a failure or disputed evidence calls for the affected
     checks again, by the agent that owns them. A check that fails in a cycle run and passes when run
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
     WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.

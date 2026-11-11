@@ -85,6 +85,34 @@ class SectionFormsTest(unittest.TestCase):
             report = f"{heading}\n\n- one item\n"
             self.assertEqual(items(report), ["one item"], heading)
 
+    def test_a_numbered_heading_names_the_section(self) -> None:
+        report = ("## 11. Own-work check\n\n- `python -B x.py` exit 0\n\n"
+                  "## 12. Searches not found or unclear\n\n- The route to the host: not found.\n"
+                  "- Unclear: which release the handoff means.\n\n"
+                  "## 13. Problems\n\n- not an item\n")
+        self.assertEqual(items(report), [
+            "The route to the host: not found.",
+            "Unclear: which release the handoff means.",
+        ])
+
+    def test_a_section_number_may_take_the_forms_of_a_numbered_heading(self) -> None:
+        for heading in ("## 12) Searches not found or unclear",
+                        "### 3.1 Searches not found or unclear",
+                        "### 3.1. Searches not found or unclear:",
+                        "## **12.** Searches not found or unclear",
+                        "## 7. **Searches not found or unclear**",
+                        "## 12. Searches not found or unclear (WAY-260)"):
+            report = f"{heading}\n\n- one item\n"
+            self.assertEqual(items(report), ["one item"], heading)
+
+    def test_a_heading_with_other_words_before_the_name_does_not_name_the_section(self) -> None:
+        for heading in ("## Section 12. Searches not found or unclear",
+                        "## 12.Searches not found or unclear",
+                        "## 12. Other searches not found or unclear",
+                        "## 12. Searches found"):
+            report = f"{heading}\n\n- one item\n"
+            self.assertEqual(items(report), [], heading)
+
     def test_a_bold_label_with_bullets_below_it_gives_the_bullets(self) -> None:
         report = ("**Choices**\n- x\n\n**Searches not found or unclear:**\n\n"
                   "- Whether the host's cron daemon runs: the record does not say.\n"

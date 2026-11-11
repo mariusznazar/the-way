@@ -253,6 +253,18 @@ the order of their kinds.
   this request" has a fresh reviewer read what stayed unread. A reviewer that read whole the
   decisions concerning the change, ran through the rest by title and named none unread gives no
   item, since that reading is the practice (WAY-150).
+- **16.** *Something an entry stands on that the foundation does not hold yet* (WAY-71, WAY-287),
+  from the invariants file and the decision log of the tree after the change: each descriptive
+  `TODO` — `TODO — <the fact, with its source>` in an invariant's *Rests on*,
+  `TODO — <the decision, and where it is expected>` in an invariant's *Derives from*,
+  `TODO — <what is missing, with its source>` in a decision's *Based on* — that stands there; the
+  change writes it, keeps it or does not remove it. A `TODO` that closes a value after known entries
+  (`<fact> · TODO — …`) is the same gap: one item, naming what is missing alone, not the known
+  entries. One item for each gap, in plain words: the rule the invariant states or the question the
+  decision answers, and what is missing. The answer "do it in this request" has the missing fact,
+  decision or source written in this request; "make a task of it" leaves the gap standing; letting it
+  through accepts it on the main branch. A request therefore carries one such item for as long as an
+  old gap stands.
 
 *You accept by merging*
 
