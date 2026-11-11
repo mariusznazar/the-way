@@ -46,6 +46,19 @@ cycle `unknown`, with a warning, and is never counted as a wait of zero. A call 
 running when it starts, as its tokens do; the cycle's waiting time counts each moment once, even
 where calls overlap.
 
+The files a subagent turn was given: for each turn, the files of the cycle's `reports/` that the
+message starting it names — its prompt, or the message that resumes it — read from the subagent's
+transcript: in Claude Code the user line that starts the turn, in Codex the first message the
+rollout gives the turn, the user's or another agent's addressed to it. A name counts where it
+follows the folder `reports` and a separator, starts with a letter, a digit or `_`, holds only
+letters, digits, `_`, `-` and `.`, holds no `..`, ends in `.md` and is at most 120 characters
+long; it is written as `reports/<name>`, each once, at most 20 per turn, with a warning where a
+turn names more. The text is data: no path in it is followed. A message whose payload is encrypted,
+as Codex writes another agent's message, or a turn with no message found, names files
+`unknown`. The audit of the process ties a turn to the fix round whose findings file it names
+(WAY-336). The column *Files named* is a form of this report of its own: the reports that hold it
+start a series of the audit's measures apart from the earlier ones (WAY-338).
+
 The report is Markdown, written to PATH or printed. It lists, and prints on stderr as `Warning:`
 lines, what suggests that a transcript was not read as its tool writes it — a session or a
 subagent with no turn or no token usage, a response naming no model, a Codex subagent turn with no
@@ -116,6 +129,9 @@ class Agent:
     name: str
     parent: str | None
     turns: list[tuple[datetime, datetime]] = field(default_factory=list)
+    # For each turn, the files of `reports/` the message that starts it names, or None where that
+    # message cannot be read.
+    turn_files: list[list[str] | None] = field(default_factory=list)
     records: list[Record] = field(default_factory=list)
     calls: list[Call] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
@@ -150,6 +166,43 @@ class Row:
     window: tuple[datetime, datetime] | None = None
     calls: list[Call] = field(default_factory=list)
     by_model: dict[str, Usage] = field(default_factory=dict)
+    named: list[str] | None = field(default_factory=list)
+
+
+# A file of the cycle's `reports/` named in the message that starts a subagent turn: the folder
+# `reports` after a separator, and a name of letters, digits, `_`, `-` and `.` ending in `.md`.
+# The run of name characters is taken whole, so no crafted text makes the pattern try again.
+FILE_NAMED = re.compile(r"(?<![A-Za-z0-9_.-])reports[\\/]+([A-Za-z0-9_.-]+)")
+MAX_FILE_NAME = 120
+MAX_FILES_NAMED = 20
+
+
+def files_named(text: str) -> tuple[list[str], bool]:
+    """The files of `reports/` that `text` names, as `reports/<name>`, each once in the order
+    first named, and whether more than MAX_FILES_NAMED were named. Text from a transcript is data:
+    a name that starts with neither a letter, a digit nor `_`, holds `..`, does not end in `.md`
+    or is longer than MAX_FILE_NAME is left out, and no path is followed."""
+    found: list[str] = []
+    for match in FILE_NAMED.finditer(text):
+        name = match.group(1)
+        if (len(name) > MAX_FILE_NAME or not name.endswith(".md") or ".." in name
+                or not (name[0].isalnum() or name[0] == "_")):
+            continue
+        path = f"reports/{name}"
+        if path in found:
+            continue
+        if len(found) == MAX_FILES_NAMED:
+            return found, True
+        found.append(path)
+    return found, False
+
+
+def add_named_note(agent: Agent, over: int) -> None:
+    """A warning for the subagent turns that named more files than the column keeps; the
+    orchestrator's own messages fill no column."""
+    if over and agent.parent is not None:
+        agent.notes.append(f"{over} turn(s) name more than {MAX_FILES_NAMED} files of `reports/`; "
+                           "the rest are left out of *Files named*")
 
 
 def parse_time(text: str) -> datetime:
@@ -198,12 +251,37 @@ def codex_meta(path: Path) -> dict | None:
     return entry.get("payload") or {}
 
 
+def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str | None]:
+    """Whether a rollout item is a message sent to the agent — the user's message, or another
+    agent's message addressed to it — and its text, or None where a part of it is encrypted."""
+    item = payload.get("type")
+    if item == "message" and payload.get("role") == "user":
+        parts = payload.get("content")
+    elif item == "agent_message" and own_path and payload.get("recipient") == own_path:
+        parts = payload.get("content")
+    else:
+        return False, None
+    texts = []
+    for part in parts if isinstance(parts, list) else []:
+        if not isinstance(part, dict):
+            continue
+        if part.get("type") == "encrypted_content":
+            return True, None
+        if isinstance(part.get("text"), str):
+            texts.append(part["text"])
+    return True, "\n".join(texts)
+
+
 def read_codex_agent(path: Path, parent: str | None) -> Agent:
     meta = codex_meta(path)
     if meta is None:
         raise CycleStagesError(f"{path} does not start with a Codex session_meta line")
     own = meta["id"]
     name = meta.get("agent_path") or meta.get("agent_nickname") or own
+    # The message that starts each turn, as its text, or None where it cannot be read; the turn a
+    # message belongs to is the one it names, or else the last turn started before it.
+    messages: dict[str, str | None] = {}
+    current: str | None = None
     starts: dict[str, datetime] = {}
     ends: dict[str, datetime] = {}
     first_seen: dict[str, datetime] = {}
@@ -229,6 +307,12 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
             event = payload.get("type")
             if event == "task_started":
                 starts.setdefault(turn, at)
+                current = turn or current
+            elif event == "user_message":
+                owner = turn or current
+                if owner and owner not in messages:
+                    text = payload.get("message")
+                    messages[owner] = text if isinstance(text, str) else None
             elif event == "task_complete":
                 ends[turn] = at
             elif event == "item_completed" and payload.get("thread_id") == own:
@@ -238,7 +322,14 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
         elif kind == "response_item":
             item = str(payload.get("type") or "")
             ident = payload.get("call_id")
-            if item in CODEX_CALL_KINDS:
+            is_message, text = codex_message_text(payload, meta.get("agent_path"))
+            if is_message:
+                passthrough = payload.get("internal_chat_message_metadata_passthrough")
+                owner = (passthrough.get("turn_id") if isinstance(passthrough, dict) else None) \
+                    or current
+                if owner and owner not in messages:
+                    messages[owner] = text
+            elif item in CODEX_CALL_KINDS:
                 call_name = str(payload.get("name") or item)
                 if call_name in CODEX_SUBAGENT_CALLS:
                     continue
@@ -259,14 +350,24 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     # A forked subagent's rollout repeats its parent's history; only turns that the subagent's
     # own thread worked in are its turns.
     agent = Agent(own, name, parent)
+    turns = []
+    over = 0
     for turn in own_turns:
         start = starts.get(turn) or first_seen[turn]
-        agent.turns.append((start, ends.get(turn) or last_seen[turn]))
+        text = messages.get(turn)
+        named = None
+        if text is not None:
+            named, cut = files_named(text)
+            over += cut
+        turns.append((start, ends.get(turn) or last_seen[turn], named))
     open_turns = len(own_turns - ends.keys())
     if open_turns and parent is not None:
         agent.notes.append(f"{open_turns} turn(s) without `task_complete`, each ending at its "
                            "last entry")
-    agent.turns.sort()
+    add_named_note(agent, over)
+    turns.sort(key=lambda turn: turn[:2])
+    agent.turns = [(start, end) for start, end, _ in turns]
+    agent.turn_files = [named for _, _, named in turns]
     for key, (start, call_name) in started_calls.items():
         agent.calls.append(Call(start, finished_calls.get(key), call_name))
     agent.calls.extend(unrecognised)
@@ -336,9 +437,20 @@ def content_blocks(entry: dict) -> list[dict]:
     return [block for block in content if isinstance(block, dict)]
 
 
+def message_text(entry: dict) -> str:
+    """The text of a user line: its content as a string, or its text blocks joined."""
+    content = (entry.get("message") or {}).get("content")
+    if isinstance(content, str):
+        return content
+    return "\n".join(block["text"] for block in content_blocks(entry)
+                     if block.get("type") == "text" and isinstance(block.get("text"), str))
+
+
 def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Agent:
     responses: dict[str, tuple[datetime, dict, str | None]] = {}
-    prompts: list[datetime] = []
+    # Each line that sets the agent working, with the files of `reports/` it names.
+    prompts: list[tuple[datetime, list[str]]] = []
+    over = 0
     activity: list[datetime] = []
     answered = True
     started_calls: dict[str, tuple[datetime, str]] = {}
@@ -356,7 +468,9 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             # (a loaded skill, a message from the coordinator) does so only once the agent has
             # answered, and is part of the running turn otherwise.
             if is_text(entry) and (not entry.get("isMeta") or answered):
-                prompts.append(at)
+                named, cut = files_named(message_text(entry))
+                over += cut
+                prompts.append((at, named))
                 answered = False
             else:
                 activity.append(at)
@@ -387,13 +501,15 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
         agent.calls.append(Call(start, results.get(ident), call_name))
     agent.calls.extend(unrecognised)
     add_call_notes(agent)
-    prompts.sort()
+    prompts.sort(key=lambda prompt: prompt[0])
     activity.sort()
-    for index, start in enumerate(prompts):
-        stop = prompts[index + 1] if index + 1 < len(prompts) else None
+    for index, (start, named) in enumerate(prompts):
+        stop = prompts[index + 1][0] if index + 1 < len(prompts) else None
         inside = [at for at in activity if at >= start and (stop is None or at < stop)]
         if inside:
             agent.turns.append((start, inside[-1]))
+            agent.turn_files.append(named)
+    add_named_note(agent, over)
     for at, usage, model in responses.values():
         agent.records.append(Record(at, Usage(
             usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
@@ -527,8 +643,9 @@ def build_rows(sessions: list[Session]) -> list[Row]:
                 count = len(agent.turns)
                 stages[agent.key] = [
                     Row(start, agent.name + (f" — turn {n}" if count > 1 else ""), end - start,
-                        window=(start, end))
-                    for n, (start, end) in enumerate(agent.turns, 1)
+                        window=(start, end), named=named)
+                    for n, ((start, end), named) in enumerate(
+                        zip(agent.turns, agent.turn_files), 1)
                 ]
     owned = sorted(((record, top_level(agent, by_key, roots).key)
                     for session in sessions for agent in session.subagents
@@ -751,17 +868,23 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "",
         "Times are UTC. Each stage's waiting for tools is the time of its tool calls, from each "
         "call to its result; `unknown` marks a stage with a call whose result was not read or "
-        "whose type is not recognised. Input includes the part read from a cache.",
+        "whose type is not recognised. Input includes the part read from a cache. *Files named* "
+        "lists the files of the cycle's `reports/` that the message starting a subagent turn "
+        "names — its prompt, or the message that resumes it — each once; it is empty where that "
+        "message names none and for the orchestrator's rows, and `unknown` where the message "
+        "cannot be read.",
         "",
-        "| # | Stage | Start | Waiting for tools | Model | Input | Cached input | Output |",
-        "|---|---|---|---|---|---|---|---|",
+        "| # | Stage | Start | Waiting for tools | Model | Input | Cached input | Output "
+        "| Files named |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
         models = sorted(row.by_model.items(), key=lambda item: -item[1].total) or [("—", Usage())]
+        named = "unknown" if row.named is None else cell(", ".join(row.named))
         for model, usage in models:
             lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
                          f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
-                         f"| {number(usage.cached)} | {number(usage.output)} |")
+                         f"| {number(usage.cached)} | {number(usage.output)} | {named} |")
     return "\n".join(lines) + "\n"
 
 
