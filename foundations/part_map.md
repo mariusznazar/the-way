@@ -118,7 +118,7 @@ counts the audit and the skill that leads its weekly session.
 
 - **Files:** process-audit/**
 - **Depends on:** task-cycle · project-level
-- **Trust boundary:** none
+- **Trust boundary:** process-audit/audit_count.py
 
 ## gate
 
@@ -234,6 +234,7 @@ sentence and its exit codes.
 | a product pinned to a commit | both | untrusted |
 | git | them → us | trusted |
 | a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted |
+| a user's places outside every repository — the locations file and the places its entries name, such as the register of problems and the results of the audit | both | untrusted |
 
 ## Files left out on purpose
 
