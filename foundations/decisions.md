@@ -1677,34 +1677,46 @@ already reads; hiding tests from the executor — it costs honest work.
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
-there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's
-*Rests on*, in the form `TODO — <the fact, with its source>`, naming a fact the product's foundation
-does not hold yet; a change that leaves one there puts it before the human.
-`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error.
+there, `TODO` that something is missing. The main branch holds `TODO` only where an entry stands on
+something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
+`TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
+`TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
+`TODO — <what is missing, with its source>`; a change that leaves one there puts it before the
+human. `elements/common/foundation_check.py` reports a missing field, or a word not given it, as an
+error.
 
-- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common,
+  task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
-    `Based on: TODO — <what is missing>`;
+    `Based on: TODO — <what is missing, with its source>`; an invariant whose decision is not
+    written yet reads `Derives from: TODO — <the decision, and where it is expected>`;
   - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
-    reads `Based on: none` where its source says nothing of what it rests on.
+    reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
+    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
+    *Origin*.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
-with no test reads `review` as its method rather than `TODO` (WAY-61). An invariant that rests on
-a fact the foundation does not hold yet can expose it as `TODO — <the fact, with its source>`
-instead of falsely claiming `none`, and the description keeps the gap from standing as a silent
-one: it names what is missing, and the human sees at the merge that it is left.
+with no test reads `review` as its method rather than `TODO` (WAY-61). An entry that stands on
+something the foundation does not hold yet — a fact for an invariant, the decision an invariant
+derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
+`none`, and the description keeps the gap from standing as a silent one: it names what is missing,
+and the human sees at the merge that it is left. *Relations* and *Origin* are what an author states
+about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
+foundation lacks.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
 state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
 the main branch and having the script enforce it — a cycle would stop to write a fact outside its
-task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact.
+task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact; `TODO` only
+in *Rests on* — an author of a decision whose source is silent, or of an invariant whose decision
+is not written yet, would have to stop the cycle or write `none`, which is false.
 
 ### WAY-72 — In what language is a product's foundation written?
 
@@ -4567,7 +4579,8 @@ it.
     and its exit code;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
-    plan's *Checks* or a handoff tells an executor to run the gate after its slice.
+    plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
+    its fix changes code, and the return step does not compare the fix's range.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
@@ -9074,10 +9087,11 @@ decisions of the task's own sections, in a blocked request what the cycle needs 
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
 makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
 (WAY-295), an error of the form check that the cycle holds wrong (WAY-291), each descriptive `TODO`
-in an invariant's *Rests on* that stands on the main branch after the change (WAY-71), and the
-foundation entries the human did not see at the task document — and its `none` says that nothing
-else in the request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
-plain words, in that section, while each remaining finding stands with its place in the code in the
+in an invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main
+branch after the change (WAY-71), and the foundation entries the human did not see at the task
+document — and its `none` says that nothing else in the request waits for the human's yes. A
+blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle
+needs, in plain words, in that section, while each remaining finding stands with its place in the code in the
 lower part.
 
 - **Scope:** task-cycle, agent-instructions
@@ -9096,13 +9110,16 @@ lower part.
     decision of the change as unread has no such question; a request whose merged tree holds an
     invariant that reads `Rests on: TODO — the store of documents, once a task chooses it`, written
     by the change or standing from before, names the rule of that invariant and the missing store in
-    that section;
+    that section, and so does a request whose merged tree holds a decision that reads
+    `Based on: TODO — the source of the save format` or an invariant that reads
+    `Derives from: TODO — the decision on where saves live, expected in the save task`, each with
+    what is missing;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
     request is written in a shape of its own; the incomplete reading of the review of the whole
     change stands only in the lower part, or stands in the section in every request whatever the
-    reviewer did; the section reads `none` while an invariant's *Rests on* holds a descriptive
-    `TODO` on the merged tree.
+    reviewer did; the section reads `none` while an invariant's *Rests on* or *Derives from* or a
+    decision's *Based on* holds a descriptive `TODO` on the merged tree.
 - **Origin:** none
 
 *Rationale:* the human merges once the section that asks for decisions reads `none`, so a matter that
@@ -9115,9 +9132,9 @@ whole change that read only part of what it selected, and did not run through th
 passes as a full review unless the human is told, and the human is the one who can decide to merge
 on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
 the section keeps its `none` for requests that can be merged. A descriptive `TODO` that stands in
-an invariant's *Rests on* once the change is merged is a gap on the main branch that the merge
-accepts, so it stands here with the fact it names, for the human to accept (WAY-71); while an old
-gap stands, every request carries it.
+an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
+is a gap on the main branch that the merge accepts, so it stands here with what it names as
+missing, for the human to accept (WAY-71); while an old gap stands, every request carries it.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.

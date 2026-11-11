@@ -36,19 +36,22 @@ What it reports, each as `path:line: message`:
   ` · ` — name; and a reference written
   `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
   are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
-  fact written `ID@<fingerprint>` anywhere in the field. A *Rests on* whose value begins with the
-  word `TODO` is a missing fact, read whole as `TODO — <the fact, with its source>` and split into
-  no items, since its description names no entry; `TODO` alone, with no description of the fact,
-  is an error (WAY-71). Only a value that begins with `TODO` is read so: a `TODO` that is an item
-  after other facts, as in `clock-tick · TODO`, is not reported, and the dash after `TODO` is not
-  required;
+  fact written `ID@<fingerprint>` anywhere in the field. An invariant's *Rests on* or *Derives
+  from*, or a decision's *Based on*, whose value begins with the word `TODO` is something missing,
+  read whole as `TODO — <the fact, with its source>`, `TODO — <the decision, and where it is
+  expected>` or `TODO — <what is missing, with its source>` and split into no items or references,
+  since its description names no entry; `TODO` alone, with no description of what is missing, is an
+  error (WAY-71). Only a value that begins with `TODO` is read so: a `TODO` that is an item after
+  other facts, as in `clock-tick · TODO`, is not reported, and the dash after `TODO` is not
+  required; any other value of the three fields is read as before;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,
   *Part* and *Violated* (`yes` or `no`); a fact's *Source*, never `none` or `TODO`; a glossary
   entry's *Not*; a part's *Files*, *Depends on* and *Trust boundary*, never `TODO`; and a
   surface's *Relied on by*, never `none` or `TODO`; a decision's *Scope* and an invariant's
-  *Part* never read `none` or `TODO`, nor a decision's *Verification* `TODO`. An entry of the map
+  *Part* never read `none` or `TODO`, nor a decision's *Verification* `TODO`, nor a decision's
+  *Relations* or *Origin* a value that begins with `TODO`. An entry of the map
   is a part where it has *Files*, a surface where it has *Relied on by*, and an error with neither.
   An entry in the earlier form — a version in its heading, or a map entry with *Parts*,
   *Invariant*, *Criticality*, *Coverage* or *Declared at* — is an error, which
@@ -101,12 +104,19 @@ FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
-# The value of a *Rests on* that begins with the word `TODO`, with or without backticks.
+# The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
+# The three fields that take `TODO — <description>`: what a bare `TODO` in each fails to say, and
+# the form the description takes.
+MISSING = {"Rests on": ("names no fact", "<the fact, with its source>"),
+           "Derives from": ("names no decision", "<the decision, and where it is expected>"),
+           "Based on": ("says nothing of what is missing", "<what is missing, with its source>")}
 ANY = lambda value: bool(value)
 DECISION_FIELDS = ("Scope", "Based on", "Relations", "Verification", "Origin")
 DECISION_WORDS = {"Scope": lambda value: value not in EMPTY,
-                  "Verification": lambda value: value != "TODO"}
+                  "Relations": lambda value: not TODO_VALUE.match(value),
+                  "Verification": lambda value: value != "TODO",
+                  "Origin": lambda value: not TODO_VALUE.match(value)}
 INVARIANT_FIELDS = {"Method": lambda value: value in ("test", "review"), "Rests on": ANY,
                     "Derives from": ANY, "Part": lambda value: value not in EMPTY,
                     "Violated": lambda value: value in ("yes", "no")}
@@ -396,35 +406,38 @@ class Foundation:
             if number not in skipped:
                 self.refer_decisions(path, number, line)
 
-    def check_rests_on(self, found):
-        """A *Rests on* that begins with the word `TODO` is a missing fact, read whole and never
-        as a list; it takes a description of the fact. Any other value names facts."""
-        value, lines = found.get("Rests on", ("", [0]))
+    def missing_thing(self, path, found, name):
+        """Whether a field's value begins with the word `TODO`: a missing fact, decision or source,
+        read whole and never as a list or a reference. It takes a description of what is missing,
+        and a `TODO` with none is reported. Any other value is read as its field is read."""
+        value, lines = found.get(name, ("", [0]))
         todo = TODO_VALUE.match(value)
-        if not todo:
-            for word, line in located(found, "Rests on"):
-                self.refer(INVARIANTS, line, word, "fact")
-        elif not value[todo.end():].strip(" \t\n`—–-"):
-            self.report.error(INVARIANTS, lines[0],
-                              "*Rests on* reads `TODO` and names no fact: write `TODO — <the fact, "
-                              "with its source>`")
+        if todo and not value[todo.end():].strip(" \t\n`—–-"):
+            what, form = MISSING[name]
+            self.report.error(path, lines[0], "*%s* reads `TODO` and %s: write `TODO — %s`"
+                              % (name, what, form))
+        return bool(todo)
 
     def check_foundation_references(self):
         for _, _, body in blocks(self.files[DECISIONS], "### "):
             found = fields(body)
             for word, line in located(found, "Scope"):
                 self.refer(DECISIONS, line, word, "part")
-            for word, line in based_on(found):
-                self.refer(DECISIONS, line, word, "fact")
             self.based_lines.update(found.get("Based on", ("", []))[1])
-            for line, text in unquoted(found, "Based on"):
-                self.refer_decisions(DECISIONS, line, text)
+            if not self.missing_thing(DECISIONS, found, "Based on"):
+                for word, line in based_on(found):
+                    self.refer(DECISIONS, line, word, "fact")
+                for line, text in unquoted(found, "Based on"):
+                    self.refer_decisions(DECISIONS, line, text)
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")
         for _, (_, found) in self.entries[INVARIANTS].items():
-            for line, text in unquoted(found, "Derives from"):
-                self.refer_decisions(INVARIANTS, line, text)
-            self.check_rests_on(found)
+            if not self.missing_thing(INVARIANTS, found, "Derives from"):
+                for line, text in unquoted(found, "Derives from"):
+                    self.refer_decisions(INVARIANTS, line, text)
+            if not self.missing_thing(INVARIANTS, found, "Rests on"):
+                for word, line in located(found, "Rests on"):
+                    self.refer(INVARIANTS, line, word, "fact")
             for word, line in located(found, "Part"):
                 self.refer(INVARIANTS, line, word, "part", EMPTY + ("every",))
         for _, (_, found) in self.entries[PART_MAP].items():

@@ -633,6 +633,72 @@ class FoundationCheckTest(unittest.TestCase):
                                "- **Rests on:** none")
         self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
+    def test_based_on_a_missing_thing_described_passes_whole(self):
+        # a description is read as one: its commas, ` · ` and the words in it name no entry
+        for value in ("TODO — the source of the save format",
+                      "TODO — the source of the save format, once the vendor answers",
+                      "TODO — clock-tock, ABC-77 · its source",
+                      "`TODO — the source of the save format, once the vendor answers`"):
+            with self.subTest(value=value):
+                decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                                      "- **Based on:** " + value + "\n")
+                self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_based_on_a_missing_thing_described_over_two_lines_passes(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                              "- **Based on:** TODO — the source of the save format,\n"
+                              "  once the vendor answers\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_based_on_a_bare_todo_names_nothing_missing(self):
+        for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
+            with self.subTest(value=value):
+                decisions = self.edit(DECISIONS, "- **Based on:** none\n",
+                                      "- **Based on:** " + value + "\n")
+                self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                                 "foundations/decisions.md:21: *Based on* reads `TODO` and says "
+                                 "nothing of what is missing: write `TODO — <what is missing, "
+                                 "with its source>`", "1 error")
+
+    def test_based_on_a_word_that_only_starts_with_todo_is_read_as_before(self):
+        decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** TODOs\n")
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
+
+    def test_derives_from_a_missing_decision_described_passes_whole(self):
+        for value in ("TODO — the decision on where saves live",
+                      "TODO — the decision on where saves live, expected in the save task",
+                      "TODO — ABC-77, expected next · or ABC-78",
+                      "`TODO — the decision on where saves live, expected in the save task`"):
+            with self.subTest(value=value):
+                invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
+                                       "- **Derives from:** " + value)
+                self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_derives_from_a_bare_todo_names_no_decision(self):
+        for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
+            with self.subTest(value=value):
+                invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
+                                       "- **Derives from:** " + value)
+                self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                                 "foundations/invariants.md:9: *Derives from* reads `TODO` and "
+                                 "names no decision: write `TODO — <the decision, and where it is "
+                                 "expected>`", "1 error")
+
+    def test_derives_from_other_values_are_read_as_before(self):
+        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
+                               "- **Derives from:** ABC-77")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:9: `ABC-77` names no decision of the log")
+
+    def test_relations_and_origin_take_no_todo(self):
+        for field, old in (("Relations", "- **Relations:** none\n"),
+                           ("Origin", "- **Origin:** none\n")):
+            for value in ("TODO", "TODO — the reasoning"):
+                with self.subTest(field=field, value=value):
+                    decisions = self.edit(DECISIONS, old, "- **%s:** %s\n" % (field, value))
+                    self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                                     "*%s* does not take `%s`" % (field, value), "1 error")
+
     def test_based_on_no_fact(self):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),

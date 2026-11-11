@@ -17,9 +17,11 @@ which word each field takes, how its entries are named — stands in that elemen
 - A field holds a value, or `none` or `TODO` only where its element's template gives it that word:
   `none` states that nothing is there, `TODO` that something is known to be missing. `none` is a
   statement, not a blank: where a source is silent, the field reads `TODO` (WAY-71).
-- The main branch holds `TODO` only in an invariant's *Rests on*, in the form
-  `TODO — <the fact, with its source>`, naming a fact the product's foundation does not hold yet; a
-  change that leaves one there puts it before the human (WAY-71).
+- The main branch holds `TODO` only where an entry stands on something the product's foundation
+  does not hold yet: in an invariant's *Rests on*, in the form `TODO — <the fact, with its source>`;
+  in an invariant's *Derives from*, in the form `TODO — <the decision, and where it is expected>`;
+  and in a decision's *Based on*, in the form `TODO — <what is missing, with its source>`; a change
+  that leaves one there puts it before the human (WAY-71).
 - `elements/common/foundation_check.py` reports a missing field, or a word its template does not
   give that field, as an error (WAY-71).
 

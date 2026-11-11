@@ -246,11 +246,14 @@ order:
     whole; merge anyway?". A reviewer that read whole the decisions concerning the change, ran
     through the rest by title and named none unread gives no item, since that reading is the
     practice (WAY-150).
-15. *A fact an invariant rests on that the foundation does not hold yet* (WAY-71, WAY-287), from the
-    invariants file of the tree after the change: each `TODO — <the fact, with its source>` in an
-    invariant's *Rests on* that stands there — the change writes it, keeps it or does not remove
-    it — one item in plain words: the rule the invariant states and the fact the foundation lacks,
-    with "Merge with the gap?". A request therefore carries one such item for as long as an old gap
+15. *Something an entry stands on that the foundation does not hold yet* (WAY-71, WAY-287), from the
+    invariants file and the decision log of the tree after the change: each descriptive `TODO` —
+    `TODO — <the fact, with its source>` in an invariant's *Rests on*,
+    `TODO — <the decision, and where it is expected>` in an invariant's *Derives from*,
+    `TODO — <what is missing, with its source>` in a decision's *Based on* — that stands there; the
+    change writes it, keeps it or does not remove it. One item for each gap, in plain words: the
+    rule the invariant states or the question the decision answers, and what is missing, with
+    "Merge with the gap?". A request therefore carries one such item for as long as an old gap
     stands.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and

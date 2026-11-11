@@ -25,7 +25,7 @@ particular to a decision (WAY-35).
 <1–3 binding sentences>
 
 - **Scope:** <parts from the part map>
-- **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | none
+- **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
 - **Relations:** derives from WAY-x · narrows WAY-y | none
 - **Verification:** invariants: <identifier> · <identifier>. An agent compares a change with the
   decision:
@@ -48,6 +48,11 @@ particular to a decision (WAY-35).
   source as its address, the place in it, the passage quoted word for word and the date it was read
   (WAY-90).
 - What is not yet known, or the decider's own motive, is no source outside the product.
+- Where the decision's source is silent on what it rests on, *Based on* reads
+  `TODO — <what is missing, with its source>`, never a bare `TODO` and never `none`; the main branch
+  may hold it, and a change that leaves one there puts it before the human (WAY-71).
+  `elements/common/foundation_check.py` reports a bare `TODO` there as an error. *Relations* and
+  *Origin* never read `TODO`: the script reports it (WAY-71).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than
