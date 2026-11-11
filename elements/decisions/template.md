@@ -212,8 +212,10 @@ A field stays in the template only while someone or something reads it (WAY-05).
 *Origin* points to where the full reasoning lives: a research document, a design document, a
 merge request, a ticket, or a file at a fixed commit — never to anything deleted when its task
 closes. When the whole reasoning is in the entry, it is `none`. Documents go in *Origin*;
-*Based on* names sources about the world. The task a decision was made in is not recorded: git
-history gives it.
+*Based on* names sources about the world. The task a decision was made in is not recorded, and a
+task document is never named in *Origin*, wherever the product keeps its tasks: the place of tasks
+is where work is found, never a source an entry points to (WAY-27). What it holds of the reasoning
+goes into the entry's *Rationale* and *Rejected*; *Origin* then reads `none`.
 
 ## Recovered decisions
 

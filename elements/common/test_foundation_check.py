@@ -596,6 +596,43 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
                          "`clock-steady`")
 
+    def test_rests_on_a_missing_fact_described_passes_whole(self):
+        # a description is read as one: its commas and the words in it name no entry
+        for value in ("TODO — the store of documents",
+                      "TODO — the store of documents, once a task chooses it",
+                      "TODO — clock-tock, the clock the game runs on · its source",
+                      "`TODO — the store of documents, once a task chooses it`"):
+            with self.subTest(value=value):
+                invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                                       "- **Rests on:** " + value)
+                self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_rests_on_a_missing_fact_described_over_two_lines_passes(self):
+        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                               "- **Rests on:** TODO — the store of documents,\n"
+                               "  once a task chooses it")
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
+    def test_rests_on_a_bare_todo_names_no_fact(self):
+        for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
+            with self.subTest(value=value):
+                invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                                       "- **Rests on:** " + value)
+                self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                                 "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
+                                 "no fact: write `TODO — <the fact, with its source>`", "1 error")
+
+    def test_rests_on_a_word_that_only_starts_with_todo_is_no_todo(self):
+        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                               "- **Rests on:** TODOs")
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
+                         "foundations/invariants.md:8: `TODOs` is no identifier of a fact")
+
+    def test_rests_on_none_and_a_fact_still_pass(self):
+        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
+                               "- **Rests on:** none")
+        self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
+
     def test_based_on_no_fact(self):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),

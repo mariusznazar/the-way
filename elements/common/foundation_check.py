@@ -36,7 +36,10 @@ What it reports, each as `path:line: message`:
   ` · ` — name; and a reference written
   `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
   are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
-  fact written `ID@<fingerprint>` anywhere in the field;
+  fact written `ID@<fingerprint>` anywhere in the field. A *Rests on* whose value begins with the
+  word `TODO` is a missing fact, read whole as `TODO — <the fact, with its source>` and split into
+  no items, since its description names no entry; `TODO` alone, with no description of the fact,
+  is an error (WAY-71);
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,
@@ -96,6 +99,8 @@ FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
+# The value of a *Rests on* that begins with the word `TODO`, with or without backticks.
+TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
 ANY = lambda value: bool(value)
 DECISION_FIELDS = ("Scope", "Based on", "Relations", "Verification", "Origin")
 DECISION_WORDS = {"Scope": lambda value: value not in EMPTY,
@@ -389,6 +394,19 @@ class Foundation:
             if number not in skipped:
                 self.refer_decisions(path, number, line)
 
+    def check_rests_on(self, found):
+        """A *Rests on* that begins with the word `TODO` is a missing fact, read whole and never
+        as a list; it takes a description of the fact. Any other value names facts."""
+        value, lines = found.get("Rests on", ("", [0]))
+        todo = TODO_VALUE.match(value)
+        if not todo:
+            for word, line in located(found, "Rests on"):
+                self.refer(INVARIANTS, line, word, "fact")
+        elif not value[todo.end():].strip(" \t\n`—–-"):
+            self.report.error(INVARIANTS, lines[0],
+                              "*Rests on* reads `TODO` and names no fact: write `TODO — <the fact, "
+                              "with its source>`")
+
     def check_foundation_references(self):
         for _, _, body in blocks(self.files[DECISIONS], "### "):
             found = fields(body)
@@ -404,8 +422,7 @@ class Foundation:
         for _, (_, found) in self.entries[INVARIANTS].items():
             for line, text in unquoted(found, "Derives from"):
                 self.refer_decisions(INVARIANTS, line, text)
-            for word, line in located(found, "Rests on"):
-                self.refer(INVARIANTS, line, word, "fact")
+            self.check_rests_on(found)
             for word, line in located(found, "Part"):
                 self.refer(INVARIANTS, line, word, "part", EMPTY + ("every",))
         for _, (_, found) in self.entries[PART_MAP].items():

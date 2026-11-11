@@ -1678,8 +1678,9 @@ already reads; hiding tests from the executor — it costs honest work.
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
 there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's
-*Rests on*, until the facts element has entries. `elements/common/foundation_check.py` reports a
-missing field, or a word not given it, as an error.
+*Rests on*, in the form `TODO — <the fact, with its source>`, naming a fact the product's foundation
+does not hold yet; a change that leaves one there puts it before the human.
+`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error.
 
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
 - **Based on:** none
@@ -1694,13 +1695,16 @@ missing field, or a word not given it, as an error.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
-with no test reads `review` as its method rather than `TODO` (WAY-61). Before facts have entries,
-an invariant can expose a needed fact as `TODO` instead of falsely claiming `none`; once they do,
-the gap must be resolved.
+with no test reads `review` as its method rather than `TODO` (WAY-61). An invariant that rests on
+a fact the foundation does not hold yet can expose it as `TODO — <the fact, with its source>`
+instead of falsely claiming `none`, and the description keeps the gap from standing as a silent
+one: it names what is missing, and the human sees at the merge that it is left.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
-state field and a ratcheted list — three mechanisms where one serves.
+state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
+the main branch and having the script enforce it — a cycle would stop to write a fact outside its
+task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact.
 
 ### WAY-72 — In what language is a product's foundation written?
 
@@ -4558,8 +4562,9 @@ it.
 - **Based on:** none
 - **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
 - **Verification:** an agent compares the gate's run and the request with the decision:
-  - complies: the orchestrator runs the gate after the review of the whole change and again after
-    the return step changed the tree, and the request gives the command and its exit code;
+  - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
+    and again where the merge with the target branch changed it, and the request gives the command
+    and its exit code;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice.
@@ -4570,12 +4575,19 @@ author's focused checks give, and the orchestrator owns that run. The command an
 tell the human what passed; the checks that failed or did not run, named, keep what stayed
 unchecked in view. A gate run after every slice repeats for each slice a run the finished change
 needs once and holds the next slice until it ends, while the focused checks of the code and
-invariants a slice reaches find what it breaks there.
+invariants a slice reaches find what it breaks there. The return step compares the foundation with
+the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
+tree it and its review leave covers the finished change, where a run before it would be made again
+on the tree it changes; the merge with the target branch is the one change to the tree that can
+follow. The price is that a failure of the gate comes after the return step, so the fix of that
+failure sends the return step back to its range.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
 alone — a check that did not run would pass unseen; the gate after every slice — it multiplies the
-gate's run by the number of slices and holds each slice for it.
+gate's run by the number of slices and holds each slice for it; rerunning after the return step
+only the checks that read the foundation — the-way does not know which checks of a product read its
+foundation.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
@@ -9062,7 +9074,8 @@ unread, the unfixed findings the product's user or the human working with the pr
 decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
 makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
-(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
+(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), each descriptive `TODO`
+in an invariant's *Rests on* that the change leaves on the main branch (WAY-71), and the foundation
 entries the human did not see at the task document — and its `none` says that nothing else in the
 request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
 plain words, in that section, while each remaining finding stands with its place in the code in the
@@ -9098,7 +9111,9 @@ human seeing them at the merge, and this section is where the merge shows them. 
 whole change that read only part of what it selected, and did not run through the rest by title,
 passes as a full review unless the human is told, and the human is the one who can decide to merge
 on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
-the section keeps its `none` for requests that can be merged.
+the section keeps its `none` for requests that can be merged. A descriptive `TODO` left in an
+invariant's *Rests on* is a gap the merge puts on the main branch, so it stands here with the fact
+it names, for the human to accept (WAY-71).
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
