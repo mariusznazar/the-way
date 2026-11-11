@@ -1,0 +1,7 @@
+# Handoff — the return step
+
+You are the one author, resumed for the return step of the cycle (method: `.claude/skills/the-way-make-change/SKILL.md` as you read it; the stage is the return step, not a row of its variants). Read `task-cycle/skill/return_step.md` whole and follow it, and `task-cycle/skill/foundation_step.md` where it names it. Worktree `the root of the task worktree`, branch `task/guidelines-departure`, head `b4bfca8` (WAY-327 after the fix; the review of the whole change `PASS 7442841…`, of its fix `PASS b4bfca8…`). Frozen task: `.runs/task-cycles/guidelines-departure/task.md`.
+
+Compare the entries the change writes (WAY-327), those the task names (WAY-215, WAY-217, WAY-209, WAY-244) and those your search found, and the part map, with the files of the repository, and correct in the same change whatever no longer matches; write an invariant only for a rule the task, a decision or the human sets (none is set). One new Minor observation of the fix review is for the request, not for you to fix: "guidelines of the-way's own" in the third binding sentence is wider than the decision's coverage (coding and testing guidelines only).
+
+Report to `.runs/task-cycles/guidelines-departure/reports/return-report.md` with the fields of *Return step* in `task-cycle/record_template.md`, your checks with command and exit code, **Unread material** and **Searches not found or unclear**. Commit any correction; if nothing needs correcting, commit nothing. Return status, commits, a one-line check result and the path.
