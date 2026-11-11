@@ -136,8 +136,9 @@ two outcomes: the human weighs it further, or sets it aside.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
    a pin that is unknown or a cycle that is not read.
-3. **What still waits, and for how long.** Each issue of *Open issues*: the cycles in which its
-   problems stand, its problems and its *Days waiting*. Add the issues of *Dropped issues* once,
+3. **What still waits, and for how long.** Each issue of *Open issues*: the cycles its problems came
+   back in (the first cycle where a problem stood does not count, so `0` is a problem seen once),
+   its problems and its *Days waiting*. Add the issues of *Dropped issues* once,
    as the count gives them, with no waiting.
 4. **What each version of the process shows.** For each series of *Process versions*, one at a time,
    with the line that says why it begins where it does: the median cost at constant prices of each

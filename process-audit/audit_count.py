@@ -99,7 +99,9 @@ Measures are compared only within a series, and each series is its own section o
 three answers, each `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
 is no, text naming an open design choice with no word that denies it (`no`, `not`, `without`...)
-is yes, other text or a missing or doubled item is unknown; where the item reads `none` but
+among the last four words just before the phrase, in the same clause, is yes (a denial elsewhere in
+the item, as in the template's `foundation entries none`, does not count), other text or a missing
+or doubled item is unknown; where the item reads `none` but
 *Review rounds* names a findings file, the answer is unknown, since the findings are not in the
 record. Q2, more than one third of the slices of the plans came back too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
@@ -140,9 +142,11 @@ does not hold it, never by date: the holding is `git merge-base --is-ancestor <f
 checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
 short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a pin
 `unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the number
-of cycles in which its problems stand, and the days it has waited: from the earliest commit date
-of the copies its problems' *Record* names to the day of the run, `unknown` where a problem's cycle
-is not known. An
+of cycles its problems came back in, and the days it has waited: the cycles in which a problem of
+the issue stands, except the first of them, so `0` where it stands in one cycle only, and `at least
+n` where a refused row or a problem of a cycle not read may belong to a cycle not counted; and from
+the earliest commit date of the copies its problems' *Record* names to the day of the run,
+`unknown` where a problem's cycle is not known. An
 issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
 register, never ranked by their counts (WAY-336).
 
@@ -259,8 +263,15 @@ SLICES_WORD = re.compile(r"slices", re.I)
 # letter or digit before it, so `F1a` and `F1–F4` give none. Every repetition is bounded.
 SLICES_COUNT = re.compile(r"(?<![A-Za-z0-9])([0-9]{1,6})[ \t]{1,8}slices(?![A-Za-z0-9])", re.I)
 # Words that deny what follows them, so that `no open design choice` is not read as one.
-NEGATIONS = frozenset({"no", "not", "none", "nor", "never", "without"})
+NEGATIONS = frozenset({"no", "not", "none", "nor", "never", "without", "neither", "nothing"})
 WORDS = re.compile(r"[a-z]+")
+# A denial is looked for only among the last words just before the phrase, in the same clause: the
+# template's own form of a discarded attempt holds `none` and the like in its other parts. At most
+# this many characters before the phrase are read, so that the work per phrase is bounded.
+DENIAL_WORDS = 4
+DENIAL_REACH = 60
+CLAUSE_MARKS = frozenset(";:,.—–()[]!?\"")
+CONTRACTED_NOT = ("n't", "n’t")
 # The locations file and the price list are named by their options in an error, never by their
 # path, which is the user's (WAY-320).
 LOCATIONS_LABEL = "the locations file (`--locations`)"
@@ -881,12 +892,37 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
         # `none` followed by more words, such as `none — no open design choice`, is not read as a
         # discarded open design choice either way.
         return None, "the item `Discarded attempt` opens with none and holds more text"
-    if DESIGN_CHOICE in text.casefold():
-        if NEGATIONS.intersection(WORDS.findall(text.casefold())):
-            return None, ("the item `Discarded attempt` names an open design choice beside a word "
-                          "that may deny it")
+    folded = text.casefold()
+    if DESIGN_CHOICE in folded:
+        if any(denied_before(folded, at) for at in phrase_starts(folded)):
+            return None, ("the item `Discarded attempt` names an open design choice with a word "
+                          "just before it that may deny it")
         return "yes", None
     return None, "the item `Discarded attempt` names neither none nor an open design choice"
+
+
+def phrase_starts(folded: str) -> list[int]:
+    """The place of each occurrence of the phrase in the case-folded text, one pass."""
+    found = []
+    at = folded.find(DESIGN_CHOICE)
+    while at != -1:
+        found.append(at)
+        at = folded.find(DESIGN_CHOICE, at + len(DESIGN_CHOICE))
+    return found
+
+
+def denied_before(folded: str, at: int) -> bool:
+    """Whether a denying word stands among the last words just before the phrase at `at`, in the
+    same clause: at most DENIAL_REACH characters are read, cut after the last clause mark, and the
+    last DENIAL_WORDS words of what remains are searched. Linear: no pattern is tried again."""
+    before = folded[max(0, at - DENIAL_REACH):at]
+    for index in range(len(before) - 1, -1, -1):
+        if before[index] in CLAUSE_MARKS:
+            before = before[index + 1:]
+            break
+    if any(mark in before for mark in CONTRACTED_NOT):
+        return True
+    return bool(NEGATIONS.intersection(WORDS.findall(before)[-DENIAL_WORDS:]))
 
 
 def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, str | None]:
@@ -1684,8 +1720,14 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                                     "its earliest copy is dated after the day of the run"))
                 else:
                     days = str(waited)
-            open_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
-                              counted(not_read, refused), days, str(refused)])
+            # The problem stands in the first cycle it is found in and comes back in each other
+            # cycle, so the count is the cycles that hold it less one, whichever of them is first.
+            # A refused row or a problem of an unread cycle may belong to a cycle not counted
+            # here, so the count is a lower bound then: at least the known cycles less one.
+            came_back = max(len(hit) - 1, 0)
+            open_rows.append([name, counted(came_back, refused + not_read),
+                              counted(len(members), refused), counted(not_read, refused), days,
+                              str(refused)])
         else:
             dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
                                  counted(not_read, refused), str(refused)])
@@ -2017,14 +2059,17 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "## Open issues",
         "",
-        "An open issue's cycles are those its problems stand in. *Days waiting* counts from the "
-        "earliest commit date of the copies its problems' *Record* names to the day of the run; "
-        "a count with refused rows of the issue reads `at least n`; `—` where the issue has no "
-        "problem yet. The issues are in the order of the register, never ranked by their counts "
-        "(WAY-336), and the weighing is the human's.",
+        "*Cycles its problems came back in* counts the cycles in which a problem of the issue "
+        "stands, except the first of them, where it stood and did not come back: `0` where it "
+        "stands in one cycle only. It reads `at least n` where refused rows of the issue or "
+        "problems of a cycle that is not read may belong to cycles not counted. *Days waiting* "
+        "counts from the earliest commit date of the copies its problems' *Record* names to the "
+        "day of the run; `—` where the issue has no problem yet. A count of problems with refused "
+        "rows of the issue reads `at least n`. The issues are in the order of the register, never "
+        "ranked by their counts (WAY-336), and the weighing is the human's.",
         "",
     ]
-    lines += table(["Issue", "Cycles in which its problems stand", "Problems",
+    lines += table(["Issue", "Cycles its problems came back in", "Problems",
                     "Problems whose cycle is not read", "Days waiting", "Refused rows"],
                    analysis.open_rows)
     lines += [

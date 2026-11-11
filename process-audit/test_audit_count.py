@@ -1285,7 +1285,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2025-10-19")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["slow-one", "1", "1", "0", "10", "0"]], self.rows("Open issues"))
+        self.assertEqual([["slow-one", "0", "1", "0", "10", "0"]], self.rows("Open issues"))
         done = self.run_count("--today", "2025-10-08")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual("unknown", self.rows("Open issues")[0][4])
@@ -1302,7 +1302,69 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["first-issue", "1", "1", "0"], ["second-issue", "2", "2", "0"]],
+        self.assertEqual([["first-issue", "0", "1", "0"], ["second-issue", "1", "2", "0"]],
+                         [row[:4] for row in self.rows("Open issues")])
+
+    def test_an_open_issue_counts_the_cycles_its_problems_came_back_in(self):
+        # Three cycles hold problems of one issue, one of them two: the problem stands in the first
+        # and came back in the other two, so the count is 2, not 3.
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record()})
+        second, removed = product.cycle("b-task", {"cycle.md": record()}, parent=removed)
+        third, _ = product.cycle("c-task", {"cycle.md": record()}, parent=removed)
+        self.use_register(issues=[issue_row("seen-once"), issue_row("seen-thrice")],
+                          problems=[problem_row("product", first, "seen-once"),
+                                    problem_row("product", first, "seen-thrice"),
+                                    problem_row("product", first, "seen-thrice"),
+                                    problem_row("product", second, "seen-thrice"),
+                                    problem_row("product", third, "seen-thrice")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertIn("| Issue | Cycles its problems came back in | Problems |", self.latest())
+        self.assertEqual([["seen-once", "0", "1", "0"], ["seen-thrice", "2", "4", "0"]],
+                         [row[:4] for row in self.rows("Open issues")])
+
+    def test_the_count_of_returns_reads_at_least_where_a_row_or_a_cycle_is_missing(self):
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record()})
+        second, removed = product.cycle("b-task", {"cycle.md": record()}, parent=removed)
+        third, _ = product.cycle("c-task", {"cycle.md": record()}, parent=removed)
+        self.use_register(
+            issues=[issue_row("exact"), issue_row("cycle-lost"), issue_row("row-refused")],
+            problems=[problem_row("product", first, "exact"),
+                      problem_row("product", second, "exact"),
+                      problem_row("product", first, "cycle-lost"),
+                      problem_row("product", second, "cycle-lost"),
+                      problem_row("product", third, "cycle-lost"),
+                      problem_row("ghost", first, "cycle-lost"),
+                      problem_row("product", first, "row-refused"),
+                      problem_row("product", second, "row-refused"),
+                      problem_row("product", third, "row-refused", weight="Blocker")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        # `cycle-lost`: its problem of an unread cycle may stand in a fourth cycle, so at least 2.
+        # `row-refused`: the refused row may name another cycle, so at least 1.
+        self.assertEqual([["exact", "1", "2", "0"], ["cycle-lost", "at least 2", "4", "1"],
+                          ["row-refused", "at least 1", "at least 2", "at least 0"]],
+                         [row[:4] for row in self.rows("Open issues")])
+
+    def test_a_cycle_copied_again_is_one_cycle_in_the_count_of_returns(self):
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record()})
+        again, removed = product.cycle("a-task", {"cycle.md": record(
+            remarks="- Process remarks on the-way:\n  - one\n")}, parent=removed)
+        second, _ = product.cycle("b-task", {"cycle.md": record()}, parent=removed)
+        self.use_register(issues=[issue_row("one-cycle"), issue_row("two-cycles")],
+                          problems=[problem_row("product", first, "one-cycle"),
+                                    problem_row("product", again, "one-cycle"),
+                                    problem_row("product", again, "two-cycles"),
+                                    problem_row("product", second, "two-cycles")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["one-cycle", "0", "2", "0"], ["two-cycles", "1", "2", "0"]],
                          [row[:4] for row in self.rows("Open issues")])
 
     def test_a_cycle_committed_again_counts_its_problem_once(self):
@@ -1378,7 +1440,8 @@ class RegisterCount(AuditCountCase):
         reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "row 1 of `Problems`"]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("more than one cycle", reasons[0])
-        self.assertEqual([["open-one", "0", "1", "1", "unknown", "0"]], self.rows("Open issues"))
+        self.assertEqual([["open-one", "at least 0", "1", "1", "unknown", "0"]],
+                         self.rows("Open issues"))
 
     def test_an_open_issue_waits_from_the_copy_its_problem_names(self):
         # 1760000000 is 2025-10-09 and 1760864000 is 2025-10-19 in UTC. The problem stands in the
@@ -1400,7 +1463,7 @@ class RegisterCount(AuditCountCase):
         done = self.run_count("--today", "2025-10-29")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([[first, again]], [[c["Record"], c["Later copies"]] for c in self.cycles()])
-        self.assertEqual([["slow-one", "1", "1", "0", "10", "0"]], self.rows("Open issues"))
+        self.assertEqual([["slow-one", "0", "1", "0", "10", "0"]], self.rows("Open issues"))
 
     def test_a_register_far_larger_than_a_real_one_lists_its_unknown_rows_in_part(self):
         product = self.repository()
@@ -1775,6 +1838,76 @@ class ProcessVersions(AuditCountCase):
              1_000_000)])
         self.run_versions(way, product)
         self.assertEqual("unknown", self.series(1)[0][5])
+
+    def test_the_templates_own_form_of_a_discarded_open_design_choice_reads_yes(self):
+        # The form `task-cycle/record_template.md` gives holds `none` and `report` in its other parts
+        # (`foundation entries none`); only the words just before the phrase can deny it.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("template", process_record(
+                v1, discarded="10:32, open design choice found in the auth flow; report "
+                              "reports/x.md; foundation entries none; reset to abc1234; next "
+                              "route: spec"), 1_000_000)])
+        self.run_versions(way, product)
+        self.assertEqual("yes", self.series(1)[0][5])
+        self.assertEqual([], [row for row in self.rows("Unknown values")
+                              if row[2] == "Discarded attempt"])
+
+    def test_a_denial_stands_only_where_it_comes_just_before_the_phrase(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        import remarks_check
+
+        def read(discarded: str) -> str | None:
+            lines = remarks_check.split_lines(f"- Discarded attempt: {discarded}\n")
+            return audit_count.read_contradiction(lines, remarks_check.fenced_flags(lines))[0]
+
+        for text, answer in (
+                ("10:32, open design choice found in the auth flow; foundation entries none", "yes"),
+                ("a time overrun; open design choice at the start; no code was kept", "yes"),
+                ("not found, open design choice at the start", "yes"),
+                ("a time overrun; no open design choice", None),
+                ("it was not an open design choice", None),
+                ("discarded without an open design choice", None),
+                ("found no evidence of an open design choice", None),
+                ("NO OPEN DESIGN CHOICE", None),
+                ("never an open design choice", None),
+                ("neither a size problem nor an open design choice", None),
+                ("it wasn't an open design choice", None),
+                ("open design choice at the start; later no open design choice", None),
+                ("a time overrun", None)):
+            with self.subTest(text):
+                self.assertEqual(answer, read(text))
+
+    def test_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        import remarks_check
+        crafted = (
+            ("very long", "open design choice " * 20_000),
+            ("very long before", "no " * 200_000 + "open design choice"),
+            ("long without clause marks", "x" * 500_000 + " open design choice"),
+            ("control characters", "\x1b[2J open design choice \x00\x07 | no | open design choice"),
+            ("a bar", "a | b open design choice | c"))
+        for label, text in crafted:
+            with self.subTest(label):
+                lines = remarks_check.split_lines(f"- Discarded attempt: {text}\n")
+                answer, why = audit_count.read_contradiction(lines, remarks_check.fenced_flags(lines))
+                self.assertIn(answer, ("yes", None))
+                self.assertEqual(answer is None, why is not None)
+        # Run whole: no cell of the result holds a bar or a control character from the item.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            (f"crafted-{number}", process_record(v1, discarded=text.replace("\n", " ")), 1_000)
+            for number, (_, text) in enumerate(crafted)])
+        self.run_versions(way, product)
+        self.assertEqual([], [char for char in self.latest()
+                              if not char.isprintable() and char != "\n"])
+        self.assertEqual(["yes"], [self.series(1)[0][5]])
 
     def test_a_discarded_attempt_opening_with_none_is_not_read_as_a_design_choice(self):
         # `none` with more words names the phrase, but it says nothing was discarded: unknown.
