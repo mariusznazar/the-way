@@ -1001,6 +1001,10 @@ class Register:
     classes: list[str] = field(default_factory=list)
     issues: list[tuple[str, str, str]] = field(default_factory=list)
     problems: list[Problem] = field(default_factory=list)
+    # The Repository, Record and Issue texts of each refused row of *Problems*, as the row gives them
+    # (Issue empty where the row is too short to have one): a refused row still belongs to the cycle
+    # and the issue it names, and the counts that include it say so (WAY-335).
+    refused_problems: list[tuple[str, str, str]] = field(default_factory=list)
     refused: list[tuple[str, str, str, str]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
 
@@ -1160,6 +1164,8 @@ def read_register(path: Path) -> Register:
             if len(cells) != 7:
                 register.refuse(value, f"the row has {len(cells)} cells, not 7",
                                 cells[0] if cells else "", cells[1] if len(cells) > 1 else "")
+                register.refused_problems.append((cells[0] if cells else "",
+                                                  cells[1] if len(cells) > 1 else "", ""))
                 continue
             repository, record, _, _, cls, weight, issue = cells
             why = None
@@ -1175,6 +1181,7 @@ def read_register(path: Path) -> Register:
                 why = "the issue is in no valid row of Issues"
             if why:
                 register.refuse(value, why, repository, record)
+                register.refused_problems.append((repository, record, issue))
                 continue
             register.problems.append(Problem(number, repository, record.lower(), cls, weight,
                                              issue))
@@ -1249,6 +1256,11 @@ class Ancestry:
         return None, f"git could not compare the version {pin} with the fix (exit code {code})"
 
 
+def counted(count: int, refused: int) -> str:
+    """A count as a cell: exact where no refused row belongs to it, `at least n` where some does."""
+    return f"at least {count}" if refused else str(count)
+
+
 @dataclass
 class Analysis:
     """The tables the register adds to the result, as rows of text, and the values it leaves
@@ -1284,22 +1296,40 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         else:
             tally = counts.setdefault((cycle.repository, cycle.record), Counter())
             tally[(problem.cls, problem.weight)] += 1
+    # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
+    # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
+    # as `at least n`, since the row's own figure is not in the count (the review's Important finding).
+    refused_cycle: Counter = Counter()
+    refused_issue: Counter = Counter()
+    valid_issues = {name for name, _, _ in register.issues}
+    for repository, record, issue in register.refused_problems:
+        cycle = index.get((repository, record.lower())) if FULL_HASH.fullmatch(record) else None
+        if cycle is not None:
+            refused_cycle[(cycle.repository, cycle.record)] += 1
+        if issue in valid_issues:
+            refused_issue[issue] += 1
     cycle_rows = []
     for cycle in cycles:
-        mine = counts.get((cycle.repository, cycle.record), Counter())
+        key = (cycle.repository, cycle.record)
+        mine = counts.get(key, Counter())
+        refused = refused_cycle[key]
         head = [cycle.repository, cycle.record]
-        if not mine:
-            cycle_rows.append(head + [NONE, "0", "0", "0", "0"])
+        rows_here = []
         for cls in register.classes:
             tally = [mine[(cls, weight)] for weight in LEVELS]
             if any(tally):
-                cycle_rows.append(head + [cls] + [str(count) for count in tally])
+                rows_here.append(head + [cls] + [counted(count, refused) for count in tally]
+                                 + [str(refused)])
+        if not rows_here:
+            rows_here.append(head + [NONE] + [counted(0, refused)] * 4 + [str(refused)])
+        cycle_rows += rows_here
     fixed_rows, open_rows, dropped_rows = [], [], []
     for name, fate, fix in register.issues:
         members = [(problem, cycle) for problem, cycle in found if problem.issue == name]
         hit = {(cycle.repository, cycle.record): cycle for _, cycle in members
                if cycle is not None}
         not_read = sum(1 for _, cycle in members if cycle is None)
+        refused = refused_issue[name]
         if fate == FIXED:
             fixed, why = ancestry.commit(fix)
             if fixed is None:
@@ -1319,10 +1349,17 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                         holding += 1
                     else:
                         lacking += 1
-            shown = ["unknown", "unknown"] if fixed is None else [str(holding), str(lacking)]
-            fixed_rows.append([name, fix] + shown + [str(pin_unknown), str(not_read)])
+            shown = (["unknown", "unknown"] if fixed is None
+                     else [counted(holding, refused), counted(lacking, refused)])
+            fixed_rows.append([name, fix] + shown + [str(pin_unknown), str(not_read),
+                                                     str(refused)])
         elif fate == "open":
-            if not members:
+            if refused:
+                days = UNKNOWN
+                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
+                                "some of its problem rows are refused, so its waiting is not "
+                                "known"))
+            elif not members:
                 days = "—"
             elif not_read:
                 days = UNKNOWN
@@ -1342,9 +1379,11 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                                     "its earliest cycle is dated after the day of the run"))
                 else:
                     days = str(waited)
-            open_rows.append([name, str(len(hit)), str(len(members)), str(not_read), days])
+            open_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
+                              str(not_read), days, str(refused)])
         else:
-            dropped_rows.append([name, str(len(hit)), str(len(members)), str(not_read)])
+            dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
+                                 str(not_read), str(refused)])
     return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows,
                     list(dict.fromkeys(unknown)))
 
@@ -1445,24 +1484,27 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis) -> str:
         "## Problems by cycle",
         "",
         "The problems of the register by class and weight, each problem once (WAY-333); a cycle "
-        "with no problem has one row, `none`. Problems whose cycle no named repository holds are "
-        "in *Unknown values*.",
+        "with no problem has one row, `none`. *Refused rows* are rows of *Problems* that name this "
+        "cycle and were refused for a class, weight or issue the register lacks; a count with one "
+        "reads `at least n`, as the refused row is not in it. Problems whose cycle no named "
+        "repository holds are in *Unknown values*.",
         "",
     ]
     lines += table(["Repository", "Record", "Class", "No problem", "Minor", "Important",
-                    "Critical"], analysis.cycle_rows)
+                    "Critical", "Refused rows"], analysis.cycle_rows)
     lines += [
         "",
         "## Fixed issues",
         "",
         "A fixed issue's problems count apart by whether the *Process pin* of their cycle holds "
         "the fix, by the commit and never by date (WAY-334). `unknown` where the fix is not in the "
-        "checkout of the-way, and the reasons are in *Unknown values*.",
+        "checkout of the-way, and the reasons are in *Unknown values*. *Refused rows* are refused "
+        "rows of *Problems* that name this issue; a count with one reads `at least n`.",
         "",
     ]
     lines += table(["Issue", "Fix", "Problems in cycles whose pin holds the fix",
                     "Problems in cycles whose pin lacks it", "Problems with an unknown pin",
-                    "Problems whose cycle is not read"], analysis.fixed_rows)
+                    "Problems whose cycle is not read", "Refused rows"], analysis.fixed_rows)
     lines += [
         "",
         "## Open issues",
@@ -1474,16 +1516,18 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis) -> str:
         "",
     ]
     lines += table(["Issue", "Cycles in which its problem came back", "Problems",
-                    "Problems whose cycle is not read", "Days waiting"], analysis.open_rows)
+                    "Problems whose cycle is not read", "Days waiting", "Refused rows"],
+                   analysis.open_rows)
     lines += [
         "",
         "## Dropped issues",
         "",
-        "A dropped issue's problems are counted apart; it has no waiting.",
+        "A dropped issue's problems are counted apart; it has no waiting. A count with refused "
+        "rows of the issue reads `at least n`.",
         "",
     ]
-    lines += table(["Issue", "Cycles", "Problems", "Problems whose cycle is not read"],
-                   analysis.dropped_rows)
+    lines += table(["Issue", "Cycles", "Problems", "Problems whose cycle is not read",
+                    "Refused rows"], analysis.dropped_rows)
     lines += [
         "",
         "## Unknown values",

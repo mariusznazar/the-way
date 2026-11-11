@@ -995,7 +995,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(data)
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["fixed-one", fix, "1", "1", "0", "0"]], self.rows("Fixed issues"))
+        self.assertEqual([["fixed-one", fix, "1", "1", "0", "0", "0"]], self.rows("Fixed issues"))
 
     def test_the_template_with_no_rows_counts_nothing_and_refuses_nothing(self):
         product = self.repository()
@@ -1003,7 +1003,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
         self.assertEqual([], self.rows("Fixed issues"))
         self.assertEqual([], [row for row in self.rows("Unknown values")
@@ -1018,7 +1018,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertIn(["ghost", added, "row 1 of `Problems`"],
                       [row[:3] for row in self.rows("Unknown values")])
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
     def test_crafted_rows_of_the_register_are_refused_with_a_reason_and_the_rest_counted(self):
@@ -1048,8 +1048,10 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([f"row {number} of `Problems`" for number in range(2, 8)],
                          [row[2] for row in unknown if row[2].endswith("`Problems`")])
         self.assertTrue(all(len(cell) < 1000 for row in unknown for cell in row), unknown)
-        self.assertEqual([[ "product", added, "process-remark", "0", "1", "0", "0"]],
-                         self.rows("Problems by cycle"))
+        # Four of the seven rows name this cycle and are refused (class, weight, issue, issue); the
+        # valid one is counted; the count with refused rows of the cycle reads `at least`.
+        self.assertEqual([["product", added, "process-remark", "at least 0", "at least 1",
+                           "at least 0", "at least 0", "4"]], self.rows("Problems by cycle"))
         self.assertEqual(["good-issue"], [row[0] for row in self.rows("Open issues")])
 
     def test_a_class_named_in_two_rows_refuses_both_and_its_problems_with_it(self):
@@ -1063,11 +1065,29 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(["row 1 of `Classes`", "row 8 of `Classes`"],
                          [row[2] for row in self.rows("Unknown values")
                           if row[2].endswith("`Classes`")])
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
-                         self.rows("Problems by cycle"))
+        self.assertEqual([["product", added, "none", "at least 0", "at least 0", "at least 0",
+                           "at least 0", "1"]], self.rows("Problems by cycle"))
         self.assertIn(["product", added, "row 1 of `Problems`",
                        "the class is not in the list of classes"],
                       [row[:4] for row in self.rows("Unknown values")])
+
+    def test_a_refused_row_of_a_cycle_and_an_issue_is_counted_not_hidden(self):
+        # Scratch A of the review of slice 5: one open issue, one problem of it in one cycle with a
+        # weight the scale lacks. The row is refused; the cycle and the issue must not read as
+        # having no problem, since the refused row belongs to both.
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(issues=[issue_row("open-one")],
+                          problems=[problem_row("product", added, "open-one", weight="Blocker")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, "none", "at least 0", "at least 0", "at least 0",
+                           "at least 0", "1"]], self.rows("Problems by cycle"))
+        self.assertEqual([["open-one", "at least 0", "at least 0", "0", "unknown", "1"]],
+                         self.rows("Open issues"))
+        self.assertIn("the weight is not one of the four levels",
+                      [row[3] for row in self.rows("Unknown values")])
 
     def test_a_long_run_of_blanks_in_a_class_name_does_not_stall_the_count(self):
         product = self.repository()
@@ -1076,7 +1096,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11", timeout=60)
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
     def test_a_table_missing_from_the_register_is_an_error_of_the_register(self):
@@ -1092,7 +1112,7 @@ class RegisterCount(AuditCountCase):
         self.assertIn("## Issues", error)
         self.assertIn(["the-way", "none", "table `Issues`"],
                       [row[:3] for row in self.rows("Unknown values")])
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0"]],
+        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
     def test_a_register_larger_than_the_cap_stops_the_run_with_nothing_written(self):
@@ -1119,7 +1139,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2025-10-19")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["slow-one", "1", "1", "0", "10"]], self.rows("Open issues"))
+        self.assertEqual([["slow-one", "1", "1", "0", "10", "0"]], self.rows("Open issues"))
         done = self.run_count("--today", "2025-10-08")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual("unknown", self.rows("Open issues")[0][4])
@@ -1148,7 +1168,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["product", first, "process-remark", "0", "1", "0", "0"]],
+        self.assertEqual([["product", first, "process-remark", "0", "1", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
     def test_an_unknown_pin_or_a_pin_the_history_lacks_is_unknown_for_its_side(self):
@@ -1172,11 +1192,28 @@ class RegisterCount(AuditCountCase):
         self.write_locations(data)
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["fixed-one", fix, "1", "0", "2", "0"]], self.rows("Fixed issues"))
+        self.assertEqual([["fixed-one", fix, "1", "0", "2", "0", "0"]], self.rows("Fixed issues"))
         reasons = [row[3] for row in self.rows("Unknown values")
                    if row[:3] == ["product", lacking, "Process pin"]]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
+
+    def test_a_refused_problem_of_a_fixed_issue_is_counted_in_its_row(self):
+        way, fix, with_fix, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        holding, _ = product.cycle("holding-task",
+                                   {"cycle.md": record(pin_line=f"- Process pin: `{with_fix}`")})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", holding, "fixed-one"),
+                                    problem_row("product", holding, "fixed-one", weight="Blocker")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        # Both side counts read `at least`: the refused row could belong to either side.
+        self.assertEqual([["fixed-one", fix, "at least 1", "at least 0", "0", "0", "1"]],
+                         self.rows("Fixed issues"))
 
     def test_a_fix_the_history_lacks_leaves_its_issue_unknown(self):
         way, _, with_fix, _ = self.the_way_with_a_fix()
@@ -1191,7 +1228,7 @@ class RegisterCount(AuditCountCase):
         self.write_locations(data)
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual([["fixed-one", missing, "unknown", "unknown", "0", "0"]],
+        self.assertEqual([["fixed-one", missing, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
         reasons = [row[3] for row in self.rows("Unknown values")
                    if row[2] == "the fix of issue `fixed-one`"]
