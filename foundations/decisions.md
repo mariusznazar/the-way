@@ -10917,10 +10917,13 @@ problem is the level below them.
 - **Based on:** none
 - **Relations:** derives from WAY-329
 - **Verification:** an agent compares a change with the decision:
-  - complies: a problem is graded Minor and given a class that the list holds; a session of the audit
-    that meets a problem no class fits adds a class to the list;
-  - violates: the scale gains a fifth level; the audit refuses a problem for a class the list lacks
-    instead of widening the list.
+  - complies: a problem is graded Minor and given a class that the list holds; the count refuses a
+    problem whose class the list lacks until the list holds it, and a session of the audit that
+    meets such a problem, or another that no class fits, puts a new class before the human and, on
+    the human's yes, adds it to the list in the register;
+  - violates: the scale gains a fifth level; a problem whose class the list lacks is given the
+    nearest class the list holds; a session of the audit leaves a problem that no class fits
+    refused, with no new class put before the human.
 - **Origin:** none
 
 *Rationale:* the grades of the review of a cycle are a scale the agents of the cycle and the human
@@ -11029,27 +11032,34 @@ measured; unknown says the measure is missing.
 measured by the two numbers alone, and the source keeps no reason beside it; a turn put in a fix
 round by the words `fix` and `review` in the names of reports and of stages — records name their
 fix reports in other words, and a cycle that had a fix round got a share of zero; a turn tied to a
-round by its time against the times of the record — the record and the stage report write times in
-different forms and zones; the share given only as zero or unknown until the stage report carries
-the tie — the measure stays empty in every cycle that has a fix round.
+round by its time against the times of the record — the record and the report of a cycle's stages
+write times in different forms and zones; the share given only as zero or unknown until the report
+of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round.
 
 ### WAY-337 — What is the time of a cycle?
 
-A cycle's time is two measures: the working time of its agents, with no wait for the human in it,
-and, apart from it, the time its agents wait for tools.
+A cycle's time is two measures: the working time of its agents, with neither the wait for the human
+nor the wait for tools in it, and, apart from it, the time its agents wait for tools, from each call
+of a tool to its result. A call that starts a subagent, sends it a message or waits for it is no
+wait for a tool: its time is the subagent's work.
 
-- **Scope:** process-audit
+- **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares a change with the decision:
   - complies: the time of a cycle is shown as the agents' working time and, beside it, the time they
-    waited for tools, and a night the cycle waited for the human's answer adds to neither;
-  - violates: the time of a cycle is the time from its start to its merge.
+    waited for tools, the two together being the time the agents worked, and a night the cycle
+    waited for the human's answer adds to neither; while the orchestrator waits for a subagent's
+    answer, the time counts as the subagent's work;
+  - violates: the time of a cycle is the time from its start to its merge; the working time holds
+    the wait for tools; the call that starts a subagent counts as a wait for a tool.
 - **Origin:** none
 
 *Rationale:* the wait for the human depends on when the human reads, not on the process, while the
 time the agents work and the time they wait for tools are the two parts of a cycle's time that a
-change to the process can move.
+change to the process can move. A call that starts a subagent hands work to another agent of the
+cycle, so the time it lasts is that agent's work, which the working time already holds, and no wait
+that a faster tool would shorten.
 *Rejected:* the wait for the human counted in the time of a cycle — the human said that waiting for
 them is not counted.
 
@@ -11119,6 +11129,66 @@ review, and a count made on the night before leaves its result ready when the se
 no human present for it.
 *Rejected:* the audit as a part of the weekly review — the human prefers a dedicated task for the
 audit and would not mix it with that review.
+
+### WAY-341 — Which entries of the locations file does the audit of the process read?
+
+The audit reads, in the locations file of WAY-320, under the key `the-way` the entry
+`problem_register`, the file of the register of problems, and the entry `audit_results`, the
+directory of its results, and under the key of each repository whose cycles it reads the entry
+`repository`, the path of that repository's checkout, the key being the name by which the
+register's problems name their repository. It reads every key that holds an entry `repository`
+unless the user names the keys to read, and the checkout of the-way, whose history tells which
+version holds a fix, is the entry `repository` under `the-way`, or, where that entry is missing,
+the checkout of the-way that holds the counting command run.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-320 · derives from WAY-329 · derives from WAY-331
+- **Verification:** an agent compares a change with the decision:
+  - complies: the counting started by a scheduler with no option reads the register the entry
+    `problem_register` under `the-way` names, writes its result into the directory of
+    `audit_results`, and reads the cycles of every key that holds `repository`; a problem whose
+    repository reads `shop` is counted against the cycles of the checkout the entry `repository`
+    under `shop` names; the skill of the session finds the same places by the same entries;
+  - violates: the repositories to read are named by the paths of their checkouts, in the
+    scheduler's command or in a file a repository tracks; the skill reads the register from an
+    entry of another name than the counting does; a problem names its repository by a path.
+- **Origin:** none
+
+*Rationale:* the counting runs with no human present, so it finds every place it needs by itself,
+and the session that reads its result finds the same places by the same names. The key under which
+a checkout stands is the name a problem gives its repository, so a problem and the cycles of its
+repository meet by one word and no path is written into the register. A checkout's path tells how
+the user's disk is laid out as much as any other place on it, so it stands in the user's file and
+in no file a repository tracks (WAY-320). The price taken: a user writes each repository to read
+into the file once, beside the places the file was first made for.
+*Rejected:* unknown
+
+### WAY-342 — Which version of the-way did a cycle of the-way itself run on?
+
+A cycle of the-way's own repository, whose record pins no commit of the-way, ran on the version of
+the-way at the commit its task branch started from, which the record's line *Target branch and
+base* names. A cycle whose record names neither a pinned commit nor that commit has no known
+version, and the audit counts it under no version.
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-334
+- **Verification:** an agent compares a change with the decision:
+  - complies: a cycle of the-way whose record says the pin does not apply and names the commit its
+    branch started from counts under that commit, and a fix that is an ancestor of it counts the
+    cycle among those that ran with the fix;
+  - violates: every cycle of the-way counts under no version; a cycle of the-way counts under the
+    commit that merged its request.
+- **Origin:** none
+
+*Rationale:* the agents of a cycle of the-way read the process from the worktree the cycle changes,
+which begins at the commit its task branch started from, so that commit is the process the cycle
+started under, as the pinned commit is for a cycle of a product (WAY-34). The price taken: a change
+the cycle makes to the process already acts within its own cycle, and the version the audit gives
+the cycle does not show it.
+*Rejected:* every cycle of the-way given no version — the audit would show no version for the
+cycles of the-way itself.
 
 ## Withdrawn identifiers
 
