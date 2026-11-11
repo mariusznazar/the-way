@@ -32,10 +32,10 @@ followed into each of their parents. A cycle committed more than once, after a c
 once: it is named by its repository and the first commit that adds a copy in its folder, the later
 ones noted, and its values are read from the last copy, the most complete. For each cycle:
 
-- *Process pin*: the version of the-way the cycle ran on — the commit the record's line
-  `Process pin` names, or the commit it moved to where the line says the pin moved; for a cycle of
-  the-way's own history, whose line names no commit, the commit of its line
-  `Target branch and base`;
+- *Process pin*: the version of the-way the cycle ran on — the commit the record's header line
+  `Process pin` names (in earlier records `Process pin and ...`), or the commit it moved to where
+  the line says the pin moved; for a cycle of the-way's own history, whose line names no commit,
+  the commit of its line `Target branch and base`;
 - *Remarks*: the number of entries under the record's item `Process remarks on the-way`, `0`
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
@@ -283,8 +283,9 @@ class Read:
 
 
 def header_fields(lines: list[str], fenced: list[bool], label: str) -> list[str]:
-    """The values of the record's header lines `- <label>: ...`, before its first `## ` heading,
-    each with the indented lines that continue it joined to it."""
+    """The values of the record's header lines `- <label>: ...`, or `- <label> and ...: ...` as
+    earlier records join two fields, before its first `## ` heading, each with the indented lines
+    that continue it joined to it."""
     values: list[str] = []
     collecting = False
     for line, inside_fence in zip(lines, fenced):
@@ -295,7 +296,8 @@ def header_fields(lines: list[str], fenced: list[bool], label: str) -> list[str]
             break
         match = HEADER_FIELD.fullmatch(line)
         if match:
-            collecting = match.group("label") == label
+            found = match.group("label")
+            collecting = found == label or found.startswith(label + " and ")
             if collecting:
                 values.append(match.group("value").strip())
         elif collecting and line.strip() and line[:1] in " \t":

@@ -257,9 +257,13 @@ class ProcessPin(AuditCountCase):
         self.assertIn("more than once", unknown[0][3])
 
     def test_a_missing_pin_is_unknown(self):
-        pin, unknown = self.pin_of("- Process pin and target base: `main` at `1234567`")
+        pin, unknown = self.pin_of("- Pin of the process: `1234567`")
         self.assertEqual("unknown", pin)
         self.assertIn("no line `Process pin`", unknown[0][3])
+
+    def test_an_earlier_record_joining_the_pin_with_its_base_gives_the_commit(self):
+        pin, _ = self.pin_of("- Process pin and target base: `main` at `1234567`")
+        self.assertEqual("1234567", pin)
 
     def test_a_pin_in_a_later_section_is_not_the_header_line(self):
         pin, _ = self.pin_of("- Status: complete")
