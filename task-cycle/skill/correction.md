@@ -50,4 +50,18 @@ An answer to the item of the request's *For you to decide* on unfixed findings (
 binds; an answer that names none makes of them the findings the item listed (WAY-289). The
 correction's review ends as every review does. The findings that remain unfixed after it are put by
 the request only with the question of a task, or stay in the lower part, and no second correction
-is asked for them. An answer to make a task needs no correction.
+is asked for them. An answer to make a task, or to let the item through, needs no correction.
+
+An answer to do it in this request, to an item of *Fix or let through* other than item 8, runs the
+correction the same way, the item it names being the remark the correction binds (WAY-289):
+
+- for a skipped step or an unrun check (item 4): the correction runs the step or the check that
+  was left out, on the corrected tree, and records its result;
+- for a proposal of the task's own sections that was not applied (item 9): the correction applies
+  the proposal;
+- for an incomplete reading by the review of the whole change (item 14): a fresh reviewer, who
+  did not make the change and did not write that review, reads what stayed unread, and its report
+  holds its **Unread material**, and its findings are handled as those of every review are.
+
+What such a correction leaves undone, or finds anew, is put by the request only with the question
+of a task, as for item 8. An item that cannot be done in this request offered no such answer.

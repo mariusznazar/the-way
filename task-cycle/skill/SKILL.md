@@ -504,10 +504,10 @@ changed in this cycle and the archive is not held back (WAY-295):
 1. Do not append the listed line as an item of its stage.
 2. Enter the case in the process remarks as an entry of your own: the script, the line it listed,
    and why you hold it wrong. It is a matter of the-way's script, not of the product.
-3. Commit the record as usual. In the request's description, *For you to decide* gets one item
-   naming what the script listed, in plain words, why the cycle holds it wrong and "Merge as it
-   stands?", and *Checks* names the check with its command, its exit code and its listed line, as
-   `task-cycle/skill/request_template.md` gives.
+3. Commit the record as usual. In the request's description, the group *You accept by merging* of
+   *For you to decide* gets one item naming what the script listed, in plain words, and why the
+   cycle holds it wrong, and *Checks* names the check with its command, its exit code and its
+   listed line, as `task-cycle/skill/request_template.md` gives.
 
 ## The record before it is committed
 
