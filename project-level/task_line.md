@@ -38,7 +38,7 @@ characters other than lower-case letters and digits, hyphens included, turned in
 either end.
 The task `forest-on-hex-grid` of the plan file `player-game.md` has the identifier
 `player-game-forest-on-hex-grid`. A task that belongs to no plan has no identifier from the-way; a
-line of it takes one only where the rules require it.
+line of it takes one only where the rules require it (WAY-329).
 
 The derivation is unambiguous only while the plan file names of the place differ, and only while no
 two pairs join to the same text: the plan `a-b.md` with the task `c` and the plan `a.md` with the

@@ -2486,8 +2486,9 @@ place for such things; the rules of the task place written at the product, its s
 status of a new line when none is given — the human's word was that the rules be taken from the
 task place and not be written anywhere at the product, and no cost of this way is kept (`unknown`);
 a new line left in the default state of the tool that holds the tasks — its status is wrong from
-the first moment and the check of the notes against the lines reports a mismatch; a status of a line fixed in the-way's skills — a skill of the-way would assume
-one tool for the backlog, against WAY-101; the agent finding the rules through the user's global
+the first moment and the check of the notes against the lines reports a mismatch; a status of a
+line fixed in the-way's skills — a skill of the-way would assume one tool for the backlog, against
+WAY-101; the agent finding the rules through the user's global
 instructions — it does not work in a session that does not load them, such as one in the cloud, and
 stands against the user's sentence that global instructions are not the place for such things.
 
@@ -4463,10 +4464,11 @@ wait is logged and its task is proposed again when the named prerequisite is don
 - **Verification:** an agent compares the turns, task documents, plan and backlog with the decision:
   - complies: parallel refiners write separate documents, and each, in its first turn that creates
     its document, also writes its task's line, with the dependencies of the plan's row, while the
-    others do the same; a fresh refiner keeps each settled answer and source; the project
-    orchestrator, on the human's acceptance of a document, changes its Status line, the plan's row
-    and the task's line together; and interrupted acceptance resumes without guessing human
-    agreement;
+    others do the same; a refiner whose first turn ended on a question about the task place's rules
+    writes the line in the first later turn that can; a fresh refiner keeps each settled answer and
+    source; the project orchestrator, on the human's acceptance of a document, changes its Status
+    line, the plan's row and the task's line together, making the line, already ready, where none
+    stands; and interrupted acceptance resumes without guessing human agreement;
   - violates: the project orchestrator rewrites a task body or carries questions in prompts,
     an agent's readiness stands for human acceptance, a refiner moves its line to ready or writes
     `ready for cycle`, a refiner writes the plan, the definition or the foundation because a
@@ -10476,8 +10478,8 @@ A user's places on their own disk that lie outside every repository, such as the
 product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
 found at that place for every user and through no environment variable: a JSON object whose keys are
 repository names, each holding entries by name, such as `tasks`, `projects` and `task-rules`, whose
-values are paths on the user's disk. No file the repository tracks holds an absolute path, or a note link in a
-Markdown file, other than the files that the invariant `tracked-file-private-paths` names, which
+values are paths on the user's disk. No file the repository tracks holds an absolute path, or a note
+link in a Markdown file, other than the files that the invariant `tracked-file-private-paths` names, which
 write example paths in order to find or to test them; a file that points to such a place names its
 entry in the locations file. The copy of a task cycle's record and the description of a request are
 checked for a note link in every file, as WAY-309 gives.
@@ -10526,8 +10528,8 @@ read `AGENTS.local.md`; introducing nothing and correcting only the line that na
 the path of the tasks file stays in the repository, and the next path written is stopped only by a
 careful review; one entry for the rules of the task place shared by all products, at the top level
 of the file — the keys of the file would no longer be only repository names, and a product whose
-tasks lie elsewhere would silently take the rules of another place; for the files that write example paths by their nature, a check that skips only the
-lines marked as examples — every example line to mark and the code of the marks, and a real path in
+tasks lie elsewhere would silently take the rules of another place; for the files that write
+example paths by their nature, a check that skips only the lines marked as examples — every example line to mark and the code of the marks, and a real path in
 a marked line passes too; no exceptions, with the examples rewritten so that the pattern does not
 find them — every example to rewrite, the tests and the description of the script harder to read,
 and every later author of a test has to remember it; a check that skips all test files and both
@@ -10885,6 +10887,47 @@ with no decision in its own log, the same effect as the way chosen in a worse pl
 the parts that hold code today — the first script or test in another part would raise the question
 again and force an extension of the decision; a decision with no sentence that adds a new part to its
 *Scope* — the first script in a new part would raise the question of missing guidelines again.
+
+### WAY-329 — How is the identifier of a project task's line in the backlog derived?
+
+The identifier of the line of a task of a project plan is the plan's file name without its extension,
+joined by `-` to the task's name in the plan (WAY-147), in lower case, each run of characters other
+than lower-case letters and digits, hyphens included, turned into one `-`, none at either end, so that
+a refiner computes it from the plan and the task's name alone, and writes it in the dependency of
+another task's line before that task's line exists. The identifier is unambiguous in the place of the
+tasks only while the plan file names of the place differ and no two pairs of a plan file name and a
+task name join to one text, and an agent that finds another line carrying the identifier it derived
+writes nothing and asks the human.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-147 · derives from WAY-107 · derives from WAY-154
+- **Verification:** an agent compares the line of a task and the derivation with the decision:
+  - complies: the task `forest-on-hex-grid` of the plan file `player-game.md` has the identifier
+    `player-game-forest-on-hex-grid`, and a refiner writes it into the dependencies of a task that
+    waits on it before the line of `forest-on-hex-grid` exists; the plan file `MVP2 plan (v2).md`
+    gives `mvp2-plan-v2-forest-on-hex-grid`; the plan `a-b.md` with the task `c` and the plan `a.md`
+    with the task `b-c` both give `a-b-c`, and the refiner that finds the first line already
+    carrying it asks the human before writing the second;
+  - violates: an identifier counted when a line is made; an identifier that is the task's name alone,
+    taken for unique across plans; a derivation that leaves a double hyphen or a hyphen at an end; a
+    refiner that writes an identifier another line already carries.
+- **Origin:** none
+
+*Rationale:* the refiner of a dependent task needs the identifier of the task it waits on while that
+task's line may not exist, so it has to be a function of what the plan already holds: the plan and the
+task's name, which stays with the task while the plan changes (WAY-147). The form of an identifier,
+and that it is unambiguous in the whole place of the tasks, are the rules of that place (WAY-107); the
+derivation yields lower-case letters, digits and hyphens. A run of other characters becoming one
+hyphen keeps a file name with spaces and brackets from leaving a double hyphen or a hyphen at an end.
+The price taken: the derivation guarantees uniqueness only under the two conditions the sentence
+names, so two plans of one place with the same file name, or two pairs that join alike, clash, and
+the agent that meets the clash asks the human, and an identifier that is wrong is mended by editing
+the lines.
+*Rejected:* the plan's name alone — it is not unique across plans; a number counted when the line is
+made — a refiner cannot know it before the other task's line exists; one hyphen for each character
+other than a letter, a digit or a hyphen, instead of one for each run — a double hyphen where a file
+name holds a space beside a bracket.
 
 ## Withdrawn identifiers
 
