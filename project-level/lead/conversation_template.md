@@ -20,7 +20,8 @@ examples and recommendations are never human decisions. Sections without materia
   changes this task document's body. It writes its numbered turn, questions and human material,
   checks sources and copies resolved answers with provenance and the ways the human did not choose
   into the task's Questions to settle. It also makes the task's line in the backlog, where none
-  stands, as `project-level/task_line.md` gives (WAY-154).
+  stands, and brings the lines of the tasks tied to it into agreement, as `project-level/task_line.md`
+  gives (WAY-154).
   It never writes the shared plan, definition or foundation, asks the human, starts a child agent,
   launches implementation, moves a line to ready or records its own recommendation as acceptance.
 - The answering agent follows `project-level/lead/answering.md`. It fills answers below questions

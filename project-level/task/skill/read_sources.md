@@ -16,8 +16,8 @@ because a project definition is a source.
 
 Read the product root `AGENTS.md` section `## Backlog` to find the task system, as
 `project-level/backlog_place.md` gives. Check whether it can hold the whole document. If it holds
-short task entries only, create a separate Markdown document in the product's task area and link it
-from that entry; do not paste the document into a checklist item. If the document's location is
+short task lines only, create a separate Markdown document in the product's task area and link it
+from that line; do not paste the document into a checklist item. If the document's location is
 unclear, ask once and offer to record it as that file gives.
 
 Where the task has no line there yet, make it as `project-level/task_line.md` gives, which also

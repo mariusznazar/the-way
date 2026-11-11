@@ -38,11 +38,12 @@ to guess or overwrite another task.
 - Write your task document, your conversation turn and whatever else the project orchestrator's
   order asks of you, and nothing that belongs to acceptance: no agent but the project orchestrator,
   on the human's word, moves a line to ready or writes `ready for cycle`. The order stands in the
-  dispatch and the conversation file; one part of it stands here: where the task has no line in the
-  backlog, make it as `project-level/task_line.md` gives, which says when, with what and how. Do not
-  write the shared plan, definition or foundation, nor launch implementation. Record a mismatch
-  requiring upstream work as `plan change`, with evidence and the requested change. An unavailable
-  source/capability or conflict preventing a valid next step is `obstacle`, with what resolves it.
+  dispatch and the conversation file; one part of it stands here: make the task's line in the
+  backlog, and bring it and the lines of the tasks tied to it into agreement, as
+  `project-level/task_line.md` gives, which says when, with what and how. Do not write the shared
+  plan, definition or foundation, nor launch implementation. Record a mismatch requiring upstream
+  work as `plan change`, with evidence and the requested change. An unavailable source/capability or
+  conflict preventing a valid next step is `obstacle`, with what resolves it.
 - Transfer every resolved answer, including canonical answers shared across tasks, with its
   original source and the ways the human did not choose into Questions to settle before relying
   on it (WAY-134). Preserve human words separately
