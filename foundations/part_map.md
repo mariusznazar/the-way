@@ -98,7 +98,7 @@ them.
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation
-- **Trust boundary:** none
+- **Trust boundary:** task-cycle/cycle_stages.py
 
 ## foundation-review
 
@@ -110,6 +110,16 @@ review done.
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level
 - **Trust boundary:** none
+
+## process-audit
+
+The part answers for the audit of whether the process gets better, cheaper and faster across
+cycles: the template of the register of problems, the dated price list of models, the command that
+counts the audit and the skill that leads its weekly session.
+
+- **Files:** process-audit/**
+- **Depends on:** task-cycle · project-level
+- **Trust boundary:** process-audit/audit_count.py
 
 ## gate
 
@@ -225,6 +235,7 @@ sentence and its exit codes.
 | a product pinned to a commit | both | untrusted |
 | git | them → us | trusted |
 | a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted |
+| a user's places outside every repository — the locations file and the places its entries name, such as the register of problems and the results of the audit | both | untrusted |
 
 ## Files left out on purpose
 
