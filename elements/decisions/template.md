@@ -25,7 +25,7 @@ particular to a decision (WAY-35).
 <1–3 binding sentences>
 
 - **Scope:** <parts from the part map>
-- **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | none
+- **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
 - **Relations:** derives from WAY-x · narrows WAY-y | none
 - **Verification:** invariants: <identifier> · <identifier>. An agent compares a change with the
   decision:
@@ -48,6 +48,14 @@ particular to a decision (WAY-35).
   source as its address, the place in it, the passage quoted word for word and the date it was read
   (WAY-90).
 - What is not yet known, or the decider's own motive, is no source outside the product.
+- Where the decision's source is silent on what it rests on, *Based on* reads
+  `TODO — <what is missing, with its source>`, never a bare `TODO` and never `none`; the main branch
+  may hold it, and a change that leaves one there puts it before the human (WAY-71).
+  `elements/common/foundation_check.py` reports a bare `TODO` there as an error. Where the source is
+  silent on only some of what the decision rests on, the known facts and sources stay named and the
+  missing one is the last item, `<fact> · TODO — <what is missing, with its source>`; its
+  description runs to the end of the value, so a comma or a ` · ` inside it joins nothing
+  (WAY-71). *Relations* and *Origin* never read `TODO`: the script reports it (WAY-71).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than
@@ -212,8 +220,10 @@ A field stays in the template only while someone or something reads it (WAY-05).
 *Origin* points to where the full reasoning lives: a research document, a design document, a
 merge request, a ticket, or a file at a fixed commit — never to anything deleted when its task
 closes. When the whole reasoning is in the entry, it is `none`. Documents go in *Origin*;
-*Based on* names sources about the world. The task a decision was made in is not recorded: git
-history gives it.
+*Based on* names sources about the world. The task a decision was made in is not recorded, and a
+task document is never named in *Origin*, wherever the product keeps its tasks: the place of tasks
+is where work is found, never a source an entry points to (WAY-27). What it holds of the reasoning
+goes into the entry's *Rationale* and *Rejected*; *Origin* then reads `none`.
 
 ## Recovered decisions
 

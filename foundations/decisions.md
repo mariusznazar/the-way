@@ -1677,30 +1677,54 @@ already reads; hiding tests from the executor — it costs honest work.
 
 Every field an element's template gives an entry of its kind appears in every entry of its kind,
 holding a value, or `none` or `TODO` where the template gives it that word: `none` says nothing is
-there, `TODO` that something is missing. The main branch holds `TODO` only in an invariant's
-*Rests on*, until the facts element has entries. `elements/common/foundation_check.py` reports a
-missing field, or a word not given it, as an error.
+there, `TODO` that something is missing. The main branch holds `TODO` only where an entry stands on
+something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
+`TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
+`TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
+`TODO — <what is missing, with its source>`; where an entry stands on several things and only some
+are missing, the missing one is the last item of the value and reads as the form of its field,
+after the known items; a change that leaves one there puts it before the human.
+`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error.
 
-- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common
+- **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common,
+  task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
-    `Based on: TODO — <what is missing>`;
-  - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
-    reads `Based on: none` where its source says nothing of what it rests on.
+    `Based on: TODO — <what is missing, with its source>`; an invariant whose decision is not
+    written yet reads `Derives from: TODO — <the decision, and where it is expected>`; an
+    invariant that rests on a fact the foundation holds and on one it lacks reads
+    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`;
+  - violates: an invariant that rests on a known fact and on a missing one reads a whole-value
+    `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
+    after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
+    reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
+    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
+    *Origin*.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten (WAY-58); an undefined value misleads. An invariant
-with no test reads `review` as its method rather than `TODO` (WAY-61). Before facts have entries,
-an invariant can expose a needed fact as `TODO` instead of falsely claiming `none`; once they do,
-the gap must be resolved.
+with no test reads `review` as its method rather than `TODO` (WAY-61). An entry that stands on
+something the foundation does not hold yet — a fact for an invariant, the decision an invariant
+derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
+`none`, and the description keeps the gap from standing as a silent one: it names what is missing,
+and the human sees at the merge that it is left. Where only some of the things an entry stands on
+are missing, the known ones stay named items, because every link of the chain is written (WAY-17)
+and a named item stays checked as a reference, while a known one moved into the description would
+no longer be; the missing one closes the value. *Relations* and *Origin* are what an author states
+about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
+foundation lacks.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
-state field and a ratcheted list — three mechanisms where one serves.
+state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
+the main branch and having the script enforce it — a cycle would stop to write a fact outside its
+task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact; `TODO` only
+in *Rests on* — an author of a decision whose source is silent, or of an invariant whose decision
+is not written yet, would have to stop the cycle or write `none`, which is false.
 
 ### WAY-72 — In what language is a product's foundation written?
 
@@ -4558,11 +4582,13 @@ it.
 - **Based on:** none
 - **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
 - **Verification:** an agent compares the gate's run and the request with the decision:
-  - complies: the orchestrator runs the gate after the review of the whole change and again after
-    the return step changed the tree, and the request gives the command and its exit code;
+  - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
+    and again where the merge with the target branch changed it, and the request gives the command
+    and its exit code;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
-    plan's *Checks* or a handoff tells an executor to run the gate after its slice.
+    plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
+    its fix changes code, and the return step does not compare the fix's range.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
@@ -4570,12 +4596,18 @@ author's focused checks give, and the orchestrator owns that run. The command an
 tell the human what passed; the checks that failed or did not run, named, keep what stayed
 unchecked in view. A gate run after every slice repeats for each slice a run the finished change
 needs once and holds the next slice until it ends, while the focused checks of the code and
-invariants a slice reaches find what it breaks there.
+invariants a slice reaches find what it breaks there. The return step compares the foundation with
+the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
+tree it and its review leave covers the finished change, where a run before it would be made again
+on the tree it changes; the merge with the target branch is the one change to the tree that can
+follow. The price is that a failure of the gate comes after the return step.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
 alone — a check that did not run would pass unseen; the gate after every slice — it multiplies the
-gate's run by the number of slices and holds each slice for it.
+gate's run by the number of slices and holds each slice for it; rerunning after the return step
+only the checks that read the foundation — the-way does not know which checks of a product read its
+foundation.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
@@ -9059,14 +9091,22 @@ not run, the incomplete reading of the review of the whole change where its revi
 through the rest of its selection by title or itself named a decision concerning the change as
 unread, and the gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
 unread, the unfixed findings the product's user or the human working with the process will feel, the
-decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
-human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
-makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
-(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
-entries the human did not see at the task document — and its `none` says that nothing else in the
-request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
-plain words, in that section, while each remaining finding stands with its place in the code in the
-lower part.
+decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
+actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
+a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
+error of the form check that the cycle holds wrong (WAY-291), each descriptive `TODO` in an
+invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
+after the change (WAY-71), and the foundation entries the human did not see at the task document — in
+three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
+order: what the request cannot go on without, an answer or an action of the human; what the cycle did
+not do or did not fix and can still be done in this request, which the human has done there, makes a
+task of or lets through; and what the cycle did within its authority, which the human accepts by
+merging and which waits for no separate answer. Every group stands, reading `none` where it holds no
+item, the items are numbered in one run through the three groups, and the section reads `none` alone
+where no group holds an item, which says that nothing else in the request waits for the human's yes.
+A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle
+needs, in plain words, and the stages it did not run because it stopped, under *Needed from you*,
+while each remaining finding stands with its place in the code in the lower part.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -9074,31 +9114,58 @@ lower part.
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a request whose cycle chose the place of a new file the task left open, skipped the
     return step on the human's word and left a finding a player would feel puts all three in the
-    section, each with its question, and the lower part keeps their evidence; a request whose
+    section, the skipped step and the finding under *Fix or let through* each with its question and
+    the choice under *You accept by merging* with its reason and no question, and the lower part
+    keeps their evidence; a request that needs no answer and has no choice beyond the task reads
+    `none` alone in the section; a request with one choice beyond the task and nothing else keeps
+    all three headings, with `none` under the first two; a request whose
     cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
     in that section; a request a remaining finding blocks says in that section, in plain words,
-    what the human is to decide about it, while the finding's place and reason stand in the lower
-    part; a request whose review of the whole change read 40 of 151 selected decisions whole and
-    ran through none of the other 111 by title asks in that section whether to merge anyway, while
-    a request whose reviewer read 40 whole, ran through the other 111 by title and named no
-    decision of the change as unread has no such question;
+    what the human is to decide about it, and names the return step and the reconciliation it did not
+    run under *Needed from you*, while the finding's place and reason stand in the lower part; a
+    request whose review of the whole change read 40 of 151 selected decisions whole and
+    ran through none of the other 111 by title puts that under *Fix or let through*, asking whether
+    to have what stayed unread read in the request, make a task of it or let it through, while a
+    request whose reviewer read 40 whole, ran through the other 111 by title and named no decision
+    of the change as unread has no such item; a request whose merged tree holds an invariant that
+    reads `Rests on: TODO — the store of documents, once a task chooses it`, written by the change or
+    standing from before, puts it under *Fix or let through* with the rule of that invariant and the
+    missing store, and so does a request whose merged tree holds a decision that reads
+    `Based on: TODO — the source of the save format` or an invariant that reads
+    `Derives from: TODO — the decision on where saves live, expected in the save task`, each with
+    what is missing; a value that names a fact the foundation holds and then
+    `TODO — a second fact, from the vendor` is one gap, shown with the second fact alone;
   - violates: the section reads `none` while a choice beyond the task stands only among the
-    foundation entries; a skipped step is named only in the last line of the checks; a blocked
+    foundation entries; a group with no item is left out, or its heading stands with nothing under
+    it; the numbering of the items starts again in each group; a choice the cycle made within its
+    authority stands under *Needed from you*, or ends with a question that waits for an answer; a
+    skipped step is named only in the last line of the checks; a blocked
     request is written in a shape of its own; the incomplete reading of the review of the whole
     change stands only in the lower part, or stands in the section in every request whatever the
-    reviewer did.
+    reviewer did; the section reads `none` while an invariant's *Rests on* or *Derives from* or a
+    decision's *Based on* holds a descriptive `TODO` on the merged tree, or such a gap
+    stands under *Needed from you* or under *You accept by merging* with no way to answer it.
 - **Origin:** none
 
 *Rationale:* the human merges once the section that asks for decisions reads `none`, so a matter that
 needs a yes and stands in another section passes without the human's knowledge. One section that
 holds every such matter makes its `none` a statement the human can merge on. A blocked request that
 keeps the skeleton is read the way every other request is read, and what the cycle needs is the
-question it asks. Additions to a product's logging scope come here because WAY-274 counts on the
+question it asks, under *Needed from you*. Additions to a product's logging scope come here because WAY-274 counts on the
 human seeing them at the merge, and this section is where the merge shows them. A review of the
 whole change that read only part of what it selected, and did not run through the rest by title,
 passes as a full review unless the human is told, and the human is the one who can decide to merge
 on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
-the section keeps its `none` for requests that can be merged.
+the section keeps its `none` for requests that can be merged. A descriptive `TODO` that stands in
+an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
+is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
+it names as missing, for the human to have the missing thing written in the request, make a task of
+it or let it through (WAY-71); while an old gap stands, every request carries it. In one list, what
+the request cannot go on without, what the human can still have done in it and what the merge
+accepts look alike and end in a similar question, so the human answers all of them in one way, or
+reads none, and the matter that needs a real decision is lost among the rest; three groups put the
+criterion of each before the human, and a group that always stands lets the human tell a group with
+nothing in it from one that was forgotten.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
@@ -9111,7 +9178,14 @@ the human to see at the merge. It would encourage moving everything into the sec
 the top part outside this section on the incomplete reading — an incomplete review would pass
 without the human's yes, with a note in a place the template gives to something else; the lower
 part, in the section of the checks — the human does not read it, so would still not know that the
-review was incomplete.
+review was incomplete. The skipped steps and unrun checks, the proposals not applied and the
+incomplete reading of the review in one group with what the request cannot go on without — a skipped
+step is a matter of doing it here or letting it through, so the group would mix two matters; only
+the groups that hold an item — shorter, but a group with nothing in it cannot be told from a
+forgotten one, by the human or by the script; three sections of the description in place of the
+groups — it changes the skeleton of WAY-286 and every reference to the section, and gives the
+human nothing beyond headings in one section; bold lines in place of headings — they look the same,
+but the script cannot tell them from plain text and checks nothing.
 
 ### WAY-288 — In what language is a request's description written?
 
@@ -9137,33 +9211,41 @@ by line, so not at all; the top part in Polish and the lower part in English —
 opens in Polish; a report in Polish in the human's notes — the cycle writes nothing outside the
 repository, and the human would look in two places.
 
-### WAY-289 — Which unfixed findings does a request put before the human for a decision?
+### WAY-289 — Which things the cycle left unfixed or undone does a request put before the human for a decision?
 
 Writing a request's description, the orchestrator of the cycle judges each unfixed finding — a Minor
 finding that no fix made, a finding outside the task's scope and the new Critical or Important
 finding of a fix that WAY-162 reverted — from the whole cycle record, the reports of the walk
 through the running product and its screenshots included, by whether the product's user or the human
 working with the process will feel it, and restates each that will be felt, in plain words, in the
-section for the human's decisions as one question with two answers, to fix it in this request or to
-make a task of it, which one answer may settle for the whole list. The answer to fix it runs a
-correction with one fix and one review of that fix, and the findings it leaves unfixed are put by
-the request only with the question whether they become a task, or stay in the lower part, so that
-the loop ends after one correction. Every finding stays in its list of the lower part with the
-reviewer's words and its place in the code, and the judgment changes no finding's kind or grade and
-decides no fix and no block.
+section for the human's decisions, under *Fix or let through*, as one question with the answers to
+fix it in this request, to make a task of it or to let it through, which one answer may settle for
+the whole list. The answer to fix it runs a correction with one fix and one review of that fix; the
+same answer is offered for a step or a check the cycle skipped, a proposal of the task's own
+sections not applied and an incomplete reading of the review of the whole change, and runs the step
+or the check, applies the proposal or has a fresh reviewer read what stayed unread, and what the
+correction leaves unfixed or undone, like whatever cannot be done in the request at all, is put by
+the request only with the question whether it becomes a task, which the human who makes none lets
+through by merging, or stays in the lower part, so that the loop ends after one correction. Every finding stays
+in its list of the lower part with the reviewer's words and its place in the code, and the judgment
+changes no finding's kind or grade and decides no fix and no block.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-161 · derives from WAY-287
 - **Verification:** an agent compares the request's description with the decision:
   - complies: a Minor finding that a button stays enabled while a save runs and that no fix made is
-    restated as "a player can press save twice while the game saves; fix it in this request, or
-    make a task of it?", and stays in the list of Minor findings with the reviewer's words; a
-    finding on the name of a helper stays in its list alone; after the human answers that the
-    findings are to be fixed, a correction makes one fix and has it reviewed once, and a Minor
-    finding of that review is put with the question of a task alone;
+    restated as "a player can press save twice while the game saves; fix it in this request, make a
+    task of it or let it through?", and stays in the list of Minor findings with the reviewer's
+    words; a finding on the name of a helper stays in its list alone; after the human answers that
+    the findings are to be fixed, a correction makes one fix and has it reviewed once, and a Minor
+    finding of that review is put with the question of a task alone; the return step that was
+    skipped is put with the same answers, and the answer to do it in this request runs the return
+    step in a correction;
   - violates: the orchestrator moves a finding it judges felt to the blocking ones, or leaves out of
-    its list one it judges not felt; a finding a player would feel stands only in the lower part;
+    its list one it judges not felt; a finding a player would feel stands only in the lower part; a
+    skipped step is offered only the answers of a task or a let-through while it can still be run in
+    the request;
     the restatement names a file and a line instead of what the player meets; a finding left
     unfixed by the correction that the answer to fix it ran asks again for a fix, or the correction
     runs a second fix for it.
@@ -9179,7 +9261,10 @@ judged not felt stays where WAY-161 puts it, so nothing WAY-161 keeps in front o
 it. The clean-ups stay in the lower part for a reading of the lower parts of many requests together.
 A human who wants a finding fixed at once has an answer for it in the question, where without one he
 answers against the question and the cycle has no rule for it; one answer may cover the whole list,
-so that a human who wants all of it fixed answers once. The correction that answer runs brings
+so that a human who wants all of it fixed answers once. A step or a check the cycle skipped, a
+proposal not applied and a reading of the review left incomplete are things the cycle left undone
+and can still do in the request, so the same answer serves them and the human has no second way to
+ask for them. The correction that answer runs brings
 findings of its own, and a second fix for them would raise the same question without end, so what
 the correction leaves goes only with the question of a task, or stays below. The findings nobody
 will feel stay out of the question, since the `none` of the human's section says that nothing waits
@@ -9199,30 +9284,36 @@ the code and the task and does not run the product.
 ### WAY-290 — How is the form of a request's description checked?
 
 Before a request opens, the cycle runs the-way's script that checks the form of the request's
-description — the order and level of its headings, content or `none` in each section, and the
-collapsed block in the task document's language — and corrects the description until the script
-reports no error. The script judges no content.
+description — the order and level of its headings, the three group headings of the section for the
+human's decisions, content or `none` in each section, and the collapsed block in the task
+document's language — and corrects the description until the script reports no error. The script
+judges no content.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-286 · derives from WAY-288
 - **Verification:** an agent compares the cycle and its request with the decision:
   - complies: the script reports that the section of Minor findings is missing, and the
-    orchestrator writes it with `none` and runs the script again before the request opens; a request
-    whose description the script passed opens from that very file;
+    orchestrator writes it with `none` and runs the script again before the request opens; the
+    script reports that the group *Fix or let through* is missing from the section for the human's
+    decisions, and the orchestrator writes it with its items or `none`; a request whose description
+    the script passed opens from that very file;
   - violates: a request opens with a description the script was not run on; the orchestrator
     corrects one of two reported errors and opens the request; the script is taught to judge whether
-    the decision section is complete.
+    the decision section is complete, or whether an item stands in the group it belongs to.
 - **Origin:** none
 
-*Rationale:* an agent writing from a template can lose or move a section, and nobody notices until
-the human reads the request; a check of the form run before the request opens catches that while
-the description can still be corrected. Whether the content is complete and true stays with the
-agent writing it, since a script cannot judge it, and whether decisions still slip into the lower
-part is seen by reading many requests later.
-*Rejected:* the template alone — an agent can lose or move a section, and nobody notices until the
-reading; the script and a second agent comparing the description with the record — one more agent
-call in every cycle, before it is known whether decisions slip into the lower part at all.
+*Rationale:* an agent writing from a template can lose or move a section or a group of the section
+for the human's decisions, and nobody notices until the human reads the request; a check of the
+form run before the request opens catches that while the description can still be corrected.
+Whether the content is complete and true stays with the agent writing it, since a script cannot
+judge it, and whether decisions still slip into the lower part is seen by reading many requests
+later.
+*Rejected:* the template alone, for the group headings as for the other headings — an agent can
+lose or move a section, and a description in the old shape leaves the cycle and is seen by the
+human only at the merge; the script and a second agent comparing the description with the record —
+one more agent call in every cycle, before it is known whether decisions slip into the lower part at
+all.
 
 ### WAY-291 — What does the cycle do with an error of the form check that it holds wrong?
 
@@ -10243,8 +10334,9 @@ product is reported as WAY-219 gives and needs no second item.
 - **Verification:** an agent compares the cycle and its request with the decision:
   - complies: a product whose foundation settles a way to its running screens but no place for
     screenshots: the author inspects the screenshot, commits none and embeds none, and the request
-    asks the human, in plain words, whether to merge without seeing the screen, saying that the
-    product has settled no place for screenshots; the cycle goes on to its review and its request;
+    tells the human, in plain words, that the screen was looked at and is not shown, saying that the
+    product has settled no place for screenshots, which the human accepts by merging; the cycle goes
+    on to its review and its request;
     a product whose foundation settles no way to the running product: the screenshot stays
     unchecked for that reason in the report and the request, as WAY-219 gives, with no item about a
     place;
@@ -10625,7 +10717,46 @@ so the choice would take effect only when it read more than it must; a record of
 selection compared with every *Scope* of the log — WAY-150 rejects it, as it costs every piece of
 work and records reading, not understanding.
 
-### WAY-327 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
+### WAY-327 — What does an item of a request's section for the human's decisions carry where the human chooses?
+
+An item of the section of a request's description for the human's decisions in which the human
+chooses — each item of the groups *Needed from you* and *Fix or let through* but one that asks for
+an action outside the repository — says concretely what happens and who feels it, when and in what
+situation; gives each way open with what follows from choosing it and what it costs, in time, a
+round of correction with its review and the risk that stays, and where it can show up later; gives a
+recommendation with its reason in one sentence; and asks a question with the answers to choose from.
+The agent that writes the description checks every such item against these four before the request
+opens, and fills in what is missing.
+
+- **Scope:** task-cycle, agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-287
+- **Verification:** an agent compares the request's description with the decision:
+  - complies: an item about parts of an instruction that were never tried says who will find out
+    and when, gives the three ways — try them in the request, make a task of a separate trial, let
+    it through — each with its cost, recommends one with a reason, and asks which to take; the agent
+    that wrote the description read each item of the first two groups against the four parts before
+    the form check, and added the missing way and its cost to an item that had none;
+  - violates: an item reads "the return step was skipped; merge without it?", with no word on who
+    will feel it, what the other ways cost or what the writer would do; the description is
+    published with an item of the first two groups that was not read against the four parts.
+- **Origin:** none
+
+*Rationale:* a question with no account of what happens and what each answer costs leaves the human
+to rebuild it from the lower part, or to agree without reading; the account is what lets the human
+choose in the one place the request asks for a choice. The agent that writes the description knows
+the record, so it can fill in the account, and it reads the item before the human does. WAY-290 has
+the form check judge no content, so a missing way or cost shows to nobody before the human unless
+the writer reads the item against the four parts. The price is that an item written generally still
+reaches the human when the writer reads carelessly, and that every item in which the human chooses
+is longer.
+*Rejected:* the rule as a sentence of the template with a good and a bad example alone — the agent
+can go on writing generally and nobody catches it before the human; a fresh agent reading the top
+part of the description before it is published — one more agent call in every cycle, and a change
+to WAY-290, which did not take such a second reading; it stays for later, should the writer's own
+check not suffice.
+
+### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
 
 The-way departs, for its own code and its own tests, from the general coding guidelines and from the
 testing guidelines of a product, under WAY-217: in each part named in *Scope*, neither is missing, so
