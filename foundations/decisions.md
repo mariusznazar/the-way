@@ -10762,8 +10762,9 @@ The-way departs, for its own code and its own tests, from the general coding gui
 testing guidelines of a product, under WAY-217: in each part named in *Scope*, neither is missing, so
 a task of the-way that writes code, or writes or changes a test, in such a part waits for neither.
 The *Scope* names every part of the-way's part map, and a change that adds a part to the part map adds
-that part to this decision's *Scope*. A separate task that writes guidelines of the-way's own withdraws
-this decision.
+that part to this decision's *Scope*. A separate task that writes the general coding guidelines of
+the-way's own takes the coding guidelines out of this decision, one that writes its testing guidelines
+takes the testing guidelines out of it, and once both are written the decision is withdrawn.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
