@@ -630,10 +630,18 @@ def stage_row(number, name, model, input_, cached, output) -> str:
             f"| {output} |\n")
 
 
-def fix_record(events=FIX_EVENTS) -> str:
-    """A cycle record whose Events table has the output column the fix rounds are read from."""
-    return record(remarks="- Process remarks on the-way: none\n").replace(
+FIX_ROUNDS = ("- Review rounds: one, fix `fbea390` (report `reports/07-fix-1-report.md`), review "
+              "of the fix (report `reports/08-review-fix-1-report.md`)\n")
+
+
+def fix_record(events=FIX_EVENTS, rounds=None) -> str:
+    """A cycle record whose Events table has the output column the fix rounds are read from, and
+    whose line `Review rounds` names the rounds the Events name (or none, without events)."""
+    if rounds is None:
+        rounds = FIX_ROUNDS if events else "- Review rounds: none yet\n"
+    text = record(remarks="- Process remarks on the-way: none\n").replace(
         "| Time | Stage |\n|---|---|\n", FULL_EVENTS + events)
+    return text.replace("- Status: request open\n", "- Status: request open\n" + rounds)
 
 
 def one_fix_round() -> str:
@@ -666,15 +674,84 @@ class Cost(AuditCountCase):
     def unknown_why(self, value: str) -> list[str]:
         return [row[3] for row in self.rows("Unknown values") if row[2] == value]
 
-    def test_a_fix_round_at_a_test_price_list_gives_the_cost_and_the_share(self):
+    def test_a_fix_round_at_a_test_price_list_gives_the_cost_and_no_share(self):
         done = self.count(one_fix_round())
         self.assertEqual(0, done.returncode, done.stderr)
         # Worked by hand, in millionths of a dollar: stage 1 is 1000*2 + 100*10 = 3000; stage 2 is
         # 1000*2 + 1000*1 + 200*10 = 5000; stage 3 is 300*4 + 100*0.5 + 40*20 = 2050; stage 4 is
-        # 300*2 + 30*10 = 900. The total is 10950 and the fix round (stages 3 and 4) 2950: 26.9 %.
+        # 300*2 + 30*10 = 900. The total is 10950. The share is unknown: stages.md names the
+        # subagents, which cannot be tied to the round reliably.
         row = self.cost_row()
-        self.assertEqual(["product", "2026-01-01", "0.010950", "1", "26.9%"],
+        self.assertEqual(["product", "2026-01-01", "0.010950", "1", "unknown"],
                          [row[0], row[2], row[3], row[4], row[5]])
+        self.assertTrue(any("cannot be tied to the rounds reliably" in why
+                            for why in self.unknown_why("Fix rounds share")))
+
+    def test_resumed_turns_named_with_fix_do_not_give_a_share(self):
+        # The archived form: the author is one subagent with a fix in its second turn, and its
+        # name holds the word `fix`. Counting whole stages by name gave the whole author as the
+        # fix round (99.6 % in the review's run); the share must be unknown.
+        stages = (STAGES_HEADER
+                  + stage_row(1, "Author: fix the login bug (general-purpose) — turn 1",
+                              "model-a", 1000, 0, 100)
+                  + stage_row(2, "Author: fix the login bug (general-purpose) — turn 2",
+                              "model-a", 400, 0, 40)
+                  + stage_row(3, "Reviewer: review the fix of the login bug (general-purpose) "
+                                 "— turn 1", "model-a", 2000, 0, 200)
+                  + stage_row(4, "Reviewer: review the fix of the login bug (general-purpose) "
+                                 "— turn 2", "model-a", 300, 0, 30))
+        self.assertEqual(0, self.count(stages).returncode)
+        row = self.cost_row()
+        self.assertEqual(["unknown"], [row[5]])
+
+    def test_orchestrator_rows_naming_fix_subagents_are_in_no_fix_round(self):
+        # Two rows of the orchestrator's work while subagents run in parallel name a fix and a
+        # review; no subagent of the cycle was a fix. Counting their names gave a share of 49.7 %.
+        stages = (STAGES_HEADER
+                  + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
+                  + stage_row(2, "orchestrator while in parallel: Fix typos (general-purpose), "
+                                 "One author (general-purpose)", "model-a", 2000, 0, 200)
+                  + stage_row(3, "orchestrator while in parallel: Review the fix "
+                                 "(general-purpose), Other (general-purpose)", "model-a", 300, 0, 30))
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual(["unknown"], [self.cost_row()[5]])
+
+    def test_a_cycle_naming_no_fix_round_and_no_fix_stage_has_a_share_of_zero(self):
+        stages = (STAGES_HEADER
+                  + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
+                  + stage_row(2, "orchestrator while in parallel: Fix typos (general-purpose), "
+                                 "Other (general-purpose)", "model-a", 2000, 0, 200)
+                  + stage_row(3, "Review whole change (general-purpose) — turn 1", "model-a",
+                              300, 0, 30))
+        done = self.count(stages, record_text=fix_record(events=""))
+        self.assertEqual(0, done.returncode, done.stderr)
+        row = self.cost_row()
+        self.assertEqual(["0", "0.0%"], [row[4], row[5]])
+
+    def test_review_rounds_naming_a_fix_the_events_lack_leave_the_share_unknown(self):
+        record_text = fix_record(events="", rounds="- Review rounds: one, fix `x` "
+                                                   "(report `reports/07-fix-1-report.md`)\n")
+        stages = STAGES_HEADER + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
+        done = self.count(stages, record_text=record_text)
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(["unknown"], [self.cost_row()[5]])
+        self.assertTrue(any("do not agree" in why for why in self.unknown_why("Fix rounds share")))
+
+    def test_a_record_without_a_review_rounds_line_leaves_the_share_unknown(self):
+        stages = STAGES_HEADER + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
+        done = self.count(stages, record_text=fix_record(events="", rounds=""))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(["unknown"], [self.cost_row()[5]])
+        self.assertTrue(any("no line `Review rounds`" in why
+                            for why in self.unknown_why("Fix rounds share")))
+
+    def test_a_stage_with_no_token_usage_leaves_the_cost_unknown(self):
+        # cycle_stages.py writes the model mark `—` with zero counts for a stage it found no usage
+        # for; that is not a cost of zero.
+        stages = STAGES_HEADER + stage_row(1, "orchestrator", "—", 0, 0, 0)
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("no token usage" in why for why in self.unknown_why("Cost")))
 
     def test_a_model_the_list_lacks_leaves_the_cost_and_the_share_unknown(self):
         stages = one_fix_round().replace("| model-b |", "| model-c |")
@@ -696,7 +773,7 @@ class Cost(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         row = self.cost_row()
         self.assertEqual(["0.010950", "unknown"], [row[3], row[5]])
-        self.assertTrue(any("cannot be tied to the rounds" in why
+        self.assertTrue(any("the record names no fix round" in why
                             for why in self.unknown_why("Fix rounds share")))
 
     def test_cached_input_above_input_leaves_the_cost_unknown(self):

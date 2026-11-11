@@ -52,16 +52,16 @@ ones noted, and its values are read from the last copy, the most complete. For e
   so they are priced as input: an approximation. A model the list gives no price for, a row that
   does not read, or a `stages.md` without that section (an earlier form) gives the cost `unknown`,
   never zero;
-- the share of that cost spent in fix rounds. The record's table `## Events` names a fix round by
-  a report of its column *Output or full report* whose file name holds the words `fix` and
-  `report` (the fix itself, `reports/07-fix-1-report.md`), and the review of that fix by the same
-  with the word `review` too (`reports/08-review-fix-1-report.md`). A stage of `stages.md` is a fix
-  stage when its name, as the orchestrator gave the subagent, holds the word `fix` and not
-  `review`, and a review of a fix when it holds both; each turn of a subagent is part of its stage,
-  and the orchestrator's own stretches are in no round. Where the number of fix stages differs from
-  the number of fix reports, or the number of review stages from the number of review reports (two
-  rounds given one name count as one), the share is `unknown` with the reason and the cost is still
-  given.
+- the share of that cost spent in fix rounds. The record names its fix rounds by the report paths
+  of its table `## Events` (column *Output or full report*) and of its line `Review rounds`: a path
+  whose file name holds the words `report` and `fix` is a fix report, and one that holds `review`
+  too is the review of a fix (`reports/07-fix-1-report.md`, `reports/08-review-fix-1-report.md`).
+  The two places must name the same reports. The share is given as `0.0%` only where the record
+  names no fix round and no stage of `stages.md` (other than the orchestrator's rows) names a fix
+  or a review of one. Where the record names a round, the share is `unknown`: `stages.md` names
+  the subagents that worked, not the round each turn served, and no link the records or stages.md
+  write ties a stage to a round reliably; a wrong figure is worse than `unknown`. The cost is still
+  given. A stage with no token usage makes the cost `unknown`.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
@@ -604,12 +604,26 @@ def stage_tokens(lines: list[str],
     return rows, None
 
 
+def report_paths(text: str) -> tuple[set[str], set[str]]:
+    """The fix reports and the review reports of fix rounds among the paths in `text`: a path
+    whose file name holds the words `report` and `fix`; the review of a fix holds `review` too."""
+    fixes: set[str] = set()
+    reviews: set[str] = set()
+    for token in text.split():
+        path = token.strip("`;,()")
+        if not path.endswith(".md"):
+            continue
+        words = re.findall(r"[a-z]+", re.split(r"[\\/]", path)[-1].lower())
+        if "report" in words and "fix" in words:
+            (reviews if "review" in words else fixes).add(path)
+    return fixes, reviews
+
+
 def record_rounds(lines: list[str], fenced: list[bool]) -> tuple[set[str] | None, set[str] | None,
                                                                   str | None]:
     """The fix reports and the review reports of fix rounds that the record's `## Events` table
-    names, or None with the reason: an earlier form has no such table. A round's report is a path
-    in the column *Output or full report* whose file name holds the words `report` and `fix`; the
-    review of a fix holds `review` too."""
+    names, or None with the reason: an earlier form has no such table. The paths are read from the
+    column *Output or full report*."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == EVENTS_HEADING]
     if not headings:
@@ -633,16 +647,39 @@ def record_rounds(lines: list[str], fenced: list[bool]) -> tuple[set[str] | None
             continue
         if is_separator(cells) or columns >= len(cells):
             continue
-        for token in cells[columns].split():
-            path = token.strip("`;,")
-            if not path.endswith(".md"):
-                continue
-            words = re.findall(r"[a-z]+", re.split(r"[\\/]", path)[-1].lower())
-            if "report" in words and "fix" in words:
-                (reviews if "review" in words else fixes).add(path)
+        found_fixes, found_reviews = report_paths(cells[columns])
+        fixes |= found_fixes
+        reviews |= found_reviews
     if columns is None:
         return None, None, "the table of `## Events` is missing: an earlier form"
     return fixes, reviews, None
+
+
+def review_rounds(lines: list[str],
+                  fenced: list[bool]) -> tuple[set[str], set[str], bool]:
+    """The fix reports and the review reports that the record's line `Review rounds` names, and
+    whether the record holds that line: the line and the lines indented under it, outside code
+    fences."""
+    fixes: set[str] = set()
+    reviews: set[str] = set()
+    found = False
+    collecting = False
+    for line, inside in zip(lines, fenced):
+        if inside:
+            collecting = False
+            continue
+        if line.startswith("- Review rounds:"):
+            collecting = True
+            found = True
+        elif collecting and line[:1] in (" ", "\t") and line.strip():
+            pass
+        else:
+            collecting = False
+            continue
+        found_fixes, found_reviews = report_paths(line)
+        fixes |= found_fixes
+        reviews |= found_reviews
+    return fixes, reviews, found
 
 
 def stage_kind(name: str) -> str | None:
@@ -654,16 +691,24 @@ def stage_kind(name: str) -> str | None:
     return "review of a fix" if "review" in words else "fix"
 
 
+def is_orchestrator_row(name: str) -> bool:
+    """The orchestrator's own rows, as `cycle_stages.py` names them: its stretches and the rows of
+    its work while subagents run in parallel. Their names list subagents, but the work is the
+    orchestrator's, so they are in no fix round."""
+    return name == "orchestrator" or name.startswith("orchestrator while in parallel: ")
+
+
 def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
     """The cost in dollars of each row at the list's prices, or None with the reason: a model with
-    no price, a cached input above its input, or tokens with no model make the cost unknown."""
+    no price, a cached input above its input, or a stage with no token usage make the cost
+    unknown."""
     costs: list[Decimal] = []
     for row in rows:
         if row.model == NO_MODEL:
-            if row.input or row.cached or row.output:
-                return None, f"stage `{row.name}` has tokens but no model"
-            costs.append(Decimal(0))
-            continue
+            # `cycle_stages.py` writes this mark for a stage it found no token usage for: its
+            # tokens are not known, so its cost is not zero.
+            return None, (f"stage `{row.name}` has no token usage in its transcript, so its cost "
+                          "is not known")
         if row.cached > row.input:
             return None, f"the cached input of stage `{row.name}` is above its input"
         price = prices.table.get(row.model)
@@ -702,22 +747,36 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
     if fixes is None:
         cycle.unknown.append(("Fix rounds share", reason))
         return
-    fixing = {TURN_SUFFIX.sub("", row.name) for row in rows if stage_kind(row.name) == "fix"}
-    reviewing = {TURN_SUFFIX.sub("", row.name) for row in rows
-                 if stage_kind(row.name) == "review of a fix"}
-    if len(fixing) != len(fixes) or len(reviewing) != len(reviews):
+    named_fixes, named_reviews, found = review_rounds(record_lines, record_fenced)
+    if not found:
+        cycle.unknown.append(("Fix rounds share", "the record holds no line `Review rounds`: an "
+                                                  "earlier form"))
+        return
+    if (fixes, reviews) != (named_fixes, named_reviews):
         cycle.unknown.append(("Fix rounds share", (
-            f"the record names {len(fixes)} fix report(s) and {len(reviews)} review report(s) of a "
-            f"fix, and stages.md shows {len(fixing)} fix stage(s) and {len(reviewing)} review "
-            "stage(s) of a fix: the stages cannot be tied to the rounds")))
+            f"the record's *Events* name {len(fixes)} fix report(s) and {len(reviews)} review "
+            f"report(s) of a fix, its line `Review rounds` names {len(named_fixes)} and "
+            f"{len(named_reviews)}: the two do not agree")))
         return
     cycle.rounds = len(fixes)
+    if fixes or reviews:
+        # The stage names say which subagent worked, not which round a turn served: no stage can
+        # be tied to a round by anything the records or stages.md write, so no share is given.
+        cycle.unknown.append(("Fix rounds share", (
+            f"the record names {len(fixes)} fix report(s) and {len(reviews)} review report(s) of a "
+            "fix; stages.md names the subagents, not the round each turn served, so the stages "
+            "cannot be tied to the rounds reliably")))
+        return
+    named = [row.name for row in rows if not is_orchestrator_row(row.name)]
+    if any(stage_kind(name) is not None for name in named):
+        cycle.unknown.append(("Fix rounds share", (
+            "stages.md names a fix or a review of a fix, and the record names no fix round")))
+        return
     if total == 0:
         cycle.unknown.append(("Fix rounds share", "the stages hold no tokens"))
         return
-    in_rounds = sum((cost for row, cost in zip(rows, costs) if stage_kind(row.name) is not None),
-                    Decimal(0))
-    cycle.share = in_rounds * 100 / total
+    # The record names no fix round and no stage names one: no cost is spent in fix rounds.
+    cycle.share = Decimal(0)
 
 
 def tree_entries(git: Git, commit: str) -> dict[bytes, tuple[bytes, bytes, str, str]]:
