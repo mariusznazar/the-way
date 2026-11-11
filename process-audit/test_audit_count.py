@@ -201,6 +201,11 @@ class AuditCountCase(unittest.TestCase):
         lines = [line for line in section.splitlines() if line.startswith("|")]
         return [split_row(line) for line in lines[2:]]
 
+    def reasons_of(self, rows: list[list[str]], value: str) -> str:
+        """The reasons of the rows of *Unknown values* that name `value`, joined: the rows are
+        found by their value, since a cycle now has rows of its process questions too."""
+        return " ".join(row[3] for row in rows if row[2] == value)
+
     def cycles(self) -> list[dict]:
         text = self.latest()
         section = text.split("\n## Cycles\n", 1)[1].split("\n## ", 1)[0]
@@ -421,7 +426,7 @@ class Times(AuditCountCase):
     def test_a_missing_stages_md_is_unknown(self):
         cycle, unknown = self.times_of(None)
         self.assertEqual("unknown", cycle["Waiting for tools"])
-        self.assertIn("no `stages.md`", unknown[0][3])
+        self.assertIn("no `stages.md`", self.reasons_of(unknown, "Waiting for tools"))
 
 
 class CraftedInput(AuditCountCase):
@@ -450,7 +455,8 @@ class CraftedInput(AuditCountCase):
         self.write_locations(self.places(product=product))
         self.assertEqual(0, self.run_count().returncode)
         self.assertEqual("unknown", self.cycles()[0]["Waiting for tools"])
-        self.assertIn("no regular file", self.rows("Unknown values")[0][3])
+        self.assertIn("no regular file",
+                      self.reasons_of(self.rows("Unknown values"), "Waiting for tools"))
 
     def test_a_record_not_in_utf8_gives_unknown_values(self):
         product = self.repository()
@@ -470,7 +476,8 @@ class CraftedInput(AuditCountCase):
         self.write_locations(self.places(product=product))
         self.assertEqual(0, self.run_count().returncode)
         self.assertEqual("unknown", self.cycles()[0]["Waiting for tools"])
-        self.assertIn("larger than", self.rows("Unknown values")[0][3])
+        self.assertIn("larger than",
+                      self.reasons_of(self.rows("Unknown values"), "Waiting for tools"))
 
     def test_a_header_line_of_blanks_does_not_stall_the_count(self):
         # A header line `-`, a long run of blanks and no colon: a pattern that can split the run
@@ -1303,6 +1310,169 @@ class Run(AuditCountCase):
         [row] = self.rows("Repositories")
         self.assertEqual("the-way", row[0])
         self.assertTrue(row[2].startswith("yes"), row)
+
+
+def process_record(pin, discarded="none", plan="none on the one-author route", too_large="none",
+                   rounds="none", extra="") -> str:
+    """A cycle record whose items the questions of a process version read; `extra` adds lines
+    under the status line, for a doubled item."""
+    items = (f"- Discarded attempt: {discarded}\n- Plan: {plan}\n"
+             f"- Slices returned too large: {too_large}\n- Review rounds: {rounds}\n{extra}")
+    return record(pin_line=f"- Process pin: `{pin}`").replace(
+        "- Status: request open\n", "- Status: request open\n" + items)
+
+
+class ProcessVersions(AuditCountCase):
+    """The process versions, their series and the three questions (WAY-338, WAY-340)."""
+
+    FIRST = 1759968000    # 2025-10-09, UTC midnight
+    LATER = 1760054400    # 2025-10-10
+    MARCH = 1772323200    # 2026-03-01
+    BASE_FILES = {"README.md": "the-way\n", "task-cycle/change/SKILL.md": "change\n",
+                  "task-cycle/cycle_stages.py": "stages\n"}
+
+    def the_way(self) -> Repository:
+        way = self.repository("the-way")
+        return way
+
+    def version_at(self, way, when, parent=None, changed=None) -> str:
+        """A commit of the-way dated `when`: the base files, with the files of `changed` replaced
+        or added."""
+        way.time = when - 3600
+        files = {**self.BASE_FILES, **(changed or {})}
+        return way.commit(files, f"Version at {when}", *([parent] if parent else []))
+
+    def stages_of(self, tokens) -> str:
+        return STAGES_HEADER + stage_row(1, "orchestrator", "model-a", tokens, 0, 0)
+
+    def add_cycles(self, product, specs) -> None:
+        """Each cycle as (folder, record text, tokens), chained so that all stay in the history."""
+        parent = product.commit({"README.md": "a product\n"}, "Start")
+        for folder, text, tokens in specs:
+            _, parent = product.cycle(folder, {"cycle.md": text,
+                                               "stages.md": self.stages_of(tokens)},
+                                      parent=parent, branch=None)
+        product.branch("main", parent)
+
+    def run_versions(self, way, product, prices=TEST_PRICES):
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(prices, encoding="utf-8")
+        done = self.run_count("--prices", str(test_prices), "--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+
+    def series(self, number) -> list[list[str]]:
+        text = self.latest()
+        heading = f"\n### Series {number}\n"
+        self.assertIn(heading, text, "the result has no such series")
+        section = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+        lines = [line for line in section.splitlines() if line.startswith("|")]
+        return [split_row(line) for line in lines[2:]]
+
+    def test_versions_compare_within_a_series_and_not_across_it(self):
+        # v1 and v2 share a series; a class added between v2 and v3 starts a new one. Medians:
+        # v1 is (2 + 4) / 2 = 3 dollars, v2 is 1 dollar, v3 is 0.5 dollar. v2 falls against v1;
+        # v3 has no previous version in its series, so it is not compared with v2 (0.5 < 1).
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1)
+        v3 = self.version_at(way, self.MARCH, parent=v2)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("one", process_record(v1), 1_000_000), ("two", process_record(v1), 2_000_000),
+            ("three", process_record(v2), 500_000), ("four", process_record(v3), 250_000),
+            ("five", process_record("none"), 100)])
+        # The class is added on the day of v3, which counts as between the two versions.
+        self.register.write_text(register_text(classes=["| sharp | x | 2026-03-01 | none |"]),
+                                 encoding="utf-8")
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "2025-10-09", "2", "2", "3.000000", "no", "0 of 0", "unknown",
+                           "unknown"],
+                          [v2, "2025-10-10", "1", "1", "1.000000", "no", "0 of 0", "unknown",
+                           "yes"]], self.series(1))
+        self.assertEqual([[v3, "2026-03-01", "1", "1", "0.500000", "no", "0 of 0", "unknown",
+                           "unknown"]], self.series(2))
+        self.assertIn("### No version", self.latest())
+        self.assertIn("## Process versions", self.latest())
+
+    def test_a_change_of_the_reviewed_files_starts_a_new_series(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1,
+                             changed={"task-cycle/change/SKILL.md": "changed\n"})
+        product = self.repository()
+        self.add_cycles(product, [("one", process_record(v1), 1_000_000),
+                                  ("two", process_record(v2), 250_000)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "no", "0 of 0", "unknown",
+                           "unknown"]], self.series(1))
+        self.assertEqual([[v2, "2025-10-10", "1", "1", "0.500000", "no", "0 of 0", "unknown",
+                           "unknown"]], self.series(2))
+
+    def test_the_questions_read_the_record_items_and_say_unknown_otherwise(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        listed = "\n  - slice 2\n  - slice 4\n  - slice 7\n  - slice 8"
+        self.add_cycles(product, [
+            ("reading-a", process_record(
+                v1, discarded="open design choice at start: the spec left the field open",
+                plan="11 slices and 12 foundation entries", too_large=listed), 1_000_000),
+            ("reading-b", process_record(v1, plan="3 slices", too_large="\n  - slice 1"), 1_000_000),
+            ("reading-c", process_record(v1, plan="5 slices", extra="- Plan: 6 slices\n"), 1_000_000),
+        ])
+        self.run_versions(way, product)
+        # Q1 is yes from reading-a's discarded attempt. Q2: 4 + 1 too large of 11 + 3 planned,
+        # 15 > 14, so yes; reading-c's doubled item is unknown and left out of the sums.
+        self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "yes", "2 of 3", "yes",
+                           "unknown"]], self.series(1))
+        plan_reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"]
+        self.assertEqual(["the record holds the item `Plan` more than once"], plan_reasons)
+
+    def test_a_review_round_with_discarded_none_leaves_the_question_unknown(self):
+        # The findings of a round are not in the record, so `none` discarded is not `no`.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("rounds", process_record(v1, rounds="\n  - findings `reports/x_findings.md`: one"),
+             1_000_000)])
+        self.run_versions(way, product)
+        self.assertEqual("unknown", self.series(1)[0][5])
+
+    def test_a_third_is_not_above_a_third_and_unknown_reads_stay_unknown(self):
+        # One slice too large of three planned is exactly a third, which is not above it: no.
+        # The prose discarded attempt makes Q1 unknown; the cycle whose plan has no figure
+        # before the word `slices` is left out of Q2 with its reason, and does not stall the run.
+        way = self.the_way()
+        v2 = self.version_at(way, self.LATER)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("exact", process_record(v2, plan="3 slices", too_large="\n  - slice 1"), 1_000_000),
+            ("prose", process_record(v2, discarded="a time overrun"), 1_000_000),
+            ("crawling", process_record(v2, plan="9" * 200_000 + " slices"), 1_000_000),
+        ])
+        self.run_versions(way, product)
+        [row] = self.series(1)
+        self.assertEqual([v2, "2025-10-10", "3", "3", "2.000000", "unknown", "1 of 2", "no"],
+                         row[:8])
+        unknown = self.rows("Unknown values")
+        self.assertEqual(1, len([row for row in unknown if row[2] == "Discarded attempt"]))
+        self.assertEqual(["the item `Plan` does not give one count of slices before the word "
+                          "`slices`"],
+                         [row[3] for row in unknown if row[2] == "Plan"])
+
+
+class PriceBoundary(unittest.TestCase):
+    def test_a_new_price_list_starts_a_new_series(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        self.assertEqual("the price list changed",
+                         audit_count.series_boundary(earlier, later, audit_count.Register(), None))
 
 
 if __name__ == "__main__":

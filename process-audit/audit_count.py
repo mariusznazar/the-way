@@ -6,6 +6,7 @@ register of problems counted against those cycles (WAY-329, WAY-332 to WAY-335).
 Usage:
 
     python -B process-audit/audit_count.py [--locations FILE] [--repository KEY ...] [--today DATE]
+                                           [--prices FILE]
 
 In a product, the path starts with `.the-way/`. The command asks nothing and reads nothing from
 stdin, and git runs with its terminal prompt off, so that a system scheduler can start it with no
@@ -73,6 +74,36 @@ ones noted, and its values are read from the last copy, the most complete. For e
   the review of that fix, or where a turn was given a findings file the record does not name: a
   wrong figure is worse than `unknown`. The cost is still given.
 
+The process versions (WAY-338, WAY-340): each cycle is grouped by the version of the-way its
+*Process pin* resolves to, the full commit that `git rev-parse --disambiguate` names in the
+checkout of the-way. A cycle whose pin is unknown, does not resolve, is ambiguous, or whose commit
+has no readable date stands apart as *no version*, with its reason, and is in no series. Versions
+are ordered by their commit's date (`git log -1 --format=%ct`), ties by the full hash. A series is
+a run of consecutive versions between which none of these changes:
+
+- the price list the costs are priced by (one list per run, so this never splits a run);
+- the register's list of classes: a date of *Added* or *Withdrawn* on or between the days of the
+  two versions, or a list the register does not give in full, which splits at every version;
+- the tree of the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review`,
+  `task-cycle/spec` and `task-cycle/cycle_stages.py` (`git diff --quiet`; exit 1, or any other
+  failure, counts as changed). This test is deliberately conservative: any change of those files
+  starts a series, though not every change alters a stage report's form or the reviewer's
+  instructions. It cannot tell such a change from another one, and errs toward fewer comparisons.
+
+Measures are compared only within a series, and each series is its own section of the result
+(WAY-338). Per version: the median cost at constant prices of its cycles with a known cost, and
+three answers, each `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
+that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
+is no, text naming an open design choice is yes, other text or a missing or doubled item is
+unknown; where the item reads `none` but *Review rounds* names a findings file, the answer is
+unknown, since the findings are not in the record. Q2, more than one third of the slices of the
+plans came back too large: from the item *Plan* (`none` on the one-author route leaves the cycle
+out; otherwise the one figure written before the word `slices`, and where there is none or more
+than one, unknown) and the entries of *Slices returned too large* (`none` is 0); the answer is yes
+where three times the sum of too-large slices is above the sum of planned slices of the cycles
+whose plan is read, and unknown where no cycle's plan is read. Q3, the cost falls: the median
+against the previous version of the same series, yes where lower, unknown where there is none.
+
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. The records, the `stages.md` files and the locations file are untrusted input:
@@ -125,6 +156,7 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
+import bisect
 import json
 import os
 import re
@@ -200,6 +232,17 @@ SHARE = Decimal("0.1")
 # A cost at or above this many dollars is not given: a crafted count would otherwise overrun the
 # precision the cost is written with.
 COST_CEILING = Decimal(10) ** 18
+# The reviewed files of the-way: a change of any of them between two versions starts a series.
+TREE_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
+              "task-cycle/cycle_stages.py")
+# The items of the record the questions of a process version read (task-cycle/record_template.md).
+ITEM_DISCARDED = "Discarded attempt"
+ITEM_PLAN = "Plan"
+ITEM_TOO_LARGE = "Slices returned too large"
+DESIGN_CHOICE = "open design choice"
+SLICES_WORD = re.compile(r"slices", re.I)
+# A count standing alone: no letter or digit beside it, so `F1a` and `F1–F4` give none.
+FIGURE = re.compile(r"(?<![A-Za-z0-9])[0-9]{1,6}(?![A-Za-z0-9])")
 
 
 class AuditCountError(Exception):
@@ -372,6 +415,13 @@ class Cycle:
     cost: Decimal | None = None
     rounds: int | None = None
     share: Decimal | None = None
+    # The questions of the process version: Q1 as yes, no or unknown; the plan's slices, and the
+    # slices returned too large, each None where unknown; and whether the plan is left out (the
+    # one-author route).
+    contradiction: str | None = None
+    plan_left_out: bool = False
+    planned: int | None = None
+    too_large: int | None = None
     unknown: list[tuple[str, str]] = field(default_factory=list)
 
 
@@ -730,6 +780,131 @@ def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | Non
     return found, None
 
 
+def item_texts(lines: list[str], fenced: list[bool],
+               label: str) -> list[tuple[str, list[tuple[str, bool]]]]:
+    """The items `- <label>: ...` of a record outside code fences, each as its text on its line and
+    the lines indented under it with their fence flags. The whole record is read, since the items
+    of the spec and the plan sit below the header. One pass: each item reads down to the next line
+    that starts at the margin."""
+    found = []
+    for index, line in enumerate(lines):
+        if fenced[index] or not line.startswith("- "):
+            continue
+        field_found = header_field(line)
+        if field_found is None or field_found[0] != label:
+            continue
+        below = []
+        for next_index in range(index + 1, len(lines)):
+            text = lines[next_index]
+            if not text.strip():
+                continue
+            if remarks_check.indent_of(text) == 0:
+                break
+            below.append((text, fenced[next_index]))
+        found.append((field_found[1], below))
+    return found
+
+
+def item_count_reason(label: str, items: list) -> str:
+    return (f"the record holds the item `{label}` more than once" if items
+            else f"the record holds no item `{label}`")
+
+
+def item_words(rest: str, below: list[tuple[str, bool]]) -> str:
+    """The item's text: its line and the lines under it, joined."""
+    return " ".join([rest] + [text.strip() for text, _ in below if text.strip()]).strip()
+
+
+def reads_none_first(text: str) -> bool:
+    """Whether the text opens with the word `none`, as `none on the one-author route` does."""
+    word = text.strip(" \t*_`.").casefold()
+    return word.startswith("none") and not word[4:5].isalnum()
+
+
+def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None, str | None]:
+    """Q1: whether a contradiction with the settlements came out only after code was written, as
+    the record's item *Discarded attempt* and its *Review rounds* give it: `yes`, `no`, or None with
+    the reason."""
+    items = item_texts(lines, fenced, ITEM_DISCARDED)
+    if len(items) != 1:
+        return None, item_count_reason(ITEM_DISCARDED, items)
+    text = item_words(items[0][0], items[0][1])
+    if remarks_check.reads_none(text):
+        findings, why = review_rounds(lines, fenced)
+        if findings is None:
+            return None, ("the item `Review rounds` does not give its findings files, so whether a "
+                          "review round found a contradiction is not known")
+        if findings:
+            return None, "a review round names findings, and their content is not in the record"
+        return "no", None
+    if DESIGN_CHOICE in text.casefold():
+        return "yes", None
+    return None, "the item `Discarded attempt` names neither none nor an open design choice"
+
+
+def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, str | None]:
+    """The item *Plan* of a record: whether the plan is left out (the one-author route), the
+    slices it made, or None with the reason. The count is the one figure written before the word
+    `slices`; with no figure or with more than one there, the count is not read."""
+    items = item_texts(lines, fenced, ITEM_PLAN)
+    if len(items) != 1:
+        return False, None, item_count_reason(ITEM_PLAN, items)
+    text = item_words(items[0][0], items[0][1])
+    if reads_none_first(text):
+        return True, None, None
+    word = SLICES_WORD.search(text)
+    if word is None:
+        return False, None, "the item `Plan` names no count of slices"
+    figures = FIGURE.findall(text[:word.start()])
+    if len(figures) != 1:
+        return False, None, ("the item `Plan` does not give one count of slices before the word "
+                             "`slices`")
+    return False, int(figures[0]), None
+
+
+def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
+    """The item *Slices returned too large*: 0 where it reads `none`, the number of its entries
+    where it lists them, or None with the reason."""
+    items = item_texts(lines, fenced, ITEM_TOO_LARGE)
+    if len(items) != 1:
+        return None, item_count_reason(ITEM_TOO_LARGE, items)
+    rest, below = items[0]
+    if reads_none_first(rest) and not any(text.strip() for text, _ in below):
+        return 0, None
+    markers = [remarks_check.indent_of(text) for text, inside in below
+               if not inside and remarks_check.MARKER.fullmatch(text)]
+    if rest.strip() or not markers:
+        return None, ("the item `Slices returned too large` reads neither none nor an entry "
+                      "per slice")
+    base = min(markers)
+    return sum(1 for indent in markers if indent == base), None
+
+
+def process_questions(cycle: Cycle, lines: list[str] | None, fenced: list[bool] | None,
+                      reason: str | None) -> None:
+    """Read the questions of a process version from the cycle's record; a value that cannot be
+    read is `unknown` with its reason, and the record missing makes all of them unknown."""
+    if lines is None or fenced is None:
+        cycle.unknown += [(ITEM_DISCARDED, reason), (ITEM_PLAN, reason),
+                          (ITEM_TOO_LARGE, reason)]
+        return
+    cycle.contradiction, why = read_contradiction(lines, fenced)
+    if why:
+        cycle.unknown.append((ITEM_DISCARDED, why))
+    cycle.plan_left_out, cycle.planned, why = read_plan(lines, fenced)
+    if cycle.plan_left_out:
+        return
+    if why:
+        cycle.unknown.append((ITEM_PLAN, why))
+    cycle.too_large, why = read_too_large(lines, fenced)
+    if why:
+        cycle.unknown.append((ITEM_TOO_LARGE, why))
+    elif cycle.planned is not None and cycle.too_large > cycle.planned:
+        cycle.too_large = None
+        cycle.unknown.append((ITEM_TOO_LARGE,
+                              "more slices are returned too large than the plan made"))
+
+
 def is_orchestrator_row(name: str) -> bool:
     """The orchestrator's own rows, as `cycle_stages.py` names them: its stretches and the rows of
     its work while subagents run in parallel. Their work is the orchestrator's, so they serve no
@@ -892,6 +1067,7 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         cycle.remarks, reason = remarks_count(record_lines, record_fenced)
         if reason:
             cycle.unknown.append(("Remarks", reason))
+    process_questions(cycle, record_lines, record_fenced, record_reason)
     working_name = "Working time without waiting for tools"
     if stages is None:
         cycle.unknown += [(working_name, stages_reason), ("Waiting for tools", stages_reason),
@@ -1007,6 +1183,11 @@ class Register:
     refused_problems: list[tuple[str, str, str]] = field(default_factory=list)
     refused: list[tuple[str, str, str, str]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    # The dates of *Added* and *Withdrawn* of the valid rows of *Classes*, sorted as text (they are
+    # written YYYY-MM-DD); unknown where a row or the table does not read, so that a change of the
+    # list cannot be ruled out.
+    class_dates: list[str] = field(default_factory=list)
+    class_dates_unknown: bool = False
 
     def refuse(self, value: str, why: str, repository: str = THE_WAY, record: str = "none") -> None:
         self.refused.append(tuple(text[:TEXT_CAP] for text in (repository, record, value, why)))
@@ -1144,9 +1325,17 @@ def read_register(path: Path) -> Register:
             register.errors.append(why)
             register.refuse(f"table `{title}`", why)
         tables[title] = rows
-    if tables["Classes"] is not None:
+    if tables["Classes"] is None:
+        register.class_dates_unknown = True
+    else:
         register.classes = [name for name, _, _ in
                             named_rows(register, "Classes", tables["Classes"], 4, check_class)]
+        for cells in tables["Classes"]:
+            if len(cells) != 4 or check_class(cells)[1] is not None:
+                register.class_dates_unknown = True
+                continue
+            register.class_dates += [text for text in (cells[2], cells[3]) if valid_date(text)]
+        register.class_dates.sort()
     if tables["Weights"] is not None:
         weights = named_rows(register, "Weights", tables["Weights"], 2, check_weight)
         if sorted(name for name, _, _ in weights) != sorted(LEVELS):
@@ -1254,6 +1443,26 @@ class Ancestry:
                               "lack its history")
             return False, None
         return None, f"git could not compare the version {pin} with the fix (exit code {code})"
+
+    def stamp(self, version: str) -> tuple[int | None, str | None]:
+        """The committer date of a full commit hash of the checkout, as a Unix time, or None with
+        the reason; a value that is no number is not read (WAY-338)."""
+        try:
+            text = self.git.run("log", "-1", "--format=%ct", version, "--").decode("ascii").strip()
+        except (GitError, ValueError) as error:
+            return None, f"git could not read the date of the commit: {display(error)}"
+        try:
+            return int(text), None
+        except ValueError:
+            return None, "the date of the commit is not a number"
+
+    def changed(self, earlier: str, later: str) -> bool:
+        """Whether the reviewed files of the-way differ between two full commit hashes; a git
+        that fails counts as changed, so that a series is never joined by mistake (WAY-338)."""
+        try:
+            return self.git.code("diff", "--quiet", earlier, later, "--", *TREE_PATHS) != 0
+        except GitError:
+            return True
 
 
 def counted(count: int, refused: int) -> str:
@@ -1388,6 +1597,193 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                     list(dict.fromkeys(unknown)))
 
 
+# The process versions (WAY-338, WAY-340)
+
+
+@dataclass
+class Version:
+    """A version of the process: the full commit of the-way that cycles pin, its committer date
+    as a Unix time and as a day, the price list its costs are priced by, and its cycles."""
+    commit: str
+    stamp: int
+    day: str
+    price: str
+    cycles: list[Cycle]
+
+
+@dataclass
+class Series:
+    """A run of versions between which no change splits a series: why it begins with its first
+    version, its versions, and the rows of its table."""
+    begins: str
+    versions: list[Version]
+    rows: list[list[str]] = field(default_factory=list)
+
+
+@dataclass
+class Versions:
+    series: list[Series] = field(default_factory=list)
+    no_version: list[Cycle] = field(default_factory=list)
+    unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
+
+
+VERSION_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
+                  "Median cost (USD)", "Q1: contradiction only after code", "Plans read",
+                  "Q2: more than a third of slices too large", "Q3: cost falls"]
+
+
+def median_of(costs: list[Decimal]) -> Decimal | None:
+    """The median of the costs: the middle one, or the mean of the two middle ones; None where
+    there is none."""
+    if not costs:
+        return None
+    ordered = sorted(costs)
+    middle = len(ordered) // 2
+    if len(ordered) % 2:
+        return ordered[middle]
+    return (ordered[middle - 1] + ordered[middle]) / 2
+
+
+def series_boundary(earlier: Version, later: Version, register: Register,
+                    ancestry: Ancestry) -> str | None:
+    """Why a new series begins at `later`, or None where both versions share one series."""
+    if earlier.price != later.price:
+        return "the price list changed"
+    if register.class_dates_unknown:
+        return "the register's list of classes is not given in full, so it may have changed"
+    # A date on the day of either version counts: the test errs toward more series.
+    at = bisect.bisect_left(register.class_dates, earlier.day)
+    if at < len(register.class_dates) and register.class_dates[at] <= later.day:
+        return "the register's list of classes changed between the two versions"
+    if ancestry.changed(earlier.commit, later.commit):
+        return "the reviewed files of the-way changed between the two versions"
+    return None
+
+
+def contradiction_of(version: Version) -> tuple[str, str | None]:
+    """Q1 for a version: yes where a cycle answers yes, no where every cycle answers no."""
+    answers = [cycle.contradiction for cycle in version.cycles]
+    if "yes" in answers:
+        return "yes", None
+    if answers and all(answer == "no" for answer in answers):
+        return "no", None
+    return "unknown", "a cycle's answer is unknown, so the question is not settled for the version"
+
+
+def too_large_of(version: Version) -> tuple[str, str, str | None]:
+    """Q2 for a version, with the cell *Plans read*: the sums of the slices of the cycles whose
+    plan is read, too-large over planned, above one third is yes."""
+    planned_cycles = [cycle for cycle in version.cycles if not cycle.plan_left_out]
+    read = [cycle for cycle in planned_cycles
+            if cycle.planned is not None and cycle.too_large is not None]
+    plans_read = f"{len(read)} of {len(planned_cycles)}"
+    if not read:
+        return plans_read, "unknown", "no cycle's plan can be read"
+    planned = sum(cycle.planned for cycle in read if cycle.planned is not None)
+    large = sum(cycle.too_large for cycle in read if cycle.too_large is not None)
+    if planned == 0:
+        return plans_read, "unknown", "the plans that are read hold no slice"
+    return plans_read, ("yes" if 3 * large > planned else "no"), None
+
+
+def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
+                     prices: Prices) -> Versions:
+    """Group the cycles by their version, split the versions into series, and answer the three
+    questions of each version within its own series (WAY-338, WAY-340)."""
+    result = Versions()
+    groups: dict[str, list[Cycle]] = {}
+    for read in reads:
+        for cycle in read.cycles:
+            if cycle.pin is None:
+                result.no_version.append(cycle)
+                continue
+            commit, why = ancestry.commit(cycle.pin)
+            if commit is None:
+                result.no_version.append(cycle)
+                result.unknown.append((cycle.repository, cycle.record, "Process pin", why or ""))
+                continue
+            groups.setdefault(commit, []).append(cycle)
+    versions: list[Version] = []
+    for commit, members in groups.items():
+        stamp, why = ancestry.stamp(commit)
+        day = committed_date(str(stamp)) if stamp is not None else None
+        if day is None:
+            why = why or "the commit's date lies outside the years the command can read"
+            result.no_version += members
+            result.unknown.append((THE_WAY, NONE, f"version {commit}", why))
+            result.unknown += [(cycle.repository, cycle.record, "Process pin",
+                                "its version has no readable date") for cycle in members]
+            continue
+        versions.append(Version(commit, stamp or 0, day, prices.date, members))
+    versions.sort(key=lambda version: (version.stamp, version.commit))
+    for version in versions:
+        if not result.series:
+            result.series.append(Series("the first version of the result", [version]))
+            continue
+        reason = series_boundary(result.series[-1].versions[-1], version, register, ancestry)
+        if reason is None:
+            result.series[-1].versions.append(version)
+        else:
+            result.series.append(Series(reason, [version]))
+    for block in result.series:
+        previous: Version | None = None
+        previous_median: Decimal | None = None
+        for version in block.versions:
+            costs = [cycle.cost for cycle in version.cycles if cycle.cost is not None]
+            median = median_of(costs)
+            answer1, why1 = contradiction_of(version)
+            plans, answer2, why2 = too_large_of(version)
+            if previous is None:
+                answer3, why3 = "unknown", "no previous version in the series"
+            elif median is None or previous_median is None:
+                answer3, why3 = "unknown", "a median cost is not known"
+            else:
+                answer3 = "yes" if median < previous_median else "no"
+                why3 = None
+            for label, why in (("contradiction only after code", why1),
+                               ("slices too large", why2), ("cost falls", why3)):
+                if why:
+                    result.unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}",
+                                           why))
+            block.rows.append([version.commit, version.day, str(len(version.cycles)),
+                               str(len(costs)), money(median), answer1, plans, answer2, answer3])
+            previous, previous_median = version, median
+    return result
+
+
+def versions_lines(versions: Versions) -> list[str]:
+    """The section *Process versions*: a table per series and a note of the cycles in no version."""
+    lines = [
+        "## Process versions",
+        "",
+        "A version of the process is the commit of the-way that its cycles' *Process pin* "
+        "resolves to, ordered by the commit's date. A series is a run of versions between which "
+        "the price list, the register's list of classes and the reviewed files of the-way "
+        "(`task-cycle/change`, `task-cycle/plan`, `task-cycle/review`, `task-cycle/spec`, "
+        "`task-cycle/cycle_stages.py`) do not change. Measures are compared only within one "
+        "series, and no cell sets a number of one series beside a number of another (WAY-338). "
+        "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
+        "unknown.",
+        "",
+    ]
+    for number, block in enumerate(versions.series, 1):
+        lines += [f"### Series {number}", "", f"Begins at this version: {block.begins}.", ""]
+        lines += table(VERSION_HEADER, block.rows)
+        lines.append("")
+    if versions.no_version:
+        lines += [
+            "### No version",
+            "",
+            f"{len(versions.no_version)} cycle(s) stand in no version and in no series: their "
+            "*Process pin* is unknown, does not resolve in the-way's history, or names a commit "
+            "with no readable date. Each reason is in *Unknown values*.",
+            "",
+        ]
+    if lines[-1] == "":
+        lines.pop()
+    return lines
+
+
 # The result
 
 
@@ -1422,7 +1818,7 @@ def table(header: list[str], rows: list[list[str]]) -> list[str]:
     return lines
 
 
-def render(reads: list[Read], prices: Prices, analysis: Analysis) -> str:
+def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
         "# Count of the audit of the process",
@@ -1479,8 +1875,8 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis) -> str:
             f"| {cell(cycle.repository)} | {cycle.record} | {cell(prices.date)} "
             f"| {money(cycle.cost)} | {UNKNOWN if cycle.rounds is None else cycle.rounds} "
             f"| {share_text(cycle.share)} |")
+    lines += ["", *versions_lines(versions), ""]
     lines += [
-        "",
         "## Problems by cycle",
         "",
         "The problems of the register by class and weight, each problem once (WAY-333); a cycle "
@@ -1593,7 +1989,9 @@ def main(argv: list[str] | None = None) -> int:
         ancestry = Ancestry(Git(the_way_checkout(locations)))
         reads = [read_repository(key, path, prices) for key, path in named.items()]
         analysis = analyse(reads, register, ancestry, today)
-        text = render(reads, prices, analysis)
+        versions = process_versions(reads, register, ancestry, prices)
+        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown))
+        text = render(reads, prices, analysis, versions)
         dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)
         write(results, LATEST, text)
