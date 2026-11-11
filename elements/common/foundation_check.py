@@ -39,7 +39,9 @@ What it reports, each as `path:line: message`:
   fact written `ID@<fingerprint>` anywhere in the field. A *Rests on* whose value begins with the
   word `TODO` is a missing fact, read whole as `TODO — <the fact, with its source>` and split into
   no items, since its description names no entry; `TODO` alone, with no description of the fact,
-  is an error (WAY-71);
+  is an error (WAY-71). Only a value that begins with `TODO` is read so: a `TODO` that is an item
+  after other facts, as in `clock-tick · TODO`, is not reported, and the dash after `TODO` is not
+  required;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,

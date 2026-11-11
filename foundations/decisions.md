@@ -4579,8 +4579,7 @@ invariants a slice reaches find what it breaks there. The return step compares t
 the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
 tree it and its review leave covers the finished change, where a run before it would be made again
 on the tree it changes; the merge with the target branch is the one change to the tree that can
-follow. The price is that a failure of the gate comes after the return step, so the fix of that
-failure sends the return step back to its range.
+follow. The price is that a failure of the gate comes after the return step.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
@@ -9075,9 +9074,9 @@ decisions of the task's own sections, in a blocked request what the cycle needs 
 human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
 makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
 (WAY-295), an error of the form check that the cycle holds wrong (WAY-291), each descriptive `TODO`
-in an invariant's *Rests on* that the change leaves on the main branch (WAY-71), and the foundation
-entries the human did not see at the task document — and its `none` says that nothing else in the
-request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
+in an invariant's *Rests on* that stands on the main branch after the change (WAY-71), and the
+foundation entries the human did not see at the task document — and its `none` says that nothing
+else in the request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle needs, in
 plain words, in that section, while each remaining finding stands with its place in the code in the
 lower part.
 
@@ -9094,12 +9093,16 @@ lower part.
     part; a request whose review of the whole change read 40 of 151 selected decisions whole and
     ran through none of the other 111 by title asks in that section whether to merge anyway, while
     a request whose reviewer read 40 whole, ran through the other 111 by title and named no
-    decision of the change as unread has no such question;
+    decision of the change as unread has no such question; a request whose merged tree holds an
+    invariant that reads `Rests on: TODO — the store of documents, once a task chooses it`, written
+    by the change or standing from before, names the rule of that invariant and the missing store in
+    that section;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
     request is written in a shape of its own; the incomplete reading of the review of the whole
     change stands only in the lower part, or stands in the section in every request whatever the
-    reviewer did.
+    reviewer did; the section reads `none` while an invariant's *Rests on* holds a descriptive
+    `TODO` on the merged tree.
 - **Origin:** none
 
 *Rationale:* the human merges once the section that asks for decisions reads `none`, so a matter that
@@ -9111,9 +9114,10 @@ human seeing them at the merge, and this section is where the merge shows them. 
 whole change that read only part of what it selected, and did not run through the rest by title,
 passes as a full review unless the human is told, and the human is the one who can decide to merge
 on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
-the section keeps its `none` for requests that can be merged. A descriptive `TODO` left in an
-invariant's *Rests on* is a gap the merge puts on the main branch, so it stands here with the fact
-it names, for the human to accept (WAY-71).
+the section keeps its `none` for requests that can be merged. A descriptive `TODO` that stands in
+an invariant's *Rests on* once the change is merged is a gap on the main branch that the merge
+accepts, so it stands here with the fact it names, for the human to accept (WAY-71); while an old
+gap stands, every request carries it.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
