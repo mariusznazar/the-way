@@ -171,8 +171,20 @@ A new script checks the form of the description before the request opens.
 
 ## For you to decide
 
+### Needed from you
+
+none
+
+### Fix or let through
+
+none
+
+### You accept by merging
+
+Merging accepts these; if one does not suit you, say which.
+
 1. The cycle kept the old heading of the record, so that the tests that read it need no change.
-   Accept? (Technical changes, 2)
+   (Technical changes, 2)
 
 ## Cost
 
@@ -198,8 +210,19 @@ Nowy skrypt sprawdza formę opisu, zanim PR się otworzy.
 
 ## Do twojej decyzji
 
+### Wymagane od Ciebie
+
+none
+
+### Do poprawienia albo przepuszczenia
+
+none
+
+### Przyjmujesz scaleniem
+
+Scalenie oznacza zgodę na te punkty; jeśli któryś Ci nie pasuje, napisz który.
+
 1. Cykl zostawił stary nagłówek zapisu cyklu, żeby testy, które go czytają, nie wymagały zmian.
-   Akceptujesz?
 
 ## Koszt
 
@@ -515,6 +538,146 @@ class ContentTest(unittest.TestCase):
                          [line_of(description, "<details>")])
 
 
+GROUPS = ("Needed from you", "Fix or let through", "You accept by merging")
+
+
+def with_decisions(description: str, section: str) -> str:
+    """`description` with the content of `## For you to decide` replaced by `section`."""
+    start = description.index("## For you to decide\n") + len("## For you to decide\n")
+    end = description.index("## Cost\n")
+    return description[:start] + "\n" + section + "\n" + description[end:]
+
+
+def groups(needed: str = "none", fix: str = "none", accept: str = "none") -> str:
+    """The section of three groups, each with the text given."""
+    return (f"### {GROUPS[0]}\n\n{needed}\n\n### {GROUPS[1]}\n\n{fix}\n\n"
+            f"### {GROUPS[2]}\n\n{accept}\n")
+
+
+class DecisionGroupsTest(unittest.TestCase):
+    def test_a_section_reading_none_alone_passes(self) -> None:
+        for content in ("none\n", "`none`\n", "<!-- nothing waits -->\nnone\n"):
+            description = with_decisions(VALID, content)
+            self.assertEqual(Checked(description, POLISH_TASK).result.problems, [], content)
+
+    def test_three_groups_in_order_each_with_items_pass(self) -> None:
+        description = with_decisions(VALID, groups(
+            needed="1. Place the file by hand. Done or not?",
+            fix="2. A step was skipped. Do it here, make a task of it, or let it through?",
+            accept="Merging accepts these.\n\n3. The cycle chose the old heading."))
+        self.assertEqual(Checked(description, POLISH_TASK).result.problems, [])
+
+    def test_a_group_reading_none_beside_groups_with_items_passes(self) -> None:
+        description = with_decisions(VALID, groups(fix="1. A step was skipped. Do it here?"))
+        self.assertEqual(Checked(description, POLISH_TASK).result.problems, [])
+
+    def test_a_missing_group_is_reported_where_it_should_stand(self) -> None:
+        # Each group missing in turn: reported at the next group present, or at the next section.
+        cases = (
+            (GROUPS[0], f"### {GROUPS[1]}\n\nnone\n\n### {GROUPS[2]}\n\nnone\n", f"### {GROUPS[1]}"),
+            (GROUPS[1], f"### {GROUPS[0]}\n\nnone\n\n### {GROUPS[2]}\n\nnone\n", f"### {GROUPS[2]}"),
+            (GROUPS[2], f"### {GROUPS[0]}\n\nnone\n\n### {GROUPS[1]}\n\nnone\n", "## Cost"),
+        )
+        for missing, section, anchor in cases:
+            description = with_decisions(VALID, section)
+            checked = Checked(description, POLISH_TASK)
+            self.assertEqual(checked.lines, [line_of(description, anchor)], missing)
+            self.assertIn(f"### {missing}", checked.text)
+            self.assertIn("missing", checked.text)
+
+    def test_all_groups_missing_beside_items_is_reported_once_at_the_section(self) -> None:
+        description = with_decisions(VALID, "1. A choice of the cycle.\n")
+        checked = Checked(description, POLISH_TASK)
+        self.assertEqual(checked.lines, [line_of(description, "## For you to decide")])
+        self.assertIn("### Needed from you", checked.text)
+
+    def test_groups_out_of_order_are_reported_at_the_group_that_is_early(self) -> None:
+        section = (f"### {GROUPS[1]}\n\nnone\n\n### {GROUPS[0]}\n\nnone\n\n"
+                   f"### {GROUPS[2]}\n\nnone\n")
+        description = with_decisions(VALID, section)
+        checked = Checked(description, POLISH_TASK)
+        self.assertEqual(checked.lines, [line_of(description, f"### {GROUPS[0]}")])
+        self.assertIn("order", checked.text)
+        self.assertIn(f"### {GROUPS[1]}", checked.text)
+
+    def test_a_fourth_heading_is_reported_at_its_line(self) -> None:
+        description = with_decisions(VALID, groups() + "\n### Open questions\n\nnone\n")
+        checked = Checked(description, POLISH_TASK)
+        self.assertEqual(checked.lines, [line_of(description, "### Open questions")])
+        self.assertIn("Open questions", checked.text)
+
+    def test_a_repeated_group_is_reported_at_its_second_place(self) -> None:
+        description = with_decisions(VALID, groups() + f"\n### {GROUPS[0]}\n\nnone\n")
+        checked = Checked(description, POLISH_TASK)
+        self.assertEqual(checked.lines, [line_of(description, f"### {GROUPS[0]}", 2)])
+        self.assertIn("repeated", checked.text)
+
+    def test_text_before_the_first_group_is_reported_at_its_line(self) -> None:
+        for before in ("1. A choice of the cycle.", "none"):
+            description = with_decisions(VALID, before + "\n\n" + groups())
+            checked = Checked(description, POLISH_TASK)
+            self.assertEqual(checked.lines, [line_of(description, before)], before)
+            self.assertIn("before", checked.text)
+
+    def test_a_comment_before_the_first_group_is_no_text(self) -> None:
+        description = with_decisions(VALID, "<!-- the groups follow\nin order -->\n\n" + groups())
+        self.assertEqual(Checked(description, POLISH_TASK).result.problems, [])
+
+    def test_an_empty_group_is_reported_at_its_heading(self) -> None:
+        for number, name in enumerate(GROUPS):
+            texts = ["none", "none", "none"]
+            texts[number] = ""
+            description = with_decisions(VALID, groups(*texts))
+            checked = Checked(description, POLISH_TASK)
+            self.assertEqual(checked.lines, [line_of(description, f"### {name}")], name)
+            self.assertIn("none", checked.text)
+
+    def test_a_group_holding_only_a_comment_is_empty(self) -> None:
+        description = with_decisions(VALID, groups(fix="<!-- the items to fix -->"))
+        self.assertEqual(Checked(description, POLISH_TASK).lines,
+                         [line_of(description, f"### {GROUPS[1]}")])
+
+    def test_a_group_heading_of_another_level_is_missing(self) -> None:
+        description = with_decisions(VALID, groups().replace(f"### {GROUPS[1]}",
+                                                             f"#### {GROUPS[1]}"))
+        checked = Checked(description, POLISH_TASK)
+        self.assertIn(f"`### {GROUPS[1]}` is missing", checked.text)
+
+    def test_a_group_heading_in_other_words_is_missing(self) -> None:
+        description = with_decisions(VALID, groups().replace(f"### {GROUPS[2]}",
+                                                             "### You accept by merging it"))
+        checked = Checked(description, POLISH_TASK)
+        self.assertIn(f"`### {GROUPS[2]}` is missing", checked.text)
+
+    def test_headings_inside_fenced_code_in_a_group_are_not_headings(self) -> None:
+        item = "1. The item shows the form:\n\n   ```markdown\n   ### Open questions\n   ```"
+        description = with_decisions(VALID, groups(fix=item))
+        self.assertEqual(Checked(description, POLISH_TASK).result.problems, [])
+
+    def test_the_block_in_the_tasks_language_is_not_held_to_the_groups(self) -> None:
+        # The block of VALID translates the groups; a block with a plain list, or with other
+        # headings, passes as well.
+        plain = ("\n**Stan: gotowy** — poza jednym wyborem niżej nic na ciebie nie czeka.\n\n"
+                 "## Do twojej decyzji\n\n1. Cykl zostawił stary nagłówek zapisu cyklu, żeby "
+                 "testy, które go czytają, nie wymagały zmian. Akceptujesz?\n\n"
+                 "### Coś innego\n\nTo jest osobna rzecz, którą człowiek przeczyta w swoim "
+                 "języku.\n\n")
+        checked = Checked(with_block(VALID, plain), POLISH_TASK)
+        self.assertEqual(checked.result.problems, [])
+        self.assertEqual(checked.result.block_language, "not English")
+
+    def test_groups_are_checked_in_a_description_with_an_english_task_too(self) -> None:
+        description = with_block(with_decisions(VALID, "1. A choice.\n"), "\nnone\n\n")
+        self.assertEqual(Checked(description, ENGLISH_TASK).lines,
+                         [line_of(description, "## For you to decide")])
+
+    def test_a_section_with_no_content_is_reported_as_one_without_content(self) -> None:
+        description = with_decisions(VALID, "<!-- to be filled -->\n")
+        checked = Checked(description, POLISH_TASK)
+        self.assertEqual(checked.lines, [line_of(description, "## For you to decide")])
+        self.assertIn("no content", checked.text)
+
+
 class BlockTest(unittest.TestCase):
     def test_no_block_is_reported(self) -> None:
         start = VALID.index("<details>")
@@ -741,10 +904,20 @@ class TemplateTest(unittest.TestCase):
                     re.finditer(r"^(#{2,3}) (.+)$", skeleton.group(1), re.M)]
         expected = [(2, heading) for heading in request_check.TOP_HEADINGS]
         expected.insert(1, (3, request_check.UNDERNEATH))
+        expected[3:3] = [(3, group) for group in request_check.DECISION_GROUPS]
         expected += [(2, heading) for heading in request_check.LOWER_HEADINGS[:-1]]
         expected += [(2, request_check.OWN_SECTIONS_PLACEHOLDER),
                      (2, request_check.LOWER_HEADINGS[-1])]
         self.assertEqual(headings, expected)
+
+    def test_the_templates_example_of_the_decision_section_passes_the_check(self) -> None:
+        text = TEMPLATE.read_text(encoding="utf-8")
+        examples = [block for block in re.findall(r"^```markdown\n(.*?)^```$", text, re.S | re.M)
+                    if block.startswith("## For you to decide\n")]
+        self.assertEqual(len(examples), 1, "the template holds one example of the section")
+        example = examples[0].removeprefix("## For you to decide\n")
+        description = with_decisions(VALID, example)
+        self.assertEqual(Checked(description, POLISH_TASK).result.problems, [])
 
 if __name__ == "__main__":
     unittest.main()
