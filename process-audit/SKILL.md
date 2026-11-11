@@ -80,8 +80,9 @@ List the `audit_results` directory. It holds `count-<YYYY-MM-DD>.md`, one for ea
 the day of the run in UTC; `count-latest.md`, a copy of the newest; and the notes
 `audit-<YYYY-MM-DD>.md` of earlier sessions.
 
-A newest count older than the last night from Friday to Saturday means no scheduler started the
-counting. Tell the human, and offer to run it now. The command writes the two count files into the
+A newest count dated before the Friday of the last night from Friday to Saturday means no scheduler
+started the counting (a run of that night is dated that Friday or the Saturday, as the clock of the
+scheduler and UTC fall). Tell the human, and offer to run it now. The command writes the two count files into the
 `audit_results` directory, replacing those of the same day, so run it on the human's yes:
 
 ```
