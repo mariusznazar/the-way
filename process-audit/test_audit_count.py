@@ -171,6 +171,7 @@ class AuditCountCase(unittest.TestCase):
     def rows(self, heading: str) -> list[list[str]]:
         """The rows of the table under `## <heading>` of the latest result, as cells."""
         text = self.latest()
+        self.assertIn(f"\n## {heading}\n", text, f"the result has no section `## {heading}`")
         section = text.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
         lines = [line for line in section.splitlines() if line.startswith("|")]
         return [split_row(line) for line in lines[2:]]
@@ -349,20 +350,24 @@ class Times(AuditCountCase):
 
     WORKING = "Working time without waiting for tools"
 
+    def time_rows(self, unknown: list[list[str]]) -> list[list[str]]:
+        """The rows of *Unknown values* about the two times; the cost rows are checked apart."""
+        return [row for row in unknown if row[2] in (self.WORKING, "Waiting for tools")]
+
     def test_the_times_of_stages_md(self):
         cycle, unknown = self.times_of(
             "# Stages\n\n- Working time, orchestrator turns and subagent turns joined: 1:00:05\n"
             "- Waiting for tools: 0:10:05\n- Working time without waiting for tools: 0:50:00\n")
         self.assertEqual("0:50:00", cycle[self.WORKING])
         self.assertEqual("0:10:05", cycle["Waiting for tools"])
-        self.assertEqual([], unknown)
+        self.assertEqual([], self.time_rows(unknown))
 
     def test_an_earlier_form_without_the_wait_is_unknown_not_zero(self):
         cycle, unknown = self.times_of(
             "# Stages\n\n- Working time, orchestrator turns and subagent turns joined: 0:30:28\n")
         self.assertEqual("unknown", cycle[self.WORKING])
         self.assertEqual("unknown", cycle["Waiting for tools"])
-        self.assertEqual(2, len(unknown))
+        self.assertEqual(2, len(self.time_rows(unknown)))
 
     def test_a_wait_stages_md_gives_as_unknown_is_unknown(self):
         cycle, unknown = self.times_of(
@@ -372,7 +377,7 @@ class Times(AuditCountCase):
         self.assertEqual("unknown", cycle["Waiting for tools"])
         self.assertEqual(["gives the working time without waiting for tools as unknown",
                           "gives the waiting for tools as unknown"],
-                         [row[3].split("` ", 1)[1] for row in unknown])
+                         [row[3].split("` ", 1)[1] for row in self.time_rows(unknown)])
 
     def test_a_doubled_or_malformed_line_is_unknown(self):
         cycle, unknown = self.times_of("- Waiting for tools: 0:01:00\n- Waiting for tools: 0:02:00\n"
@@ -380,7 +385,7 @@ class Times(AuditCountCase):
         self.assertEqual("unknown", cycle[self.WORKING])
         self.assertEqual("unknown", cycle["Waiting for tools"])
         self.assertEqual(["Working time without waiting for tools", "Waiting for tools"],
-                         [row[2] for row in unknown])
+                         [row[2] for row in self.time_rows(unknown)])
 
     def test_a_line_inside_a_malformed_table_or_fenced_code_is_not_read(self):
         cycle, _ = self.times_of("| # | Stage |\n|---|\n| - Waiting for tools: 0:01:00 |\n"
@@ -593,6 +598,136 @@ class Locations(AuditCountCase):
         self.assertEqual(2, done.returncode)
         self.assertIn("inside the repository `product`", done.stderr.decode("utf-8"))
         self.assertEqual([], list(inner.iterdir()))
+
+
+FULL_EVENTS = ("| Time | Stage | Actor and model | Handoff, skill and inputs "
+               "| Output or full report | Short result and next step |\n"
+               "|---|---|---|---|---|---|\n")
+FIX_EVENTS = ("| 10:00 | fix dispatch | orchestrator | findings | - | dispatched |\n"
+              "| 10:20 | fix returned | author | - | reports/07-fix-1-report.md | done |\n"
+              "| 10:30 | review of the fix | reviewer | - "
+              "| reports/08-review-fix-1-report.md | PASS |\n")
+TEST_PRICES = """# Test prices
+
+- List date: 2026-01-01
+
+## Test provider
+
+| Model id in stages.md | Page name | Input | Cached input | Output |
+|---|---|---|---|---|
+| model-a | Model A | 2 | 1 | 10 |
+| model-b | Model B | 4 | 0.5 | 20 |
+"""
+STAGES_HEADER = ("# Stages of the cycle run\n\n- Working time without waiting for tools: 0:20:00\n"
+                 "- Waiting for tools: 0:05:00\n\n"
+                 "## Stages: start, waiting for tools and tokens by model\n\n"
+                 "| # | Stage | Start | Waiting for tools | Model | Input | Cached input "
+                 "| Output |\n|---|---|---|---|---|---|---|---|\n")
+
+
+def stage_row(number, name, model, input_, cached, output) -> str:
+    return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
+            f"| {output} |\n")
+
+
+def fix_record(events=FIX_EVENTS) -> str:
+    """A cycle record whose Events table has the output column the fix rounds are read from."""
+    return record(remarks="- Process remarks on the-way: none\n").replace(
+        "| Time | Stage |\n|---|---|\n", FULL_EVENTS + events)
+
+
+def one_fix_round() -> str:
+    review = "Review whole change (general-purpose) — turn 1"
+    fix = "Fix 1 of the findings (general-purpose) — turn 1"
+    fix_review = "Review of the fix 1 (general-purpose) — turn 1"
+    return (STAGES_HEADER
+            + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
+            + stage_row(2, review, "model-a", 2000, 1000, 200)
+            + stage_row(3, fix, "model-b", 400, 100, 40)
+            + stage_row(4, fix_review, "model-a", 300, 0, 30))
+
+
+class Cost(AuditCountCase):
+    def count(self, stages, record_text=None, prices=TEST_PRICES):
+        product = self.repository()
+        files = {"cycle.md": record_text if record_text is not None else fix_record()}
+        if stages is not None:
+            files["stages.md"] = stages
+        product.cycle("a-task", files)
+        self.write_locations(self.places(product=product))
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(prices, encoding="utf-8")
+        return self.run_count("--prices", str(test_prices))
+
+    def cost_row(self) -> list[str]:
+        [row] = self.rows("Cost")
+        return row
+
+    def unknown_why(self, value: str) -> list[str]:
+        return [row[3] for row in self.rows("Unknown values") if row[2] == value]
+
+    def test_a_fix_round_at_a_test_price_list_gives_the_cost_and_the_share(self):
+        done = self.count(one_fix_round())
+        self.assertEqual(0, done.returncode, done.stderr)
+        # Worked by hand, in millionths of a dollar: stage 1 is 1000*2 + 100*10 = 3000; stage 2 is
+        # 1000*2 + 1000*1 + 200*10 = 5000; stage 3 is 300*4 + 100*0.5 + 40*20 = 2050; stage 4 is
+        # 300*2 + 30*10 = 900. The total is 10950 and the fix round (stages 3 and 4) 2950: 26.9 %.
+        row = self.cost_row()
+        self.assertEqual(["product", "2026-01-01", "0.010950", "1", "26.9%"],
+                         [row[0], row[2], row[3], row[4], row[5]])
+
+    def test_a_model_the_list_lacks_leaves_the_cost_and_the_share_unknown(self):
+        stages = one_fix_round().replace("| model-b |", "| model-c |")
+        self.assertEqual(0, self.count(stages).returncode)
+        row = self.cost_row()
+        self.assertEqual(["unknown", "unknown"], [row[3], row[5]])
+        reasons = self.unknown_why("Cost")
+        self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
+
+    def test_stages_md_without_the_per_model_section_leaves_the_cost_unknown(self):
+        stages = ("# Stages of the cycle run\n\n- Working time, orchestrator turns and subagent "
+                  "turns joined: 1:00:00\n")
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("earlier form" in why for why in self.unknown_why("Cost")))
+
+    def test_fix_stages_the_record_does_not_name_leave_only_the_share_unknown(self):
+        done = self.count(one_fix_round(), record_text=fix_record(events=""))
+        self.assertEqual(0, done.returncode, done.stderr)
+        row = self.cost_row()
+        self.assertEqual(["0.010950", "unknown"], [row[3], row[5]])
+        self.assertTrue(any("cannot be tied to the rounds" in why
+                            for why in self.unknown_why("Fix rounds share")))
+
+    def test_cached_input_above_input_leaves_the_cost_unknown(self):
+        stages = one_fix_round().replace("| 2000 | 1000 | 200 |", "| 2000 | 5000 | 200 |")
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("above its input" in why for why in self.unknown_why("Cost")))
+
+    def test_a_token_count_of_sixteen_digits_leaves_the_cost_unknown(self):
+        stages = one_fix_round().replace("| 400 |", "| " + "9" * 16 + " |")
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+
+    def test_a_cost_at_the_command_limit_is_unknown_not_written_with_overrun_digits(self):
+        # 1,200 rows of 999,999,999,999,999 input tokens at 999,999.999999 dollars per million come
+        # to about 1.2 * 10^18 dollars, above the limit of 10^18.
+        row = stage_row(1, "Stage of a large count", "model-b", 999999999999999, 0, 0)
+        stages = STAGES_HEADER + row * 1200
+        prices = TEST_PRICES.replace("| model-b | Model B | 4 | 0.5 | 20 |",
+                                     "| model-b | Model B | 999999.999999 | 0.5 | 20 |")
+        self.assertEqual(0, self.count(stages, prices=prices).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("limit" in why for why in self.unknown_why("Cost")))
+
+    def test_a_price_list_naming_a_model_twice_refuses_the_run(self):
+        doubled = TEST_PRICES + "| model-a | Model A again | 2 | 1 | 10 |\n"
+        done = self.count(one_fix_round(), prices=doubled)
+        self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+        self.assertIn("twice", done.stderr.decode("utf-8"))
+        self.assertEqual([], list(self.results.iterdir()))
 
 
 class Run(AuditCountCase):
