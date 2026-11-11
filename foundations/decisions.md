@@ -10631,7 +10631,8 @@ The-way departs, for its own code and its own tests, from the general coding gui
 testing guidelines of a product, under WAY-217: in each part named in *Scope*, neither is missing, so
 a task of the-way that writes code, or writes or changes a test, in such a part waits for neither.
 The *Scope* names every part of the-way's part map, and a change that adds a part to the part map adds
-that part to this decision's *Scope*.
+that part to this decision's *Scope*. A separate task that writes guidelines of the-way's own withdraws
+this decision.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -10650,17 +10651,17 @@ that part to this decision's *Scope*.
     screen.
 - **Origin:** none
 
-*Rationale:* the reason for the departure lies in the-way as a whole, not in the directories that
-hold code today, so a scope drawn by where code stands would raise the question again at the first
-script or test of another part. The-way keeps no time limit on the departure because the reason does
-not end with a stage of the repository, and without a decision of its log the rule that a task waits
-for guidelines either stops every task of the-way with code or tests, or lets each pass with no basis
-on record. Recorded once in the log, the
-basis holds for every later task (WAY-173), and the departure covers the coding guidelines and the
-testing guidelines only; the-way has no screens, so a styleguide is no part of it. The price: nothing
-of a product's guidelines protects the-way's code and tests, and new code copies the code already
-there. If guidelines of the-way's own come to pay, a separate task writes them and withdraws or
-narrows this decision.
+*Rationale:* the-way departs rather than writes its own guidelines because that is a large task of its
+own whose gain lies mostly in code and tests that already exist and would have to be cleaned, while
+every task of the-way with code or tests waits for it. The reason lies in the-way as a whole, not in
+the directories that hold code today, so a scope drawn by where code stands would raise the question
+again at the first script or test of another part. The departure has no time limit because its reason
+does not end with a stage of the repository, and without a decision of the-way's log the rule that a
+task waits for guidelines either stops every task of the-way with code or tests, or lets each pass
+with no basis on record. Recorded once in the log, the basis holds for every later task (WAY-173), and
+the departure covers the coding guidelines and the testing guidelines only; the-way has no screens, so
+a styleguide is no part of it. The price: nothing of a product's guidelines protects the-way's code and
+tests, and new code copies the code already there.
 *Rejected:* the-way writing its own coding guidelines and testing guidelines, as every product does —
 a large task of its own: an audit of the code and the tests that exist, the choice of tools with a
 trial run, a change to WAY-09 and the assignment of the guidelines directory to a part; until it
@@ -10670,7 +10671,8 @@ that the rule does not concern the-way itself — an exception for the-way would
 every product pins, and the-way, which elsewhere treats itself as a product, would stop being one
 with no decision in its own log, the same effect as the way chosen in a worse place; a scope of only
 the parts that hold code today — the first script or test in another part would raise the question
-again and force an extension of the decision.
+again and force an extension of the decision; a decision with no sentence that adds a new part to its
+*Scope* — the first script in a new part would raise the question of missing guidelines again.
 
 ## Withdrawn identifiers
 
