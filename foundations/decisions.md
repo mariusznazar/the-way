@@ -225,31 +225,31 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
-`product-guidelines/`, `foundation-review/`, `process-audit/` and `task-cycle/` — the files that configure the whole
-repository, which its part map gives to the `repository` part (WAY-44), the root agent instruction
-files and the project skill entry points under `.claude/skills/` and `.agents/skills/`, which the
-map gives to `agent-instructions` (WAY-44), and a `README.md` that describes the repository. A
-directory reaches the main branch only once it holds what its part requires: an element its
-template and rules, examples or a pointer to entries of the-way that serve as its examples, and a
-skill that writes its entries; `elements/common/` the rules of form and the way of working the
-elements' templates and skills share, the script that checks a foundation, the script that migrates a foundation from the
-earlier form, and the skills that find entries and that critique proposals; `project-level/` the
-templates of a project definition, a project plan and a task document, the skills that write them
-and lead a handed-over plan, the readiness check, the plan check, the reader of task-cycle evidence
-for plan states and their tests; `relation-model/` the script that computes the fingerprint of a
-project definition; `gate/` the command that runs every test, with its tests, and the test of every
-critical flow; `installation/` the installer, its tests and a README explaining how a product uses
-the pinned version; `agent-instructions/` the instructions for agents working on this repository,
-led to from the root agent instruction files; `instruction-files/` the principles of instruction
-files for coding agents, the account of how the tools load them, the skill that applies them, and
-the script that checks instruction files with its tests; `product-guidelines/` the template that the
-guidelines of every product share, for each discipline of work whose guidelines the-way gives a
-template of, that template with the skill that leads the work on them; `foundation-review/` the
-skill that reviews a product's foundation against the product, with the files it names;
-`process-audit/` the template of the register of problems, the dated price list of models, the
-command that counts the audit and the skill that leads its weekly session;
-`task-cycle/` what the design of the task cycle sets. The entries in
-`foundations/` are checked by `elements/common/foundation_check.py`.
+`product-guidelines/`, `foundation-review/`, `process-audit/` and `task-cycle/` — the files that
+configure the whole repository, which its part map gives to the `repository` part (WAY-44), the root
+agent instruction files and the project skill entry points under `.claude/skills/` and
+`.agents/skills/`, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
+describes the repository. A directory reaches the main branch only once it holds what its part
+requires: an element its template and rules, examples or a pointer to entries of the-way that serve
+as its examples, and a skill that writes its entries; `elements/common/` the rules of form and the
+way of working the elements' templates and skills share, the script that checks a foundation, the
+script that migrates a foundation from the earlier form, and the skills that find entries and that
+critique proposals; `project-level/` the templates of a project definition, a project plan and a
+task document, the skills that write them and lead a handed-over plan, the readiness check, the plan
+check, the reader of task-cycle evidence for plan states and their tests; `relation-model/` the
+script that computes the fingerprint of a project definition; `gate/` the command that runs every
+test, with its tests, and the test of every critical flow; `installation/` the installer, its tests
+and a README explaining how a product uses the pinned version; `agent-instructions/` the
+instructions for agents working on this repository, led to from the root agent instruction files;
+`instruction-files/` the principles of instruction files for coding agents, the account of how the
+tools load them, the skill that applies them, and the script that checks instruction files with its
+tests; `product-guidelines/` the template that the guidelines of every product share, for each
+discipline of work whose guidelines the-way gives a template of, that template with the skill that
+leads the work on them; `foundation-review/` the skill that reviews a product's foundation against
+the product, with the files it names; `process-audit/` the template of the register of problems, the
+dated price list of models, the command that counts the audit and the skill that leads its weekly
+session; `task-cycle/` what the design of the task cycle sets. The entries in `foundations/` are
+checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,

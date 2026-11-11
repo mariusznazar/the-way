@@ -165,8 +165,8 @@ findings and, after them, the Minor findings of the review of the whole change w
 fix also gets the fix report. The message that dispatches or resumes the agent of a fix, and the
 one of the review of that fix, names the findings file by its path in `reports/`, as
 `reports/<file>.md`, besides the handoff that names it, and no other message does: the audit of
-the process ties a turn to its fix round by that path (WAY-336). No handoff tells an agent to run the product's gate; its run is
-yours (step 10, WAY-160).
+the process ties a turn to its fix round by that path (WAY-336). No handoff tells an agent to run
+the product's gate; its run is yours (step 10, WAY-160).
 
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
 entries by identifier — those of the task's *Decisions in play*, and the decisions, invariants and
