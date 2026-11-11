@@ -20,10 +20,10 @@ short task entries only, create a separate Markdown document in the product's ta
 from that entry; do not paste the document into a checklist item. If the document's location is
 unclear, ask once and offer to record it as that file gives.
 
-Where the task has no entry there yet, make it as `project-level/task_line.md` gives: by hand
-at this step, and in orchestrated mode in the turn that first creates the document. The rules of
-the task place come from the `## Backlog` section too, as `project-level/backlog_place.md` gives; a
-missing entry of them is asked about once, like a missing place.
+Where the task has no line there yet, make it as `project-level/task_line.md` gives, which also
+says when. The rules of the task place come from the `## Backlog` section too, as
+`project-level/backlog_place.md` gives; a missing entry of them is asked about once, like a
+missing place.
 
 Check that this is one task. Keep one task by default: each split adds a full cycle. Identify a split only where a part cannot start or finish without something outside this refinement — access the agent lacks, another task's result — or where a later step of this skill offers one, and name that reason; a task's size alone (WAY-13) you name as a signal and leave the split to the human. For a project
 member, update its plan through the owning workflow before refining either new item; for another

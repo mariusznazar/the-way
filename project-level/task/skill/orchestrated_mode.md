@@ -39,11 +39,9 @@ to guess or overwrite another task.
   order asks of you, and nothing that belongs to acceptance: no agent but the project orchestrator,
   on the human's word, moves a line to ready or writes `ready for cycle`. The order stands in the
   dispatch and the conversation file; one part of it stands here: where the task has no line in the
-  backlog, make it in the turn that first creates the task document, with the dependencies of its
-  plan row, as `project-level/task_line.md` gives. Write it in that turn at once, parallel to the
-  round's other refiners, with no wait for one another and no queue of writes. Do not write the
-  shared plan, definition or foundation, nor launch implementation. Record a mismatch requiring
-  upstream work as `plan change`, with evidence and the requested change. An unavailable
+  backlog, make it as `project-level/task_line.md` gives, which says when, with what and how. Do not
+  write the shared plan, definition or foundation, nor launch implementation. Record a mismatch
+  requiring upstream work as `plan change`, with evidence and the requested change. An unavailable
   source/capability or conflict preventing a valid next step is `obstacle`, with what resolves it.
 - Transfer every resolved answer, including canonical answers shared across tasks, with its
   original source and the ways the human did not choose into Questions to settle before relying

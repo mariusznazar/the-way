@@ -102,9 +102,8 @@ project skill with the `the-way-` prefix, never a personal copy.
    actor/stage routing. Requirements and answers travel through files, never relayed in prompts.
    Permit one writer per file; refiners edit no shared plan, definition or foundation and launch
    no children. The one file that several refiners write in the same minutes is the task place:
-   each makes its task's line in the turn that first creates its document, as
-   `project-level/task_line.md` gives, and you set no order between those writes (WAY-154). You
-   perform all child dispatches their borrowed workflows request.
+   each makes its task's line as `project-level/task_line.md` gives, and you set no order between
+   those writes (WAY-154). You perform all child dispatches their borrowed workflows request.
    For a refiner's *Child-work request* for a run of the step that settles technology (WAY-267),
    in any turn of a round, one resumed from the conversation files included, read
    `technology_run.md` beside this skill.

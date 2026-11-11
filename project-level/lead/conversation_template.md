@@ -19,9 +19,8 @@ examples and recommendations are never human decisions. Sections without materia
 - A refiner follows `project-level/task/skill/SKILL.md` in orchestrated mode. Only it creates or
   changes this task document's body. It writes its numbered turn, questions and human material,
   checks sources and copies resolved answers with provenance and the ways the human did not choose
-  into the task's Questions to settle. In the turn that first creates the document it also makes
-  the task's line in the backlog, where none stands, as `project-level/task_line.md` gives, in
-  parallel with the other refiners and with no queue of writes (WAY-154).
+  into the task's Questions to settle. It also makes the task's line in the backlog, where none
+  stands, as `project-level/task_line.md` gives (WAY-154).
   It never writes the shared plan, definition or foundation, asks the human, starts a child agent,
   launches implementation, moves a line to ready or records its own recommendation as acceptance.
 - The answering agent follows `project-level/lead/answering.md`. It fills answers below questions

@@ -2475,19 +2475,18 @@ member of the team can reach stands in the section, where a new member finds it.
 backlog can be named in two ways, and the agent that records a missing place judges which fits. The
 rules by which a line of a task is written belong to the place of the tasks, not to the product that
 names it, so they are read from there and not copied beside the product; the price is that the path
-to them stands in the user's file once for each product, the same path repeated, and that a product
-whose tasks lie in a place with no such rules finds an agent asking where they are.
+to them stands in the user's file once for each product, the same path repeated.
 *Rejected:* a fixed backlog location for all products — it would require moving an existing
 backlog; asking for the location in every project conversation — the answer would be lost between
 sessions; the file for every place, the section only naming the entry — every user of every
 product creates the file, also where the backlog is public or lies in the repository, and a new
 member of a team finds no tasks until writing the path everyone else knows; the place described in
 words in the section, with its path in the user's global instructions — those instructions are not a
-place for such things; the rules of the task place kept in the product, its section giving the
-status of a new line when none is given — a rule of a place kept in two files, and the rulebook of
-the place says it in the place; a new line left in the default state of the tool that holds the
-tasks — its status is wrong from the first moment and the check of the notes against the lines
-reports a mismatch; a status of a line fixed in the-way's skills — a skill of the-way would assume
+place for such things; the rules of the task place written at the product, its section giving the
+status of a new line when none is given — the human's word was that the rules be taken from the
+task place and not be written anywhere at the product, and no cost of this way is kept (`unknown`);
+a new line left in the default state of the tool that holds the tasks — its status is wrong from
+the first moment and the check of the notes against the lines reports a mismatch; a status of a line fixed in the-way's skills — a skill of the-way would assume
 one tool for the backlog, against WAY-101; the agent finding the rules through the user's global
 instructions — it does not work in a session that does not load them, such as one in the cloud, and
 stands against the user's sentence that global instructions are not the place for such things.
@@ -4441,15 +4440,17 @@ ends its turn as `questions`, `waits for task <n>`, `ready for approval`, `plan 
 `obstacle`. Only a refiner changes the task document's body and transfers settled answers with
 their sources and the ways the human did not choose (WAY-134) into Questions to settle, and it
 writes besides what the project orchestrator's order asks of it: in the turn in which it first
-creates the task document, the task's line in the backlog the product names (WAY-107), where none
-stands, with the dependencies the plan gives the task, in the same turn as the other refiners of the
-round and with no queue between their writes. The plan, the definition and the foundation stay
+creates the task document, or in the first later turn that can where that turn could not, the
+task's line in the backlog the product names (WAY-107), where none stands, with the dependencies the
+plan gives the task, at the same time as the other refiners of the round and with no queue between
+their writes. The plan, the definition and the foundation stay
 outside a refiner, and no agent other than the project orchestrator, after the human's word, takes a
 step that belongs to acceptance, which is moving the line to ready and `ready for cycle`. The project
 orchestrator records human answers in conversations, owns ordinary plan updates and their log, brings
-the dependencies in the task lines in step with the plan when it changes them, and after the human
-has accepted a complete task document, one document at a time, changes that document's Status line
-and moves the task's line to ready. Agent turns, questions and explicit waits keep the plan task to
+the dependencies in the task lines in step with the plan when the plan's dependencies change, and
+after the human has accepted a complete task document, one document at a time, changes that
+document's Status line and moves the task's line to ready, making it already ready where none stands.
+Agent turns, questions and explicit waits keep the plan task to
 refine, a presented human package or ready for approval makes it waiting for human, and final
 acceptance makes both document and plan ready for cycle and removes only that conversation after all
 settled answers, their sources and the ways not chosen survive in the task document; an explicit

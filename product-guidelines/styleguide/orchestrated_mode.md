@@ -6,4 +6,5 @@ proposal on accessibility and every choice shown through what the user sees go i
 conversation turn as `refine-task` routes them, and the skill ends the turn rather than asking the
 human. The research agents and the critiques are requested from the project orchestrator, which
 starts them, the turn naming the paths of their reports under `.runs/styleguide/<part>/`. The skill
-starts no child agent and edits only the task document and its turn.
+starts no child agent and edits only the task document, its turn and the task's line in the
+backlog, as `refine-task` gives.
