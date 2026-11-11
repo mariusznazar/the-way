@@ -177,14 +177,14 @@ class AuditCountCase(unittest.TestCase):
             data.setdefault(key, {})["repository"] = str(repository.root)
         return data
 
-    def run_count(self, *arguments, locations=True, timeout=120):
+    def run_count(self, *arguments, locations=True, timeout=120, env=None):
         command = [sys.executable, "-B", str(SCRIPT)]
         if locations:
             command += ["--locations", str(self.locations)]
         try:
             return subprocess.run(command + list(arguments), capture_output=True,
                                   stdin=subprocess.DEVNULL, timeout=timeout,
-                                  env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+                                  env=dict(os.environ, PYTHONIOENCODING="utf-8", **(env or {})))
         except subprocess.TimeoutExpired:
             self.fail(f"the command did not finish within {timeout} s")
 
@@ -376,7 +376,10 @@ class Times(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count()
         self.assertEqual(0, done.returncode, done.stderr)
-        return self.cycles()[0], self.rows("Unknown values")
+        cycle = self.cycles()[0]
+        # The record gives its pin and its remarks: no reading of `stages.md` makes them unknown.
+        self.assertEqual([PIN, "0"], [cycle["Process pin"], cycle["Remarks"]])
+        return cycle, self.rows("Unknown values")
 
     WORKING = "Working time without waiting for tools"
 
@@ -549,13 +552,32 @@ class Locations(AuditCountCase):
         return product
 
     def test_a_missing_file(self):
-        self.assert_refused(self.run_count(), "does not exist")
+        done = self.run_count()
+        self.assert_refused(done, "does not exist", "--locations")
+        # The error names the option, never the path: the path is the user's (WAY-320).
+        self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
+
+    def test_a_price_list_that_is_missing_or_wrong_is_named_by_its_option_not_its_path(self):
+        self.write_locations(self.places(product=self.product()))
+        prices = self.home / "prices.md"
+        done = self.run_count("--prices", str(prices))
+        self.assert_refused(done, "does not exist", "--prices")
+        self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
+        prices.write_text("# Prices\n\nno date here\n", encoding="utf-8")
+        done = self.run_count("--prices", str(prices))
+        self.assert_refused(done, "List date", "--prices")
+        self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
 
     def test_a_file_that_is_not_json_or_no_object(self):
         self.write_locations("{\"the-way\": ")
         self.assert_refused(self.run_count(), "is not JSON")
         self.write_locations("[1, 2]")
         self.assert_refused(self.run_count(), "is not a JSON object")
+
+    def test_a_number_too_long_to_read_is_not_json_and_no_traceback(self):
+        # Python reads an integer of more than 4300 digits as no number at all.
+        self.write_locations("{\"the-way\": {\"x\": " + "1" * 5000 + "}}")
+        self.assert_refused(self.run_count(), "is not JSON")
 
     def test_a_missing_key_or_entry(self):
         product = self.product()
@@ -629,6 +651,23 @@ class Locations(AuditCountCase):
         done = self.run_count()
         self.assertEqual(2, done.returncode)
         self.assertIn("inside the repository `product`", done.stderr.decode("utf-8"))
+        self.assertEqual([], list(inner.iterdir()))
+
+    def test_a_result_directory_inside_the_way_not_read_in_the_run(self):
+        # No repository holds the results, the-way's included, whether or not the run reads it
+        # (WAY-331).
+        product = self.product()
+        way = self.repository("the-way")
+        way.branch("main", way.commit({"README.md": "the-way\n"}, "Start"))
+        inner = way.root / "results"
+        inner.mkdir()
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        data["the-way"]["audit_results"] = str(inner)
+        self.write_locations(data)
+        done = self.run_count("--repository", "product")
+        self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+        self.assertIn("inside the repository `the-way`", done.stderr.decode("utf-8"))
         self.assertEqual([], list(inner.iterdir()))
 
 
@@ -969,6 +1008,106 @@ class Cost(AuditCountCase):
         self.assertIn("twice", done.stderr.decode("utf-8"))
         self.assertEqual([], list(self.results.iterdir()))
 
+    def test_a_wrong_price_list_refuses_the_run_with_nothing_written(self):
+        cases = {
+            "a price cell that is no number": (
+                TEST_PRICES.replace("| 4 | 0.5 | 20 |", "| 1e9 | 0.5 | 20 |"), "neither a number"),
+            "a doubled list date": (TEST_PRICES.replace(
+                "- List date: 2026-01-01\n", "- List date: 2026-01-01\n- List date: 2026-02-01\n"),
+                "more than once"),
+            "a list date that is no date": (TEST_PRICES.replace("2026-01-01", "2026-02-30"),
+                                            "no date"),
+            "a list larger than the cap": (TEST_PRICES + "x" * 4_200_000, "larger than"),
+        }
+        for label, (prices, words) in cases.items():
+            with self.subTest(label):
+                done = self.count(one_fix_round(), prices=prices)
+                self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+                self.assertIn(words, done.stderr.decode("utf-8"))
+                self.assertEqual([], list(self.results.iterdir()))
+
+    def test_a_price_cell_written_as_a_dash_leaves_its_model_unpriced(self):
+        prices = TEST_PRICES.replace("| 4 | 0.5 | 20 |", "| — | — | — |")
+        done = self.count(one_fix_round(), prices=prices)
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("no price for model `model-b`" in why
+                            for why in self.unknown_why("Cost")))
+
+    def test_a_stage_or_model_name_reaches_a_reason_short_and_inside_one_cell(self):
+        cases = {
+            "a crafted stage name": stage_row(5, "Idle\\|x\x1b[2J\\x7c" + "s" * 2_000_000, "—", 0,
+                                              0, 0, ""),
+            "a crafted model name": stage_row(5, "Odd (general-purpose)",
+                                              "m\\|c\x07" + "m" * 2_000_000, 1, 0, 1, ""),
+        }
+        for label, row in cases.items():
+            with self.subTest(label):
+                done = self.count(one_fix_round() + row)
+                self.assertEqual(0, done.returncode, done.stderr)
+                text = self.latest()
+                self.assertLess(len(text), 100_000)
+                self.assertEqual([], [char for char in text
+                                      if not char.isprintable() and char != "\n"])
+                section = text.split("\n## Unknown values\n", 1)[1]
+                cost_lines = [line for line in section.splitlines() if "| Cost |" in line]
+                self.assertEqual(1, len(cost_lines), cost_lines)
+                self.assertEqual(4, len(split_row(cost_lines[0])), cost_lines[0])
+                self.assertEqual(5, cost_lines[0].count("|"), cost_lines[0])
+
+    def test_a_section_of_stages_written_twice_leaves_the_cost_unknown(self):
+        section = "## " + one_fix_round().split("\n## ", 1)[1]
+        stages = one_fix_round() + "\n" + section
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("more than once" in why for why in self.unknown_why("Cost")))
+
+    def test_a_stage_whose_usage_was_not_read_leaves_the_cost_unknown(self):
+        # cycle_stages.py writes the model `unknown` for a stage whose transcript holds no usage.
+        stages = one_fix_round() + stage_row(5, "orchestrator", "unknown", 0, 0, 0, "")
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("not read" in why for why in self.unknown_why("Cost")),
+                        self.unknown_why("Cost"))
+
+    def test_an_orchestrator_row_of_parallel_work_with_no_token_usage_costs_nothing(self):
+        stages = one_fix_round() + stage_row(
+            5, "orchestrator while in parallel: Fix (general-purpose), Review (general-purpose)",
+            "—", 0, 0, 0, "")
+        row, _ = self.share_of(stages)
+        self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
+        self.assertEqual([], self.unknown_why("Cost"))
+
+    def test_a_subagent_turn_whose_message_was_not_read_leaves_the_share_unknown(self):
+        # The turn may have served a fix round, so `none` is not ruled in, nor a share computed
+        # without it.
+        extra = stage_row(5, "Other (general-purpose)", "model-a", 100, 0, 10, "unknown")
+        cases = {
+            "under none": (one_fix_round(fix_files="reports/fix_handoff.md",
+                                         review_files="reports/review_handoff.md") + extra,
+                           fix_record(rounds="- Review rounds: none\n")),
+            "under a named round": (one_fix_round() + extra, fix_record()),
+        }
+        for label, (stages, record_text) in cases.items():
+            with self.subTest(label):
+                row, why = self.share_of(stages, record_text)
+                self.assertEqual("unknown", row[5])
+                self.assertTrue(any("could not be read" in reason for reason in why), why)
+
+    def test_rows_of_one_turn_that_disagree_leave_the_share_unknown(self):
+        for label, old, new in (
+                ("in its files", f"| model-a | 100 | 0 | 10 | reports/fix_handoff.md, {WHOLE} |",
+                 "| model-a | 100 | 0 | 10 | reports/fix_handoff.md |"),
+                ("in its name", "| One author (general-purpose) — turn 2 | 2026-11-11 10:00:00 "
+                                "| 0:00:00 | model-a |",
+                 "| Another (general-purpose) | 2026-11-11 10:00:00 | 0:00:00 | model-a |")):
+            with self.subTest(label):
+                stages = one_fix_round()
+                self.assertEqual(1, stages.count(old), old)
+                row, why = self.share_of(stages.replace(old, new))
+                self.assertEqual("unknown", row[5])
+                self.assertTrue(any("disagree" in reason for reason in why), why)
+
 
 class RegisterCount(AuditCountCase):
     """The register of problems counted against the cycles (WAY-329, WAY-332 to WAY-335)."""
@@ -1091,7 +1230,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["product", added, "none", "at least 0", "at least 0", "at least 0",
                            "at least 0", "1"]], self.rows("Problems by cycle"))
-        self.assertEqual([["open-one", "at least 0", "at least 0", "0", "unknown", "1"]],
+        self.assertEqual([["open-one", "at least 0", "at least 0", "at least 0", "unknown", "1"]],
                          self.rows("Open issues"))
         self.assertIn("the weight is not one of the four levels",
                       [row[3] for row in self.rows("Unknown values")])
@@ -1218,9 +1357,159 @@ class RegisterCount(AuditCountCase):
         self.write_locations(data)
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        # Both side counts read `at least`: the refused row could belong to either side.
-        self.assertEqual([["fixed-one", fix, "at least 1", "at least 0", "0", "0", "1"]],
+        # Every count beside the refused row reads `at least`: the row could belong to any column.
+        self.assertEqual([["fixed-one", fix, "at least 1", "at least 0", "at least 0", "at least 0",
+                           "1"]], self.rows("Fixed issues"))
+
+    def test_a_record_that_adds_the_records_of_two_cycles_names_neither(self):
+        # One commit adds the records of two cycles: a problem naming it belongs to no one cycle.
+        product = self.repository()
+        start = product.commit({"README.md": "a product\n"}, "Start")
+        both = product.commit({"README.md": "a product\n", "docs/task-cycles/a/cycle.md": record(),
+                               "docs/task-cycles/b/cycle.md": record()}, "Add two records", start)
+        product.branch("main", product.commit({"README.md": "a product\n"}, "Remove", both))
+        self.use_register(issues=[issue_row("open-one")],
+                          problems=[problem_row("product", both, "open-one", cls="foundation-gap")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", both, "none", "at least 0", "at least 0", "at least 0",
+                           "at least 0", "0"]] * 2, self.rows("Problems by cycle"))
+        reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "row 1 of `Problems`"]
+        self.assertEqual(1, len(reasons), reasons)
+        self.assertIn("more than one cycle", reasons[0])
+        self.assertEqual([["open-one", "0", "1", "1", "unknown", "0"]], self.rows("Open issues"))
+
+    def test_an_open_issue_waits_from_the_copy_its_problem_names(self):
+        # 1760000000 is 2025-10-09 and 1760864000 is 2025-10-19 in UTC. The problem stands in the
+        # second copy of a corrected cycle: it waits from that copy, 10 days, not from the first.
+        product = self.repository()
+        start = product.commit({"README.md": "a product\n"}, "Start")
+        first = product.commit_dated({"README.md": "a product\n",
+                                      "docs/task-cycles/slow-task/cycle.md": record()},
+                                     start, "1760000000")
+        removed = product.commit({"README.md": "a product\n"}, "Remove the record", first)
+        again = product.commit_dated({"README.md": "a product\n",
+                                      "docs/task-cycles/slow-task/cycle.md": record(
+                                          remarks="- Process remarks on the-way:\n  - one\n")},
+                                     removed, "1760864000")
+        product.branch("main", product.commit({"README.md": "a product\n"}, "Remove", again))
+        self.use_register(issues=[issue_row("slow-one")],
+                          problems=[problem_row("product", again, "slow-one")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2025-10-29")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([[first, again]], [[c["Record"], c["Later copies"]] for c in self.cycles()])
+        self.assertEqual([["slow-one", "1", "1", "0", "10", "0"]], self.rows("Open issues"))
+
+    def test_a_register_far_larger_than_a_real_one_lists_its_unknown_rows_in_part(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(problems=[problem_row("ghost", added) for _ in range(1500)])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        unknown = self.rows("Unknown values")
+        listed = [row for row in unknown if row[2].endswith("of `Problems`")]
+        self.assertLess(len(listed), 1500)
+        self.assertIn(f"{1500 - len(listed)} more", " ".join(row[3] for row in unknown))
+
+    def test_problems_whose_cycle_is_not_read_count_apart_for_fixed_and_dropped_issues(self):
+        way, fix, _, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix), issue_row("gone", "dropped")],
+                          problems=[problem_row("ghost", added, "fixed-one"),
+                                    problem_row("ghost", added, "gone")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "0", "0", "0", "1", "0"]], self.rows("Fixed issues"))
+        self.assertEqual([["gone", "0", "1", "1", "0"]], self.rows("Dropped issues"))
+
+    def test_a_pin_written_as_a_short_hash_is_resolved_in_the_way(self):
+        way, fix, with_fix, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        holding, _ = product.cycle("short-task",
+                                   {"cycle.md": record(pin_line=f"- Process pin: `{with_fix[:7]}`")})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", holding, "fixed-one")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "1", "0", "0", "0", "0"]], self.rows("Fixed issues"))
+
+    def test_a_short_hash_two_objects_share_is_ambiguous(self):
+        import hashlib
+        way, fix, with_fix, _ = self.the_way_with_a_fix()
+        # Two blobs whose names share their first seven characters, found by their hashes.
+        seen: dict[str, bytes] = {}
+        for number in range(1_000_000):
+            data = f"{number}\n".encode("ascii")
+            name = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+            # A pin is read as a commit only with a digit in it.
+            if (name[:7] in seen and name[:7] not in (fix[:7], with_fix[:7])
+                    and any(char.isdigit() for char in name[:7])):
+                break
+            seen[name[:7]] = data
+        prefix = name[:7]
+        for blob in (seen[prefix], data):
+            way.blob(blob)
+        product = self.repository()
+        cycle, _ = product.cycle("odd-task",
+                                 {"cycle.md": record(pin_line=f"- Process pin: `{prefix}`")})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", cycle, "fixed-one")])
+        places = self.places(product=product)
+        places["the-way"]["repository"] = str(way.root)
+        self.write_locations(places)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "0", "0", "1", "0", "0"]], self.rows("Fixed issues"))
+        self.assertIn("ambiguous", " ".join(row[3] for row in self.rows("Unknown values")
+                                            if row[:3] == ["product", cycle, "Process pin"]))
+
+    def test_a_shallow_clone_of_the_way_lacking_the_fix_says_so(self):
+        way, fix, with_fix, _ = self.the_way_with_a_fix()
+        shallow = self.home / "repos" / "shallow-way"
+        subprocess.run(["git", "clone", "-q", "--depth", "1", way.root.as_uri(), str(shallow)],
+                       capture_output=True, env=GIT_ENV, check=True)
+        product = self.repository()
+        holding, _ = product.cycle("holding-task",
+                                   {"cycle.md": record(pin_line=f"- Process pin: `{with_fix}`")})
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", holding, "fixed-one")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(shallow)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["fixed-one", fix, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
+        self.assertIn("shallow clone", " ".join(row[3] for row in self.rows("Unknown values")
+                                                if row[2] == "the fix of issue `fixed-one`"))
+
+    def test_a_doubled_heading_or_header_row_of_the_register_is_refused(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.register.write_text(register_text() + "\n## Classes\n\n" + CLASSES_HEADER,
+                                 encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertIn("`## Classes` more than once", done.stderr.decode("utf-8"))
+        self.use_register(problems=[PROBLEMS_HEADER.split("\n", 1)[0],
+                                    problem_row("product", added)])
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertIn(["row 1 of `Problems`", "the Record is no commit of 40 hexadecimal characters"],
+                      [row[2:] for row in self.rows("Unknown values")])
+        self.assertEqual([["product", added, "process-remark", "0", "1", "0", "0", "0"]],
+                         self.rows("Problems by cycle"))
 
     def test_a_fix_the_history_lacks_leaves_its_issue_unknown(self):
         way, _, with_fix, _ = self.the_way_with_a_fix()
@@ -1302,6 +1591,19 @@ class Run(AuditCountCase):
         self.assertEqual(["plain", "0"], rows[0][:2])
         self.assertTrue(rows[0][2].startswith("no: "), rows[0])
         self.assertEqual(["product", "1", "yes"], rows[1])
+
+    def test_git_reads_the_named_checkout_whatever_git_variables_the_run_inherits(self):
+        # A scheduler or a hook may start the command with GIT_DIR set to another repository.
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        other = self.repository("other")
+        other.cycle("other-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count(env={"GIT_DIR": str(other.root / ".git"),
+                                   "GIT_WORK_TREE": str(other.root)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([("product", added, "a-task")],
+                         [(c["Repository"], c["Record"], c["Folder"]) for c in self.cycles()])
 
     def test_the_way_without_a_repository_entry_is_this_checkout(self):
         self.write_locations(self.places())
@@ -1424,12 +1726,55 @@ class ProcessVersions(AuditCountCase):
             ("reading-c", process_record(v1, plan="5 slices", extra="- Plan: 6 slices\n"), 1_000_000),
         ])
         self.run_versions(way, product)
-        # Q1 is yes from reading-a's discarded attempt. Q2: 4 + 1 too large of 11 + 3 planned,
-        # 15 > 14, so yes; reading-c's doubled item is unknown and left out of the sums.
-        self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "yes", "2 of 3", "yes",
+        # Q1 is yes from reading-a's discarded attempt. Q2 is unknown: reading-c's doubled item
+        # is not read, and its slices could change the share of the other two plans.
+        self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "yes", "2 of 3", "unknown",
                            "unknown"]], self.series(1))
         plan_reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"]
         self.assertEqual(["the record holds the item `Plan` more than once"], plan_reasons)
+        self.assertIn("1 cycle(s) are not read",
+                      self.reasons_of(self.rows("Unknown values"), f"slices too large, version {v1}"))
+
+    def test_the_slices_of_every_plan_of_a_version_are_summed(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        listed = "\n  - slice 2\n  - slice 4\n  - slice 7\n  - slice 8"
+        self.add_cycles(product, [
+            ("reading-a", process_record(v1, plan="11 slices and 12 foundation entries",
+                                         too_large=listed), 1_000_000),
+            ("reading-b", process_record(v1, plan="3 slices", too_large="\n  - slice 1"), 1_000_000),
+            ("one-author", process_record(v1), 1_000_000),
+        ])
+        self.run_versions(way, product)
+        # 4 + 1 too large of 11 + 3 planned: 15 > 14, so yes; the one-author cycle has no plan.
+        self.assertEqual(["2 of 2", "yes"], self.series(1)[0][6:8])
+
+    def test_the_count_of_slices_is_the_figure_just_before_the_word(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("apart", process_record(v1, plan="reviewed by 2 agents; slices: 8",
+                                     too_large="\n  - slice 1"), 1_000_000),
+            ("tight", process_record(v1, plan="the plan has 4 slices, reviewed by 2 agents",
+                                     too_large="\n  - slice 1"), 1_000_000),
+        ])
+        self.run_versions(way, product)
+        self.assertEqual("1 of 2", self.series(1)[0][6])
+        self.assertEqual(["the item `Plan` does not give one count of slices before the word "
+                          "`slices`"],
+                         [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"])
+
+    def test_a_discarded_attempt_that_denies_a_design_choice_is_not_read_as_one(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("denies", process_record(v1, discarded="a time overrun; no open design choice"),
+             1_000_000)])
+        self.run_versions(way, product)
+        self.assertEqual("unknown", self.series(1)[0][5])
 
     def test_a_discarded_attempt_opening_with_none_is_not_read_as_a_design_choice(self):
         # `none` with more words names the phrase, but it says nothing was discarded: unknown.
@@ -1455,10 +1800,19 @@ class ProcessVersions(AuditCountCase):
         self.run_versions(way, product)
         self.assertEqual("unknown", self.series(1)[0][5])
 
-    def test_a_third_is_not_above_a_third_and_unknown_reads_stay_unknown(self):
+    def test_a_third_is_not_above_a_third(self):
         # One slice too large of three planned is exactly a third, which is not above it: no.
-        # The prose discarded attempt makes Q1 unknown; the cycle whose plan has no figure
-        # before the word `slices` is left out of Q2 with its reason, and does not stall the run.
+        way = self.the_way()
+        v2 = self.version_at(way, self.LATER)
+        product = self.repository()
+        self.add_cycles(product, [
+            ("exact", process_record(v2, plan="3 slices", too_large="\n  - slice 1"), 1_000_000)])
+        self.run_versions(way, product)
+        self.assertEqual(["1 of 1", "no"], self.series(1)[0][6:8])
+
+    def test_unknown_reads_stay_unknown(self):
+        # The prose discarded attempt makes Q1 unknown; the cycle whose plan has no figure just
+        # before the word `slices` makes Q2 unknown with its reason, and does not stall the run.
         way = self.the_way()
         v2 = self.version_at(way, self.LATER)
         product = self.repository()
@@ -1469,7 +1823,7 @@ class ProcessVersions(AuditCountCase):
         ])
         self.run_versions(way, product)
         [row] = self.series(1)
-        self.assertEqual([v2, "2025-10-10", "3", "3", "2.000000", "unknown", "1 of 2", "no"],
+        self.assertEqual([v2, "2025-10-10", "3", "3", "2.000000", "unknown", "1 of 2", "unknown"],
                          row[:8])
         unknown = self.rows("Unknown values")
         self.assertEqual(1, len([row for row in unknown if row[2] == "Discarded attempt"]))

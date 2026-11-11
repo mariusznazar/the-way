@@ -33,7 +33,9 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
 per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price (WAY-336, WAY-338).
+*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is neither
+a number nor `—` refuses the list (WAY-336, WAY-338). An error about the locations file or the price
+list names its option, `--locations` or `--prices`, never the path it was given (WAY-320).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -54,10 +56,10 @@ ones noted, and its values are read from the last copy, the most complete. For e
   cached input at the *Input* price, its cached input at the *Cached input* price and its output at
   the *Output* price. Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in),
   so they are priced as input: an approximation. A model the list gives no price for, a row that
-  does not read, a subagent stage with no token usage (the model `—`), a section where no stage has
-  any, or a `stages.md` without that section (an earlier form) gives the cost `unknown`, never
-  zero; a stretch of the orchestrator with no token usage, time it worked with no response of a
-  model, costs nothing;
+  does not read, a subagent stage with no token usage (the model `—`), a stage whose usage the
+  stage report could not read (the model `unknown`), a section where no stage has any, or a
+  `stages.md` without that section (an earlier form) gives the cost `unknown`, never zero; a row of
+  the orchestrator with no token usage, time it worked with no response of a model, costs nothing;
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
@@ -70,9 +72,11 @@ ones noted, and its values are read from the last copy, the most complete. For e
   of process remarks tells one (WAY-294). It is `unknown`, with the reason, where the item is
   missing, doubled or names a round otherwise than by its findings file, where `stages.md` has no
   column *Files named* (an earlier form), where a cell of it is not a list of files of `reports/`,
-  where a findings file the record names is named by fewer than two subagent turns, the fix and
-  the review of that fix, or where a turn was given a findings file the record does not name: a
-  wrong figure is worse than `unknown`. The cost is still given.
+  where the rows of one turn disagree in their stage or their files, where a subagent turn's cell
+  reads `unknown`, since that turn may serve a round, where a findings file the record names is
+  named by fewer than two subagent turns, the fix and the review of that fix, or where a turn was
+  given a findings file the record does not name: a wrong figure is worse than `unknown`. The cost
+  is still given.
 
 The process versions (WAY-338, WAY-340): each cycle is grouped by the version of the-way its
 *Process pin* resolves to, the full commit that `git rev-parse --disambiguate` names in the
@@ -94,33 +98,41 @@ Measures are compared only within a series, and each series is its own section o
 (WAY-338). Per version: the median cost at constant prices of its cycles with a known cost, and
 three answers, each `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
-is no, text naming an open design choice is yes, other text or a missing or doubled item is
-unknown; where the item reads `none` but *Review rounds* names a findings file, the answer is
-unknown, since the findings are not in the record. Q2, more than one third of the slices of the
-plans came back too large: from the item *Plan* (`none` on the one-author route leaves the cycle
-out; otherwise the one figure written before the word `slices`, and where there is none or more
-than one, unknown) and the entries of *Slices returned too large* (`none` is 0); the answer is yes
-where three times the sum of too-large slices is above the sum of planned slices of the cycles
-whose plan is read, and unknown where no cycle's plan is read. Q3, the cost falls: the median
-against the previous version of the same series, yes where lower, unknown where there is none.
+is no, text naming an open design choice with no word that denies it (`no`, `not`, `without`...)
+is yes, other text or a missing or doubled item is unknown; where the item reads `none` but
+*Review rounds* names a findings file, the answer is unknown, since the findings are not in the
+record. Q2, more than one third of the slices of the plans came back too large: from the item
+*Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
+before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
+and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times
+the sum of too-large slices is above the sum of planned slices, and unknown where the plan of a
+cycle that has one is not read, since its slices could change the answer. Q3, the cost falls: the
+median against the previous version of the same series, yes where lower, unknown where there is
+none.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. The records, the `stages.md` files and the locations file are untrusted input:
-their text reaches the result only as a commit, a number or a time it was read as, and a folder or
-a key on one line with each control character and each bar written as `\\x..`, so that no cell of
-a table holds a bar; no path written in them is followed, and nothing of them is run. A commit
-dated outside the years the platform reads gives *Committed* `unknown`. Git runs only to read:
-`rev-parse`, `log`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
+their text reaches the result only as a commit, a number or a time it was read as, and a folder,
+a key or a name in a reason on one line, cut to 200 characters, with each control character and
+each bar written as `\\x..`, so that no cell of a table holds a bar; a bar and the text `\\x7c`
+then read alike. No path written in them is followed, and nothing of them is run. A commit dated
+outside the years the platform reads gives *Committed* `unknown`. Git runs only to read, with no
+`GIT_` variable of the environment it is started in and no signature shown: `rev-parse`, `log`,
+`diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
 
 The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
 gives: four tables, *Classes*, *Weights*, *Issues* and *Problems*, found by their headings and header
 rows. A table missing, a row that does not read, an unknown class or weight, an issue in no row of
 *Issues*, a doubled name, a *Fix* that is no commit or a date that is no date refuses that row or
-table with a reason, and what depends on it is `unknown`; a table missing is an `Error:` of the
-register on stderr, with exit 1. A problem whose cycle no named repository holds is `unknown`, not
-dropped. A problem is counted once, by its row (WAY-333); a cycle copied again after a correction
-is one cycle, and its problems are counted once.
+table with a reason. A refused row of *Problems* still belongs to the cycle and the issue it names:
+each count of that cycle or issue reads `at least n`, as the row is not in it. What else depends on
+a refused row or table is `unknown`; a table missing is an `Error:` of the register on stderr, with
+exit 1. A problem whose cycle no named repository holds is `unknown`, not dropped, and so is a
+problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
+read `at least n`. A problem is counted once, by its row (WAY-333); a cycle copied again after a
+correction is one cycle, and its problems are counted once. *Unknown values* lists at most 500
+values the register leaves unknown, and says how many more there are.
 
 For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
@@ -128,14 +140,16 @@ does not hold it, never by date: the holding is `git merge-base --is-ancestor <f
 checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
 short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a pin
 `unknown` gives `unknown` with its reason (WAY-334). For each issue whose *Fate* is `open`, the number
-of cycles in which its problems stand, and the days it has waited: from the commit date of the
-earliest of those cycles to the day of the run, `unknown` where a problem's cycle is not read. An
+of cycles in which its problems stand, and the days it has waited: from the earliest commit date
+of the copies its problems' *Record* names to the day of the run, `unknown` where a problem's cycle
+is not known. An
 issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
 register, never ranked by their counts (WAY-335).
 
 The result is Markdown in UTF-8 with LF line ends, the same bytes for the same input, written to
 `count-<YYYY-MM-DD>.md`, the date of the run, and `count-latest.md` in the directory of
-`audit_results`, never inside a repository it reads: a section *Repositories*, a table of each
+`audit_results`, never inside a repository it reads or the checkout of the-way, read or not
+(WAY-331): a section *Repositories*, a table of each
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
@@ -147,8 +161,8 @@ Exit code: 0 with the result written; 1 with the result written but a repository
 read, or a table of the register missing, named in the result and in an `Error:` line on stderr; 2
 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the locations
 file, the price list, the register or an entry it needs is missing or wrong, the register is larger
-than 4 MiB or not UTF-8, the result directory lies inside a repository to read, or the result cannot
-be written.
+than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the checkout of
+the-way, or the result cannot be written.
 
 Standard library only.
 """
@@ -241,8 +255,18 @@ ITEM_PLAN = "Plan"
 ITEM_TOO_LARGE = "Slices returned too large"
 DESIGN_CHOICE = "open design choice"
 SLICES_WORD = re.compile(r"slices", re.I)
-# A count standing alone: no letter or digit beside it, so `F1a` and `F1–F4` give none.
-FIGURE = re.compile(r"(?<![A-Za-z0-9])[0-9]{1,6}(?![A-Za-z0-9])")
+# The count of slices written just before the word, as `8 slices`: a figure standing alone, no
+# letter or digit before it, so `F1a` and `F1–F4` give none. Every repetition is bounded.
+SLICES_COUNT = re.compile(r"(?<![A-Za-z0-9])([0-9]{1,6})[ \t]{1,8}slices(?![A-Za-z0-9])", re.I)
+# Words that deny what follows them, so that `no open design choice` is not read as one.
+NEGATIONS = frozenset({"no", "not", "none", "nor", "never", "without"})
+WORDS = re.compile(r"[a-z]+")
+# The locations file and the price list are named by their options in an error, never by their
+# path, which is the user's (WAY-320).
+LOCATIONS_LABEL = "the locations file (`--locations`)"
+PRICES_LABEL = "the price list (`--prices`)"
+# *Unknown values* lists at most this many values the register leaves unknown.
+MAX_LISTED = 500
 
 
 class AuditCountError(Exception):
@@ -266,36 +290,39 @@ def read_locations(name: str) -> dict:
     """The locations file as a JSON object; a key or an entry written twice is an error, since
     JSON readers disagree on which of the two counts."""
     path = Path(name).expanduser()
+    label = LOCATIONS_LABEL
     try:
         raw = path.read_bytes()
     except FileNotFoundError:
-        raise AuditCountError(f"the locations file {display(name)} does not exist") from None
+        raise AuditCountError(f"{label} does not exist") from None
     except OSError as error:
-        raise AuditCountError(f"cannot read the locations file {display(name)}: "
-                              f"{display(error.strerror or error)}") from None
+        raise AuditCountError(f"cannot read {label}: {display(error.strerror or error)}") from None
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError:
-        raise AuditCountError(f"the locations file {display(name)} is not UTF-8") from None
+        raise AuditCountError(f"{label} is not UTF-8") from None
 
     def unique(pairs: list[tuple[str, object]]) -> dict:
         seen: dict[str, object] = {}
         for key, value in pairs:
             if key in seen:
-                raise AuditCountError(f"the locations file {display(name)} holds the key or entry "
-                                      f"`{display(key)}` twice in one object")
+                raise AuditCountError(f"{label} holds the key or entry "
+                                      f"`{display(key[:TEXT_CAP])}` twice in one object")
             seen[key] = value
         return seen
 
     try:
         data = json.loads(text, object_pairs_hook=unique)
     except json.JSONDecodeError as error:
-        raise AuditCountError(f"the locations file {display(name)} is not JSON: line "
-                              f"{error.lineno}, column {error.colno}") from None
+        raise AuditCountError(f"{label} is not JSON: line {error.lineno}, column "
+                              f"{error.colno}") from None
+    except ValueError:
+        # A number of more digits than Python converts is no JSONDecodeError.
+        raise AuditCountError(f"{label} is not JSON: it holds a number too long to read") from None
     except RecursionError:
-        raise AuditCountError(f"the locations file {display(name)} is nested too deeply") from None
+        raise AuditCountError(f"{label} is nested too deeply") from None
     if not isinstance(data, dict):
-        raise AuditCountError(f"the locations file {display(name)} is not a JSON object")
+        raise AuditCountError(f"{label} is not a JSON object")
     return data
 
 
@@ -375,12 +402,17 @@ class Git:
         self.repository = repository
 
     def execute(self, arguments: tuple[str, ...]) -> subprocess.CompletedProcess:
-        environment = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never",
+        # A `GIT_` variable of the environment the command starts in, such as GIT_DIR set by a
+        # hook, would point git at another repository or add configuration: none is passed on.
+        environment = {name: value for name, value in os.environ.items()
+                       if not name.upper().startswith("GIT_")}
+        environment.update(GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never",
                            GIT_OPTIONAL_LOCKS="0")
         try:
             return subprocess.run(
-                ["git", "--no-pager", "-c", "core.fsmonitor=false", "-C", str(self.repository),
-                 *arguments], stdin=subprocess.DEVNULL, capture_output=True,
+                ["git", "--no-pager", "-c", "core.fsmonitor=false", "-c", "log.showSignature=false",
+                 "-C", str(self.repository), *arguments], stdin=subprocess.DEVNULL,
+                capture_output=True,
                 timeout=GIT_TIMEOUT, env=environment)
         except (OSError, subprocess.TimeoutExpired) as error:
             raise GitError(f"git {arguments[0]}: {display(error)}") from None
@@ -408,6 +440,9 @@ class Cycle:
     record: str
     committed: str
     later: list[str] = field(default_factory=list)
+    # The commit date of each copy, the first and the later ones, by its commit; `unknown` where
+    # the date cannot be read.
+    copies: dict[str, str] = field(default_factory=dict)
     pin: str | None = None
     remarks: int | None = None
     working: int | None = None
@@ -605,34 +640,32 @@ def read_prices(name: str) -> Prices:
     """The price list, read as a file of the-way: a missing or wrong list stops the run with
     nothing written, as a wrong entry of the locations file does."""
     path = Path(name).expanduser()
+    label = PRICES_LABEL
     try:
         raw = path.read_bytes()
     except FileNotFoundError:
-        raise AuditCountError(f"the price list {display(name)} does not exist") from None
+        raise AuditCountError(f"{label} does not exist") from None
     except OSError as error:
-        raise AuditCountError(f"cannot read the price list {display(name)}: "
-                              f"{display(error.strerror or error)}") from None
+        raise AuditCountError(f"cannot read {label}: {display(error.strerror or error)}") from None
     if len(raw) > MAX_BYTES:
-        raise AuditCountError(f"the price list {display(name)} is larger than {MAX_BYTES} bytes")
+        raise AuditCountError(f"{label} is larger than {MAX_BYTES} bytes")
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError:
-        raise AuditCountError(f"the price list {display(name)} is not UTF-8") from None
+        raise AuditCountError(f"{label} is not UTF-8") from None
     lines = remarks_check.split_lines(text)
     fenced = remarks_check.fenced_flags(lines)
     dates = header_fields(lines, fenced, PRICE_HEADING)
     if len(dates) != 1:
-        raise AuditCountError(f"the price list {display(name)} "
+        raise AuditCountError(f"{label} "
                               + ("holds the line `List date` more than once" if dates
                                  else "holds no line `List date`"))
     if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", dates[0]):
-        raise AuditCountError(f"the line `List date` of the price list {display(name)} is no date "
-                              "written YYYY-MM-DD")
+        raise AuditCountError(f"the line `List date` of {label} is no date written YYYY-MM-DD")
     try:
         date.fromisoformat(dates[0])
     except ValueError:
-        raise AuditCountError(f"the line `List date` of the price list {display(name)} is no "
-                              "date") from None
+        raise AuditCountError(f"the line `List date` of {label} is no date") from None
     table: dict[str, tuple[Decimal, Decimal, Decimal] | None] = {}
     columns: list[int] | None = None
     for line, inside in zip(lines, fenced):
@@ -643,25 +676,32 @@ def read_prices(name: str) -> Prices:
         if columns is None:
             if cells[:1] == [PRICE_MODEL]:
                 if not all(name_of in cells for name_of in PRICE_COLUMNS):
-                    raise AuditCountError(f"a table of the price list {display(name)} lacks one "
-                                          f"of the columns {', '.join(PRICE_COLUMNS)}")
+                    raise AuditCountError(f"a table of {label} lacks one of the columns "
+                                          f"{', '.join(PRICE_COLUMNS)}")
                 columns = [cells.index(name_of) for name_of in PRICE_COLUMNS]
             continue
         if is_separator(cells):
             continue
         if not cells or max(columns) >= len(cells) or not cells[0]:
-            raise AuditCountError(f"a row of a table of the price list {display(name)} has fewer "
-                                  "cells than its header")
+            raise AuditCountError(f"a row of a table of {label} has fewer cells than its header")
         model = cells[0]
         if model in table:
-            raise AuditCountError(f"the price list {display(name)} names model `{display(model)}` "
-                                  "twice")
-        numbers = [Decimal(cells[index]) if PRICE.fullmatch(cells[index]) else None
-                   for index in columns]
+            raise AuditCountError(f"{label} names model `{display(model[:TEXT_CAP])}` twice")
+        numbers: list[Decimal | None] = []
+        for index in columns:
+            if cells[index] == NO_MODEL:
+                numbers.append(None)
+            elif PRICE.fullmatch(cells[index]):
+                numbers.append(Decimal(cells[index]))
+            else:
+                # A typo would otherwise leave the model unpriced, and every cycle that used it
+                # would point away from the list.
+                raise AuditCountError(f"a price of model `{display(model[:TEXT_CAP])}` in {label} "
+                                      "is neither a number nor `—`")
         table[model] = None if any(number is None for number in numbers) else (
             numbers[0], numbers[1], numbers[2])
     if not table:
-        raise AuditCountError(f"the price list {display(name)} names no model")
+        raise AuditCountError(f"{label} names no model")
     return Prices(dates[0], table)
 
 
@@ -842,24 +882,27 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
         # discarded open design choice either way.
         return None, "the item `Discarded attempt` opens with none and holds more text"
     if DESIGN_CHOICE in text.casefold():
+        if NEGATIONS.intersection(WORDS.findall(text.casefold())):
+            return None, ("the item `Discarded attempt` names an open design choice beside a word "
+                          "that may deny it")
         return "yes", None
     return None, "the item `Discarded attempt` names neither none nor an open design choice"
 
 
 def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, str | None]:
     """The item *Plan* of a record: whether the plan is left out (the one-author route), the
-    slices it made, or None with the reason. The count is the one figure written before the word
-    `slices`; with no figure or with more than one there, the count is not read."""
+    slices it made, or None with the reason. The count is the figure written just before the word
+    `slices`, as in `8 slices`; with no such figure or with more than one, the count is not
+    read."""
     items = item_texts(lines, fenced, ITEM_PLAN)
     if len(items) != 1:
         return False, None, item_count_reason(ITEM_PLAN, items)
     text = item_words(items[0][0], items[0][1])
     if reads_none_first(text):
         return True, None, None
-    word = SLICES_WORD.search(text)
-    if word is None:
+    if SLICES_WORD.search(text) is None:
         return False, None, "the item `Plan` names no count of slices"
-    figures = FIGURE.findall(text[:word.start()])
+    figures = SLICES_COUNT.findall(text)
     if len(figures) != 1:
         return False, None, ("the item `Plan` does not give one count of slices before the word "
                              "`slices`")
@@ -919,28 +962,37 @@ def is_orchestrator_row(name: str) -> bool:
 
 def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
     """The cost in dollars of each row at the list's prices, or None with the reason: a model with
-    no price, a cached input above its input, a subagent stage with no token usage, or a section
-    with no stage that has any, make the cost unknown. An orchestrator stretch with no token usage
+    no price, a cached input above its input, a subagent stage with no token usage, a stage whose
+    model is unknown, or a section with no stage that has any, make the cost unknown. A row of the
+    orchestrator with no token usage — a stretch, or its work while subagents run in parallel —
     costs nothing."""
     costs: list[Decimal] = []
     if all(row.model == NO_MODEL for row in rows):
         return None, "every stage of `stages.md` has no token usage, so the cost is not known"
     for row in rows:
+        # A name from `stages.md` is cut before it reaches a reason: the reason is written twice
+        # per cycle, and a crafted name would otherwise make the result as large as the file.
+        name = row.name[:TEXT_CAP]
+        if row.model == UNKNOWN:
+            # `cycle_stages.py` writes this for a stage whose transcript holds no token usage at
+            # all, and for tokens of a response that names no model.
+            return None, (f"stage `{name}` gives its model as unknown: its token usage was not "
+                          "read, or names no model")
         if row.model == NO_MODEL:
-            if row.name == ORCHESTRATOR:
-                # A stretch of the orchestrator's own work with time and no response of a model:
+            if is_orchestrator_row(row.name):
+                # A row of the orchestrator's own work with no response of a model in it:
                 # `cycle_stages.py` reads every response of the orchestrator's transcript.
                 costs.append(Decimal(0))
                 continue
             # `cycle_stages.py` writes this mark for a stage it found no token usage for: its
             # tokens are not known, so its cost is not zero.
-            return None, (f"stage `{row.name}` has no token usage in its transcript, so its cost "
+            return None, (f"stage `{name}` has no token usage in its transcript, so its cost "
                           "is not known")
         if row.cached > row.input:
-            return None, f"the cached input of stage `{row.name}` is above its input"
+            return None, f"the cached input of stage `{name}` is above its input"
         price = prices.table.get(row.model)
         if price is None:
-            return None, f"the price list gives no price for model `{row.model}`"
+            return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
         input_price, cached_price, output_price = price
         costs.append((Decimal(row.input - row.cached) * input_price
                       + Decimal(row.cached) * cached_price
@@ -990,14 +1042,24 @@ def fix_rounds_share(rows: list[StageTokens], costs: list[Decimal], total: Decim
     if total == 0:
         return "the stages hold no tokens"
     turns: dict[str, tuple[frozenset[str] | None, Decimal]] = {}
+    names: dict[str, str] = {}
     for row, cost in zip(rows, costs):
         if is_orchestrator_row(row.name):
             continue
         if not row.files_read:
-            return (f"the cell `{FILES_COLUMN}` of stage `{row.name}` is not a list of files of "
-                    "`reports/`")
-        files, spent = turns.get(row.number, (row.files, Decimal(0)))
-        turns[row.number] = (files, spent + cost)
+            return (f"the cell `{FILES_COLUMN}` of stage `{row.name[:TEXT_CAP]}` is not a list of "
+                    "files of `reports/`")
+        if row.number in turns:
+            # The model rows of one turn repeat its stage and its files; rows that disagree do
+            # not tell which of them the turn was given.
+            files, spent = turns[row.number]
+            if names[row.number] != row.name or files != row.files:
+                return (f"the rows of stage number {row.number[:TEXT_CAP]} disagree in their stage "
+                        f"or in their cell `{FILES_COLUMN}`")
+            turns[row.number] = (files, spent + cost)
+        else:
+            turns[row.number] = (row.files, cost)
+            names[row.number] = row.name
     given = [files for files, _ in turns.values() if files is not None]
     unread = len(turns) - len(given)
     extra = sorted({path for files in given for path in files
@@ -1006,12 +1068,16 @@ def fix_rounds_share(rows: list[StageTokens], costs: list[Decimal], total: Decim
         return (f"{len(extra)} findings file(s) the subagent turns were given are not named by "
                 f"the item `Review rounds`, which names {len(findings)}: the record and "
                 "`stages.md` do not agree")
+    if unread:
+        # Such a turn may be a fix or the review of a fix: neither `none` nor a share without it
+        # can be told.
+        return (f"the message of {unread} subagent turn(s) could not be read, so whether they "
+                "serve a fix round is not known")
     for path in findings:
         count = sum(1 for files in given if path in files)
         if count < 2:
             return (f"the findings file `{path}` that the item `Review rounds` names is named by "
-                    f"{count} subagent turn(s), and a round has a fix and the review of that fix"
-                    + (f"; the message of {unread} turn(s) could not be read" if unread else ""))
+                    f"{count} subagent turn(s), and a round has a fix and the review of that fix")
     spent = sum((cost for files, cost in turns.values()
                  if files is not None and files & set(findings)), Decimal(0))
     cycle.share = spent / total * 100
@@ -1125,7 +1191,8 @@ def read_repository(key: str, path: Path, prices: Prices) -> Read:
         first, stamp = commits[0]
         committed = committed_date(stamp)
         cycle = Cycle(key, display(folder.decode("utf-8", errors="replace")), first,
-                      committed or UNKNOWN, [commit for commit, _ in commits[1:]])
+                      committed or UNKNOWN, [commit for commit, _ in commits[1:]],
+                      {commit: committed_date(when) or UNKNOWN for commit, when in commits})
         if committed is None:
             cycle.unknown.append(("Committed", "the commit's date lies outside the years the "
                                                "command can read"))
@@ -1491,24 +1558,37 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     weight (WAY-333), per fixed issue by whether the pin of its cycles holds the fix (WAY-334), and
     per open issue the cycles it came back in and the days it has waited (WAY-335)."""
     cycles = [cycle for read in reads for cycle in read.cycles]
-    index: dict[tuple[str, str], Cycle] = {}
+    # Each commit that adds a copy of a record, with the cycles whose copy it adds: one commit may
+    # add the records of several cycles, and then it names none of them.
+    owners: dict[tuple[str, str], list[Cycle]] = {}
     for cycle in cycles:
-        index[(cycle.repository, cycle.record)] = cycle
-        for later in cycle.later:
-            index[(cycle.repository, later)] = cycle
+        for record in dict.fromkeys([cycle.record, *cycle.later]):
+            owners.setdefault((cycle.repository, record), []).append(cycle)
+    index = {key: found[0] for key, found in owners.items() if len(found) == 1}
+    shared = {key: found for key, found in owners.items() if len(found) > 1}
+    # The problems of a *Record* that names several cycles count in none of them, so the counts of
+    # each of those cycles read `at least n`.
+    uncounted: Counter = Counter()
     found = [(problem, index.get((problem.repository, problem.record)))
              for problem in register.problems]
     unknown = list(register.refused)
     counts: dict[tuple[str, str], Counter] = {}
     for problem, cycle in found:
-        if cycle is None:
-            unknown.append((problem.repository[:TEXT_CAP], problem.record,
-                            f"row {problem.number} of `Problems`",
-                            "no named repository holds the cycle of its record; name its key "
-                            "with --repository"))
-        else:
+        if cycle is not None:
             tally = counts.setdefault((cycle.repository, cycle.record), Counter())
             tally[(problem.cls, problem.weight)] += 1
+            continue
+        key = (problem.repository, problem.record)
+        if key in shared:
+            for owner in shared[key]:
+                uncounted[(owner.repository, owner.record)] += 1
+            why = ("its Record is a commit that adds the records of more than one cycle, so the "
+                   "cycle it belongs to is not known")
+        else:
+            why = ("no named repository holds the cycle of its record; name its key with "
+                   "--repository")
+        unknown.append((problem.repository[:TEXT_CAP], problem.record,
+                        f"row {problem.number} of `Problems`", why))
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
     # as `at least n`, since the row's own figure is not in the count (the review's Important finding).
@@ -1516,9 +1596,13 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     refused_issue: Counter = Counter()
     valid_issues = {name for name, _, _ in register.issues}
     for repository, record, issue in register.refused_problems:
-        cycle = index.get((repository, record.lower())) if FULL_HASH.fullmatch(record) else None
+        key = (repository, record.lower())
+        cycle = index.get(key) if FULL_HASH.fullmatch(record) else None
         if cycle is not None:
             refused_cycle[(cycle.repository, cycle.record)] += 1
+        elif FULL_HASH.fullmatch(record) and key in shared:
+            for owner in shared[key]:
+                uncounted[(owner.repository, owner.record)] += 1
         if issue in valid_issues:
             refused_issue[issue] += 1
     cycle_rows = []
@@ -1526,19 +1610,24 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         key = (cycle.repository, cycle.record)
         mine = counts.get(key, Counter())
         refused = refused_cycle[key]
+        partial = refused + uncounted[key]
         head = [cycle.repository, cycle.record]
         rows_here = []
         for cls in register.classes:
             tally = [mine[(cls, weight)] for weight in LEVELS]
             if any(tally):
-                rows_here.append(head + [cls] + [counted(count, refused) for count in tally]
+                rows_here.append(head + [cls] + [counted(count, partial) for count in tally]
                                  + [str(refused)])
         if not rows_here:
-            rows_here.append(head + [NONE] + [counted(0, refused)] * 4 + [str(refused)])
+            rows_here.append(head + [NONE] + [counted(0, partial)] * 4 + [str(refused)])
         cycle_rows += rows_here
+    # The problems of each issue, gathered once rather than by a scan of every problem per issue.
+    by_issue: dict[str, list[tuple[Problem, Cycle | None]]] = {}
+    for problem, cycle in found:
+        by_issue.setdefault(problem.issue, []).append((problem, cycle))
     fixed_rows, open_rows, dropped_rows = [], [], []
     for name, fate, fix in register.issues:
-        members = [(problem, cycle) for problem, cycle in found if problem.issue == name]
+        members = by_issue.get(name, [])
         hit = {(cycle.repository, cycle.record): cycle for _, cycle in members
                if cycle is not None}
         not_read = sum(1 for _, cycle in members if cycle is None)
@@ -1564,9 +1653,13 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                         lacking += 1
             shown = (["unknown", "unknown"] if fixed is None
                      else [counted(holding, refused), counted(lacking, refused)])
-            fixed_rows.append([name, fix] + shown + [str(pin_unknown), str(not_read),
-                                                     str(refused)])
+            fixed_rows.append([name, fix] + shown + [counted(pin_unknown, refused),
+                                                     counted(not_read, refused), str(refused)])
         elif fate == "open":
+            # Each problem waits from the copy its Record names, which after a correction may be
+            # a later copy than the cycle's first.
+            dates = [cycle.copies.get(problem.record, cycle.committed)
+                     for problem, cycle in members if cycle is not None]
             if refused:
                 days = UNKNOWN
                 unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
@@ -1577,28 +1670,33 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
             elif not_read:
                 days = UNKNOWN
                 unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                "a problem's cycle is not in the named repositories, so the day "
-                                "it came back first is not known"))
-            elif UNKNOWN in [cycle.committed for cycle in hit.values()]:
+                                "a problem's cycle is not known, so the day it came back first is "
+                                "not known"))
+            elif UNKNOWN in dates:
                 days = UNKNOWN
                 unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                "the commit date of one of its cycles is unknown"))
+                                "the commit date of the copy one of its problems names is unknown"))
             else:
-                first = min(cycle.committed for cycle in hit.values())
-                waited = (today - date.fromisoformat(first)).days
+                waited = (today - date.fromisoformat(min(dates))).days
                 if waited < 0:
                     days = UNKNOWN
                     unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                    "its earliest cycle is dated after the day of the run"))
+                                    "its earliest copy is dated after the day of the run"))
                 else:
                     days = str(waited)
             open_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
-                              str(not_read), days, str(refused)])
+                              counted(not_read, refused), days, str(refused)])
         else:
             dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
-                                 str(not_read), str(refused)])
-    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows,
-                    list(dict.fromkeys(unknown)))
+                                 counted(not_read, refused), str(refused)])
+    listed = list(dict.fromkeys(unknown))
+    if len(listed) > MAX_LISTED:
+        # A register far larger than a real one would make the result as large as itself.
+        more = len(listed) - MAX_LISTED
+        listed = listed[:MAX_LISTED] + [(THE_WAY, NONE, "values of the register not listed",
+                                         f"{more} more values the register leaves unknown are not "
+                                         "listed here; the register holds them")]
+    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, listed)
 
 
 # The process versions (WAY-338, WAY-340)
@@ -1675,14 +1773,19 @@ def contradiction_of(version: Version) -> tuple[str, str | None]:
 
 
 def too_large_of(version: Version) -> tuple[str, str, str | None]:
-    """Q2 for a version, with the cell *Plans read*: the sums of the slices of the cycles whose
-    plan is read, too-large over planned, above one third is yes."""
+    """Q2 for a version, with the cell *Plans read*: the sums of the slices of the version's plans,
+    too-large over planned, above one third is yes. Where a plan is not read, its slices could
+    turn either answer, so the answer is unknown."""
     planned_cycles = [cycle for cycle in version.cycles if not cycle.plan_left_out]
     read = [cycle for cycle in planned_cycles
             if cycle.planned is not None and cycle.too_large is not None]
     plans_read = f"{len(read)} of {len(planned_cycles)}"
     if not read:
         return plans_read, "unknown", "no cycle's plan can be read"
+    if len(read) < len(planned_cycles):
+        return plans_read, "unknown", (f"the plans of {len(planned_cycles) - len(read)} cycle(s) "
+                                       "are not read, so the share of the version's slices is "
+                                       "not known")
     planned = sum(cycle.planned for cycle in read if cycle.planned is not None)
     large = sum(cycle.too_large for cycle in read if cycle.too_large is not None)
     if planned == 0:
@@ -1761,11 +1864,14 @@ def versions_lines(versions: Versions) -> list[str]:
         "## Process versions",
         "",
         "A version of the process is the commit of the-way that its cycles' *Process pin* "
-        "resolves to, ordered by the commit's date. A series is a run of versions between which "
-        "the price list, the register's list of classes and the reviewed files of the-way "
-        "(`task-cycle/change`, `task-cycle/plan`, `task-cycle/review`, `task-cycle/spec`, "
-        "`task-cycle/cycle_stages.py`) do not change. Measures are compared only within one "
-        "series, and no cell sets a number of one series beside a number of another (WAY-338). "
+        "resolves to, ordered by the commit's date. WAY-338 starts a new series at a new price "
+        "list, or at a change of the form of a stage report, of the list of classes or of the "
+        "instructions of the reviewer. This count splits more often than that: at a new price "
+        "list, at a date of the register's list of classes, and at any change of the files of "
+        "the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and "
+        "`task-cycle/spec` or of `task-cycle/cycle_stages.py`, whatever the change, so that it "
+        "compares less and never across a change WAY-338 names. Measures are compared only "
+        "within one series, and no cell sets a number of one series beside a number of another. "
         "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
         "unknown.",
         "",
@@ -1886,8 +1992,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "The problems of the register by class and weight, each problem once (WAY-333); a cycle "
         "with no problem has one row, `none`. *Refused rows* are rows of *Problems* that name this "
         "cycle and were refused for a class, weight or issue the register lacks; a count with one "
-        "reads `at least n`, as the refused row is not in it. Problems whose cycle no named "
-        "repository holds are in *Unknown values*.",
+        "reads `at least n`, as the refused row is not in it. A count reads `at least n` also "
+        "where a problem names as its *Record* a commit that adds the records of more than one "
+        "cycle: it counts in none of them. Problems whose cycle no named repository holds, or "
+        "whose *Record* names more than one cycle, are in *Unknown values*.",
         "",
     ]
     lines += table(["Repository", "Record", "Class", "No problem", "Minor", "Important",
@@ -1910,12 +2018,13 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "## Open issues",
         "",
         "An open issue's cycles are those its problems stand in. *Days waiting* counts from the "
-        "commit date of the earliest of them to the day of the run; `—` where the issue has no "
+        "earliest commit date of the copies its problems' *Record* names to the day of the run; "
+        "a count with refused rows of the issue reads `at least n`; `—` where the issue has no "
         "problem yet. The issues are in the order of the register, never ranked by their counts "
         "(WAY-335), and the weighing is the human's.",
         "",
     ]
-    lines += table(["Issue", "Cycles in which its problem came back", "Problems",
+    lines += table(["Issue", "Cycles in which its problems stand", "Problems",
                     "Problems whose cycle is not read", "Days waiting", "Refused rows"],
                    analysis.open_rows)
     lines += [
@@ -1982,7 +2091,10 @@ def main(argv: list[str] | None = None) -> int:
         register_path = entry_path(locations, THE_WAY, REGISTER_ENTRY, "file")
         results = entry_path(locations, THE_WAY, RESULTS_ENTRY, "directory")
         named = repositories(locations, args.repository)
-        for key, path in named.items():
+        the_way = the_way_checkout(locations)
+        # No repository holds the results, the-way's included, whether this run reads it or not
+        # (WAY-331).
+        for key, path in [*named.items(), (THE_WAY, the_way)]:
             if inside(results, path):
                 raise AuditCountError(f"the directory of the entry `{RESULTS_ENTRY}` under "
                                       f"`{THE_WAY}` lies inside the repository "
@@ -1990,7 +2102,7 @@ def main(argv: list[str] | None = None) -> int:
                                       f"repository")
         prices = read_prices(args.prices)
         register = read_register(register_path)
-        ancestry = Ancestry(Git(the_way_checkout(locations)))
+        ancestry = Ancestry(Git(the_way))
         reads = [read_repository(key, path, prices) for key, path in named.items()]
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
