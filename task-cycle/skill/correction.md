@@ -64,4 +64,5 @@ correction the same way, the item it names being the remark the correction binds
   holds its **Unread material**, and its findings are handled as those of every review are.
 
 What such a correction leaves undone, or finds anew, is put by the request only with the question
-of a task, as for item 8. An item that cannot be done in this request offered no such answer.
+of a task, as for item 8, and so is an item that cannot be done in this request at all. The human
+who makes no task lets such an item through by merging.

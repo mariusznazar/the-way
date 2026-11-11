@@ -47,8 +47,9 @@ and its text is not English. Where TASK or the block is not judged, no error fol
 language.
 
 The script judges no content: not whether the decision section is complete or true, not which group
-an item stands in or whether it carries what its group asks, not the plain words of the top part, not whether the block says what the top part says or which language other
-than English it is in, not the items of the lower part and not the task's own sections.
+an item stands in or whether it carries what its group asks, not the plain words of the top part,
+not whether the block says what the top part says or which language other than English it is in,
+not the items of the lower part and not the task's own sections.
 
 Each problem is printed on stdout as `line <n>: <what is wrong and what to write>`, in the order of
 the file, then one summary line naming the sections found and the reading of the languages. Exit

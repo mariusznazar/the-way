@@ -9059,21 +9059,21 @@ not run, the incomplete reading of the review of the whole change where its revi
 through the rest of its selection by title or itself named a decision concerning the change as
 unread, and the gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
 unread, the unfixed findings the product's user or the human working with the process will feel, the
-decisions of the task's own sections, in a blocked request what the cycle needs to go on, the
-human actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change
-makes to a product's logging scope, a listing of the remarks check that the cycle holds wrong
-(WAY-295), an error of the form check that the cycle holds wrong (WAY-291), and the foundation
-entries the human did not see at the task document — in three groups, headed *Needed from you*,
-*Fix or let through* and *You accept by merging*, in this order: what the request cannot go on
-without, an answer or an action of the human; what the cycle did not do or did not fix and can
-still be done in this request, which the human has done there, makes a task of or lets through; and
-what the cycle did within its authority, which the human accepts by merging and which waits for no
-separate answer. Every group stands, reading `none`
-where it holds no item, the items are numbered in one run through the three groups, and the section
-reads `none` alone where no group holds an item, which says that nothing else in the request waits
-for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its first
-sentence and what the cycle needs, in plain words, in that section, while each remaining finding
-stands with its place in the code in the lower part.
+decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
+actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
+a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
+error of the form check that the cycle holds wrong (WAY-291), and the foundation entries the human
+did not see at the task document — in three groups, headed *Needed from you*, *Fix or let through*
+and *You accept by merging*, in this order: what the request cannot go on without, an answer or an
+action of the human; what the cycle did not do or did not fix and can still be done in this request,
+which the human has done there, makes a task of or lets through; and what the cycle did within its
+authority, which the human accepts by merging and which waits for no separate answer. Every group
+stands, reading `none` where it holds no item, the items are numbered in one run through the three
+groups, and the section reads `none` alone where no group holds an item, which says that nothing
+else in the request waits for the human's yes. A blocked request keeps the same skeleton, with
+`blocked` in its first sentence and what the cycle needs, in plain words, and the stages it did not
+run because it stopped, under *Needed from you*, while each remaining finding stands with its place
+in the code in the lower part.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -9088,8 +9088,8 @@ stands with its place in the code in the lower part.
     all three headings, with `none` under the first two; a request whose
     cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
     in that section; a request a remaining finding blocks says in that section, in plain words,
-    what the human is to decide about it, while the finding's place and reason stand in the lower
-    part; a request whose review of the whole change read 40 of 151 selected decisions whole and
+    what the human is to decide about it, and names the return step and the reconciliation it did not
+    run under *Needed from you*, while the finding's place and reason stand in the lower part; a request whose review of the whole change read 40 of 151 selected decisions whole and
     ran through none of the other 111 by title puts that under *Fix or let through*, asking whether
     to have what stayed unread read in the request, make a task of it or let it through, while a
     request whose reviewer read 40 whole, ran through the other 111 by title and named no decision
@@ -9164,7 +9164,7 @@ by line, so not at all; the top part in Polish and the lower part in English —
 opens in Polish; a report in Polish in the human's notes — the cycle writes nothing outside the
 repository, and the human would look in two places.
 
-### WAY-289 — Which unfixed findings does a request put before the human for a decision?
+### WAY-289 — Which things the cycle left unfixed or undone does a request put before the human for a decision?
 
 Writing a request's description, the orchestrator of the cycle judges each unfixed finding — a Minor
 finding that no fix made, a finding outside the task's scope and the new Critical or Important
@@ -9177,8 +9177,9 @@ the whole list. The answer to fix it runs a correction with one fix and one revi
 same answer is offered for a step or a check the cycle skipped, a proposal of the task's own
 sections not applied and an incomplete reading of the review of the whole change, and runs the step
 or the check, applies the proposal or has a fresh reviewer read what stayed unread, and what the
-correction leaves unfixed or undone is put by the request only with the question whether it becomes
-a task, or stays in the lower part, so that the loop ends after one correction. Every finding stays
+correction leaves unfixed or undone, like whatever cannot be done in the request at all, is put by
+the request only with the question whether it becomes a task, which the human who makes none lets
+through by merging, or stays in the lower part, so that the loop ends after one correction. Every finding stays
 in its list of the lower part with the reviewer's words and its place in the code, and the judgment
 changes no finding's kind or grade and decides no fix and no block.
 
@@ -10697,10 +10698,11 @@ opens, and fills in what is missing.
 *Rationale:* a question with no account of what happens and what each answer costs leaves the human
 to rebuild it from the lower part, or to agree without reading; the account is what lets the human
 choose in the one place the request asks for a choice. The agent that writes the description knows
-the record, so it can fill in the account, and it reads the item before the human does. WAY-290 has the form check judge no content, so a missing way or cost shows to nobody
-before the human unless the writer reads the item against the four parts. The price is that an
-item written generally still reaches the human when the writer reads carelessly, and that every
-item in which the human chooses is longer.
+the record, so it can fill in the account, and it reads the item before the human does. WAY-290 has
+the form check judge no content, so a missing way or cost shows to nobody before the human unless
+the writer reads the item against the four parts. The price is that an item written generally still
+reaches the human when the writer reads carelessly, and that every item in which the human chooses
+is longer.
 *Rejected:* the rule as a sentence of the template with a good and a bad example alone — the agent
 can go on writing generally and nobody catches it before the human; a fresh agent reading the top
 part of the description before it is published — one more agent call in every cycle, and a change
