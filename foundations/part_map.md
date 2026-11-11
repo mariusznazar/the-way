@@ -97,7 +97,7 @@ them.
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation
-- **Trust boundary:** none
+- **Trust boundary:** task-cycle/cycle_stages.py
 
 ## foundation-review
 
