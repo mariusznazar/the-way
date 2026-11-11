@@ -366,6 +366,177 @@ class ClaudeCodeTest(unittest.TestCase):
         self.assertEqual(output.read_text(encoding="utf-8").count("Claude Code session"), 1)
 
 
+def tool_answer(clock: str, ident: str, model: str, uncached: int, written: int, read: int,
+                output: int, call: str, name: str) -> dict:
+    """A response whose content is one tool call."""
+    entry = answer(clock, ident, model, uncached, written, read, output, "tool_use")
+    entry["message"]["content"] = [{"type": "tool_use", "id": call, "name": name, "input": {}}]
+    return entry
+
+
+def call_result(clock: str, call: str) -> dict:
+    return {"type": "user", "timestamp": at(clock), "message": {"role": "user", "content": [
+        {"type": "tool_result", "tool_use_id": call, "content": "ok"}]}}
+
+
+class ClaudeWaitTest(unittest.TestCase):
+    """A stage with one Bash call (15 s) and one SendMessage call of the orchestrator (1 s) that
+    must not count as a wait for a tool."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.home = Path(self.folder.name) / "claude"
+        project = self.home / "projects" / "C--repo"
+        write_lines(project / "wait.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            tool_answer("09:00:05", "o1", "opus", 1, 0, 100, 1, "ag1", "Agent"),
+            call_result("09:00:06", "ag1"),
+            tool_answer("09:00:30", "o2", "opus", 1, 0, 100, 1, "sm1", "SendMessage"),
+            call_result("09:00:31", "sm1"),
+            answer("09:00:45", "o3", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+        agents = project / "wait" / "subagents"
+        write_lines(agents / "agent-s1.jsonl", [
+            prompt("09:00:06", "implement"),
+            tool_answer("09:00:10", "x1", "sonnet", 3, 30, 300, 3, "b1", "Bash"),
+            call_result("09:00:25", "b1"),
+            answer("09:00:40", "x2", "sonnet", 4, 40, 400, 4, "end_turn"),
+        ])
+        (agents / "agent-s1.meta.json").write_text(json.dumps(
+            {"agentType": "general-purpose", "description": "Implement"}), "utf-8")
+        write_lines(project / "lost.jsonl", [
+            prompt("09:00:00", "run"),
+            tool_answer("09:00:10", "o1", "opus", 1, 0, 100, 1, "lost1", "Bash"),
+            answer("09:00:20", "o2", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def report(self, session: str) -> str:
+        output = Path(self.folder.name) / "out" / f"{session}.md"
+        code = cycle_stages.main([session, "--claude-home", str(self.home),
+                                  "--codex-home", str(Path(self.folder.name) / "codex"),
+                                  "--output", str(output)])
+        self.assertEqual(code, 0)
+        return output.read_text(encoding="utf-8")
+
+    def test_a_tool_call_counts_as_a_wait_and_a_subagent_message_does_not(self) -> None:
+        text = self.report("wait")
+        self.assertIn("| Implement (general-purpose) | 2026-10-06 09:00:06 | 0:00:15 | sonnet "
+                      "| 777 | 700 | 7 |", text)
+
+    def test_the_summary_splits_working_time_into_waiting_and_the_rest(self) -> None:
+        text = self.report("wait")
+        self.assertIn("- Working time, orchestrator turns and subagent turns joined: 0:00:45", text)
+        self.assertIn("- Waiting for tools: 0:00:15", text)
+        self.assertIn("- Working time without waiting for tools: 0:00:30", text)
+
+    def test_a_call_without_its_result_makes_the_wait_unknown_and_is_warned(self) -> None:
+        text = self.report("lost")
+        self.assertIn("- Waiting for tools: unknown", text)
+        self.assertIn("| unknown (at least 0:00:00) | opus |", text)
+        self.assertIn("- Claude Code session `lost`, the orchestrator: 1 tool call(s) with no "
+                      "readable result: their waits are unknown", text)
+
+
+def codex_call(clock: str, name: str, ident: str) -> dict:
+    return {"timestamp": at(clock), "type": "response_item", "payload": {
+        "type": "function_call", "name": name, "call_id": ident, "arguments": "{}"}}
+
+
+def codex_call_output(clock: str, ident: str) -> dict:
+    return {"timestamp": at(clock), "type": "response_item", "payload": {
+        "type": "function_call_output", "call_id": ident, "output": "ok"}}
+
+
+class CodexWaitTest(unittest.TestCase):
+    """A stage with one shell call (15 s); spawn_agent, send_message and wait_agent are subagent
+    calls and no wait for a tool."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.home = Path(self.folder.name) / "codex"
+        rollout(self.home, "orchw", [
+            meta("orchw", "10:00:00"),
+            started("10:00:00", "o1"),
+            context("10:00:00", "o1", "model-o"),
+            codex_call("10:00:05", "spawn_agent", "c-spawn"),
+            codex_call_output("10:00:06", "c-spawn"),
+            codex_call("10:00:20", "send_message", "c-msg"),
+            codex_call_output("10:00:21", "c-msg"),
+            codex_call("10:00:41", "wait_agent", "c-wait"),
+            codex_call_output("10:00:50", "c-wait"),
+            tokens("10:00:30", "orchw", "o1", 100, 0, 10),
+            complete("10:01:00", "o1"),
+        ])
+        rollout(self.home, "work", [
+            meta("work", "10:00:06", "orchw", "/root/work"),
+            started("10:00:06", "w1"),
+            context("10:00:06", "w1", "model-w"),
+            codex_call("10:00:10", "shell", "c-shell"),
+            codex_call_output("10:00:25", "c-shell"),
+            tokens("10:00:30", "work", "w1", 500, 200, 20),
+            complete("10:00:40", "w1"),
+        ])
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def report(self, session: str) -> str:
+        output = Path(self.folder.name) / "out" / f"{session}.md"
+        code = cycle_stages.main([session, "--codex-home", str(self.home),
+                                  "--claude-home", str(Path(self.folder.name) / "claude"),
+                                  "--output", str(output)])
+        self.assertEqual(code, 0)
+        return output.read_text(encoding="utf-8")
+
+    def test_a_tool_call_counts_as_a_wait_and_subagent_calls_do_not(self) -> None:
+        text = self.report("orchw")
+        self.assertIn("| /root/work | 2026-10-06 10:00:06 | 0:00:15 | model-w | 500 | 200 | 20 |",
+                      text)
+
+    def test_the_summary_splits_working_time_into_waiting_and_the_rest(self) -> None:
+        text = self.report("orchw")
+        self.assertIn("- Working time, orchestrator turns and subagent turns joined: 0:01:00", text)
+        self.assertIn("- Waiting for tools: 0:00:15", text)
+        self.assertIn("- Working time without waiting for tools: 0:00:45", text)
+
+    def test_an_exec_call_that_calls_a_subagent_tool_is_left_out_with_a_warning(self) -> None:
+        rollout(self.home, "orchx", [
+            meta("orchx", "10:05:00"),
+            started("10:05:00", "x1"),
+            context("10:05:00", "x1", "model-x"),
+            {"timestamp": at("10:05:01"), "type": "response_item", "payload": {
+                "type": "custom_tool_call", "name": "exec", "call_id": "c-exec",
+                "input": "await tools.wait_agent({timeout_ms: 1000})"}},
+            {"timestamp": at("10:05:21"), "type": "response_item", "payload": {
+                "type": "custom_tool_call_output", "call_id": "c-exec", "output": "ok"}},
+            tokens("10:05:30", "orchx", "x1", 10, 0, 1),
+            complete("10:06:00", "x1"),
+        ])
+        text = self.report("orchx")
+        self.assertIn("- Waiting for tools: 0:00:00", text)
+        self.assertIn("- Codex session `orchx`, the orchestrator: 1 exec call(s) that call a "
+                      "subagent tool: their time is left out of the waits", text)
+
+    def test_a_call_type_the_reader_does_not_know_makes_the_wait_unknown_and_is_warned(
+            self) -> None:
+        rollout(self.home, "odd", [
+            meta("odd", "10:02:00", "orchw", "/root/odd"),
+            started("10:02:00", "d1"),
+            context("10:02:00", "d1", "model-d"),
+            {"timestamp": at("10:02:05"), "type": "response_item", "payload": {
+                "type": "web_search_call", "status": "completed"}},
+            tokens("10:02:30", "odd", "d1", 10, 0, 1),
+            complete("10:03:00", "d1"),
+        ])
+        text = self.report("orchw")
+        self.assertIn("- Waiting for tools: unknown", text)
+        self.assertIn("- Codex session `orchw`, /root/odd: 1 call(s) of a type the reader does not "
+                      "recognise (web_search_call): their waits are unknown", text)
+
+
 class CommandTest(unittest.TestCase):
     def test_an_unknown_session_fails_with_a_message(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
