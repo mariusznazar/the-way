@@ -10590,9 +10590,9 @@ after the colon, is not listed; a link stuck to a word, which Obsidian renders a
 listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
 by rewriting the string. A character class of the shell in double brackets is code too, though a
 command quoted in a Markdown file holds it: a run of the check on 2026-11-11 over the commands in
-the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. Each
-of the twelve names is kept to, not matched by a pattern, so a text with another name between the
-colons stays listed, since it may be a note. The price taken: a note whose title is one of these
+the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. The
+twelve names are listed one by one, not matched by a general shape, so a text with another name
+between the colons stays listed, since it may be a note. The price taken: a note whose title is one of these
 names between colons is not listed, and a name a shell adds later needs the list changed.
 *Rejected:* the product lists the Markdown file holding the quoted specification among the skipped
 files — every real path later written in that file of its foundation passes; no change to the rule
