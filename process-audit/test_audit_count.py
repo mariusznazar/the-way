@@ -3,7 +3,6 @@ locations files, never on the user's own."""
 
 import json
 import os
-import re
 import subprocess
 import sys
 import tempfile
@@ -29,6 +28,25 @@ def record(pin_line=f"- Process pin: `{PIN}`", remarks="- Process remarks on the
             f"- Target branch and base: `main`, `{BASE}`\n- Task branch: task/a\n"
             f"- Status: request open\n\n## Events\n\n| Time | Stage |\n|---|---|\n{extra}\n"
             f"## Request handoff\n\n- Request URL and status: draft\n{remarks}\n")
+
+
+def split_row(line: str) -> list[str]:
+    """The cells of a table row as a GFM reader splits it: a backslash escapes the character
+    after it, and every other bar ends a cell."""
+    cells, current, escaped = [], [], False
+    for char in line.strip():
+        if escaped:
+            current.append(char)
+            escaped = False
+        elif char == "\\":
+            current.append(char)
+            escaped = True
+        elif char == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    return cells[1:]
 
 
 class Repository:
@@ -79,6 +97,14 @@ class Repository:
             arguments += ["-p", parent]
         return self.git(*arguments)
 
+    def commit_dated(self, files: dict, parent: str, stamp: str) -> str:
+        """A commit whose author and committer lines carry `stamp` as it is, written as a raw
+        object, so that a date git's own commands would refuse can stand in the history."""
+        person = f"Tester <tester@example.com> {stamp} +0000"
+        text = f"tree {self.tree(files)}\nparent {parent}\nauthor {person}\ncommitter {person}\n\nRaw\n"
+        return self.git("hash-object", "-t", "commit", "-w", "--literally", "--stdin",
+                        data=text.encode("utf-8"))
+
     def branch(self, name: str, commit: str) -> None:
         self.git("update-ref", f"refs/heads/{name}", commit)
 
@@ -126,13 +152,16 @@ class AuditCountCase(unittest.TestCase):
             data.setdefault(key, {})["repository"] = str(repository.root)
         return data
 
-    def run_count(self, *arguments, locations=True):
+    def run_count(self, *arguments, locations=True, timeout=120):
         command = [sys.executable, "-B", str(SCRIPT)]
         if locations:
             command += ["--locations", str(self.locations)]
-        return subprocess.run(command + list(arguments), capture_output=True,
-                              stdin=subprocess.DEVNULL, timeout=120,
-                              env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+        try:
+            return subprocess.run(command + list(arguments), capture_output=True,
+                                  stdin=subprocess.DEVNULL, timeout=timeout,
+                                  env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+        except subprocess.TimeoutExpired:
+            self.fail(f"the command did not finish within {timeout} s")
 
     def latest(self) -> str:
         path = self.results / "count-latest.md"
@@ -144,8 +173,7 @@ class AuditCountCase(unittest.TestCase):
         text = self.latest()
         section = text.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
         lines = [line for line in section.splitlines() if line.startswith("|")]
-        return [[cell.strip() for cell in re.split(r"(?<!\\)\|", line)[1:-1]]
-                for line in lines[2:]]
+        return [split_row(line) for line in lines[2:]]
 
     def cycles(self) -> list[dict]:
         text = self.latest()
@@ -413,6 +441,59 @@ class CraftedInput(AuditCountCase):
         self.assertEqual(0, self.run_count().returncode)
         self.assertEqual("unknown", self.cycles()[0]["Waiting for tools"])
         self.assertIn("larger than", self.rows("Unknown values")[0][3])
+
+    def test_a_header_line_of_blanks_does_not_stall_the_count(self):
+        # A header line `-`, a long run of blanks and no colon: a pattern that can split the run
+        # between the marker's blanks and the label tries every split before it fails.
+        product = self.repository()
+        product.cycle("blank-task", {"cycle.md": record(
+            pin_line="- " + " " * 150_000 + "x\n" + f"- Process pin: `{PIN}`")})
+        self.write_locations(self.places(product=product))
+        self.assertEqual(0, self.run_count(timeout=60).returncode)
+        self.assertEqual(PIN, self.cycles()[0]["Process pin"])
+
+    def test_a_long_continuation_of_a_header_line_does_not_stall_the_count(self):
+        product = self.repository()
+        product.cycle("long-task", {"cycle.md": record(
+            pin_line="- Process pin: none" + "\n x" * 800_000)})
+        self.write_locations(self.places(product=product))
+        self.assertEqual(0, self.run_count(timeout=60).returncode)
+        self.assertEqual("unknown", self.cycles()[0]["Process pin"])
+
+    def test_a_backslash_before_a_bar_stays_inside_its_cell(self):
+        product = self.repository()
+        product.cycle("x\\|none\\|7777777\\|99\\|0:00:01\\|0:00:02", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        self.assertEqual(0, self.run_count().returncode)
+        section = self.latest().split("\n## Cycles\n", 1)[1].split("\n## ", 1)[0]
+        [row] = [line for line in section.splitlines() if line.startswith("| product ")]
+        # Nine cells whether a reader honours backslash escapes or splits at every bar.
+        self.assertEqual(9, len(split_row(row)), row)
+        self.assertEqual(10, row.count("|"), row)
+        cycle = self.cycles()[0]
+        self.assertEqual(PIN, cycle["Process pin"])
+        self.assertEqual("0", cycle["Remarks"])
+
+    def test_a_commit_dated_beyond_the_readable_years_leaves_its_date_unknown(self):
+        product = self.repository()
+        start = product.commit({"README.md": "a product\n"}, "Start")
+        added = product.commit_dated({"README.md": "a product\n",
+                                      "docs/task-cycles/far-task/cycle.md": record()},
+                                     start, "99999999999999")
+        removed = product.commit({"README.md": "a product\n"}, "Remove the record", added)
+        product.branch("main", removed)
+        other = self.repository("other")
+        other.cycle("plain-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product, other=other))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        cycles = {cycle["Repository"]: cycle for cycle in self.cycles()}
+        self.assertEqual(added, cycles["product"]["Record"])
+        self.assertEqual("unknown", cycles["product"]["Committed"])
+        self.assertEqual(PIN, cycles["product"]["Process pin"])
+        self.assertIn("other", cycles)
+        self.assertIn(["product", added, "Committed"],
+                      [row[:3] for row in self.rows("Unknown values")])
 
 
 class Locations(AuditCountCase):

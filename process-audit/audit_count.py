@@ -45,8 +45,10 @@ A value a record or a `stages.md` does not give — an earlier form, a missing, 
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. The records, the `stages.md` files and the locations file are untrusted input:
 their text reaches the result only as a commit, a number or a time it was read as, and a folder or
-a key on one line; no path written in them is followed, and nothing of them is run. Git runs only
-to read: `rev-parse`, `log`, `diff-tree`, `ls-tree` and `cat-file`.
+a key on one line with each control character and each bar written as `\\x..`, so that no cell of
+a table holds a bar; no path written in them is followed, and nothing of them is run. A commit
+dated outside the years the platform reads gives *Committed* `unknown`. Git runs only to read:
+`rev-parse`, `log`, `diff-tree`, `ls-tree` and `cat-file`.
 
 The result is Markdown in UTF-8 with LF line ends, the same bytes for the same input, written to
 `count-<YYYY-MM-DD>.md`, the date of the run, and `count-latest.md` in the directory of
@@ -103,7 +105,6 @@ GIT_TIMEOUT = 120
 COMMIT = r"(?<![0-9A-Za-z])(?=[0-9a-fA-F]*[0-9])[0-9a-fA-F]{7,40}(?![0-9A-Za-z])"
 COMMIT_IN_TEXT = re.compile(COMMIT)
 MOVED_PIN = re.compile(r"moved to `?(" + COMMIT + r")`?", re.I)
-HEADER_FIELD = re.compile(r"-[ \t]+(?P<label>[^:\n]+?):[ \t]*(?P<value>.*)")
 REMARKS_OPENER = re.compile(r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on the-way(?![\w-])"
                             r"[ \t]*:?[ \t]*(?P<rest>.*)")
 DURATION = re.compile(r"(\d{1,7}):([0-5]\d):([0-5]\d)")
@@ -286,7 +287,7 @@ def header_fields(lines: list[str], fenced: list[bool], label: str) -> list[str]
     """The values of the record's header lines `- <label>: ...`, or `- <label> and ...: ...` as
     earlier records join two fields, before its first `## ` heading, each with the indented lines
     that continue it joined to it."""
-    values: list[str] = []
+    values: list[list[str]] = []
     collecting = False
     for line, inside_fence in zip(lines, fenced):
         if inside_fence:
@@ -294,17 +295,29 @@ def header_fields(lines: list[str], fenced: list[bool], label: str) -> list[str]
             continue
         if line.startswith("## "):
             break
-        match = HEADER_FIELD.fullmatch(line)
-        if match:
-            found = match.group("label")
-            collecting = found == label or found.startswith(label + " and ")
+        found = header_field(line)
+        if found:
+            collecting = found[0] == label or found[0].startswith(label + " and ")
             if collecting:
-                values.append(match.group("value").strip())
+                values.append([found[1]])
         elif collecting and line.strip() and line[:1] in " \t":
-            values[-1] = (values[-1] + " " + line.strip()).strip()
+            values[-1].append(line.strip())
         else:
             collecting = False
-    return values
+    return [" ".join(part for part in parts if part) for parts in values]
+
+
+def header_field(line: str) -> tuple[str, str] | None:
+    """The label and the value of a header line `- <label>: <value>`, or None. It is cut at the
+    first colon in one pass, never by a pattern that could try every way of splitting a run of
+    blanks, so that no crafted line costs more than its length."""
+    if line[:1] != "-" or line[1:2] not in (" ", "\t"):
+        return None
+    label, colon, value = line[1:].partition(":")
+    label = label.strip(" \t")
+    if not colon or not label:
+        return None
+    return label, value.strip(" \t")
 
 
 def process_pin(text_lines, fenced, own: bool) -> tuple[str | None, str | None]:
@@ -447,6 +460,16 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool) -> None:
         cycle.unknown.append(("Waiting for tools", reason))
 
 
+def committed_date(stamp: str) -> str | None:
+    """The UTC date of a commit's timestamp as `git log` gives it, or None where the commit holds
+    a value outside the years the platform can read: a commit's date is written by whoever made
+    it, and one such commit must not end the count of every repository."""
+    try:
+        return datetime.fromtimestamp(int(stamp), timezone.utc).date().isoformat()
+    except (OSError, OverflowError, ValueError):
+        return None
+
+
 def read_repository(key: str, path: Path) -> Read:
     """The cycles whose records the history of one repository holds."""
     result = Read(key)
@@ -457,7 +480,7 @@ def read_repository(key: str, path: Path) -> Read:
         listed = git.run("log", "--full-history", "--branches", "--remotes", "--diff-filter=A",
                          "--no-renames", "--topo-order", "--reverse", "--format=%H %ct", "--",
                          RECORD_PATHSPEC).decode("ascii")
-        copies: dict[bytes, list[tuple[str, int]]] = {}
+        copies: dict[bytes, list[tuple[str, str]]] = {}
         for line in listed.splitlines():
             commit, _, stamp = line.partition(" ")
             added = git.run("diff-tree", "--root", "--no-commit-id", "-r", "-z", "--no-renames",
@@ -465,15 +488,18 @@ def read_repository(key: str, path: Path) -> Read:
             for name in added.split(b"\0"):
                 parts = name.split(b"/")
                 if len(parts) == 4 and parts[3] == b"cycle.md" and parts[2]:
-                    copies.setdefault(parts[2], []).append((commit, int(stamp)))
+                    copies.setdefault(parts[2], []).append((commit, stamp))
     except (GitError, ValueError, UnicodeError) as error:
         result.error = display(error)
         return result
     for folder, commits in copies.items():
         first, stamp = commits[0]
+        committed = committed_date(stamp)
         cycle = Cycle(key, display(folder.decode("utf-8", errors="replace")), first,
-                      datetime.fromtimestamp(stamp, timezone.utc).date().isoformat(),
-                      [commit for commit, _ in commits[1:]])
+                      committed or UNKNOWN, [commit for commit, _ in commits[1:]])
+        if committed is None:
+            cycle.unknown.append(("Committed", "the commit's date lies outside the years the "
+                                               "command can read"))
         fill(cycle, git, commits[-1][0], folder, key == THE_WAY)
         result.cycles.append(cycle)
     result.cycles.sort(key=lambda cycle: (cycle.committed, cycle.folder, cycle.record))
@@ -484,8 +510,11 @@ def read_repository(key: str, path: Path) -> Read:
 
 
 def cell(text: str) -> str:
-    """Text on one line that cannot end or split a cell of a table."""
-    return display(" ".join(str(text).split())).replace("|", "\\|")
+    """Text on one line that cannot end or split a cell of a table: a bar is written `\\x7c`, as
+    `display` writes a control character, so that no cell holds a bar at all. An escaped bar
+    `\\|` would not do: Markdown readers differ on whether a backslash before it escapes the bar
+    or is itself escaped, and a reader of the second kind ends the cell there."""
+    return display(" ".join(str(text).split())).replace("|", "\\x7c")
 
 
 def duration(seconds: int | None) -> str:
