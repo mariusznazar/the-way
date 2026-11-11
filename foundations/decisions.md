@@ -10970,9 +10970,9 @@ change that adds a part to the part map adds it to this *Scope*.
     error; a script that is no check of form lists an absent field as an item with exit code 1; a
     script whose purpose is to check the form of a file stops with exit code 2 at an absent section
     whose presence it checks; a change that reworks the reading of a file checks the field it added
-    and leaves the other fields of that file unchecked; a change adds a reading of a file with no
-    test that gives the file without a field; a change that adds a part to the part map leaves this
-    *Scope* as it was.
+    and leaves the other fields of that file unchecked; a new script's reading of a file, or a
+    changed script's reworked reading of a file, has no test that gives the file without a field; a
+    change that adds a part to the part map leaves this *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
@@ -11011,9 +11011,8 @@ reworks the reading of a file; exit code 1 always, a missing field as an item of
 orchestrator carries out a listing with exit code 1 as findings, and for the script that lists the
 process remarks every item goes into the remarks word for word (WAY-294), so a missing section in a
 report would become a process remark and the report would stay uncorrected, the same quiet pass the
-rule prevents; a new exit code, such as 3 — the skills that read exit codes know only 0, 1 and 2, so
-each would have to be extended, and until then each orchestrator would read an unknown code its own
-way, in exchange for a signal that exit code 2 already gives.
+rule prevents; a new exit code, such as 3 — each skill that reads exit codes would have to be
+extended.
 
 ## Withdrawn identifiers
 
