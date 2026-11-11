@@ -170,6 +170,35 @@ class NoteLinkTest(unittest.TestCase):
         self.assertEqual(shown(text), ["[[Note]]", "C:/Work/proj", "[[Other]]"])
 
 
+class PosixClassTest(unittest.TestCase):
+    # A character class of the shell in double brackets, `[[:space:]]`, is no note link; the
+    # exception covers the twelve names of the classes and no other text between the colons.
+    CLASSES = ("alnum", "alpha", "blank", "cntrl", "digit", "graph", "lower", "print", "punct",
+               "space", "upper", "xdigit")
+
+    def test_each_of_the_twelve_classes_in_double_brackets_is_no_link(self) -> None:
+        for name in self.CLASSES:
+            text = 'grep -E "[[:' + name + ':]]" file'
+            self.assertEqual(hits(text), [], name)
+
+    def test_a_class_in_a_line_of_a_shell_command_is_no_link(self) -> None:
+        self.assertEqual(hits('grep -v -E "^[[:space:]]*#" "$file"'), [])
+        self.assertEqual(hits("tr -cd '[[:alnum:]]' < x"), [])
+
+    def test_a_caret_before_a_class_in_one_bracket_is_no_link(self) -> None:
+        self.assertEqual(hits("grep '[^[:space:]]' x"), [])
+
+    def test_another_name_between_the_colons_is_still_a_link(self) -> None:
+        for text in ("[[:other:]]", "[[:alphanumeric:]]", "[[:Space:]]", "see [[:punct:x]]"):
+            self.assertEqual(hits(text), [(1, "note link", text[text.index("[["):])], text)
+
+    def test_a_real_link_and_a_path_on_a_line_with_a_class_are_still_listed(self) -> None:
+        text = "grep '[[:alpha:]]' C:/Work/proj/a.md, see [[Notatka]] and [[(P) Loop]]"
+        self.assertEqual(hits(text), [(1, "absolute path", "C:/Work/proj/a.md"),
+                                      (1, "note link", "[[Notatka]]"),
+                                      (1, "note link", "[[(P) Loop]]")])
+
+
 class PlaceTest(unittest.TestCase):
     def test_the_line_of_each_hit_counts_from_one_in_any_line_ending(self) -> None:
         for end in ("\n", "\r\n", "\r"):

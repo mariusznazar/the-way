@@ -121,7 +121,14 @@ gives (WAY-64).
 
 - *Derives from* names every decision entry this invariant is derived from, and *Rests on* every
   environment fact it rests on, each by its identifier alone; neither link is optional, and a link
-  the author knows is missing reads `TODO` rather than `none` (WAY-17).
+  the author knows is missing reads `TODO` rather than `none`: in *Rests on* as
+  `TODO — <the fact, with its source>` and in *Derives from* as
+  `TODO — <the decision, and where it is expected>`, never the bare word in either, which
+  `elements/common/foundation_check.py` reports as an error (WAY-17, WAY-71). Where the invariant
+  rests on or derives from several things and only some are missing, the known ones stay named, as
+  they are checked as references, and the missing one is the last item, reading as the form of its
+  field: `Rests on: <environment fact> · TODO — <the fact, with its source>`; its description runs
+  to the end of the value, so a comma or a ` · ` inside it joins nothing (WAY-71).
 - *Rests on* names every environment fact holding a condition that decides whether a commit makes
   the sentence true, and no other: read otherwise, such a fact would change whether some commit
   makes the sentence true, or change a value the sentence copies from it. A fact that is only a
