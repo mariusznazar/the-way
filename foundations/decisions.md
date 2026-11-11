@@ -10549,12 +10549,14 @@ resumption the human strikes the same matter again and looks at the list twice.
 ### WAY-323 — What does the script of WAY-309 take for an absolute path and for a note link?
 
 The script of WAY-309 takes no `[[...]]` for a note link when its first bracket stands against a
-letter, a digit, a dot or an underscore on its left, and no letter for the start of a drive when a
-backslash stands before it. It takes no text for an absolute path when all that follows the drive
-letter and its colon is escape sequences of a newline, a tab or a carriage return (`\n`, `\t`,
-`\r`), so a message ending in a letter, a colon and such a sequence is not listed; a path written
-with a real name, a Git Bash path, a link after a space or a mark and a text stuck to such a
-sequence stay listed.
+letter, a digit, a dot or an underscore on its left, when it is a character class of the shell in
+double brackets, `[[:space:]]`, with one of the twelve POSIX names between the colons (`alnum`,
+`alpha`, `blank`, `cntrl`, `digit`, `graph`, `lower`, `print`, `punct`, `space`, `upper`, `xdigit`),
+and no letter for the start of a drive when a backslash stands before it. It takes no text for an
+absolute path when all that follows the drive letter and its colon is escape sequences of a newline,
+a tab or a carriage return (`\n`, `\t`, `\r`), so a message ending in a letter, a colon and such a
+sequence is not listed; a path written with a real name, a Git Bash path, a link after a space or a
+mark and a text stuck to such a sequence stay listed.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -10565,10 +10567,14 @@ sequence stay listed.
     in a string of code, and a note link that follows a space; it lists nothing for a slot of a
     specification written with a dot before its brackets, for an array inside an array in code, for
     the end of a message in a string of code that ends in a letter, a colon and a newline sequence,
-    or for the letters of a regular expression that stand after a backslash;
+    or for the letters of a regular expression that stand after a backslash; it lists nothing for a
+    character class of the shell in double brackets with one of the twelve names, such as
+    `[[:space:]]` in a command, and lists a note link on the same line as one;
   - violates: the script lists the slot of a specification; the script lists the end of a message
     that ends in a newline sequence; the script lists nothing for a path through a directory named
-    `new` written in a string of code; the script lists nothing for a link to a note after a space.
+    `new` written in a string of code; the script lists nothing for a link to a note after a space;
+    the script lists `[[:space:]]`; the script lists nothing for a double-bracketed text between
+    colons whose name is none of the twelve, such as the name `other`.
 - **Origin:** none
 
 *Rationale:* the patterns of WAY-309 were written for the prose a cycle publishes, and code holds
@@ -10582,7 +10588,12 @@ rule is narrow, so that what a real path or link can look like stays listed. The
 directory of the root of a disk with a one-letter name, written `n`, `t` or `r` and standing alone
 after the colon, is not listed; a link stuck to a word, which Obsidian renders as a link, is not
 listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
-by rewriting the string.
+by rewriting the string. A character class of the shell in double brackets is code too, though a
+command quoted in a Markdown file holds it: a run of the check on 2026-11-11 over the commands in
+the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. Each
+of the twelve names is kept to, not matched by a pattern, so a text with another name between the
+colons stays listed, since it may be a note. The price taken: a note whose title is one of these
+names between colons is not listed, and a name a shell adds later needs the list changed.
 *Rejected:* the product lists the Markdown file holding the quoted specification among the skipped
 files — every real path later written in that file of its foundation passes; no change to the rule
 for a link — the check of that product fails while the quoted fact stands in its foundation, and
@@ -10592,7 +10603,12 @@ the home directory of a user in the form some tools print it included; recognisi
 regular expressions for each language — a parser for each language a product adds, out of
 proportion to the few texts it frees; no change to the rule for a drive — the product rewrites each
 such string and every later message of that form hits again, or lists its files and a real path in
-them passes.
+them passes; no exception for every double-bracketed text between colons — a note whose title is
+written between colons, in double brackets, passes, a cost the check cannot see; no exception for
+every `[[` that a parenthesis or another mark follows — it cuts real links whose titles begin with
+a parenthesis, as a vault holds them; the exception only in the check of tracked files — two sets of
+rules to keep and to describe apart, and a cycle copy that quotes such a command still gives the
+false hit, which the cycle removes by rewriting it in words.
 
 ### WAY-324 — How does a product check the files it tracks for private paths and notes?
 

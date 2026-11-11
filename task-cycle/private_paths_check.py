@@ -26,9 +26,12 @@ holds no list of words that are private, and it neither judges nor rewrites anyt
   `\\Users\\<name>` with a backslash; each of them also behind `file://`;
 - a link to a note, `[[Title]]`, with an alias, a heading or an embed (`![[file]]`) in it. A
   `[[` followed by a space, as in the shell's `[[ -f x ]]`, a `[[...]]` that holds no letter or
-  digit, the form for writing about the link, and a `[[` stuck on its left to a letter, a digit, a
-  dot or an underscore (`p.[[Slot]]` of a specification, an index `a[[0]]`) are no link. A link
-  stuck to a word that Obsidian would still render (`word.[[Note]]`) is therefore not listed.
+  digit, the form for writing about the link, a character class of the shell in double brackets,
+  `[[:space:]]`, with one of the names `alnum`, `alpha`, `blank`, `cntrl`, `digit`, `graph`,
+  `lower`, `print`, `punct`, `space`, `upper` and `xdigit` between the colons, and a `[[` stuck on
+  its left to a letter, a digit, a dot or an underscore (`p.[[Slot]]` of a specification, an index
+  `a[[0]]`) are no link. A link stuck to a word that Obsidian would still render (`word.[[Note]]`)
+  is therefore not listed. Another name between the colons, as in `[[:other:]]`, is still a link.
 
 A path or a link inside a code span or a fenced block is listed like any other: a copy of the record
 publishes it too. This command reads a copy or a description, so it lists a link in every file;
@@ -69,10 +72,14 @@ POSIX_DRIVE = r"(?:(?<![\w.~/\\:-])|(?<=file://))(?:/mnt|/cygdrive)?/[A-Za-z]/(?
 HOME_DIRECTORY = r"(?:(?<![\w.~/\\-])|(?<=file://))(?:/home|[\\/]Users)[\\/][\w.-]+"
 # What a path runs through after its start, for showing it: up to a space, a quote or a bracket.
 PATH_TAIL = r"""[^\s"'`<>|*?()\[\]{}]*"""
-# `[[` not stuck to a letter, a digit, a dot or an underscore on its left, followed by a first
-# character that is no space, a letter or digit somewhere inside, and no line end before the
-# closing `]]`.
-NOTE_LINK = r"(?<![\w.])\[\[(?=[^\s\]])(?=[^\]\n]*[^\W_])[^\]\n]+\]\]"
+# A character class of the shell in double brackets, `[[:space:]]`: one of the twelve POSIX names
+# between the colons, and nothing else in the brackets.
+POSIX_CLASS = (r":(?:alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space|upper|xdigit):"
+               r"\]\]")
+# `[[` not stuck to a letter, a digit, a dot or an underscore on its left, not the start of a
+# POSIX class, followed by a first character that is no space, a letter or digit somewhere inside,
+# and no line end before the closing `]]`.
+NOTE_LINK = (r"(?<![\w.])\[\[(?!" + POSIX_CLASS + r")(?=[^\s\]])(?=[^\]\n]*[^\W_])[^\]\n]+\]\]")
 # A drive letter, a colon and nothing but the escape sequences of a newline, a tab or a carriage
 # return: the end of a message in a string of code, not a directory.
 ESCAPE_SEQUENCES_ONLY = re.compile(r"[A-Za-z]:(?:\\[ntr])+")
