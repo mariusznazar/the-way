@@ -9,7 +9,8 @@ Copy it to a place of your own, adapt it to your needs, and let your own tool fi
   `the-way` in your locations file, `~/.the-way/locations.json`, names (WAY-320). It never lies in a
   repository: it carries the names of your products and what their cycles reported.
 - Your own tool fills it: a review of the reports of your cycles, made by an agent or by hand. The
-  audit reads the register and gives no problem a class or a weight itself (WAY-329).
+  audit reads the register and gives no problem a class or a weight itself (WAY-329); the one
+  change a session of the audit makes in it is a class added to *Classes*, on your yes.
 - You adapt the template to your needs: the meaning of a class, the list of classes, the words of
   this text. What the counting command of the audit reads keeps the form the next section gives.
 - A problem is a lapse that the process let through in one cycle. A problem that several stages of
@@ -50,8 +51,10 @@ stand, with the columns in their order.
 - *Withdrawn*: `none`, or the date from which no problem is given the class. A withdrawn class keeps
   its row, so that the problems given it earlier stay readable.
 
-The list widens: where a problem fits no class, the list gains one, with the date it is added, and
-the problem is never given the nearest class instead (WAY-332). A change of what a class means is
+The list widens: where a problem fits no class, a session of the audit puts a new class before you —
+its name, its meaning and the day it is added — and on your yes adds its row to this table, here in
+your register; the problem is never given the nearest class instead (WAY-332). A row of *Problems*
+whose class the list lacks is refused by the count until then. A change of what a class means is
 written as that class withdrawn and a new class, under a new name, added on the same date. Each date
 in *Added* or *Withdrawn* starts a new series of measures, and the audit compares measures only
 within one series (WAY-338).

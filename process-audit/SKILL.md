@@ -8,9 +8,9 @@ description: Use when the weekly audit of the process has to be led with the hum
 Leads the weekly audit of the process with a human, in one session of its own, apart from any
 weekly review (WAY-340). It reads the latest result of the counting command, `audit_count.py` beside
 this file, puts before the human the matters to weigh, and writes down what the human decided to
-weigh and what the human set aside. It changes nothing in any repository and nothing in the register
-of problems; a matter the human takes into work becomes a task through the human's own backlog, not
-through this session.
+weigh and what the human set aside. It changes nothing in any repository; in the register of problems
+it changes nothing but the list of classes, which it widens on the human's yes (step 3). A matter the
+human takes into work becomes a task through the human's own backlog, not through this session.
 
 This skill lives in `process-audit/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the session's
@@ -40,9 +40,13 @@ These hold at every step.
   a recommended rank from how often it returned or how long it has waited, and list issues in the
   order the count gives, which is the register's. The human weighs what a return costs and what its
   fix costs.
-- **Measures are compared inside a series only** (WAY-338). A series is a run of versions of the
-  process between which the price list, the register's list of classes and the reviewed files of
-  the-way did not change. Set no number of one series beside a number of another, and no week's count
+- **Measures are compared inside a series only** (WAY-338). WAY-338 starts a new series at a new
+  price list, or at a change of the form of a stage report, of the list of classes or of the
+  instructions of the reviewer. The count splits more often than that: at a new price list, at a
+  date of the register's list of classes, and at any change of the files of the-way under
+  `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec` or of
+  `task-cycle/cycle_stages.py`, whatever the change, so that it compares less and never across a
+  change WAY-338 names. Set no number of one series beside a number of another, and no week's count
   beside the week before; a version of the process is judged by the cycles that ran on it.
 - **No frozen earlier tasks are replayed on an old and a new version** (WAY-339). Where the human
   asks for such a comparison, say that the audit holds no such set and judges a version by its own
@@ -119,8 +123,11 @@ two outcomes: the human weighs it further, or sets it aside.
 
 1. **What the count could not read.** The *Repositories* table: any repository read `no`, a shallow
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
-   kinds of `unknown` in *Unknown values* and how many cycles each touches, and any *Refused rows*,
-   which the user's own tool corrects in the register. An archive of earlier cycles gives
+   kinds of `unknown` in *Unknown values* and how many cycles each touches, and any *Refused rows*.
+   A row refused for its class — its row in *Unknown values* names row `<n>` of *Problems* and gives
+   the reason `the class is not in the list of classes` — is the matter of a class the list lacks,
+   below; the user's own tool corrects any other refused row in the register. An archive of earlier
+   cycles gives
    `unknown` often: a record with no item *Process remarks on the-way* gives no remarks; a
    `stages.md` without the working-time lines or the section of tokens by model gives no times and no
    cost; the share of the cost in fix rounds is `unknown` where the record's *Review rounds* is not
@@ -130,7 +137,7 @@ two outcomes: the human weighs it further, or sets it aside.
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
    a pin that is unknown or a cycle that is not read.
 3. **What still waits, and for how long.** Each issue of *Open issues*: the cycles in which its
-   problem came back, its problems and its *Days waiting*. Add the issues of *Dropped issues* once,
+   problems stand, its problems and its *Days waiting*. Add the issues of *Dropped issues* once,
    as the count gives them, with no waiting.
 4. **What each version of the process shows.** For each series of *Process versions*, one at a time,
    with the line that says why it begins where it does: the median cost at constant prices of each
@@ -139,8 +146,21 @@ two outcomes: the human weighs it further, or sets it aside.
    wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
    the cycles in *No version*, with the reasons *Unknown values* gives.
 
-Where the register itself seems wrong to the human, such as a problem under another class or an
-issue whose fate has changed, the correction is the user's own tool's to make: note it in the result.
+**A class the list lacks.** Where a row refused for its class, or the human's own reading of a
+problem, shows a problem that no class of the register's *Classes* fits, the list widens; the
+problem is never given the nearest class instead (WAY-332). Read that row of the register, and put
+before the human a new class: its name, lower-case letters, digits and hyphens, the refused row's
+class where it is one; what it means; and the day of the session as the date it is added. On the
+human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register
+that the entry `problem_register` names, which lies in the user's place and never in a repository,
+and change nothing else of it. Adding a class gives no problem a class (WAY-329): a problem's class
+in *Problems* stays the user's tool's to write. The date starts a new series of measures, and the
+next count reads the class; offer to run the count again as step 2 gives. Where the human says no,
+or names a class the list already holds, the problem's row is a correction for the user's tool.
+
+Where the register itself seems wrong to the human otherwise, such as a problem under another class
+or an issue whose fate has changed, the correction is the user's own tool's to make: note it in the
+result.
 
 ## 4. Write the result
 
@@ -153,6 +173,7 @@ holds. Show the human its text first, and write it on the human's yes. It holds:
   commit — with the rows quoted as they were shown and the human's words about it;
 - *Set aside*: each matter the human set aside, with the human's reason as said;
 - *Not reached*: the matters not yet put before the human, where the session ended early;
+- *Classes added*: each class the session added to the register, with its name, meaning and date;
 - the corrections of the register the human named.
 
 Where the human ends the session early, write the note with what was decided and the rest under
