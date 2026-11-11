@@ -80,7 +80,8 @@ The part answers for the form and writing of a project definition, its readiness
 breakdown of an approved definition into a project plan and the check of that plan, and the
 refinement of a task before its implementation cycle, whether the task belongs to a project,
 uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
-refinement and evidence-backed upkeep of task states.
+refinement and evidence-backed upkeep of task states, and for how the line of a task in the product's
+backlog is made, given its dependencies and moved to ready.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·

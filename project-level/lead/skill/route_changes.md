@@ -8,7 +8,9 @@ Read from step 5 of `SKILL.md`. The edit of the definition and its gate stand in
   `plan-project` agent in delegated mode (WAY-156). Stop your shared-plan writes until it returns;
   it follows all existing plan checks and logs each change/reason. Human questions and required
   critique requests return through the file, for you to dispatch/present and record. Read its
-  result and rerun the whole-plan check before resuming state updates or affected refinement.
+  result and rerun the whole-plan check before resuming state updates or affected refinement. Where
+  it altered a `Depends on` cell, bring the dependencies of the lines of the changed rows in step
+  with the plan, as `project-level/task_line.md` gives (WAY-154).
 - A scope change or changing which task writes a projected entry is the human's decision
   (WAY-145). Present the complete proposed change, sources, consequences, ways/costs and
   recommendation; record the answer before the owning agent applies it. Moving a question
