@@ -10936,6 +10936,85 @@ made — a refiner cannot know it before the other task's line exists; one hyphe
 other than a letter, a digit or a hyphen, instead of one for each run — a double hyphen where a file
 name holds a space beside a bracket.
 
+### WAY-330 — What does a script of the-way do when a file it reads lacks a field it needs?
+
+A script of the-way that reads a file an agent or a human writes checks that the file holds each
+field the script needs — a field being any named thing the script looks for data by in the file: a
+section heading, a row label, a table column or a JSON key — and where a field is missing or stands
+under another name the script ends with an error that names it, never guessing and never reading the
+absence as an empty value. The rule binds a script that a change adds and, in a script that a change
+changes, the whole reading of each file whose way of reading the change reworks — every field of that
+file, no other file and no other part of the script — and a missing field ends the script with exit
+code 2 and a message that names the file and the field, except that a script whose purpose is to
+check the form of a file reports a missing field whose presence it checks as a finding of its list,
+with exit code 1. Each reading of a file that the rule covers has one test that gives the file
+without one of the fields it needs and asserts the failure that names that field, the review of the
+change answering for the other fields; the *Scope* names every part of the-way's part map, and a
+change that adds a part to the part map adds it to this *Scope*.
+
+- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
+  elements-common, project-level, task-cycle, foundation-review, gate, repository,
+  agent-instructions, instruction-files, installation, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-38
+- **Verification:** an agent compares a change with the decision:
+  - complies: a new script reads a JSON file in which the key `due` of the issues has become
+    `due_date`, and ends with exit code 2 and a message naming the file and `issues.due`, and its
+    test gives the file without that key and asserts that the message names it; a change that
+    reworks how a script reads the section headings of a report brings every field of that report
+    under the check, adds one test that gives the report without one heading, and leaves the
+    script's reading of other files as it was; a script whose purpose is to check the form of a file
+    lists an absent section it checks as a problem with exit code 1; a change that adds a part to
+    the part map adds its identifier to the *Scope* of this decision in the same change;
+  - violates: a script reads the absent key `due` as no due date and gives its result with no
+    error; a script that is no check of form lists an absent field as an item with exit code 1; a
+    script whose purpose is to check the form of a file stops with exit code 2 at an absent section
+    whose presence it checks; a change that reworks the reading of a file checks the field it added
+    and leaves the other fields of that file unchecked; a change adds a reading of a file with no
+    test that gives the file without a field; a change that adds a part to the part map leaves this
+    *Scope* as it was.
+- **Origin:** none
+
+*Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
+and an absent field read as a value — no items, no date, no finding — lets the check the script
+exists for pass with no error to show it, the same quiet pass that WAY-38 keeps out of the check of a
+product's commands. The-way departs from the guidelines of a product for its own code (WAY-328), so
+no guideline of a product asks that a script check its input, and new code copies the code already
+there; this rule is the requirement that stands in the-way's own log. An error naming the field lets
+the author of the change or the cycle repair the file or the script at once; exit code 2 says the
+file was not read, apart from a listing of findings, which a caller carries out as findings. The rule
+covers the whole reading of a file a change reworks, so that the old reads of that file, which a
+change of format threatens most, are not left unchecked, and one test per reading, not one per field,
+keeps the cost of the check in proportion. The price: a change that reworks the reading of a file
+pays for the check of every field of that file; an existing script that no change touches stays as it
+is, so the rule protects new and changed readings first; and the review alone answers for the fields
+beyond the one each test gives up. Tests of a script's behaviour stand without an invariant, since
+WAY-12 concerns how a decision is checked.
+*Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
+the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
+withdrawn after the-way's own guidelines are written the rule would have to be moved, and until then
+an agent that writes a script would look for rules in WAY-38 and the invariants `script-language`,
+`script-imports` and `script-subprocesses`, not in a decision about a departure; the rule as a
+decision with an invariant whose *Part* is `every`, like `script-imports` — an invariant claims
+something of every tracked script on every commit, so it needs an entry stating whether it holds
+today; without a review of every existing script any such entry is a guess, and marking it violated
+(WAY-51) would keep watch over new and changed scripts only while claiming a violation with no
+evidence; the whole script as what a changed script brings under the rule — a small fix grows into
+a review of every field the script reads, and the agent that reviews it has to read the whole script
+instead of the diff; only the readings of fields that the change adds or reworks — an existing
+script can stay checked by halves for good, and the old reads, which a change of format threatens
+most, stay unprotected; review alone with the test left to the choice of the cycle — an agent that
+reviews easily overlooks one unchecked field among many, and a later change that quietly removes
+the check breaks nothing; review and a test for every field — as many tests as fields, and for a
+file of a dozen fields the test costs more than the check, a work that falls on every change that
+reworks the reading of a file; exit code 1 always, a missing field as an item of the list — the
+orchestrator carries out a listing with exit code 1 as findings, and for the script that lists the
+process remarks every item goes into the remarks word for word (WAY-294), so a missing section in a
+report would become a process remark and the report would stay uncorrected, the same quiet pass the
+rule prevents; a new exit code, such as 3 — the skills that read exit codes know only 0, 1 and 2, so
+each would have to be extended, and until then each orchestrator would read an unknown code its own
+way, in exchange for a signal that exit code 2 already gives.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
