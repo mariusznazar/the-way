@@ -251,10 +251,11 @@ order:
     `TODO — <the fact, with its source>` in an invariant's *Rests on*,
     `TODO — <the decision, and where it is expected>` in an invariant's *Derives from*,
     `TODO — <what is missing, with its source>` in a decision's *Based on* — that stands there; the
-    change writes it, keeps it or does not remove it. One item for each gap, in plain words: the
-    rule the invariant states or the question the decision answers, and what is missing, with
-    "Merge with the gap?". A request therefore carries one such item for as long as an old gap
-    stands.
+    change writes it, keeps it or does not remove it. A `TODO` that closes a value after known
+    entries (`<fact> · TODO — …`) is the same gap: one item, naming what is missing alone, not the
+    known entries. One item for each gap, in plain words: the rule the invariant states or the
+    question the decision answers, and what is missing, with "Merge with the gap?". A request
+    therefore carries one such item for as long as an old gap stands.
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.

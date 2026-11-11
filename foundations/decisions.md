@@ -1681,9 +1681,10 @@ there, `TODO` that something is missing. The main branch holds `TODO` only where
 something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
 `TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
 `TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
-`TODO — <what is missing, with its source>`; a change that leaves one there puts it before the
-human. `elements/common/foundation_check.py` reports a missing field, or a word not given it, as an
-error.
+`TODO — <what is missing, with its source>`; where an entry stands on several things and only some
+are missing, the missing one is the last item of the value and reads as the form of its field,
+after the known items; a change that leaves one there puts it before the human.
+`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error.
 
 - **Scope:** decisions, part-map, invariants, glossary, environment-facts, elements-common,
   task-cycle
@@ -1694,8 +1695,12 @@ error.
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
     `Based on: TODO — <what is missing, with its source>`; an invariant whose decision is not
-    written yet reads `Derives from: TODO — <the decision, and where it is expected>`;
-  - violates: an invariant reads `Derives from: none` though nobody searched the log; a decision
+    written yet reads `Derives from: TODO — <the decision, and where it is expected>`; an
+    invariant that rests on a fact the foundation holds and on one it lacks reads
+    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`;
+  - violates: an invariant that rests on a known fact and on a missing one reads a whole-value
+    `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
+    after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
     `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
     *Origin*.
@@ -1706,7 +1711,10 @@ with no test reads `review` as its method rather than `TODO` (WAY-61). An entry 
 something the foundation does not hold yet — a fact for an invariant, the decision an invariant
 derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
 `none`, and the description keeps the gap from standing as a silent one: it names what is missing,
-and the human sees at the merge that it is left. *Relations* and *Origin* are what an author states
+and the human sees at the merge that it is left. Where only some of the things an entry stands on
+are missing, the known ones stay named items, because every link of the chain is written (WAY-17)
+and a named item stays checked as a reference, while a known one moved into the description would
+no longer be; the missing one closes the value. *Relations* and *Origin* are what an author states
 about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
 foundation lacks.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
@@ -9113,7 +9121,8 @@ lower part.
     that section, and so does a request whose merged tree holds a decision that reads
     `Based on: TODO — the source of the save format` or an invariant that reads
     `Derives from: TODO — the decision on where saves live, expected in the save task`, each with
-    what is missing;
+    what is missing; a value that names a fact the foundation holds and then
+    `TODO — a second fact, from the vendor` is one gap, shown with the second fact alone;
   - violates: the section reads `none` while a choice beyond the task stands only among the
     foundation entries; a skipped step is named only in the last line of the checks; a blocked
     request is written in a shape of its own; the incomplete reading of the review of the whole

@@ -699,6 +699,104 @@ class FoundationCheckTest(unittest.TestCase):
                     self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                                      "*%s* does not take `%s`" % (field, value), "1 error")
 
+    # --- a missing thing as the last item of a value that names known ones ----------------------
+
+    def mixed_rests_on(self, value):
+        return self.run_on(foundations__invariants_dot_md=self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** " + value))
+
+    def mixed_derives_from(self, value):
+        return self.run_on(foundations__invariants_dot_md=self.edit(
+            INVARIANTS, "- **Derives from:** ABC-01@0123abcd", "- **Derives from:** " + value))
+
+    def mixed_based_on(self, value):
+        return self.run_on(foundations__decisions_dot_md=self.edit(
+            DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"))
+
+    def test_rests_on_a_known_fact_then_a_missing_one_described_passes(self):
+        for value in ("clock-tick · TODO — a second fact, from the vendor",
+                      "clock-tick · TODO — a second fact, from the vendor, read once",
+                      "clock-tick · TODO — a second fact · from the vendor",
+                      "clock-tick@0123abcd · TODO — a second fact"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_rests_on(value))
+
+    def test_rests_on_a_known_fact_then_a_bare_todo_names_no_fact(self):
+        for value in ("clock-tick · TODO", "clock-tick · `TODO`", "clock-tick · TODO —"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_rests_on(value),
+                                 "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
+                                 "no fact: write `TODO — <the fact, with its source>`", "1 error")
+
+    def test_rests_on_a_known_fact_before_a_todo_is_still_checked(self):
+        self.assertFails(self.mixed_rests_on("clock-tock · TODO — a second fact"),
+                         "foundations/invariants.md:8: `clock-tock` names no fact", "1 error")
+
+    def test_rests_on_a_todo_first_reads_the_rest_as_its_description(self):
+        self.assertPasses(self.mixed_rests_on("TODO — a second fact · clock-tock, fact-x"))
+
+    def test_rests_on_a_known_fact_after_a_description_is_part_of_it(self):
+        self.assertPasses(self.mixed_rests_on("clock-tick · TODO — a second fact · clock-tock"))
+
+    def test_derives_from_a_known_decision_then_a_missing_one_described_passes(self):
+        for value in ("ABC-01 · TODO — the decision on saves, expected in the save task",
+                      "ABC-01@0123abcd · TODO — the decision on saves · or its successor",
+                      "ABC-01 · TODO — ABC-77, expected next"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_derives_from(value))
+
+    def test_derives_from_a_known_decision_then_a_bare_todo_names_no_decision(self):
+        for value in ("ABC-01 · TODO", "ABC-01 · `TODO`", "ABC-01 · TODO —"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_derives_from(value),
+                                 "foundations/invariants.md:9: *Derives from* reads `TODO` and "
+                                 "names no decision: write `TODO — <the decision, and where it is "
+                                 "expected>`", "1 error")
+
+    def test_derives_from_a_decision_before_a_todo_is_still_checked(self):
+        self.assertFails(self.mixed_derives_from("ABC-77 · TODO — the decision on saves"),
+                         "foundations/invariants.md:9: `ABC-77` names no decision of the log",
+                         "1 error")
+
+    def test_derives_from_a_quoted_source_then_a_missing_decision_passes(self):
+        self.assertPasses(self.mixed_derives_from(
+            "https://example.org/clock § Ticks — \"one tick · a millisecond\"; read 2026-10-01 · "
+            "TODO — the decision on ticks, once the clock task is made"))
+
+    def test_based_on_a_known_fact_then_a_missing_source_described_passes(self):
+        for value in ("clock-tick · TODO — the source of the save format, from the vendor",
+                      "clock-tick · TODO — the source of the save format · from the vendor",
+                      "clock-tick · TODO — the source named by ABC-77, once it is written",
+                      "https://example.org/clock — \"one tick, a millisecond\"; read 2026-10-01 · "
+                      "TODO — the source of the save format, once the vendor answers"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_based_on(value))
+
+    def test_based_on_a_known_fact_then_a_bare_todo_says_nothing_is_missing(self):
+        for value in ("clock-tick · TODO", "clock-tick · `TODO`", "clock-tick · TODO —"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_based_on(value),
+                                 "foundations/decisions.md:21: *Based on* reads `TODO` and says "
+                                 "nothing of what is missing: write `TODO — <what is missing, "
+                                 "with its source>`", "1 error")
+
+    def test_based_on_a_fact_before_a_todo_is_still_checked(self):
+        self.assertFails(self.mixed_based_on("clock-tock · TODO — the source of the save format"),
+                         "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
+
+    def test_based_on_a_todo_inside_a_quoted_source_is_no_todo_item(self):
+        for value in ("https://example.org/clock — \"one · TODO tick\"; read 2026-10-01 · "
+                      "clock-tick",
+                      "https://example.org/clock — \"a TODO\"; read 2026-10-01",
+                      "clock-tick · https://example.org/clock — \"one · TODO\"; read 2026-10-01"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_based_on(value))
+
+    def test_based_on_a_quoted_source_with_a_todo_inside_still_has_its_references_checked(self):
+        self.assertFails(self.mixed_based_on(
+            "https://example.org/clock — \"one · TODO tick\"; read 2026-10-01 · clock-tock"),
+            "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
+
     def test_based_on_no_fact(self):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
         self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),

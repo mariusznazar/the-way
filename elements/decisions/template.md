@@ -51,8 +51,11 @@ particular to a decision (WAY-35).
 - Where the decision's source is silent on what it rests on, *Based on* reads
   `TODO — <what is missing, with its source>`, never a bare `TODO` and never `none`; the main branch
   may hold it, and a change that leaves one there puts it before the human (WAY-71).
-  `elements/common/foundation_check.py` reports a bare `TODO` there as an error. *Relations* and
-  *Origin* never read `TODO`: the script reports it (WAY-71).
+  `elements/common/foundation_check.py` reports a bare `TODO` there as an error. Where the source is
+  silent on only some of what the decision rests on, the known facts and sources stay named and the
+  missing one is the last item, `<fact> · TODO — <what is missing, with its source>`; its
+  description runs to the end of the value, so a comma or a ` · ` inside it joins nothing
+  (WAY-71). *Relations* and *Origin* never read `TODO`: the script reports it (WAY-71).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than

@@ -36,14 +36,16 @@ What it reports, each as `path:line: message`:
   ` · ` — name; and a reference written
   `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
   are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
-  fact written `ID@<fingerprint>` anywhere in the field. An invariant's *Rests on* or *Derives
-  from*, or a decision's *Based on*, whose value begins with the word `TODO` is something missing,
-  read whole as `TODO — <the fact, with its source>`, `TODO — <the decision, and where it is
-  expected>` or `TODO — <what is missing, with its source>` and split into no items or references,
-  since its description names no entry; `TODO` alone, with no description of what is missing, is an
-  error (WAY-71). Only a value that begins with `TODO` is read so: a `TODO` that is an item after
-  other facts, as in `clock-tick · TODO`, is not reported, and the dash after `TODO` is not
-  required; any other value of the three fields is read as before;
+  fact written `ID@<fingerprint>` anywhere in the field. In an invariant's *Rests on*
+  or *Derives from*, or a decision's *Based on*, the first item of the value (items joined by
+  ` · `, a ` · ` inside quotation marks joining nothing) that begins with the word `TODO`, and all
+  that follows it, is one description of something missing, read as `TODO — <the fact, with its
+  source>`, `TODO — <the decision, and where it is expected>` or `TODO — <what is missing, with its
+  source>`, split into no items or references, since it names no entry; the items before it are
+  read as before, so a known entry followed by it stays checked. A `TODO` item with no description
+  of what is missing, whether alone or after known entries, as in `clock-tick · TODO`, is an error
+  (WAY-71). A `TODO` inside quotation marks begins no item, the dash after `TODO` is not required,
+  and a value with no `TODO` item is read as before;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,
@@ -212,6 +214,20 @@ def based_on(found):
         if word not in EMPTY and re.fullmatch(WORDS, word):
             yield word, lines[value.count("\n", 0, start + item.index(word))]
         start += len(item) + 1
+
+
+def todo_item(value):
+    """The index in a field's value where its first item that begins with the word `TODO` starts,
+    or None. The items are joined by ` · `; a ` · ` inside quotation marks joins nothing, and a
+    `TODO` inside them begins no item."""
+    masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
+    start = 0
+    for piece in masked.split("·"):
+        text = value[start:start + len(piece)]
+        if TODO_VALUE.match(text.lstrip()):
+            return start + len(text) - len(text.lstrip())
+        start += len(piece) + 1
+    return None
 
 
 def unquoted(found, name):
@@ -406,17 +422,21 @@ class Foundation:
             if number not in skipped:
                 self.refer_decisions(path, number, line)
 
-    def missing_thing(self, path, found, name):
-        """Whether a field's value begins with the word `TODO`: a missing fact, decision or source,
-        read whole and never as a list or a reference. It takes a description of what is missing,
-        and a `TODO` with none is reported. Any other value is read as its field is read."""
+    def known_part(self, path, found, name):
+        """`found` with the field's value cut before its missing thing: the first item that begins
+        with the word `TODO`, which with all that follows is one description of a missing fact,
+        decision or source, never a list or a reference. A `TODO` with no description is reported.
+        A value with no such item is returned as it is, to be read as its field is read."""
         value, lines = found.get(name, ("", [0]))
-        todo = TODO_VALUE.match(value)
-        if todo and not value[todo.end():].strip(" \t\n`—–-"):
+        start = todo_item(value)
+        if start is None:
+            return found
+        todo = TODO_VALUE.match(value, start)
+        if not value[todo.end():].strip(" \t\n`—–-"):
             what, form = MISSING[name]
-            self.report.error(path, lines[0], "*%s* reads `TODO` and %s: write `TODO — %s`"
-                              % (name, what, form))
-        return bool(todo)
+            self.report.error(path, lines[value.count("\n", 0, start)],
+                              "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form))
+        return {**found, name: (value[:start], lines)}
 
     def check_foundation_references(self):
         for _, _, body in blocks(self.files[DECISIONS], "### "):
@@ -424,20 +444,20 @@ class Foundation:
             for word, line in located(found, "Scope"):
                 self.refer(DECISIONS, line, word, "part")
             self.based_lines.update(found.get("Based on", ("", []))[1])
-            if not self.missing_thing(DECISIONS, found, "Based on"):
-                for word, line in based_on(found):
-                    self.refer(DECISIONS, line, word, "fact")
-                for line, text in unquoted(found, "Based on"):
-                    self.refer_decisions(DECISIONS, line, text)
+            known = self.known_part(DECISIONS, found, "Based on")
+            for word, line in based_on(known):
+                self.refer(DECISIONS, line, word, "fact")
+            for line, text in unquoted(known, "Based on"):
+                self.refer_decisions(DECISIONS, line, text)
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")
         for _, (_, found) in self.entries[INVARIANTS].items():
-            if not self.missing_thing(INVARIANTS, found, "Derives from"):
-                for line, text in unquoted(found, "Derives from"):
-                    self.refer_decisions(INVARIANTS, line, text)
-            if not self.missing_thing(INVARIANTS, found, "Rests on"):
-                for word, line in located(found, "Rests on"):
-                    self.refer(INVARIANTS, line, word, "fact")
+            known = self.known_part(INVARIANTS, found, "Derives from")
+            for line, text in unquoted(known, "Derives from"):
+                self.refer_decisions(INVARIANTS, line, text)
+            known = self.known_part(INVARIANTS, found, "Rests on")
+            for word, line in located(known, "Rests on"):
+                self.refer(INVARIANTS, line, word, "fact")
             for word, line in located(found, "Part"):
                 self.refer(INVARIANTS, line, word, "part", EMPTY + ("every",))
         for _, (_, found) in self.entries[PART_MAP].items():
