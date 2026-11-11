@@ -41,23 +41,34 @@ message or waits for it is no wait for a tool, its time being the subagent's wor
 Claude Code's `Agent`, `Task` and `SendMessage`, and Codex's `spawn_agent`, `wait_agent`,
 `send_message` and `followup_task`, each read from the `name` of its tool call. A Codex `exec` call
 whose script calls one of the Codex subagent tools is left out of the waits, with a warning. A call
-with no result, or of a type the reader does not recognise, makes the waits of its stage and of the
-cycle `unknown`, with a warning, and is never counted as a wait of zero. A call counts in the stage
-running when it starts, as its tokens do; the cycle's waiting time counts each moment once, even
-where calls overlap.
+with no result that a later entry of its transcript follows — the result of any call, a message to
+the agent, another response of its model, or in Codex the end of its turn — or a call of a type the
+reader does not recognise, makes the waits of its stage and of the cycle `unknown`, with a warning,
+and is never counted as a wait of zero. A call with no result that nothing of these follows, so that
+its transcript ends while it runs, is no wait and makes nothing `unknown`: its time lies after the
+agent's last entry, outside every working window. That is the call that runs this script on the
+live session running it, in the orchestrator's transcript or a subagent's, and a call of a session
+stopped while it ran. A call counts in the stage running when it starts, as its tokens do; the
+cycle's waiting time counts each moment once, even where calls overlap.
 
 The files a subagent turn was given: for each turn, the files of the cycle's `reports/` that the
 message starting it names — its prompt, or the message that resumes it — read from the subagent's
 transcript: in Claude Code the user line that starts the turn, in Codex the first message the
-rollout gives the turn, the user's or another agent's addressed to it. A name counts where it
-follows the folder `reports` and a separator, starts with a letter, a digit or `_`, holds only
-letters, digits, `_`, `-` and `.`, holds no `..`, ends in `.md` and is at most 120 characters
-long; it is written as `reports/<name>`, each once, at most 20 per turn, with a warning where a
-turn names more. The text is data: no path in it is followed. A message whose payload is encrypted,
+rollout gives the turn, the user's or another agent's addressed to it, past the AGENTS.md text and
+the environment that Codex gives a turn first as user messages. A name counts where it follows the
+folder `reports` and a separator, starts with a letter, a digit or `_`, holds only letters, digits,
+`_`, `-` and `.`, holds no `..`, ends in `.md` and is at most 120 characters long, the full stops
+that end a sentence after it left out; it is written as `reports/<name>`, each once, at most 20 per
+turn, with a warning where a turn names more. The text is data: no path in it is followed. A message whose payload is encrypted,
 as Codex writes another agent's message, or a turn with no message found, names files
 `unknown`. The audit of the process ties a turn to the fix round whose findings file it names
 (WAY-336). The column *Files named* is a form of this report of its own: the reports that hold it
 start a series of the audit's measures apart from the earlier ones (WAY-338).
+
+A stage with no token usage has the model `—` and zero counts in the section of the stages where
+its agent's transcript holds token usage elsewhere; where that transcript holds none at all, so that
+its usage was not read, the model reads `unknown` — for the orchestrator's rows, where any of the
+orchestrator's transcripts holds none.
 
 The report is Markdown, written to PATH or printed. It lists, and prints on stderr as `Warning:`
 lines, what suggests that a transcript was not read as its tool writes it — a session or a
@@ -167,6 +178,8 @@ class Row:
     calls: list[Call] = field(default_factory=list)
     by_model: dict[str, Usage] = field(default_factory=dict)
     named: list[str] | None = field(default_factory=list)
+    # False where the transcript the row's usage comes from holds no token usage at all.
+    usage_read: bool = True
 
 
 # A file of the cycle's `reports/` named in the message that starts a subagent turn: the folder
@@ -179,12 +192,14 @@ MAX_FILES_NAMED = 20
 
 def files_named(text: str) -> tuple[list[str], bool]:
     """The files of `reports/` that `text` names, as `reports/<name>`, each once in the order
-    first named, and whether more than MAX_FILES_NAMED were named. Text from a transcript is data:
-    a name that starts with neither a letter, a digit nor `_`, holds `..`, does not end in `.md`
-    or is longer than MAX_FILE_NAME is left out, and no path is followed."""
+    first named, and whether more than MAX_FILES_NAMED were named. The full stops that end a name
+    are cut. Text from a transcript is data: a name that starts with neither a letter, a digit nor
+    `_`, holds `..`, does not end in `.md` or is longer than MAX_FILE_NAME is left out, and no path
+    is followed."""
     found: list[str] = []
     for match in FILE_NAMED.finditer(text):
-        name = match.group(1)
+        # A full stop after the name ends the sentence the name stands in; it is no part of it.
+        name = match.group(1).rstrip(".")
         if (len(name) > MAX_FILE_NAME or not name.endswith(".md") or ".." in name
                 or not (name[0].isalnum() or name[0] == "_")):
             continue
@@ -228,6 +243,18 @@ def first_line(path: Path) -> dict:
     raise CycleStagesError(f"{path} is empty")
 
 
+def add_calls(agent: Agent, started: dict[str, tuple[datetime, str]],
+              ended: dict[str, datetime], tail: set[str]) -> None:
+    """The agent's calls, each with its result. A call with no result in `tail`, which no later
+    entry of the transcript follows, is cut off by the end of the transcript: it is no wait, so it
+    ends where it starts."""
+    for key, (start, call_name) in started.items():
+        end = ended.get(key)
+        if end is None and key in tail:
+            end = start
+        agent.calls.append(Call(start, end, call_name))
+
+
 def add_call_notes(agent: Agent) -> None:
     """Warnings for the calls whose waits cannot be known: no readable result, or a type the reader
     does not recognise."""
@@ -253,7 +280,8 @@ def codex_meta(path: Path) -> dict | None:
 
 def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str | None]:
     """Whether a rollout item is a message sent to the agent — the user's message, or another
-    agent's message addressed to it — and its text, or None where a part of it is encrypted."""
+    agent's message addressed to it — and its text, or None where a part of it is encrypted. The
+    parts Codex injects are left out, and a message of nothing else is none."""
     item = payload.get("type")
     if item == "message" and payload.get("role") == "user":
         parts = payload.get("content")
@@ -262,14 +290,30 @@ def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str |
     else:
         return False, None
     texts = []
+    injected = False
     for part in parts if isinstance(parts, list) else []:
         if not isinstance(part, dict):
             continue
         if part.get("type") == "encrypted_content":
             return True, None
         if isinstance(part.get("text"), str):
-            texts.append(part["text"])
+            if is_injected(part["text"]):
+                injected = True
+            else:
+                texts.append(part["text"])
+    if injected and not texts:
+        # Only what Codex gives the turn first: no message that sets the agent working.
+        return False, None
     return True, "\n".join(texts)
+
+
+# The texts Codex gives a turn first as user messages, before the message that sets it working:
+# the AGENTS.md text and the environment, each opening with its mark.
+CODEX_INJECTED = ("# AGENTS.md instructions", "<environment_context>", "<user_instructions>")
+
+
+def is_injected(text: str) -> bool:
+    return text.lstrip().startswith(CODEX_INJECTED)
 
 
 def read_codex_agent(path: Path, parent: str | None) -> Agent:
@@ -291,6 +335,9 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     raw: list[tuple[datetime, str, dict]] = []
     started_calls: dict[str, tuple[datetime, str]] = {}
     finished_calls: dict[str, datetime] = {}
+    # The calls started since the last entry that shows the agent went on: an output, a message,
+    # another item of a response, or a turn starting or ending.
+    tail: set[str] = set()
     unrecognised: list[Call] = []
     left_out = 0
     for entry in read_lines(path):
@@ -305,13 +352,16 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
             last_seen[turn] = at
         if kind == "event_msg":
             event = payload.get("type")
+            if event in ("task_started", "user_message", "task_complete"):
+                tail.clear()
             if event == "task_started":
                 starts.setdefault(turn, at)
                 current = turn or current
             elif event == "user_message":
                 owner = turn or current
-                if owner and owner not in messages:
-                    text = payload.get("message")
+                text = payload.get("message")
+                if owner and owner not in messages and not (
+                        isinstance(text, str) and is_injected(text)):
                     messages[owner] = text if isinstance(text, str) else None
             elif event == "task_complete":
                 ends[turn] = at
@@ -322,6 +372,8 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
         elif kind == "response_item":
             item = str(payload.get("type") or "")
             ident = payload.get("call_id")
+            if item not in CODEX_CALL_KINDS:
+                tail.clear()
             is_message, text = codex_message_text(payload, meta.get("agent_path"))
             if is_message:
                 passthrough = payload.get("internal_chat_message_metadata_passthrough")
@@ -339,6 +391,7 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
                     continue
                 key = ident or f"no call id {len(started_calls)}"
                 started_calls.setdefault(key, (at, call_name))
+                tail.add(key)
             elif item.endswith("_call_output"):
                 if ident:
                     finished_calls.setdefault(ident, at)
@@ -368,8 +421,7 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     turns.sort(key=lambda turn: turn[:2])
     agent.turns = [(start, end) for start, end, _ in turns]
     agent.turn_files = [named for _, _, named in turns]
-    for key, (start, call_name) in started_calls.items():
-        agent.calls.append(Call(start, finished_calls.get(key), call_name))
+    add_calls(agent, started_calls, finished_calls, tail)
     agent.calls.extend(unrecognised)
     if parent is not None:
         # A forked subagent's rollout repeats its parent's calls before its own turns.
@@ -455,12 +507,16 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
     answered = True
     started_calls: dict[str, tuple[datetime, str]] = {}
     results: dict[str, datetime] = {}
+    # The calls of the last response, while no user line and no other response follows it.
+    tail: set[str] = set()
+    tail_response: object = None
     unrecognised: list[Call] = []
     for entry in read_lines(path):
         if "timestamp" not in entry:
             continue
         at = parse_time(entry["timestamp"])
         if entry.get("type") == "user":
+            tail.clear()
             for block in content_blocks(entry):
                 if block.get("type") == "tool_result":
                     results.setdefault(block.get("tool_use_id"), at)
@@ -480,6 +536,11 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             if model == "<synthetic>":
                 continue
             activity.append(at)
+            # Claude Code writes one response over several lines, which share its id.
+            ident = message.get("id") or entry.get("uuid")
+            if ident != tail_response:
+                tail.clear()
+                tail_response = ident
             for block in content_blocks(entry):
                 kind = str(block.get("type") or "")
                 call_name = str(block.get("name") or "")
@@ -487,18 +548,17 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
                     continue
                 if kind == "tool_use" and block.get("id"):
                     started_calls.setdefault(block["id"], (at, call_name or kind))
+                    tail.add(block["id"])
                 elif kind == "tool_use" or kind.endswith("_tool_use"):
                     unrecognised.append(Call(at, None, call_name or kind, known=False))
             if message.get("stop_reason"):
                 answered = message["stop_reason"] == "end_turn"
             usage = message.get("usage") or {}
-            ident = message.get("id") or entry.get("uuid")
             kept = responses.get(ident)
             if kept is None or usage.get("output_tokens", 0) >= kept[1].get("output_tokens", 0):
                 responses[ident] = (at, usage, model)
     agent = Agent(key, name, parent)
-    for ident, (start, call_name) in started_calls.items():
-        agent.calls.append(Call(start, results.get(ident), call_name))
+    add_calls(agent, started_calls, results, tail)
     agent.calls.extend(unrecognised)
     add_call_notes(agent)
     prompts.sort(key=lambda prompt: prompt[0])
@@ -643,7 +703,7 @@ def build_rows(sessions: list[Session]) -> list[Row]:
                 count = len(agent.turns)
                 stages[agent.key] = [
                     Row(start, agent.name + (f" — turn {n}" if count > 1 else ""), end - start,
-                        window=(start, end), named=named)
+                        window=(start, end), named=named, usage_read=bool(agent.records))
                     for n, ((start, end), named) in enumerate(
                         zip(agent.turns, agent.turn_files), 1)
                 ]
@@ -669,11 +729,13 @@ def build_rows(sessions: list[Session]) -> list[Row]:
     busy = merge([row.window for row in stage_rows])
     active = merge([turn for session in sessions for turn in session.orchestrator.turns])
     edges = [None] + [point for block in busy for point in block] + [None]
+    orchestrator_read = all(session.orchestrator.records for session in sessions)
     stretches = []
     for index in range(0, len(edges), 2):
         start, end = edges[index], edges[index + 1]
         stretches.append(Row(stretch_start(start, end, active), "orchestrator",
-                             overlap(active, start, end), window=(start, end)))
+                             overlap(active, start, end), window=(start, end),
+                             usage_read=orchestrator_read))
     parallel: dict[frozenset[int], Row] = {}
 
     def orchestrator_row(at: datetime) -> Row:
@@ -687,7 +749,8 @@ def build_rows(sessions: list[Session]) -> list[Row]:
             group = frozenset(running)
             if group not in parallel:
                 names = ", ".join(stage_rows[i].name for i in sorted(running))
-                parallel[group] = Row(at, f"orchestrator while in parallel: {names}", None)
+                parallel[group] = Row(at, f"orchestrator while in parallel: {names}", None,
+                                      usage_read=orchestrator_read)
             return parallel[group]
         return next(r for r in stretches
                     if (r.window[0] is None or r.window[0] < at)
@@ -868,7 +931,9 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "",
         "Times are UTC. Each stage's waiting for tools is the time of its tool calls, from each "
         "call to its result; `unknown` marks a stage with a call whose result was not read or "
-        "whose type is not recognised. Input includes the part read from a cache. *Files named* "
+        "whose type is not recognised. Input includes the part read from a cache. The model `—` "
+        "marks a stage with no token usage, and `unknown` with zero counts one whose transcript "
+        "holds no token usage at all, so that its usage was not read. *Files named* "
         "lists the files of the cycle's `reports/` that the message starting a subagent turn "
         "names — its prompt, or the message that resumes it — each once; it is empty where that "
         "message names none and for the orchestrator's rows, and `unknown` where the message "
@@ -879,7 +944,8 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
-        models = sorted(row.by_model.items(), key=lambda item: -item[1].total) or [("—", Usage())]
+        models = (sorted(row.by_model.items(), key=lambda item: -item[1].total)
+                  or [("—" if row.usage_read else "unknown", Usage())])
         named = "unknown" if row.named is None else cell(", ".join(row.named))
         for model, usage in models:
             lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "

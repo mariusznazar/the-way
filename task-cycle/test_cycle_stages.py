@@ -439,6 +439,41 @@ class ClaudeWaitTest(unittest.TestCase):
         self.assertIn("- Claude Code session `lost`, the orchestrator: 1 tool call(s) with no "
                       "readable result: their waits are unknown", text)
 
+    def live(self, *last: dict) -> str:
+        """The report of a session whose transcript ends with `last`, as the transcript of the
+        session running this script ends while the call that runs it waits for its result."""
+        write_lines(self.home / "projects" / "C--repo" / "live.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            tool_answer("09:00:10", "o1", "opus", 1, 0, 100, 1, "b1", "Bash"),
+            call_result("09:00:25", "b1"),
+            *last,
+        ])
+        return self.report("live")
+
+    def test_a_call_the_transcript_ends_in_is_no_wait_and_no_unknown(self) -> None:
+        text = self.live(tool_answer("09:00:40", "o2", "opus", 1, 0, 100, 1, "run", "Bash"))
+        self.assertIn("- Waiting for tools: 0:00:15", text)
+        self.assertIn("- Working time without waiting for tools: 0:00:25", text)
+        self.assertIn("Warnings: none.", text)
+
+    def test_parallel_calls_of_the_last_response_are_no_wait_and_no_unknown(self) -> None:
+        # One response written over two lines, each with one of its calls.
+        text = self.live(tool_answer("09:00:40", "o2", "opus", 1, 0, 100, 1, "run", "Bash"),
+                         tool_answer("09:00:41", "o2", "opus", 1, 0, 100, 1, "read", "Read"))
+        self.assertIn("- Waiting for tools: 0:00:15", text)
+        self.assertIn("Warnings: none.", text)
+
+    def test_a_call_without_its_result_before_a_later_entry_stays_unknown(self) -> None:
+        for label, later in (
+                ("a later result", call_result("09:00:50", "other")),
+                ("a later message", prompt("09:00:50", "go on")),
+                ("a later response", answer("09:00:50", "o3", "opus", 1, 0, 100, 1, "end_turn"))):
+            with self.subTest(label):
+                text = self.live(tool_answer("09:00:40", "o2", "opus", 1, 0, 100, 1, "run",
+                                             "Bash"), later)
+                self.assertIn("- Waiting for tools: unknown", text)
+                self.assertIn("1 tool call(s) with no readable result", text)
+
 
 def codex_call(clock: str, name: str, ident: str) -> dict:
     return {"timestamp": at(clock), "type": "response_item", "payload": {
@@ -535,6 +570,64 @@ class CodexWaitTest(unittest.TestCase):
         self.assertIn("- Waiting for tools: unknown", text)
         self.assertIn("- Codex session `orchw`, /root/odd: 1 call(s) of a type the reader does not "
                       "recognise (web_search_call): their waits are unknown", text)
+
+    def test_a_stage_with_no_usage_reads_apart_from_one_whose_usage_was_not_read(self) -> None:
+        # In `orchw` the orchestrator's usage is read, and its stretches outside the subagent turn
+        # hold none: `—`. In `orchu` its rollout holds no usage at all: its stretches are `unknown`.
+        stretch = "| orchestrator | 2026-10-06 10:00:00 | 0:00:00 | {} | 0 | 0 | 0 |  |"
+        self.assertIn(stretch.format("—"), self.report("orchw"))
+        rollout(self.home, "orchu", [
+            meta("orchu", "10:00:00"),
+            started("10:00:00", "u1"),
+            context("10:00:00", "u1", "model-o"),
+            {"timestamp": at("10:00:01"), "type": "event_msg", "payload": {
+                "type": "item_completed", "thread_id": "orchu", "turn_id": "u1"}},
+            complete("10:01:00", "u1"),
+        ])
+        rollout(self.home, "worku", [
+            meta("worku", "10:00:06", "orchu", "/root/worku"),
+            started("10:00:06", "w1"),
+            context("10:00:06", "w1", "model-w"),
+            tokens("10:00:30", "worku", "w1", 500, 200, 20),
+            complete("10:00:40", "w1"),
+        ])
+        text = self.report("orchu")
+        self.assertIn(stretch.format("unknown"), text)
+        self.assertIn("| /root/worku | 2026-10-06 10:00:06 | 0:00:00 | model-w | 500 | 200 | 20 |",
+                      text)
+
+    def live(self, *last: dict) -> str:
+        """The report of a session whose rollout ends with `last`, as the rollout of the session
+        running this script ends while the call that runs it waits for its output."""
+        rollout(self.home, "livec", [
+            meta("livec", "10:00:00"),
+            started("10:00:00", "l1"),
+            context("10:00:00", "l1", "model-l"),
+            codex_call("10:00:05", "shell", "c-one"),
+            codex_call_output("10:00:20", "c-one"),
+            *last,
+        ])
+        return self.report("livec")
+
+    def test_a_call_the_rollout_ends_in_is_no_wait_and_no_unknown(self) -> None:
+        # Codex writes the usage of the response and its item's completion after the call.
+        text = self.live(codex_call("10:00:30", "shell", "c-run"),
+                         tokens("10:00:30", "livec", "l1", 10, 0, 1),
+                         {"timestamp": at("10:00:31"), "type": "event_msg",
+                          "payload": {"type": "item_completed", "turn_id": "l1"}})
+        self.assertIn("- Waiting for tools: 0:00:15", text)
+        self.assertIn("Warnings: none.", text)
+
+    def test_a_call_without_its_output_before_a_later_item_stays_unknown(self) -> None:
+        for label, later in (
+                ("a later output", codex_call_output("10:00:40", "c-other")),
+                ("a later message", user_message("10:00:40", "go on")),
+                ("the end of its turn", complete("10:00:40", "l1"))):
+            with self.subTest(label):
+                text = self.live(codex_call("10:00:30", "shell", "c-run"),
+                                 tokens("10:00:30", "livec", "l1", 10, 0, 1), later)
+                self.assertIn("- Waiting for tools: unknown", text)
+                self.assertIn("1 tool call(s) with no readable result", text)
 
 
 # A path written with backslashes, as a prompt on Windows names a handoff.
@@ -637,6 +730,24 @@ class ClaudeFilesNamedTest(unittest.TestCase):
         self.assertTrue(line.endswith(" | reports/" + "b" * 117 + ".md, reports/fine-name_1.md, "
                                       "reports/win.md |"), line)
 
+    def test_a_name_ending_its_sentence_is_read_without_the_mark_that_ends_it(self) -> None:
+        for text in ("Fix the findings in reports/review_slice4_findings.md.",
+                     "Fix the findings in reports/review_slice4_findings.md, then return.",
+                     "Fix the findings in `reports/review_slice4_findings.md`.",
+                     "Fix the findings (reports/review_slice4_findings.md) now.",
+                     "Fix the findings in [reports/review_slice4_findings.md].",
+                     'Fix the findings in "reports/review_slice4_findings.md".',
+                     "Fix the findings in 'reports/review_slice4_findings.md'.",
+                     "Fix the findings in reports/review_slice4_findings.md...",
+                     "Fix the findings in reports/review_slice4_findings.md:"):
+            with self.subTest(text=text):
+                self.assertEqual((["reports/review_slice4_findings.md"], False),
+                                 cycle_stages.files_named(text))
+        # A full stop is cut only at the end: a name that is no file of `reports/` without it
+        # stays out.
+        self.assertEqual(([], False), cycle_stages.files_named(
+            "See reports/.md. and reports/x.md.bak. and reports/notes."))
+
     def test_more_files_than_the_cap_are_cut_with_a_warning(self) -> None:
         many = " ".join(f"reports/r{n:02}.md" for n in range(cycle_stages.MAX_FILES_NAMED + 5))
         write_lines(self.home / "projects" / "C--repo" / "named" / "subagents"
@@ -722,6 +833,23 @@ class CodexFilesNamedTest(unittest.TestCase):
 
     def test_a_turn_whose_message_cannot_be_read_names_unknown_files(self) -> None:
         self.assertIsNone(find(self.rows(), "/root/fixer — turn 3").named)
+
+    def test_the_injected_instructions_before_the_prompt_are_not_the_turns_message(self) -> None:
+        # Codex gives a turn the AGENTS.md text and the environment first, as user messages.
+        rollout(self.home, "fresh", [
+            meta("fresh", "10:40:00", "orchn", "/root/fresh"),
+            started("10:40:00", "r1"),
+            context("10:40:00", "r1", "model-f"),
+            {"timestamp": at("10:40:00"), "type": "response_item", "payload": {
+                "type": "message", "role": "user", "content": [
+                    {"type": "input_text", "text": "# AGENTS.md instructions for C:\\repo\n\n"
+                                                   "<INSTRUCTIONS>\nread reports/x.md\n"},
+                    {"type": "input_text", "text": "<environment_context>\n  <cwd>C:\\repo</cwd>"}]}},
+            user_message("10:40:01", "Fix the findings in reports/review_findings.md."),
+            tokens("10:41:00", "fresh", "r1", 50, 0, 5),
+            complete("10:42:00", "r1"),
+        ])
+        self.assertEqual(["reports/review_findings.md"], find(self.rows(), "/root/fresh").named)
 
     def test_the_report_writes_unknown_for_a_message_it_cannot_read(self) -> None:
         output = Path(self.folder.name) / "out" / "orchn.md"
