@@ -49,12 +49,17 @@ not authorize running it.
   on the planned route, also the plan review's evidence, and for each blocking finding the slice
   it comes from, with that slice's class, or none — a gap of the plan, or the plan's *Foundation
   entries* with their writer's class>
-- Review rounds: <for each code review whose findings blocked — of the whole change, of the
-  return step, of the reconciliation with the target branch, of a correction — its range and
-  report, the blocking findings, the fix range and the review of that fix; any blocking finding
-  that remained after it; for the whole-change review also the fix for its Minor findings within
-  the task, whether it ran alone or with a blocking fix, its review and, where the cycle reverted
-  it, the revert commit and the new finding; a slice's rounds stand in its row of Slices; or none>
+- Review rounds: <`none`, or nothing after the colon and, under this line, one entry for each fix
+  round of the cycle — a fix of a review's findings and the review of that fix, a slice's round
+  included — in the form below>
+  - findings `reports/<file>.md`: <the findings file the fix and the review of that fix were
+    given, by its path in `reports/`, opening the entry as written here; then, for a code review
+    whose findings blocked — of the whole change, of the return step, of the reconciliation with
+    the target branch, of a correction — its range and report, the blocking findings, the fix
+    range and the review of that fix, and any blocking finding that remained after it; for the
+    fix of the whole-change review's Minor findings within the task, whether it ran alone or with
+    a blocking fix, its review and, where the cycle reverted it, the revert commit and the new
+    finding; for a slice's round, the slice, whose row of Slices holds the rest>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
   it showed and the report that states it>
 
