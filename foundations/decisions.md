@@ -225,7 +225,7 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository` — `elements/<element>/` for each
 foundation element, `elements/common/` for what the elements share, `relation-model/`, `gate/`,
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
-`product-guidelines/`, `foundation-review/` and `task-cycle/` — the files that configure the whole
+`product-guidelines/`, `foundation-review/`, `process-audit/` and `task-cycle/` — the files that configure the whole
 repository, which its part map gives to the `repository` part (WAY-44), the root agent instruction
 files and the project skill entry points under `.claude/skills/` and `.agents/skills/`, which the
 map gives to `agent-instructions` (WAY-44), and a `README.md` that describes the repository. A
@@ -246,17 +246,20 @@ the script that checks instruction files with its tests; `product-guidelines/` t
 guidelines of every product share, for each discipline of work whose guidelines the-way gives a
 template of, that template with the skill that leads the work on them; `foundation-review/` the
 skill that reviews a product's foundation against the product, with the files it names;
+`process-audit/` the template of the register of problems, the dated price list of models, the
+command that counts the audit and the skill that leads its weekly session;
 `task-cycle/` what the design of the task cycle sets. The entries in
 `foundations/` are checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
-  project-level, product-guidelines, foundation-review, task-cycle
+  project-level, product-guidelines, foundation-review, process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: repository-file-location · element-directory-contents. For what
   `elements/common/`, `installation/`, `agent-instructions/`, `instruction-files/`,
-  `project-level/`, `product-guidelines/`, `foundation-review/` and `task-cycle/` hold and for what
+  `project-level/`, `product-guidelines/`, `foundation-review/`, `process-audit/` and
+  `task-cycle/` hold and for what
   checks `foundations/`, an agent compares the change with the decision:
   - complies: code two skills of the elements share moves into `elements/common/`, and both read it
     from there; a new rule of form for the entries in `foundations/` is checked by
@@ -269,7 +272,9 @@ skill that reviews a product's foundation against the product, with the files it
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
     styleguide discipline stand together in `product-guidelines/`; the skill of the review of a
-    foundation and the files it reads beside it stand together in `foundation-review/`;
+    foundation and the files it reads beside it stand together in `foundation-review/`; the template
+    of the register of problems, the price list of models, the command that counts the audit and the
+    skill of its weekly session stand together in `process-audit/`;
   - violates: a `tools/` directory for shared scripts reaches the main branch; a new element comes
     with a script of its own that checks the form of its entries beside
     `elements/common/foundation_check.py`.
@@ -284,7 +289,9 @@ from this repository's own agent instructions; a product's guidelines stand outs
 and answer to no element, so their templates stand apart from the elements, and their failures — a
 product's screens built on a meaning nobody approved, guidelines telling agents an old rule — are
 not those of instruction files; the review of a product's foundation answers neither the question
-of a task cycle nor that of an element, so its skill stands apart from both.
+of a task cycle nor that of an element, so its skill stands apart from both; the audit of the process
+over many cycles answers neither of those questions either, so its template, command and skill stand
+in a directory of their own (WAY-328).
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/` directory
 for everything shared — it matches no part and grows into a store; one set of template, skill and
@@ -1024,7 +1031,7 @@ format. Where a product declares no such command, the script reports what it cou
 agreement.
 
 - **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
-  instruction-files, project-level, task-cycle
+  instruction-files, project-level, task-cycle, process-audit
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: script-language · script-imports · script-subprocesses.
@@ -1995,7 +2002,7 @@ the declared version moves when the version in use leaves bugfix support, never 
 version comes out.
 
 - **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
-  instruction-files, project-level, task-cycle, repository
+  instruction-files, project-level, task-cycle, repository, process-audit
 - **Based on:** python-314-bugfix-status · python-release-binaries ·
   https://raw.githubusercontent.com/python/peps/b53285d29f16cc743a7a6339c947c49ccf70c525/peps/pep-0745.rst
   § Bugfix releases — "3.14.14: Tuesday, 2027-10-05 (Final regular bugfix release with binary installers)";
@@ -10330,7 +10337,8 @@ write example paths in order to find or to test them; a file that points to such
 entry in the locations file. The copy of a task cycle's record and the description of a request are
 checked for a note link in every file, as WAY-309 gives.
 
-- **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle
+- **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle,
+  process-audit
 - **Based on:** none
 - **Relations:** derives from WAY-27
 - **Verification:** invariants: tracked-file-private-paths. For the place and the form of the file,
@@ -10624,6 +10632,278 @@ section — in a report of `done` or `PASS` the orchestrator reads no more than 
 so the choice would take effect only when it read more than it must; a record of every agent's
 selection compared with every *Scope* of the log — WAY-150 rejects it, as it costs every piece of
 work and records reading, not understanding.
+
+### WAY-327 — Where does the audit of the process get the class and weight of each problem, and the tie of a problem to the fix meant to remove it?
+
+The-way gives a template of a register of problems, which holds for each problem the cycle it comes
+from, its class and weight, the issue it belongs to — the one matter that like problems of several
+cycles make — and that issue's fate, the fix of an implemented issue included. A user's own tool
+fills the register and the user adapts the template to their own needs; the audit reads the register
+that an entry of the user's locations file names and gives no problem a class or a weight itself.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-103 · derives from WAY-320
+- **Verification:** an agent compares a change with the decision:
+  - complies: the command of the audit reads the register at the place that an entry of the
+    locations file names, and counts each problem with the class and weight the register gives it; a
+    user whose tool records problems another way changes the template for themselves;
+  - violates: the audit reads the stage reports of cycles and gives their remarks a class and a
+    weight itself; the repository of the-way holds a register filled with a user's problems; the
+    audit reads a register from a place written into its code.
+- **Origin:** none
+
+*Rationale:* the class and weight of a problem are a judgment. A register that a tool of the user
+fills holds that judgment once, where an audit that read the records of cycles itself would repeat
+it every week, and could repeat it differently. A template lets another user of the-way keep the
+same register in their own way, as WAY-103 asks of a process meant for more than its author. The
+price taken: until a user has a tool that fills the register, the audit has nothing to count.
+*Rejected:* the audit reading the records of cycles itself and giving the class and weight — the
+same remarks would be judged by two agents, who may judge differently, and the tie of a problem to
+its fix would have to be rebuilt each time; the-way taking over the review of the remarks of cycles
+— the largest change, and the remarks would turn into issues once a week instead of every night.
+
+### WAY-328 — Where in the repository does the audit of the process stand?
+
+The audit of the process is a part of the-way of its own, `process-audit`, with a directory of its
+own, `process-audit/`, apart from the part of the task cycle. The audit answers how the process fares
+over many cycles, which is not the question the part `task-cycle` answers.
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-09
+- **Verification:** an agent compares a change with the decision:
+  - complies: the template of the register, the command that counts and the skill of the audit stand
+    in `process-audit/`, and the part map gives them to the part `process-audit`;
+  - violates: a file of the audit stands in `task-cycle/`; a decision of the audit names the part
+    `task-cycle` as the one it governs.
+- **Origin:** none
+
+*Rationale:* the part of the task cycle answers how one task is carried out, and every agent of the
+cycle reads its decisions. The audit answers a different question, how the whole process fares in
+time, as the review of a product's foundation answers neither a cycle's question nor an element's
+(WAY-09); kept in its own part, the audit has decisions that only the work on it reads.
+*Rejected:* the audit inside `task-cycle/` — that part would begin to answer for judging the whole
+process over time, a different question from carrying out one task, and every agent of the cycle
+reads its decisions.
+
+### WAY-329 — Where do the results of the audit lie?
+
+The results of the audit lie at a place on the user's disk outside every repository, which an entry
+of the locations file (WAY-320) names. No repository, the repository of the-way included, holds them.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-320
+- **Verification:** an agent compares a change with the decision:
+  - complies: the skill of the audit writes its results to the place that the entry of the locations
+    file names, and asks the human where the file or the entry is missing;
+  - violates: the results of a session are committed to the repository of the-way; the place of the
+    results is written into a tracked file as a path.
+- **Origin:** none
+
+*Rationale:* the repository of the-way is public, and the results carry the names of products and
+the content of remarks from their cycles, which the history of a repository keeps after a later
+change removes them (WAY-320). A place named by an entry of the locations file is the way WAY-320
+gives for every place outside the repositories.
+*Rejected:* the results in the repository of the-way — the repository is public, and the results
+carry the names of products and the content of remarks from their cycles.
+
+### WAY-330 — How is a problem that the audit counts graded and classed?
+
+Each problem the audit counts has a weight on a scale of four levels — no problem, Minor, Important
+and Critical — and a class from a list that the template of the register starts and the audit
+widens. Minor, Important and Critical are the grades of the review of a cycle (WAY-161), and no
+problem is the level below them.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-327
+- **Verification:** an agent compares a change with the decision:
+  - complies: a problem is graded Minor and given a class that the list holds; a session of the audit
+    that meets a problem no class fits adds a class to the list;
+  - violates: the scale gains a fifth level; the audit refuses a problem for a class the list lacks
+    instead of widening the list.
+- **Origin:** none
+
+*Rationale:* the grades of the review of a cycle are a scale the agents of the cycle and the human
+already read, and the level for no problem gives a remark that proves to be none a place on the same
+scale. A list that the audit widens follows what the sessions find, where a closed list would give a
+problem it lacks a class for a wrong class.
+*Rejected:* unknown
+
+### WAY-331 — What does the audit count, remarks or problems?
+
+The audit counts problems, not remarks: a problem that several stages of one cycle report is one
+problem.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-327
+- **Verification:** an agent compares a change with the decision:
+  - complies: a lack that three stages of a cycle report counts once, and the register keeps the
+    stages that reported it;
+  - violates: the audit counts each remark of a stage as a problem of its own.
+- **Origin:** none
+
+*Rationale:* what several stages report is one thing the process let through without a fix. Counting
+each report would make the number of problems follow the number of stages that looked at a thing
+rather than the number of lapses of the process, and the register keeps the stages that reported a
+problem, so counting it once loses nothing.
+*Rejected:* unknown
+
+### WAY-332 — What decides whether a fix of the process works?
+
+Whether a fix works is decided by the cycles that ran on a version of the-way that holds the fix,
+compared with the cycles that ran on a version without it, and never by the date on which the fix was
+made.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the returns of a problem are counted in the cycles whose version of the-way holds the
+    fix and, apart, in the cycles whose version lacks it;
+  - violates: the returns of a problem before and after the date of its fix are set against each
+    other.
+- **Origin:** none
+
+*Rationale:* a cycle's record names the version of the-way the cycle ran on, and a product takes the
+process at the commit it pins (WAY-34), so a cycle made after the date of a fix can still run on a
+version without it. The version tells whether the cycle had the fix; the date does not.
+*Rejected:* unknown
+
+### WAY-333 — Does how often an issue comes back set its priority?
+
+How often an issue comes back is material that the audit shows the human to weigh; the audit sets no
+priority from it and ranks no issue by the number of its returns.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the audit shows for an open issue the number of cycles in which its problem came back
+    and leaves the weighing to the human;
+  - violates: the audit orders issues by the number of their returns and presents the order as the
+    priority.
+- **Origin:** none
+
+*Rationale:* how often an issue returns is a fact about the past. What it costs when it returns, and
+what its fix costs, are others, and only a human sets them against one another; a ranking by returns
+would put the order of the work into a count.
+*Rejected:* a priority that rises by itself with the number of returns — the human asked whether
+being frequent makes a priority rise automatically and answered that it does not, so it is weighed
+every time.
+
+### WAY-334 — How is the cost of a cycle measured?
+
+A cycle's cost is two numbers: its cost at constant prices, computed from a price list of models that
+carries a date, and the share of that cost that the rounds of fixes after review make up. Neither is
+divided by a measure of the size of the task.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the cost of a cycle is shown as an amount at the prices of one dated list and as the
+    share of the fix rounds in it;
+  - violates: the cost is a sum of tokens of every kind and model; the cost is divided by the lines a
+    cycle changed.
+- **Origin:** none
+
+*Rationale:* at constant prices a cycle's cost changes when its work changes, not when the price of a
+model does, and the share of the fix rounds shows how much of the cost went to work that a review
+sent back. A divisor taken from the task would turn both into a ratio whose changes could come from
+the task as well as from the process, and the measure of size would have to be chosen.
+*Rejected:* a cost divided by a measure of the size of the task — the human settled that cost is
+measured by the two numbers alone, and the source keeps no reason beside it.
+
+### WAY-335 — What is the time of a cycle?
+
+A cycle's time is two measures: the working time of its agents, with no wait for the human in it,
+and, apart from it, the time its agents wait for tools.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the time of a cycle is shown as the agents' working time and, beside it, the time they
+    waited for tools, and a night the cycle waited for the human's answer adds to neither;
+  - violates: the time of a cycle is the time from its start to its merge.
+- **Origin:** none
+
+*Rationale:* the wait for the human depends on when the human reads, not on the process, while the
+time the agents work and the time they wait for tools are the two parts of a cycle's time that a
+change to the process can move.
+*Rejected:* the wait for the human counted in the time of a cycle — the human said that waiting for
+them is not counted.
+
+### WAY-336 — When do the measures of the audit stop being comparable?
+
+A new price list, or a change of the form of a stage report, of the list of classes or of the
+instructions of the reviewer, starts a new series of measures. The audit compares measures only
+within one series, and judges a version of the process by the cycles that ran on it, never one week
+against another.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
+    not set against the median of the other; the cycles of one version of the process are compared
+    with the cycles of another version inside a series;
+  - violates: the number of remarks of one week is set against that of the week before, across a
+    change of the form of a stage report.
+- **Origin:** none
+
+*Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the
+rise of remarks after WAY-260 shows, a change of the price list changes the cost of the same work,
+and a change of the list of classes or of the instructions of the reviewer changes what is counted
+and what is found. A number from before such a change says something about the change as well as
+about the process.
+*Rejected:* unknown
+
+### WAY-337 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
+
+The audit replays no frozen earlier tasks on an old and a new version of the process; it judges a
+version of the process by the cycles that ran on it.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the audit counts the cycles that have run on each version of the process;
+  - violates: the audit holds a set of frozen tasks and runs it on two versions of the process to
+    compare the results.
+- **Origin:** none
+
+*Rationale:* cycles run on every version of the process in any case, and each cycle's record names
+its version, so the audit has material about every version without a cycle made only to measure;
+a replay would cost a cycle for each task and each version.
+*Rejected:* a set of frozen earlier tasks run on the old and the new version of the process — the
+human struck it, and the source keeps no reason beside it.
+
+### WAY-338 — How often does the audit run, and what starts it?
+
+The audit runs once a week, in a session of its own apart from the user's weekly review. The counting
+runs without a human on the night from Friday to Saturday, and a weekly task in the user's backlog
+starts the session.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: the command of the audit runs unattended, so that the system's scheduler can start it
+    on the night from Friday to Saturday, and the session reads its result when the weekly task of
+    the backlog starts it;
+  - violates: the audit is a step of the weekly review; the counting waits for a human to start it.
+- **Origin:** none
+
+*Rationale:* a session of its own keeps the audit from sharing the time and the subject of the weekly
+review, and a count made on the night before leaves its result ready when the session begins, with
+no human present for it.
+*Rejected:* the audit as a part of the weekly review — the human prefers a dedicated task for the
+audit and would not mix it with that review.
 
 ## Withdrawn identifiers
 
