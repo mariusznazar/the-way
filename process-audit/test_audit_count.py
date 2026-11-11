@@ -603,10 +603,10 @@ class Locations(AuditCountCase):
 FULL_EVENTS = ("| Time | Stage | Actor and model | Handoff, skill and inputs "
                "| Output or full report | Short result and next step |\n"
                "|---|---|---|---|---|---|\n")
-FIX_EVENTS = ("| 10:00 | fix dispatch | orchestrator | findings | - | dispatched |\n"
-              "| 10:20 | fix returned | author | - | reports/07-fix-1-report.md | done |\n"
-              "| 10:30 | review of the fix | reviewer | - "
-              "| reports/08-review-fix-1-report.md | PASS |\n")
+# Events as the archived records write a fix round: no path holds the word `report`.
+ARCHIVED_EVENTS = ("| 10:00 | fix dispatch | orchestrator | findings | - | dispatched |\n"
+                   "| 10:20 | fix returned | author | - | reports/fix.md | done |\n"
+                   "| 10:30 | review of the fix | reviewer | - | reports/review-fix.md | PASS |\n")
 TEST_PRICES = """# Test prices
 
 - List date: 2026-01-01
@@ -625,34 +625,52 @@ STAGES_HEADER = ("# Stages of the cycle run\n\n- Working time without waiting fo
                  "| Output |\n|---|---|---|---|---|---|---|---|\n")
 
 
-def stage_row(number, name, model, input_, cached, output) -> str:
+STAGES_HEADER_NAMED = STAGES_HEADER.replace(
+    "| Output |\n|---|---|---|---|---|---|---|---|\n",
+    "| Output | Files named |\n|---|---|---|---|---|---|---|---|---|\n")
+
+
+def stage_row(number, name, model, input_, cached, output, files=None) -> str:
+    """A row of the stages section; with `files`, the row of the form that names the files each
+    turn was given."""
+    named = "" if files is None else f" {files} |"
     return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
-            f"| {output} |\n")
+            f"| {output} |{named}\n")
 
 
-FIX_ROUNDS = ("- Review rounds: one, fix `fbea390` (report `reports/07-fix-1-report.md`), review "
-              "of the fix (report `reports/08-review-fix-1-report.md`)\n")
+WHOLE = "reports/review_whole_findings.md"
+SLICE = "reports/review_slice2_findings.md"
+ONE_ROUND = (f"- Review rounds:\n  - findings `{WHOLE}`: the whole change, range `a1b2c3d..e4f5a6b`,"
+             "\n    report `reports/review_whole.md`; fix `reports/fix.md`, its review "
+             "`reports/review-fix.md`\n")
 
 
-def fix_record(events=FIX_EVENTS, rounds=None) -> str:
-    """A cycle record whose Events table has the output column the fix rounds are read from, and
-    whose line `Review rounds` names the rounds the Events name (or none, without events)."""
-    if rounds is None:
-        rounds = FIX_ROUNDS if events else "- Review rounds: none yet\n"
+def fix_record(rounds=ONE_ROUND, events="") -> str:
+    """A cycle record whose item `Review rounds` reads `rounds`."""
     text = record(remarks="- Process remarks on the-way: none\n").replace(
         "| Time | Stage |\n|---|---|\n", FULL_EVENTS + events)
     return text.replace("- Status: request open\n", "- Status: request open\n" + rounds)
 
 
-def one_fix_round() -> str:
+def one_fix_round(header=STAGES_HEADER_NAMED, fix_files=f"reports/fix_handoff.md, {WHOLE}",
+                  review_files=f"{WHOLE}, reports/fix.md") -> str:
+    """Stages of one round of the whole change: the review that found the findings, the fix,
+    which ran on two models, and the review of the fix. With the earlier header, the rows have no
+    cell of files."""
+    named = header == STAGES_HEADER_NAMED
+
+    def files(text):
+        return text if named else None
+
     review = "Review whole change (general-purpose) — turn 1"
-    fix = "Fix 1 of the findings (general-purpose) — turn 1"
-    fix_review = "Review of the fix 1 (general-purpose) — turn 1"
-    return (STAGES_HEADER
-            + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
-            + stage_row(2, review, "model-a", 2000, 1000, 200)
-            + stage_row(3, fix, "model-b", 400, 100, 40)
-            + stage_row(4, fix_review, "model-a", 300, 0, 30))
+    author = "One author (general-purpose) — turn 2"
+    reviewer = "Review whole change (general-purpose) — turn 2"
+    return (header
+            + stage_row(1, "orchestrator", "model-a", 1000, 0, 100, files(""))
+            + stage_row(2, review, "model-a", 2000, 1000, 200, files("reports/review_handoff.md"))
+            + stage_row(3, author, "model-b", 400, 100, 40, files(fix_files))
+            + stage_row(3, author, "model-a", 100, 0, 10, files(fix_files))
+            + stage_row(4, reviewer, "model-a", 300, 0, 30, files(review_files)))
 
 
 class Cost(AuditCountCase):
@@ -674,84 +692,205 @@ class Cost(AuditCountCase):
     def unknown_why(self, value: str) -> list[str]:
         return [row[3] for row in self.rows("Unknown values") if row[2] == value]
 
-    def test_a_fix_round_at_a_test_price_list_gives_the_cost_and_no_share(self):
-        done = self.count(one_fix_round())
+    def share_of(self, stages, record_text=None) -> tuple[list[str], list[str]]:
+        """The cost row and the reasons the share is unknown."""
+        done = self.count(stages, record_text)
         self.assertEqual(0, done.returncode, done.stderr)
+        return self.cost_row(), self.unknown_why("Fix rounds share")
+
+    def test_a_round_named_by_its_findings_file_gives_the_share_of_the_turns_that_name_it(self):
         # Worked by hand, in millionths of a dollar: stage 1 is 1000*2 + 100*10 = 3000; stage 2 is
-        # 1000*2 + 1000*1 + 200*10 = 5000; stage 3 is 300*4 + 100*0.5 + 40*20 = 2050; stage 4 is
-        # 300*2 + 30*10 = 900. The total is 10950. The share is unknown: stages.md names the
-        # subagents, which cannot be tied to the round reliably.
-        row = self.cost_row()
-        self.assertEqual(["product", "2026-01-01", "0.010950", "1", "unknown"],
+        # 1000*2 + 1000*1 + 200*10 = 5000; stage 3 is 300*4 + 100*0.5 + 40*20 = 2050 on model-b
+        # and 100*2 + 10*10 = 300 on model-a; stage 4 is 300*2 + 30*10 = 900. The total is 11250.
+        # Stages 3 and 4 name the findings file: 3250 of 11250 is 28.89 %.
+        row, why = self.share_of(one_fix_round())
+        self.assertEqual(["product", "2026-01-01", "0.011250", "1", "28.9%"],
                          [row[0], row[2], row[3], row[4], row[5]])
-        self.assertTrue(any("cannot be tied to the rounds reliably" in why
-                            for why in self.unknown_why("Fix rounds share")))
+        self.assertEqual([], why)
 
-    def test_resumed_turns_named_with_fix_do_not_give_a_share(self):
-        # The archived form: the author is one subagent with a fix in its second turn, and its
-        # name holds the word `fix`. Counting whole stages by name gave the whole author as the
-        # fix round (99.6 % in the review's run); the share must be unknown.
-        stages = (STAGES_HEADER
-                  + stage_row(1, "Author: fix the login bug (general-purpose) — turn 1",
-                              "model-a", 1000, 0, 100)
-                  + stage_row(2, "Author: fix the login bug (general-purpose) — turn 2",
-                              "model-a", 400, 0, 40)
-                  + stage_row(3, "Reviewer: review the fix of the login bug (general-purpose) "
-                                 "— turn 1", "model-a", 2000, 0, 200)
-                  + stage_row(4, "Reviewer: review the fix of the login bug (general-purpose) "
-                                 "— turn 2", "model-a", 300, 0, 30))
-        self.assertEqual(0, self.count(stages).returncode)
-        row = self.cost_row()
-        self.assertEqual(["unknown"], [row[5]])
+    def test_the_stage_report_cycle_stages_writes_gives_the_share(self):
+        # Transcripts in Claude Code's form, where the fix and the review of the fix are each a
+        # resumed subagent whose message names the findings file. Worked by hand at model-a's
+        # prices: the orchestrator 1000*2 + 100*10 = 3000; the author's first turn 3000 and its
+        # fix 500*2 + 50*10 = 1500; the reviewer's first turn 2000*2 + 200*10 = 6000 and its review
+        # of the fix 250*2 + 25*10 = 750. 2250 of 14250 is 15.79 %.
+        def line(kind, clock, **fields):
+            entry = {"type": kind, "timestamp": f"2026-11-11T{clock}.000Z"}
+            entry.update(fields)
+            return json.dumps(entry) + "\n"
 
-    def test_orchestrator_rows_naming_fix_subagents_are_in_no_fix_round(self):
-        # Two rows of the orchestrator's work while subagents run in parallel name a fix and a
-        # review; no subagent of the cycle was a fix. Counting their names gave a share of 49.7 %.
-        stages = (STAGES_HEADER
-                  + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
-                  + stage_row(2, "orchestrator while in parallel: Fix typos (general-purpose), "
-                                 "One author (general-purpose)", "model-a", 2000, 0, 200)
-                  + stage_row(3, "orchestrator while in parallel: Review the fix "
-                                 "(general-purpose), Other (general-purpose)", "model-a", 300, 0, 30))
-        self.assertEqual(0, self.count(stages).returncode)
-        self.assertEqual(["unknown"], [self.cost_row()[5]])
+        def told(clock, text, meta=False):
+            fields = {"message": {"role": "user", "content": text}}
+            if meta:
+                fields["isMeta"] = True
+            return line("user", clock, **fields)
 
-    def test_a_cycle_naming_no_fix_round_and_no_fix_stage_has_a_share_of_zero(self):
-        stages = (STAGES_HEADER
-                  + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
-                  + stage_row(2, "orchestrator while in parallel: Fix typos (general-purpose), "
-                                 "Other (general-purpose)", "model-a", 2000, 0, 200)
-                  + stage_row(3, "Review whole change (general-purpose) — turn 1", "model-a",
-                              300, 0, 30))
-        done = self.count(stages, record_text=fix_record(events=""))
-        self.assertEqual(0, done.returncode, done.stderr)
-        row = self.cost_row()
-        self.assertEqual(["0", "0.0%"], [row[4], row[5]])
+        def answered(clock, ident, input_, output):
+            return line("assistant", clock, message={
+                "id": ident, "model": "model-a", "stop_reason": "end_turn",
+                "content": [{"type": "text"}],
+                "usage": {"input_tokens": input_, "cache_creation_input_tokens": 0,
+                          "cache_read_input_tokens": 0, "output_tokens": output}})
 
-    def test_review_rounds_naming_a_fix_the_events_lack_leave_the_share_unknown(self):
-        record_text = fix_record(events="", rounds="- Review rounds: one, fix `x` "
-                                                   "(report `reports/07-fix-1-report.md`)\n")
-        stages = STAGES_HEADER + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
-        done = self.count(stages, record_text=record_text)
-        self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual(["unknown"], [self.cost_row()[5]])
-        self.assertTrue(any("do not agree" in why for why in self.unknown_why("Fix rounds share")))
+        project = self.home / "claude" / "projects" / "p"
+        agents = project / "sess" / "subagents"
+        agents.mkdir(parents=True)
+        (project / "sess.jsonl").write_text(
+            told("09:00:00", "run the cycle") + answered("09:00:10", "o1", 1000, 100), "utf-8")
+        (agents / "agent-f.jsonl").write_text(
+            told("09:01:00", "Implement; handoff .runs/task-cycles/t/reports/author_handoff.md")
+            + answered("09:02:00", "f1", 1000, 100)
+            + told("09:20:00", f"Fix the findings in {WHOLE} by reports/fix_handoff.md", True)
+            + answered("09:21:00", "f2", 500, 50), "utf-8")
+        (agents / "agent-r.jsonl").write_text(
+            told("09:10:00", "Review the change; handoff reports/review_handoff.md")
+            + answered("09:11:00", "r1", 2000, 200)
+            + told("09:30:00", f"Review the fix of the findings in {WHOLE}", True)
+            + answered("09:31:00", "r2", 250, 25), "utf-8")
+        for name, description in (("f", "Author"), ("r", "Reviewer")):
+            (agents / f"agent-{name}.meta.json").write_text(json.dumps(
+                {"agentType": "general-purpose", "description": description}), "utf-8")
+        output = self.home / "stages.md"
+        written = subprocess.run(
+            [sys.executable, "-B", str(HERE.parent / "task-cycle" / "cycle_stages.py"), "sess",
+             "--claude-home", str(self.home / "claude"), "--codex-home", str(self.home / "codex"),
+             "--output", str(output)], capture_output=True, stdin=subprocess.DEVNULL)
+        self.assertEqual(0, written.returncode, written.stderr)
+        row, why = self.share_of(output.read_text(encoding="utf-8"))
+        self.assertEqual(["0.014250", "1", "15.8%"], row[3:6])
+        self.assertEqual([], why)
+
+    def test_the_same_record_with_an_earlier_form_of_stages_md_leaves_the_share_unknown(self):
+        row, why = self.share_of(one_fix_round(header=STAGES_HEADER))
+        self.assertEqual(["0.011250", "1", "unknown"], row[3:6])
+        self.assertTrue(any("no column `Files named`" in reason for reason in why), why)
+
+    def test_review_rounds_reading_none_gives_a_share_of_zero(self):
+        stages = one_fix_round(fix_files="reports/author_handoff.md",
+                               review_files="reports/review_handoff.md")
+        row, why = self.share_of(stages, fix_record(rounds="- Review rounds: none\n"))
+        self.assertEqual(["0.011250", "0", "0.0%"], row[3:6])
+        self.assertEqual([], why)
+
+    def test_a_turn_naming_the_findings_files_of_two_rounds_counts_once(self):
+        # Every stage costs 1000*2 + 100*10 = 3000: 15000 in all. The fix names both findings
+        # files, each review one of them: 9000 of 15000 is 60 %; counting the fix once per file
+        # would give 80 %.
+        stages = (STAGES_HEADER_NAMED
+                  + stage_row(1, "orchestrator", "model-a", 1000, 0, 100, "")
+                  + stage_row(2, "Fix (general-purpose)", "model-a", 1000, 0, 100,
+                              f"{WHOLE}, {SLICE}")
+                  + stage_row(3, "Review A (general-purpose)", "model-a", 1000, 0, 100, WHOLE)
+                  + stage_row(4, "Review B (general-purpose)", "model-a", 1000, 0, 100, SLICE)
+                  + stage_row(5, "Other (general-purpose)", "model-a", 1000, 0, 100,
+                              "reports/other_handoff.md"))
+        rounds = f"- Review rounds:\n  - findings `{WHOLE}`: one\n  - findings `{SLICE}`: two\n"
+        row, why = self.share_of(stages, fix_record(rounds=rounds))
+        self.assertEqual(["0.015000", "2", "60.0%"], row[3:6])
+
+    def test_rounds_written_in_prose_leave_the_share_unknown_not_zero(self):
+        # The archived form: the fix is named, but by no findings file.
+        record_text = fix_record(events=ARCHIVED_EVENTS,
+                                 rounds="- Review rounds: one whole-change round, one fix and its "
+                                        "review. Closed at 4327974.\n")
+        row, why = self.share_of(one_fix_round(), record_text)
+        self.assertEqual(["unknown", "unknown"], row[4:6])
+        self.assertTrue(any("names no findings file" in reason for reason in why), why)
+
+    def test_a_findings_file_no_turn_names_leaves_the_share_unknown(self):
+        stages = one_fix_round(fix_files="reports/fix_handoff.md",
+                               review_files="reports/review_fix_handoff.md")
+        row, why = self.share_of(stages)
+        self.assertEqual(["1", "unknown"], row[4:6])
+        self.assertTrue(any("named by 0 subagent turn(s)" in reason for reason in why), why)
+
+    def test_a_findings_file_only_one_turn_names_leaves_the_share_unknown(self):
+        # The fix was given its findings file only inside its handoff: the share would leave out
+        # the fix itself.
+        row, why = self.share_of(one_fix_round(fix_files="reports/fix_handoff.md"))
+        self.assertEqual(["1", "unknown"], row[4:6])
+        self.assertTrue(any("named by 1 subagent turn(s)" in reason for reason in why), why)
+
+    def test_none_beside_a_turn_naming_a_findings_file_leaves_the_share_unknown(self):
+        row, why = self.share_of(one_fix_round(), fix_record(rounds="- Review rounds: none\n"))
+        self.assertEqual(["0", "unknown"], row[4:6])
+        self.assertTrue(any("do not agree" in reason for reason in why), why)
+
+    def test_a_findings_file_the_record_does_not_name_leaves_the_share_unknown(self):
+        stages = one_fix_round(review_files=f"{WHOLE}, {SLICE}")
+        row, why = self.share_of(stages)
+        self.assertEqual(["1", "unknown"], row[4:6])
+        self.assertTrue(any("do not agree" in reason for reason in why), why)
+
+    def test_a_doubled_review_rounds_line_leaves_the_share_unknown(self):
+        rounds = ONE_ROUND + f"- Review rounds:\n  - findings `{SLICE}`: another\n"
+        row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
+        self.assertEqual(["unknown", "unknown"], row[4:6])
+        self.assertTrue(any("more than once" in reason for reason in why), why)
+
+    def test_an_entry_of_review_rounds_without_its_findings_file_leaves_the_share_unknown(self):
+        rounds = ONE_ROUND + "  - the return step: fix `reports/return_fix.md`\n"
+        row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
+        self.assertEqual(["unknown", "unknown"], row[4:6])
+        self.assertTrue(any("names no findings file" in reason for reason in why), why)
+
+    def test_review_rounds_that_contradict_themselves_leave_the_share_unknown(self):
+        cases = {
+            "none beside entries": ("- Review rounds: none\n"
+                                    + ONE_ROUND.split("\n", 1)[1], "beside its entries"),
+            "a findings file twice": (ONE_ROUND + f"  - findings `{WHOLE}`: again\n", "twice"),
+        }
+        for label, (rounds, words) in cases.items():
+            with self.subTest(label):
+                row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
+                self.assertEqual(["unknown", "unknown"], row[4:6])
+                self.assertTrue(any(words in reason for reason in why), why)
 
     def test_a_record_without_a_review_rounds_line_leaves_the_share_unknown(self):
-        stages = STAGES_HEADER + stage_row(1, "orchestrator", "model-a", 1000, 0, 100)
-        done = self.count(stages, record_text=fix_record(events="", rounds=""))
-        self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual(["unknown"], [self.cost_row()[5]])
-        self.assertTrue(any("no line `Review rounds`" in why
-                            for why in self.unknown_why("Fix rounds share")))
+        row, why = self.share_of(one_fix_round(), fix_record(rounds=""))
+        self.assertEqual(["unknown", "unknown"], row[4:6])
+        self.assertTrue(any("no item `Review rounds`" in reason for reason in why), why)
+
+    def test_crafted_cells_of_files_leave_the_share_unknown_and_one_row_per_cycle(self):
+        for files in (f"{WHOLE}, reports/../secret.md", f"{WHOLE}, reports/a..b.md",
+                      f"{WHOLE}, reports/x.md\x1b[2J",
+                      "reports/" + "a" * 200_000 + ".md", f"{WHOLE},, reports/.hidden.md"):
+            with self.subTest(files=files[:40]):
+                row, why = self.share_of(one_fix_round(fix_files=files))
+                self.assertEqual(["0.011250", "1", "unknown"], row[3:6])
+                self.assertTrue(any("not a list of files of `reports/`" in reason
+                                    for reason in why), why)
+                self.assertEqual(1, len(self.rows("Cost")))
+
+    def test_findings_files_in_review_rounds_are_read_only_in_their_form(self):
+        for path in ("reports/../x_findings.md", "reports/" + "f" * 200_000 + ".md",
+                     "reports/a|b.md"):
+            with self.subTest(path=path[:40]):
+                rounds = f"- Review rounds:\n  - findings `{path}`: crafted\n"
+                row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
+                self.assertEqual(["unknown", "unknown"], row[4:6])
 
     def test_a_stage_with_no_token_usage_leaves_the_cost_unknown(self):
         # cycle_stages.py writes the model mark `—` with zero counts for a stage it found no usage
-        # for; that is not a cost of zero.
+        # for; where no row of the section is priced, that is not a cost of zero.
         stages = STAGES_HEADER + stage_row(1, "orchestrator", "—", 0, 0, 0)
         self.assertEqual(0, self.count(stages).returncode)
         self.assertEqual("unknown", self.cost_row()[3])
         self.assertTrue(any("no token usage" in why for why in self.unknown_why("Cost")))
+
+    def test_an_orchestrator_stretch_with_no_token_usage_costs_nothing(self):
+        # A stretch of the orchestrator's own work with time and no response: the subagent
+        # stages are priced, so the cycle's cost is known.
+        stages = one_fix_round() + stage_row(5, "orchestrator", "—", 0, 0, 0, "")
+        row, why = self.share_of(stages)
+        self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
+        self.assertEqual([], self.unknown_why("Cost"))
+
+    def test_a_subagent_stage_with_no_token_usage_leaves_the_cost_unknown(self):
+        stages = one_fix_round() + stage_row(5, "Idle (general-purpose)", "—", 0, 0, 0, "")
+        self.assertEqual(0, self.count(stages).returncode)
+        self.assertEqual("unknown", self.cost_row()[3])
+        self.assertTrue(any("Idle" in why for why in self.unknown_why("Cost")))
 
     def test_a_model_the_list_lacks_leaves_the_cost_and_the_share_unknown(self):
         stages = one_fix_round().replace("| model-b |", "| model-c |")
@@ -767,14 +906,6 @@ class Cost(AuditCountCase):
         self.assertEqual(0, self.count(stages).returncode)
         self.assertEqual("unknown", self.cost_row()[3])
         self.assertTrue(any("earlier form" in why for why in self.unknown_why("Cost")))
-
-    def test_fix_stages_the_record_does_not_name_leave_only_the_share_unknown(self):
-        done = self.count(one_fix_round(), record_text=fix_record(events=""))
-        self.assertEqual(0, done.returncode, done.stderr)
-        row = self.cost_row()
-        self.assertEqual(["0.010950", "unknown"], [row[3], row[5]])
-        self.assertTrue(any("the record names no fix round" in why
-                            for why in self.unknown_why("Fix rounds share")))
 
     def test_cached_input_above_input_leaves_the_cost_unknown(self):
         stages = one_fix_round().replace("| 2000 | 1000 | 200 |", "| 2000 | 5000 | 200 |")

@@ -10994,26 +10994,44 @@ every time.
 
 ### WAY-336 — How is the cost of a cycle measured?
 
-A cycle's cost is two numbers: its cost at constant prices, computed from a price list of models that
-carries a date, and the share of that cost that the rounds of fixes after review make up. Neither is
-divided by a measure of the size of the task.
+A cycle's cost is two numbers, neither divided by a measure of the size of the task: its cost at
+constant prices, computed from a price list of models that carries a date, and the share of that
+cost spent in fix rounds, a fix round being the fix of a review's findings and the review of that
+fix. A turn of an agent serves a fix round when the message that dispatches or resumes it names the
+round's findings file by its path in the cycle's `reports/`, which only the messages of that fix
+and of the review of that fix do, and the cycle's record names each round by that path. The share
+is `0.0%` only where the record says the cycle had no fix round, and unknown wherever the record and
+the stages cannot tie each round to the turns that served it.
 
-- **Scope:** process-audit
+- **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares a change with the decision:
   - complies: the cost of a cycle is shown as an amount at the prices of one dated list and as the
-    share of the fix rounds in it;
+    share of the fix rounds in it; the share counts once each turn whose message named a findings
+    file of a round the record names; a record that tells its rounds in prose, without their
+    findings files, leaves the share unknown;
   - violates: the cost is a sum of tokens of every kind and model; the cost is divided by the lines a
-    cycle changed.
+    cycle changed; a turn is put in a fix round by the words in the name of a report or of an agent;
+    a record that names a fix round in any form gets a share of `0.0%`; the message that resumes the
+    agent of a fix names its findings file only inside its handoff.
 - **Origin:** none
 
 *Rationale:* at constant prices a cycle's cost changes when its work changes, not when the price of a
 model does, and the share of the fix rounds shows how much of the cost went to work that a review
 sent back. A divisor taken from the task would turn both into a ratio whose changes could come from
-the task as well as from the process, and the measure of size would have to be chosen.
+the task as well as from the process, and the measure of size would have to be chosen. The message
+that sets an agent working is the one text that holds, at the moment the work starts, what the
+work is for; a findings file named there ties a turn to its round with no guess from names, which
+differ from one cycle to the next. A share given where the tie fails is a figure that looks
+measured; unknown says the measure is missing.
 *Rejected:* a cost divided by a measure of the size of the task — the human settled that cost is
-measured by the two numbers alone, and the source keeps no reason beside it.
+measured by the two numbers alone, and the source keeps no reason beside it; a turn put in a fix
+round by the words `fix` and `review` in the names of reports and of stages — records name their
+fix reports in other words, and a cycle that had a fix round got a share of zero; a turn tied to a
+round by its time against the times of the record — the record and the stage report write times in
+different forms and zones; the share given only as zero or unknown until the stage report carries
+the tie — the measure stays empty in every cycle that has a fix round.
 
 ### WAY-337 — What is the time of a cycle?
 

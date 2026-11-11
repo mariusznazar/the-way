@@ -50,18 +50,25 @@ ones noted, and its values are read from the last copy, the most complete. For e
   cached input at the *Input* price, its cached input at the *Cached input* price and its output at
   the *Output* price. Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in),
   so they are priced as input: an approximation. A model the list gives no price for, a row that
-  does not read, or a `stages.md` without that section (an earlier form) gives the cost `unknown`,
-  never zero;
-- the share of that cost spent in fix rounds. The record names its fix rounds by the report paths
-  of its table `## Events` (column *Output or full report*) and of its line `Review rounds`: a path
-  whose file name holds the words `report` and `fix` is a fix report, and one that holds `review`
-  too is the review of a fix (`reports/07-fix-1-report.md`, `reports/08-review-fix-1-report.md`).
-  The two places must name the same reports. The share is given as `0.0%` only where the record
-  names no fix round and no stage of `stages.md` (other than the orchestrator's rows) names a fix
-  or a review of one. Where the record names a round, the share is `unknown`: `stages.md` names
-  the subagents that worked, not the round each turn served, and no link the records or stages.md
-  write ties a stage to a round reliably; a wrong figure is worse than `unknown`. The cost is still
-  given. A stage with no token usage makes the cost `unknown`.
+  does not read, a subagent stage with no token usage (the model `—`), a section where no stage has
+  any, or a `stages.md` without that section (an earlier form) gives the cost `unknown`, never
+  zero; a stretch of the orchestrator with no token usage, time it worked with no response of a
+  model, costs nothing;
+- *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
+  reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
+  orchestrator gives both the findings file, by its path in `reports/`, and the item names each
+  round by that path: one entry for each round under the item, opening with the word `findings`
+  and the path between backticks (`task-cycle/record_template.md`);
+- the share of the cost spent in fix rounds (WAY-336): the cost of the subagent turns whose cell
+  *Files named* in that section of `stages.md` names a findings file of a round the record names,
+  each turn counted once, over the cycle's cost. It is `0.0%` only where the item reads `none` and
+  no subagent turn was given a findings file, told by the word `findings` in its name as the check
+  of process remarks tells one (WAY-294). It is `unknown`, with the reason, where the item is
+  missing, doubled or names a round otherwise than by its findings file, where `stages.md` has no
+  column *Files named* (an earlier form), where a cell of it is not a list of files of `reports/`,
+  where a findings file the record names is named by fewer than two subagent turns, the fix and
+  the review of that fix, or where a turn was given a findings file the record does not name: a
+  wrong figure is worse than `unknown`. The cost is still given.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
@@ -138,12 +145,22 @@ REMARKS_OPENER = re.compile(r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on th
 DURATION = re.compile(r"(\d{1,7}):([0-5]\d):([0-5]\d)")
 WORKING_LINE = "- Working time without waiting for tools:"
 WAITING_LINE = "- Waiting for tools:"
-EVENTS_HEADING = "## Events"
-EVENTS_OUTPUT = "Output or full report"
 STAGES_HEADING = "## Stages: start, waiting for tools and tokens by model"
 STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
+FILES_COLUMN = "Files named"
 NO_MODEL = "—"
+ORCHESTRATOR = "orchestrator"
+# A file of the cycle's `reports/` as `task-cycle/cycle_stages.py` writes it and as the record's
+# item `Review rounds` names a findings file: a name that starts with a letter, a digit or `_`,
+# holds letters, digits, `_`, `-` and `.`, ends in `.md` and is at most 120 characters long. The
+# repetition is bounded and nothing follows it but the end, so no text makes it try again.
+REPORT_FILE = re.compile(r"reports/[A-Za-z0-9_][A-Za-z0-9_.-]{0,116}\.md")
+ROUNDS_LABEL = "Review rounds"
+ROUND_ENTRY = re.compile(r"findings `([^`\n]{1,200})`")
+# A findings file is told by the word in its name, as the check of process remarks tells it
+# (WAY-294); used only to find a turn given a findings file the record does not name.
+FINDINGS_WORD = "findings"
 PRICE_HEADING = "List date"
 PRICE_MODEL = "Model id in stages.md"
 PRICE_COLUMNS = ("Input", "Cached input", "Output")
@@ -487,12 +504,18 @@ class Prices:
 
 @dataclass
 class StageTokens:
-    """One row of the section of `stages.md` that gives each stage's tokens by model."""
+    """One row of the section of `stages.md` that gives each stage's tokens by model. `files` is
+    what its cell *Files named* gives: the files of `reports/` the turn was given, None where the
+    cell reads `unknown` or the form has no such column; `files_read` is False where the cell is
+    not a list of such files."""
+    number: str
     name: str
     model: str
     input: int
     cached: int
     output: int
+    files: frozenset[str] | None = None
+    files_read: bool = True
 
 
 def read_prices(name: str) -> Prices:
@@ -566,17 +589,37 @@ def token_count(text: str) -> int | None:
     return None
 
 
-def stage_tokens(lines: list[str],
-                 fenced: list[bool]) -> tuple[list[StageTokens] | None, str | None]:
-    """The rows of the section of `stages.md` that gives each stage's tokens by model, or None
-    with the reason: an earlier form has no such section (WAY-336)."""
+def is_report_file(path: str) -> bool:
+    """A file of `reports/` written as `reports/<name>` in the form REPORT_FILE gives, with no
+    `..` in it."""
+    return REPORT_FILE.fullmatch(path) is not None and ".." not in path
+
+
+def files_cell(text: str) -> tuple[frozenset[str] | None, bool]:
+    """The files a cell *Files named* gives, and whether it reads as such: empty, `unknown`, or
+    files of `reports/` joined by `, `."""
+    if not text:
+        return frozenset(), True
+    if text == UNKNOWN:
+        return None, True
+    files = [part.strip() for part in text.split(",")]
+    if not all(is_report_file(path) for path in files):
+        return None, False
+    return frozenset(files), True
+
+
+def stage_tokens(lines: list[str], fenced: list[bool]) -> tuple[list[StageTokens] | None, bool,
+                                                                 str | None]:
+    """The rows of the section of `stages.md` that gives each stage's tokens by model, whether its
+    table has the column *Files named*, or None with the reason: an earlier form has no such
+    section (WAY-336)."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == STAGES_HEADING]
     if not headings:
-        return None, ("`stages.md` holds no section `Stages: start, waiting for tools and tokens "
-                      "by model`: an earlier form")
+        return None, False, ("`stages.md` holds no section `Stages: start, waiting for tools and "
+                             "tokens by model`: an earlier form")
     if len(headings) > 1:
-        return None, "`stages.md` holds that section more than once"
+        return None, False, "`stages.md` holds that section more than once"
     table: list[list[str]] = []
     for line, inside in zip(lines[headings[0] + 1:], fenced[headings[0] + 1:]):
         if inside:
@@ -585,126 +628,98 @@ def stage_tokens(lines: list[str],
             break
         if line.startswith("|"):
             table.append(table_cells(line))
-    if not table or table[0] != STAGE_COLUMNS:
-        return None, ("the table of the section in `stages.md` is not of the form the stage report "
-                      "gives")
+    named = bool(table) and table[0] == STAGE_COLUMNS + [FILES_COLUMN]
+    if not table or (table[0] != STAGE_COLUMNS and not named):
+        return None, False, ("the table of the section in `stages.md` is not of the form the stage "
+                             "report gives")
+    columns = len(table[0])
     body = [cells for cells in table[1:] if not is_separator(cells)]
     if not body:
-        return None, "the section in `stages.md` holds no stage row"
+        return None, False, "the section in `stages.md` holds no stage row"
     rows: list[StageTokens] = []
     for cells in body:
-        if len(cells) != len(STAGE_COLUMNS):
-            return None, (f"a row of the section in `stages.md` has {len(cells)} cells, not "
-                          f"{len(STAGE_COLUMNS)}")
+        if len(cells) != columns:
+            return None, False, (f"a row of the section in `stages.md` has {len(cells)} cells, not "
+                                 f"{columns}")
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
         if any(count is None for count in counts):
-            return None, ("a token count in the section of `stages.md` is not a number of at most "
-                          f"{TOKEN_DIGITS} digits")
-        rows.append(StageTokens(cells[1], cells[4], counts[0], counts[1], counts[2]))
-    return rows, None
+            return None, False, ("a token count in the section of `stages.md` is not a number of at "
+                                 f"most {TOKEN_DIGITS} digits")
+        row = StageTokens(cells[0], cells[1], cells[4], counts[0], counts[1], counts[2])
+        if named:
+            row.files, row.files_read = files_cell(cells[8])
+        rows.append(row)
+    return rows, named, None
 
 
-def report_paths(text: str) -> tuple[set[str], set[str]]:
-    """The fix reports and the review reports of fix rounds among the paths in `text`: a path
-    whose file name holds the words `report` and `fix`; the review of a fix holds `review` too."""
-    fixes: set[str] = set()
-    reviews: set[str] = set()
-    for token in text.split():
-        path = token.strip("`;,()")
-        if not path.endswith(".md"):
+def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
+    """The findings files of the fix rounds that the record's item `Review rounds` names, in its
+    form: the item reading `none`, or nothing after its colon and one entry indented under it for
+    each round, opening with the word `findings` and `reports/<file>.md` between backticks. None
+    with the reason where the item is missing, doubled, or not in that form. Outside code fences
+    only; one pass over the lines."""
+    openers = [index for index, line in enumerate(lines)
+               if not fenced[index] and line.startswith("- ")
+               and (header_field(line) or ("", ""))[0] == ROUNDS_LABEL]
+    if not openers:
+        return None, "the record holds no item `Review rounds`: an earlier form"
+    if len(openers) > 1:
+        return None, "the record holds the item `Review rounds` more than once"
+    start = openers[0]
+    rest = header_field(lines[start])[1]
+    markers: list[tuple[int, str]] = []
+    for line, inside in zip(lines[start + 1:], fenced[start + 1:]):
+        if not line.strip():
             continue
-        words = re.findall(r"[a-z]+", re.split(r"[\\/]", path)[-1].lower())
-        if "report" in words and "fix" in words:
-            (reviews if "review" in words else fixes).add(path)
-    return fixes, reviews
-
-
-def record_rounds(lines: list[str], fenced: list[bool]) -> tuple[set[str] | None, set[str] | None,
-                                                                  str | None]:
-    """The fix reports and the review reports of fix rounds that the record's `## Events` table
-    names, or None with the reason: an earlier form has no such table. The paths are read from the
-    column *Output or full report*."""
-    headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
-                if not inside and line.strip() == EVENTS_HEADING]
-    if not headings:
-        return None, None, "the record holds no `## Events` table: an earlier form"
-    fixes: set[str] = set()
-    reviews: set[str] = set()
-    columns: int | None = None
-    for line, inside in zip(lines[headings[0] + 1:], fenced[headings[0] + 1:]):
-        if inside:
-            continue
-        if line.startswith("#"):
+        indent = remarks_check.indent_of(line)
+        if indent == 0:
             break
-        if not line.startswith("|"):
-            continue
-        cells = table_cells(line)
-        if columns is None:
-            if EVENTS_OUTPUT not in cells:
-                return None, None, (f"the table of `## Events` has no column `{EVENTS_OUTPUT}`: an "
-                                    "earlier form")
-            columns = cells.index(EVENTS_OUTPUT)
-            continue
-        if is_separator(cells) or columns >= len(cells):
-            continue
-        found_fixes, found_reviews = report_paths(cells[columns])
-        fixes |= found_fixes
-        reviews |= found_reviews
-    if columns is None:
-        return None, None, "the table of `## Events` is missing: an earlier form"
-    return fixes, reviews, None
-
-
-def review_rounds(lines: list[str],
-                  fenced: list[bool]) -> tuple[set[str], set[str], bool]:
-    """The fix reports and the review reports that the record's line `Review rounds` names, and
-    whether the record holds that line: the line and the lines indented under it, outside code
-    fences."""
-    fixes: set[str] = set()
-    reviews: set[str] = set()
-    found = False
-    collecting = False
-    for line, inside in zip(lines, fenced):
-        if inside:
-            collecting = False
-            continue
-        if line.startswith("- Review rounds:"):
-            collecting = True
-            found = True
-        elif collecting and line[:1] in (" ", "\t") and line.strip():
-            pass
-        else:
-            collecting = False
-            continue
-        found_fixes, found_reviews = report_paths(line)
-        fixes |= found_fixes
-        reviews |= found_reviews
-    return fixes, reviews, found
-
-
-def stage_kind(name: str) -> str | None:
-    """`fix` for a fix stage, `review of a fix` for the review of one, or None: read from the
-    words of the stage's name, which the orchestrator gave the subagent."""
-    words = set(re.findall(r"[a-z]+", name.lower()))
-    if "fix" not in words:
-        return None
-    return "review of a fix" if "review" in words else "fix"
+        marker = None if inside else remarks_check.MARKER.fullmatch(line)
+        if marker:
+            markers.append((indent, marker.group("text")))
+    if not markers:
+        if remarks_check.reads_none(rest):
+            return [], None
+        return None, ("the item `Review rounds` names no findings file: it reads neither `none` nor "
+                      "an entry for each round")
+    if rest:
+        return None, "the item `Review rounds` holds text beside its entries"
+    base = min(indent for indent, _ in markers)
+    found: list[str] = []
+    for _, text in (marker for marker in markers if marker[0] == base):
+        entry = ROUND_ENTRY.match(text)
+        if not entry or not is_report_file(entry.group(1)):
+            return None, ("an entry of the item `Review rounds` names no findings file: it does not "
+                          "open with the word findings and reports/<file>.md between backticks")
+        if entry.group(1) in found:
+            return None, "the item `Review rounds` names a findings file twice"
+        found.append(entry.group(1))
+    return found, None
 
 
 def is_orchestrator_row(name: str) -> bool:
     """The orchestrator's own rows, as `cycle_stages.py` names them: its stretches and the rows of
-    its work while subagents run in parallel. Their names list subagents, but the work is the
-    orchestrator's, so they are in no fix round."""
-    return name == "orchestrator" or name.startswith("orchestrator while in parallel: ")
+    its work while subagents run in parallel. Their work is the orchestrator's, so they serve no
+    fix round by the files they name; the orchestrator's tokens while a fix runs stand in the
+    fix's own row."""
+    return name == ORCHESTRATOR or name.startswith("orchestrator while in parallel: ")
 
 
 def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
     """The cost in dollars of each row at the list's prices, or None with the reason: a model with
-    no price, a cached input above its input, or a stage with no token usage make the cost
-    unknown."""
+    no price, a cached input above its input, a subagent stage with no token usage, or a section
+    with no stage that has any, make the cost unknown. An orchestrator stretch with no token usage
+    costs nothing."""
     costs: list[Decimal] = []
+    if all(row.model == NO_MODEL for row in rows):
+        return None, "every stage of `stages.md` has no token usage, so the cost is not known"
     for row in rows:
         if row.model == NO_MODEL:
+            if row.name == ORCHESTRATOR:
+                # A stretch of the orchestrator's own work with time and no response of a model:
+                # `cycle_stages.py` reads every response of the orchestrator's transcript.
+                costs.append(Decimal(0))
+                continue
             # `cycle_stages.py` writes this mark for a stage it found no token usage for: its
             # tokens are not known, so its cost is not zero.
             return None, (f"stage `{row.name}` has no token usage in its transcript, so its cost "
@@ -726,7 +741,7 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
              prices: Prices) -> None:
     """The cycle's cost at the list's prices and the share of its fix rounds in it; a value that
     cannot be given is `unknown` with its reason, never zero."""
-    rows, reason = stage_tokens(stages_lines, stages_fenced)
+    rows, named, reason = stage_tokens(stages_lines, stages_fenced)
     if rows is None:
         cycle.unknown += [("Cost", reason), ("Fix rounds share", reason)]
         return
@@ -743,40 +758,52 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
     if record_lines is None:
         cycle.unknown.append(("Fix rounds share", record_reason))
         return
-    fixes, reviews, reason = record_rounds(record_lines, record_fenced)
-    if fixes is None:
+    findings, reason = review_rounds(record_lines, record_fenced)
+    if findings is None:
         cycle.unknown.append(("Fix rounds share", reason))
         return
-    named_fixes, named_reviews, found = review_rounds(record_lines, record_fenced)
-    if not found:
-        cycle.unknown.append(("Fix rounds share", "the record holds no line `Review rounds`: an "
-                                                  "earlier form"))
-        return
-    if (fixes, reviews) != (named_fixes, named_reviews):
-        cycle.unknown.append(("Fix rounds share", (
-            f"the record's *Events* name {len(fixes)} fix report(s) and {len(reviews)} review "
-            f"report(s) of a fix, its line `Review rounds` names {len(named_fixes)} and "
-            f"{len(named_reviews)}: the two do not agree")))
-        return
-    cycle.rounds = len(fixes)
-    if fixes or reviews:
-        # The stage names say which subagent worked, not which round a turn served: no stage can
-        # be tied to a round by anything the records or stages.md write, so no share is given.
-        cycle.unknown.append(("Fix rounds share", (
-            f"the record names {len(fixes)} fix report(s) and {len(reviews)} review report(s) of a "
-            "fix; stages.md names the subagents, not the round each turn served, so the stages "
-            "cannot be tied to the rounds reliably")))
-        return
-    named = [row.name for row in rows if not is_orchestrator_row(row.name)]
-    if any(stage_kind(name) is not None for name in named):
-        cycle.unknown.append(("Fix rounds share", (
-            "stages.md names a fix or a review of a fix, and the record names no fix round")))
-        return
+    cycle.rounds = len(findings)
+    reason = fix_rounds_share(rows, costs, total, named, findings, cycle)
+    if reason:
+        cycle.unknown.append(("Fix rounds share", reason))
+
+
+def fix_rounds_share(rows: list[StageTokens], costs: list[Decimal], total: Decimal, named: bool,
+                     findings: list[str], cycle: Cycle) -> str | None:
+    """Set the share of the cost spent in the fix rounds whose findings files the record names:
+    the cost of the subagent turns given one of those files, each turn once, over the cycle's
+    cost (WAY-336). Returns the reason where it cannot be given."""
+    if not named:
+        return f"`stages.md` has no column `{FILES_COLUMN}`: an earlier form"
     if total == 0:
-        cycle.unknown.append(("Fix rounds share", "the stages hold no tokens"))
-        return
-    # The record names no fix round and no stage names one: no cost is spent in fix rounds.
-    cycle.share = Decimal(0)
+        return "the stages hold no tokens"
+    turns: dict[str, tuple[frozenset[str] | None, Decimal]] = {}
+    for row, cost in zip(rows, costs):
+        if is_orchestrator_row(row.name):
+            continue
+        if not row.files_read:
+            return (f"the cell `{FILES_COLUMN}` of stage `{row.name}` is not a list of files of "
+                    "`reports/`")
+        files, spent = turns.get(row.number, (row.files, Decimal(0)))
+        turns[row.number] = (files, spent + cost)
+    given = [files for files, _ in turns.values() if files is not None]
+    unread = len(turns) - len(given)
+    extra = sorted({path for files in given for path in files
+                    if FINDINGS_WORD in path.rsplit("/", 1)[-1]} - set(findings))
+    if extra:
+        return (f"{len(extra)} findings file(s) the subagent turns were given are not named by "
+                f"the item `Review rounds`, which names {len(findings)}: the record and "
+                "`stages.md` do not agree")
+    for path in findings:
+        count = sum(1 for files in given if path in files)
+        if count < 2:
+            return (f"the findings file `{path}` that the item `Review rounds` names is named by "
+                    f"{count} subagent turn(s), and a round has a fix and the review of that fix"
+                    + (f"; the message of {unread} turn(s) could not be read" if unread else ""))
+    spent = sum((cost for files, cost in turns.values()
+                 if files is not None and files & set(findings)), Decimal(0))
+    cycle.share = spent / total * 100
+    return None
 
 
 def tree_entries(git: Git, commit: str) -> dict[bytes, tuple[bytes, bytes, str, str]]:
@@ -964,9 +991,11 @@ def render(reads: list[Read], prices: Prices) -> str:
         "## Cost",
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
-        "list starts a new one (WAY-338). *Fix rounds* is the number of fix reports the record "
-        "names; *Share of the cost in fix rounds* is the cost of the fix stages and of the review "
-        "of each fix over the cycle's cost. `unknown` has its reason in *Unknown values*.",
+        "list starts a new one (WAY-338). A stretch of the orchestrator with no token usage costs "
+        "nothing. *Fix rounds* is the number of findings files the record's *Review rounds* "
+        "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "
+        "those findings files — each fix and the review of that fix — over the cycle's cost. "
+        "`unknown` has its reason in *Unknown values*.",
         "",
         "| Repository | Record | Price list | Cost (USD) | Fix rounds "
         "| Share of the cost in fix rounds |",
