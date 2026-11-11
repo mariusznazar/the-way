@@ -110,6 +110,16 @@ review done.
   elements-common · project-level
 - **Trust boundary:** none
 
+## process-audit
+
+The part answers for the audit of whether the process gets better, cheaper and faster across
+cycles: the template of the register of problems, the dated price list of models, the command that
+counts the audit and the skill that leads its weekly session.
+
+- **Files:** process-audit/**
+- **Depends on:** task-cycle · project-level
+- **Trust boundary:** none
+
 ## gate
 
 The part answers for the command that runs every test of the-way, and for the tests of critical
