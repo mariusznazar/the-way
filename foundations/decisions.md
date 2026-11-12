@@ -10944,34 +10944,36 @@ made — a refiner cannot know it before the other task's line exists; one hyphe
 other than a letter, a digit or a hyphen, instead of one for each run — a double hyphen where a file
 name holds a space beside a bracket.
 
-### WAY-330 — Where does the audit of the process get the class and weight of each problem, and the tie of a problem to the fix meant to remove it?
+### WAY-330 — Where does the audit of the process get the class, weight and cost of an occurrence of each problem, and the tie of a problem to the fix meant to remove it?
 
 The-way gives a template of a register of problems, which holds for each problem the cycle it comes
-from, its class and weight, the issue it belongs to — the one matter that like problems of several
-cycles make — and that issue's fate, the fix of an implemented issue included. A user's own tool
-fills the register and the user adapts the template to their own needs; the audit reads the register
-that an entry of the user's locations file names and gives no problem a class or a weight itself.
+from, its class, its weight, the cost of its occurrence, the issue it belongs to — the one matter
+that like problems of several cycles make — and that issue's fate, the fix of an implemented issue
+included. A user's own tool fills the register and the user adapts the template to their own needs;
+the audit reads the register that an entry of the user's locations file names and gives no problem a
+class, a weight or a cost of an occurrence itself.
 
 - **Scope:** process-audit
 - **Based on:** none
 - **Relations:** derives from WAY-103 · derives from WAY-320
 - **Verification:** an agent compares a change with the decision:
   - complies: the command of the audit reads the register at the place that an entry of the
-    locations file names, and counts each problem with the class and weight the register gives it; a
-    user whose tool records problems another way changes the template for themselves;
-  - violates: the audit reads the stage reports of cycles and gives their remarks a class and a
-    weight itself; the repository of the-way holds a register filled with a user's problems; the
-    audit reads a register from a place written into its code.
+    locations file names, and counts each problem with the class, weight and cost of an occurrence
+    the register gives it; a user whose tool records problems another way changes the template for
+    themselves;
+  - violates: the audit reads the stage reports of cycles and gives their remarks a class, a weight
+    and a cost of an occurrence itself; the repository of the-way holds a register filled with a
+    user's problems; the audit reads a register from a place written into its code.
 - **Origin:** none
 
-*Rationale:* the class and weight of a problem are a judgment. A register that a tool of the user
-fills holds that judgment once, where an audit that read the records of cycles itself would repeat
-it every week, and could repeat it differently. A template lets another user of the-way keep the
+*Rationale:* the class, weight and cost of an occurrence of a problem are a judgment. A register
+that a tool of the user fills holds that judgment once, where an audit that read the records of
+cycles itself would repeat it every week, and could repeat it differently. A template lets another user of the-way keep the
 same register in their own way, as WAY-103 asks of a process meant for more than its author. The
 price taken: until a user has a tool that fills the register, the audit has nothing to count.
-*Rejected:* the audit reading the records of cycles itself and giving the class and weight — the
-same remarks would be judged by two agents, who may judge differently, and the tie of a problem to
-its fix would have to be rebuilt each time; the-way taking over the review of the remarks of cycles
+*Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost
+— the same remarks would be judged by two agents, who may judge differently, and the tie of a
+problem to its fix would have to be rebuilt each time; the-way taking over the review of the remarks of cycles
 — the largest change, and the remarks would turn into issues once a week instead of every night.
 
 ### WAY-331 — Where in the repository does the audit of the process stand?
@@ -11381,6 +11383,68 @@ process remarks every item goes into the remarks word for word (WAY-294), so a m
 report would become a process remark and the report would stay uncorrected, the same quiet pass the
 rule prevents; a new exit code, such as 3 — each skill that reads exit codes would have to be
 extended.
+
+### WAY-345 — How is the cost of one occurrence of a problem that the audit counts graded?
+
+The cost of an occurrence of a problem is graded on a scale of five levels — `nothing`, `steps`,
+`stage`, `round` and `human` — each dearer than the one before. A problem has the highest level that
+the cost of its occurrence actually reached, and the user adapts the meaning of a level, never the
+levels.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-330
+- **Verification:** an agent compares a change with the decision:
+  - complies: the register gives a problem one of the five levels, and a problem whose occurrence
+    cost a few steps of an agent and then an extra run of an agent has `round`; the count refuses a
+    row whose cost is none of the five levels, and a table of levels that does not name each of the
+    five once; a user changes what `steps` means in their register and leaves the five levels
+    as they are;
+  - violates: the scale gains a sixth level, or the count reads a list of levels that the user
+    keeps and widens; a problem that cost on several levels has the lowest of them, or one level
+    for each; the audit gives a problem its cost itself.
+- **Origin:** none
+
+*Rationale:* the weight of a problem says how far it endangered the change, and it does not say what
+an occurrence cost: a collision of decision numbers at a merge can weigh Minor and cost a whole extra
+run of an agent, and an edit in the main copy of a repository can weigh Important and cost a few
+steps. A scale the counting command knows in order lets it count the levels as a scale, where a list
+the user widens would make cost a category with no order, and each change to the list would break a
+series of measures, as a change to the list of classes does (WAY-339). The highest level reached,
+because a problem that cost a few steps and then a round has cost a round. The price: the levels are
+coarse, and which level an occurrence reached is a judgment of whoever fills the register.
+*Rejected:* a list of levels that the user keeps and widens, as the classes are — the counting
+command does not know the order of the levels, so cost becomes a category and not a scale, and every
+change to the list breaks a series of measures; four levels, with no `stage` — easier to assign, but
+a repeated command and a second reading of several hundred kilobytes of the foundation land on the
+same level; `human` outside the scale, as an axis of its own — the time of the human is another
+currency than the tokens of agents, but every row gets a third grade and the count a third axis.
+
+### WAY-346 — Where does the result of the audit's count show the cost of an occurrence?
+
+For each issue, fixed, open and dropped, the result of the count gives how many of its problems stand
+on each level of the cost of an occurrence, and it gives no count of those levels by cycle.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-345
+- **Verification:** an agent compares a change with the decision:
+  - complies: the result lists each issue of the register, in the register's order, with the number
+    of its problems on `nothing`, `steps`, `stage`, `round` and `human`, and the audit puts the row
+    of an issue beside the issue as material for the human to weigh;
+  - violates: the result gives a table of class by cost of an occurrence for each cycle, beside the
+    table of class by weight; the result orders the issues by the cost of their problems and
+    presents the order as a priority (WAY-336).
+- **Origin:** none
+
+*Rationale:* the human of the audit weighs an issue, what a return of it costs against what its fix
+costs (WAY-336), and the cost of an occurrence is the first of the two. Whether cycles get cheaper
+is what the cost of a cycle already measures (WAY-337), so a count of the levels at the cycles would
+add a second measure of the same question and an extra table to read.
+*Rejected:* the cost at the cycles, as a second table of class by cost beside that of class by
+weight — no step of the audit's session reads it, and whether cycles get cheaper is already
+measured by the cost of a cycle (WAY-337); the cost in both places — a longer result, and half of the
+new numbers fall in a table the session does not read.
 
 ## Withdrawn identifiers
 
