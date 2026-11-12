@@ -400,14 +400,72 @@ class EdgeReadingTest(MeasuresTest):
         self.assertIn("- Context of the orchestrator's last call: 300\n", text)
         self.assertIn("| x1 | Claude Code | 3 | 100 | 200 | 300 |", text)
 
-    def test_a_response_with_no_id_counts_as_a_call_of_its_own(self) -> None:
-        first = response("09:00:00", "x", input_tokens=1, output=1)
-        second = response("09:01:00", "y", input_tokens=2, output=1)
-        del first["message"]["id"]
-        del second["message"]["id"]
-        self.session([first, second])
-        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
-        self.assertIn("- Calls of the orchestrator: 2\n", text)
+    def test_a_response_without_message_id_ends_with_exit_2_naming_the_line_and_field(self) -> None:
+        broken = response("09:00:00", "x", input_tokens=1, output=1)
+        del broken["message"]["id"]
+        transcript = self.session([prompt("08:59:00", "run"), broken])
+        self.assert_error_names(transcript, 2, "message.id")
+
+    def test_a_response_without_timestamp_ends_with_exit_2_naming_the_line_and_field(self) -> None:
+        broken = response("09:00:00", "x", input_tokens=1, output=1)
+        del broken["timestamp"]
+        transcript = self.session([prompt("08:59:00", "run"), broken])
+        self.assert_error_names(transcript, 2, "timestamp")
+
+    def test_a_response_with_unreadable_timestamp_ends_with_exit_2_naming_the_field(self) -> None:
+        broken = response("09:00:00", "x", input_tokens=1, output=1)
+        broken["timestamp"] = 12345
+        transcript = self.session([broken])
+        self.assert_error_names(transcript, 2, "timestamp")
+
+    def assert_error_names(self, transcript: Path, code_expected: int, field: str) -> None:
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(transcript), "--output", str(output))
+        self.assertEqual(code_expected, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(transcript.name, errors)
+        self.assertIn(field, errors)
+        self.assertRegex(errors, r":\d+: ")
+        self.assertFalse(output.exists())
+
+    def test_a_line_nested_too_deeply_ends_with_exit_2_naming_the_file_and_line(self) -> None:
+        transcript = self.session([prompt("09:00:00", "run")])
+        with transcript.open("a", encoding="utf-8") as handle:
+            handle.write("[" * 200000 + "]" * 200000 + "\n")
+        self.assert_error_names_line(transcript)
+
+    def test_a_number_of_more_than_4300_digits_ends_with_exit_2_naming_the_file_and_line(self) -> None:
+        transcript = self.session([prompt("09:00:00", "run")])
+        digits = "9" * 5000
+        with transcript.open("a", encoding="utf-8") as handle:
+            handle.write('{"type": "assistant", "timestamp": "' + at("09:01:00") + '", "message": '
+                         '{"id": "big", "model": "opus", "usage": {"input_tokens": ' + digits
+                         + ', "cache_read_input_tokens": 0, "cache_creation_input_tokens": 0, '
+                         '"output_tokens": 1, "cache_creation": {"ephemeral_5m_input_tokens": 0, '
+                         '"ephemeral_1h_input_tokens": 0}}}}\n')
+        self.assert_error_names_line(transcript)
+
+    def assert_error_names_line(self, transcript: Path) -> None:
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(transcript), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(transcript.name, errors)
+        self.assertRegex(errors, rf"{transcript.name}:2: ")
+        self.assertFalse(output.exists())
+
+    def test_a_meta_file_with_a_number_of_more_than_4300_digits_ends_with_exit_2_naming_it(self) -> None:
+        write_lines(self.project / SESSION / "subagents" / "agent-m1.jsonl", [
+            response("09:00:00", "m", input_tokens=1, output=1)])
+        meta = self.project / SESSION / "subagents" / "agent-m1.meta.json"
+        meta.write_text('{"description": ' + "9" * 5000 + "}", encoding="utf-8")
+        self.session([prompt("08:59:00", "run")])
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(self.project / f"{SESSION}.jsonl"), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(meta.name, errors)
+        self.assertFalse(output.exists())
 
     def test_a_bar_and_a_control_character_in_an_agent_name_do_not_break_the_table(self) -> None:
         write_lines(self.project / SESSION / "subagents" / "agent-b1.jsonl", [

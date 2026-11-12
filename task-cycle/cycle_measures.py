@@ -48,7 +48,6 @@ SYNTHETIC_MODEL = "<synthetic>"
 REWRITE_FLOOR = 2000
 REWRITE_SHRINK_LIMIT = (7, 10)  # a context that falls to 7/10 of the previous one or less is a collapse
 LARGE_CONTEXT = 200000
-EARLIEST = datetime.min.replace(tzinfo=timezone.utc)
 
 
 @dataclass(frozen=True)
@@ -73,14 +72,15 @@ class Agent:
     calls: list[Call]
 
 
-def parse_time(value: object) -> datetime:
-    """The time of a transcript line, in UTC; a line with no readable time sorts first."""
+def read_time(entry: dict, where: str) -> datetime:
+    """The time of a response line, in UTC. A missing or unreadable time ends the reading."""
+    value = member(entry, "timestamp", "timestamp", where)
     if not isinstance(value, str):
-        return EARLIEST
+        raise MeasuresError(f"{where}: field timestamp is not a time")
     try:
         at = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return EARLIEST
+    except ValueError as error:
+        raise MeasuresError(f"{where}: field timestamp is not a time") from error
     return at if at.tzinfo else at.replace(tzinfo=timezone.utc)
 
 
@@ -107,7 +107,7 @@ def read_response(entry: dict, where: str, index: int) -> tuple[str, int, Call]:
     write = whole(usage, "cache_creation_input_tokens", "message.usage.cache_creation_input_tokens",
                   where)
     call = Call(
-        at=parse_time(entry.get("timestamp")),
+        at=read_time(entry, where),
         index=index,
         input=whole(usage, "input_tokens", "message.usage.input_tokens", where),
         read=whole(usage, "cache_read_input_tokens", "message.usage.cache_read_input_tokens", where),
@@ -118,9 +118,9 @@ def read_response(entry: dict, where: str, index: int) -> tuple[str, int, Call]:
                        "message.usage.cache_creation.ephemeral_1h_input_tokens", where),
     )
     output = whole(usage, "output_tokens", "message.usage.output_tokens", where)
-    ident = message.get("id")
+    ident = member(message, "id", "message.id", where)
     if not isinstance(ident, str) or not ident:
-        ident = f"line {index}"
+        raise MeasuresError(f"{where}: field message.id is not an identifier")
     return ident, output, call
 
 
@@ -136,7 +136,7 @@ def read_calls(path: Path) -> list[Call]:
                 where = f"{path}:{number}"
                 try:
                     entry = json.loads(line)
-                except json.JSONDecodeError as error:
+                except (ValueError, RecursionError) as error:
                     raise MeasuresError(f"{where}: not JSON: {error}") from error
                 if not isinstance(entry, dict):
                     raise MeasuresError(f"{where}: not a JSON object")
@@ -175,7 +175,7 @@ def read_subagent_name(transcript: Path, agent_id: str) -> str:
     if meta_path.is_file():
         try:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        except (OSError, UnicodeDecodeError, ValueError, RecursionError) as error:
             raise MeasuresError(f"cannot read {meta_path}: {error}") from error
     if not isinstance(meta, dict):
         meta = {}
