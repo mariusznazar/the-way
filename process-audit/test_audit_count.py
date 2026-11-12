@@ -1622,6 +1622,15 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual(500, len(self.rows("Gate runs")))
         self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
 
+    def test_a_flood_of_wrong_width_rows_after_a_valid_header_is_capped_too(self):
+        # Every row of the wrong number of cells is a run of its own, and the limit counts it
+        # (WAY-349): a crafted file of such rows costs bounded work and writes bounded rows.
+        rows = "| a | b |\n" * 600
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(500, len(self.rows("Gate runs")))
+        self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
+
     def test_directories_beyond_the_limit_of_one_run_are_not_listed_and_say_so(self):
         rows = "".join(gate_row(STARTED, 0, "1.000", 0, f"gate/d{index:02}", "1.0")
                        for index in range(60))

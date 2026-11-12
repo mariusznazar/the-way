@@ -1473,18 +1473,20 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
         cells = table_cells(lines[index])
         if is_separator(cells):
             continue
-        if len(cells) != len(names):
-            reasons.append(("Gate runs", f"a row of the table in `{GATE_FILE}` has {len(cells)} "
-                                         f"cells, not {len(names)}"))
-            runs.append((None, []))
-            last = None
-            continue
-        key = [cells[at[name]] for name in GATE_RUN_COLUMNS]
-        if last is None or key != last:
+        # A row of the wrong number of cells is a run of its own, and the limit counts it too.
+        wide = len(cells) != len(names)
+        key = None if wide else [cells[at[name]] for name in GATE_RUN_COLUMNS]
+        if wide or last is None or key != last:
             if len(runs) >= MAX_RUNS:
                 reasons.append(("Gate runs", f"`{GATE_FILE}` holds more than {MAX_RUNS} runs: the "
                                              "rest are not read"))
                 break
+            if wide:
+                reasons.append(("Gate runs", f"a row of the table in `{GATE_FILE}` has "
+                                             f"{len(cells)} cells, not {len(names)}"))
+                runs.append((None, []))
+                last = None
+                continue
             runs.append((key, []))
             last = key
         directory, seconds = cells[at["Directory"]], cells[at["Directory seconds"]]
