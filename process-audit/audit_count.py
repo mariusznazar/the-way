@@ -52,15 +52,20 @@ ones noted, and its values are read from the last copy, the most complete. For e
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
-- the cost at constant prices: each row of the section *Stages: start, waiting for tools and
-  tokens by model* of the copy's `stages.md` is priced at the list's prices, its input less its
-  cached input at the *Input* price, its cached input at the *Cached input* price and its output at
-  the *Output* price. Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in),
-  so they are priced as input: an approximation. A model the list gives no price for, a row that
-  does not read, a subagent stage with no token usage (the model `—`), a stage whose usage the
-  stage report could not read (the model `unknown`), a section where no stage has any, or a
-  `stages.md` without that section (an earlier form) gives the cost `unknown`, never zero; a row of
-  the orchestrator with no token usage, time it worked with no response of a model, costs nothing;
+- the cost at constant prices (WAY-337, WAY-352), from the copy's `stages.md` in either of its two
+  forms. The newer form is known by its heading: each row of the section *Stages: start, waiting
+  for tools and tokens by model* is priced at the list's prices, its input less its cached input at
+  the *Input* price, its cached input at the *Cached input* price and its output at the *Output*
+  price. The older form has no such section: it is known by its table of tokens by model, the one
+  table whose header row begins with *Model* and has the columns *Model*, *Total tokens*, *Input*,
+  *Cached input* and *Output*, found exactly once, and each of its rows is priced in the same way.
+  Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in), so they are priced
+  as input: an approximation. A model the list gives no price for, a row that does not read, a
+  cached input above its input, a subagent stage with no token usage (the model `—`), a stage or a
+  row whose usage the stage report could not read (the model `unknown`), a section where no stage
+  has any, a table of the older form with no row, or such a table written twice, gives the cost
+  `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
+  response of a model, costs nothing;
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
@@ -72,7 +77,9 @@ ones noted, and its values are read from the last copy, the most complete. For e
   no subagent turn was given a findings file, told by the word `findings` in its name as the check
   of process remarks tells one (WAY-294). It is `unknown`, with the reason, where the item is
   missing, doubled or names a round otherwise than by its findings file, where `stages.md` has no
-  column *Files named* (an earlier form), where a cell of it is not a list of files of `reports/`,
+  column *Files named* (an earlier form of the section), where `stages.md` is of the older form,
+  whose table of tokens by model gives no turns (the number of fix rounds is still read from the
+  record's item, as for the newer form), where a cell of it is not a list of files of `reports/`,
   where the rows of one turn disagree in their stage or their files, where a subagent turn's cell
   reads `unknown`, since that turn may serve a round, where a findings file the record names is
   named by fewer than two subagent turns, the fix and the review of that fix, or where a turn was
@@ -115,7 +122,22 @@ none.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
-result says why. The records, the `stages.md` files and the locations file are untrusted input:
+result says why. A field of `stages.md` that the form the file's own signs name needs and the file
+lacks is a missing field (WAY-344, which gives this command its own way to end): the values that need it
+are `unknown`, the result is written, and the run ends with exit 1 and, for each missing field, a
+line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `stages.md` of the copy lacks
+the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
+`Model`, `Input`, `Cached input` and `Output` of the table of the newer form's section, and that
+table itself, which a heading with no table misses (the column `Files named` is never missing: a
+section without it is the earlier form of the section); the columns `Input`, `Cached input` and
+`Output` of the older form's table, `Model` being its sign; the section and the table both, where
+the file has neither the heading nor a table beginning with `Model`; and, where the file has one of
+the lines `- Working time without waiting for tools:` and `- Waiting for tools:`, the other (a file
+with neither is an earlier form, read with both times unknown and no error). Every field of
+`stages.md` is under this check, since this reading of the file is reworked. Where every field
+stands in a table but in another order, or another column stands beside them, none is missing: the
+table is refused with a reason, as before. The records, the `stages.md` files and the locations
+file are untrusted input:
 their text reaches the result only as a commit, a number or a time it was read as, and a folder,
 a key or a name in a reason on one line, cut to 200 characters, with each control character and
 each bar written as `\\x..`, so that no cell of a table holds a bar; a bar and the text `\\x7c`
@@ -173,8 +195,8 @@ issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* gi
 counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
 
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
-read, or a table of the register refused as a whole, named in the result and in an `Error:` line on
-stderr; 2 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the
+read, a table of the register refused as a whole, or a field missing in a `stages.md`, named in the
+result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the
 locations file, the price list, the register or an entry it needs is missing or wrong, the register
 lacks a heading, a table or a column it needs, the register is larger than 4 MiB or not UTF-8, the
 result directory lies inside a repository to read or the checkout of the-way, or the result cannot
@@ -233,10 +255,23 @@ REMARKS_OPENER = re.compile(r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on th
 DURATION = re.compile(r"(\d{1,7}):([0-5]\d):([0-5]\d)")
 WORKING_LINE = "- Working time without waiting for tools:"
 WAITING_LINE = "- Waiting for tools:"
-STAGES_HEADING = "## Stages: start, waiting for tools and tokens by model"
+SECTION_TITLE = "Stages: start, waiting for tools and tokens by model"
+STAGES_HEADING = "## " + SECTION_TITLE
 STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
 FILES_COLUMN = "Files named"
+# The table of tokens by model, which every form of `stages.md` has and the older form is read
+# from: the table whose header row begins with `Model` (WAY-352).
+MODEL_COLUMN = "Model"
+OLDER_COLUMNS = [MODEL_COLUMN, "Total tokens", "Input", "Cached input", "Output"]
+OLDER_NEEDED = ("Input", "Cached input", "Output")
+# The fields of `stages.md` a form needs, as an `Error:` line names them (WAY-344): no backtick
+# stands in a name, since the line writes the name between backticks.
+FIELD_SECTION = f"section {SECTION_TITLE}"
+FIELD_SECTION_TABLE = f"table of the section {SECTION_TITLE}"
+FIELD_OLDER_TABLE = f"table with the first cell {MODEL_COLUMN}"
+OLDER_NO_TURNS = ("`stages.md` is of the older form, whose table of tokens by model gives no turns, "
+                  "so no round is tied to the turns that served it")
 NO_MODEL = "—"
 ORCHESTRATOR = "orchestrator"
 # A file of the cycle's `reports/` as `task-cycle/cycle_stages.py` writes it and as the record's
@@ -481,6 +516,9 @@ class Cycle:
     planned: int | None = None
     too_large: int | None = None
     unknown: list[tuple[str, str]] = field(default_factory=list)
+    # The fields of `stages.md` a form needs that the copy lacks, as an `Error:` line names them
+    # (WAY-344): the run ends with exit code 1 where any cycle has one.
+    missing: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -599,6 +637,18 @@ def stages_time(lines: list[str], fenced: list[bool], prefix: str,
         return None, f"`stages.md` gives the {what} in a form that is not h:mm:ss"
     hours, minutes, seconds = (int(part) for part in match.groups())
     return hours * 3600 + minutes * 60 + seconds, None
+
+
+def has_line(lines: list[str], fenced: list[bool], prefix: str) -> bool:
+    """Whether a line of `stages.md` outside code fences begins with `prefix`."""
+    return any(not inside and line.startswith(prefix) for line, inside in zip(lines, fenced))
+
+
+def missing_line(cycle: Cycle, prefix: str) -> str:
+    """Record the time line `prefix` as a field `stages.md` lacks, and give the reason."""
+    name = f"line {prefix[2:-1]}"
+    cycle.missing.append(name)
+    return missing_reason(name)
 
 
 # Tables and the price list
@@ -754,48 +804,130 @@ def files_cell(text: str) -> tuple[frozenset[str] | None, bool]:
     return frozenset(files), True
 
 
-def stage_tokens(lines: list[str], fenced: list[bool]) -> tuple[list[StageTokens] | None, bool,
-                                                                 str | None]:
-    """The rows of the section of `stages.md` that gives each stage's tokens by model, whether its
-    table has the column *Files named*, or None with the reason: an earlier form has no such
-    section (WAY-337)."""
+@dataclass
+class StageTable:
+    """What `stages.md` gives for its cost, in the form its own signs name (WAY-337, WAY-352): the
+    rows of the section of the newer form, or of the table of tokens by model of the older form
+    (`older`); `named` is whether the section's table has the column *Files named*. `rows` is None
+    with the `reason` where they cannot be read; `missing` holds the fields the form needs that the
+    file lacks (WAY-344), which are no refusal of the form but a field not found."""
+    rows: list[StageTokens] | None = None
+    named: bool = False
+    older: bool = False
+    reason: str | None = None
+    missing: list[str] = field(default_factory=list)
+
+
+def missing_columns(found: list[str], needed, where: str) -> list[str]:
+    """The fields that name each column of `needed` that the header row `found` lacks, in the
+    order of `needed`."""
+    return [f"column {name} of the table {where}" for name in needed if name not in found]
+
+
+def stage_table(lines: list[str], fenced: list[bool]) -> StageTable:
+    """The rows `stages.md` gives for the cost. The newer form is known by the heading of its
+    section, and is read from the table of that section; without the heading the file is of the
+    older form, read from its table of tokens by model. A file with neither lacks the section and
+    the table (WAY-344)."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == STAGES_HEADING]
-    if not headings:
-        return None, False, ("`stages.md` holds no section `Stages: start, waiting for tools and "
-                             "tokens by model`: an earlier form")
     if len(headings) > 1:
-        return None, False, "`stages.md` holds that section more than once"
+        return StageTable(reason="`stages.md` holds that section more than once")
+    if headings:
+        return section_table(lines, fenced, headings[0])
+    return older_table(lines, fenced)
+
+
+def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTable:
+    """The newer form: the rows of the table under the heading of the section. A heading with no
+    table, or a table whose header row lacks one of the columns the form needs, is a field missing;
+    the column *Files named* is never one: a section without it is the earlier form of the
+    section."""
     table: list[list[str]] = []
-    for line, inside in zip(lines[headings[0] + 1:], fenced[headings[0] + 1:]):
+    for line, inside in zip(lines[heading + 1:], fenced[heading + 1:]):
         if inside:
             continue
         if line.startswith("#"):
             break
         if line.startswith("|"):
             table.append(table_cells(line))
-    named = bool(table) and table[0] == STAGE_COLUMNS + [FILES_COLUMN]
-    if not table or (table[0] != STAGE_COLUMNS and not named):
-        return None, False, ("the table of the section in `stages.md` is not of the form the stage "
-                             "report gives")
+    if not table:
+        return StageTable(reason="the section in `stages.md` holds no table",
+                          missing=[FIELD_SECTION_TABLE])
+    absent = missing_columns(table[0], STAGE_COLUMNS, f"of the section {SECTION_TITLE}")
+    if absent:
+        return StageTable(reason="the table of the section in `stages.md` lacks a column",
+                          missing=absent)
+    named = table[0] == STAGE_COLUMNS + [FILES_COLUMN]
+    if table[0] != STAGE_COLUMNS and not named:
+        return StageTable(reason=("the table of the section in `stages.md` is not of the form the "
+                                  "stage report gives"))
     columns = len(table[0])
     body = [cells for cells in table[1:] if not is_separator(cells)]
     if not body:
-        return None, False, "the section in `stages.md` holds no stage row"
+        return StageTable(reason="the section in `stages.md` holds no stage row")
     rows: list[StageTokens] = []
     for cells in body:
         if len(cells) != columns:
-            return None, False, (f"a row of the section in `stages.md` has {len(cells)} cells, not "
-                                 f"{columns}")
+            return StageTable(reason=(f"a row of the section in `stages.md` has {len(cells)} "
+                                      f"cells, not {columns}"))
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
         if any(count is None for count in counts):
-            return None, False, ("a token count in the section of `stages.md` is not a number of at "
-                                 f"most {TOKEN_DIGITS} digits")
+            return StageTable(reason=("a token count in the section of `stages.md` is not a number "
+                                      f"of at most {TOKEN_DIGITS} digits"))
         row = StageTokens(cells[0], cells[1], cells[4], counts[0], counts[1], counts[2])
         if named:
             row.files, row.files_read = files_cell(cells[8])
         rows.append(row)
-    return rows, named, None
+    return StageTable(rows=rows, named=named)
+
+
+def older_table(lines: list[str], fenced: list[bool]) -> StageTable:
+    """The older form: the rows of the table of tokens by model, the one table of `stages.md`
+    whose header row begins with `Model`, found exactly once. Without it the file lacks the section
+    and the table; written twice, no row is chosen and the cost is unknown with no field missing;
+    a header row without one of the columns the cost needs is a field missing, and in another
+    order, or with another column beside them, none is and the table is refused."""
+    starts = [index for index, (line, inside) in enumerate(zip(lines, fenced))
+              if not inside and line.startswith("|") and table_cells(line)[:1] == [MODEL_COLUMN]
+              and (index == 0 or fenced[index - 1] or not lines[index - 1].startswith("|"))]
+    if not starts:
+        return StageTable(reason=("`stages.md` holds neither the section `" + SECTION_TITLE
+                                  + "` nor a table of tokens by model"),
+                          missing=[FIELD_SECTION, FIELD_OLDER_TABLE])
+    if len(starts) > 1:
+        return StageTable(reason="`stages.md` holds the table of tokens by model more than once")
+    start = starts[0]
+    header = table_cells(lines[start])
+    absent = missing_columns(header, OLDER_NEEDED, f"with the first cell {MODEL_COLUMN}")
+    if absent:
+        return StageTable(reason="the table of tokens by model in `stages.md` lacks a column",
+                          missing=absent)
+    form = "the table of tokens by model in `stages.md` is not of the form the stage report gives"
+    if header != OLDER_COLUMNS:
+        return StageTable(reason=form)
+    if (start + 1 >= len(lines) or fenced[start + 1] or not lines[start + 1].startswith("|")
+            or not is_separator(table_cells(lines[start + 1]))):
+        return StageTable(reason=form)
+    body: list[list[str]] = []
+    for index in range(start + 2, len(lines)):
+        if fenced[index] or not lines[index].startswith("|"):
+            break
+        body.append(table_cells(lines[index]))
+    if not body:
+        return StageTable(reason="the table of tokens by model in `stages.md` holds no model row")
+    rows: list[StageTokens] = []
+    for number, cells in enumerate(body, 1):
+        if len(cells) != len(OLDER_COLUMNS):
+            return StageTable(reason=(f"a row of the table of tokens by model in `stages.md` has "
+                                      f"{len(cells)} cells, not {len(OLDER_COLUMNS)}"))
+        counts = [token_count(cells[index]) for index in range(1, len(OLDER_COLUMNS))]
+        if any(count is None for count in counts):
+            return StageTable(reason=("a token count in the table of tokens by model in "
+                                      f"`stages.md` is not a number of at most {TOKEN_DIGITS} "
+                                      "digits"))
+        rows.append(StageTokens(str(number), cells[0], cells[0], counts[1], counts[2], counts[3]))
+    return StageTable(rows=rows, older=True)
 
 
 def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
@@ -1041,23 +1173,58 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
-        input_price, cached_price, output_price = price
-        costs.append((Decimal(row.input - row.cached) * input_price
-                      + Decimal(row.cached) * cached_price
-                      + Decimal(row.output) * output_price) / MILLION)
+        costs.append(cost_at(price, row))
     return costs, None
+
+
+def cost_at(price: tuple[Decimal, Decimal, Decimal], row: StageTokens) -> Decimal:
+    """The cost in dollars of a row at a price: its input less its cached input at the *Input*
+    price, its cached input at the *Cached input* price and its output at the *Output* price."""
+    input_price, cached_price, output_price = price
+    return (Decimal(row.input - row.cached) * input_price + Decimal(row.cached) * cached_price
+            + Decimal(row.output) * output_price) / MILLION
+
+
+def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
+    """The cost in dollars of each row of the table of tokens by model at the list's prices, as
+    `priced` gives it for the rows of the section, or None with the reason: a model `unknown`, a
+    cached input above its input, or a model with no price make the cost unknown."""
+    costs: list[Decimal] = []
+    for row in rows:
+        name = row.model[:TEXT_CAP]
+        if row.model == UNKNOWN:
+            return None, ("the table of tokens by model names the model `unknown`: its token usage "
+                          "was not read, or names no model")
+        if row.cached > row.input:
+            return None, f"the cached input of model `{name}` is above its input"
+        price = prices.table.get(row.model)
+        if price is None:
+            return None, f"the price list gives no price for model `{name}`"
+        costs.append(cost_at(price, row))
+    return costs, None
+
+
+def missing_reason(name: str) -> str:
+    return f"the file `stages.md` of the copy lacks the field `{name}`"
 
 
 def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[bool] | None,
              record_reason: str | None, stages_lines: list[str], stages_fenced: list[bool],
              prices: Prices) -> None:
     """The cycle's cost at the list's prices and the share of its fix rounds in it; a value that
-    cannot be given is `unknown` with its reason, never zero."""
-    rows, named, reason = stage_tokens(stages_lines, stages_fenced)
-    if rows is None:
-        cycle.unknown += [("Cost", reason), ("Fix rounds share", reason)]
+    cannot be given is `unknown` with its reason, never zero. A field the form of `stages.md` needs
+    and the file lacks is also put on the cycle's `missing`, for the `Error:` line (WAY-344)."""
+    table = stage_table(stages_lines, stages_fenced)
+    if table.rows is None:
+        if table.missing:
+            for name in table.missing:
+                cycle.missing.append(name)
+                cycle.unknown += [("Cost", missing_reason(name)),
+                                  ("Fix rounds share", missing_reason(name))]
+        else:
+            cycle.unknown += [("Cost", table.reason), ("Fix rounds share", table.reason)]
         return
-    costs, reason = priced(rows, prices)
+    costs, reason = (priced_older if table.older else priced)(table.rows, prices)
     if costs is None:
         cycle.unknown += [("Cost", reason), ("Fix rounds share", reason)]
         return
@@ -1067,6 +1234,10 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
                           ("Fix rounds share", "the cost is at or above the command's limit")]
         return
     cycle.cost = total
+    if table.older:
+        # The table of tokens by model ties no round to the turns that served it: the share is
+        # unknown (WAY-352), but the number of rounds stands in the record.
+        cycle.unknown.append(("Fix rounds share", OLDER_NO_TURNS))
     if record_lines is None:
         cycle.unknown.append(("Fix rounds share", record_reason))
         return
@@ -1075,7 +1246,9 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
         cycle.unknown.append(("Fix rounds share", reason))
         return
     cycle.rounds = len(findings)
-    reason = fix_rounds_share(rows, costs, total, named, findings, cycle)
+    if table.older:
+        return
+    reason = fix_rounds_share(table.rows, costs, total, table.named, findings, cycle)
     if reason:
         cycle.unknown.append(("Fix rounds share", reason))
 
@@ -1193,11 +1366,19 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         return
     lines = remarks_check.split_lines(stages)
     fenced = remarks_check.fenced_flags(lines)
+    # A file with one of the two time lines and not the other lacks the other (WAY-344); a file with
+    # neither is an earlier form, whose two times are unknown with no field missing.
+    has_working = has_line(lines, fenced, WORKING_LINE)
+    has_waiting = has_line(lines, fenced, WAITING_LINE)
     cycle.working, reason = stages_time(lines, fenced, WORKING_LINE,
                                         "working time without waiting for tools")
+    if has_waiting and not has_working:
+        reason = missing_line(cycle, WORKING_LINE)
     if reason:
         cycle.unknown.append((working_name, reason))
     cycle.waiting, reason = stages_time(lines, fenced, WAITING_LINE, "waiting for tools")
+    if has_working and not has_waiting:
+        reason = missing_line(cycle, WAITING_LINE)
     if reason:
         cycle.unknown.append(("Waiting for tools", reason))
     add_cost(cycle, record_lines, record_fenced, record_reason, lines, fenced, prices)
@@ -2068,7 +2249,9 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
         "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
-        "nothing. *Fix rounds* is the number of findings files the record's *Review rounds* "
+        "nothing. A cycle whose stage report has no section of stages is priced from its table of "
+        "tokens by model at the same prices, and its share of the cost in fix rounds is unknown "
+        "(WAY-352). *Fix rounds* is the number of findings files the record's *Review rounds* "
         "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "
         "those findings files — each fix and the review of that fix — over the cycle's cost. "
         "`unknown` has its reason in *Unknown values*.",
@@ -2234,10 +2417,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: repository `{display(read.key)}`: {read.error}", file=sys.stderr)
     for why in register.errors:
         print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
+    # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-344): each is
+    # named here after the result is written. The folder is text of the history, so it is cut.
+    lacking = [(read, cycle, name) for read in reads for cycle in read.cycles
+               for name in cycle.missing]
+    for read, cycle, name in lacking:
+        print(f"Error: repository `{display(read.key[:TEXT_CAP])}`: cycle "
+              f"`{display(cycle.folder[:TEXT_CAP])}`: {missing_reason(name)}", file=sys.stderr)
     count = sum(len(read.cycles) for read in reads)
     print(f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
           f"{len(reads)} repositories.")
-    return 1 if failed or register.errors else 0
+    return 1 if failed or register.errors or lacking else 0
 
 
 if __name__ == "__main__":

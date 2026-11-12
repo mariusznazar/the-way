@@ -369,11 +369,16 @@ class Remarks(AuditCountCase):
 
 
 class Times(AuditCountCase):
+    # The table of tokens by model of the older form, so that a file read for its times is no file
+    # that lacks the section and the table (WAY-344).
+    TABLE = ("\n| Model | Total tokens | Input | Cached input | Output |\n|---|---|---|---|---|\n"
+             "| model-a | 110 | 100 | 0 | 10 |\n")
+
     def times_of(self, stages) -> tuple[dict, list[list[str]]]:
         product = self.repository()
         files = {"cycle.md": record()}
         if stages is not None:
-            files["stages.md"] = stages
+            files["stages.md"] = stages + self.TABLE
         product.cycle("a-task", files)
         self.write_locations(self.places(product=product))
         done = self.run_count()
@@ -703,6 +708,23 @@ STAGES_HEADER_NAMED = STAGES_HEADER.replace(
     "| Output | Files named |\n|---|---|---|---|---|---|---|---|---|\n")
 
 
+# The older form of the stage report: no section of stages, only the time lines and the table of
+# tokens by model, which every form has.
+TIME_LINES = ("- Working time without waiting for tools: 0:20:00\n"
+              "- Waiting for tools: 0:05:00\n")
+OLDER_HEADER = ("| Model | Total tokens | Input | Cached input | Output |\n"
+                "|---|---|---|---|---|\n")
+
+
+def older_row(model, input_, cached, output) -> str:
+    return f"| {model} | {input_ + output} | {input_} | {cached} | {output} |\n"
+
+
+def older_stages(*rows, header=OLDER_HEADER, times=TIME_LINES) -> str:
+    """A stage report with no section of stages, as the stage reports before it are."""
+    return "# Stages of the cycle run\n\n" + times + "\n" + header + "".join(rows)
+
+
 def stage_row(number, name, model, input_, cached, output, files=None) -> str:
     """A row of the stages section; with `files`, the row of the form that names the files each
     turn was given."""
@@ -973,12 +995,106 @@ class Cost(AuditCountCase):
         reasons = self.unknown_why("Cost")
         self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
 
-    def test_stages_md_without_the_per_model_section_leaves_the_cost_unknown(self):
-        stages = ("# Stages of the cycle run\n\n- Working time, orchestrator turns and subagent "
-                  "turns joined: 1:00:00\n")
-        self.assertEqual(0, self.count(stages).returncode)
+    def test_stages_md_without_the_section_is_priced_from_the_table_of_tokens_by_model(self):
+        # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and model-b 4 / 0.5 / 20:
+        # model-a is (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000; model-b is (500 - 100) * 4
+        # + 100 * 0.5 + 50 * 20 = 2650. The total is 10650.
+        stages = older_stages(older_row("model-a", 3000, 1000, 300),
+                              older_row("model-b", 500, 100, 50))
+        done = self.count(stages)
+        self.assertEqual(0, done.returncode, done.stderr)
+        row = self.cost_row()
+        self.assertEqual(["product", "2026-01-01", "0.010650"], [row[0], row[2], row[3]])
+        self.assertEqual([], self.unknown_why("Cost"))
+
+    def test_the_older_form_gives_no_share_and_says_why_but_its_rounds_are_read_from_the_record(self):
+        stages = older_stages(older_row("model-a", 3000, 1000, 300))
+        cases = (
+            ("one round", ONE_ROUND, ["0.008000", "1", "unknown"]),
+            ("none", "- Review rounds: none\n", ["0.008000", "0", "unknown"]),
+            ("prose", "- Review rounds: one round, fixed and reviewed.\n",
+             ["0.008000", "unknown", "unknown"]),
+        )
+        for label, rounds, expected in cases:
+            with self.subTest(label):
+                row, why = self.share_of(stages, fix_record(rounds=rounds))
+                self.assertEqual(expected, row[3:6])
+                self.assertTrue(any("gives no turns" in reason for reason in why), why)
+
+    def test_the_cost_of_the_section_is_read_as_before_where_both_forms_stand(self):
+        # `cycle_stages.py` writes the table of tokens by model and the section: the heading names
+        # the newer form, which is read as before, whatever the table holds.
+        stages = one_fix_round().replace(
+            "\n## Stages:", "\n" + OLDER_HEADER + older_row("model-a", 9_000_000, 0, 9_000_000)
+            + "\n## Stages:")
+        row, why = self.share_of(stages)
+        self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
+        self.assertEqual([], why)
+
+    def test_the_older_form_leaves_the_cost_unknown_where_a_row_cannot_be_priced(self):
+        good = older_row("model-b", 100, 0, 10)
+        cases = {
+            "a model the list lacks": (good + older_row("model-c", 100, 0, 10),
+                                       "no price for model `model-c`"),
+            "a model unknown": (good + older_row("unknown", 100, 0, 10),
+                                "names the model `unknown`"),
+            "a cached input above its input": (good + older_row("model-a", 100, 500, 10),
+                                               "above its input"),
+            "a count that is no number": (good + "| model-a | 110 | many | 0 | 10 |\n",
+                                          "token count"),
+            "a count of sixteen digits": (good + older_row("model-a", int("9" * 16), 0, 10),
+                                          "token count"),
+            "a total that is no number": (good + "| model-a | lots | 100 | 0 | 10 |\n",
+                                          "token count"),
+            "no row": ("", "no model row"),
+        }
+        for label, (rows, words) in cases.items():
+            with self.subTest(label):
+                done = self.count(older_stages(rows))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                row = self.cost_row()
+                self.assertEqual(["unknown", "unknown"], [row[3], row[5]])
+                self.assertTrue(any(words in why for why in self.unknown_why("Cost")),
+                                self.unknown_why("Cost"))
+
+    def test_a_table_of_tokens_by_model_written_twice_leaves_the_cost_unknown_with_no_error(self):
+        once = older_stages(older_row("model-a", 3000, 1000, 300))
+        done = self.count(once + "\n" + OLDER_HEADER + older_row("model-a", 1, 0, 1))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("unknown", self.cost_row()[3])
-        self.assertTrue(any("earlier form" in why for why in self.unknown_why("Cost")))
+        self.assertTrue(any("more than once" in why for why in self.unknown_why("Cost")))
+
+    def test_a_table_of_tokens_by_model_in_fenced_code_is_not_read(self):
+        stages = ("# Stages of the cycle run\n\n" + TIME_LINES + "\n```\n" + OLDER_HEADER
+                  + older_row("model-a", 3000, 1000, 300) + "```\n")
+        done = self.count(stages)
+        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertEqual("unknown", self.cost_row()[3])
+
+    def test_a_table_of_tokens_by_model_in_another_order_or_with_another_column_is_refused(self):
+        # Every column the cost needs is there, so no field is missing: the table is refused with
+        # a reason, the cost is unknown and the run is not ended with an error.
+        row = "| model-a | 3300 | 3000 | 1000 | 300 |\n"
+        cases = {
+            "swapped columns": (OLDER_HEADER.replace("| Input | Cached input |",
+                                                      "| Cached input | Input |"), row),
+            "another column beside them": (OLDER_HEADER.replace("| Output |", "| Output | Note |")
+                                           .replace("|---|---|---|---|---|",
+                                                    "|---|---|---|---|---|---|"),
+                                           row[:-1] + " x |\n"),
+            "without the total": (OLDER_HEADER.replace(" Total tokens |", "").replace(
+                "|---|---|---|---|---|", "|---|---|---|---|"), "| model-a | 3000 | 1000 | 300 |\n"),
+        }
+        for label, (header, body) in cases.items():
+            with self.subTest(label):
+                done = self.count(older_stages(body, header=header))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.cost_row()[3])
+                self.assertTrue(any("not of the form" in why for why in self.unknown_why("Cost")),
+                                self.unknown_why("Cost"))
 
     def test_cached_input_above_input_leaves_the_cost_unknown(self):
         stages = one_fix_round().replace("| 2000 | 1000 | 200 |", "| 2000 | 5000 | 200 |")
@@ -1109,6 +1225,169 @@ class Cost(AuditCountCase):
                 row, why = self.share_of(stages.replace(old, new))
                 self.assertEqual("unknown", row[5])
                 self.assertTrue(any("disagree" in reason for reason in why), why)
+
+
+SECTION = "Stages: start, waiting for tools and tokens by model"
+NEWER_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
+                 "Output"]
+
+
+class StagesForms(AuditCountCase):
+    """The reading of `stages.md` by its form, and a field the form needs that the file lacks
+    (WAY-344, as the settlement 6 of the task puts it for the count of the audit): the cost or the
+    time that needs it is unknown, the result is written, and the run ends with exit code 1 and an
+    `Error:` line that names the file and the field."""
+
+    def count(self, stages, folder="a-task"):
+        product = self.repository()
+        product.cycle(folder, {"cycle.md": record(), "stages.md": stages})
+        self.write_locations(self.places(product=product))
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES, encoding="utf-8")
+        return self.run_count("--prices", str(test_prices))
+
+    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True) -> str:
+        """The newer form: the table of tokens by model, then the section whose table has the
+        columns given."""
+        text = ("# Stages of the cycle run\n\n" + times + "\n" + OLDER_HEADER
+                + older_row("model-a", 1000, 0, 100) + f"\n## {SECTION}\n\nTimes are UTC.\n")
+        if table:
+            text += ("\n| " + " | ".join(columns) + " |\n|" + "---|" * len(columns) + "\n"
+                     + stage_row(1, "orchestrator", "model-a", 1000, 0, 100))
+        return text
+
+    def error_line(self, field, folder="a-task") -> str:
+        return (f"Error: repository `product`: cycle `{folder}`: the file `stages.md` of the copy "
+                f"lacks the field `{field}`")
+
+    def assert_missing(self, done, fields, cost_unknown=True) -> None:
+        """Exit code 1, the result written, one `Error:` line for each field and no other, and
+        the field named in a row of *Unknown values*."""
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual([self.error_line(field) for field in fields], errors)
+        [row] = self.rows("Cost")
+        self.assertEqual("unknown" if cost_unknown else "0.003000", row[3])
+        reasons = [unknown[3] for unknown in self.rows("Unknown values")]
+        for field in fields:
+            self.assertTrue(any(field in reason for reason in reasons), (field, reasons))
+
+    def test_a_column_of_the_newer_table_that_the_file_lacks_is_a_missing_field(self):
+        for column in NEWER_COLUMNS:
+            with self.subTest(column):
+                columns = [name for name in NEWER_COLUMNS if name != column]
+                done = self.count(self.newer(columns))
+                self.assert_missing(done, [f"column {column} of the table of the section {SECTION}"])
+
+    def test_a_column_that_stands_under_another_name_is_a_missing_field(self):
+        columns = [("Begin" if name == "Start" else name) for name in NEWER_COLUMNS]
+        done = self.count(self.newer(columns))
+        self.assert_missing(done, [f"column Start of the table of the section {SECTION}"])
+
+    def test_every_column_of_the_newer_table_that_is_lacking_is_named_once(self):
+        columns = [name for name in NEWER_COLUMNS if name not in ("Stage", "Output")]
+        done = self.count(self.newer(columns))
+        self.assert_missing(done, [f"column Stage of the table of the section {SECTION}",
+                                   f"column Output of the table of the section {SECTION}"])
+
+    def test_a_heading_with_no_table_at_all_misses_the_table(self):
+        done = self.count(self.newer(table=False))
+        self.assert_missing(done, [f"table of the section {SECTION}"])
+
+    def test_a_column_of_the_older_table_that_the_file_lacks_is_a_missing_field(self):
+        for column in ("Input", "Cached input", "Output"):
+            with self.subTest(column):
+                names = ["Model", "Total tokens", "Input", "Cached input", "Output"]
+                names.remove(column)
+                header = "| " + " | ".join(names) + " |\n|" + "---|" * len(names) + "\n"
+                done = self.count(older_stages("| model-a | 3300 | 3000 | 300 |\n", header=header))
+                self.assert_missing(done, [f"column {column} of the table with the first cell Model"])
+
+    def test_a_file_with_neither_the_section_nor_the_table_misses_both(self):
+        for label, stages in (("only times", "# Stages\n\n" + TIME_LINES),
+                              ("a table of another kind", "# Stages\n\n" + TIME_LINES
+                               + "\n| Name | Tokens |\n|---|---|\n| model-a | 100 |\n"),
+                              ("an empty file", "")):
+            with self.subTest(label):
+                done = self.count(stages)
+                self.assert_missing(done, [f"section {SECTION}",
+                                           "table with the first cell Model"])
+
+    def test_a_time_line_without_the_other_is_a_missing_field(self):
+        cases = (
+            ("the wait", "- Working time without waiting for tools: 0:20:00\n",
+             "line Waiting for tools", "0:20:00"),
+            ("the working time", "- Waiting for tools: 0:05:00\n",
+             "line Working time without waiting for tools", "0:05:00"),
+        )
+        for label, times, field, known in cases:
+            with self.subTest(label):
+                done = self.count(older_stages(older_row("model-a", 1000, 0, 100), times=times))
+                self.assert_missing(done, [field], cost_unknown=False)
+                [cycle] = self.cycles()
+                both = [cycle["Working time without waiting for tools"], cycle["Waiting for tools"]]
+                self.assertEqual(sorted([known, "unknown"]), sorted(both))
+
+    def test_neither_time_line_is_the_earlier_form_and_no_missing_field(self):
+        done = self.count(older_stages(older_row("model-a", 1000, 0, 100),
+                                       times="- Working time, orchestrator turns and subagent "
+                                             "turns joined: 0:30:28\n"))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        [cycle] = self.cycles()
+        self.assertEqual(["unknown", "unknown"], [cycle["Working time without waiting for tools"],
+                                                  cycle["Waiting for tools"]])
+
+    def test_the_column_files_named_is_never_a_missing_field(self):
+        done = self.count(self.newer())
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        self.assertEqual("0.003000", self.rows("Cost")[0][3])
+
+    def test_columns_in_another_order_or_with_another_column_miss_nothing_and_are_refused(self):
+        swapped = [("Cached input" if name == "Input" else "Input" if name == "Cached input"
+                    else name) for name in NEWER_COLUMNS]
+        for label, columns in (("swapped", swapped), ("a column beside", NEWER_COLUMNS + ["Note"])):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.rows("Cost")[0][3])
+                self.assertTrue(any("not of the form" in row[3]
+                                    for row in self.rows("Unknown values")))
+
+    def test_the_text_of_a_missing_field_error_is_cut_and_escaped(self):
+        folder = "x|" + "y" * 300 + "\x1b[2J" + "z"
+        done = self.count("# Stages\n", folder=folder)
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual(2, len(errors), errors)
+        for line in errors:
+            self.assertTrue(line.startswith("Error: repository `product`: cycle `x|yyy"), line)
+            self.assertIn("the file `stages.md` of the copy lacks the field `", line)
+            self.assertLess(len(line), 500)
+            self.assertEqual([], [char for char in line if not char.isprintable()])
+        self.assertEqual([], [char for char in self.latest()
+                              if not char.isprintable() and char != "\n"])
+
+    def test_a_file_lacking_a_field_does_not_stop_the_count_of_the_other_cycles(self):
+        product = self.repository()
+        _, parent = product.cycle("bad", {"cycle.md": record(), "stages.md": "# Stages\n"},
+                                  branch=None)
+        product.cycle("good", {"cycle.md": record(), "stages.md": self.newer()}, parent=parent,
+                      branch="main")
+        self.write_locations(self.places(product=product))
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES, encoding="utf-8")
+        done = self.run_count("--prices", str(test_prices))
+        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertEqual(["0.003000", "unknown"], sorted(row[3] for row in self.rows("Cost")))
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual(2, len(errors), errors)
+        self.assertTrue(all("cycle `bad`" in line for line in errors), errors)
 
 
 class RegisterCount(AuditCountCase):
@@ -1876,11 +2155,13 @@ class ProcessVersions(AuditCountCase):
         return STAGES_HEADER + stage_row(1, "orchestrator", "model-a", tokens, 0, 0)
 
     def add_cycles(self, product, specs) -> None:
-        """Each cycle as (folder, record text, tokens), chained so that all stay in the history."""
+        """Each cycle as (folder, record text, tokens), chained so that all stay in the history;
+        a fourth item is the text of its `stages.md`, where it is not the newer form."""
         parent = product.commit({"README.md": "a product\n"}, "Start")
-        for folder, text, tokens in specs:
+        for folder, text, tokens, *stages in specs:
             _, parent = product.cycle(folder, {"cycle.md": text,
-                                               "stages.md": self.stages_of(tokens)},
+                                               "stages.md": stages[0] if stages
+                                               else self.stages_of(tokens)},
                                       parent=parent, branch=None)
         product.branch("main", parent)
 
@@ -1940,6 +2221,40 @@ class ProcessVersions(AuditCountCase):
                            "unknown"]], self.series(1))
         self.assertEqual([[v2, "2025-10-10", "1", "1", "0.500000", "no", "0 of 0", "unknown",
                            "unknown"]], self.series(2))
+
+    def test_the_older_and_the_newer_form_of_the_stage_report_are_never_in_one_comparison(self):
+        # The form changes with `cycle_stages.py`, a file whose change starts a series; a change of
+        # the scripts that measure the mechanism or the gate does not. v1 to v3 are of the older
+        # form, v4 of the newer; the costs are 2, 1, 0.5 and 0.25 dollars. The median of v4 is not
+        # set against v3's: it begins its own series.
+        way = self.the_way()
+        measures = {"task-cycle/cycle_measures.py": "measures\n"}
+        gate = {**measures, "task-cycle/gate_times.py": "gate\n"}
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.FIRST + 86400, parent=v1, changed=measures)
+        v3 = self.version_at(way, self.FIRST + 2 * 86400, parent=v2, changed=gate)
+        v4 = self.version_at(way, self.FIRST + 3 * 86400, parent=v3,
+                             changed={**gate, "task-cycle/cycle_stages.py": "newer form\n"})
+        product = self.repository()
+
+        def older(tokens):
+            return older_stages(older_row("model-a", tokens, 0, 0))
+
+        self.add_cycles(product, [
+            ("one", process_record(v1), 1_000_000, older(1_000_000)),
+            ("two", process_record(v2), 500_000, older(500_000)),
+            ("three", process_record(v3), 250_000, older(250_000)),
+            ("four", process_record(v4), 125_000)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "no", "0 of 0", "unknown",
+                           "unknown"],
+                          [v2, "2025-10-10", "1", "1", "1.000000", "no", "0 of 0", "unknown",
+                           "yes"],
+                          [v3, "2025-10-11", "1", "1", "0.500000", "no", "0 of 0", "unknown",
+                           "yes"]], self.series(1))
+        self.assertEqual([[v4, "2025-10-12", "1", "1", "0.250000", "no", "0 of 0", "unknown",
+                           "unknown"]], self.series(2))
+        self.assertNotIn("### Series 3", self.latest())
 
     def test_the_questions_read_the_record_items_and_say_unknown_otherwise(self):
         way = self.the_way()
