@@ -266,6 +266,10 @@ class SectionFormsTest(unittest.TestCase):
                                "**Searches not found or unclear:** an item\n"), [])
         self.assertEqual(items("A paragraph\n**Searches not found or unclear:**\n- an item\n"), [])
 
+    def test_a_bold_label_right_after_a_code_block_opens_a_section(self) -> None:
+        report = "```\ncode\n```\n**Searches not found or unclear:** an item\n"
+        self.assertEqual(items(report), ["an item"])
+
     def test_two_bold_labels_on_consecutive_lines_are_both_read(self) -> None:
         report = ("**Unread material:** the file\n"
                   "**Searches not found or unclear:**\n- the first search\n")

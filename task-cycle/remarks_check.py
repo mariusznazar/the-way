@@ -192,7 +192,8 @@ def opens_paragraph(lines: list[str], fenced: list[bool], index: int) -> bool:
     if index == 0:
         return True
     if fenced[index - 1]:
-        return False
+        # The line is not fenced itself, so the line before it can only be the closing fence.
+        return True
     before = lines[index - 1]
     return (not before.strip() or HEADING.fullmatch(before) is not None
             or RULE.fullmatch(before) is not None or BOLD_START.match(before) is not None)
