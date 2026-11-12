@@ -1309,14 +1309,20 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(1, TEMPLATE.count(PROBLEMS_HEADER))
         extra = PROBLEMS_HEADER.replace("| Issue |", "| Issue | Note |").replace(
             "---|", "---|---|", 1)
-        self.register.write_text(TEMPLATE.replace(PROBLEMS_HEADER, extra), encoding="utf-8")
+        swapped = PROBLEMS_HEADER.replace(
+            "| Weight | Cost of an occurrence |", "| Cost of an occurrence | Weight |")
+        self.assertNotEqual(PROBLEMS_HEADER, swapped)
         self.write_locations(self.places(product=product))
-        done = self.run_count("--today", "2026-11-11")
-        self.assertEqual(1, done.returncode, done.stderr)
-        self.assertIn(["the-way", "none", "table `Problems`"],
-                      [row[:3] for row in self.rows("Unknown values")])
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
-                         self.rows("Problems by cycle"))
+        for label, header in (("an extra column", extra), ("two columns swapped", swapped)):
+            with self.subTest(label):
+                self.register.write_text(TEMPLATE.replace(PROBLEMS_HEADER, header),
+                                         encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(1, done.returncode, done.stderr)
+                self.assertIn(["the-way", "none", "table `Problems`"],
+                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
+                                 self.rows("Problems by cycle"))
 
     def test_a_register_larger_than_the_cap_stops_the_run_with_nothing_written(self):
         product = self.repository()

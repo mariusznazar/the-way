@@ -10968,13 +10968,15 @@ class, a weight or a cost of an occurrence itself.
 
 *Rationale:* the class, weight and cost of an occurrence of a problem are a judgment. A register
 that a tool of the user fills holds that judgment once, where an audit that read the records of
-cycles itself would repeat it every week, and could repeat it differently. A template lets another user of the-way keep the
-same register in their own way, as WAY-103 asks of a process meant for more than its author. The
-price taken: until a user has a tool that fills the register, the audit has nothing to count.
+cycles itself would repeat it every week, and could repeat it differently. A template lets another
+user of the-way keep the same register in their own way, as WAY-103 asks of a process meant for
+more than its author. The price taken: until a user has a tool that fills the register, the audit
+has nothing to count.
 *Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost
 — the same remarks would be judged by two agents, who may judge differently, and the tie of a
-problem to its fix would have to be rebuilt each time; the-way taking over the review of the remarks of cycles
-— the largest change, and the remarks would turn into issues once a week instead of every night.
+problem to its fix would have to be rebuilt each time; the-way taking over the review of the
+remarks of cycles — the largest change, and the remarks would turn into issues once a week instead
+of every night.
 
 ### WAY-331 — Where in the repository does the audit of the process stand?
 

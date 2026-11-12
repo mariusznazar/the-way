@@ -36,7 +36,7 @@ needs and cannot find ends the run with an error that names it (WAY-344).
 - A date is written `YYYY-MM-DD`, and a commit as its full hash of forty hexadecimal characters.
 - A name of a class or of an issue is lower-case letters, digits and hyphens, and no two rows of
   its table share it.
-- Text outside the four tables is not read; write there what you like.
+- Text outside the five tables is not read; write there what you like.
 
 ## Classes
 
