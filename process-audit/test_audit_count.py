@@ -2697,6 +2697,303 @@ class ProcessVersions(AuditCountCase):
                          [row[3] for row in unknown if row[2] == "Plan"])
 
 
+def gate_run(second, others, total, *directories) -> str:
+    """The rows of one run of gate_times.md: its start differs with `second`, so that runs stay
+    apart; each directory is (name, seconds), and a run with none has the one row with dashes."""
+    started = f"2026-11-11 10:00:{second:02}.000"
+    if not directories:
+        return gate_row(started, 0, total, others)
+    return "".join(gate_row(started, 0, total, others, name, seconds) for name, seconds in directories)
+
+
+TOTAL = "Total time of the run"
+
+
+class MeasureVersions(AuditCountCase):
+    """The series of the mechanism measures and of the gate times, each by the change of its own
+    instrument alone, and the median of each measure of each version (WAY-339, WAY-348,
+    WAY-350). The helpers are those of ProcessVersions."""
+
+    FIRST = ProcessVersions.FIRST
+    BASE_FILES = ProcessVersions.BASE_FILES
+    the_way = ProcessVersions.the_way
+    version_at = ProcessVersions.version_at
+    run_versions = ProcessVersions.run_versions
+    series = ProcessVersions.series
+
+    def day(self, number) -> int:
+        return self.FIRST + number * 86400
+
+    def add_measured(self, product, specs) -> None:
+        """Each cycle as (folder, pin, values, runs), chained so that all stay in the history:
+        `values` maps a label of mechanism_measures.md to its value, the other labels keeping the
+        value of MEASURE_VALUES, and is None for a copy with no such file; `runs` is the rows of
+        gate_times.md, None for a copy with no such file."""
+        parent = product.commit({"README.md": "a product\n"}, "Start")
+        for folder, pin, values, runs in specs:
+            files = {"cycle.md": process_record(pin)}
+            if values is not None:
+                files[MEASURES] = measures_file([(label, values.get(label, default))
+                                                 for label, default in MEASURE_VALUES])
+            if runs is not None:
+                files[GATE] = gate_file(rows=runs)
+            _, parent = product.cycle(folder, files, parent=parent, branch=None)
+        product.branch("main", parent)
+
+    def section(self, kind, number) -> list[list[str]]:
+        text = self.latest()
+        heading = f"\n### {kind}, series {number}\n"
+        self.assertIn(heading, text, "the result has no such series")
+        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+        lines = [line for line in part.splitlines() if line.startswith("|")]
+        return [split_row(line) for line in lines[2:]]
+
+    def measure(self, number, label) -> list[list[str]]:
+        """The rows of a series of mechanism measures that are of one measure."""
+        return [row for row in self.section("Mechanism measures", number) if row[1] == label]
+
+    def gate(self, number, measure=TOTAL) -> list[list[str]]:
+        return [row for row in self.section("Gate times", number) if row[1] == measure]
+
+    def test_a_change_of_an_instrument_starts_only_the_series_of_its_own_measures(self):
+        # v2 changes the script of the measures, v3 the script of the gate times, v4 the reviewer's
+        # instructions and `cycle_stages.py`. The cost splits at v4 alone; the mechanism measures
+        # at v2 alone; the gate times at v3 alone, and no median is set across a split.
+        way = self.the_way()
+        measures = {"task-cycle/cycle_measures.py": "measures\n"}
+        both = {**measures, "task-cycle/gate_times.py": "gate\n"}
+        reviewed = {**both, "task-cycle/review/SKILL.md": "reviewer\n",
+                    "task-cycle/cycle_stages.py": "newer form\n"}
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1, changed=measures)
+        v3 = self.version_at(way, self.day(2), parent=v2, changed=both)
+        v4 = self.version_at(way, self.day(3), parent=v3, changed=reviewed)
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, {"Calls in all": "8"}, gate_run(2, 0, "90.000")),
+            ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "80.000")),
+            ("four", v4, {"Calls in all": "5"}, gate_run(4, 0, "70.000"))])
+        self.run_versions(way, product)
+        self.assertEqual([v1, v2, v3], [row[0] for row in self.series(1)])
+        self.assertEqual([v4], [row[0] for row in self.series(2)])
+        self.assertNotIn("### Series 3", self.latest())
+        calls = "Calls in all"
+        self.assertEqual([[v1, calls, "1", "10", "unknown"]], self.measure(1, calls))
+        self.assertEqual([[v2, calls, "1", "8", "unknown"], [v3, calls, "1", "9", "no"],
+                          [v4, calls, "1", "5", "yes"]], self.measure(2, calls))
+        self.assertNotIn("### Mechanism measures, series 3", self.latest())
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v2, TOTAL, "1", "90.000", "yes", "0", "unknown"]], self.gate(1))
+        self.assertEqual([[v3, TOTAL, "1", "80.000", "unknown", "0", "unknown"],
+                          [v4, TOTAL, "1", "70.000", "yes", "0", "unknown"]], self.gate(2))
+        self.assertNotIn("### Gate times, series 3", self.latest())
+        text = self.latest()
+        self.assertLess(text.index("## Process versions"), text.index("## Measure versions"))
+        self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
+
+    def test_the_reviewer_the_stage_script_and_the_list_of_classes_split_no_series_of_measures(self):
+        # v2 changes the reviewer's instructions, v3 `cycle_stages.py`, and a class is added on the
+        # day of v4: each splits the series of the cost and none splits the measures, whose
+        # medians fall from version to version across all three.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n"})
+        v3 = self.version_at(way, self.day(2), parent=v2,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n",
+                                      "task-cycle/cycle_stages.py": "newer form\n"})
+        v4 = self.version_at(way, self.day(3), parent=v3,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n",
+                                      "task-cycle/cycle_stages.py": "newer form\n"})
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, {"Calls in all": "9"}, gate_run(2, 0, "90.000")),
+            ("three", v3, {"Calls in all": "8"}, gate_run(3, 0, "80.000")),
+            ("four", v4, {"Calls in all": "7"}, gate_run(4, 0, "70.000"))])
+        self.register.write_text(register_text(classes=["| sharp | x | 2025-10-12 | none |"]),
+                                 encoding="utf-8")
+        self.run_versions(way, product)
+        self.assertEqual([[v1], [v2], [v3], [v4]],
+                         [[row[0] for row in self.series(number)] for number in (1, 2, 3, 4)])
+        self.assertEqual([[v1, "Calls in all", "1", "10", "unknown"],
+                          [v2, "Calls in all", "1", "9", "yes"],
+                          [v3, "Calls in all", "1", "8", "yes"],
+                          [v4, "Calls in all", "1", "7", "yes"]], self.measure(1, "Calls in all"))
+        self.assertEqual(["unknown", "yes", "yes", "yes"],
+                         [row[4] for row in self.gate(1)])
+        self.assertNotIn("### Mechanism measures, series 2", self.latest())
+        self.assertNotIn("### Gate times, series 2", self.latest())
+
+    def test_a_new_price_list_splits_no_series_of_measures(self):
+        # One price list prices a whole run, so no real run splits at it: the series of the
+        # measures are asked of the two versions directly, and ask git about their script alone.
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        asked = []
+
+        class Unchanged:
+            def differs(self, earlier, later, paths):
+                asked.append(tuple(paths))
+                return False
+
+        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        for script in ("task-cycle/cycle_measures.py", "task-cycle/gate_times.py"):
+            with self.subTest(script):
+                blocks = audit_count.instrument_series([earlier, later], Unchanged(), script)
+                self.assertEqual([[earlier, later]], [block.versions for block in blocks])
+                self.assertEqual((script,), asked[-1])
+        self.assertEqual("the price list changed",
+                         audit_count.series_boundary(earlier, later, audit_count.Register(), None))
+
+    def test_medians_and_falls_of_three_versions_over_an_odd_and_an_even_number_of_cycles(self):
+        # Calls in all: v1 has 10, 4 and 7 (median 7, odd), v2 has 6 and 9 (median 7.5, even, so
+        # not lower than 7), v3 has 2, 8, 5 and 6 (sorted 2, 5, 6, 8: median 5.5, lower than 7.5).
+        # The share has a value in 2 of 3 cycles of v1 (12.5 and 13.0: 12.75), in 1 of 2 of v2
+        # (12.0, lower) and in 2 of 4 of v3 (12.0 and 12.5: 12.25, not lower than 12.0). A cycle
+        # of no version, with 1 call, stands in no median.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        share = "Share of the context in calls above 200000 tokens"
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {"Calls in all": "10", share: "12.5%"}, None),
+            ("b", v1, {"Calls in all": "4", share: "13.0%"}, None),
+            ("c", v1, {"Calls in all": "7", share: "unknown"}, None),
+            ("d", v2, {"Calls in all": "6", share: "12.0%"}, None),
+            ("e", v2, {"Calls in all": "9", share: "unknown"}, None),
+            ("f", v3, {"Calls in all": "2", share: "12.0%"}, None),
+            ("g", v3, {"Calls in all": "8", share: "12.5%"}, None),
+            ("h", v3, {"Calls in all": "5", share: "unknown"}, None),
+            ("i", v3, {"Calls in all": "6", share: "unknown"}, None),
+            ("stray", "none", {"Calls in all": "1"}, None)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "Calls in all", "3", "7", "unknown"],
+                          [v2, "Calls in all", "2", "7.5", "no"],
+                          [v3, "Calls in all", "4", "5.5", "yes"]], self.measure(1, "Calls in all"))
+        self.assertEqual([[v1, share, "2", "12.75%", "unknown"],
+                          [v2, share, "1", "12.0%", "yes"],
+                          [v3, share, "2", "12.25%", "no"]], self.measure(1, share))
+        # A measure that does not change does not fall; every one of the fifteen has a row.
+        self.assertEqual([[v1, "Calls of subagents", "3", "7", "unknown"],
+                          [v2, "Calls of subagents", "2", "7", "no"],
+                          [v3, "Calls of subagents", "4", "7", "no"]],
+                         self.measure(1, "Calls of subagents"))
+        self.assertEqual(3 * len(MEASURE_LABELS), len(self.section("Mechanism measures", 1)))
+        unknown = self.rows("Unknown values")
+        self.assertEqual("no previous version in the series",
+                         self.reasons_of(unknown, f"Measure falls: Calls in all, version {v1}"))
+        self.assertEqual("", self.reasons_of(unknown, f"Measure falls: Calls in all, version {v2}"))
+
+    def test_the_gate_times_take_only_runs_with_no_other_gate_and_show_the_others_apart(self):
+        # Medians by hand. v1: total of the runs alone 100 and 110 (105.000), apart 200 (company: 1
+        # other gate) and 300 (count unknown): 250.000; gate/a alone 60.0 and 70.0 (65.0), apart
+        # 135.0; gate/b alone 40.0, apart 80.0. v2: alone 90 and 95 (92.500, lower than 105), apart
+        # 10.000 (it would pull the median down if it entered); gate/a 51.0, apart 1.0; no gate/b
+        # run. v3: total alone 100 (not lower than 92.5: apart 1.000 enters no comparison),
+        # gate/a in a run with company only, gate/b alone 41.0 with no previous gate/b. v4: every
+        # run has company, so no comparison.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        v4 = self.version_at(way, self.day(3), parent=v3)
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "100.000", ("gate/a", "60.0"), ("gate/b", "40.0"))
+             + gate_run(2, 1, "200.000", ("gate/a", "120.0"), ("gate/b", "80.0"))),
+            ("b", v1, {}, gate_run(3, 0, "110.000", ("gate/a", "70.0"))
+             + gate_run(4, "unknown", "300.000", ("gate/a", "150.0"))),
+            ("c", v2, {}, gate_run(5, 0, "90.000", ("gate/a", "50.0"))
+             + gate_run(6, 0, "95.000", ("gate/a", "52.0"))
+             + gate_run(7, 3, "10.000", ("gate/a", "1.0"))),
+            ("d", v3, {}, gate_run(8, 0, "100.000", ("gate/b", "41.0"))
+             + gate_run(9, 1, "1.000", ("gate/a", "0.5"))),
+            ("e", v4, {}, gate_run(10, 2, "50.000", ("gate/a", "20.0")))])
+        self.run_versions(way, product)
+        a, b = "Directory: gate/a", "Directory: gate/b"
+        self.assertEqual([
+            [v1, TOTAL, "2", "105.000", "unknown", "2", "250.000"],
+            [v1, a, "2", "65.0", "unknown", "2", "135.0"],
+            [v1, b, "1", "40.0", "unknown", "1", "80.0"],
+            [v2, TOTAL, "2", "92.500", "yes", "1", "10.000"],
+            [v2, a, "2", "51.0", "yes", "1", "1.0"],
+            [v3, TOTAL, "1", "100.000", "no", "1", "1.000"],
+            [v3, a, "0", "unknown", "unknown", "1", "0.5"],
+            [v3, b, "1", "41.0", "unknown", "0", "unknown"],
+            [v4, TOTAL, "0", "unknown", "unknown", "1", "50.000"],
+            [v4, a, "0", "unknown", "unknown", "1", "20.0"],
+        ], self.section("Gate times", 1))
+        unknown = self.rows("Unknown values")
+        self.assertIn("no previous version in the series",
+                      self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v1}"))
+        self.assertIn("no run of the version with no other gate",
+                      self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v4}"))
+        self.assertIn("no run of the previous version with no other gate",
+                      self.reasons_of(unknown, f"Gate time falls: {b}, version {v3}"))
+
+    def test_a_version_with_no_cycle_that_gave_a_value_has_no_median_and_no_comparison(self):
+        # v2's cycle has neither file: its medians are unknown with no value counted, and v3 is not
+        # compared with it.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, None, None),
+            ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "90.000"))])
+        self.run_versions(way, product)
+        calls = "Calls in all"
+        self.assertEqual([[v1, calls, "1", "10", "unknown"], [v2, calls, "0", "unknown", "unknown"],
+                          [v3, calls, "1", "9", "unknown"]], self.measure(1, calls))
+        self.assertEqual(3 * len(MEASURE_LABELS), len(self.section("Mechanism measures", 1)))
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v2, TOTAL, "0", "unknown", "unknown", "0", "unknown"],
+                          [v3, TOTAL, "1", "90.000", "unknown", "0", "unknown"]], self.gate(1))
+        unknown = self.rows("Unknown values")
+        self.assertEqual("no cycle of the version gives a value, so its median is not known",
+                         self.reasons_of(unknown, f"Measure falls: {calls}, version {v2}"))
+        self.assertEqual("no cycle of the previous version gives a value",
+                         self.reasons_of(unknown, f"Measure falls: {calls}, version {v3}"))
+
+    def test_a_directory_written_twice_in_one_run_counts_once_and_says_so(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "10.000", ("gate/a", "5.0"), ("gate/a", "7.0")))])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "Directory: gate/a", "1", "5.0", "unknown", "0", "unknown"]],
+                         self.gate(1, "Directory: gate/a"))
+        self.assertTrue(any("twice" in row[3] for row in self.rows("Unknown values")))
+
+    def test_crafted_directories_and_runs_break_no_cell_and_cost_bounded_work(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        product = self.repository()
+        crafted = (gate_run(1, 0, "1.000", ("gate\\|x\x1b[2J\x07y", "1.0"), ("d" * 500, "2.0"))
+                   + "".join(gate_row(f"2026-11-11 11:00:00.{index:03}", 0, "1.000", 0,
+                                      f"gate/d{index}", "1.0") for index in range(700))
+                   + "| a | b |\n" * 30)
+        self.add_measured(product, [("a", v1, {}, crafted)])
+        self.run_versions(way, product)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        self.assertNotIn("d" * 201, text)
+        rows = self.section("Gate times", 1)
+        self.assertEqual({7}, {len(row) for row in rows})
+        # 500 runs are read, the first of them the crafted one: the total, its two directories and
+        # the 499 directories of the runs after it.
+        self.assertEqual(1 + 2 + 499, len(rows))
+        self.assertIn(["Directory: " + "d" * 200], [[row[1]] for row in rows])
+
+
 class PriceBoundary(unittest.TestCase):
     def test_a_new_price_list_starts_a_new_series(self):
         sys.path.insert(0, str(HERE))

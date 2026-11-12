@@ -120,6 +120,23 @@ cycle that has one is not read, since its slices could change the answer. Q3, th
 median against the previous version of the same series, yes where lower, unknown where there is
 none.
 
+The measure versions (WAY-339, WAY-348, WAY-350): the same versions, in their own series, one kind of
+series for each instrument. A series of the mechanism measures of `mechanism_measures.md` begins at
+a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a series of
+the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` differs, by the same
+test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts as changed). No
+other change splits them: not the price list, a date of the register's list of classes, a change
+under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or `task-cycle/spec`, nor one of
+`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
+*Measure versions* gives, for each version of a series and each cycle-level measure, the number of
+cycles that give a value, their median (the rule of the median of the cost) and whether it falls
+against the previous version of the series, and for the gate times the total of the run and each
+directory any run of the version has: the median and *Falls* take only the runs during which no
+other gate run was going, and the runs with another gate or an unknown count are counted and their
+median shown apart, never compared. A version in which no run was alone, or no cycle gave a value,
+has no comparison; the values are kept as `Decimal` and a median that is a half is written with its
+decimal.
+
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. A field of `stages.md` that the form the file's own signs name needs and the file
@@ -356,6 +373,13 @@ MAX_RUNS = 500
 MAX_DIRECTORIES = 50
 GATE_NONE = "—"
 DIRECTORY_SEPARATOR = " · "
+# The two instruments that start a series of the measures they give (WAY-339): a change of the one
+# starts a series of the mechanism measures, of the other a series of the gate times, and of
+# nothing else. The measures of a gate time are the total and each directory (WAY-350).
+MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
+GATE_SCRIPT = "task-cycle/gate_times.py"
+TOTAL_MEASURE = "Total time of the run"
+DIRECTORY_MEASURE = "Directory: "
 
 
 class AuditCountError(Exception):
@@ -523,6 +547,16 @@ class Git:
 
 
 @dataclass
+class GateRun:
+    """A run of `gate_times.md` as numbers, for the medians of a version: the count of other gate
+    runs at the same time, the total seconds and the seconds of each directory, each None where the
+    file gives it as unknown or in a form that is not its column's."""
+    others: int | None
+    total: Decimal | None
+    directories: list[tuple[str, Decimal | None]] = field(default_factory=list)
+
+
+@dataclass
 class Cycle:
     repository: str
     folder: str
@@ -555,6 +589,8 @@ class Cycle:
     measures: dict[str, str] = field(default_factory=dict)
     # The runs of `gate_times.md`, each as the cells after the repository and the record (WAY-349).
     gate_runs: list[list[str]] = field(default_factory=list)
+    # The same runs as numbers, one for each of `gate_runs`, in the same order (WAY-350).
+    gate_timed: list[GateRun] = field(default_factory=list)
     # The fields of the two files that the copy lacks, as (file, field), for the `Error:` line.
     missing_in: list[tuple[str, str]] = field(default_factory=list)
 
@@ -1504,6 +1540,7 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
     for key, directories in runs:
         if key is None:
             cycle.gate_runs.append([UNKNOWN] * 5)
+            cycle.gate_timed.append(GateRun(None, None))
             continue
         started, code, total, others = [
             gate_value(reasons, column, value, pattern, why)
@@ -1515,13 +1552,26 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
                  "a total is not written as seconds to three decimals",
                  "a count of other gate runs is not a whole number"))]
         listed = []
+        # The numbers of the run: a directory written twice in it counts once, at its first time.
+        timed = GateRun(None if others == UNKNOWN else int(others),
+                        None if total == UNKNOWN else Decimal(total))
+        named: set[str] = set()
         for name, seconds in directories:
             seconds = gate_value(reasons, "Directory seconds", seconds, GATE_SECONDS,
                                  "the seconds of a directory are not a number")
             listed.append(f"{name[:TEXT_CAP]} " + (seconds if seconds == UNKNOWN
                                                    else seconds + " s"))
+            if name[:TEXT_CAP] in named:
+                reasons.append(("Gate runs: Directories",
+                                f"a run in `{GATE_FILE}` lists a directory twice: only its first "
+                                "time is counted in the medians"))
+                continue
+            named.add(name[:TEXT_CAP])
+            timed.directories.append((name[:TEXT_CAP],
+                                      None if seconds == UNKNOWN else Decimal(seconds)))
         cycle.gate_runs.append([started, code, total, others,
                                 DIRECTORY_SEPARATOR.join(listed) or GATE_NONE])
+        cycle.gate_timed.append(timed)
     cycle.unknown.extend(dict.fromkeys(reasons))
 
 
@@ -1992,8 +2042,13 @@ class Ancestry:
     def changed(self, earlier: str, later: str) -> bool:
         """Whether the reviewed files of the-way differ between two full commit hashes; a git
         that fails counts as changed, so that a series is never joined by mistake (WAY-339)."""
+        return self.differs(earlier, later, TREE_PATHS)
+
+    def differs(self, earlier: str, later: str, paths: tuple[str, ...]) -> bool:
+        """Whether the files at `paths` differ between two full commit hashes of the-way, by
+        `git diff --quiet`: exit 1, or any failure, counts as changed."""
         try:
-            return self.git.code("diff", "--quiet", earlier, later, "--", *TREE_PATHS) != 0
+            return self.git.code("diff", "--quiet", earlier, later, "--", *paths) != 0
         except GitError:
             return True
 
@@ -2202,6 +2257,8 @@ class Versions:
     series: list[Series] = field(default_factory=list)
     no_version: list[Cycle] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
+    # Every version, in the order of their dates: the series of the measures are made of them.
+    ordered: list["Version"] = field(default_factory=list)
 
 
 VERSION_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
@@ -2235,6 +2292,132 @@ def series_boundary(earlier: Version, later: Version, register: Register,
     if ancestry.changed(earlier.commit, later.commit):
         return "the reviewed files of the-way changed between the two versions"
     return None
+
+
+def instrument_series(versions: list[Version], ancestry: Ancestry, script: str) -> list[Series]:
+    """Split the versions, in the order of their dates, into series by the change of one script
+    alone: a series begins at a version whose `script` differs from the previous version's
+    (WAY-339). Nothing else splits it: not the price list, the register's list of classes or the
+    reviewed files of the cost."""
+    blocks: list[Series] = []
+    for version in versions:
+        if not blocks:
+            blocks.append(Series("the first version of the result", [version]))
+        elif ancestry.differs(blocks[-1].versions[-1].commit, version.commit, (script,)):
+            blocks.append(Series(f"`{script}` changed between the two versions", [version]))
+        else:
+            blocks[-1].versions.append(version)
+    return blocks
+
+
+@dataclass
+class MeasureVersions:
+    """The series of the mechanism measures and of the gate times, each with its rows, and the
+    answers of *Falls* that are unknown as (repository, record, value, why)."""
+    mechanism: list[Series] = field(default_factory=list)
+    gate: list[Series] = field(default_factory=list)
+    unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
+
+
+MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
+GATE_HEADER = ["Version (commit)", "Measure", "Runs with no other gate", "Median (seconds)",
+               "Falls", "Runs with another gate or an unknown count", "Median of those (seconds)"]
+
+
+def median_text(median: Decimal | None, suffix: str = "") -> str:
+    """A median as the exact value of its Decimal, a half with its decimal, never in exponent form."""
+    return UNKNOWN if median is None else format(median, "f") + suffix
+
+
+def falls_answer(version: Version, first: bool, median: Decimal | None,
+                 previous: Decimal | None, subject: str, rest: str, what: str,
+                 unknown: list[tuple[str, str, str, str]], name: str) -> str:
+    """`yes` where the median is lower than the previous version's of the same measure in the same
+    series, `no` where it is not, and `unknown`, with its reason kept in `unknown`, where the
+    version is the first of its series or either median is not known."""
+    if first:
+        why = "no previous version in the series"
+    elif median is None:
+        why = f"no {subject} of the version{rest} gives {what}, so its median is not known"
+    elif previous is None:
+        why = f"no {subject} of the previous version{rest} gives {what}"
+    else:
+        return "yes" if median < previous else "no"
+    unknown.append((THE_WAY, NONE, f"{name}, version {version.commit}", why))
+    return UNKNOWN
+
+
+def measure_number(label: str, text: str) -> Decimal:
+    """The value of a cycle-level line that `read_measures` kept: a whole number, or for the share
+    a number of percent with one decimal."""
+    return Decimal(text[:-1] if label == SHARE_LABEL else text)
+
+
+def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the mechanism measures: for each version and each cycle-level
+    measure, the median of the cycles that give a value and whether it falls."""
+    previous: dict[str, Decimal | None] = {}
+    for index, version in enumerate(block.versions):
+        medians: dict[str, Decimal | None] = {}
+        for label in MEASURE_LABELS:
+            values = [measure_number(label, cycle.measures[label])
+                      for cycle in version.cycles if label in cycle.measures]
+            median = median_of(values)
+            medians[label] = median
+            falls = falls_answer(version, index == 0, median, previous.get(label), "cycle", "",
+                                 "a value", unknown, f"Measure falls: {label}")
+            block.rows.append([version.commit, label, str(len(values)),
+                               median_text(median, "%" if label == SHARE_LABEL else ""), falls])
+        previous = medians
+
+
+def gate_values(version: Version) -> dict[str, tuple[list[Decimal], list[Decimal]]]:
+    """The times of the runs of a version, over all its cycles, by measure: the total first and
+    then each directory that any run has, by name. Each measure holds the values of the runs with
+    no other gate and apart those of the runs with another gate or an unknown count; a run that
+    does not give the time adds to neither."""
+    found: dict[str, tuple[list[Decimal], list[Decimal]]] = {TOTAL_MEASURE: ([], [])}
+    for cycle in version.cycles:
+        for run in cycle.gate_timed:
+            side = 0 if run.others == 0 else 1
+            if run.total is not None:
+                found[TOTAL_MEASURE][side].append(run.total)
+            for name, seconds in run.directories:
+                lists = found.setdefault(DIRECTORY_MEASURE + name, ([], []))
+                if seconds is not None:
+                    lists[side].append(seconds)
+    return {name: found[name] for name in [TOTAL_MEASURE, *sorted(found.keys() - {TOTAL_MEASURE})]}
+
+
+def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the gate times: for each version and each measure, the median of the
+    runs with no other gate and whether it falls, and the runs with another gate or an unknown
+    count apart, never compared (WAY-350)."""
+    previous: dict[str, Decimal | None] = {}
+    for index, version in enumerate(block.versions):
+        medians: dict[str, Decimal | None] = {}
+        for name, (alone, apart) in gate_values(version).items():
+            median = median_of(alone)
+            medians[name] = median
+            falls = falls_answer(version, index == 0, median, previous.get(name), "run",
+                                 " with no other gate", "this time", unknown,
+                                 f"Gate time falls: {name}")
+            block.rows.append([version.commit, name, str(len(alone)), median_text(median), falls,
+                               str(len(apart)), median_text(median_of(apart))])
+        previous = medians
+
+
+def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
+    """Group the versions into the series of each instrument and give the medians and the
+    comparison of each version within its own series (WAY-339, WAY-348, WAY-350)."""
+    result = MeasureVersions()
+    result.mechanism = instrument_series(versions.ordered, ancestry, MEASURES_SCRIPT)
+    result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPT)
+    for block in result.mechanism:
+        mechanism_rows(block, result.unknown)
+    for block in result.gate:
+        gate_rows(block, result.unknown)
+    return result
 
 
 def contradiction_of(version: Version) -> tuple[str, str | None]:
@@ -2298,6 +2481,7 @@ def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
             continue
         versions.append(Version(commit, stamp or 0, day, prices.date, members))
     versions.sort(key=lambda version: (version.stamp, version.commit))
+    result.ordered = versions
     for version in versions:
         if not result.series:
             result.series.append(Series("the first version of the result", [version]))
@@ -2369,6 +2553,53 @@ def versions_lines(versions: Versions) -> list[str]:
     return lines
 
 
+def measure_versions_lines(measured: MeasureVersions) -> list[str]:
+    """The section *Measure versions*: a table per series of each instrument, the median of each
+    measure of each version and whether it falls against the previous version of its series."""
+    lines = [
+        "## Measure versions",
+        "",
+        "The versions are those of *Process versions*, but the series are not: the measures of how "
+        "a cycle's agents use context and the prompt cache and the times of the gate are the "
+        "numbers by which a change to the instructions of the cycle is judged, so only a change of "
+        "the instrument that measures them splits them (WAY-339). A series of the mechanism "
+        f"measures begins at a version whose `{MEASURES_SCRIPT}` differs from the previous "
+        f"version's, and a series of the gate times at one whose `{GATE_SCRIPT}` differs, by "
+        "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
+        "date of the register's list of classes and a change under `task-cycle/change`, "
+        "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
+        "`task-cycle/cycle_stages.py` split neither, though they split the series of the cost. "
+        "Each series is its own subsection, a number of one series is never set beside a number of "
+        "another, and the cycles in no version stand in no series. *Falls* is `yes` where the "
+        "median is lower than the previous version's median of the same measure in the same "
+        "series, `no` where it is not, and `unknown` where the version is the first of its series "
+        "or either median is not known; *Unknown values* says why. A median is written as the "
+        "exact value, a half with its decimal.",
+        "",
+        "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
+        "and *Cycles with a value* counts them.",
+        "",
+        "*Gate times*: the runs are taken together over all the cycles of the version. The median "
+        "and *Falls* take only the runs during which no other gate run by the script was going "
+        "(*Runs with no other gate*, WAY-350); the runs with another gate, or with the count "
+        "`unknown`, are counted and their median shown apart in the last two columns and are never "
+        "compared, so a version in which no run was alone has no comparison. Each count is of the "
+        "runs that give the time of its row, and a directory's median takes the runs that give "
+        "its time.",
+        "",
+    ]
+    for title, blocks, header in (("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
+                                  ("Gate times", measured.gate, GATE_HEADER)):
+        for number, block in enumerate(blocks, 1):
+            lines += [f"### {title}, series {number}", "",
+                      f"Begins at this version: {block.begins}.", ""]
+            lines += table(header, block.rows)
+            lines.append("")
+    if lines[-1] == "":
+        lines.pop()
+    return lines
+
+
 # The result
 
 
@@ -2434,7 +2665,8 @@ def gate_lines(cycles: list[Cycle]) -> list[str]:
                           "Other gate runs at the same time", "Directories"], rows)
 
 
-def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions) -> str:
+def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions,
+           measured: MeasureVersions) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
         "# Count of the audit of the process",
@@ -2494,7 +2726,7 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
             f"| {money(cycle.cost)} | {UNKNOWN if cycle.rounds is None else cycle.rounds} "
             f"| {share_text(cycle.share)} |")
     lines += ["", *measures_lines(cycles), "", *gate_lines(cycles), "", *versions_lines(versions),
-              ""]
+              "", *measure_versions_lines(measured), ""]
     lines += [
         "## Problems by cycle",
         "",
@@ -2633,8 +2865,10 @@ def main(argv: list[str] | None = None) -> int:
         reads = [read_repository(key, path, prices) for key, path in named.items()]
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
-        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown))
-        text = render(reads, prices, analysis, versions)
+        measured = measure_versions(versions, ancestry)
+        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown
+                                              + measured.unknown))
+        text = render(reads, prices, analysis, versions, measured)
         dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)
         write(results, LATEST, text)
