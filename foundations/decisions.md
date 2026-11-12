@@ -9537,11 +9537,9 @@ is told by its name lacking the two words that mark the files the cycle names ot
 and a file of findings, so a report under any other name is read and none is passed over unseen; the
 price is that a handoff or findings file written under a name without those words is read as a
 report. A report without the section is no failed reading: a stage report that returns `questions`
-may lack the section, and the cycle's reports also hold the orchestrator's own files, which never
+may lack the section, and the cycle's reports also hold files of the orchestrator, which need not
 have one. A stage report that lacks it is returned to its agent for repair by the orchestrator,
-which is where a missing section is caught. The exception stands in this decision and not in a task
-document, since an exception that lives only in a task document is one the foundation does not hold
-(WAY-30).
+which is where a missing section is caught.
 *Rejected:* an exit code of 2 where no report is read — it does not catch the case where some of
 the reports are read and others are not, and it goes against the rule of the cycle that exit 2
 means no listing was made; a line in the listing that marks a file not read — it looks like an item

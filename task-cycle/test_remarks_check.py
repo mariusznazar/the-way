@@ -266,6 +266,10 @@ class SectionFormsTest(unittest.TestCase):
                                "**Searches not found or unclear:** an item\n"), [])
         self.assertEqual(items("A paragraph\n**Searches not found or unclear:**\n- an item\n"), [])
 
+    def test_a_bold_label_right_after_a_heading_or_a_rule_opens_a_section(self) -> None:
+        self.assertEqual(items("# T\n**Searches not found or unclear:** x\n"), ["x"])
+        self.assertEqual(items("text\n\n---\n**Searches not found or unclear:** x\n"), ["x"])
+
     def test_a_bold_label_right_after_a_code_block_opens_a_section(self) -> None:
         report = "```\ncode\n```\n**Searches not found or unclear:** an item\n"
         self.assertEqual(items(report), ["an item"])
@@ -475,7 +479,7 @@ class CommandTest(unittest.TestCase):
     def test_every_md_file_whose_name_holds_neither_handoff_nor_findings_is_read(self) -> None:
         record = self.record(cycle_with("none"), {
             "review_whole.md": section("read in review whole"),
-            "report-planner.md": section("read in report planner"),
+            "planner-report.md": section("read in planner report"),
             "01-author-handoff.md": section("not read in author handoff"),
             "handoff_author.md": section("not read in handoff author"),
             "slice-1-findings.md": section("not read in slice findings"),
@@ -484,7 +488,7 @@ class CommandTest(unittest.TestCase):
         code, out, _ = run_main([record])
         self.assertEqual(code, 1)
         self.assertEqual(self.listing(out), [
-            f"{Path(record).as_posix()}/reports/report-planner.md: read in report planner",
+            f"{Path(record).as_posix()}/reports/planner-report.md: read in planner report",
             f"{Path(record).as_posix()}/reports/review_whole.md: read in review whole"])
 
     def test_reports_are_read_in_the_order_of_their_names(self) -> None:

@@ -146,9 +146,9 @@ names that file and only what routing needs (WAY-148). Begin each report file's 
 or the agent's role, the word `report` after it if at all (`author-report.md`, not
 `report-author.md`): Claude Code refuses a subagent's write of a file whose name starts with
 `report`, `summary`, `findings` or `analysis`, answering that subagents should return findings as
-text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
-and commits of the frozen task and of the spec and plan where they exist, the answers of step 4,
-and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
+text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of
+its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths and commits of the
+frozen task and of the spec and plan where they exist, the answers of step 4, and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
 included, only when the step or variant that names the file comes (WAY-125); no handoff tells it to
 read at the start every file its method names. Where that `SKILL.md` opens with a table of
 variants, the handoff names the agent's variant in the words of its row: under `make-change`,

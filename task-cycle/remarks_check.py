@@ -23,10 +23,11 @@ its section in either of two forms, and may give both:
   next heading, the next rule, or the next line that is no list item and starts with bold text,
   so that `**Choices:** ...` ends it.
 
-A mention of the name inside a sentence, a section inside fenced code, and a report with no
-section are not read. The items of a section are its list items, each with the lines that continue
-it and its sub-items, and its paragraphs, a paragraph after a list included, so that nothing written
-in the section goes unread; a sub-heading and a thematic break are no items. An item
+A mention of the name inside a sentence and a section inside fenced code are not read, and a
+report with no section gives no item. The items of a section are its list items, each with the
+lines that continue it and its sub-items, and its paragraphs, a paragraph after a list included, so
+that nothing written in the section goes unread; a sub-heading and a thematic break are no items.
+An item
 reads `none` when, with emphasis marks, backticks and a final full stop taken off, it is `none` in
 any case; every other item is listed, `none found` and `None unresolved. Unclear: ...` among them.
 
