@@ -99,6 +99,7 @@ them.
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation
 - **Trust boundary:** task-cycle/cycle_stages.py
+  task-cycle/cycle_measures.py
 
 ## foundation-review
 
