@@ -34,7 +34,10 @@ with the evidence and stop.
    against it and record the effect; stop only when the required outcome can no longer be
    established.
    Before a plan member's cycle starts, read `task-cycle/skill/plan_member.md` and follow it.
-2. Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
+2. Name the task `<task-slug>` first: for a task of a project plan, its name in the plan (WAY-147);
+   for any other, the name the cycle gives it. Every gate run of the cycle, the first included, writes
+   its times to the record directory of that name, so the name is known before the first run.
+   Read the product's `AGENTS.md`, verify that the pinned the-way checkout matches the product's
    gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
    record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
@@ -45,8 +48,8 @@ with the evidence and stop.
    `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
    comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
    so each handoff has the agent work from the worktree's root and names its stage's method by its
-   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives, at
-   once; a check that fails there and passed on the base is work the task carries, made under the
+   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives, through
+   `task-cycle/gate_times.py`, at once; a check that fails there and passed on the base is work the task carries, made under the
    new pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
    check their coverage as they check its items. Every reset of the task branch to its base stops
    at that commit. The review of the whole change checks that commit: it holds only the gitlink, at
@@ -66,7 +69,9 @@ with the evidence and stop.
    subagents this cycle cannot run in that harness.
 
 The cycle writes only in the task's worktree and changes nothing outside the product repository,
-except the fast-forward of the checkout in step 4 and the account of the request named below;
+except the fast-forward of the checkout in step 4, the account of the request named below and the
+registry of running gates that `task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a
+directory of empty files that holds no content of the cycle;
 reading outside it stays with the agent (WAY-140). A remark about the-way, the user's agent
 instructions or another repository goes into the record's process remarks, never into the request.
 For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
@@ -126,12 +131,13 @@ set the task's state.
    once. Record the base commit and the checks already failing on it. Run those checks on the base
    alone: finish them before anything changes a tracked file of the worktree, or run them in a
    separate checkout of the base commit under the worktree's ignored `.runs/`, deleted when they
-   end. In a product that checkout gets its dependencies installed, as the product's own rules give,
+   end. The gate's run on the base is one of the gate runs step 10 gives: it goes through
+   `task-cycle/gate_times.py` from that checkout, with `--output ../task-cycles/<task-slug>/gate_times.md`,
+   which reaches the worktree's record directory from a checkout directly under its `.runs/`. In a product that checkout gets its dependencies installed, as the product's own rules give,
    and its `.the-way` populated before the checks run; otherwise they fail for that reason and not on
    the base. Keep a frozen copy of the task document with its original path and its approval date or
    source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.
-5. Name the task `<task-slug>`: for a task of a project plan, its name in the plan (WAY-147); for
-   any other, the name the cycle gives it. Create the ignored record
+5. Keep the name `<task-slug>` that step 2 gave the task. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` in the task's worktree from
    `task-cycle/record_template.md` of the pinned the-way and fill it as its sections give; it is
    the cycle's only log (WAY-148). Keep each full handoff and report beside it in `reports/`, with
@@ -330,7 +336,8 @@ contradicts a decision.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
         change as step 10 gives (at once, since no return step runs), run
-        `task-cycle/cycle_stages.py`, prepare the record's copy as
+        `task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py` naming the same
+        sessions, prepare the record's copy as
         "The record before it is committed" gives and commit it and its removal as step 12 gives,
         then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
@@ -361,9 +368,17 @@ contradicts a decision.
    reviewer's grade or scope. The Minor findings of this review within the task are fixed before
    step 10, as "The end of a code review" gives (WAY-161).
 10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
-    included, or the code a revert of that fix leaves, and record its command, exit
-    code and the failures it names under *Verification*, with each check that failed or did not
-    run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
+    included, or the code a revert of that fix leaves, through the script of the pinned the-way:
+    `python -B task-cycle/gate_times.py --output .runs/task-cycles/<task-slug>/gate_times.md -- <the
+    product's declared gate command>`, the command after `--` given as the product's rules declare
+    it (the-way's is `python -B gate/run_tests.py`; in a product the script's path starts with
+    `.the-way/`). Every run of the gate goes this way: the run on the commit that moved the pin
+    (step 2), the run on the base (step 4), this run, and the reruns of steps 9 and 12 that this step
+    governs. The gate's output passes through unchanged. The script's exit code is the gate's, and
+    the orchestrator records it with the command as before; an exit code 2 that comes with an
+    `Error: gate_times.py:` line on stderr is the script's own failure, not the gate's. Record its
+    command, exit code and the failures it names under *Verification*, with each check that failed or
+    did not run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
     any review of it are done, on the tree they leave: the return step needs no result of the gate,
     so one run covers both. Where the gate then fails and its fix changes code, the return step
     compares that fix's range too. The authors' focused checks are not rerun merely to go on
@@ -443,7 +458,10 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
     correction's included, by its transcript path or id; Claude Code holds the current session's id
-    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Run the process remarks check on
+    in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Beside it, run
+    `task-cycle/cycle_measures.py` of the pinned the-way with `--output
+    .runs/task-cycles/<task-slug>/mechanism_measures.md`, naming the same sessions in the same way: it
+    counts the context and the prompt cache of the cycle's agents. Run the process remarks check on
     the record as "The process remarks check" gives, before the description is written, so that a
     listing you hold wrong reaches the description. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
@@ -537,7 +555,7 @@ the worktree's root (in a product, the path starts with `.the-way/`):
 2. Copy the whole record directory to `docs/task-cycles/<task-slug>/` on the task branch and
    rewrite its links to the committed copies.
 3. Clean the copy by one rewriting, applied to every text file of it — `cycle.md`, the handoffs
-   and reports, the copy of the task document, `stages.md`, `request.md` — so that a text standing
+   and reports, the copy of the task document, `stages.md`, `mechanism_measures.md`, `gate_times.md`, `request.md` — so that a text standing
    in two files is replaced by the same words in both. An item of a report and the same item in
    the process remarks must still read the same, word for word:
    - an absolute path to a place inside the repository, such as the worktree, becomes the path
