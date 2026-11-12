@@ -21,8 +21,8 @@ with `process-audit/` starts at that root, and the command runs from there.
 
 - **The register of problems.** The user's own tool fills it, from the template
   `process-audit/problem_register.md`, which the user copies to a place of their own and adapts to
-  their needs. The audit gives no problem a class or a weight itself and reads the register that an
-  entry of the locations file names (WAY-330).
+  their needs. The audit gives no problem a class, a weight or a cost of an occurrence itself and
+  reads the register that an entry of the locations file names (WAY-330).
 - **The counting.** `python -B process-audit/audit_count.py` asks nothing and reads nothing from
   stdin, so a system scheduler can start it with no one present. It runs on the night from Friday to
   Saturday, and the session finds its result ready (WAY-341).
@@ -40,6 +40,13 @@ These hold at every step.
   a recommended rank from how often it returned or how long it has waited, and list issues in the
   order the count gives, which is the register's. The human weighs what a return costs and what its
   fix costs.
+- **The cost of an occurrence is material, never a priority** (WAY-346, WAY-336). It is the level,
+  on the five of the register's table *Costs of an occurrence*, that one occurrence of a problem
+  cost: `nothing`, `steps`, `stage`, `round` or `human`, each dearer than the one before. It is no
+  cost of a cycle, which *Cost* gives in money, and no weight, which says how far a problem
+  endangered the change. Show it beside an issue and leave it to the human to set it against what
+  the issue's returns number and what its fix costs. Give no issue a priority, an order or a rank
+  from it, and add the levels into no score.
 - **Measures are compared inside a series only** (WAY-339). WAY-339 starts a new series at a new
   price list, or at a change of the form of a stage report, of the list of classes or of the
   instructions of the reviewer. The count splits more often than that: at a new price list, at a
@@ -100,18 +107,22 @@ waiting count to. Its exit code says:
 
 - `0`: the result is written;
 - `1`: the result is written, but a repository could not be read or a table of the register is
-  missing; the `Error:` lines on stderr and the result's sections *Repositories* and *Unknown values*
-  name which. Put it before the human at step 3 as the first matter;
+  refused as a whole; the `Error:` lines on stderr and the result's sections *Repositories* and
+  *Unknown values* name which. Put it before the human at step 3 as the first matter;
 - `2`: an `Error:` line on stderr and nothing written; the line names the file, key, entry or
-  argument that is missing or wrong, never a path. Ask the human as in step 1, or what to correct,
-  and run again once it is.
+  argument that is missing or wrong, never a path. A register that lacks a heading, a table or a
+  column the count needs, such as a register kept in an earlier form of the template, ends here with
+  the line naming each field missing: it is for the user's own tool to bring the register to the
+  template's form, and the session changes nothing in it but a class on the human's yes. Ask the
+  human as in step 1, or what to correct, and run again once it is.
 
 Then read `count-latest.md` whole.
 
 ## 3. Put the matters before the human
 
 The count has the sections *Repositories*, *Cycles*, *Cost*, *Process versions*, *Problems by
-cycle*, *Fixed issues*, *Open issues*, *Dropped issues* and *Unknown values*. Read the newest
+cycle*, *Fixed issues*, *Open issues*, *Dropped issues*, *Cost of an occurrence by issue* and
+*Unknown values*. Read the newest
 earlier note `audit-<YYYY-MM-DD>.md`, if there is one, only to see which matters the human weighed or
 set aside; say so beside a matter that comes again.
 
@@ -135,11 +146,14 @@ two outcomes: the human weighs it further, or sets it aside.
    That is the state of those records, and no defect of the count.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
-   a pin that is unknown or a cycle that is not read.
+   a pin that is unknown or a cycle that is not read. Beside each, quote its row of *Cost of an
+   occurrence by issue* with the header row of that table: how many of its problems stand on each
+   level of the cost of an occurrence.
 3. **What still waits, and for how long.** Each issue of *Open issues*: the cycles its problems came
    back in (the first cycle where a problem stood does not count, so `0` is a problem seen once),
    its problems and its *Days waiting*. Add the issues of *Dropped issues* once,
-   as the count gives them, with no waiting.
+   as the count gives them, with no waiting. Beside each issue, open or dropped, quote its row of
+   *Cost of an occurrence by issue* with the header row of that table.
 4. **What each version of the process shows.** For each series of *Process versions*, one at a time,
    with the line that says why it begins where it does: the median cost at constant prices of each
    version and its answers Q1, Q2 and Q3, which `yes`, `no` or `unknown` give inside that series. Quote

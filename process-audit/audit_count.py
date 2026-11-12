@@ -1,7 +1,8 @@
 """The counting command of the audit of the process: the cycles whose records the user's
 repositories hold in their history, and for each the version of the-way it ran on, its number of
 process remarks and its times (WAY-330, WAY-332, WAY-338, WAY-341); and the problems of the user's
-register of problems counted against those cycles (WAY-330, WAY-333 to WAY-336).
+register of problems counted against those cycles (WAY-330, WAY-333 to WAY-336, WAY-345,
+WAY-346).
 
 Usage:
 
@@ -124,13 +125,19 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
 
 The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
-gives: four tables, *Classes*, *Weights*, *Issues* and *Problems*, found by their headings and header
-rows. A table missing, a row that does not read, an unknown class or weight, an issue in no row of
-*Issues*, a doubled name, a *Fix* that is no commit or a date that is no date refuses that row or
-table with a reason. A refused row of *Problems* still belongs to the cycle and the issue it names:
-each count of that cycle or issue reads `at least n`, as the row is not in it. What else depends on
-a refused row or table is `unknown`; a table missing is an `Error:` of the register on stderr, with
-exit 1. A problem whose cycle no named repository holds is `unknown`, not dropped, and so is a
+gives: five tables, *Classes*, *Weights*, *Costs of an occurrence*, *Issues* and *Problems*, found
+by their headings and header rows. A heading, a table or a column of a header row the register lacks
+is a missing field (WAY-344): the run ends with exit 2, nothing written, and the `Error:` line names
+every field missing, never reading its absence as an empty value. Where every column stands in the
+header row but not in the template's order, or another stands beside them, or a heading is written
+twice, no field is missing: the table is refused. A row that does not read, an unknown class,
+weight or cost of an occurrence, an issue in no row of *Issues*, a doubled name, a *Fix* that is no
+commit or a date that is no date refuses that row or table with a reason. A table of *Weights* or of
+*Costs of an occurrence* that does not name its levels, four or five, each once is refused, and an
+`Error:` of the register on stderr gives exit 1. A refused row of *Problems* still belongs to the
+cycle and the issue it names: each count of that cycle or issue reads `at least n`, as the row is
+not in it. What else depends on a refused row or table is `unknown`. A problem whose cycle no named
+repository holds is `unknown`, not dropped, and so is a
 problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
 read `at least n`. A problem is counted once, by its row (WAY-334); a cycle copied again after a
 correction is one cycle, and its problems are counted once. *Unknown values* lists at most 500
@@ -148,7 +155,11 @@ n` where a refused row or a problem of a cycle not read may belong to a cycle no
 the earliest commit date of the copies its problems' *Record* names to the day of the run,
 `unknown` where a problem's cycle is not known. An
 issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
-register, never ranked by their counts (WAY-336).
+register, never ranked by their counts (WAY-336). For each issue, whatever its fate, how many of its
+problems stand on each of the five levels of the cost of an occurrence (WAY-345, WAY-346): a cost
+counted by the issue and never by the cycle, and a different thing from the cost of a cycle in
+money, which the section *Cost* gives (WAY-337). A level counts the issue's problems by their rows,
+whether or not their cycles are read.
 
 The result is Markdown in UTF-8 with LF line ends, the same bytes for the same input, written to
 `count-<YYYY-MM-DD>.md`, the date of the run, and `count-latest.md` in the directory of
@@ -158,15 +169,16 @@ repository read and its cycles; a section *Cycles*, a table of one row per cycle
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
 number of fix rounds and the share of the cost in them. The sections *Problems by cycle*, *Fixed
-issues*, *Open issues* and *Dropped issues* give the register's counts, and sit before *Unknown
-values*. On stdout it names the two files and the counts.
+issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* give the register's
+counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
 
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
-read, or a table of the register missing, named in the result and in an `Error:` line on stderr; 2
-with `Error: <message>` on stderr and nothing written, when an argument is wrong, the locations
-file, the price list, the register or an entry it needs is missing or wrong, the register is larger
-than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the checkout of
-the-way, or the result cannot be written.
+read, or a table of the register refused as a whole, named in the result and in an `Error:` line on
+stderr; 2 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the
+locations file, the price list, the register or an entry it needs is missing or wrong, the register
+lacks a heading, a table or a column it needs, the register is larger than 4 MiB or not UTF-8, the
+result directory lies inside a repository to read or the checkout of the-way, or the result cannot
+be written.
 
 Standard library only.
 """
@@ -1240,15 +1252,21 @@ def read_repository(key: str, path: Path, prices: Prices) -> Read:
 
 # The register of problems
 
-# The four tables of the register, each under its heading, with the header row the template gives.
+COSTS_TITLE = "Costs of an occurrence"
+# The five tables of the register, each under its heading, with the header row the template gives.
 REGISTER_TABLES = (
     ("Classes", ["Class", "Meaning", "Added", "Withdrawn"]),
     ("Weights", ["Weight", "Meaning"]),
+    (COSTS_TITLE, ["Cost of an occurrence", "Meaning"]),
     ("Issues", ["Issue", "What", "Fate", "Fix"]),
-    ("Problems", ["Repository", "Record", "Stages", "What", "Class", "Weight", "Issue"]),
+    ("Problems", ["Repository", "Record", "Stages", "What", "Class", "Weight",
+                  "Cost of an occurrence", "Issue"]),
 )
 # The scale of weight has these four levels and no other (WAY-333).
 LEVELS = ["no problem", "Minor", "Important", "Critical"]
+# The scale of the cost of an occurrence has these five levels, each dearer than the one before, and
+# no other (WAY-345). It is a different thing from the cost of a cycle in money (WAY-337).
+COST_LEVELS = ["nothing", "steps", "stage", "round", "human"]
 FATES = ["open", "fixed", "dropped"]
 FIXED = "fixed"
 START = "start"
@@ -1274,6 +1292,7 @@ class Problem:
     record: str
     cls: str
     weight: str
+    cost: str
     issue: str
 
 
@@ -1331,6 +1350,12 @@ def check_weight(cells: list[str]) -> tuple[str, str | None]:
     return cells[0], None
 
 
+def check_cost_level(cells: list[str]) -> tuple[str, str | None]:
+    if cells[0] not in COST_LEVELS:
+        return cells[0], "the cost of an occurrence is not one of the five levels"
+    return cells[0], None
+
+
 def check_issue(cells: list[str]) -> tuple[str, str | None]:
     name, fate, fix = cells[0], cells[2], cells[3]
     if not valid_name(name) or name == NONE:
@@ -1370,14 +1395,18 @@ def named_rows(register: Register, title: str, rows: list[list[str]], width: int
     return valid
 
 
-def register_table(lines: list[str], fenced: list[bool], title: str,
-                   columns: list[str]) -> tuple[list[list[str]] | None, str | None]:
+def register_table(lines: list[str], fenced: list[bool], title: str, columns: list[str],
+                   missing: list[str]) -> tuple[list[list[str]] | None, str | None]:
     """The rows of the table under the heading `## <title>`, or None with the reason. The table
     starts at the first line that begins with `|` before the next heading, and its header row must
-    be `columns`; its rows run on until a line that does not begin with `|`."""
+    be `columns`; its rows run on until a line that does not begin with `|`. A heading, a table or
+    a column the register lacks is a field missing (WAY-344): it is added to `missing`, in words
+    that name it, as well as returned as the reason."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == f"## {title}"]
     if len(headings) != 1:
+        if not headings:
+            missing.append(f"the heading `## {title}`")
         return None, (f"the register holds the heading `## {title}` "
                       + ("more than once" if headings else "not at all"))
     start = None
@@ -1390,8 +1419,14 @@ def register_table(lines: list[str], fenced: list[bool], title: str,
             start = index
             break
     if start is None:
+        missing.append(f"the table under the heading `## {title}`")
         return None, f"the table `{title}` is missing"
-    if table_cells(lines[start]) != columns:
+    found = table_cells(lines[start])
+    if found != columns:
+        # A column absent from the header row, or standing under another name, is a field missing;
+        # the columns all there in another order, or with another beside them, are not.
+        absent = [name for name in columns if name not in found]
+        missing.extend(f"the column `{name}` of the table `{title}`" for name in absent)
         return None, f"the table `{title}` does not have the header row the template gives"
     separator = start + 1
     if (separator >= len(lines) or not lines[separator].startswith("|")
@@ -1426,12 +1461,17 @@ def read_register(path: Path) -> Register:
     fenced = remarks_check.fenced_flags(lines)
     register = Register()
     tables: dict[str, list[list[str]] | None] = {}
+    missing: list[str] = []
     for title, columns in REGISTER_TABLES:
-        rows, why = register_table(lines, fenced, title, columns)
+        rows, why = register_table(lines, fenced, title, columns, missing)
         if why:
             register.errors.append(why)
             register.refuse(f"table `{title}`", why)
         tables[title] = rows
+    if missing:
+        # The register is a file a human or a tool writes, and a field the count looks for data by
+        # that it cannot find ends the run; the absence is never read as no rows (WAY-344).
+        raise AuditCountError("the register of problems lacks " + ", ".join(missing))
     if tables["Classes"] is None:
         register.class_dates_unknown = True
     else:
@@ -1449,6 +1489,12 @@ def read_register(path: Path) -> Register:
             why = "the table `Weights` must name the four levels, each once"
             register.errors.append(why)
             register.refuse("table `Weights`", why)
+    if tables[COSTS_TITLE] is not None:
+        costs = named_rows(register, COSTS_TITLE, tables[COSTS_TITLE], 2, check_cost_level)
+        if sorted(name for name, _, _ in costs) != sorted(COST_LEVELS):
+            why = f"the table `{COSTS_TITLE}` must name the five levels, each once"
+            register.errors.append(why)
+            register.refuse(f"table `{COSTS_TITLE}`", why)
     if tables["Issues"] is not None:
         register.issues = [(name, cells[2], cells[3].lower()) for name, _, cells in
                            named_rows(register, "Issues", tables["Issues"], 4, check_issue)]
@@ -1457,13 +1503,13 @@ def read_register(path: Path) -> Register:
         issue_names = {name for name, _, _ in register.issues}
         for number, cells in enumerate(tables["Problems"], 1):
             value = f"row {number} of `Problems`"
-            if len(cells) != 7:
-                register.refuse(value, f"the row has {len(cells)} cells, not 7",
+            if len(cells) != 8:
+                register.refuse(value, f"the row has {len(cells)} cells, not 8",
                                 cells[0] if cells else "", cells[1] if len(cells) > 1 else "")
                 register.refused_problems.append((cells[0] if cells else "",
                                                   cells[1] if len(cells) > 1 else "", ""))
                 continue
-            repository, record, _, _, cls, weight, issue = cells
+            repository, record, _, _, cls, weight, cost, issue = cells
             why = None
             if not repository:
                 why = "the row names no repository"
@@ -1473,6 +1519,8 @@ def read_register(path: Path) -> Register:
                 why = "the class is not in the list of classes"
             elif weight not in LEVELS:
                 why = "the weight is not one of the four levels"
+            elif cost not in COST_LEVELS:
+                why = "the cost of an occurrence is not one of the five levels"
             elif issue != NONE and issue not in issue_names:
                 why = "the issue is in no valid row of Issues"
             if why:
@@ -1480,7 +1528,7 @@ def read_register(path: Path) -> Register:
                 register.refused_problems.append((repository, record, issue))
                 continue
             register.problems.append(Problem(number, repository, record.lower(), cls, weight,
-                                             issue))
+                                             cost, issue))
     return register
 
 
@@ -1585,6 +1633,7 @@ class Analysis:
     fixed_rows: list[list[str]]
     open_rows: list[list[str]]
     dropped_rows: list[list[str]]
+    cost_rows: list[list[str]]
     unknown: list[tuple[str, str, str, str]]
 
 
@@ -1661,9 +1710,15 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     by_issue: dict[str, list[tuple[Problem, Cycle | None]]] = {}
     for problem, cycle in found:
         by_issue.setdefault(problem.issue, []).append((problem, cycle))
-    fixed_rows, open_rows, dropped_rows = [], [], []
+    fixed_rows, open_rows, dropped_rows, cost_rows = [], [], [], []
     for name, fate, fix in register.issues:
         members = by_issue.get(name, [])
+        # The cost of an occurrence stands in the problem's row, so the cycle is not needed: a
+        # problem of a cycle that is not read is counted, and a refused row makes the count a lower
+        # bound.
+        levels = Counter(problem.cost for problem, _ in members)
+        cost_rows.append([name, fate] + [counted(levels[level], refused_issue[name])
+                                         for level in COST_LEVELS] + [str(refused_issue[name])])
         hit = {(cycle.repository, cycle.record): cycle for _, cycle in members
                if cycle is not None}
         not_read = sum(1 for _, cycle in members if cycle is None)
@@ -1738,7 +1793,7 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         listed = listed[:MAX_LISTED] + [(THE_WAY, NONE, "values of the register not listed",
                                          f"{more} more values the register leaves unknown are not "
                                          "listed here; the register holds them")]
-    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, listed)
+    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows, listed)
 
 
 # The process versions (WAY-339, WAY-341)
@@ -2082,6 +2137,21 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
     ]
     lines += table(["Issue", "Cycles", "Problems", "Problems whose cycle is not read",
                     "Refused rows"], analysis.dropped_rows)
+    lines += [
+        "",
+        "## Cost of an occurrence by issue",
+        "",
+        "For each issue, whatever its fate, how many of its problems stand on each level of the cost "
+        "of an occurrence: the highest level that the actual cost of one occurrence reached, the "
+        "levels running from the cheapest to the dearest as the columns do; the meaning of each is "
+        "in the register's table *Costs of an occurrence*. This is no cost of a cycle, which the "
+        "section *Cost* gives in money. A problem counts by its row, whether or not its cycle is "
+        "read. *Refused rows* are refused rows of *Problems* that name this issue; a count with one "
+        "reads `at least n`. The issues are in the order of the register, never ranked by their "
+        "costs (WAY-336), and the weighing is the human's.",
+        "",
+    ]
+    lines += table(["Issue", "Fate", *COST_LEVELS, "Refused rows"], analysis.cost_rows)
     lines += [
         "",
         "## Unknown values",
