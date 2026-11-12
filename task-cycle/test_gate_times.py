@@ -34,8 +34,11 @@ def now_ms() -> int:
 
 
 def printed(text: bytes, code: int = 0) -> list[str]:
-    """A command that writes `text` to its output exactly, as bytes, and exits with `code`."""
-    return [sys.executable, "-c", "import sys; sys.stdout.buffer.write(%r); sys.exit(%d)" % (text, code)]
+    """A command that writes `text` to its output exactly, as bytes, and exits with `code`. The text
+    comes in hex in the arguments, so that the code of the command stays a literal."""
+    return [sys.executable, "-c",
+            "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); sys.exit(int(sys.argv[2]))",
+            text.hex(), str(code)]
 
 
 class GateTimesTest(unittest.TestCase):
@@ -133,9 +136,10 @@ class PassThroughTest(GateTimesTest):
 
     def test_output_is_passed_on_unchanged_with_error_output_joined(self) -> None:
         data = "alpha é\r\n== a\nRan 1 test in 0.1s\n|bar \x00 end\n".encode("utf-8")
-        code = ("import sys; sys.stdout.buffer.write(%r); sys.stdout.flush(); "
-                "sys.stderr.buffer.write(b'err line\\n'); sys.stderr.flush()" % data)
-        result = self.run_gate([sys.executable, "-c", code])
+        result = self.run_gate([sys.executable, "-c",
+                                "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); "
+                                "sys.stdout.flush(); sys.stderr.buffer.write(b'err line\\n'); "
+                                "sys.stderr.flush()", data.hex()])
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(data + b"err line\n", result.stdout)
 
@@ -168,12 +172,13 @@ class RegistryTest(GateTimesTest):
             (self.registry / name).touch()
         # The command makes the entry of a run that ended inside this run: started a minute before
         # it, ended after this run started, which it did before the command began.
-        code = ("import os, sys, time\n"
-                "time.sleep(0.1)\n"
-                "now = time.time_ns() // 1000000\n"
-                "open(os.path.join(%r, '%%d_%%d_inside.run' %% (now - 60000, now)), 'w').close()\n"
-                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')\n" % str(self.registry))
-        result = self.run_gate([sys.executable, "-c", code])
+        result = self.run_gate([sys.executable, "-c",
+                                "import os, sys, time; time.sleep(0.1); "
+                                "now = time.time_ns() // 1000000; "
+                                "open(os.path.join(sys.argv[1], '{}_{}_inside.run'.format("
+                                "now - 60000, now)), 'w').close(); "
+                                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
+                                str(self.registry)])
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual("2", self.rows()[0][3])
         listing = set(os.listdir(self.registry))
@@ -191,9 +196,10 @@ class RegistryTest(GateTimesTest):
     def test_unusable_registry_gives_unknown_and_the_gate_still_runs(self) -> None:
         self.registry.write_text("not a folder", encoding="utf-8")
         marker = self.root / "ran.txt"
-        code = ("import sys; open(%r, 'w').close(); "
-                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')" % str(marker))
-        result = self.run_gate([sys.executable, "-c", code])
+        result = self.run_gate([sys.executable, "-c",
+                                "import sys; open(sys.argv[1], 'w').close(); "
+                                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
+                                str(marker)])
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue(marker.exists())
         self.assertTrue(result.stderr.decode("utf-8", errors="replace").startswith("Warning:"))
@@ -224,8 +230,7 @@ class ErrorTest(GateTimesTest):
 
     def test_no_output_is_an_error_before_the_command_starts(self) -> None:
         marker = self.root / "ran.txt"
-        code = "open(%r, 'w').close()" % str(marker)
-        result = self.run_gate([sys.executable, "-c", code],
+        result = self.run_gate([sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
                                options=["--registry", str(self.registry)])
         self.assertError(result)
         self.assertFalse(marker.exists())
@@ -234,8 +239,7 @@ class ErrorTest(GateTimesTest):
         folder = self.root / "a_folder"
         folder.mkdir()
         marker = self.root / "ran.txt"
-        code = "open(%r, 'w').close()" % str(marker)
-        result = self.run_gate([sys.executable, "-c", code],
+        result = self.run_gate([sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
                                options=["--output", str(folder), "--registry", str(self.registry)])
         self.assertError(result)
         self.assertFalse(marker.exists())
