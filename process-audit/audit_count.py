@@ -1537,8 +1537,6 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         record = stages = None
         record_reason = stages_reason = reason
         measures = gate = (None, reason)
-    read_measures(cycle, *measures)
-    read_gate(cycle, *gate)
     record_lines = record_fenced = None
     if record is None:
         cycle.unknown += [("Process pin", record_reason), ("Remarks", record_reason)]
@@ -1552,6 +1550,10 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         if reason:
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
+    # The two files after the record's own values, so that the rows of *Unknown values* of a
+    # cycle keep their order (WAY-347, WAY-349).
+    read_measures(cycle, *measures)
+    read_gate(cycle, *gate)
     working_name = "Working time without waiting for tools"
     if stages is None:
         cycle.unknown += [(working_name, stages_reason), ("Waiting for tools", stages_reason),
