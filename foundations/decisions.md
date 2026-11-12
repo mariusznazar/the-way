@@ -9501,23 +9501,26 @@ neither `handoff` nor `findings` — that the record's process remarks do not ho
 appends each listed item word for word with its stage name and full report path, and runs the script again until
 it lists nothing. The commits that add the record are its copy for a request, the repetition of that
 copy in a correction after review, and the copy of a request blocked for any cause. The script only
-lists, and an item that two reports give is listed again until the remarks hold it twice.
+lists, and an item that two reports give is listed again until the remarks hold it twice; a report
+without the section gives no item and does not end the script with an error, which narrows WAY-344
+for the reports this script reads.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-260
+- **Relations:** derives from WAY-260 · narrows WAY-344
 - **Verification:** an agent compares a cycle and its record with the decision:
   - complies: a stage report that works after the request opened gives one item beside three lines
     reading `none found`; the script lists that item with its report path, the orchestrator appends
     it and runs the script again, which lists nothing, and only then the record is committed; a
     correction runs the script over the reports of the correction too; a report named
-    `review_whole.md` and one named `report-planner.md` are read, while `01-author-handoff.md`,
-    `slice-1-findings.md`, `notes.txt` and `gate.log` are not;
+    `review_whole.md` and one named `planner-report.md` are read, while `01-author-handoff.md`,
+    `slice-1-findings.md`, `notes.txt` and `gate.log` are not; a report with no section lists
+    nothing, and the script exits with 0 when no other report lists an item;
   - violates: a record is committed without the script having been run on it; the orchestrator
     stops after a run that listed items; it appends an item in other words, or leaves it out
     because it looks small; an item that two reports give stands once in the remarks; a `.md` file
     of `reports/` whose name holds neither word is left unread, or a handoff or a file of findings
-    is read as a report.
+    is read as a report; the script ends with exit code 2 at a report that has no section.
 - **Origin:** none
 
 *Rationale:* the orchestrator copies an item when it has a report in front of it, and in the cycles
@@ -9533,7 +9536,10 @@ script must recognise in the two forms reports give it, and a literal reading of
 is told by its name lacking the two words that mark the files the cycle names otherwise, a handoff
 and a file of findings, so a report under any other name is read and none is passed over unseen; the
 price is that a handoff or findings file written under a name without those words is read as a
-report.
+report. A report without the section is no failed reading: a stage report that returns `questions`
+may lack the section, and the cycle's reports also hold files of the orchestrator, which need not
+have one. A stage report that lacks it is returned to its agent for repair by the orchestrator,
+which is where a missing section is caught.
 *Rejected:* an exit code of 2 where no report is read — it does not catch the case where some of
 the reports are read and others are not, and it goes against the rule of the cycle that exit 2
 means no listing was made; a line in the listing that marks a file not read — it looks like an item
@@ -9542,7 +9548,10 @@ correction included — a few sentences in the skill, but it does not close the 
 `none` lines, which arose while the orchestrator had the report in front of it; a pass of the
 orchestrator through all reports before every archive, skipping only a section that reads `none`
 throughout — a few sentences that close both causes, but it still rests on a model reading with
-care, which already failed in a cycle with dozens of reports.
+care, which already failed in a cycle with dozens of reports; an exit code of 2 at a report without
+the section, as WAY-344 gives — it would stop the record of every cycle whose reports hold a file
+without the section, and of a cycle whose stage report returns `questions`; no exception at all,
+with WAY-344 unchanged — a reviewer who compares the script with WAY-344 would take it for a breach.
 
 ### WAY-295 — What does the cycle do with a listing of the remarks check that it holds wrong?
 
