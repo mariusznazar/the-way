@@ -254,6 +254,26 @@ class SectionFormsTest(unittest.TestCase):
         self.assertEqual(items("# Report\n\n## Checks\n\n- exit 0\n"), [])
         self.assertEqual(items(""), [])
 
+    def test_a_thematic_break_in_a_section_is_no_item(self) -> None:
+        for rule in ("---", "***", "___", "- - -", "* * *"):
+            report = f"## Searches not found or unclear\n\n- first\n\n{rule}\n\n- second\n"
+            self.assertEqual(items(report), ["first", "second"], rule)
+            report = f"## Searches not found or unclear\n\n- first\n\n{rule}\n"
+            self.assertEqual(items(report), ["first"], rule)
+
+    def test_a_bold_label_on_a_second_line_of_a_paragraph_opens_no_section(self) -> None:
+        self.assertEqual(items("A paragraph that goes on\n"
+                               "**Searches not found or unclear:** an item\n"), [])
+        self.assertEqual(items("A paragraph\n**Searches not found or unclear:**\n- an item\n"), [])
+
+    def test_two_bold_labels_on_consecutive_lines_are_both_read(self) -> None:
+        report = ("**Unread material:** the file\n"
+                  "**Searches not found or unclear:**\n- the first search\n")
+        self.assertEqual(items(report), ["the first search"])
+        report = ("**Searches not found or unclear:** first\n"
+                  "**Searches not found or unclear:** second\n")
+        self.assertEqual(items(report), ["first", "second"])
+
 
 class RemarkBlockTest(unittest.TestCase):
     def blocks(self, text: str) -> list[str]:
@@ -359,6 +379,15 @@ class CommandTest(unittest.TestCase):
         self.assertEqual((code, err), (0, ""))
         self.assertEqual(self.listing(out), [])
         self.assertTrue(out.splitlines()[-1].startswith("checked: "), out)
+
+    def test_a_report_without_the_section_gives_no_item_and_exit_zero(self) -> None:
+        record = self.record(cycle_with("none"), {
+            "02-author-report.md": "# Report\n\n## Checks\n\n- `python -B x.py` exit 0\n"})
+        code, out, err = run_main([record])
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(self.listing(out), [])
+        self.assertEqual(out.splitlines()[-1], "checked: 1 reports, 0 items other than none, "
+                         "0 not in the process remarks")
 
     def test_a_missing_item_is_listed_with_its_report_path_and_exit_one(self) -> None:
         record = self.record(

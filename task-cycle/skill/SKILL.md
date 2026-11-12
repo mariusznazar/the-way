@@ -142,8 +142,11 @@ set the task's state.
    secrets. The record stays out of commits until step 12.
 
 Write each dispatch's full handoff to a file in `reports/` whose name holds `handoff`; the message
-names that file and only what routing needs (WAY-148). The handoff gives the user's delegation, the worktree, the method of
-the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
+names that file and only what routing needs (WAY-148). Begin each report file's name with the stage
+or the agent's role, the word `report` after it if at all (`author-report.md`, not
+`report-author.md`): Claude Code refuses a subagent's write of a file whose name starts with
+`report`, `summary`, `findings` or `analysis`, answering that subagents should return findings as
+text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths
 and commits of the frozen task and of the spec and plan where they exist, the answers of step 4,
 and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
 included, only when the step or variant that names the file comes (WAY-125); no handoff tells it to

@@ -17,15 +17,16 @@ its section in either of two forms, and may give both:
   number such as `12.`, with an optional trailing colon, emphasis or parenthesis; the section runs
   to the next heading of the same or a higher level;
 - a bold label `**Searches not found or unclear**`, its colon inside or outside the bold or absent,
-  at the start of a line or of a list item; the text after the label on its line belongs to the
-  section. A label that is a list item ends at the next line indented no deeper than its marker. A
-  label that is no list item ends at the next heading, the next rule, or the next line that is no
-  list item and starts with bold text, so that `**Choices:** ...` ends it.
+  at the start of a paragraph, of a list item, or after a line opening with another bold label;
+  the text after the label on its line belongs to the section. A label that is a list item ends
+  at the next line indented no deeper than its marker. A label that is no list item ends at the
+  next heading, the next rule, or the next line that is no list item and starts with bold text,
+  so that `**Choices:** ...` ends it.
 
 A mention of the name inside a sentence, a section inside fenced code, and a report with no
 section are not read. The items of a section are its list items, each with the lines that continue
 it and its sub-items, and its paragraphs, a paragraph after a list included, so that nothing written
-in the section goes unread; a sub-heading is no item. An item
+in the section goes unread; a sub-heading and a thematic break are no items. An item
 reads `none` when, with emphasis marks, backticks and a final full stop taken off, it is `none` in
 any case; every other item is listed, `none found` and `None unresolved. Unclear: ...` among them.
 
@@ -160,10 +161,12 @@ def split_items(body: list[tuple[str, bool]]) -> list[str]:
             current.parts.append(text)
             blank = False
             continue
-        if not text.strip() or HEADING.fullmatch(text):
-            # A sub-heading inside a section is no item; it parts what comes before and after it.
+        if not text.strip() or HEADING.fullmatch(text) or RULE.fullmatch(text):
+            # A sub-heading or a thematic break inside a section is no item; it parts what comes
+            # before and after it.
             blank = True
-            current = None if HEADING.fullmatch(text) else current
+            if HEADING.fullmatch(text) or RULE.fullmatch(text):
+                current = None
             continue
         indent = indent_of(text)
         marker = MARKER.fullmatch(text)
@@ -181,6 +184,18 @@ def split_items(body: list[tuple[str, bool]]) -> list[str]:
             current.parts.append(text.strip())
         blank = False
     return [text for text in (collapse(" ".join(item.parts)) for item in items) if text]
+
+
+def opens_paragraph(lines: list[str], fenced: list[bool], index: int) -> bool:
+    """Whether line `index` starts a paragraph: it is the first line, or follows a blank line, a
+    heading, a thematic break or a line opening with bold text."""
+    if index == 0:
+        return True
+    if fenced[index - 1]:
+        return False
+    before = lines[index - 1]
+    return (not before.strip() or HEADING.fullmatch(before) is not None
+            or RULE.fullmatch(before) is not None or BOLD_START.match(before) is not None)
 
 
 def label_end(lines: list[str], fenced: list[bool], start: int, indent: int, is_list: bool) -> int:
@@ -226,7 +241,7 @@ def section_items(text: str) -> list[str]:
             index = end
             continue
         label = LABEL.fullmatch(lines[index])
-        if label:
+        if label and (label.group("marker") is not None or opens_paragraph(lines, fenced, index)):
             end = label_end(lines, fenced, index, len(label.group("indent")),
                             label.group("marker") is not None)
             body = list(zip(lines[index + 1:end], fenced[index + 1:end]))
