@@ -9,20 +9,26 @@ Copy it to a place of your own, adapt it to your needs, and let your own tool fi
   `the-way` in your locations file, `~/.the-way/locations.json`, names (WAY-320). It never lies in a
   repository: it carries the names of your products and what their cycles reported.
 - Your own tool fills it: a review of the reports of your cycles, made by an agent or by hand. The
-  audit reads the register and gives no problem a class or a weight itself (WAY-330); the one
-  change a session of the audit makes in it is a class added to *Classes*, on your yes.
+  audit reads the register and gives no problem a class, a weight or a cost of an occurrence itself
+  (WAY-330); the one change a session of the audit makes in it is a class added to *Classes*, on
+  your yes.
 - You adapt the template to your needs: the meaning of a class, the list of classes, the words of
   this text. What the counting command of the audit reads keeps the form the next section gives.
 - A problem is a lapse that the process let through in one cycle. A problem that several stages of
   one cycle report is one problem: one row, which names every stage that reported it (WAY-334).
 - An issue is the one matter that like problems of several cycles make: the problems that one fix of
   the process would remove belong to one issue.
+- A problem has a weight and, apart from it, a cost of an occurrence. The weight says how far the
+  problem endangered the change; the cost of an occurrence says what one occurrence of it cost, on
+  the five levels of *Costs of an occurrence* (WAY-345). The cost of an occurrence is no cost of a
+  cycle, which the count gives in money in its section *Cost*.
 
 ## What the counting command reads
 
-The counting command of the audit reads the four tables below: *Classes*, *Weights*, *Issues* and
-*Problems*. It finds each table by the heading above it and by its header row, so keep both as they
-stand, with the columns in their order.
+The counting command of the audit reads the five tables below: *Classes*, *Weights*, *Costs of an
+occurrence*, *Issues* and *Problems*. It finds each table by the heading above it and by its header
+row, so keep both as they stand, with the columns in their order. A heading, a table or a column it
+needs and cannot find ends the run with an error that names it (WAY-344).
 
 - A table's rows follow its header row and its separator row, with no empty line between them; the
   table ends at the first line that does not start with `|`.
@@ -30,7 +36,7 @@ stand, with the columns in their order.
 - A date is written `YYYY-MM-DD`, and a commit as its full hash of forty hexadecimal characters.
 - A name of a class or of an issue is lower-case letters, digits and hyphens, and no two rows of
   its table share it.
-- Text outside the four tables is not read; write there what you like.
+- Text outside the five tables is not read; write there what you like.
 
 ## Classes
 
@@ -72,6 +78,20 @@ The scale has these four levels and gains no other: Minor, Important and Critica
 the review of a cycle (WAY-161), and no problem is the level below them (WAY-333). Adapt the
 meanings, never the levels.
 
+## Costs of an occurrence
+
+| Cost of an occurrence | Meaning |
+|---|---|
+| nothing | the occurrence cost nothing: a confirmation, or a remark with no consequence |
+| steps | a few steps of one agent within its stage, which the agent put right itself: a repeated command, a wrong path and a search, a repeated read |
+| stage | a stage or a large part of it done again, or a large extra reading or checking by the same agent |
+| round | an extra run of an agent: a round of fixes, an extra merge with the target branch, a new review, a slice made again |
+| human | the human's time: a question, a decision, a manual check, a fix after the merge |
+
+The scale has these five levels, each dearer than the one before, and gains no other (WAY-345). A
+problem has the highest level its actual cost reached; what it could have cost is the weight's
+business. Adapt the meanings, never the levels.
+
 ## Issues
 
 | Issue | What | Fate | Fix |
@@ -86,8 +106,8 @@ meanings, never the levels.
 
 ## Problems
 
-| Repository | Record | Stages | What | Class | Weight | Issue |
-|---|---|---|---|---|---|---|
+| Repository | Record | Stages | What | Class | Weight | Cost of an occurrence | Issue |
+|---|---|---|---|---|---|---|---|
 
 - *Repository*: the name of the product's repository, as your locations file names it among its
   keys (WAY-320).
@@ -100,4 +120,6 @@ meanings, never the levels.
 - *What*: the problem, in one line.
 - *Class*: the name of a class from *Classes*.
 - *Weight*: a level from *Weights*.
+- *Cost of an occurrence*: a level from *Costs of an occurrence*, the highest one that the actual
+  cost of one occurrence of the problem reached.
 - *Issue*: the name of an issue from *Issues*, or `none` while the problem belongs to no issue.

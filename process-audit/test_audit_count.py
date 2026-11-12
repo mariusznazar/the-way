@@ -23,8 +23,8 @@ BASE = "89abcdef0123456789abcdef0123456789abcdef"
 TEMPLATE = (HERE / "problem_register.md").read_text(encoding="utf-8")
 CLASSES_HEADER = "| Class | Meaning | Added | Withdrawn |\n|---|---|---|---|\n"
 ISSUES_HEADER = "| Issue | What | Fate | Fix |\n|---|---|---|---|\n"
-PROBLEMS_HEADER = ("| Repository | Record | Stages | What | Class | Weight | Issue |\n"
-                   "|---|---|---|---|---|---|---|\n")
+PROBLEMS_HEADER = ("| Repository | Record | Stages | What | Class | Weight | Cost of an occurrence "
+                   "| Issue |\n|---|---|---|---|---|---|---|---|\n")
 
 
 def register_text(classes=(), issues=(), problems=()) -> str:
@@ -41,8 +41,10 @@ def issue_row(name, fate="open", fix="none") -> str:
     return f"| {name} | the matter | {fate} | {fix} |"
 
 
-def problem_row(repository, record, issue="none", cls="process-remark", weight="Minor") -> str:
-    return f"| {repository} | {record} | author · reviewer | a lapse | {cls} | {weight} | {issue} |"
+def problem_row(repository, record, issue="none", cls="process-remark", weight="Minor",
+                cost="nothing") -> str:
+    return (f"| {repository} | {record} | author · reviewer | a lapse | {cls} | {weight} | {cost} "
+            f"| {issue} |")
 
 
 def record(pin_line=f"- Process pin: `{PIN}`", remarks="- Process remarks on the-way: none",
@@ -1245,21 +1247,82 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
-    def test_a_table_missing_from_the_register_is_an_error_of_the_register(self):
+    def test_a_register_lacking_a_field_ends_the_run_with_an_error_naming_it(self):
+        # WAY-344: a heading, a table or a column the count needs and cannot find is no empty
+        # value; the run ends with exit code 2, nothing written, and the error names the field.
         product = self.repository()
-        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        product.cycle("a-task", {"cycle.md": record()})
         self.assertEqual(1, TEMPLATE.count("## Issues\n"))
-        self.register.write_text(TEMPLATE.replace("## Issues\n", "## Issue list\n"), encoding="utf-8")
+        self.assertEqual(1, TEMPLATE.count("## Costs of an occurrence\n"))
+        without_cost = (PROBLEMS_HEADER.replace("| Cost of an occurrence ", "")
+                        .replace("---|", "", 1))
+        self.assertEqual(1, TEMPLATE.count(PROBLEMS_HEADER))
+        costs_header = "| Cost of an occurrence | Meaning |\n|---|---|\n"
+        self.assertEqual(1, TEMPLATE.count(costs_header))
+        cases = (
+            ("a heading", TEMPLATE.replace("## Issues\n", "## Issue list\n"), "## Issues"),
+            ("the heading of the table of costs",
+             TEMPLATE.replace("## Costs of an occurrence\n", "## Costs\n"),
+             "## Costs of an occurrence"),
+            ("a table",
+             TEMPLATE.replace("| Issue | What | Fate | Fix |\n|---|---|---|---|\n", ""),
+             "table under the heading `## Issues`"),
+            ("the column of the cost, as the old form of the register has it",
+             TEMPLATE.replace(PROBLEMS_HEADER, without_cost), "`Cost of an occurrence`"),
+            ("the column of the cost under another name",
+             TEMPLATE.replace("| Weight | Cost of an occurrence |", "| Weight | Cost |"),
+             "`Cost of an occurrence`"),
+            ("the column of the meaning of a cost",
+             TEMPLATE.replace(costs_header, "| Cost of an occurrence |\n|---|\n"), "`Meaning`"),
+        )
+        self.write_locations(self.places(product=product))
+        for label, text, field in cases:
+            with self.subTest(label):
+                self.assertNotEqual(TEMPLATE, text)
+                self.register.write_text(text, encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(2, done.returncode, done.stderr)
+                error = done.stderr.decode("utf-8")
+                self.assertIn("Error: the register of problems", error)
+                self.assertIn(field, error)
+                self.assertEqual([], list(self.results.iterdir()))
+
+    def test_every_field_missing_from_the_register_is_named_in_one_error(self):
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record()})
+        text = TEMPLATE.replace("## Issues\n", "## Issue list\n").replace(
+            "## Classes\n", "## Class list\n")
+        self.register.write_text(text, encoding="utf-8")
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
-        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertEqual(2, done.returncode, done.stderr)
         error = done.stderr.decode("utf-8")
-        self.assertIn("Error: the register of problems", error)
         self.assertIn("## Issues", error)
-        self.assertIn(["the-way", "none", "table `Issues`"],
-                      [row[:3] for row in self.rows("Unknown values")])
-        self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
-                         self.rows("Problems by cycle"))
+        self.assertIn("## Classes", error)
+
+    def test_a_column_in_another_order_or_an_extra_one_is_refused_not_missing(self):
+        # Every column the count needs stands in the header row, but not in the template's order,
+        # or another stands beside them: no field is missing, so the table is refused with a reason
+        # as before, and the run is not ended.
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.assertEqual(1, TEMPLATE.count(PROBLEMS_HEADER))
+        extra = PROBLEMS_HEADER.replace("| Issue |", "| Issue | Note |").replace(
+            "---|", "---|---|", 1)
+        swapped = PROBLEMS_HEADER.replace(
+            "| Weight | Cost of an occurrence |", "| Cost of an occurrence | Weight |")
+        self.assertNotEqual(PROBLEMS_HEADER, swapped)
+        self.write_locations(self.places(product=product))
+        for label, header in (("an extra column", extra), ("two columns swapped", swapped)):
+            with self.subTest(label):
+                self.register.write_text(TEMPLATE.replace(PROBLEMS_HEADER, header),
+                                         encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(1, done.returncode, done.stderr)
+                self.assertIn(["the-way", "none", "table `Problems`"],
+                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
+                                 self.rows("Problems by cycle"))
 
     def test_a_register_larger_than_the_cap_stops_the_run_with_nothing_written(self):
         product = self.repository()
@@ -1593,6 +1656,108 @@ class RegisterCount(AuditCountCase):
                    if row[2] == "the fix of issue `fixed-one`"]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
+
+    def test_the_problems_of_each_issue_are_counted_on_each_level_of_the_cost_of_an_occurrence(self):
+        way, fix, _, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record()})
+        second, _ = product.cycle("b-task", {"cycle.md": record()}, parent=removed)
+        self.use_register(
+            issues=[issue_row("open-one"), issue_row("fixed-one", "fixed", fix),
+                    issue_row("gone", "dropped")],
+            problems=[
+                problem_row("product", first, "open-one", weight="Minor", cost="steps"),
+                problem_row("product", first, "open-one", weight="Important", cost="steps"),
+                problem_row("product", first, "fixed-one", weight="Minor", cost="round"),
+                problem_row("product", second, "open-one", weight="Critical", cost="human"),
+                problem_row("product", second, "fixed-one", weight="no problem", cost="nothing"),
+                problem_row("product", second, "gone", weight="Minor", cost="stage"),
+                problem_row("product", second, "none", weight="Minor", cost="human"),
+                # The cost stands in the row, so a problem of a cycle that is not read counts too.
+                problem_row("ghost", first, "open-one", weight="Minor", cost="round")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        # Issue, fate, then the problems on nothing, steps, stage, round and human, in the order
+        # of the register; the problem that belongs to no issue is in no row.
+        self.assertEqual([["open-one", "open", "0", "2", "0", "1", "1", "0"],
+                          ["fixed-one", "fixed", "1", "0", "0", "1", "0", "0"],
+                          ["gone", "dropped", "0", "0", "1", "0", "0", "0"]],
+                         self.rows("Cost of an occurrence by issue"))
+        # The cost is no weight: the counts by weight stay as the rows give them.
+        self.assertEqual([["product", first, "process-remark", "0", "2", "1", "0", "0"],
+                          ["product", second, "process-remark", "1", "2", "0", "1", "0"]],
+                         self.rows("Problems by cycle"))
+        self.assertEqual("4", self.rows("Open issues")[0][2])
+
+    def test_a_cost_that_is_no_level_refuses_its_row_and_reads_at_least_in_its_issue(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(
+            issues=[issue_row("open-one")],
+            problems=[problem_row("product", added, "open-one", cost="steps"),
+                      problem_row("product", added, "open-one", cost="Steps"),
+                      problem_row("product", added, "open-one", cost="free"),
+                      problem_row("product", added, "open-one", cost=""),
+                      problem_row("product", added, "open-one", cost="Minor"),
+                      problem_row("product", added, "open-one", cost="steps\x1b[2J"),
+                      problem_row("product", added, "open-one", cost="st|eps"),
+                      # A line break in a cell ends the row, and the table with it.
+                      problem_row("product", added, "open-one", cost="steps\nhuman")])
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        self.assertEqual([["open-one", "open", "at least 0", "at least 1", "at least 0",
+                           "at least 0", "at least 0", "5"]],
+                         self.rows("Cost of an occurrence by issue"))
+        reasons = {row[2]: row[3] for row in self.rows("Unknown values")
+                   if row[2].endswith("of `Problems`")}
+        self.assertEqual({f"row {number} of `Problems`" for number in range(2, 9)}, set(reasons))
+        for number in (2, 3, 4, 5, 6):
+            self.assertEqual("the cost of an occurrence is not one of the five levels",
+                             reasons[f"row {number} of `Problems`"])
+        self.assertEqual("the row has 9 cells, not 8", reasons["row 7 of `Problems`"])
+        self.assertEqual("the row has 7 cells, not 8", reasons["row 8 of `Problems`"])
+
+    def test_a_table_of_costs_that_lacks_a_level_is_treated_as_the_table_of_weights_is(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        lines = TEMPLATE.splitlines(keepends=True)
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| stage |")))
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| steps |")))
+        missing = "".join(line for line in lines if not line.startswith("| stage |"))
+        doubled = "".join(line + ("| steps | once more |\n" if line.startswith("| steps |") else "")
+                          for line in lines)
+        self.write_locations(self.places(product=product))
+        for label, text in (("a level missing", missing), ("a level written twice", doubled)):
+            with self.subTest(label):
+                self.register.write_text(text, encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(1, done.returncode, done.stderr)
+                self.assertIn("Error: the register of problems: the table `Costs of an occurrence` "
+                              "must name the five levels, each once", done.stderr.decode("utf-8"))
+                self.assertIn(["the-way", "none", "table `Costs of an occurrence`"],
+                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
+                                 self.rows("Problems by cycle"))
+        with self.subTest("a level the scale lacks, beside the five"):
+            # As an unknown weight beside the four: its row is refused and the five stand.
+            self.register.write_text(
+                TEMPLATE.replace("| human |", "| free | no such level |\n| human |"),
+                encoding="utf-8")
+            done = self.run_count("--today", "2026-11-11")
+            self.assertEqual(0, done.returncode, done.stderr)
+            self.assertIn(["the-way", "none", "row 5 of `Costs of an occurrence`"],
+                          [row[:3] for row in self.rows("Unknown values")])
+        with self.subTest("the template as it stands"):
+            self.register.write_text(TEMPLATE, encoding="utf-8")
+            done = self.run_count("--today", "2026-11-11")
+            self.assertEqual(0, done.returncode, done.stderr)
+            self.assertEqual(b"", done.stderr)
 
 
 class Run(AuditCountCase):

@@ -177,3 +177,9 @@ An exemplar is a file of a product that a decision of the product designates as 
 A standing check is a check that a tool makes of every change to a product's code for the whole of the product, rather than for one kind of code, as a linter, a formatter or an audit of dependencies does.
 
 - **Not:** none
+
+## cost of an occurrence
+
+The cost of an occurrence is the highest of five levels — `nothing`, `steps`, `stage`, `round` and `human`, each dearer than the one before — that one occurrence of a problem in the audit's register actually cost.
+
+- **Not:** the amount in money, at constant prices, that the audit gives for a cycle — `WAY-337`
