@@ -2088,10 +2088,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "The problems of the register by class and weight, each problem once (WAY-334); a cycle "
         "with no problem has one row, `none`. *Refused rows* are rows of *Problems* that name this "
-        "cycle and were refused for a class, weight or issue the register lacks; a count with one "
-        "reads `at least n`, as the refused row is not in it. A count reads `at least n` also "
-        "where a problem names as its *Record* a commit that adds the records of more than one "
-        "cycle: it counts in none of them. Problems whose cycle no named repository holds, or "
+        "cycle and were refused for a class, weight, cost of an occurrence or issue the register "
+        "lacks; a count with one reads `at least n`, as the refused row is not in it. A count "
+        "reads `at least n` also where a problem names as its *Record* a commit that adds the "
+        "records of more than one cycle: it counts in none of them. Problems whose cycle no named repository holds, or "
         "whose *Record* names more than one cycle, are in *Unknown values*.",
         "",
     ]
