@@ -1390,6 +1390,249 @@ class StagesForms(AuditCountCase):
         self.assertTrue(all("cycle `bad`" in line for line in errors), errors)
 
 
+MEASURES = "mechanism_measures.md"
+GATE = "gate_times.md"
+# The cycle-level lines of mechanism_measures.md, each with a value worked out by hand for the
+# test; the labels are those task-cycle/cycle_measures.py writes.
+MEASURE_VALUES = [
+    ("Calls in all", "12"),
+    ("Calls of the orchestrator", "5"),
+    ("Calls of subagents", "7"),
+    ("Mean context per call", "51000"),
+    ("Mean context per call of the orchestrator", "62000"),
+    ("Share of the context in calls above 200000 tokens", "12.5%"),
+    ("Context of the orchestrator's first call", "20000"),
+    ("Context of the orchestrator's middle call", "60000"),
+    ("Context of the orchestrator's last call", "90000"),
+    ("Cache written, 5 minutes", "3000"),
+    ("Cache written, 1 hour", "0"),
+    ("Cache written again by the orchestrator", "1500"),
+    ("Calls of the orchestrator with a cache write again", "2"),
+    ("Cache written again by subagents", "800"),
+    ("Calls of subagents with a cache write again", "1"),
+]
+MEASURE_LABELS = [label for label, _ in MEASURE_VALUES]
+GATE_HEADING = ("# Gate runs of the cycle\n\nEach row is one run by this script; times are seconds.\n\n")
+GATE_TABLE = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
+              "| Directory | Directory seconds |\n| --- | --- | --- | --- | --- | --- |\n")
+STARTED = "2026-11-11 10:00:00.000"
+
+
+def measures_file(values=MEASURE_VALUES) -> str:
+    """mechanism_measures.md as task-cycle/cycle_measures.py writes it, with the cycle-level lines
+    given and one row of the table of agents."""
+    lines = "".join(f"- {label}: {value}\n" for label, value in values)
+    return ("# Measures of the cycle run\n\n" + lines + "\n## Agents\n\n"
+            "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |\n"
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+            "| orchestrator a1 | Claude Code | 5 | 20000 | 60000 | 90000 | 3000 | 0 | 1500 | 2 |\n")
+
+
+def gate_row(started, code, total, others, directory="—", seconds="—") -> str:
+    return f"| {started} | {code} | {total} | {others} | {directory} | {seconds} |\n"
+
+
+def gate_file(table=GATE_TABLE, rows="") -> str:
+    """gate_times.md as task-cycle/gate_times.py writes it, with the table header given."""
+    return GATE_HEADING + table + rows
+
+
+class MeasuresCase(AuditCountCase):
+    """The two files of a cycle's record the count reads (WAY-347, WAY-349): a copy holding
+    neither is an earlier form, and a file lacking a field it needs is an error (WAY-344)."""
+
+    def count(self, files, folder="a-task"):
+        product = self.repository()
+        added, _ = product.cycle(folder, {"cycle.md": record(), **files})
+        self.write_locations(self.places(product=product))
+        return self.run_count(), added
+
+    def assert_missing(self, done, file, field, folder="a-task") -> None:
+        """Exit code 1 and one `Error:` line naming the file and the field, the result written."""
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual([f"Error: repository `product`: cycle `{folder}`: the file `{file}` of "
+                          f"the copy lacks the field `{field}`"], errors)
+        self.latest()
+
+    def unknown_rows(self, *values) -> list[list[str]]:
+        """The rows of *Unknown values* whose value is one of `values` or starts with `Gate runs`."""
+        return [row for row in self.rows("Unknown values")
+                if row[2] in values or row[2].startswith("Gate runs")]
+
+
+class MechanismMeasures(MeasuresCase):
+    def test_both_files_give_the_values_and_the_runs_of_the_cycle_worked_out_by_hand(self):
+        runs = (gate_row(STARTED, 0, "100.000", 0, "gate/b", "59.9")
+                + gate_row(STARTED, 0, "100.000", 0, "gate/a", "40.1")
+                + gate_row("2026-11-11 11:00:00.000", 1, "20.000", 2))
+        done, added = self.count({MEASURES: measures_file(), GATE: gate_file(rows=runs)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([
+            ["product", added, STARTED, "0", "100.000", "0", "gate/b 59.9 s · gate/a 40.1 s"],
+            ["product", added, "2026-11-11 11:00:00.000", "1", "20.000", "2", "—"],
+        ], self.rows("Gate runs"))
+
+    def test_a_copy_without_the_files_gives_unknown_values_with_their_reasons_and_no_error(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        self.assertEqual([["product", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertIn(["product", added, "Mechanism measures",
+                       "the copy holds no `mechanism_measures.md`: an earlier form"],
+                      self.rows("Unknown values"))
+        self.assertIn(["product", added, "Gate runs",
+                       "the copy holds no `gate_times.md`: an earlier form"],
+                      self.rows("Unknown values"))
+
+    def test_the_last_copy_is_read_where_a_later_copy_differs(self):
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record(), MEASURES: measures_file(),
+                                              GATE: gate_file(rows=gate_row(STARTED, 0, "1.000", 0))})
+        later = [("Calls in all", "99"), *MEASURE_VALUES[1:]]
+        again, _ = product.cycle("a-task", {"cycle.md": record(), MEASURES: measures_file(later),
+                                            GATE: gate_file()}, parent=removed)
+        self.write_locations(self.places(product=product))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        # The record column names the first copy; the values are those of the last one.
+        self.assertEqual([["product", first, *[value for _, value in later]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual(again, self.cycles()[0]["Later copies"])
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_measures_file_without_a_label_gives_every_value_unknown_and_exits_one(self):
+        values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
+        done, added = self.count({MEASURES: measures_file(values)})
+        self.assert_missing(done, MEASURES, "Calls of subagents")
+        self.assertEqual([["product", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertIn(["product", added, "Calls of subagents",
+                       "the file `mechanism_measures.md` of the copy lacks the field "
+                       "`Calls of subagents`"], self.rows("Unknown values"))
+
+    def test_a_doubled_label_and_malformed_values_are_unknown_with_no_error(self):
+        changed = dict(MEASURE_VALUES)
+        changed["Mean context per call"] = "5x"
+        changed["Cache written, 1 hour"] = "unknown"
+        changed["Share of the context in calls above 200000 tokens"] = "150.0%"
+        done, added = self.count({MEASURES: measures_file([("Calls in all", "13"),
+                                                          *changed.items()])})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        expected = {label: "unknown" for label in
+                    ("Calls in all", "Mean context per call", "Cache written, 1 hour",
+                     "Share of the context in calls above 200000 tokens")}
+        values = [expected.get(label, value) for label, value in MEASURE_VALUES]
+        self.assertEqual([["product", added, *values]], self.rows("Mechanism measures"))
+        reasons = {row[2]: row[3] for row in self.unknown_rows(*MEASURE_LABELS)}
+        self.assertIn("more than once", reasons["Calls in all"])
+        self.assertIn("not what its label gives", reasons["Mean context per call"])
+        self.assertIn("not what its label gives",
+                      reasons["Share of the context in calls above 200000 tokens"])
+        self.assertIn("as unknown", reasons["Cache written, 1 hour"])
+
+    def test_crafted_values_break_no_cell_and_read_no_text_into_a_reason(self):
+        changed = dict(MEASURE_VALUES)
+        changed["Calls in all"] = "1|2\x1b[2J" + "9" * 300
+        changed["Mean context per call"] = "x" * 5000
+        done, added = self.count({MEASURES: measures_file(list(changed.items()))})
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        [row] = self.rows("Mechanism measures")
+        self.assertEqual(2 + len(MEASURE_LABELS), len(row))
+        self.assertEqual("unknown", row[2])
+        self.assertEqual("unknown", row[5])
+        self.assertNotIn("x" * 50, text)
+
+
+class GateRunsMeasures(MeasuresCase):
+    def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
+        table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
+                 "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
+        done, added = self.count({GATE: gate_file(table=table)})
+        self.assert_missing(done, GATE, "column Exit code of the table")
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
+        done, added = self.count({GATE: gate_file(table="")})
+        self.assert_missing(done, GATE, "table of the runs")
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_table_with_no_run_gives_no_rows_and_no_error(self):
+        done, added = self.count({GATE: gate_file()})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_row_of_the_wrong_number_of_cells_is_its_own_unknown_run(self):
+        rows = (gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0")
+                + "| 2026-11-11 12:00:00.000 | 0 | 5.000 | 0 | gate/a |\n")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([
+            ["product", added, STARTED, "0", "5.000", "0", "gate/a 5.0 s"],
+            ["product", added, "unknown", "unknown", "unknown", "unknown", "unknown"],
+        ], self.rows("Gate runs"))
+        self.assertIn(["product", added, "Gate runs",
+                       "a row of the table in `gate_times.md` has 5 cells, not 6"],
+                      self.rows("Unknown values"))
+
+    def test_an_unreadable_total_and_seconds_are_unknown_with_their_reasons(self):
+        rows = gate_row("2026-11-11 13:00:00.000", 0, "12,5", 0, "gate/a", "one")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, "2026-11-11 13:00:00.000", "0", "unknown", "0",
+                           "gate/a unknown"]], self.rows("Gate runs"))
+        values = [row[2] for row in self.unknown_rows()]
+        self.assertIn("Gate runs: Total seconds", values)
+        self.assertIn("Gate runs: Directory seconds", values)
+
+    def test_bars_and_control_characters_in_a_directory_stay_in_one_cell(self):
+        rows = gate_row(STARTED, 0, "1.000", 0, "gate\\|x\x1b[2J\x07y", "1.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        [row] = self.rows("Gate runs")
+        self.assertEqual(7, len(row))
+        self.assertIn("gate", row[6])
+
+    def test_a_long_directory_name_is_cut(self):
+        rows = gate_row(STARTED, 0, "1.000", 0, "d" * 500, "1.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("d" * 201, self.latest())
+        self.assertIn("d" * 200, self.latest())
+
+    def test_runs_beyond_the_limit_are_not_read_and_say_so(self):
+        rows = "".join(gate_row(f"2026-11-11 10:00:00.{index:03}", 0, "1.000", 0, "gate/a", "1.0")
+                       for index in range(600))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(500, len(self.rows("Gate runs")))
+        self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
+
+    def test_directories_beyond_the_limit_of_one_run_are_not_listed_and_say_so(self):
+        rows = "".join(gate_row(STARTED, 0, "1.000", 0, f"gate/d{index:02}", "1.0")
+                       for index in range(60))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        [row] = self.rows("Gate runs")
+        self.assertEqual(50, len(row[6].split(" · ")))
+        self.assertTrue(any("more than 50 directories" in unknown[3]
+                            for unknown in self.unknown_rows()))
+
+
 class RegisterCount(AuditCountCase):
     """The register of problems counted against the cycles (WAY-330, WAY-333 to WAY-336)."""
 

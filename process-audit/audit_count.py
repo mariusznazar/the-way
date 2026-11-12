@@ -325,6 +325,37 @@ LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
 # *Unknown values* lists at most this many values the register leaves unknown.
 MAX_LISTED = 500
+# The two files of a cycle's record that the count reads (WAY-347, WAY-349), each written by its
+# script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
+# task-cycle/gate_times.py. A copy holding neither is an earlier form.
+MEASURES_FILE = "mechanism_measures.md"
+GATE_FILE = "gate_times.md"
+MEASURE_LABELS = (
+    "Calls in all", "Calls of the orchestrator", "Calls of subagents", "Mean context per call",
+    "Mean context per call of the orchestrator",
+    "Share of the context in calls above 200000 tokens",
+    "Context of the orchestrator's first call", "Context of the orchestrator's middle call",
+    "Context of the orchestrator's last call", "Cache written, 5 minutes", "Cache written, 1 hour",
+    "Cache written again by the orchestrator", "Calls of the orchestrator with a cache write again",
+    "Cache written again by subagents", "Calls of subagents with a cache write again",
+)
+SHARE_LABEL = "Share of the context in calls above 200000 tokens"
+MEASURE_WHOLE = re.compile(r"[0-9]{1,15}")
+MEASURE_SHARE = re.compile(r"([0-9]{1,3}\.[0-9])%")
+GATE_COLUMNS = ["Started (UTC)", "Exit code", "Total seconds", "Other gate runs at the same time",
+                "Directory", "Directory seconds"]
+GATE_RUN_COLUMNS = GATE_COLUMNS[:4]
+GATE_TABLE_FIELD = "table of the runs"
+GATE_STARTED = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}")
+GATE_CODE = re.compile(r"[0-9]{1,3}")
+GATE_TOTAL = re.compile(r"[0-9]{1,9}\.[0-9]{3}")
+GATE_OTHERS = re.compile(r"[0-9]{1,6}")
+GATE_SECONDS = re.compile(r"[0-9]{1,9}(?:\.[0-9]{1,9})?")
+# The runs and the directories of one run read from `gate_times.md`, the rest not read and said so.
+MAX_RUNS = 500
+MAX_DIRECTORIES = 50
+GATE_NONE = "—"
+DIRECTORY_SEPARATOR = " · "
 
 
 class AuditCountError(Exception):
@@ -519,6 +550,13 @@ class Cycle:
     # The fields of `stages.md` a form needs that the copy lacks, as an `Error:` line names them
     # (WAY-344): the run ends with exit code 1 where any cycle has one.
     missing: list[str] = field(default_factory=list)
+    # The values of `mechanism_measures.md` by label, each as the file writes it; a label not here
+    # is unknown (WAY-347).
+    measures: dict[str, str] = field(default_factory=dict)
+    # The runs of `gate_times.md`, each as the cells after the repository and the record (WAY-349).
+    gate_runs: list[list[str]] = field(default_factory=list)
+    # The fields of the two files that the copy lacks, as (file, field), for the `Error:` line.
+    missing_in: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -1204,8 +1242,8 @@ def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal]
     return costs, None
 
 
-def missing_reason(name: str) -> str:
-    return f"the file `stages.md` of the copy lacks the field `{name}`"
+def missing_reason(name: str, file: str = "stages.md") -> str:
+    return f"the file `{file}` of the copy lacks the field `{name}`"
 
 
 def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[bool] | None,
@@ -1335,6 +1373,156 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
         return None, f"`{name}` of the copy is not UTF-8"
 
 
+def read_optional(git: Git, entries: dict, prefix: bytes, name: str) -> tuple[str | None, str | None]:
+    """The text of a file of the copy that an earlier form lacks, or None with the reason."""
+    path = prefix + name.encode("ascii")
+    if path not in entries:
+        return None, f"the copy holds no `{name}`: an earlier form"
+    return read_file(git, entries, path)
+
+
+def measure_fits(label: str, value: str) -> bool:
+    """Whether a value of `mechanism_measures.md` is what its label gives: a whole number, and for
+    the share a number of percent up to 100."""
+    if label == SHARE_LABEL:
+        found = MEASURE_SHARE.fullmatch(value)
+        return found is not None and Decimal(found.group(1)) <= 100
+    return MEASURE_WHOLE.fullmatch(value) is not None
+
+
+def read_measures(cycle: Cycle, text: str | None, reason: str | None) -> None:
+    """Read the cycle-level lines of `mechanism_measures.md` by their labels (WAY-347). A label the
+    file lacks is a missing field: then every value of the file is unknown, and the field is named
+    for the `Error:` line (WAY-344). A label written twice, a value that is not what its label gives
+    or `unknown` is unknown with its reason, and the count goes on."""
+    if text is None:
+        cycle.unknown.append(("Mechanism measures", reason))
+        return
+    lines = remarks_check.split_lines(text)
+    fenced = remarks_check.fenced_flags(lines)
+    found = {label: header_fields(lines, fenced, label) for label in MEASURE_LABELS}
+    absent = [label for label in MEASURE_LABELS if not found[label]]
+    if absent:
+        for label in MEASURE_LABELS:
+            if label in absent:
+                cycle.missing_in.append((MEASURES_FILE, label))
+                cycle.unknown.append((label, missing_reason(label, MEASURES_FILE)))
+            else:
+                cycle.unknown.append((label, f"`{MEASURES_FILE}` lacks a field, so its values "
+                                             "are unknown"))
+        return
+    for label in MEASURE_LABELS:
+        values = found[label]
+        if len(values) > 1:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` holds the line `{label}` more than "
+                                         "once"))
+        elif values[0] == UNKNOWN:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it as unknown"))
+        elif measure_fits(label, values[0]):
+            cycle.measures[label] = values[0]
+        else:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it in a form that is not what "
+                                         "its label gives"))
+
+
+def gate_value(reasons: list[tuple[str, str]], column: str, value: str, pattern: re.Pattern,
+               why: str) -> str:
+    """A cell of a run in `gate_times.md` as written where it has the form of its column, else
+    `unknown` with the reason kept in `reasons` under the value `Gate runs: <column>`."""
+    if pattern.fullmatch(value):
+        return value
+    reasons.append((f"Gate runs: {column}",
+                    f"`{GATE_FILE}` gives it as unknown" if value == UNKNOWN else why))
+    return UNKNOWN
+
+
+def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
+    """Read the runs of `gate_times.md` from its table (WAY-349). A table lacking one of its six
+    columns, or lacking the table, is a missing field, and the runs are not read; a row of the wrong
+    number of cells is a run of its own with unknown values; the runs and the directories beyond the
+    limits are not read, and the reason is given."""
+    if text is None:
+        cycle.unknown.append(("Gate runs", reason))
+        return
+    lines = remarks_check.split_lines(text)
+    fenced = remarks_check.fenced_flags(lines)
+    header = next((index for index, (line, inside) in enumerate(zip(lines, fenced))
+                   if not inside and line.startswith("|")), None)
+    if header is None:
+        cycle.missing_in.append((GATE_FILE, GATE_TABLE_FIELD))
+        cycle.unknown.append(("Gate runs", missing_reason(GATE_TABLE_FIELD, GATE_FILE)))
+        return
+    names = table_cells(lines[header])
+    absent = [name for name in GATE_COLUMNS if name not in names]
+    if absent:
+        for name in absent:
+            field_name = f"column {name} of the table"
+            cycle.missing_in.append((GATE_FILE, field_name))
+            cycle.unknown.append(("Gate runs", missing_reason(field_name, GATE_FILE)))
+        return
+    at = {name: names.index(name) for name in GATE_COLUMNS}
+    reasons: list[tuple[str, str]] = []
+    # Each run: its four run cells, or None for a row of the wrong number of cells, and its
+    # directories as (name, seconds).
+    runs: list[tuple[list[str] | None, list[tuple[str, str]]]] = []
+    last: list[str] | None = None
+    cut_directories = False
+    for index in range(header + 1, len(lines)):
+        if fenced[index] or not lines[index].startswith("|"):
+            break
+        cells = table_cells(lines[index])
+        if is_separator(cells):
+            continue
+        if len(cells) != len(names):
+            reasons.append(("Gate runs", f"a row of the table in `{GATE_FILE}` has {len(cells)} "
+                                         f"cells, not {len(names)}"))
+            runs.append((None, []))
+            last = None
+            continue
+        key = [cells[at[name]] for name in GATE_RUN_COLUMNS]
+        if last is None or key != last:
+            if len(runs) >= MAX_RUNS:
+                reasons.append(("Gate runs", f"`{GATE_FILE}` holds more than {MAX_RUNS} runs: the "
+                                             "rest are not read"))
+                break
+            runs.append((key, []))
+            last = key
+        directory, seconds = cells[at["Directory"]], cells[at["Directory seconds"]]
+        if directory == GATE_NONE and seconds == GATE_NONE:
+            continue
+        directories = runs[-1][1]
+        if len(directories) >= MAX_DIRECTORIES:
+            cut_directories = True
+            continue
+        directories.append((directory, seconds))
+    if cut_directories:
+        reasons.append(("Gate runs: Directories", f"a run in `{GATE_FILE}` lists more than "
+                                                  f"{MAX_DIRECTORIES} directories: the rest are "
+                                                  "not listed"))
+    for key, directories in runs:
+        if key is None:
+            cycle.gate_runs.append([UNKNOWN] * 5)
+            continue
+        started, code, total, others = [
+            gate_value(reasons, column, value, pattern, why)
+            for column, value, pattern, why in zip(
+                GATE_RUN_COLUMNS, key,
+                (GATE_STARTED, GATE_CODE, GATE_TOTAL, GATE_OTHERS),
+                ("a start is not written YYYY-MM-DD HH:MM:SS.mmm",
+                 "an exit code is not a whole number",
+                 "a total is not written as seconds to three decimals",
+                 "a count of other gate runs is not a whole number"))]
+        listed = []
+        for name, seconds in directories:
+            seconds = gate_value(reasons, "Directory seconds", seconds, GATE_SECONDS,
+                                 "the seconds of a directory are not a number")
+            listed.append(f"{name[:TEXT_CAP]} " + (seconds if seconds == UNKNOWN
+                                                   else seconds + " s"))
+        cycle.gate_runs.append([started, code, total, others,
+                                DIRECTORY_SEPARATOR.join(listed) or GATE_NONE])
+    cycle.unknown.extend(dict.fromkeys(reasons))
+
+
 def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: Prices) -> None:
     """Read the values of a cycle from the copy its commit holds."""
     prefix = RECORDS.encode("ascii") + folder + b"/"
@@ -1342,10 +1530,15 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         entries = tree_entries(git, commit)
         record, record_reason = read_file(git, entries, prefix + b"cycle.md")
         stages, stages_reason = read_file(git, entries, prefix + b"stages.md")
+        measures = read_optional(git, entries, prefix, MEASURES_FILE)
+        gate = read_optional(git, entries, prefix, GATE_FILE)
     except (GitError, ValueError, UnicodeError) as error:
         reason = f"git could not read the copy: {display(error)}"
         record = stages = None
         record_reason = stages_reason = reason
+        measures = gate = (None, reason)
+    read_measures(cycle, *measures)
+    read_gate(cycle, *gate)
     record_lines = record_fenced = None
     if record is None:
         cycle.unknown += [("Process pin", record_reason), ("Remarks", record_reason)]
@@ -2206,6 +2399,37 @@ def table(header: list[str], rows: list[list[str]]) -> list[str]:
     return lines
 
 
+def measures_lines(cycles: list[Cycle]) -> list[str]:
+    """The section *Mechanism measures*: one row per cycle, each label of the file a column."""
+    lines = [
+        "## Mechanism measures",
+        "",
+        "Written by `task-cycle/cycle_measures.py` into each cycle's record as "
+        "`mechanism_measures.md`; `unknown` is never zero, and *Unknown values* says why. The "
+        "table of agents stays in that file.",
+        "",
+    ]
+    rows = [[cycle.repository, cycle.record,
+             *[cycle.measures.get(label, UNKNOWN) for label in MEASURE_LABELS]]
+            for cycle in cycles]
+    return lines + table(["Repository", "Record", *MEASURE_LABELS], rows)
+
+
+def gate_lines(cycles: list[Cycle]) -> list[str]:
+    """The section *Gate runs*: one row per run, a cycle with no run having none."""
+    lines = [
+        "## Gate runs",
+        "",
+        "Written by `task-cycle/gate_times.py` into each cycle's record as `gate_times.md`, one row "
+        "per run of the gate; times are seconds, and `unknown` is never zero. *Directories* lists "
+        "each directory the gate printed with its seconds, and `—` where it printed none.",
+        "",
+    ]
+    rows = [[cycle.repository, cycle.record, *run] for cycle in cycles for run in cycle.gate_runs]
+    return lines + table(["Repository", "Record", "Started (UTC)", "Exit code", "Total seconds",
+                          "Other gate runs at the same time", "Directories"], rows)
+
+
 def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
@@ -2265,7 +2489,8 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
             f"| {cell(cycle.repository)} | {cycle.record} | {cell(prices.date)} "
             f"| {money(cycle.cost)} | {UNKNOWN if cycle.rounds is None else cycle.rounds} "
             f"| {share_text(cycle.share)} |")
-    lines += ["", *versions_lines(versions), ""]
+    lines += ["", *measures_lines(cycles), "", *gate_lines(cycles), "", *versions_lines(versions),
+              ""]
     lines += [
         "## Problems by cycle",
         "",
@@ -2419,11 +2644,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
     # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-344): each is
     # named here after the result is written. The folder is text of the history, so it is cut.
-    lacking = [(read, cycle, name) for read in reads for cycle in read.cycles
+    lacking = [(read, cycle, missing_reason(name)) for read in reads for cycle in read.cycles
                for name in cycle.missing]
-    for read, cycle, name in lacking:
+    # The fields of mechanism_measures.md and gate_times.md are named the same way (WAY-347, WAY-349).
+    lacking += [(read, cycle, missing_reason(name, file)) for read in reads
+                for cycle in read.cycles for file, name in cycle.missing_in]
+    for read, cycle, reason in lacking:
         print(f"Error: repository `{display(read.key[:TEXT_CAP])}`: cycle "
-              f"`{display(cycle.folder[:TEXT_CAP])}`: {missing_reason(name)}", file=sys.stderr)
+              f"`{display(cycle.folder[:TEXT_CAP])}`: {reason}", file=sys.stderr)
     count = sum(len(read.cycles) for read in reads)
     print(f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
           f"{len(reads)} repositories.")
