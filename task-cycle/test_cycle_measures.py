@@ -1,4 +1,5 @@
-"""Tests of task-cycle/cycle_measures.py on small transcripts in the form Claude Code keeps them in.
+"""Tests of task-cycle/cycle_measures.py on small transcripts and rollouts in the form Claude Code and
+Codex keep them in.
 
 The expected figures are worked out by hand from the transcripts written here, not by the script.
 """
@@ -476,13 +477,208 @@ class EdgeReadingTest(MeasuresTest):
         text = self.measures(str(self.project / f"{SESSION}.jsonl"))
         self.assertIn("| a/b c (X) | Claude Code | 1 |", text)
 
-    def test_a_codex_rollout_is_refused_with_exit_2(self) -> None:
-        rollout = write_lines(self.root / "rollout-x.jsonl", [
-            {"timestamp": at("09:00:00"), "type": "session_meta", "payload": {"id": "x"}}])
+class CodexTest(MeasuresTest):
+    """Codex rollouts, written under the codex home of the run in the form Codex keeps them in."""
+
+    def rollout(self, ident: str, entries: list[dict]) -> Path:
+        return write_lines(self.root / "codex" / "sessions" / "2026" / "10" / "06"
+                           / f"rollout-2026-10-06T00-00-00-{ident}.jsonl", entries)
+
+    def assert_codex_error(self, path: Path, field: str) -> None:
         output = self.root / "out" / "measures.md"
-        code, errors = self.run_script(str(rollout), "--output", str(output))
+        code, errors = self.run_script(str(path), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(path.name, errors)
+        self.assertIn(field, errors)
+        self.assertFalse(output.exists())
+
+
+def codex_meta(ident: str, clock: str = "09:00:00", parent: str | None = None,
+               agent_path: str | None = None, agent_nickname: str | None = None) -> dict:
+    payload: dict = {"id": ident, "timestamp": at(clock)}
+    if parent:
+        payload["parent_thread_id"] = parent
+    if agent_path:
+        payload["agent_path"] = agent_path
+    if agent_nickname:
+        payload["agent_nickname"] = agent_nickname
+    return {"timestamp": at(clock), "type": "session_meta", "payload": payload}
+
+
+def codex_usage(clock: str, thread: str, input_tokens: int, cached: int = 0) -> dict:
+    """A token usage record of a rollout. Its input already holds the part read from the cache."""
+    return {"timestamp": at(clock), "type": "token_usage_record", "payload": {
+        "thread_id": thread, "turn_id": "turn", "usage": {
+            "input_tokens": input_tokens, "cached_input_tokens": cached,
+            "output_tokens": 1, "total_tokens": input_tokens + 1}}}
+
+
+class HandWorkedCodexTest(CodexTest):
+    """A Codex orchestrator with three subagents, one of them forked, every figure worked out by hand.
+
+    Orchestrator "orch", three calls, context = input: 1000 (of which 500 read from the cache, not
+      added again), 2000, 3000. Mean 2000.
+    Subagent "design", forked from orch: its rollout repeats orch's three records, which are no
+      calls of design, then its own records 09:04 (6000) and 09:02 (5000), written out of time
+      order. Calls in time order: 5000, 6000. Mean context 5500.
+    Subagent "scout", nickname only: one call, context 400.
+    Subagent "check", a subagent of design (found through design): one call, context 7.
+    Rollout "other" names another parent: not in the cycle.
+    Total: 7 calls, contexts summing to 17407, mean 17407 / 7 = 2486.7, rounded to 2487.
+    No Codex record gives a cache write, so every cache figure is unknown.
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.orchestrator = self.rollout("orch", [
+            codex_meta("orch", "09:00:00"),
+            codex_usage("09:01:00", "orch", 1000, cached=500),
+            codex_usage("09:05:00", "orch", 2000),
+            codex_usage("09:09:00", "orch", 3000),
+        ])
+        self.rollout("design", [
+            codex_meta("design", "09:02:00", parent="orch", agent_path="/root/design"),
+            codex_usage("09:01:00", "orch", 1000, cached=500),
+            codex_usage("09:05:00", "orch", 2000),
+            codex_usage("09:09:00", "orch", 3000),
+            codex_usage("09:04:00", "design", 6000),
+            codex_usage("09:02:00", "design", 5000),
+        ])
+        self.rollout("scout", [
+            codex_meta("scout", "09:06:00", parent="orch", agent_nickname="scout-nick"),
+            codex_usage("09:06:30", "scout", 400),
+        ])
+        self.rollout("check", [
+            codex_meta("check", "09:03:00", parent="design", agent_path="/root/design/check"),
+            codex_usage("09:03:30", "check", 7),
+        ])
+        self.rollout("other", [
+            codex_meta("other", "09:03:00", parent="someone-else", agent_path="/root/other"),
+            codex_usage("09:04:00", "other", 9999),
+        ])
+
+    def test_the_codex_figures_of_the_file_match_the_hand_worked_ones(self) -> None:
+        text = self.measures(str(self.orchestrator))
+        self.assertEqual([
+            "# Measures of the cycle run",
+            "",
+            "- Calls in all: 7",
+            "- Calls of the orchestrator: 3",
+            "- Calls of subagents: 4",
+            "- Mean context per call: 2487",
+            "- Mean context per call of the orchestrator: 2000",
+            "- Share of the context in calls above 200000 tokens: 0.0%",
+            "- Context of the orchestrator's first call: 1000",
+            "- Context of the orchestrator's middle call: 2000",
+            "- Context of the orchestrator's last call: 3000",
+            "- Cache written, 5 minutes: unknown",
+            "- Cache written, 1 hour: unknown",
+            "- Cache written again by the orchestrator: unknown",
+            "- Calls of the orchestrator with a cache write again: unknown",
+            "- Cache written again by subagents: unknown",
+            "- Calls of subagents with a cache write again: unknown",
+            "",
+            "## Agents",
+            "",
+            "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| orchestrator orch | Codex | 3 | 1000 | 2000 | 3000 | unknown | unknown | unknown "
+            "| unknown |",
+            "| /root/design | Codex | 2 | 5000 | 5000 | 6000 | unknown | unknown | unknown | unknown |",
+            "| scout-nick | Codex | 1 | 400 | 400 | 400 | unknown | unknown | unknown | unknown |",
+            "| /root/design/check | Codex | 1 | 7 | 7 | 7 | unknown | unknown | unknown | unknown |",
+            "",
+        ], self.lines_of(text))
+
+    def test_the_forked_subagent_counts_only_its_own_calls(self) -> None:
+        text = self.measures(str(self.orchestrator))
+        self.assertIn("| /root/design | Codex | 2 |", text)
+        self.assertIn("- Calls of subagents: 4\n", text)
+
+    def test_a_codex_context_is_the_input_and_the_cached_part_is_not_added(self) -> None:
+        text = self.measures(str(self.orchestrator))
+        self.assertIn("- Context of the orchestrator's first call: 1000\n", text)
+
+
+class MixedCycleTest(CodexTest):
+    """A Claude Code orchestrator and a Codex orchestrator named together: the measures sum over both."""
+
+    def test_the_measures_of_both_tools_sum_and_the_codex_cache_lines_are_unknown(self) -> None:
+        claude = self.session([response("09:00:00", "a", input_tokens=100, write=1000, five=1000,
+                                        output=1)], "cycle1")
+        codex = self.rollout("orch", [
+            codex_meta("orch", "09:00:00"),
+            codex_usage("09:00:30", "orch", 300),
+        ])
+        text = self.measures(str(claude), str(codex))
+        self.assertEqual([
+            "# Measures of the cycle run",
+            "",
+            "- Calls in all: 2",
+            "- Calls of the orchestrator: 2",
+            "- Calls of subagents: 0",
+            "- Mean context per call: 700",
+            "- Mean context per call of the orchestrator: 700",
+            "- Share of the context in calls above 200000 tokens: 0.0%",
+            "- Context of the orchestrator's first call: 1100",
+            "- Context of the orchestrator's middle call: 1100",
+            "- Context of the orchestrator's last call: 300",
+            "- Cache written, 5 minutes: unknown",
+            "- Cache written, 1 hour: unknown",
+            "- Cache written again by the orchestrator: unknown",
+            "- Calls of the orchestrator with a cache write again: unknown",
+            "- Cache written again by subagents: 0",
+            "- Calls of subagents with a cache write again: 0",
+            "",
+            "## Agents",
+            "",
+            "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| orchestrator cycle1 | Claude Code | 1 | 1100 | 1100 | 1100 | 1000 | 0 | 0 | 0 |",
+            "| orchestrator orch | Codex | 1 | 300 | 300 | 300 | unknown | unknown | unknown "
+            "| unknown |",
+            "",
+        ], self.lines_of(text))
+
+
+class CodexReadingErrorsTest(CodexTest):
+    def test_a_token_usage_record_without_input_tokens_ends_with_exit_2_naming_the_file_and_field(
+            self) -> None:
+        broken = codex_usage("09:01:00", "orch", 1000)
+        del broken["payload"]["usage"]["input_tokens"]
+        self.assert_codex_error(self.rollout("orch", [codex_meta("orch"), broken]), "input_tokens")
+
+    def test_a_usage_value_that_is_no_whole_number_ends_with_exit_2_naming_the_field(self) -> None:
+        broken = codex_usage("09:01:00", "orch", 1000)
+        broken["payload"]["usage"]["input_tokens"] = "1000"
+        self.assert_codex_error(self.rollout("orch", [codex_meta("orch"), broken]), "input_tokens")
+
+    def test_a_session_meta_without_id_ends_with_exit_2_naming_the_field(self) -> None:
+        broken = codex_meta("orch")
+        del broken["payload"]["id"]
+        self.assert_codex_error(self.rollout("orch", [broken]), "payload.id")
+
+    def test_a_subagent_rollout_named_as_a_session_ends_with_exit_2(self) -> None:
+        sub = self.rollout("sub", [codex_meta("sub", parent="orch", agent_path="/root/sub"),
+                                   codex_usage("09:01:00", "sub", 5)])
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(sub), "--output", str(output))
         self.assertEqual(2, code)
         self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(sub.name, errors)
+        self.assertFalse(output.exists())
+
+    def test_a_codex_line_nested_too_deeply_ends_with_exit_2_naming_the_file_and_line(self) -> None:
+        orchestrator = self.rollout("orch", [codex_meta("orch")])
+        with orchestrator.open("a", encoding="utf-8") as handle:
+            handle.write("[" * 200000 + "]" * 200000 + "\n")
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(orchestrator), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertRegex(errors, rf"{orchestrator.name}:2: ")
         self.assertFalse(output.exists())
 
 
