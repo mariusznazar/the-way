@@ -183,3 +183,9 @@ A standing check is a check that a tool makes of every change to a product's cod
 The cost of an occurrence is the highest of five levels — `nothing`, `steps`, `stage`, `round` and `human`, each dearer than the one before — that one occurrence of a problem in the audit's register actually cost.
 
 - **Not:** the amount in money, at constant prices, that the audit gives for a cycle — `WAY-337`
+
+## transitional state
+
+A transitional state is a state of a product that a decision describes until work later than the change that brings the decision ends it.
+
+- **Not:** none

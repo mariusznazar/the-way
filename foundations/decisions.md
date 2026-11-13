@@ -9173,7 +9173,7 @@ decisions of the task's own sections, in a blocked request what the cycle needs 
 actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
 a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
 error of the form check that the cycle holds wrong (WAY-291), the pairs that give the cause of a
-correction after the request opened (WAY-356), each descriptive `TODO` in an
+correction after the request opened (WAY-358), each descriptive `TODO` in an
 invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
 after the change (WAY-71), and the foundation entries the human did not see at the task document — in
 three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
@@ -10842,8 +10842,11 @@ an action outside the repository — says concretely what happens and who feels 
 situation; gives each way open with what follows from choosing it and what it costs, in time, a
 round of correction with its review and the risk that stays, and where it can show up later; gives a
 recommendation with its reason in one sentence; and asks a question with the answers to choose from.
-The agent that writes the description checks every such item against these four before the request
-opens, and fills in what is missing.
+An item for a check the agent did not run that the human can do by hand has a fifth part, three to
+six steps for the human — where to go, what to do and what the human should see — and keeps its
+answers; the human who checks by hand writes a remark after the check. The agent that
+writes the description checks every such item against these four, and the item for a check the human
+can do by hand against the fifth as well, before the request opens, and fills in what is missing.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -10853,10 +10856,15 @@ opens, and fills in what is missing.
     and when, gives the three ways — try them in the request, make a task of a separate trial, let
     it through — each with its cost, recommends one with a reason, and asks which to take; the agent
     that wrote the description read each item of the first two groups against the four parts before
-    the form check, and added the missing way and its cost to an item that had none;
+    the form check, and added the missing way and its cost to an item that had none; an item about a
+    screen of the product that the agent did not check and a person can open gives three steps — open
+    the page, press the button, the page should show the saved value — and the three answers of its
+    group;
   - violates: an item reads "the return step was skipped; merge without it?", with no word on who
     will feel it, what the other ways cost or what the writer would do; the description is
-    published with an item of the first two groups that was not read against the four parts.
+    published with an item of the first two groups that was not read against the four parts; an item
+    for a check the human can do by hand gives no steps, or gives eight, or gives the steps as a
+    section of its own, or adds a fourth answer for them.
 - **Origin:** none
 
 *Rationale:* a question with no account of what happens and what each answer costs leaves the human
@@ -10864,14 +10872,22 @@ to rebuild it from the lower part, or to agree without reading; the account is w
 choose in the one place the request asks for a choice. The agent that writes the description knows
 the record, so it can fill in the account, and it reads the item before the human does. WAY-290 has
 the form check judge no content, so a missing way or cost shows to nobody before the human unless
-the writer reads the item against the four parts. The price is that an item written generally still
-reaches the human when the writer reads carelessly, and that every item in which the human chooses
-is longer.
+the writer reads the item against the four parts. A check the agent did not run is the item whose
+answer the human can often give only by doing it, and an item with no steps leaves the human to ask
+the agent how, or to find it in the lower part of the description; with the steps in the item the
+human has them where the request asks the question. Three to six steps keep the item short enough
+to read at the merge. The presence of the steps is no more checked by the form check than the four
+parts are. The price is that an item written generally still reaches the human when the writer reads
+carelessly, and that every item in which the human chooses is longer, an item with steps the most.
 *Rejected:* the rule as a sentence of the template with a good and a bad example alone — the agent
 can go on writing generally and nobody catches it before the human; a fresh agent reading the top
 part of the description before it is published — one more agent call in every cycle, and a change
 to WAY-290, which did not take such a second reading; it stays for later, should the writer's own
-check not suffice.
+check not suffice; the steps as a section of their own in the upper part of the description, as the
+card the point came from has them — it changes the skeleton (WAY-286), the form check with its
+tests (WAY-290) and the block in the language of the task document, and the section would stand in
+every request while it would read `none` in most; no steps, the human keeping an item with the same
+answers — to check by hand the human asks the agent or reads the lower part of the description.
 
 ### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
 
@@ -11695,7 +11711,77 @@ keeps a second way of reading a stage report for as long as cycles of the older 
 a cycle of that form has no share.
 *Rejected:* unknown
 
-### WAY-353 — Which task fixes a defect found after a merge?
+### WAY-353 — How does a task document point at a place to change in a file?
+
+A task document points at a place to change in a file by a heading or a quotation, and a line
+number given beside it is only a hint. The source under the answer to a question stays as the
+template of the task document gives it, the line with the revision.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a task document with the decision:
+  - complies: a task document sends the cycle to the paragraph that opens with a quoted sentence,
+    or to the section under a heading, and gives the line beside it as a hint; the source of an
+    answer under a question reads a file, a line and a revision;
+  - violates: a task document sends the cycle to a place by a line number alone; the source of an
+    answer leaves out the line or the revision.
+- **Origin:** none
+
+*Rationale:* a line number names a place that moves when the file changes, so an agent that opens
+the file at that line may find other text and has to look for the place, while a heading or a
+quotation finds it again after the lines have moved. The line stays in the source of an answer
+because the revision beside it says which text the line meant. In the register of problems of
+2026-11-12, 80 rows in 45 of 83 cycles were a stale reference; one occurrence cost nothing 35
+times, a few steps of an agent 44 times and a stage once, and no round and no time of the human.
+The price: a heading or a quotation can vanish as a line can, and about 40 of those 80 rows stood in
+orders to agents and in plans written during a cycle, which this rule does not reach.
+*Rejected:* a script that checks, before a cycle starts, the files, lines and entries a task names —
+it catches about 15 of the 80 rows, each worth a few steps of an agent, and costs a script with
+tests and a step at the start of every cycle; a line given with a revision as the source of an
+answer moves by design, so the script would read the file at that revision or report false alarms;
+no rule — rows keep coming, about one in a cycle, each worth nothing or a few steps of an agent.
+
+### WAY-354 — What does a review of the foundation do with a decision that describes a transitional state?
+
+A review of the foundation lists the decisions that describe a transitional state of the product,
+found by reading their binding sentences and not by a word, and asks the human at each whether a
+task exists that ends that state; where none exists, it proposes creating one, as it does for its
+other proposals (WAY-302). A decision's entry carries no field for that task.
+
+- **Scope:** decisions, foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-24 · derives from WAY-302
+- **Verification:** an agent compares the review and the template of decisions with the decision:
+  - complies: the review lists a decision that says a shared control has two forms until the last
+    screen moves to a new library, shows the sentence, asks the human whether a task ends that
+    state, and, the human answering that none does, proposes the task and makes it on the human's
+    yes; a rule such as "the tempo stays until the player picks another" is not listed;
+  - violates: the review lists a decision because the word "until" stands in it; the entry of a
+    decision gains a field that names the task; the question is put at the refinement of a task
+    that settles the state, in place of the review; the review makes the task with no yes from the
+    human.
+- **Origin:** none
+
+*Rationale:* a decision that describes a state "for now" binds for as long as no work ends the
+state, and nothing leads from the decision to that work, so the state can stay in the code for good
+with nobody seeing it before a review. The review already reads every decision against the product
+(WAY-305) and turns a proposal the human accepts into a task (WAY-302), so it is where a missing
+task shows. The human is asked, since the tasks of a product lie outside its repository (WAY-320)
+and only the line of a task of a project plan has an identifier that a decision derives (WAY-329),
+so an entry has no name to give a task outside a plan. A word does not pick the decisions: a
+search of the log by "until" and kindred words on 2026-11-12 found them mostly in ordinary rules.
+The price: the reading can miss a decision or list an ordinary rule, and the human is asked again
+at each review about a decision whose state still stands.
+*Rejected:* a field in a decision's entry that names the task, as the card the point came from has
+it — it changes WAY-24 and the template of decisions, collides with WAY-01, needs a way for an
+entry to name a task of a list that lies outside the repository, needs the task to exist before the
+decision is written, and a pointer ages; a question at the refinement of a task about what ends the
+state being settled — a state written by a cycle itself passes by, and the link between a decision
+and a task is kept nowhere; no rule — the next state may get stuck and nobody sees it before a
+review, unless the reviewer thinks of it unprompted.
+
+### WAY-355 — Which task fixes a defect found after a merge?
 
 A task fixes a defect found after a merge when it removes a defect against what the task of an
 earlier merged change, or the foundation, required when that change was merged, or a regression,
@@ -11726,13 +11812,13 @@ through; broadly, with the kind of the defect in the line ("defect against the r
 of the task") — one more judgment for each such task, a second class in the register and a second
 result to read, while nothing waits for a measure of the gaps of tasks today.
 
-### WAY-354 — Where is a defect found after a merge recorded, and in what form?
+### WAY-356 — Where is a defect found after a merge recorded, and in what form?
 
 A defect found after a merge is recorded in two places: the line `Defect introduced by:` under
 `Project relation:` in the header of the task document of the task that fixes it, which is the
 source, and a problem of the class `defect-found-after-merge` in the register of problems, which
 counts it. Every task document carries the line, which reads `none` in a task that fixes no defect
-of WAY-353, and otherwise the address of the request that introduced the defect, one address for
+of WAY-355, and otherwise the address of the request that introduced the defect, one address for
 each change where the defects come from several, joined by ` · `, the address of the commit for a
 change that came without a request, or `unknown — <why the change cannot be established>`; the
 agent that refines the task fills it, never the cycle. A task document written before the line has
@@ -11766,7 +11852,7 @@ have to recognise the field in the text, and a missing field is just as invisibl
 place of the request — the request has to be looked for from the commit, and a commit does not say
 that the change did not pass through a request.
 
-### WAY-355 — Where does the cycle record the cause of a correction after the request opened?
+### WAY-357 — Where does the cycle record the cause of a correction after the request opened?
 
 The cycle record holds one line for each correction made after the request opened, in an item of its
 request handoff that stands before the process remarks, and the line gives the cause of the
@@ -11795,7 +11881,7 @@ the messages of commits are not checked, it collides with the rules for the comm
 and the cause would stand outside the record that the nightly review reads; both places — two
 records that can drift apart, and the second adds nothing.
 
-### WAY-356 — What causes does the line of a correction give?
+### WAY-358 — What causes does the line of a correction give?
 
 The line of a correction gives each pair `<source> · <kind>` of the correction once. The source is
 read, not judged: `item <n>` is the human's answer to an item of the request's section for the
@@ -11804,13 +11890,13 @@ description and not its number in a given description; `remark` is a remark of t
 any item; `target-branch` is a correction that exists only to refresh the target branch at the
 human's request. The kind is the judgment of the agent that leads the cycle by one test against the
 documents — `defect` where the approved task or the foundation required what the correction
-changes, or it is a regression, as WAY-353 gives it, `not-required` where it was not required, and
+changes, or it is a regression, as WAY-355 gives it, `not-required` where it was not required, and
 `none` only with `target-branch` — and the request's description after the correction shows the
 pairs in one sentence (WAY-287).
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-355
+- **Relations:** derives from WAY-357
 - **Verification:** an agent compares a cycle record with the decision:
   - complies: a correction made for a remark in which the human found a defect the task required
     gives the pair `remark · defect`; a correction made for the human's answer to the item of
@@ -11836,7 +11922,7 @@ causes with no split of the human's remarks — a remark, an item the cycle put 
 target branch: cheap and checkable, but they do not separate a defect the review let through from a
 change of mind.
 
-### WAY-357 — How does the template of the register of problems record a defect found at the request or after the merge?
+### WAY-359 — How does the template of the register of problems record a defect found at the request or after the merge?
 
 The template of the register of problems starts its list of classes also with
 `defect-found-at-request`, a defect that the review let through and the human found before the

@@ -100,12 +100,12 @@ project plan, or only uses an approved project definition as a source. A task th
 definition without plan membership never acquires that plan's assignments or dependencies.
 `Defect introduced by:` stands in every task, and the agent that refines the task fills it from
 the history of the lines the task changes and from the human's report, never the cycle
-(WAY-354). The line reads `none` in a task that does not fix a defect found after a merge. A task
+(WAY-356). The line reads `none` in a task that does not fix a defect found after a merge. A task
 fixes one when it removes a defect against what the task of an earlier merged change, or the
 foundation, required when that change was merged, or a regression, something that worked and
 that the earlier change's task did not tell it to change; a new need, a change of mind, a gap of
 the earlier task, a thing it did not foresee, and maintenance such as updating a dependency are
-none of these (WAY-353). The line of a fixing task names the request that introduced the defect
+none of these (WAY-355). The line of a fixing task names the request that introduced the defect
 by its address, with one address for each change where the defects come from several, joined by
 ` · `; a change that came without a request is named by the address of its commit; where the
 change cannot be established, the line reads `unknown — ` and the reason, in the document's
@@ -227,3 +227,10 @@ row of *Settlements to record* restates in one sentence what its *Source* names,
 writes its entry from the row. Keep each sentence of Description and Context in a separate list
 item. If the project source leaves a value open, ask or keep `TODO`; do not fill it from general
 knowledge.
+
+Where the document points at a place to change in a file, anywhere in it, it names the place by the
+heading it stands under or by a quotation of the text there, and gives a line number only as a hint
+beside that, such as "the paragraph that opens 'An item of'", about line 320; the cycle finds the
+place by the heading or the quotation (WAY-353). The *Source* under a question is no such pointer:
+it stays as the skeleton gives it, with the line and the revision, which say which text the line
+meant.

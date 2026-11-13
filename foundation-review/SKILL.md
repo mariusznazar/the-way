@@ -47,8 +47,8 @@ review tag (WAY-300); the human may start it at any time.
 
 Read all of the foundation of the repository, each file whole: `foundations/decisions.md`,
 `invariants.md`, `glossary.md`, `part_map.md` and `environment_facts.md`. Read `weak_points.md`
-beside this skill for what to look for in each entry and for the checks to run (WAY-24, WAY-82,
-WAY-305).
+beside this skill for what to look for in each entry, for the checks to run and for the decisions
+that describe a transitional state (WAY-24, WAY-82, WAY-305, WAY-354).
 
 ## 3. Check the unfixed remarks of the requests
 
@@ -57,8 +57,9 @@ judged, and which are not raised again (WAY-303, WAY-304).
 
 ## 4. List the proposals
 
-Read `proposals.md` beside this skill: the proposals about the foundation, the groups of remarks,
-and the data file that holds the lists (WAY-302).
+Read `proposals.md` beside this skill: the proposals about the foundation, the decisions that
+describe a transitional state, the groups of remarks, and the data file that holds the lists
+(WAY-302, WAY-354).
 
 ## 5. Have the set critiqued
 
@@ -73,12 +74,13 @@ critiqued.
 ## 6. Go through it with the human
 
 Read `with_the_human.md` beside this skill for the order and the form: the proposals about the
-foundation one by one, the groups of remarks as groups, and the tasks that follow from the human's
-decisions (WAY-302).
+foundation one by one, the decisions that describe a transitional state one by one, the groups of
+remarks as groups, and the tasks that follow from the human's decisions (WAY-302, WAY-354).
 
 ## 7. Mark the review done
 
-The review is done when the human has decided on every proposal and every group. Then mark it:
+The review is done when the human has decided on every proposal, has answered for every decision
+that describes a transitional state and has decided on every group. Then mark it:
 
 - Name the tag `foundation-review/YYYY-MM-DD` with today's date; where a tag of that date exists
   already, add `-2`, then `-3`. Put it on the checked commit of step 1, annotated, with

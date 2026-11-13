@@ -32,7 +32,7 @@ merge brought in that bear on the parts the change touches, as step 12 of `imple
 (WAY-306, WAY-150), and the agents that own the checks the merge touches run them again. The remarks
 bind; record them as new events, and write them word for word, as the human gave them, into
 `reports/correction-<n>-remarks.md` of the record, `<n>` counting the corrections from 1, also
-where they came in conversation or concern only the refreshing of the target branch (WAY-355).
+where they came in conversation or concern only the refreshing of the target branch (WAY-357).
 Keep the recorded route for the affected work: dispatch the
 correction with `make-change`, resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code
@@ -51,7 +51,7 @@ as the template gives, and edit the request's description from it.
 
 Before the record's copy is prepared, add the correction's line to the record's item *Corrections
 after the request opened*, as `task-cycle/record_template.md` gives it: the file of the remarks and
-each pair `<source> · <kind>` of the correction once (WAY-355, WAY-356). Take the source from what
+each pair `<source> · <kind>` of the correction once (WAY-357, WAY-358). Take the source from what
 started the correction: `item <n>` for the human's answer to an item of the request's *For you to
 decide*, `<n>` being the number of that item's kind in `request_template.md`, as in item 8
 below, never the number the item had in the description; `remark` for a remark of the human

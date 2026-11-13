@@ -197,7 +197,7 @@ invariant covers it.
     `task-cycle/remarks_check.py` the cycle holds wrong>
 
 The corrections stand as one line for each correction after the request opened, written by the
-orchestrator when the correction's record is prepared (WAY-355); the file in `reports/` holds the
+orchestrator when the correction's record is prepared (WAY-357); the file in `reports/` holds the
 human's remarks of that correction word for word, also where they came in conversation or concern
 only the refreshing of the target branch. A pair is the source and the kind of a cause. The source
 is read, not judged: `item <n>` is the human's answer to an item of the request's *For you to
@@ -207,7 +207,7 @@ outside any item; `target-branch` is a correction that exists only to refresh th
 the human's request. The kind is the orchestrator's judgment by one test against the documents,
 `defect` where what the correction changes was required by the approved task or by the foundation,
 or is a regression, as `project-level/task/template.md` gives it for a task that fixes a defect;
-`not-required` where it was not required; `none`, only with `target-branch` (WAY-356). The item
+`not-required` where it was not required; `none`, only with `target-branch` (WAY-358). The item
 stands before the process remarks, which stay the last item of the record.
 
 The remarks stand in this form only: the item that opens with `Process remarks on the-way`, the
