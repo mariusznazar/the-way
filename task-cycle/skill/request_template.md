@@ -226,14 +226,15 @@ the order of their kinds.
 - **4.** *Skipped steps and unrun checks*, from the record's *Verification*, Events and *Return
   step*: a stage the cycle skill requires for this change that did not run or was skipped — the
   return step, a review, the reconciliation with the target branch, a slice not made, the gate; a
-  check of the final gate run that failed or did not run, save one that fails on the base too, which
-  stays in *Checks*; a check the change needed that an author reports as not done — a screenshot
-  unchecked (WAY-219), a missing state check or a missing own-work check (WAY-164). A check the
-  skill does not call for this change is none, and a check that failed and passed again stays in
-  *Checks* (WAY-261). The stages a blocked request did not run because it stopped are kind 1's, not
-  these. The answer "do it in this request" runs the step or the check that was left out. Where the
-  check an author reports as not done is one the human can do by hand, the item carries the steps
-  for it that "What an item carries" gives as its fifth part.
+  check of the final gate run that failed or did not run, save one that fails on the base too — by
+  the run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a
+  check the change needed that an author reports as not done — a screenshot unchecked (WAY-219), a
+  missing state check or a missing own-work check (WAY-164). A check the skill does not call for
+  this change is none, and a check that failed and passed again stays in *Checks* (WAY-261). The
+  stages a blocked request did not run because it stopped are kind 1's, not these. The answer "do it
+  in this request" runs the step or the check that was left out. Where the check an author reports
+  as not done is one the human can do by hand, the item carries the steps for it that "What an item
+  carries" gives as its fifth part.
 - **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
   no fix made and each finding outside the task's scope, of the review of the whole change and of
   every later review, and each Minor finding and new serious finding of a reverted fix, and judge
@@ -427,7 +428,10 @@ findings among them, and where the cycle reverted it, its commits and the revert
 
 **Checks.** The gate's command and exit code, each check that failed or did not run by name, and
 for a check that failed and passed when run again the number of cycle runs in which it failed and
-passed and its rerun's result (WAY-160, WAY-261); what each own-work check showed (WAY-164); the
+passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
+of failing tests it took from the earlier cycle's final gate with the commit and the file it was
+taken from, and the result of the run of the failing tests on the base where step 4 of
+`task-cycle/skill/SKILL.md` gave that run (WAY-367); what each own-work check showed (WAY-164); the
 user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
 failure of a settled one included (WAY-219); the form check's last run; the check of private
 paths' last run on the description and its last run on the copy of the record, each with its
@@ -479,7 +483,7 @@ reads `none` under its heading.
 |---|---|---|---|
 | A blocking finding remains (`blocked_finding.md`, WAY-162, WAY-163) | `**State: blocked** — a review finding remained after its one fix` | in *Needed from you*, each remaining finding in plain words, with "Fix it as the finding says, or keep the code despite it?"; what has not run on that code — the return step, the reconciliation, the slices not made | **Blocking findings left**: each with its place, reason and what the fix tried; *Cost* the cost so far with the rounds; *Checks* naming what has not run |
 | A slice failed twice (step 9.4) | `**State: blocked** — a slice failed with two agents` | in *Needed from you*, what failed, in plain words, and what the cycle needs to go on; the stages not run — the review of the whole change, the return step, the reconciliation | **Route**: both failures with the classes tried, each slice made that no review judged |
-| A reserved choice (`reserved_return.md`, WAY-269) | `**State: blocked** — the cycle met a technology choice only you make` | in *Needed from you*, the choice, by what the product needs it for; the ways seen, marked as not researched, with no recommendation; what happens next: close the request, and refinement takes the choice as its note | *Technical changes* `none`; *Foundation entries* `none`; *Checks*: the checks failing on the base and each stage not run with why, the gate among them; **Route**: where it showed (stage, task item), the limb of the rule, what was searched, the discarded attempt and its report; *How to merge*: do not merge, close |
+| A reserved choice (`reserved_return.md`, WAY-269) | `**State: blocked** — the cycle met a technology choice only you make` | in *Needed from you*, the choice, by what the product needs it for; the ways seen, marked as not researched, with no recommendation; what happens next: close the request, and refinement takes the choice as its note | *Technical changes* `none`; *Foundation entries* `none`; *Checks*: the checks failing on the base, from its run or from the list step 4 took, and each stage not run with why, the gate among them; **Route**: where it showed (stage, task item), the limb of the rule, what was searched, the discarded attempt and its report; *How to merge*: do not merge, close |
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |
 | A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question with its options and a recommendation where one exists | as an ordinary request |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | in *Needed from you*, that fact or permission; never partial work presented as complete | **Route**: the ways tried |

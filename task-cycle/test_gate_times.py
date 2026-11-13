@@ -126,6 +126,54 @@ class RowsTest(GateTimesTest):
         self.assertEqual(["a/b c", "0.1"], self.rows()[0][4:])
 
 
+class RunnerOutputTest(GateTimesTest):
+    """The output of the gate's own test runner, whose directories run at the same time and whose
+    reports come whole, in the order the directories end, are read as the blocks of the script's
+    form (WAY-349)."""
+
+    def test_directories_that_end_out_of_the_order_of_their_names_each_get_their_own_time(self) -> None:
+        repo = self.root / "repo"
+        marker = repo / "b_has_run"
+        (repo / "a").mkdir(parents=True)
+        (repo / "b").mkdir()
+        # a sorts first and ends last: its test waits for b's, then stays running a second more.
+        (repo / "a" / "test_a.py").write_text(
+            "import os, time, unittest\n\n\nclass A(unittest.TestCase):\n"
+            "    def test_a(self):\n"
+            f"        for _ in range(6000):\n            if os.path.exists({str(marker)!r}):\n"
+            "                break\n            time.sleep(0.02)\n"
+            f"        self.assertTrue(os.path.exists({str(marker)!r}))\n"
+            "        time.sleep(1)\n", encoding="utf-8")
+        (repo / "b" / "test_b.py").write_text(
+            "import unittest\n\n\nclass B(unittest.TestCase):\n"
+            "    def test_b_one(self):\n"
+            f"        open({str(marker)!r}, 'w').close()\n\n"
+            "    def test_b_two(self):\n        pass\n", encoding="utf-8")
+        for command in (["init", "-q"], ["add", "--", "a/test_a.py", "b/test_b.py"]):
+            subprocess.run(["git", *command], cwd=repo, check=True, capture_output=True)
+        runner = HERE.parent / "gate" / "run_tests.py"
+        gate = [sys.executable, "-B", str(runner), "--slowest", "1"]
+        result = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), "--output", str(self.output), "--registry",
+             str(self.registry), "--"] + gate, capture_output=True, cwd=repo, env=self.env)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        # The times as the runner printed them, read here from each report with no help of the script.
+        printed = {}
+        directory = None
+        for line in result.stdout.decode("utf-8").splitlines():
+            if line.startswith("== "):
+                directory = line[3:]
+            else:
+                matched = re.fullmatch(r"Ran \d+ tests? in ([0-9.]+)s", line)
+                if matched and directory not in printed:
+                    printed[directory] = matched.group(1)
+        self.assertEqual({"a", "b"}, set(printed))
+        rows = self.rows()
+        self.assertEqual(["b", printed["b"]], rows[0][4:])
+        self.assertEqual(["a", printed["a"]], rows[1][4:])
+        self.assertGreater(float(printed["a"]), 0.9)
+
+
 class CapTest(GateTimesTest):
     """A flood of blocks or a very long directory line keeps the record small and readable: no more
     than 50 directories are listed per run (the number the audit reads), a directory cell is cut at

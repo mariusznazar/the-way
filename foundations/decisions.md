@@ -11602,19 +11602,19 @@ the human could compare nothing sensibly.
 ### WAY-349 — How does the orchestrator of a task cycle run the product's gate so that the gate times reach the cycle's record?
 
 The orchestrator of a task cycle runs the product's gate through a script of the process at every
-run, the run on the starting state included. The script runs the gate the product declares, measures
-the time of the whole run and, where the output of the process's test runner reports the time of a
-directory of tests, the time of each such directory, in whatever order they come, and adds the run
-to a file in the cycle's record.
+run, the run on the starting state included in a cycle that makes it (WAY-367). The script runs the
+gate the product declares, measures the time of the whole run and, where the output of the process's
+test runner reports the time of a directory of tests, the time of each such directory, in whatever
+order they come, and adds the run to a file in the cycle's record.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-160
 - **Verification:** an agent compares a cycle and its record with the decision:
-  - complies: the orchestrator runs the gate through the script on the starting state and on the
-    finished tree, and the cycle's record holds a file with the time of each run and of each
-    directory in it; the file holds times and no output of the gate (WAY-160); the run of the gate
-    remains the orchestrator's alone;
+  - complies: the orchestrator runs the gate through the script on the finished tree and, in a
+    cycle that makes the run on the starting state, on the starting state, and the cycle's record
+    holds a file with the time of each run and of each directory in it; the file holds times and no
+    output of the gate (WAY-160); the run of the gate remains the orchestrator's alone;
   - violates: the orchestrator runs the command of the gate directly; the times are copied from the
     output of the gate into the record by hand; the file holds the output of the gate; an author, an
     executor or a reviewer runs the script.
@@ -12216,6 +12216,82 @@ whose reasoning ties the spec to a foundation entry that an agent designs; no ch
 where the rule's invariant is not marked violated, the excess shows only in the gate after the code
 is written, and where it is marked violated, an addition to a function not yet cleaned stops neither
 the test nor the review (WAY-51).
+
+### WAY-366 — Do the directories of a product's tests run at the same time, and how does a product keep them from it?
+
+The test runner of the process runs the directories of tests at the same time by default, each in a
+process of its own, and prints the report of each directory whole when its run ends, under a line
+naming the directory. An option of the runner limits how many directories run at once, and the value
+1 runs them one after another. A product that needs its directories one after another writes the
+option into the command of its gate, which remains the one command of WAY-16.
+
+- **Scope:** gate
+- **Based on:** none
+- **Relations:** derives from WAY-16 · derives from WAY-55
+- **Verification:** an agent compares a change with the decision:
+  - complies: the runner started with no option starts every directory at once; the runner started
+    with the limit 1 starts the next directory only after the previous one has ended; the report of
+    each directory stands whole under its own line, in the order the directories end; a product whose
+    directories cannot bear the load writes the option into its one gate command;
+  - violates: the runner started with no option runs the directories one after another; a product
+    keeps a second command for its directories to run one after another, or a list of directories
+    written by hand beside the gate; the report of a directory is mixed with another's.
+- **Origin:** none
+
+*Rationale:* the directories of a product's tests are what make its gate long, and they run in
+processes of their own, so running them together costs a change of the runner alone and shortens the
+gate for every product that pins the process. A product whose tests cannot bear the load must still
+be able to take the new version of the process, so the way back to one after another is an option the
+product writes into the gate command it already declares, with no change to the process. The price:
+a product that does not write the option gets the parallel run with the version of the process it
+pins, and the directories at once need more memory at once than one after another, so a product's
+tests that fail under load fail until the product writes the option.
+*Rejected:* parallel always, with no option — a product could not take a new version of the process
+until it had made its tests bear the load, if they failed under it; one after another by default,
+parallel only with an option — the gain comes only once a product changes its gate command, in the
+process's own repository too, whose command is one bare command (WAY-16).
+
+### WAY-367 — Does a task cycle run the gate on its starting state?
+
+A task cycle does not run the gate on its starting state where that state is a merge commit whose
+tree of files is identical to the tree of the head of the branch it merged. It takes the list of the
+tests failing before the change from the final gate of the cycle of that branch, also where that gate
+was red, from the record of that cycle in the history of git, and writes into its own record where it
+took the list from. Where the starting state is no such commit, or the merged branch holds no record
+of a cycle with the result of its final gate, the cycle runs the gate on its starting state. Where
+the final gate of a cycle that did not run the gate on its starting state fails on a test outside the
+list, the cycle runs the failing tests on its starting state to tell a fault of the change from one
+already there and writes the result into its record, the run serving that diagnosis only (WAY-243).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-160 · derives from WAY-349
+- **Verification:** an agent compares a cycle and its record with the decision:
+  - complies: a cycle starts from a merge commit whose tree equals the tree of the head of the
+    branch it merged, runs no gate on it, and its record names the list of failing tests with the
+    commit and the file it was taken from, a red final gate of the earlier cycle included; its final
+    gate fails on a test outside the list, and the cycle runs that test on the starting state and
+    records the result; a cycle starts from a commit that is no such merge and runs the gate on it;
+  - violates: a cycle skips the gate on a starting state that is no merge commit of identical tree;
+    takes the list from the final gate of the earlier cycle only where it was green; writes no
+    source of the list into its record; runs the failing tests on the starting state again to make a
+    run of the gate pass.
+- **Origin:** none
+
+*Rationale:* the final gate of the earlier cycle ran on the files the starting state now holds, so a
+run on the starting state repeats it, and one full run of the gate in each cycle is a large part of
+its wait. The list of failing tests is what the run on the starting state gives the cycle, to tell
+what the change broke from what was broken already, and the earlier cycle's final result gives the
+same list for the same files. The price: the rule takes the machine to be unchanged between the
+cycles; a failure that the machine's state brings since then shows as a failing test outside the list,
+which the run of the failing tests on the starting state sorts; a test on the list that the change
+really breaks is taken for a fault already there, as it is where it fails on the starting state
+because of the machine.
+*Rejected:* the gate on the starting state in every cycle, as before — one full run for each cycle
+that repeats the final run of the earlier cycle on the same files, and red most of the time because
+of the machine rather than the code; no run on the starting state at all, with the failing tests
+checked on the starting state only when the final gate fails — a variant shown and not chosen, its
+cost not given.
 
 ## Withdrawn identifiers
 

@@ -97,9 +97,10 @@ before dependent work, and record corrections to stale paths or commit ranges. R
 read for a question or finding in the questions table, rather than loading every stage's full
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
 During work this file, the frozen task, `stages.md` (step 12), `mechanism_measures.md` (step 12),
-`gate_times.md` (created by the first gate run, at step 2 where the pin moved, else at step 4; each
-later gate run appends to it), `spec.md`, `plan.md`, `plan-size.md`, `request.md` and `reports/`
-live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
+`gate_times.md` (created by the first gate run: step 2's where the pin moved, else step 4's, and
+step 10's where step 4 skips its run; each later gate run appends to it), `spec.md`, `plan.md`,
+`plan-size.md`, `request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/`
+directory. At the request, copy
 that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, clean
 the copy and check it as `task-cycle/skill/SKILL.md` ("The record before it is committed") gives,
 commit the copy and commit its removal immediately after; the request links the record by the SHA of
@@ -132,9 +133,13 @@ there.
 | Command or manual check | Actor, commit and environment | Exit code and result | Failed or unchecked |
 |---|---|---|---|
 
-Record the checks already failing on the base apart from the runs after the change. Where the task
-moved the pin, record the gate on the commit that moved it apart as well, naming each check that
-fails there and passed on the base: that is work the task carries. An executed
+Record the checks already failing on the base apart from the runs after the change. Where the cycle
+ran no gate on the base because step 4 of `task-cycle/skill/SKILL.md` took the list from the final
+gate of the earlier cycle, the list stands there in the place of that run, with the commit and the
+file of the earlier cycle's record that it was taken from, and the run of the failing tests on the
+base follows it where step 4 gives that run, with its result. Where the task moved the pin, record
+the gate on the commit that moved it apart as well, naming each check that fails there and is not
+among those failing on the base: that is work the task carries. An executed
 check is its command and exit code, with its result in one line; a report missing either returns
 to its agent for repair, and a claim that tests passed does not replace them. A manual check
 records its method, actor, observed result and evidence, with `not applicable` for the command and
