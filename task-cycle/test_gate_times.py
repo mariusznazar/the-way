@@ -126,6 +126,60 @@ class RowsTest(GateTimesTest):
         self.assertEqual(["a/b c", "0.1"], self.rows()[0][4:])
 
 
+class CapTest(GateTimesTest):
+    """A flood of blocks or a very long directory line keeps the record small and readable: no more
+    than 50 directories are listed per run (the number the audit reads), a directory cell is cut at
+    200 characters, and the cut is written in the record."""
+
+    def flood(self, blocks: int) -> list[str]:
+        """A command that prints `blocks` blocks, each with a line of its time, as a loop."""
+        return [sys.executable, "-c",
+                "import sys\nfor i in range(int(sys.argv[1])):\n"
+                "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)", str(blocks)]
+
+    def test_blocks_beyond_the_fiftieth_are_not_listed_and_a_row_says_how_many(self) -> None:
+        result = self.run_gate(self.flood(2000))
+        self.assertEqual(0, result.returncode, result.stderr)
+        rows = self.rows()
+        self.assertEqual(51, len(rows))
+        self.assertEqual(["d0", "0.1"], rows[0][4:])
+        self.assertEqual(["d49", "0.1"], rows[49][4:])
+        # The cut is the last row of the run: the number not listed, and no seconds, never 0.
+        self.assertEqual(["… 1950 more directories not listed", "—"], rows[50][4:])
+        self.assertEqual(rows[0][:4], rows[50][:4])
+        self.assertLess(self.output.stat().st_size, 10000)
+
+    def test_fifty_blocks_are_all_listed_with_no_cut_row(self) -> None:
+        result = self.run_gate(self.flood(50))
+        self.assertEqual(0, result.returncode, result.stderr)
+        rows = self.rows()
+        self.assertEqual(50, len(rows))
+        self.assertEqual(["d49", "0.1"], rows[49][4:])
+
+    def test_time_after_a_block_not_listed_is_not_given_to_the_last_listed_block(self) -> None:
+        # d49 has no Ran line; the Ran line after d50, which is not listed, must not become its time.
+        result = self.run_gate([sys.executable, "-c",
+                                "import sys\nfor i in range(49):\n"
+                                "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)\n"
+                                "sys.stdout.write('== d49\\n== d50\\nRan 1 test in 9.9s\\n')"])
+        self.assertEqual(0, result.returncode, result.stderr)
+        rows = self.rows()
+        self.assertEqual(["d49", "unknown"], rows[49][4:])
+        self.assertEqual(["… 1 more directories not listed", "—"], rows[50][4:])
+
+    def test_a_long_directory_line_is_cut_with_a_mark(self) -> None:
+        result = self.run_gate(printed(b"== " + b"x" * 5000 + b"\nRan 1 test in 0.1s\n"))
+        self.assertEqual(0, result.returncode, result.stderr)
+        cells = self.rows()[0][4:]
+        self.assertEqual("x" * 199 + "…", cells[0])
+        self.assertEqual("0.1", cells[1])
+
+    def test_a_directory_of_exactly_the_cap_is_kept_whole(self) -> None:
+        result = self.run_gate(printed(b"== " + b"y" * 200 + b"\nRan 1 test in 0.1s\n"))
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("y" * 200, self.rows()[0][4])
+
+
 class PassThroughTest(GateTimesTest):
 
     def test_exit_code_of_the_command_is_passed_on(self) -> None:

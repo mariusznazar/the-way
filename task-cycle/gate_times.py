@@ -12,7 +12,10 @@ only the lines it reads for the times. The exit code is the command's own.
 The times: the total wall time of the run, in seconds to three decimals; and for each block that
 `gate/run_tests.py` opens with a line `== <directory>`, the time of the first line `Ran <n> tests in
 <s>s` before the next block, kept as printed, or `unknown` where there is none. Text before the first
-block belongs to no directory.
+block belongs to no directory. A run lists at most 50 directories, the number the audit reads, and a
+directory cell is cut at 200 characters, ending in `…` where cut; the directories after the fiftieth
+are not listed, and a last row of the run says how many (`… <n> more directories not listed`, with
+`—` for its seconds), so that the record stays small and no cut is read as a time.
 
 The runs at the same time: each run makes an empty file in the registry (default `~/.the-way/gate_runs`)
 named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_<end ms>_<token>.run`.
@@ -51,6 +54,8 @@ DAY_MS = 24 * HOUR_MS
 RUNNING_LIMIT_MS = 6 * HOUR_MS
 CHUNK = 65536
 LINE_LIMIT = 1 << 20  # a line is read for the times up to this many bytes, so that memory stays bounded
+MAX_DIRECTORIES = 50  # the audit lists no more directories of a run
+DIRECTORY_CAP = 200  # the audit keeps no more characters of a directory
 UNKNOWN = "unknown"
 NONE = "—"
 BLOCK = "== "
@@ -122,18 +127,27 @@ def cell(text: str) -> str:
     return " ".join(cleaned.split()).replace("|", "/")
 
 
+def cut(text: str) -> str:
+    """The text as it is, or cut to DIRECTORY_CAP characters ending in `…`."""
+    return text if len(text) <= DIRECTORY_CAP else text[:DIRECTORY_CAP - 1] + "…"
+
+
 class Times:
     """The blocks of the gate's output and the time each block gives, read line by line."""
 
     def __init__(self) -> None:
         self.blocks: list[list[str | None]] = []  # [directory, seconds as printed or None]
+        self.not_listed = 0  # blocks after the last one kept; their lines give no time to a kept one
 
     def line(self, raw: bytes) -> None:
         text = raw.rstrip(b"\r").decode("utf-8", errors="replace")
         if text.startswith(BLOCK):
-            self.blocks.append([text[len(BLOCK):], None])
+            if len(self.blocks) >= MAX_DIRECTORIES:
+                self.not_listed += 1
+            else:
+                self.blocks.append([cut(cell(text[len(BLOCK):])), None])
             return
-        if not self.blocks:
+        if not self.blocks or self.not_listed:
             return
         matched = RAN.fullmatch(text.rstrip())
         if matched and self.blocks[-1][1] is None:
@@ -232,8 +246,10 @@ def rows(started: str, code: int, total: str, others: str, times: Times) -> list
     head = [started, str(code), total, others]
     if not times.blocks:
         return ["| " + " | ".join(head + [NONE, NONE]) + " |"]
-    return ["| " + " | ".join(head + [cell(directory), seconds or UNKNOWN]) + " |"
-            for directory, seconds in times.blocks]
+    listed = [[directory, seconds or UNKNOWN] for directory, seconds in times.blocks]
+    if times.not_listed:
+        listed.append([f"… {times.not_listed} more directories not listed", NONE])
+    return ["| " + " | ".join(head + pair) + " |" for pair in listed]
 
 
 def exit_code(code: int) -> int:
