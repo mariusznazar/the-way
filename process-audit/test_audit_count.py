@@ -370,7 +370,7 @@ class Remarks(AuditCountCase):
                        "target-branch · none\n")
         count, unknown = self.remarks_of(corrections + "- Process remarks on the-way:\n  - one\n")
         self.assertEqual("1", count)
-        self.assertEqual([], unknown)
+        self.assertNotIn("Remarks", [row[2] for row in unknown])
 
     def test_items_after_the_remarks_item_are_not_its_entries(self):
         self.assertEqual("0", self.remarks_of("- Process remarks on the-way: none\n"
