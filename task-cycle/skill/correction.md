@@ -54,7 +54,7 @@ after the request opened*, as `task-cycle/record_template.md` gives it: the file
 each pair `<source> · <kind>` of the correction once (WAY-355, WAY-356). Take the source from what
 started the correction: `item <n>` for the human's answer to an item of the request's *For you to
 decide*, `<n>` being the number of that item's kind in `request_template.md`, as in item 8
-above, never the number the item had in the description; `remark` for a remark of the human
+below, never the number the item had in the description; `remark` for a remark of the human
 outside any item; `target-branch` for a correction that exists only to refresh the target branch
 at the human's request. Judge each kind by one test against the documents: `defect` where what the
 correction changes was required by the approved task document or by the foundation, or is a

@@ -11736,7 +11736,7 @@ of WAY-353, and otherwise the address of the request that introduced the defect,
 each change where the defects come from several, joined by ` · `, the address of the commit for a
 change that came without a request, or `unknown — <why the change cannot be established>`; the
 agent that refines the task fills it, never the cycle. A task document written before the line has
-none, and a missing line means that the task was not assessed, never `none`.
+no line, and a missing line means that the task was not assessed, never `none`.
 
 - **Scope:** project-level, task-cycle, process-audit
 - **Based on:** none

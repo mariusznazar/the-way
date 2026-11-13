@@ -109,8 +109,9 @@ none of these (WAY-353). The line of a fixing task names the request that introd
 by its address, with one address for each change where the defects come from several, joined by
 ` · `; a change that came without a request is named by the address of its commit; where the
 change cannot be established, the line reads `unknown — ` and the reason, in the document's
-language. A task document written before this line has none, and a missing line means that the
-task was not assessed, never `none`. `TODO` marks a missing answer; never use it to make an unfinished task look ready.
+language. A task document written before this line has no line, and a missing line means that the
+task was not assessed, never `none`.
+`TODO` marks a missing answer; never use it to make an unfinished task look ready.
 `ready for approval` is a conversation turn result, never a value of `Status:`. Every task,
 including a manually refined one with no candidates, waits for the human to see and accept its
 complete final document before `ready for cycle` (WAY-124). Candidate selection and Human-action

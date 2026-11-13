@@ -24,7 +24,7 @@ after a merge, the addresses of the requests, or commits, that introduced the de
 `unknown` with the reason; apply the template's test of what such a
 task is, which keeps out a new need, a change of mind, a gap of the earlier task and maintenance
 (WAY-353). Where the human reopens a task document written before this line, add the line; a
-document the refinement does not reopen keeps none, and its missing line means that it was not
+document the refinement does not reopen keeps no line, and its missing line means that it was not
 assessed.
 
 Keep Description to what an implementer needs to take the task. Put likely follow-up answers in
