@@ -47,6 +47,7 @@ of the coding discipline in their places (WAY-171).
 ### Business events
 ### Secrets and personal data
 ### Logging scope
+### Size of a function and a file
 ### <further rules of the whole product>
 
 ## Examples
@@ -58,16 +59,23 @@ of the coding discipline in their places (WAY-171).
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
   template of guidelines gives a rule. The rule of each standing check names the invariants of that
-  check as the section "What each section carries" gives; any other rule names an invariant where a cheap test checks it on a
+  check, and the rule of size its own, as the section "What each section carries" gives; any other
+  rule names an invariant where a cheap test checks it on a
   convention of the product's code, and otherwise reads `none`, the review of each change the rule
-  reaches comparing the change with it (WAY-168, WAY-202).
+  reaches comparing the change with it (WAY-168, WAY-202, WAY-360).
 - The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
   order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
   product's decision that departs from it with its reason (WAY-171, WAY-202).
 - The six required rules on failures and logs, from `### Recording a failure` to `### Logging scope`,
-  follow the standing checks in the order above, and the product's further rules follow those; a
-  product that already has further rules takes the six in between when it adds them (WAY-271). A
-  file of a kind holds none of the six.
+  follow the standing checks in the order above, and the rule of size below and then the product's
+  further rules follow those; a product that already has further rules takes the six in between
+  when it adds them (WAY-271). A file of a kind holds none of the six.
+- The required rule `### Size of a function and a file` follows the six, and the product's further
+  rules follow it; a product that already has further rules takes it in between when it adds it. It
+  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind
+  holds no such rule, and a product that goes without it reads `none — <PREFIX-NN>`, naming the
+  product's decision that departs from it with its reason; a reviewer's finding about the structure
+  of such a product's code is then always Minor (WAY-360, WAY-173, WAY-363).
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
@@ -213,6 +221,30 @@ those decisions and invariants in its own foundation; the coding guidelines name
   principle of the product's decision, in the change that brings it; where it points to a person,
   the number the product gives a user included, only with the human's consent; adding an item
   changes no decision (WAY-274).
+- **Size of a function and a file** — rule. It is none of the three standing checks, and the linter's set holds no
+  rule of it: the linter's rules block only where every report leads to a change worth making
+  (WAY-203), while a function that stays whole over the threshold is an exception the product
+  records. Size is the number of lines (WAY-360). Its text says that the thresholds and the
+  exceptions stand in the product's decision on the rule. It carries:
+  - *Decision*: the product's one decision on this rule. It gives the threshold of a function and
+    the threshold of a file, set after a trial run of sizes on the product's existing code, and the
+    exceptions, each a function or a file kept whole over a threshold, named by its place, with its
+    reason; or it departs from the rule with its reason, and the heading then holds only
+    `none — <PREFIX-NN>` (WAY-360, WAY-173). The thresholds and the exceptions stand in that
+    decision alone, and the rule repeats none of them (WAY-168, WAY-312);
+  - *Invariant*: that no function and no file of the parts named is longer than its threshold,
+    other than those the decision's exceptions name. Its test stands in the product's suite and
+    runs apart from the linter's run: a run of a tool the product already has with the size rules
+    alone, or of a tool the decision adopts. Where it fails it names every function and file over
+    a threshold, each with its size, and no command of its own that counts sizes stands in the
+    guidelines or the instructions beside the gate (WAY-361, WAY-16). The test's configuration lists the exceptions of the
+    decision and no other, so that adding one is a change of the decision, which the human
+    approves (WAY-172). Where code other than those exceptions stands over a threshold when the rule
+    enters, the invariant is marked violated until that code is cleaned (WAY-51), and the review of each change
+    to the files of the parts the invariant names keeps a cleaned file or a new one from going over
+    again. The invariant's *Part* names the parts holding the code it reads and the part holding the
+    tool's configuration, as a standing check's does;
+  - *Good* and *Bad*: this template proposes none; the product writes them or `none`.
 - **Further rules of the whole product** — rule each, naming an invariant where a cheap test checks
   it on a convention of the code and otherwise `none` (WAY-168).
 - **`## Files of this kind`** — a table of the file of a kind, one row for each file of the kind it

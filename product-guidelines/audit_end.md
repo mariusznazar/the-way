@@ -51,8 +51,8 @@ free.
 
 - **Whether this audit stops.** Run the other skill's step 1 now, by the file this skill's step 3
   names, and take from it its mode alone: the check of the required headings of the rules on
-  failures and logs, with the question to the human it brings at a refresh, waits for the turn of
-  the skill whose step it is. This audit stops here where the mode gives the other skill the audit
+  failures and logs and of the rule of size, with the questions to the human they bring at a
+  refresh, waits for the turn of the skill whose step it is. This audit stops here where the mode gives the other skill the audit
   in this task and that audit has not yet run. The test is the audit that runs, never what the
   product has: the route of one kind of code and a new level of tests are no audit, so with either
   of them this audit does not stop and closes the list here, as the audit that runs last.

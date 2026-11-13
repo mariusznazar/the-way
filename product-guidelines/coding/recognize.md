@@ -34,6 +34,11 @@
   rules as `settle.md` beside this skill words them. The human's yes makes the task an extension,
   so steps 2 and 3 run as for one; the human's no is a departure with its reason, which the same
   task writes as the coding template gives (WAY-278, WAY-279).
+- At a refresh, look in the same file for the heading `### Size of a function and a file`, which
+  stands in the coding template and stays in English; a heading holding `none —` is no absence.
+  Where it is missing, propose the rule as `settle.md` words it, and the human's yes or no goes as
+  the bullet above gives for the rules on failures and logs: the yes makes the task an extension,
+  and the no is a departure with its reason (WAY-360).
 
 A refresh updates or corrects accepted guidelines within the scope they already cover,
 including adapting them to a new version of a tool the product uses. An extension covers something

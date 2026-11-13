@@ -22,3 +22,10 @@ Where the product has code:
   list, told by its effect, its place the number of files, with no rule's name, and the output's
   path stays in *Context* (WAY-281). The rules that went among the examples flagged sound code and
   yield no cause. The formatter's count never enters the list: a reformatting is no finding.
+- **Trial run of sizes** (WAY-360). In the same scratch worktree, count the lines of every function
+  and every file of the parts the rule of size reads, with the tool the product already has or a
+  throwaway count kept under `.runs/coding/`, and for a few candidate thresholds count how many
+  functions and files stand over each, and name the longest of each by place and size. The count
+  judges no function: it goes to step 4 as the evidence the human sets the thresholds and the
+  exceptions from. Once the exceptions are settled, where code they do not name stands over a
+  threshold, step 4 proposes the rule's invariant marked violated (WAY-51).

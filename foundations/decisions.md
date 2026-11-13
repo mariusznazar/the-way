@@ -4912,7 +4912,10 @@ an invariant's test, which is seen failing once in its own right (WAY-08). The r
 agent harness's practice for its workers the naming of the requirement most likely to be false and
 the check that would catch it.
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
-would attack its own work before review.
+would attack its own work before review; a review without the author's report — a reviewer of the
+orchestrator's class without the report caught 4 and 3 of the 14 reference errors, with the report 5
+and 6, and used more tokens, 112.47 million against 90.20 million in eight runs; the conditions of
+the measurement stand in WAY-229.
 
 ### WAY-165 — What must an answer to each matter of an agent's way to the running product settle?
 
@@ -6882,8 +6885,14 @@ and on the route without a plan the orchestrator, who judged that one agent can 
 knows what that agent faces. A failure gets one retry a class higher before the cycle stops, which
 costs less than running every slice on the strongest class and less than stopping at the first
 failure of a cheaper one; the slice's own review where it has one, and the review of the whole
-change, find what a cheaper model got wrong. Classes in general terms survive the release of new
-models and fit any harness.
+change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on four
+merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on each
+change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
+could not run the product's tests, and worked on a reviewer's instruction newer than the changes
+they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in 4 of the 8 runs,
+each time a change in which the original review had found a blocking flaw, repaired later, and a
+reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
+8. Classes in general terms survive the release of new models and fit any harness.
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
@@ -6893,8 +6902,11 @@ orchestrator's class — it pays a second agent to read the foundation again, wh
 return step judges it on that class; the orchestrator's class as the default — it leaves the cheaper
 class to a judgment made slice by slice and rarely taken; retries without bound, or on the same
 class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or a
-review — their errors reach every later step; model names in the process — they age with every
-release.
+review — their errors reach every later step; two runs of a reviewer of a cheaper class in place of
+one run of the orchestrator's class — both runs together caught 5 of the 14 reference errors, as
+many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
+verdict, since a change with three blocking flaws got a PASS in both; model names in the process —
+they age with every release.
 
 ### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
 
@@ -11958,6 +11970,252 @@ with a route to counting for everyone who keeps a register.
 that every problem comes from a stage report, the nightly review departs from the description that
 is to lead it, and the line in the tasks of the-way has no route to counting for anyone but its
 author.
+
+### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
+
+The template of the coding discipline requires, in the general file of a product's coding guidelines,
+a rule of the size of a function and a file under the heading `### Size of a function and a file`,
+after the six rules on failures and logs, with an invariant of its own and a test of its own, outside
+the set of rules of the product's linter. A product sets its thresholds after a trial run on its
+existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
+a decision of its log that gives the reason (WAY-173), and a product that already has coding
+guidelines gets the rule by an ordinary extension, as WAY-278 gives it for the rules on failures and
+logs. Where code other than the exceptions of the product's decision stands over a threshold, the
+rule's invariant is marked violated until that code is cleaned (WAY-51).
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-168
+- **Verification:** an agent compares the template, the skill of the coding guidelines and a
+  product's work with the decision:
+  - complies: the required form of the general file holds `### Size of a function and a file` after
+    `### Logging scope`, and the product's further rules follow it; a product whose code holds one
+    function far longer than the rest sets its thresholds after the trial run shows it, lists that
+    function as an exception with its reason in its decision where the human keeps it whole, and
+    marks the rule's invariant violated where other code stands over; a product of one small script
+    departs from the rule by a decision with its reason, and the heading holds `none — <PREFIX-NN>`;
+    a refresh of a product's coding guidelines that finds the heading missing proposes the rule, and
+    the human's yes makes the task an extension;
+  - violates: the template offers the rule as a further rule a product may take up; the rule's test
+    stands among the rules of the linter's set; a product leaves the heading out with no decision;
+    the thresholds stand in the rule's text or are taken from the template instead of standing in the
+    product's decision; a refresh passes over the missing heading in silence.
+- **Origin:** none
+
+*Rationale:* a product with no rule of size has no threshold, so a change stopped for standing over
+a threshold and a plan that makes room first do nothing there, and a rule a skill only proposes stays
+unadopted for as long as nobody takes the proposal up (WAY-202); required, the rule is left out only
+by a decision that gives the reason (WAY-173). The rule stands outside the linter's set because that
+set blocks only through rules every report of which leads to a change worth making (WAY-203), and a
+long function that is best left whole is a case the product knows and records as an exception, which
+keeps the threshold the product's choice and still lets it block. The thresholds come from a trial run
+on the product's own code, since only that shows what a threshold stops and what already stands over
+it, as the split of a linter's set comes from one (WAY-204). A threshold on a number was twice refused
+as a rule, for the share of copies the tests fail (WAY-252) and for the words of a skill (WAY-256),
+each as a number to chase; a size is a number the code itself holds, the product sets it from its own
+code, and an exception is the way out for a function worth keeping whole. A refresh stays within what
+the guidelines already cover and can only notice the rule's absence and put it to the human, where a
+no stays on record as a departure and the absence does not read as an oversight (WAY-278). The price:
+a product learns of the rule only at a change of its guidelines or when it opens an extension, a
+count of lines says nothing of whether a function is well made, and a function can be split only to
+stand under a threshold.
+*Rejected:* the rule proposed as a further rule a product may take up, with no decision on departing
+from it — a product with no rule has no threshold, so blocking a change over a threshold and the
+change in a task's plan do nothing there, and a skill that only proposes the checks leaves it so for
+as long as nobody takes the proposal up (WAY-202); no rule in the template, only the question about
+the structure of code in the review — nothing blocks, and the assessment of structure depends on the
+reviewer, with the same chance in the grade as today for a remark on the form of an entry.
+
+### WAY-361 — How does the review of a change get the sizes of functions and files from a product?
+
+The test of a product's rule of size, when it fails, names every function and file over a threshold
+with its size, and the reviewer of the whole change runs it as an ordinary test of the product's
+suite on the state before the change and on the state after it. A product has no command of its own
+that gives the sizes of functions: the one command that runs all of its tests stays the only one
+(WAY-16).
+
+- **Scope:** product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-360 · derives from WAY-16
+- **Verification:** an agent compares the template, the reviewer's run and a product's guidelines
+  with the decision:
+  - complies: a test of the rule of size that finds three functions and a file over their thresholds
+    fails with a message naming each of the four, with its place and its size; the reviewer of the
+    whole change runs that test in a worktree of the base and in one of the head, and reports the
+    functions and files named after the change that were not named before it;
+  - violates: the test stops at the first function over a threshold, or names a function with no
+    size; a product's guidelines or instructions name a command that prints the size of each function
+    beside the command that runs all the tests; the orchestrator runs a command of the product that
+    counts sizes before the review and hands the reviewer its output.
+- **Origin:** none
+
+*Rationale:* the test of the rule of size is already a test of the suite, so running it on the base
+and on the head costs the reviewer two runs and no new command, and the difference between its two
+failures shows what the change pushed over a threshold and what it left; a failure that names every
+function and file with its size gives the reviewer the numbers without a second tool. One command
+runs every test so that no list of commands written by hand drifts from the tests (WAY-16), and the
+rule of size needs no exception to that. The price: the test gives sizes only of what stands over a
+threshold, so the size of a function under its threshold shows only in the diff.
+*Rejected:* a command of the product that writes the size of each function of the files of a change,
+run by the orchestrator before the review of the whole change — a new decision with a second exception
+to WAY-16, a second command in every product and a step of the orchestrator in every cycle, for a
+count of functions under the threshold, which by the threshold are in order.
+
+### WAY-362 — What does the review of the whole change ask about the structure of the code a change leaves, and from which numbers?
+
+The reviewer of the whole change judges what the change leaves in the structure of the code: the
+growth of a function or a file, code that has no user after the change, and a name that stopped being
+true. It takes its numbers from a script of the-way that gives, for the range of the change, the lines
+of each changed file before the change and after it, and from the test of the product's rule of size
+(WAY-361), run on the state before the change and on the state after it.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136 · derives from WAY-361
+- **Verification:** an agent compares the review of the whole change with the decision:
+  - complies: the reviewer's report names a file that grew from 410 lines to 520 by the script's two
+    numbers, names the function the diff reaches in it, and reports that the test of the rule of size
+    names that function on the head and not on the base; it also lists a helper the change left with
+    no caller, and a name that no longer says what the function does;
+  - violates: the reviewer reads only the diff and says nothing of the structure the change leaves; a
+    growth of a file is named with no number; the reviewer runs no test of the rule of size where the
+    product's guidelines hold one; the reviewer runs it only on the head.
+- **Origin:** none
+
+*Rationale:* a diff shows the lines a change adds, not the size of the function or the file they reach,
+so a reviewer reading it sees each addition as small while the function grows; in one product's game
+a function reached 456 lines and another 781 unnoticed. A reviewer of the whole
+change reads every file the change touches and so is the one place where the structure it leaves can
+be judged; the lines of each changed file before and after, and the functions and files over a
+threshold on both states, turn the question from an impression into a reading with numbers. The
+threshold's test names what stands over it (WAY-361), and the difference between its runs shows what
+the change pushed over.
+*Rejected:* unknown
+
+### WAY-363 — How does a reviewer grade a finding about the structure of code?
+
+A reviewer grades as Minor a finding about the structure of code that lies below the threshold of the
+rule of size in the product's coding guidelines, and one in a product that has no rule of size — it
+departed from the rule by a decision, or has no coding guidelines at all — and judges its scope as for
+any finding (WAY-161). A finding about a function or a file over a threshold is graded as any other
+finding.
+
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** narrows WAY-161
+- **Verification:** an agent compares a review finding with the decision:
+  - complies: a reviewer who finds that a change added forty lines to a function that stays under the
+    threshold, or left a helper with no caller, grades each finding Minor, and the fix for Minor
+    findings (WAY-161) takes in what the change itself left; a reviewer who finds that a script of
+    this repository, which has no coding guidelines (WAY-328), grew by forty lines in one function,
+    or a product that departed from the rule of size by a decision, grades the finding Minor; a
+    finding that a function the change pushed over the threshold stands over it is graded as any
+    other finding; a finding about code from before the change, which restructuring would reach,
+    goes to the request's list as a finding outside the task;
+  - violates: a finding that a function grew but stays under the threshold is graded Important and
+    blocks the change; a finding about structure in a product with no rule of size is graded
+    Important and blocks the change; a finding about a function over a threshold is graded Minor
+    because it is about structure; the orchestrator regrades a finding of structure or moves it
+    between the lists.
+- **Origin:** none
+
+*Rationale:* whether a structure is good is a judgment, and a grade that follows it blocks or lets
+through a change by the reviewer's impression, with the same chance in the grade that a remark on the
+form of an entry shows (WAY-364). A Minor finding within the task is still fixed before the request
+opens (WAY-161), so what the change itself leaves, such as code with no user and a name no longer
+true, is repaired in the review of the whole change, and the finding is left out of the blocking only.
+Where code stands over the threshold, a number settles it and not the reviewer's impression: the test
+of the rule of size stops the change, and where the rule's invariant is marked violated, the review
+that keeps a cleaned file or a new one from breaking it stops it (WAY-51). Where the product has no
+rule of size there is no threshold and no such test, so the same reasoning leaves a finding of
+structure Minor and not blocking. The reviewer still judges the scope of each finding, so a restructuring of code from before the change reaches the request's list
+and not the fix.
+*Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
+block the change and give a round of fixes, with the same chance in the grade as today for the form
+of an entry; findings of structure always outside the task's scope, on the request's list and for the
+review of the foundation — code with no user and a name no longer true, which the change itself
+left, are cleaned only by a separate task after the review of the foundation, a full cycle; the
+finding graded as any other where the product has no rule of size — with no threshold a finding of
+structure can block the change on the reviewer's impression and give a round of correction, with
+the same chance in the grade as today for the form of an entry.
+
+### WAY-364 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
+
+A reviewer grades as Minor a finding that a foundation entry departs from the form of its template,
+where the entry's content agrees with the code, unless the finding cites a sentence a reader would
+read wrongly through the departure; a finding that cites such a sentence is graded as any other. A
+finding that the content of an entry does not agree with the code stays Important (WAY-263).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-161
+- **Verification:** an agent compares a review finding with the decision:
+  - complies: a reviewer who finds that a decision's *Origin* names a task document, while every
+    sentence of the decision agrees with the code, and cites no sentence read wrongly, grades the
+    finding Minor; a reviewer who cites the sentence of a rationale that holds a rule a reader would
+    take as binding, and shows how it is read, grades the finding as any other; a finding that an
+    entry says what the code does not stays Important;
+  - violates: a finding of a departure from the form that cites no sentence is graded Important and
+    blocks the change; a finding that cites a sentence read wrongly is graded Minor because it is
+    about form; a finding that the content of an entry disagrees with the code is graded Minor
+    because the entry's form is also off.
+- **Origin:** none
+
+*Rationale:* the same remark on the form of an entry was graded blocking in 9 runs of an experiment
+with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the conditions of the
+measurement stand in WAY-229), so the verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
+round of fixes, and a fix that fails leaves the request blocked for form alone (WAY-162); graded
+always Minor, a departure that makes a reader take an entry wrongly, such as a binding rule written in
+the rationale and not in a binding sentence, would not block and would not be repaired in the reviews
+after the review of the whole change. A Minor finding within the task is still fixed before the request
+opens (WAY-161), so the departure is repaired, and the grade changes three things: the verdict, a pass
+where a fail stood; the result of a failed fix, which reverts and leaves the request unblocked; and the
+lot of the finding in later reviews, where a Minor finding goes to the request's list and is not fixed.
+A mismatch of content with the code stays Important, since a request carrying it carries a rule the
+code does not keep (WAY-263).
+*Rejected:* a departure from the form always Minor — a departure by which a reader reads an entry
+wrongly, such as a binding rule in the rationale and not in the binding sentence, would not block and
+in reviews after the review of the whole change is not repaired; a departure from the form always
+Important, that is, blocking — every departure from the form is a FAIL and a round of fixes, and a
+fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
+have reached 6 of 32 runs.
+
+### WAY-365 — What does a change do where it adds to a function or a file that stands over the threshold of the rule of size?
+
+Where a slice of a plan adds to a function or a file that stands over the threshold of the product's
+rule of size, the plan begins with a slice that moves a part of that function or file out without a
+change of behaviour, writes the choice in its table of choices, and puts the slice that adds after it.
+The author of a change without a plan makes that move the first commit that changes the code. Such an addition is a choice of how to make the change and no open design choice, so it gets no
+spec (WAY-135).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136 · derives from WAY-360
+- **Verification:** an agent compares the plan, the author's commits and the record of choices with
+  the decision:
+  - complies: a task whose change adds a branch to a function that stands over its threshold gets a
+    plan whose first slice moves a part of that function into a function of its own, with the tests
+    that cover it as its checks, and whose second slice adds the branch, the move written in the
+    table of choices; the one author of the same task makes the move its first commit of code, names
+    it among its choices, and adds the branch in the commit after it;
+  - violates: a plan whose slice adds to a function over its threshold with no slice that moves a
+    part of it out; a spec written for such an addition; an author who adds in place and moves in the
+    same commit or after it; a move that changes what the function does.
+- **Origin:** none
+
+*Rationale:* a threshold stops a change only after the code is written, and where the rule's
+invariant is marked violated, an addition to a function not yet cleaned stops neither the test nor
+the review, which guards only a cleaned file and a new one (WAY-51); so the room is made before the
+addition. A move out with no change of behaviour is a change the tests that already cover the function
+can check, and the slice that adds then lands in a place under the threshold. Moving is a choice of
+how to make a change whose requirement the task and the foundation settle, so the plan's table of
+choices holds it, and the open design choice that WAY-135 sends to a spec is not met.
+*Rejected:* treating the addition as an open design choice, with a spec before the code — two further
+stages, the designer and the reviewer of the spec, at each such addition, and a change to WAY-135,
+whose reasoning ties the spec to a foundation entry that an agent designs; no change in the plan —
+where the rule's invariant is not marked violated, the excess shows only in the gate after the code
+is written, and where it is marked violated, an addition to a function not yet cleaned stops neither
+the test nor the review (WAY-51).
 
 ## Withdrawn identifiers
 

@@ -62,6 +62,32 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     - the list of today, at adoption from what the product has in its code or in its plan, and the
       number the product gives a user, put to the human at that moment, which takes the human's
       consent if added later (WAY-274).
+  - where `guidelines/coding.md` does not yet hold `### Size of a function and a file`, at the
+    first guidelines, at any extension whatever else the task is about, and at a refresh
+    `recognize.md` sends here, the product's one decision on the rule of the size of a function and
+    a file, adopting it or departing from it with its reason; the task is not ready without it
+    (WAY-360). A heading holding `none —` is no absence. It takes, asked after the trial run of
+    sizes that `trial_run.md` gives, on the product's existing code, and where the product has no
+    code, with no trial run:
+    - the rule, shown by its effect: a function or a file that grows past its size stops a change
+      from passing, and a change that adds to one already past it begins by moving a part out.
+      First say in plain words what the size of a function is: how many lines it takes, which makes
+      it harder to read, test and change the longer it is;
+    - the thresholds of a function and of a file, in lines. Show the trial run's count: how many
+      functions and files stand over each candidate, and the longest ones by place and size, so that
+      the human sees what a threshold stops and what is already over it; where the product has no
+      code, put the thresholds as a question with the ways open and their cost, and say that no
+      code of the product was tried. Say what a threshold means later: a function or a file over it
+      fails the test, and where code other than the exceptions is already over, the invariant stands
+      marked violated until that code is cleaned (WAY-51);
+    - the exceptions: each function or file that stays whole over a threshold, named by its place
+      with the reason, which the human accepts one by one; later ones are added by a change of the
+      decision, which the human approves (WAY-172);
+    - the tool that counts: look first at what the product has, a linter that can run its size
+      rules alone included (WAY-210); a new tool is a technology question of the task, put by
+      `new_tools.md`;
+    - or a departure from the rule, with its reason. Say what goes with it: with no rule of size, a
+      reviewer's finding about the structure of the product's code is always Minor (WAY-363).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code, the rule of each standing check always; a rule no such test checks gets none,
   and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,
@@ -81,7 +107,15 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for a rule on failures and logs, none, unless a cheap test checks the whole rule. A test that
     catches only a fragment of one, such as an empty block that catches an error, is a rule of the
     linter's set under the linter's invariant, once it passes the trial WAY-203 gives, and no rule
-    of these (WAY-271).
+    of these (WAY-271);
+  - for the rule of size, one invariant that no function and no file of the parts named is over its
+    threshold except the exceptions of the decision, with the test the coding template's section
+    "What each section carries" gives, run apart from the linter's run (WAY-360, WAY-361); where
+    the trial run found code over a threshold that the exceptions, settled before this, do not name,
+    it is marked violated by a change of the foundation the human accepts, until that code is
+    cleaned (WAY-51), and its weak point, that until then only
+    the review of each change to those files keeps a cleaned file or a new one under the threshold,
+    is said when it is proposed.
 - **Weak points.** Name each when its choice is proposed:
   - for a product with no code, that the recommended rules block with no evidence from the
     product's code, and that the first report of one that leads to no change worth making takes it
@@ -102,7 +136,10 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for the business events, that the rule covers only listed events and the agent adds them, so a
     function nobody lists leaves no line (WAY-275);
   - for the last-resort handler, that it usually writes without identifiers, and that a program that
-    dies whole writes only what it manages to (WAY-272).
+    dies whole writes only what it manages to (WAY-272);
+  - for the rule of size, that a count of lines says nothing of whether a function is well made, and
+    that a function can be split only to stand under a threshold, which the exceptions and the
+    review's question about the structure of the code a change leaves are there to meet (WAY-360).
 - **The top of the audit's list.** Where step 3's audit ran, the proposal of which causes of the top
   the task takes joins the set, and the human decides on it, as "At step 4" in
   `product-guidelines/audit_end.md` gives (WAY-284).

@@ -19,6 +19,10 @@ gives.
     `guidelines/coding.md`, or their markers, with the list of `### Logging scope` at adoption, as
     the coding template gives (WAY-271, WAY-279), and install and configure the library that writes
     a log line, where the task settles one (WAY-277);
+  - where the task settles the rule of size, write `### Size of a function and a file` in
+    `guidelines/coding.md`, or its marker, and, where the task adopts it, configure the tool that
+    counts sizes with the thresholds and the exceptions of the decision and write the test of the
+    rule's invariant as the coding template gives (WAY-360, WAY-361);
   - write the test of each new invariant in the product's suite, seen failing once (WAY-08,
     WAY-61);
   - apply `maintain-instruction-files` for the pointer in the product's root `AGENTS.md`, outside
@@ -39,7 +43,9 @@ gives.
   makes a comment that turns a rule off have no effect, where the tool has one, the rules on
   failures and logs adopted or each departure with its reason, the form of a log line, the principle
   of the logging scope, the boundary of what an agent adds alone, the list of today with the number
-  the product gives a user, and the library that writes a line, where one is chosen — each with
+  the product gives a user, the library that writes a line, where one is chosen, and the rule of
+  size adopted with its thresholds, its exceptions and the tool that counts, or departed from with
+  its reason — each with
   the human's words and date as its source, and the ways the human did not choose under it as the
   task template gives (WAY-134). The human's decision on the top of the audit's list and each answer
   on a backlog task stand here too, with the human's words and date.

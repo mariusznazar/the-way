@@ -8,8 +8,8 @@ description: Use when a product's code needs coding guidelines written before it
 Leads the matters of coding guidelines in a task's refinement: it recognizes what the product's code
 already has, gathers the starting set of standing checks or audits the code, and settles with the
 human every standing check, exemplar and invariant the coding guidelines are to carry, and the
-product's decision on the rules on failures and logs, so that the task's cycle can write them from
-the task document alone. What every file of guidelines holds
+product's decisions on the rules on failures and logs and on the rule of size, so that the task's
+cycle can write them from the task document alone. What every file of guidelines holds
 stands in `product-guidelines/template.md`; what coding guidelines add, and how the cycle's author
 writes their files, in `product-guidelines/coding/template.md`, each rule citing its decision; how
 a skill asks stands in `elements/common/way_of_working.md`; the critique in
@@ -102,8 +102,8 @@ conversation — it opened this skill directly, or resumed the work in a new one
 ## 1. Recognize
 
 At step 1, read `recognize.md` beside this skill. It gives the mode of the work. At a refresh it
-also has you look for the required headings of the rules on failures and logs, which stand in
-`product-guidelines/coding/template.md`: read that template in full for it.
+also has you look for the required headings of the rules on failures and logs and of the rule of
+size, which stand in `product-guidelines/coding/template.md`: read that template in full for it.
 
 ## 2. Starting set
 

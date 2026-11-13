@@ -48,6 +48,14 @@ boundary, a command — say so in your report instead of bending the code to it.
 yielding, make an exploratory edit where the change starts, follow what breaks, and revert the edit
 before you commit.
 
+As the one author, where the change adds to a function or a file that stands over the threshold of
+the rule of size in the product's coding guidelines, make the first commit that changes the code a
+move of a part of that function or file out, with no change of behaviour and the tests that cover
+it passing, and add after it (WAY-365). Name the move among your choices in the report, with the
+way rejected. A slice of a plan that needs such a move has it as the slice before it; the plan
+gives it. Where the product's guidelines hold no rule of size, or the rule reads `none —`, nothing
+of this applies.
+
 ## 2. Tests
 
 - **Test first where it fits.** Where you can name the first failing test in one sentence — a rule,
