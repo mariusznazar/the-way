@@ -47,14 +47,21 @@ These hold at every step.
   endangered the change. Show it beside an issue and leave it to the human to set it against what
   the issue's returns number and what its fix costs. Give no issue a priority, an order or a rank
   from it, and add the levels into no score.
-- **Measures are compared inside a series only** (WAY-339). WAY-339 starts a new series at a new
+- **Measures are compared inside a series only** (WAY-339). A new series of the cost begins at a new
   price list, or at a change of the form of a stage report, of the list of classes or of the
   instructions of the reviewer. The count splits more often than that: at a new price list, at a
   date of the register's list of classes, and at any change of the files of the-way under
   `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec` or of
   `task-cycle/cycle_stages.py`, whatever the change, so that it compares less and never across a
-  change WAY-339 names. Set no number of one series beside a number of another, and no week's count
-  beside the week before; a version of the process is judged by the cycles that ran on it.
+  change WAY-339 names. The mechanism measures (the numbers of how each cycle's agents use context
+  and the prompt cache, from the cycle's `mechanism_measures.md`) and the gate times (the time of
+  each run of the product's gate, from `gate_times.md`) have series of their own (WAY-348, WAY-350):
+  a new series of them begins only at a change of the script that measures them,
+  `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py`. A change of the instructions of the
+  cycle, of the reviewer or of the author starts none of them, and neither does a new price list.
+  Set no number of one series beside a number of another, no number of the measures or the gate
+  times beside a number of the cost, and no week's count beside the week before; a version of the
+  process is judged by the cycles that ran on it.
 - **No frozen earlier tasks are replayed on an old and a new version** (WAY-340). Where the human
   asks for such a comparison, say that the audit holds no such set and judges a version by its own
   cycles.
@@ -106,9 +113,13 @@ price list than `process-audit/price_list.md`; `--today` is the day of the run, 
 waiting count to. Its exit code says:
 
 - `0`: the result is written;
-- `1`: the result is written, but a repository could not be read or a table of the register is
-  refused as a whole; the `Error:` lines on stderr and the result's sections *Repositories* and
-  *Unknown values* name which. Put it before the human at step 3 as the first matter;
+- `1`: the result is written, but a repository could not be read, a table of the register is
+  refused as a whole, or a cycle's copy lacks a field its files need. The `Error:` lines on stderr
+  and the result's sections *Repositories* and *Unknown values* name which. A copy's missing field
+  gives one `Error:` line that names the repository, the cycle's folder, the file of the copy
+  (`stages.md`, `mechanism_measures.md` or `gate_times.md`) and the field it lacks; *Unknown values*
+  names the same file and field beside the values it leaves unknown. Put it before the human at
+  step 3 as the first matter;
 - `2`: an `Error:` line on stderr and nothing written; the line names the file, key, entry or
   argument that is missing or wrong, never a path. A register that lacks a heading, a table or a
   column the count needs, such as a register kept in an earlier form of the template, ends here with
@@ -120,9 +131,13 @@ Then read `count-latest.md` whole.
 
 ## 3. Put the matters before the human
 
-The count has the sections *Repositories*, *Cycles*, *Cost*, *Process versions*, *Problems by
-cycle*, *Fixed issues*, *Open issues*, *Dropped issues*, *Cost of an occurrence by issue* and
-*Unknown values*. Read the newest
+The count has the sections *Repositories*, *Cycles*, *Cost*, *Mechanism measures*, *Gate runs*,
+*Process versions*, *Measure versions*, *Problems by cycle*, *Fixed issues*, *Open issues*, *Dropped
+issues*, *Cost of an occurrence by issue* and *Unknown values*. *Mechanism measures* gives each
+cycle's values of how its agents use context and the prompt cache, and *Gate runs* each run of the
+product's gate with its times; both are read from the cycles' records. *Measure versions* gives
+their medians per version of the process and whether each falls against the version before, series
+by series. Read the newest
 earlier note `audit-<YYYY-MM-DD>.md`, if there is one, only to see which matters the human weighed or
 set aside; say so beside a matter that comes again.
 
@@ -140,9 +155,12 @@ two outcomes: the human weighs it further, or sets it aside.
    below; the user's own tool corrects any other refused row in the register. An archive of earlier
    cycles gives
    `unknown` often: a record with no item *Process remarks on the-way* gives no remarks; a
-   `stages.md` without the working-time lines or the section of tokens by model gives no times and no
-   cost; the share of the cost in fix rounds is `unknown` where the record's *Review rounds* is not
-   in the form `task-cycle/record_template.md` gives, or `stages.md` has no column *Files named*.
+   `stages.md` without the working-time lines gives no times, as an earlier form does; a `stages.md`
+   with neither the section of tokens by model nor the earlier form's table of tokens by model gives
+   no cost, and an earlier form with that table gives the cost from it. The share of the cost in fix
+   rounds is `unknown` where the record's *Review rounds* is not in the form
+   `task-cycle/record_template.md` gives, or `stages.md` has no column *Files named*, which the
+   earlier form lacks.
    That is the state of those records, and no defect of the count.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
@@ -160,6 +178,13 @@ two outcomes: the human weighs it further, or sets it aside.
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
    wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
    the cycles in *No version*, with the reasons *Unknown values* gives.
+   The series of *Measure versions* follow in the same matter, the mechanism measures and the gate
+   times each apart, one series at a time, each with the line that says why it begins where it
+   does. For each series, quote the rows of its table with the table's header row; then what follows
+   from them and what does not; then one open question for the human that the rows answer, with no
+   recommendation. The gate times of runs with another gate beside them are shown apart as the count
+   shows them, and are never compared. A measure is material and never a priority, as the rules of
+   working say of the other numbers.
 
 **A class the list lacks.** Where a row refused for its class, or the human's own reading of a
 problem, shows a problem that no class of the register's *Classes* fits, the list widens; the
