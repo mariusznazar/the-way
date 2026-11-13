@@ -342,9 +342,15 @@ def owned_agent_definition(path: Path) -> bool:
                 head.group(1) == path.stem and head.group(2).endswith(OWN_AGENT_MARK))
 
 
+def is_agent_definition(path: Path) -> bool:
+    """Whether a path the installer writes is an agent type definition: a file directly in the
+    agent directory, where every other path it writes is a skill entry point or a foundation file."""
+    return path.parent.as_posix().endswith("/" + AGENT_DIRECTORY)
+
+
 def owned(path: Path) -> bool:
     """Whether the file at a path the installer writes is the installer's own."""
-    return owned_entry_point(path) if path.name == "SKILL.md" else owned_agent_definition(path)
+    return owned_agent_definition(path) if is_agent_definition(path) else owned_entry_point(path)
 
 
 def stale_agent_definitions(target: Path) -> list[Path]:
@@ -388,8 +394,9 @@ def verify_remote(url: str, commit: str) -> None:
 
 def plan(target: Path, commit: str, url: str) -> tuple[
         dict[Path, str], dict[Path, tuple[str, str]], list[Path], bool, bool, str | None]:
-    """What the run does: the files the installer owns, the shared files, the entry points it
-    deletes, whether it adds or initializes the submodule, and the pin it moves from, if any."""
+    """What the run does: the files the installer owns, the shared files, the entry points and
+    agent definitions it deletes, whether it adds or initializes the submodule, and the pin it
+    moves from, if any."""
     files: dict[Path, str] = {}
     for filename, content in empty_foundations().items():
         files[target / "foundations" / filename] = content
@@ -579,7 +586,7 @@ def run() -> int:
         elif actions[path] == "REPLACE":
             print(shown_diff(name, path.read_bytes().decode("utf-8"), content))
     for path in stale:
-        gone = "skill" if path.name == "SKILL.md" else "agent type"
+        gone = "agent type" if is_agent_definition(path) else "skill"
         print(f"DELETE {path.relative_to(target).as_posix()} (its {gone} is no longer in the-way)")
     for path, (action, text) in shared.items():
         name = path.relative_to(target).as_posix()
@@ -643,7 +650,7 @@ def run() -> int:
             path.write_bytes(content.encode("utf-8"))
     for path in stale:
         path.unlink()
-        if path.name == "SKILL.md" and not any(path.parent.iterdir()):
+        if not is_agent_definition(path) and not any(path.parent.iterdir()):
             path.parent.rmdir()
     for path, (action, text) in shared.items():
         if action == "CREATE":

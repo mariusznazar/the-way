@@ -7873,9 +7873,9 @@ its prompt cache — a container build, a mutation run, a test suite a check nam
 the background and reading its output between waits each shorter than that lifetime, never in one
 wait past it; in Claude Code a subagent's cache lives five minutes by default, so each wait stays
 under about four. The one author's cache lives an hour, which the author's type sets (WAY-368), and
-its waits stay under about four minutes as well, since Claude Code falls back to five minutes where a
-subscription spends usage credits. Where the harness states no cache lifetime, the agent waits as the
-harness allows.
+its waits stay under about four minutes as well, since Claude Code falls back to five minutes where
+a subscription spends usage credits. Where the harness states no cache lifetime, the agent waits as
+the harness allows.
 
 - **Scope:** task-cycle
 - **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
@@ -7900,24 +7900,25 @@ harness allows.
 - **Origin:** none
 
 *Rationale:* an agent whose cache has expired pays at its next step to write its whole context
-again, while a check between waits reads that context from the cache at a fraction of that price;
-a longer cache, where a harness offers one, costs more at every write, also in work that never
-waits. The one author is the exception, since it alone is resumed after each review and for the
-return step, and each such break outlasts five minutes. In a probe of the cache, a subagent with the
-hour, resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and wrote 123,
-where a control with five minutes wrote its whole 4,786 anew. Where the session was started again
-with its saved conversation resumed, the hour did not help: the agent wrote its whole context anew at
-2.0 times the price of input, where a write to a five-minute cache costs 1.25 times, in one try,
-twice; the account in *Rejected* does not cover a restart. The price: an hour that Claude Code ignores while a
-subscription spends usage credits leaves the author at five minutes, so its waits keep to four.
+again, while a check between waits reads that context from the cache at a fraction of that price; a
+longer cache, where a harness offers one, costs more at every write, also in work that never waits.
+The one author is the exception, since it alone is resumed after each review and for the return
+step, and each such break outlasts five minutes. In a probe of the cache, a subagent with the hour,
+resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and wrote 123, where
+a control with five minutes wrote its whole 4,786 anew. Where the session was started again with its
+saved conversation resumed, the hour did not help: the agent wrote its whole context anew at 2.0
+times the price of input, where a write to a five-minute cache costs 1.25 times, in one try, twice;
+the account in *Rejected* does not cover a restart. The price: an hour that Claude Code ignores
+while a subscription spends usage credits leaves the author at five minutes, so its waits keep to
+four.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
 the few that wait: counted on the session records of past cycles of one game product and of the-way,
 an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a cycle of
-the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6% and, where the
-author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it raises the cost of
-a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game cycle and by 1.0% in
-a cycle of the-way itself.
+the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6% and,
+where the author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it raises
+the cost of a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game cycle
+and by 1.0% in a cycle of the-way itself.
 
 ### WAY-256 — Where does a fragment of a skill stand?
 
@@ -12352,44 +12353,45 @@ the-way itself loads are generated from them and tracked.
 - **Origin:** none
 
 *Rationale:* a stage agent started as a general subagent carries the list of every skill of its
-session before it reads its first file, and few agents of a cycle use a skill: in the session records
-of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252. A probe
-on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a subagent at
-36,711 tokens with the skill tool and 21,759 without it: the list of skills (29,896 characters)
-disappeared whole, the definitions of the tools shrank from 13 tools (31,547 characters) to 9
-(22,639), and the instruction files (23,658 characters) stayed. A type with every tool of the session
-but the skill tool starts about two thousand tokens larger than the probe's agent, which had a narrow
-list of tools, so the start is lighter by about 37% where the probe's was by 41%; both are estimates
-from the table of tool definitions, not measurements. The gain of the lighter start was estimated, for
-the narrow list of tools, at about 4.5% of a cycle's cost. A definition with no body gives its agent a
-system prompt of 1,722 characters in place of the 3,158 of a general subagent, so each type has a
-body that says what it is. The tools of connected servers, a browser's among them, stay, so an agent
-that has to look at an interface can, and the-way names no tool of a plugin that a product may not
-have. An agent without the skill tool reads a method as a file, which is how its handoff already
-gives it (WAY-125, WAY-148); and the personal skill of the same name that the list showed beside a
-skill of the-way, which an agent could take for it, is no longer shown. Two types and not one, since
-only the one author is resumed, after each review and for the return step, and a cache of five
-minutes is written again after each such break: in a probe of the cache, a subagent with the hour,
-resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and wrote 123, where a
-control with five minutes wrote its whole 4,786 anew (WAY-255 holds the account of the hour). The definitions come from the pinned commit like the entry points of the skills (WAY-34), and
-a session on the-way itself has tracked copies as it has those entry points (WAY-127), so that its
-cycles use the types as well. The price: an agent of these types cannot call a skill, a personal
-skill for work with a browser included; Claude Code loads the types of a directory that existed when
-the session started, so a session started before the installer or a checkout created that directory
-has no such types, and its cycle dispatches as before (WAY-370).
+session before it reads its first file, and few agents of a cycle use a skill: in the session
+records of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252.
+A probe on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a
+subagent at 36,711 tokens with the skill tool and 21,759 without it: the list of skills (29,896
+characters) disappeared whole, the definitions of the tools shrank from 13 tools (31,547 characters)
+to 9 (22,639), and the instruction files (23,658 characters) stayed. A type with every tool of the
+session but the skill tool starts about two thousand tokens larger than the probe's agent, which had
+a narrow list of tools, so the start is lighter by about 37% where the probe's was by 41%; both are
+estimates from the table of tool definitions, not measurements. The gain of the lighter start was
+estimated, for the narrow list of tools, at about 4.5% of a cycle's cost. A definition with no body
+gives its agent a system prompt of 1,722 characters in place of the 3,158 of a general subagent, so
+each type has a body that says what it is. The tools of connected servers, a browser's among them,
+stay, so an agent that has to look at an interface can, and the-way names no tool of a plugin that a
+product may not have. An agent without the skill tool reads a method as a file, which is how its
+handoff already gives it (WAY-125, WAY-148); and the personal skill of the same name that the list
+showed beside a skill of the-way, which an agent could take for it, is no longer shown. Two types
+and not one, since only the one author is resumed, after each review and for the return step, and a
+cache of five minutes is written again after each such break: in a probe of the cache, a subagent
+with the hour, resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and
+wrote 123, where a control with five minutes wrote its whole 4,786 anew (WAY-255 holds the account
+of the hour). The definitions come from the pinned commit like the entry points of the skills
+(WAY-34), and a session on the-way itself has tracked copies as it has those entry points (WAY-127),
+so that its cycles use the types as well. The price: an agent of these types cannot call a skill, a
+personal skill for work with a browser included; Claude Code loads the types of a directory that
+existed when the session started, so a session started before the installer or a checkout created
+that directory has no such types, and its cycle dispatches as before (WAY-370).
 *Rejected:* three types, with a narrow list of tools and a third type with the browser tools named —
 the-way would write into its file the names of the tools of one user's plugin, and in a product
 without it the type would have nothing to check an interface with; the orchestrator would decide at
 each dispatch whether a stage looks at an interface; and the one author of a change to an interface
-would need a fourth type; two narrow types, with the stages that look at an interface dispatched as a
-plain subagent as before — the cycle of a change to an interface would have neither the lighter start
-nor the author's hour of cache, and the orchestrator chooses the type for each stage anyway.
+would need a fourth type; two narrow types, with the stages that look at an interface dispatched as
+a plain subagent as before — the cycle of a change to an interface would have neither the lighter
+start nor the author's hour of cache, and the orchestrator chooses the type for each stage anyway.
 
 ### WAY-369 — Do the agent types of a task cycle start with the instruction files?
 
-The agent types of a task cycle start with the instruction files that Claude Code loads into an agent
-of the session, the user's and the product's; no definition of a type sets the field that starts an
-agent without them.
+The agent types of a task cycle start with the instruction files that Claude Code loads into an
+agent of the session, the user's and the product's; no definition of a type sets the field that
+starts an agent without them.
 
 - **Scope:** task-cycle
 - **Based on:** https://code.claude.com/docs/en/sub-agents.md § the frontmatter reference, row
@@ -12397,16 +12399,17 @@ agent without them.
   CLAUDE.md files"; read 2026-11-13
 - **Relations:** derives from WAY-368
 - **Verification:** an agent compares a change with the decision:
-  - complies: a definition of a type holds the fields `name`, `description`, the denied tools and, for
-    the one author, the cache lifetime;
+  - complies: a definition of a type holds the fields `name`, `description`, the denied tools and,
+    for the one author, the cache lifetime;
   - violates: a definition sets the field that starts the agent without the instruction files.
 - **Origin:** none
 
 *Rationale:* the instruction files are the part of the start that the types keep. The field that
 drops them drops the user's file, which holds the rules of git, of scripts and of privacy, and the
-product's file together, and the product's file alone cannot be kept; the start without them was measured at 10.5 thousand
-tokens, against 21,759 for the agent of the first probe with them. A later decision may reverse this where the handoffs of the stages begin to name the product's instruction
-file themselves.
+product's file together, and the product's file alone cannot be kept; starting without them lowers
+the start by about eleven thousand tokens, to 10.5 thousand, a figure whose conditions — version,
+model, tools — are not recorded. A later decision may reverse this where the handoffs of the stages
+begin to name the product's instruction file themselves.
 *Rejected:* start without the instruction files — the start falls to 10.5 thousand tokens, but the
 agent loses at once the user's global instruction file (the rules of git, of scripts and of privacy)
 and the product's instruction file, and the product's file alone cannot be kept.

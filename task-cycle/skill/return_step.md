@@ -1,7 +1,8 @@
 # The return step
 
 Read by the agent that takes the return step, step 11 of `implement-task`: the one author resumed
-for it, or a fresh agent with `make-change`. "It" below is that agent.
+for it, or a fresh agent with `make-change` (`task-cycle/change/SKILL.md`). "It" below is that
+agent.
 
 It compares with the code the entries the change writes or changes, those the task names and those
 the search of the foundation found, and the part map of the touched parts, and corrects in the same

@@ -2,7 +2,7 @@
 
 Step 7 of `implement-task`, read when the designer returns `done` with the spec.
 
-Have a fresh agent other than the designer review the spec with `write-spec` against the frozen
+Have a fresh agent other than the designer review the spec with `write-spec` (`task-cycle/spec/SKILL.md`) against the frozen
 task and the foundation entries its handoff names. On `FAIL` keep the spec as `spec-reviewed.md`
 beside it; the designer revises the spec once and the reviewer reviews the revision once,
 comparing the two. Settle a finding left after that as step 6 settles a

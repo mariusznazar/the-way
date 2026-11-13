@@ -15,9 +15,9 @@ this skill holds only how the plan is written.
 This skill lives in `task-cycle/plan/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the
 session's working directory; in a product, it is the product's pinned `.the-way`. The script
-`task-cycle/slice_size.py` is there. The planner has no skill tool: a skill this file or a file it
-reads names is the `SKILL.md` whose frontmatter `name:` is that name, read as a file under the same
-root.
+`task-cycle/slice_size.py` is there. Where the planner has no skill tool, as in the cycle's types, a
+skill this file or a file it reads names is the `SKILL.md` whose frontmatter `name:` is that name,
+read as a file under the same root.
 
 The planner is a fresh agent the orchestrator of `implement-task` dispatches when the change
 needs division, including after a reviewed spec or an oversized one-author attempt (WAY-136).

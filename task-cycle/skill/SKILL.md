@@ -206,7 +206,7 @@ In Claude Code, dispatch each stage agent as an agent of one of the pinned the-w
 `the-way-author` for the one author of a change without a plan, resumed or replaced on the same
 branch, and `the-way-stage` for every other stage agent. Neither has the skill tool: the handoff
 gives the path of every method, and a skill that a method names by its name alone is read as a file
-too, as `task-cycle/skill/foundation_step.md` gives. Where the session has no such type — another
+too, as `task-cycle/skill/foundation_step.md` gives. Where the agent types that your dispatch tool offers hold no such type — another
 harness, or a session started before `.claude/agents/` held the definitions — dispatch the stage as
 you would without them, and write in the record's row of that dispatch that it ran without its type
 and why (WAY-370).

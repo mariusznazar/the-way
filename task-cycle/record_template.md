@@ -31,9 +31,9 @@ not authorize running it.
 - Reserved choice: <none | the choice, where it showed and the limb of the rule that takes it>
 - Execution route and reason: <one author without a plan | planned slices; orchestrator's
   judgment from the task at the start, and repeated after any reviewed spec>
-- Author: <agent, agent type, class and model of the one author, for its code, foundation entries and return
-  step, a class other than `cheaper` with its reason; its resumptions; any replacement during a fix
-  and its reason; planned executors appear in Slices>
+- Author: <agent, agent type, class and model of the one author, for its code, foundation entries
+  and return step, a class other than `cheaper` with its reason; its resumptions; any replacement
+  during a fix and its reason; planned executors appear in Slices>
 - Plan: <none on the one-author route | number of slices and size-report verdicts>
 - Discarded attempt: <time, open design choice, reserved choice or oversized one-author change,
   report, last commit and changed files including foundation entries, reset base, discard
@@ -90,7 +90,8 @@ of its own reads `judged by the whole-change review` in the last column.
 
 Append one row for every dispatch, handoff, failed attempt, rerun, review and fix before the
 dispatch that depends on it. In a dispatch's row the actor names the agent type the stage ran
-with, `the-way-author` or `the-way-stage`, or says that it ran without its type and why. Name handoff and report paths and input and output commits, so work
+with, `the-way-author` or `the-way-stage`, or says that it ran without its type and why.
+Name handoff and report paths and input and output commits, so work
 resumes from these files and commits without the conversation. Keep each complete handoff and
 report, with secrets and personal data removed, in `reports/`; a short return routes the work and
 names failed and unchecked checks and unresolved concerns. Repair an incomplete or missing report

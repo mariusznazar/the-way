@@ -16,7 +16,7 @@ glossary term, `elements/part-map/skill/SKILL.md` for a part of the map and
 `elements/environment-facts/skill/SKILL.md` for an environment fact, in the pinned the-way; a skill
 that file or a file it reads names by its name alone — `record-invariant`, `update-part-map` or
 another — is the `SKILL.md` whose frontmatter `name:` is that name, which a search of the files
-named `SKILL.md` for that line finds, and the writer reads it as a file, since it has no skill tool
+named `SKILL.md` for that line finds, and the writer reads it as a file where it has no skill tool, as the cycle's types have none
 (WAY-368). A row whose settlement the writer's search of the whole foundation (WAY-33)
 finds already stated becomes no second entry: the writer ties the row to that entry, and the request
 names both, as `task-cycle/skill/request_template.md` gives (WAY-134). A plan member writes only the
