@@ -145,8 +145,8 @@ any other, run with the rest of the suite (WAY-45).
 | <who or what> | them → us · us → them · both | trusted · untrusted · — |
 ```
 
-A row names no part and no file (WAY-48). It is read by whoever records a trust boundary at the part
-that handles the exchange (WAY-48).
+A row names no part and no file. It is read by whoever records a trust boundary at the part that
+handles the exchange (WAY-48).
 
 ## Files left out on purpose
 

@@ -88,9 +88,10 @@ identifiers.
 
 ## Source
 
-- Every entry has a source; a fact without one is not written (WAY-80). An entry that would stand
-  on a missing fact takes `TODO — <the fact, with its source>` in its field, and a change that leaves
-  it there puts it before the human (WAY-71).
+- Every entry has a source; a fact without one is not written (WAY-80). An invariant whose
+  *Rests on* names a missing fact takes `TODO — <the fact, with its source>` there, and a decision
+  whose *Based on* names a missing source takes `TODO — <what is missing, with its source>`; a change
+  that leaves one there puts it before the human (WAY-71).
 - A source takes one of three forms (WAY-80):
   - an edition with its publisher's own address, the place in it, the passage the fact rests on word
     for word, and the date read. An address the publisher moves to newer text is no edition,
