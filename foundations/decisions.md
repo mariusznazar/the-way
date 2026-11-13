@@ -7884,9 +7884,7 @@ the harness allows.
   that keeps the cache warm through longer breaks but charges a higher rate for cache writes" ·
   § "Subagents and the cache" — "Subagents fall outside the main-conversation TTL bucket, so they
   get five minutes even on a subscription until you choose a longer one."; read 2026-10-27 ·
-  https://code.claude.com/docs/en/sub-agents.md § the frontmatter reference, row `experimental` —
-  "Claude Code ignores any other value, ignores `1h` while your Claude subscription is using usage
-  credits, and reads the field only from subagent files"; read 2026-11-13
+  claude-code-subagent-cache-ttl · claude-code-subagent-cache-ttl-credits
 - **Relations:** none
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:
@@ -12330,14 +12328,8 @@ pinned commit into a product, replacing and deleting only its own files, and the
 the-way itself loads are generated from them and tracked.
 
 - **Scope:** task-cycle, installation, agent-instructions
-- **Based on:** https://code.claude.com/docs/en/sub-agents.md § "Preload skills" — "To prevent a
-  subagent from invoking skills entirely, omit `Skill` from the `tools` list or add it to
-  `disallowedTools`."; read 2026-11-13 · https://code.claude.com/docs/en/sub-agents.md § the
-  frontmatter reference, row `experimental` — "Set its `cacheTtl` key to `5m` or `1h` to choose the
-  prompt cache lifetime for this subagent's requests"; read 2026-11-13 ·
-  https://code.claude.com/docs/en/sub-agents.md § the note on detecting changes to subagent files —
-  "The watcher covers only directories that existed when the session started, so after creating a
-  scope's first agent file in a new `agents` directory, restart to load it."; read 2026-11-13
+- **Based on:** claude-code-subagent-skills-denied · claude-code-subagent-cache-ttl ·
+  claude-code-subagent-agent-directories
 - **Relations:** derives from WAY-125 · derives from WAY-127 · derives from WAY-34
 - **Verification:** an agent compares a change with the decision:
   - complies: in Claude Code the orchestrator dispatches the one author with the type
@@ -12394,9 +12386,7 @@ agent of the session, the user's and the product's; no definition of a type sets
 starts an agent without them.
 
 - **Scope:** task-cycle
-- **Based on:** https://code.claude.com/docs/en/sub-agents.md § the frontmatter reference, row
-  `omitClaudeMd` — "Set to `true` to start this subagent without the user, project, and local
-  CLAUDE.md files"; read 2026-11-13
+- **Based on:** claude-code-subagent-instruction-files
 - **Relations:** derives from WAY-368
 - **Verification:** an agent compares a change with the decision:
   - complies: a definition of a type holds the fields `name`, `description`, the denied tools and,
@@ -12422,10 +12412,8 @@ without them and writes in its record that the stage ran without its type. The-w
 types for Codex.
 
 - **Scope:** task-cycle, installation
-- **Based on:** https://learn.chatgpt.com/codex/agent-configuration/subagents § where custom agents
-  are defined — "or `.codex/agents/` for project-scoped agents."; read 2026-11-13 ·
-  https://learn.chatgpt.com/codex/agent-configuration/subagents § skills of a custom agent —
-  "Disable individual skills with `skills.config`"; read 2026-11-13
+- **Based on:** codex-project-agents · codex-agent-skills-config ·
+  claude-code-subagent-agent-directories
 - **Relations:** derives from WAY-368
 - **Verification:** an agent compares a cycle and its record with the decision:
   - complies: a cycle in Codex dispatches its stages as the harness does without the types, and its
@@ -12436,10 +12424,10 @@ types for Codex.
 - **Origin:** none
 
 *Rationale:* the sessions from which the gain of the types was counted hold none of Codex, so no
-probe showed a gain there. A Codex agent type has no list of tools, and the skills it must not show
-are turned off one by one by their path, so the list kept in the process would grow with every skill
-added to the-way and need care in each change. A stage dispatched without its type loses only the
-saving: its handoff already names the method by its file, so the stage reads the same text.
+probe showed a gain there. Codex turns off the skills of an agent one skill at a time, with a
+setting for each, so the list kept in the process would grow with every skill added to the-way and
+need care in each change. A stage dispatched without its type loses only the saving: its handoff
+already names the method by its file, so the stage reads the same text.
 *Rejected:* types for Codex too, defined in the directory Codex reads project agents from — the list
 of skills they turn off grows with every skill and the process would have to keep it, and no probe
 showed a gain.
