@@ -30,6 +30,7 @@ blob, so no name is ever passed back to git.
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -49,7 +50,8 @@ class Entry:
     path: str
     before: int | str | None  # lines, "binary" or "submodule"; None where the file did not exist
     after: int | str | None  # the same; None where the file is gone
-    note: str
+    note: str  # added, deleted, renamed, type changed or modified
+    renamed_from: str | None = None
 
 
 def git(root: Path, *arguments: str) -> bytes:
@@ -161,17 +163,33 @@ def measure(root: Path, base: str, head: str) -> list[Entry]:
             elif kind == "D":
                 note = "deleted"
             elif kind == "R":
-                note = f"renamed from `{paths[0]}`"
+                note = "renamed"
             elif kind == "T":
                 note = "type changed"
             elif kind == "M":
                 note = "modified"
             else:
                 raise FileSizesError(f"git diff gives the status {status} of {paths[-1]!r}")
-            entries.append(Entry(paths[-1], before, after, note))
+            entries.append(Entry(paths[-1], before, after, note,
+                                 paths[0] if kind == "R" else None))
     finally:
         blobs.close()
     return entries
+
+
+def code_span(text: str) -> str:
+    """`text` as a Markdown code span in a table cell: the delimiter is longer than any run of
+    backticks in it, and a `|` is escaped."""
+    runs = [len(part) for part in re.findall(r"`+", text)]
+    fence = "`" * ((max(runs) if runs else 0) + 1)
+    padding = " " if text.startswith("`") or text.endswith("`") else ""
+    return f"{fence}{padding}{text.replace('|', chr(92) + '|')}{padding}{fence}"
+
+
+def note_text(entry: Entry) -> str:
+    if entry.renamed_from is not None:
+        return f"renamed from {code_span(entry.renamed_from)}"
+    return entry.note
 
 
 def cell(value: int | str | None) -> str:
@@ -202,9 +220,8 @@ def report(entries: list[Entry], base: str, head: str) -> str:
     counts = {"added": 0, "deleted": 0, "renamed": 0, "modified": 0, "not measured": 0}
     for entry in entries:
         delta = difference(entry)
-        name = entry.path.replace("|", "\\|")
-        lines.append(f"| `{name}` | {cell(entry.before)} | {cell(entry.after)} | "
-                     f"{'—' if delta is None else format(delta, '+d')} | {entry.note} |")
+        lines.append(f"| {code_span(entry.path)} | {cell(entry.before)} | {cell(entry.after)} | "
+                     f"{'—' if delta is None else format(delta, '+d')} | {note_text(entry)} |")
         if isinstance(entry.before, int):
             before_total += entry.before
         if isinstance(entry.after, int):
@@ -215,7 +232,7 @@ def report(entries: list[Entry], base: str, head: str) -> str:
             counts["added"] += 1
         elif entry.note == "deleted":
             counts["deleted"] += 1
-        elif entry.note.startswith("renamed"):
+        elif entry.note == "renamed":
             counts["renamed"] += 1
         else:
             counts["modified"] += 1

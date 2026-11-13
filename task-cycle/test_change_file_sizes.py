@@ -133,6 +133,46 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.assertEqual(self.rows(output), ["| `vendor/lib` | — | submodule | — | added |"])
         self.assertIn("lines before 0, after 0, change +0.", self.summary(output))
 
+    def stage_entry(self, name: str, content: str, mode: str) -> None:
+        """Puts an entry of any name and mode in the index, whatever the file system allows."""
+        source = self.root.parent / "blob-source"
+        source.write_bytes(content.encode("utf-8"))
+        blob = self.git("hash-object", "-w", str(source))
+        self.git("update-index", "--add", "--cacheinfo", f"{mode},{blob},{name}")
+
+    def commit_index(self) -> str:
+        self.git("commit", "-q", "-m", "change")
+        return self.git("rev-parse", "HEAD")
+
+    def test_a_file_that_becomes_a_symbolic_link_is_a_type_change_measured_on_both_sides(self) -> None:
+        self.stage_entry("thing", "one\ntwo\n", "100644")
+        base = self.commit_index()
+        self.stage_entry("thing", "target", "120000")
+        head = self.commit_index()
+        code, output, _ = self.run_command(base, head)
+        self.assertEqual(code, 0)
+        self.assertEqual(self.rows(output), ["| `thing` | 2 | 1 | -1 | type changed |"])
+        self.assertIn("1 modified", self.summary(output))
+
+    def test_a_bar_in_a_name_is_escaped_so_that_the_row_keeps_its_cells(self) -> None:
+        self.stage_entry("a|b.txt", "x\n", "100644")
+        base = self.commit_index()
+        self.stage_entry("a|b.txt", "x\ny\n", "100644")
+        head = self.commit_index()
+        _, output, _ = self.run_command(base, head)
+        self.assertEqual(self.rows(output), ["| `a\\|b.txt` | 1 | 2 | +1 | modified |"])
+
+    def test_a_backtick_in_a_name_gets_a_longer_delimiter_and_a_padded_edge(self) -> None:
+        self.stage_entry("back`tick.md", "x\n", "100644")
+        self.stage_entry("`lead.md", "x\n", "100644")
+        base = self.commit_index()
+        self.stage_entry("back`tick.md", "x\ny\n", "100644")
+        self.stage_entry("`lead.md", "x\ny\n", "100644")
+        head = self.commit_index()
+        _, output, _ = self.run_command(base, head)
+        self.assertEqual(self.rows(output), ["| `` `lead.md `` | 1 | 2 | +1 | modified |",
+                                             "| ``back`tick.md`` | 1 | 2 | +1 | modified |"])
+
     def test_a_name_with_a_space_and_a_letter_outside_ascii_is_read_as_it_is(self) -> None:
         self.write("notes ł/zażółć gęślą.md", "a\nb\n")
         base = self.commit()
