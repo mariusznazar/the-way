@@ -160,7 +160,8 @@ two outcomes: the human weighs it further, or sets it aside.
    no cost, and an earlier form with that table gives the cost from it. The share of the cost in fix
    rounds is `unknown` where the record's *Review rounds* is not in the form
    `task-cycle/record_template.md` gives, or `stages.md` has no column *Files named*, which the
-   earlier form lacks.
+   earlier form lacks. A copy with no `mechanism_measures.md` or `gate_times.md` is an earlier
+   cycle or one whose measuring script failed, and the record's *Verification* says which.
    That is the state of those records, and no defect of the count.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
@@ -182,9 +183,12 @@ two outcomes: the human weighs it further, or sets it aside.
    times each apart, one series at a time, each with the line that says why it begins where it
    does. For each series, quote the rows of its table with the table's header row; then what follows
    from them and what does not; then one open question for the human that the rows answer, with no
-   recommendation. The gate times of runs with another gate beside them are shown apart as the count
-   shows them, and are never compared. A measure is material and never a priority, as the rules of
-   working say of the other numbers.
+   recommendation. The gate times of runs not compared (those with another gate beside them or an
+   unknown count, those that failed and those whose exit code is unknown) are shown apart as the
+   count shows them, and are never compared (WAY-350). A version in which no cycle gives a value or
+   no run a time has one row with `—` for the measure; name such versions together, with the reason
+   *Unknown values* gives, and quote no row of them one by one. A measure is material and never a
+   priority, as the rules of working say of the other numbers.
 
 **A class the list lacks.** Where a row refused for its class, or the human's own reading of a
 problem, shows a problem that no class of the register's *Classes* fits, the list widens; the

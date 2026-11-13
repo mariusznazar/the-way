@@ -1488,10 +1488,12 @@ class MechanismMeasures(MeasuresCase):
                          self.rows("Mechanism measures"))
         self.assertEqual([], self.rows("Gate runs"))
         self.assertIn(["product", added, "Mechanism measures",
-                       "the copy holds no `mechanism_measures.md`: an earlier form"],
+                       "the copy holds no `mechanism_measures.md`: an earlier cycle, or a script that "
+                       "failed (the record's *Verification* says which)"],
                       self.rows("Unknown values"))
         self.assertIn(["product", added, "Gate runs",
-                       "the copy holds no `gate_times.md`: an earlier form"],
+                       "the copy holds no `gate_times.md`: an earlier cycle, or a script that "
+                       "failed (the record's *Verification* says which)"],
                       self.rows("Unknown values"))
 
     def test_the_last_copy_is_read_where_a_later_copy_differs(self):
@@ -2755,13 +2757,15 @@ class ProcessVersions(AuditCountCase):
                          [row[3] for row in unknown if row[2] == "Plan"])
 
 
-def gate_run(second, others, total, *directories) -> str:
+def gate_run(second, others, total, *directories, code=0) -> str:
     """The rows of one run of gate_times.md: its start differs with `second`, so that runs stay
-    apart; each directory is (name, seconds), and a run with none has the one row with dashes."""
+    apart; each directory is (name, seconds), and a run with none has the one row with dashes;
+    `code` is the exit code written."""
     started = f"2026-11-11 10:00:{second:02}.000"
     if not directories:
-        return gate_row(started, 0, total, others)
-    return "".join(gate_row(started, 0, total, others, name, seconds) for name, seconds in directories)
+        return gate_row(started, code, total, others)
+    return "".join(gate_row(started, code, total, others, name, seconds)
+                   for name, seconds in directories)
 
 
 TOTAL = "Total time of the run"
@@ -2989,14 +2993,15 @@ class MeasureVersions(AuditCountCase):
         unknown = self.rows("Unknown values")
         self.assertIn("no previous version in the series",
                       self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v1}"))
-        self.assertIn("no run of the version with no other gate",
+        self.assertIn("no run of the version that passed with no other gate",
                       self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v4}"))
-        self.assertIn("no run of the previous version with no other gate",
+        self.assertIn("no run of the previous version that passed with no other gate",
                       self.reasons_of(unknown, f"Gate time falls: {b}, version {v3}"))
 
-    def test_a_version_with_no_cycle_that_gave_a_value_has_no_median_and_no_comparison(self):
-        # v2's cycle has neither file: its medians are unknown with no value counted, and v3 is not
-        # compared with it.
+    def test_a_version_with_no_cycle_that_gave_a_value_has_one_row_and_one_line_of_reason(self):
+        # v2's cycle has neither file: one row in each table, `—` for the measure and no median, and
+        # one line in *Unknown values* for each instrument instead of one for each measure. v3 has
+        # values, keeps its rows as they are, and is not compared with v2.
         way = self.the_way()
         v1 = self.version_at(way, self.day(0))
         v2 = self.version_at(way, self.day(1), parent=v1)
@@ -3008,17 +3013,65 @@ class MeasureVersions(AuditCountCase):
             ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "90.000"))])
         self.run_versions(way, product)
         calls = "Calls in all"
-        self.assertEqual([[v1, calls, "1", "10", "unknown"], [v2, calls, "0", "unknown", "unknown"],
-                          [v3, calls, "1", "9", "unknown"]], self.measure(1, calls))
-        self.assertEqual(3 * len(MEASURE_LABELS), len(self.section("Mechanism measures", 1)))
+        self.assertEqual([[v1, calls, "1", "10", "unknown"], [v3, calls, "1", "9", "unknown"]],
+                         self.measure(1, calls))
+        self.assertEqual([[v2, "—", "0", "unknown", "unknown"]], self.measure(1, "—"))
+        self.assertEqual(2 * len(MEASURE_LABELS) + 1, len(self.section("Mechanism measures", 1)))
         self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
-                          [v2, TOTAL, "0", "unknown", "unknown", "0", "unknown"],
                           [v3, TOTAL, "1", "90.000", "unknown", "0", "unknown"]], self.gate(1))
+        self.assertEqual([[v2, "—", "0", "unknown", "unknown", "0", "unknown"]],
+                         self.gate(1, "—"))
         unknown = self.rows("Unknown values")
-        self.assertEqual("no cycle of the version gives a value, so its median is not known",
-                         self.reasons_of(unknown, f"Measure falls: {calls}, version {v2}"))
+        self.assertIn("no cycle of this version gives a value",
+                      self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
+        self.assertIn("an earlier cycle, or a script that failed",
+                      self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
+        self.assertIn("no run of this version gives a time",
+                      self.reasons_of(unknown, f"Gate times of version {v2}"))
+        self.assertEqual([], [row for row in unknown if row[2].startswith("Measure falls")
+                              and f"version {v2}" in row[2]])
         self.assertEqual("no cycle of the previous version gives a value",
                          self.reasons_of(unknown, f"Measure falls: {calls}, version {v3}"))
+
+    def test_a_failed_run_enters_no_median_and_is_shown_apart_with_the_runs_with_company(self):
+        # v1: passed and alone: 100.000 (gate/a 60.0). A run alone that exited 2 (5.000, gate/a
+        # 1.0) and one alone whose exit code is unknown (300.000) are not compared: apart, the
+        # median of 5.000 and 300.000 is 152.500. v2: passed and alone 90.000 (gate/a 50.0), so the
+        # total falls from 100.000 and gate/a from 60.0; a failed run alone, 2.000, is apart.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "100.000", ("gate/a", "60.0"))
+             + gate_run(2, 0, "5.000", ("gate/a", "1.0"), code=2)
+             + gate_run(3, 0, "300.000", code="unknown")),
+            ("b", v2, {}, gate_run(4, 0, "90.000", ("gate/a", "50.0"))
+             + gate_run(5, 0, "2.000", code=1))])
+        self.run_versions(way, product)
+        a = "Directory: gate/a"
+        self.assertEqual([
+            [v1, TOTAL, "1", "100.000", "unknown", "2", "152.500"],
+            [v1, a, "1", "60.0", "unknown", "1", "1.0"],
+            [v2, TOTAL, "1", "90.000", "yes", "1", "2.000"],
+            [v2, a, "1", "50.0", "yes", "0", "unknown"],
+        ], self.section("Gate times", 1))
+
+    def test_a_version_whose_only_run_failed_has_no_median_and_no_comparison(self):
+        # v1 passed (100.000); v2's only run failed (4.000): v2 has no median, no comparison, and
+        # its run is apart.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        product = self.repository()
+        self.add_measured(product, [("a", v1, {}, gate_run(1, 0, "100.000")),
+                                    ("b", v2, {}, gate_run(2, 0, "4.000", code=2))])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v2, TOTAL, "0", "unknown", "unknown", "1", "4.000"]], self.gate(1))
+        self.assertIn("no run of the version that passed with no other gate",
+                      self.reasons_of(self.rows("Unknown values"),
+                                      f"Gate time falls: {TOTAL}, version {v2}"))
 
     def test_a_directory_written_twice_in_one_run_counts_once_and_says_so(self):
         way = self.the_way()

@@ -132,11 +132,13 @@ under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or `task-cycle
 *Measure versions* gives, for each version of a series and each cycle-level measure, the number of
 cycles that give a value, their median (the rule of the median of the cost) and whether it falls
 against the previous version of the series, and for the gate times the total of the run and each
-directory any run of the version has: the median and *Falls* take only the runs during which no
-other gate run was going, and the runs with another gate or an unknown count are counted and their
-median shown apart, never compared. A version in which no run was alone, or no cycle gave a value,
-has no comparison; the values are kept as `Decimal` and a median that is a half is written with its
-decimal.
+directory any run of the version has: the median and *Falls* take only the runs that passed (exit
+code 0) during which no other gate run was going, and the runs not compared, those with another
+gate, with an unknown count, that failed or whose exit code is unknown, are counted and their median
+shown apart, never compared (WAY-350). A version in which no run passed alone, or no cycle gave a
+value, has no comparison; a version in which no cycle gives a value or no run a time has one row,
+with `—` for the measure, and one line in *Unknown values*. The values are kept as `Decimal` and a
+median that is a half is written with its decimal.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
@@ -166,8 +168,8 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 
 The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
 `task-cycle/cycle_measures.py` (WAY-347) and `gate_times.md` by `task-cycle/gate_times.py`
-(WAY-349). A copy that holds neither is an earlier form: their values are `unknown`, with the
-reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
+(WAY-349). A copy that holds neither is of an earlier cycle or of one whose script failed, and the
+record's *Verification* says which: their values are `unknown`, with that reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
 by its label; a label it lacks is a missing field, and then every value of the file is `unknown`. A
 label written twice, a value that is not what its label gives and a value `unknown` are `unknown`
 with a reason, and the count goes on. `gate_times.md` is read from its table of runs: the table
@@ -571,11 +573,12 @@ class Git:
 @dataclass
 class GateRun:
     """A run of `gate_times.md` as numbers, for the medians of a version: the count of other gate
-    runs at the same time, the total seconds and the seconds of each directory, each None where the
-    file gives it as unknown or in a form that is not its column's."""
+    runs at the same time, the total seconds, the seconds of each directory and the exit code, each
+    None where the file gives it as unknown or in a form that is not its column's."""
     others: int | None
     total: Decimal | None
     directories: list[tuple[str, Decimal | None]] = field(default_factory=list)
+    code: int | None = None  # the exit code of the run, None where the file gives it as unknown
 
 
 @dataclass
@@ -1433,10 +1436,12 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
 
 def read_optional(git: Git, entries: dict, prefix: bytes,
                   name: str) -> tuple[str | None, str | None]:
-    """The text of a file of the copy that an earlier form lacks, or None with the reason."""
+    """The text of a file of the copy that an earlier form lacks, or None with the reason: the
+    copy may be of an earlier cycle or of one whose script failed."""
     path = prefix + name.encode("ascii")
     if path not in entries:
-        return None, f"the copy holds no `{name}`: an earlier form"
+        return None, (f"the copy holds no `{name}`: an earlier cycle, or a script that failed "
+                      "(the record's *Verification* says which)")
     return read_file(git, entries, path)
 
 
@@ -1592,7 +1597,8 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
         listed = []
         # The numbers of the run: a directory written twice in it counts once, at its first time.
         timed = GateRun(None if others == UNKNOWN else int(others),
-                        None if total == UNKNOWN else Decimal(total))
+                        None if total == UNKNOWN else Decimal(total),
+                        code=None if code == UNKNOWN else int(code))
         named: set[str] = set()
         for name, seconds in directories:
             seconds = gate_value(reasons, "Directory seconds", seconds, GATE_SECONDS,
@@ -2360,9 +2366,10 @@ class MeasureVersions:
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
 
 
+NO_MEASURE = "—"  # the measure cell of the one row of a version that gives no value
 MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
-GATE_HEADER = ["Version (commit)", "Measure", "Runs with no other gate", "Median (seconds)",
-               "Falls", "Runs with another gate or an unknown count", "Median of those (seconds)"]
+GATE_HEADER = ["Version (commit)", "Measure", "Runs compared", "Median (seconds)", "Falls",
+               "Runs not compared", "Median of those (seconds)"]
 
 
 def median_text(median: Decimal | None, suffix: str = "") -> str:
@@ -2401,6 +2408,15 @@ def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> N
     previous: dict[str, Decimal | None] = {}
     for index, version in enumerate(block.versions):
         medians: dict[str, Decimal | None] = {}
+        if not any(label in cycle.measures for cycle in version.cycles for label in MEASURE_LABELS):
+            # A version no cycle of which gives a value has one row and one line of reason.
+            block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN])
+            unknown.append((THE_WAY, NONE, f"Mechanism measures of version {version.commit}",
+                            "no cycle of this version gives a value: its copies hold no "
+                            f"`{MEASURES_FILE}` (an earlier cycle, or a script that failed; the "
+                            "record's *Verification* says which) or give none"))
+            previous = {}
+            continue
         for label in MEASURE_LABELS:
             values = [measure_number(label, cycle.measures[label])
                       for cycle in version.cycles if label in cycle.measures]
@@ -2415,13 +2431,14 @@ def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> N
 
 def gate_values(version: Version) -> dict[str, tuple[list[Decimal], list[Decimal]]]:
     """The times of the runs of a version, over all its cycles, by measure: the total first and
-    then each directory that any run has, by name. Each measure holds the values of the runs with
-    no other gate and apart those of the runs with another gate or an unknown count; a run that
-    does not give the time adds to neither."""
+    then each directory that any run has, by name. Each measure holds the values of the runs that
+    passed with no other gate and apart those of the runs not compared: with another gate, with an
+    unknown count, that failed or whose exit code is unknown; a run that does not give the time
+    adds to neither (WAY-350)."""
     found: dict[str, tuple[list[Decimal], list[Decimal]]] = {TOTAL_MEASURE: ([], [])}
     for cycle in version.cycles:
         for run in cycle.gate_timed:
-            side = 0 if run.others == 0 else 1
+            side = 0 if run.others == 0 and run.code == 0 else 1
             if run.total is not None:
                 found[TOTAL_MEASURE][side].append(run.total)
             for name, seconds in run.directories:
@@ -2433,16 +2450,26 @@ def gate_values(version: Version) -> dict[str, tuple[list[Decimal], list[Decimal
 
 def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
     """The rows of a series of the gate times: for each version and each measure, the median of the
-    runs with no other gate and whether it falls, and the runs with another gate or an unknown
-    count apart, never compared (WAY-350)."""
+    runs that passed with no other gate and whether it falls, and the runs not compared apart,
+    never compared (WAY-350). A version no run of which gives a time has one row and one line of
+    reason."""
     previous: dict[str, Decimal | None] = {}
     for index, version in enumerate(block.versions):
         medians: dict[str, Decimal | None] = {}
-        for name, (alone, apart) in gate_values(version).items():
+        values = gate_values(version)
+        if all(not alone and not apart for alone, apart in values.values()):
+            block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN, "0", UNKNOWN])
+            unknown.append((THE_WAY, NONE, f"Gate times of version {version.commit}",
+                            "no run of this version gives a time: its copies hold no "
+                            f"`{GATE_FILE}` (an earlier cycle, or a script that failed; the "
+                            "record's *Verification* says which) or give none"))
+            previous = {}
+            continue
+        for name, (alone, apart) in values.items():
             median = median_of(alone)
             medians[name] = median
             falls = falls_answer(version, index == 0, median, previous.get(name), "run",
-                                 " with no other gate", "this time", unknown,
+                                 " that passed with no other gate", "this time", unknown,
                                  f"Gate time falls: {name}")
             block.rows.append([version.commit, name, str(len(alone)), median_text(median), falls,
                                str(len(apart)), median_text(median_of(apart))])
@@ -2622,12 +2649,15 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "and *Cycles with a value* counts them.",
         "",
         "*Gate times*: the runs are taken together over all the cycles of the version. The median "
-        "and *Falls* take only the runs during which no other gate run by the script was going "
-        "(*Runs with no other gate*, WAY-350); the runs with another gate, or with the count "
-        "`unknown`, are counted and their median shown apart in the last two columns and are never "
-        "compared, so a version in which no run was alone has no comparison. Each count is of the "
-        "runs that give the time of its row, and a directory's median takes the runs that give "
-        "its time.",
+        "and *Falls* take only the runs that passed (exit code 0) during which no other gate run by "
+        "the script was going (*Runs compared*, WAY-350). The runs not compared are those with "
+        "another gate, with the count `unknown`, that failed (a failed run's time says how soon "
+        "it failed, not how long the gate takes) or whose exit code is unknown: they are counted "
+        "and their median shown apart in the last two columns and are never compared, so a "
+        "version in which no run passed alone has no comparison. Each count is of the runs that "
+        "give the time of its row, and a directory's median takes the runs that give its time. A "
+        "version in which no cycle gives a value, or no run a time, has one row, with `—` for the "
+        "measure, and one line in *Unknown values*.",
         "",
     ]
     for title, blocks, header in (("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
