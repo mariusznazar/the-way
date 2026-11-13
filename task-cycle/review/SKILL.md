@@ -123,6 +123,14 @@ qualifier WAY-104 gives it in a product's foundation, is Minor unless it cites a
 hold that a reader would read wrongly for lack of it; with such a sentence it is graded as any other
 finding. This does not reach the renaming of a word with two meanings (WAY-99), and a glossary entry
 the change writes or changes is graded as the paragraph above gives (WAY-297).
+A finding about the structure of code that lies below the threshold of the rule of size in the
+product's coding guidelines is Minor, and you judge its scope as for any finding; a finding about a
+function or a file over that threshold is graded as any other finding (WAY-358).
+A finding that a foundation entry departs from the form of its template, where the entry's content
+agrees with the code, is Minor unless it cites a sentence a reader would read wrongly through the
+departure; with such a sentence it is graded as any other finding. A finding that the entry's
+content does not agree with the code stays Important, as the paragraph on WAY-263 above gives
+(WAY-359).
 
 A finding blocks when you grade it Critical or Important and it lies within the task (WAY-161).
 List under **Declined to judge** each behaviour you considered and set aside as outside the task,

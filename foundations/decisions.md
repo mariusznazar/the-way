@@ -11863,6 +11863,115 @@ run by the orchestrator before the review of the whole change — a new decision
 to WAY-16, a second command in every product and a step of the orchestrator in every cycle, for a
 count of functions under the threshold, which by the threshold are in order.
 
+### WAY-357 — What does the review of the whole change ask about the structure of the code a change leaves, and from which numbers?
+
+The reviewer of the whole change judges what the change leaves in the structure of the code: the
+growth of a function or a file, code that has no user after the change, and a name that stopped being
+true. It takes its numbers from a script of the-way that gives, for the range of the change, the lines
+of each changed file before the change and after it, and from the test of the product's rule of size
+(WAY-356), run on the state before the change and on the state after it.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136 · derives from WAY-356
+- **Verification:** an agent compares the review of the whole change with the decision:
+  - complies: the reviewer's report names a file that grew from 410 lines to 520 by the script's two
+    numbers, names the function the diff reaches in it, and reports that the test of the rule of size
+    names that function on the head and not on the base; it also lists a helper the change left with
+    no caller, and a name that no longer says what the function does;
+  - violates: the reviewer reads only the diff and says nothing of the structure the change leaves; a
+    growth of a file is named with no number; the reviewer runs no test of the rule of size where the
+    product's guidelines hold one; the reviewer runs it only on the head.
+- **Origin:** none
+
+*Rationale:* a diff shows the lines a change adds, not the size of the function or the file they reach,
+so a reviewer reading it sees each addition as small while the function grows; in one product's game
+a function reached 456 lines and another 781 unnoticed. A reviewer of the whole
+change reads every file the change touches and so is the one place where the structure it leaves can
+be judged; the lines of each changed file before and after, and the functions and files over a
+threshold on both states, turn the question from an impression into a reading with numbers. The
+threshold's test names what stands over it (WAY-356), and the difference between its runs shows what
+the change pushed over.
+*Rejected:* unknown
+
+### WAY-358 — How does a reviewer grade a finding about the structure of code?
+
+A reviewer grades as Minor a finding about the structure of code that lies below the threshold of the
+rule of size in the product's coding guidelines, and judges its scope as for any finding (WAY-161). A
+finding about a function or a file over that threshold is graded as any other finding.
+
+- **Scope:** task-cycle, product-guidelines
+- **Based on:** none
+- **Relations:** narrows WAY-161
+- **Verification:** an agent compares a review finding with the decision:
+  - complies: a reviewer who finds that a change added forty lines to a function that stays under the
+    threshold, or left a helper with no caller, grades each finding Minor, and the fix for Minor
+    findings (WAY-161) takes in what the change itself left; a finding that a function the change
+    pushed over the threshold stands over it is graded as any other finding; a finding about code from
+    before the change, which restructuring would reach, goes to the request's list as a finding outside
+    the task;
+  - violates: a finding that a function grew but stays under the threshold is graded Important and
+    blocks the change; a finding about a function over the threshold is graded Minor because it is
+    about structure; the orchestrator regrades a finding of structure or moves it between the lists.
+- **Origin:** none
+
+*Rationale:* whether a structure is good is a judgment, and a grade that follows it blocks or lets
+through a change by the reviewer's impression, with the same chance in the grade that a remark on the
+form of an entry shows (WAY-359). A Minor finding within the task is still fixed before the request
+opens (WAY-161), so what the change itself leaves, such as code with no user and a name no longer
+true, is repaired in the review of the whole change, and the finding is left out of the blocking only.
+Where code stands over the threshold, a number settles it and not the reviewer's impression: the test
+of the rule of size stops the change, and where the rule's invariant is marked violated, the review
+that keeps a cleaned file or a new one from breaking it stops it (WAY-51). The reviewer still judges the
+scope of each finding, so a restructuring of code from before the change reaches the request's list
+and not the fix.
+*Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
+block the change and give a round of fixes, with the same chance in the grade as today for the form
+of an entry; findings of structure always outside the task's scope, on the request's list and for the
+review of the foundation — code with no user and a name no longer true, which the change itself
+left, are cleaned only by a separate task after the review of the foundation, a full cycle.
+
+### WAY-359 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
+
+A reviewer grades as Minor a finding that a foundation entry departs from the form of its template,
+where the entry's content agrees with the code, unless the finding cites a sentence a reader would
+read wrongly through the departure; a finding that cites such a sentence is graded as any other. A
+finding that the content of an entry does not agree with the code stays Important (WAY-263).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-161
+- **Verification:** an agent compares a review finding with the decision:
+  - complies: a reviewer who finds that a decision's *Origin* names a task document, while every
+    sentence of the decision agrees with the code, and cites no sentence read wrongly, grades the
+    finding Minor; a reviewer who cites the sentence of a rationale that holds a rule a reader would
+    take as binding, and shows how it is read, grades the finding as any other; a finding that an
+    entry says what the code does not stays Important;
+  - violates: a finding of a departure from the form that cites no sentence is graded Important and
+    blocks the change; a finding that cites a sentence read wrongly is graded Minor because it is
+    about form; a finding that the content of an entry disagrees with the code is graded Minor
+    because the entry's form is also off.
+- **Origin:** none
+
+*Rationale:* the same remark on the form of an entry was graded blocking in 9 runs of an experiment
+with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone, so the
+verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
+round of fixes, and a fix that fails leaves the request blocked for form alone (WAY-162); graded
+always Minor, a departure that makes a reader take an entry wrongly, such as a binding rule written in
+the rationale and not in a binding sentence, would not block and would not be repaired in the reviews
+after the review of the whole change. A Minor finding within the task is still fixed before the request
+opens (WAY-161), so the departure is repaired, and the grade changes three things: the verdict, a pass
+where a fail stood; the result of a failed fix, which reverts and leaves the request unblocked; and the
+lot of the finding in later reviews, where a Minor finding goes to the request's list and is not fixed.
+A mismatch of content with the code stays Important, since a request carrying it carries a rule the
+code does not keep (WAY-263).
+*Rejected:* a departure from the form always Minor — a departure by which a reader reads an entry
+wrongly, such as a binding rule in the rationale and not in the binding sentence, would not block and
+in reviews after the review of the whole change is not repaired; a departure from the form always
+Important, that is, blocking — every departure from the form is a FAIL and a round of fixes, and a
+fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
+have reached 6 of 32 runs.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
