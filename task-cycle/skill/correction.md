@@ -30,7 +30,10 @@ merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `
 a dispatch that asks whether the two sides still hold together and names the foundation entries the
 merge brought in that bear on the parts the change touches, as step 12 of `implement-task` gives
 (WAY-306, WAY-150), and the agents that own the checks the merge touches run them again. The remarks
-bind; record them as new events. Keep the recorded route for the affected work: dispatch the
+bind; record them as new events, and write them word for word, as the human gave them, into
+`reports/correction-<n>-remarks.md` of the record, `<n>` counting the corrections from 1, also
+where they came in conversation or concern only the refreshing of the target branch (WAY-357).
+Keep the recorded route for the affected work: dispatch the
 correction with `make-change`, resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code
 review" gives. A new open design choice, a reserved choice or an oversized attempt follows the
@@ -42,8 +45,22 @@ correction's own among them. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
 accepted despite the finding, then run what has not run on that code (WAY-163). Rewrite
 `request.md` by `task-cycle/skill/request_template.md`, in its variant for a correction, for the
-state after the correction and with the link to the record's new commit, check it as the template
-gives, and edit the request's description from it.
+state after the correction, with the link to the record's new commit and with the pairs of the
+correction in one sentence as the item of kind 17 in *You accept by merging* (WAY-287), check it
+as the template gives, and edit the request's description from it.
+
+Before the record's copy is prepared, add the correction's line to the record's item *Corrections
+after the request opened*, as `task-cycle/record_template.md` gives it: the file of the remarks and
+each pair `<source> · <kind>` of the correction once (WAY-357, WAY-358). Take the source from what
+started the correction: `item <n>` for the human's answer to an item of the request's *For you to
+decide*, `<n>` being the number of that item's kind in `request_template.md`, as in item 8
+below, never the number the item had in the description; `remark` for a remark of the human
+outside any item; `target-branch` for a correction that exists only to refresh the target branch
+at the human's request. Judge each kind by one test against the documents: `defect` where what the
+correction changes was required by the approved task document or by the foundation, or is a
+regression, which is the test of `project-level/task/template.md` for a task that fixes a defect;
+`not-required` where it was not required; `none` only with `target-branch`. A correction that has
+several sources gives each pair once.
 
 An answer to the item of the request's *For you to decide* on unfixed findings (item 8 of
 `request_template.md`) that asks for the fix makes the findings it names the remarks the correction
