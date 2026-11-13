@@ -226,14 +226,15 @@ the order of their kinds.
 - **4.** *Skipped steps and unrun checks*, from the record's *Verification*, Events and *Return
   step*: a stage the cycle skill requires for this change that did not run or was skipped — the
   return step, a review, the reconciliation with the target branch, a slice not made, the gate; a
-  check of the final gate run that failed or did not run, save one that fails on the base too — by the
-  run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a check the change needed that an author reports as not done — a screenshot
-  unchecked (WAY-219), a missing state check or a missing own-work check (WAY-164). A check the
-  skill does not call for this change is none, and a check that failed and passed again stays in
-  *Checks* (WAY-261). The stages a blocked request did not run because it stopped are kind 1's, not
-  these. The answer "do it in this request" runs the step or the check that was left out. Where the
-  check an author reports as not done is one the human can do by hand, the item carries the steps
-  for it that "What an item carries" gives as its fifth part.
+  check of the final gate run that failed or did not run, save one that fails on the base too — by
+  the run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a
+  check the change needed that an author reports as not done — a screenshot unchecked (WAY-219), a
+  missing state check or a missing own-work check (WAY-164). A check the skill does not call for
+  this change is none, and a check that failed and passed again stays in *Checks* (WAY-261). The
+  stages a blocked request did not run because it stopped are kind 1's, not these. The answer "do it
+  in this request" runs the step or the check that was left out. Where the check an author reports
+  as not done is one the human can do by hand, the item carries the steps for it that "What an item
+  carries" gives as its fifth part.
 - **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
   no fix made and each finding outside the task's scope, of the review of the whole change and of
   every later review, and each Minor finding and new serious finding of a reverted fix, and judge

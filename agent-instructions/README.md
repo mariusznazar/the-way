@@ -55,10 +55,9 @@ It runs the tests of every directory that holds a `test_*.py` file git tracks, t
 the same time, each report printed whole under its directory's name when that directory ends, and
 ends with a line counting the tests and naming each directory that failed. `--jobs N` limits how
 many directories run at once, and `--jobs 1` runs them one after another; `--slowest N` lists the N
-slowest tests of each directory. A new test file in a new directory runs
-only once it is added to git (`git add`). The whole run takes about 16 minutes with `--jobs 1`, and
-less by default. Run it on the
-change as it goes into the request. A run passes when its exit code is 0. While the change is
+slowest tests of each directory. A new test file in a new directory runs only once it is added to
+git (`git add`). The whole run takes about 16 minutes with `--jobs 1`, and less by default. Run it
+on the change as it goes into the request. A run passes when its exit code is 0. While the change is
 made, `python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
 `gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
 which does not rest on the runner it checks.

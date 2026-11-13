@@ -121,28 +121,34 @@ def run_all(jobs=None, slowest=None, stream=None):
     failed, count = {}, 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=min(jobs or len(directories),
                                                               len(directories))) as pool:
-        pending = {pool.submit(run_directory, root, directory, slowest): directory
-                   for directory in directories}
-        for done in concurrent.futures.as_completed(pending):
-            directory = pending[done]
-            output, code = done.result()
-            stream.write(("== %s\n" % directory).encode("utf-8") + output)
-            if output and not output.endswith(b"\n"):
-                stream.write(b"\n")
-            stream.flush()
-            ran, last = False, b""
-            for line in output.split(b"\n"):
-                counted = RAN.match(line)
-                if counted:
-                    ran = True
-                    count += int(counted.group(1))
-                if line.strip():
-                    last = line.strip()
-            if code != 0:
-                failed[directory] = "%s (exit code %d)" % (directory, code)
-            elif not ran or not last.startswith(b"OK"):
-                # An exit code of 0 counts only beside the report of a run unittest ended with OK.
-                failed[directory] = "%s (exit code 0 without unittest's OK)" % directory
+        try:
+            pending = {pool.submit(run_directory, root, directory, slowest): directory
+                       for directory in directories}
+            for done in concurrent.futures.as_completed(pending):
+                directory = pending[done]
+                output, code = done.result()
+                stream.write(("== %s\n" % directory).encode("utf-8") + output)
+                if output and not output.endswith(b"\n"):
+                    stream.write(b"\n")
+                stream.flush()
+                ran, last = False, b""
+                for line in output.split(b"\n"):
+                    counted = RAN.match(line)
+                    if counted:
+                        ran = True
+                        count += int(counted.group(1))
+                    if line.strip():
+                        last = line.strip()
+                if code != 0:
+                    failed[directory] = "%s (exit code %d)" % (directory, code)
+                elif not ran or not last.startswith(b"OK"):
+                    # An exit code of 0 counts only beside the report of a run unittest
+                    # ended with OK.
+                    failed[directory] = "%s (exit code 0 without unittest's OK)" % directory
+        except KeyboardInterrupt:
+            # Directories still queued do not start; the ones running got the interrupt with us.
+            pool.shutdown(wait=True, cancel_futures=True)
+            raise
     summary = "%d tests in %d directories; " % (count, len(directories))
     summary += ("failed: " + ", ".join(failed[name] for name in directories if name in failed)) \
         if failed else "every directory passed"

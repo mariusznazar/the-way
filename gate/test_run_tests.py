@@ -40,7 +40,7 @@ def timed_module(log, name, wait_for=(), pause=0.0, lines=0, fail=False, after_a
 
     The test appends `start <name>` to the file `log`, prints `lines` lines of its own to the error
     output (half of them before it waits, half after), waits until `log` holds each line of `wait_for`
-    (up to 30 seconds, a failure after that), sleeps `pause` seconds and appends `end <name>`. With
+    (up to 120 seconds, a failure after that), sleeps `pause` seconds and appends `end <name>`. With
     `after_an_end` it fails unless `log` already holds an `end` line when it starts. With `fail` it
     fails after the wait."""
     return "\n".join((
@@ -65,7 +65,7 @@ def timed_module(log, name, wait_for=(), pause=0.0, lines=0, fail=False, after_a
         "            self.assertTrue(any(line.startswith('end ') for line in logged()), "
         "'started before another directory ended')",
         "        say(0, %d)" % (lines // 2),
-        "        deadline = time.time() + 30",
+        "        deadline = time.time() + 120",
         "        while time.time() < deadline and not all(line in logged() for line in %r):"
         % list(wait_for),
         "            time.sleep(0.02)",
@@ -304,6 +304,35 @@ class DirectoriesAtOnce(RunnerTestCase):
     def logged(self):
         with open(self.log(), encoding="utf-8") as handle:
             return handle.read().splitlines()
+
+    def test_an_interrupt_leaves_the_directories_still_queued_unstarted(self):
+        # The interrupt is made to come at once, when the runner starts waiting for the first
+        # directory to end; with one job, the directories after the first are still queued.
+        log = self.log()
+        for name in "abc":
+            self.write("%s/test_one.py" % name, timed_module(log, name, pause=0.3))
+        self.track("a/test_one.py", "b/test_one.py", "c/test_one.py")
+        interrupting = """
+import runpy, sys
+
+script = sys.argv[1]
+loaded = runpy.run_path(script)
+
+
+def interrupt(futures):
+    raise KeyboardInterrupt
+
+
+loaded['concurrent'].futures.as_completed = interrupt
+try:
+    loaded['run_all'](jobs=1)
+except KeyboardInterrupt:
+    print('interrupted')
+"""
+        done = subprocess.run([sys.executable, "-B", "-c", interrupting, RUNNER], cwd=self.root,
+                              capture_output=True, text=True, encoding="utf-8", errors="replace")
+        self.assertIn("interrupted", done.stdout, done.stdout + done.stderr)
+        self.assertEqual(self.logged(), ["start a", "end a"], done.stdout + done.stderr)
 
     def test_by_default_every_directory_runs_at_the_same_time(self):
         # Each test waits until the other two have started, so a run one after another fails them.

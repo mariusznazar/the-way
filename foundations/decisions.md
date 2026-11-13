@@ -11603,10 +11603,9 @@ the human could compare nothing sensibly.
 
 The orchestrator of a task cycle runs the product's gate through a script of the process at every
 run, the run on the starting state included in a cycle that makes it (WAY-367). The script runs the
-gate the product declares, measures
-the time of the whole run and, where the output of the process's test runner reports the time of a
-directory of tests, the time of each such directory, in whatever order they come, and adds the run
-to a file in the cycle's record.
+gate the product declares, measures the time of the whole run and, where the output of the process's
+test runner reports the time of a directory of tests, the time of each such directory, in whatever
+order they come, and adds the run to a file in the cycle's record.
 
 - **Scope:** task-cycle
 - **Based on:** none

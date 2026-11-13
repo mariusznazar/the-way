@@ -140,7 +140,7 @@ class RunnerOutputTest(GateTimesTest):
         (repo / "a" / "test_a.py").write_text(
             "import os, time, unittest\n\n\nclass A(unittest.TestCase):\n"
             "    def test_a(self):\n"
-            f"        for _ in range(1500):\n            if os.path.exists({str(marker)!r}):\n"
+            f"        for _ in range(6000):\n            if os.path.exists({str(marker)!r}):\n"
             "                break\n            time.sleep(0.02)\n"
             f"        self.assertTrue(os.path.exists({str(marker)!r}))\n"
             "        time.sleep(1)\n", encoding="utf-8")

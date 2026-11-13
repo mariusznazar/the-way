@@ -49,10 +49,11 @@ with the evidence and stop.
    comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
    so each handoff has the agent work from the worktree's root and names its stage's method by its
    path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives, through
-   `task-cycle/gate_times.py`, at once; a check that fails there and is not among the checks failing on the base is work the task carries, made under the
-   new pin: step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and
-   check their coverage as they check its items. Every reset of the task branch to its base stops
-   at that commit. The review of the whole change checks that commit: it holds only the gitlink, at
+   `task-cycle/gate_times.py`, at once; a check that fails there and is not among the checks failing
+   on the base is work the task carries, made under the new pin: step 4's judgment counts those
+   checks, and steps 8 and 9 hand them on with the task and check their coverage as they check its
+   items. Every reset of the task branch to its base stops at that commit. The review of the whole
+   change checks that commit: it holds only the gitlink, at
    the commit the task names, and what the installer owns: the `the-way-*` entry points in
    `.claude/skills/` and `.agents/skills/`, in `AGENTS.md` the block between its markers, and the
    removal of `.claude/rules/the-way.md` where an older pin installed it.
@@ -132,29 +133,30 @@ set the task's state.
    base is a merge commit whose tree of files is identical to the tree of the head of the branch it
    merged: `git rev-parse <base>^{tree}` and `git rev-parse <base>^2^{tree}` print the same
    identifier (WAY-367); a base with no second parent is no such commit. If it is, do not run the
-   gate on the base. Take the list of the tests
-   failing before the change from the final gate of the cycle of the merged branch, also where
-   that gate was red, from the record of that cycle in the history of git: its copy of the record,
-   `docs/task-cycles/<task-slug>/cycle.md`, which the merged branch added to its history and
-   removed again, holds the final gate's result in its *Verification*; where the branch added the
-   copy more than once, the last copy is the one. Write the list into *Verification* of this
-   cycle's record with the commit and the file it was taken from. If the base is no such commit, or
-   the merged branch holds no copy of a cycle record with the result of its final gate, run the
-   checks on the base as follows. Run those checks on the base
-   alone: finish them before anything changes a tracked file of the worktree, or run them in a
-   separate checkout of the base commit directly under the worktree's ignored `.runs/`, deleted
-   when they end. The gate's run on the base is one of the gate runs step 10 gives: it goes through
-   `task-cycle/gate_times.py` from that checkout, with
-   `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the worktree's record
-   directory from a checkout directly under its `.runs/`. In a product that checkout gets its
-   dependencies installed, as the product's own rules give,
-   and its `.the-way` populated before the checks run; otherwise they fail for that reason and not on
-   the base. Where the cycle took the list and did not run the gate on the base, and its final gate
-   (step 10) fails on a test outside the list, run the failing tests on the base in such a checkout
-   to tell a fault of the change from a fault already there, and write the result into
-   *Verification*; the run serves that diagnosis only and never makes a gate run pass (WAY-243).
-   Keep a frozen copy of the task document with its original path and its approval date or
-   source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.
+   gate on the base. Take the list of the tests failing before the change from the final gate of the
+   cycle of the merged branch, also where that gate was red, from the record of that cycle in the
+   history of git: the merged branch's own copy of its cycle record,
+   `docs/task-cycles/<merged-task-slug>/cycle.md`, where `<merged-task-slug>` is the slug of the
+   merged branch's task and not this cycle's, which that branch added to its history and removed
+   again, holds the final gate's result in its *Verification*. Find the copy with `git log
+   --diff-filter=A --name-only --format=%h <base>^1..<base>^2 -- docs/task-cycles`; where the branch
+   added the copy more than once, the last copy is the one. Write the list into *Verification* of
+   this cycle's record with the commit and the file it was taken from. If the base is no such
+   commit, or the merged branch holds no copy of a cycle record with the result of its final gate,
+   run the checks on the base as follows. Run those checks on the base alone: finish them before
+   anything changes a tracked file of the worktree, or run them in a separate checkout of the base
+   commit directly under the worktree's ignored `.runs/`, deleted when they end. The gate's run on
+   the base is one of the gate runs step 10 gives: it goes through `task-cycle/gate_times.py` from
+   that checkout, with `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the
+   worktree's record directory from a checkout directly under its `.runs/`. In a product that
+   checkout gets its dependencies installed, as the product's own rules give, and its `.the-way`
+   populated before the checks run; otherwise they fail for that reason and not on the base. Where
+   the cycle took the list and did not run the gate on the base, and its final gate (step 10) fails
+   on a test outside the list, run the failing tests on the base in such a checkout to tell a fault
+   of the change from a fault already there, and write the result into *Verification*; the run
+   serves that diagnosis only and never makes a gate run pass (WAY-243). Keep a frozen copy of the
+   task document with its original path and its approval date or source commit. Where step 2 moved
+   the pin, the branch, its base and those checks already stand.
 5. Keep the name `<task-slug>` that step 2 gave the task. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` in the task's worktree from
    `task-cycle/record_template.md` of the pinned the-way and fill it as its sections give; it is
@@ -392,10 +394,10 @@ contradicts a decision.
     it (the-way's is `python -B gate/run_tests.py`; in a product the script's path starts with
     `.the-way/`). Every run of the gate goes this way: the run on the commit that moved the pin
     (step 2), the run on the base where step 4 requires it, this run, and the reruns of steps 9 and
-    12 that this step governs. The gate's output passes through unchanged. The script's exit code is the gate's, and
-    the orchestrator records it with the command as before; an exit code 2 that comes with an
-    `Error: gate_times.py:` line on stderr is the script's own failure, not the gate's, and the
-    orchestrator does as step 12 gives for a measuring script. Record its
+    12 that this step governs. The gate's output passes through unchanged. The script's exit code is
+    the gate's, and the orchestrator records it with the command as before; an exit code 2 that
+    comes with an `Error: gate_times.py:` line on stderr is the script's own failure, not the
+    gate's, and the orchestrator does as step 12 gives for a measuring script. Record its
     command, exit code and the failures it names under *Verification*, with each check that failed or
     did not run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
     any review of it are done, on the tree they leave: the return step needs no result of the gate,
