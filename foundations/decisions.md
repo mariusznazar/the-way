@@ -10834,8 +10834,11 @@ an action outside the repository — says concretely what happens and who feels 
 situation; gives each way open with what follows from choosing it and what it costs, in time, a
 round of correction with its review and the risk that stays, and where it can show up later; gives a
 recommendation with its reason in one sentence; and asks a question with the answers to choose from.
-The agent that writes the description checks every such item against these four before the request
-opens, and fills in what is missing.
+An item for a check the agent did not run that the human can do by hand has a fifth part, three to
+six steps for the human — where to go, what to do and what the human should see — and keeps its
+answers; the human who checks by hand writes a remark after the check, as before. The agent that
+writes the description checks every such item against these four, and the item for a check the human
+can do by hand against the fifth as well, before the request opens, and fills in what is missing.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -10845,10 +10848,15 @@ opens, and fills in what is missing.
     and when, gives the three ways — try them in the request, make a task of a separate trial, let
     it through — each with its cost, recommends one with a reason, and asks which to take; the agent
     that wrote the description read each item of the first two groups against the four parts before
-    the form check, and added the missing way and its cost to an item that had none;
+    the form check, and added the missing way and its cost to an item that had none; an item about a
+    screen of the product that the agent did not check and a person can open gives three steps — open
+    the page, press the button, the page should show the saved value — and the same three answers as
+    before;
   - violates: an item reads "the return step was skipped; merge without it?", with no word on who
     will feel it, what the other ways cost or what the writer would do; the description is
-    published with an item of the first two groups that was not read against the four parts.
+    published with an item of the first two groups that was not read against the four parts; an item
+    for a check the human can do by hand gives no steps, or gives eight, or gives the steps as a
+    section of its own, or adds a fourth answer for them.
 - **Origin:** none
 
 *Rationale:* a question with no account of what happens and what each answer costs leaves the human
@@ -10856,14 +10864,22 @@ to rebuild it from the lower part, or to agree without reading; the account is w
 choose in the one place the request asks for a choice. The agent that writes the description knows
 the record, so it can fill in the account, and it reads the item before the human does. WAY-290 has
 the form check judge no content, so a missing way or cost shows to nobody before the human unless
-the writer reads the item against the four parts. The price is that an item written generally still
-reaches the human when the writer reads carelessly, and that every item in which the human chooses
-is longer.
+the writer reads the item against the four parts. A check the agent did not run is the item whose
+answer the human can often give only by doing it, and an item with no steps leaves the human to ask
+the agent how, or to find it in the lower part of the description; with the steps in the item the
+human has them where the request asks the question. Three to six steps keep the item short enough
+to read at the merge. The presence of the steps is no more checked by the form check than the four
+parts are. The price is that an item written generally still reaches the human when the writer reads
+carelessly, and that every item in which the human chooses is longer, an item with steps the most.
 *Rejected:* the rule as a sentence of the template with a good and a bad example alone — the agent
 can go on writing generally and nobody catches it before the human; a fresh agent reading the top
 part of the description before it is published — one more agent call in every cycle, and a change
 to WAY-290, which did not take such a second reading; it stays for later, should the writer's own
-check not suffice.
+check not suffice; the steps as a section of their own in the upper part of the description, as the
+card the point came from has them — it changes the skeleton (WAY-286), the form check with its
+tests (WAY-290) and the block in the language of the task document, and the section would stand in
+every request while it would read `none` in most; no steps, the human keeping an item with the same
+answers — to check by hand the human asks the agent or reads the lower part of the description.
 
 ### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
 

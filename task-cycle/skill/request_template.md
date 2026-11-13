@@ -10,8 +10,9 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
 
 1. Write the description into `.runs/task-cycles/<task-slug>/request.md`, beside the record.
 2. Before the form check, read each item of *Needed from you* and of *Fix or let through* against
-   the four parts "What an item carries" gives for an item in which the human chooses, and write
-   what is missing (WAY-327). The script cannot do this, since it judges no content.
+   the four parts "What an item carries" gives for an item in which the human chooses, and an item
+   for a check the human can do by hand against its fifth part as well, and write what is missing
+   (WAY-327). The script cannot do this, since it judges no content.
 3. Check its form, from the worktree's root — in a product, the path starts with `.the-way/`:
 
    ```
@@ -230,7 +231,9 @@ the order of their kinds.
   unchecked (WAY-219), a missing state check or a missing own-work check (WAY-164). A check the
   skill does not call for this change is none, and a check that failed and passed again stays in
   *Checks* (WAY-261). The stages a blocked request did not run because it stopped are kind 1's, not
-  these. The answer "do it in this request" runs the step or the check that was left out.
+  these. The answer "do it in this request" runs the step or the check that was left out. Where the
+  check an author reports as not done is one the human can do by hand, the item carries the steps
+  for it that "What an item carries" gives as its fifth part.
 - **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
   no fix made and each finding outside the task's scope, of the review of the whole change and of
   every later review, and each Minor finding and new serious finding of a reverted fix, and judge
@@ -326,6 +329,13 @@ the order of their kinds.
      correction with its review, the risk that stays — and where it can show up later;
   3. the recommendation, with its reason in one sentence;
   4. the question, with the answers to choose from.
+- An item of kind 4 for a check the agent did not run that the human can do by hand has a fifth part
+  after the question: three to six numbered steps for the human — where to go, what to do and what
+  the human should see — each in plain words, with no file name and no identifier of an entry, as
+  the top part asks (WAY-286). Where the way to the place is a file, a step describes the place, and
+  the item ends with its pointer to the lower part. The answers of the item stay the three of "Fix or
+  let through", and the human who checked by hand writes a remark after the check, as before. An
+  item for a check the human cannot do by hand has no steps (WAY-327).
 - An item of *Needed from you* that asks for an action outside the repository (kind 3) says what to
   do, why the request needs it and what happens without it.
 - An item of *You accept by merging* says what the cycle chose or wrote and why, in plain words,
@@ -363,6 +373,21 @@ Merging accepts these items; if one does not suit you, say which.
 2. The instruction takes the newest backup by the time of its file, not by the backup log: on a new
    server the log is gone, and that is when someone restores. The price is fetching up to seven
    backups instead of one.
+```
+
+The fifth part, for an item about a check the human can do by hand, stands after the question:
+
+```markdown
+1. The new page for editing a profile was never opened in a running copy of the product, since the
+   agent could not start the product here. If saving fails, whoever edits a profile loses the change
+   on the first day. Running the check in this request costs a session with a product that starts
+   and a round of review; making a task of it leaves the page unchecked until someone opens it;
+   letting it through accepts that risk. I recommend running it in this request, since the page is
+   the one thing the change added. Run it in this request, make a task of it, or let it through? If
+   you want to look first, and write a remark with what you saw:
+   1. Start the product and open the profile page from the menu.
+   2. Change the display name and press Save.
+   3. The page should show the new name, and it should still show it after you reload the page.
 ```
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
