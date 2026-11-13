@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -315,6 +316,39 @@ class ShareAndBoundaryTest(MeasuresTest):
         self.assertIn("- Calls in all: 0\n", text)
 
 
+class InterleavedTest(MeasuresTest):
+    """Calls of different agents, or of different sessions, that come in turn by their time."""
+
+    def test_rewrites_are_paired_within_an_agent_when_two_agents_call_in_turn(self) -> None:
+        # Orchestrator o1 09:00 writes 10000; o2 09:20 reads 0, writes 8000 (context 8000, not a
+        # collapse): min(10000, 8000) = 8000 written again. Subagent s1 09:10 writes 5000; s2 09:30
+        # reads 0, writes 5000: min(5000, 5000) = 5000. Pairing o1 with the call after it in time,
+        # s1, would give a collapse and nothing.
+        self.session([response("09:00:00", "o1", write=10000),
+                      response("09:20:00", "o2", write=8000)])
+        write_lines(self.project / SESSION / "subagents" / "agent-s.jsonl", [
+            response("09:10:00", "s1", write=5000), response("09:30:00", "s2", write=5000)])
+        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
+        self.assertIn("- Cache written again by the orchestrator: 8000\n", text)
+        self.assertIn("- Calls of the orchestrator with a cache write again: 1\n", text)
+        self.assertIn("- Cache written again by subagents: 5000\n", text)
+        self.assertIn("- Calls of subagents with a cache write again: 1\n", text)
+
+    def test_the_orchestrators_first_middle_and_last_call_over_two_sessions_are_by_time(self) -> None:
+        # Session a calls at 09:00, 09:20 and 09:40 (contexts 100, 300, 500), session b at 09:10 and
+        # 09:30 (200, 400). By time: 100, 200, 300, 400, 500, so the first is 100, the middle (the
+        # third of five) 300 and the last 500; one session after the other would give 500 and 400.
+        first = self.session([response("09:00:00", "a1", input_tokens=100),
+                              response("09:20:00", "a2", input_tokens=300),
+                              response("09:40:00", "a3", input_tokens=500)], "a")
+        second = self.session([response("09:10:00", "b1", input_tokens=200),
+                               response("09:30:00", "b2", input_tokens=400)], "b")
+        text = self.measures(str(first), str(second))
+        self.assertIn("- Context of the orchestrator's first call: 100\n", text)
+        self.assertIn("- Context of the orchestrator's middle call: 300\n", text)
+        self.assertIn("- Context of the orchestrator's last call: 500\n", text)
+
+
 class ReadingErrorsTest(MeasuresTest):
     def test_a_response_without_cache_creation_ends_with_exit_2_naming_the_file_and_field(self) -> None:
         broken = response("09:00:00", "a", input_tokens=1, output=1)
@@ -405,24 +439,24 @@ class EdgeReadingTest(MeasuresTest):
         broken = response("09:00:00", "x", input_tokens=1, output=1)
         del broken["message"]["id"]
         transcript = self.session([prompt("08:59:00", "run"), broken])
-        self.assert_error_names(transcript, 2, "message.id")
+        self.assert_error_names(transcript, "message.id")
 
     def test_a_response_without_timestamp_ends_with_exit_2_naming_the_line_and_field(self) -> None:
         broken = response("09:00:00", "x", input_tokens=1, output=1)
         del broken["timestamp"]
         transcript = self.session([prompt("08:59:00", "run"), broken])
-        self.assert_error_names(transcript, 2, "timestamp")
+        self.assert_error_names(transcript, "timestamp")
 
     def test_a_response_with_unreadable_timestamp_ends_with_exit_2_naming_the_field(self) -> None:
         broken = response("09:00:00", "x", input_tokens=1, output=1)
         broken["timestamp"] = 12345
         transcript = self.session([broken])
-        self.assert_error_names(transcript, 2, "timestamp")
+        self.assert_error_names(transcript, "timestamp")
 
-    def assert_error_names(self, transcript: Path, code_expected: int, field: str) -> None:
+    def assert_error_names(self, transcript: Path, field: str) -> None:
         output = self.root / "out" / "measures.md"
         code, errors = self.run_script(str(transcript), "--output", str(output))
-        self.assertEqual(code_expected, code, errors)
+        self.assertEqual(2, code, errors)
         self.assertTrue(errors.startswith("Error: "), errors)
         self.assertIn(transcript.name, errors)
         self.assertIn(field, errors)
@@ -468,6 +502,19 @@ class EdgeReadingTest(MeasuresTest):
         self.assertIn(meta.name, errors)
         self.assertFalse(output.exists())
 
+    def test_a_meta_file_nested_too_deeply_ends_with_exit_2_naming_it(self) -> None:
+        write_lines(self.project / SESSION / "subagents" / "agent-m1.jsonl", [
+            response("09:00:00", "m", input_tokens=1, output=1)])
+        meta = self.project / SESSION / "subagents" / "agent-m1.meta.json"
+        meta.write_text("[" * 200000 + "]" * 200000, encoding="utf-8")
+        self.session([prompt("08:59:00", "run")])
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(self.project / f"{SESSION}.jsonl"), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(meta.name, errors)
+        self.assertFalse(output.exists())
+
     def test_a_bar_and_a_control_character_in_an_agent_name_do_not_break_the_table(self) -> None:
         write_lines(self.project / SESSION / "subagents" / "agent-b1.jsonl", [
             response("09:00:00", "b", input_tokens=1, output=1)])
@@ -476,6 +523,7 @@ class EdgeReadingTest(MeasuresTest):
         self.session([response("09:00:00", "a", input_tokens=1, output=1)])
         text = self.measures(str(self.project / f"{SESSION}.jsonl"))
         self.assertIn("| a/b c (X) | Claude Code | 1 |", text)
+
 
 class CodexTest(MeasuresTest):
     """Codex rollouts, written under the codex home of the run in the form Codex keeps them in."""
@@ -680,6 +728,55 @@ class CodexReadingErrorsTest(CodexTest):
         self.assertEqual(2, code, errors)
         self.assertRegex(errors, rf"{orchestrator.name}:2: ")
         self.assertFalse(output.exists())
+
+
+class CodexSearchTest(CodexTest):
+    """The search of a Codex orchestrator's subagents among the rollouts under the codex home."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        # The orchestrator's first call is at 09:01 on 2026-10-06 (UTC).
+        self.orchestrator = self.rollout("orch", [codex_meta("orch", "09:00:00"),
+                                                  codex_usage("09:01:00", "orch", 1000)])
+        self.floor = datetime(2026, 10, 6, 9, 1, tzinfo=timezone.utc).timestamp()
+
+    def unreadable(self, ident: str, modified: float) -> Path:
+        path = self.root / "codex" / "sessions" / "2026" / "09" / f"rollout-{ident}.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("this is not JSON\n", encoding="utf-8")
+        os.utime(path, (modified, modified))
+        return path
+
+    def test_a_rollout_older_than_the_orchestrators_first_call_is_not_read(self) -> None:
+        self.unreadable("stale", self.floor - 3600)
+        text = self.measures(str(self.orchestrator))
+        self.assertIn("- Calls in all: 1\n", text)
+
+    def test_a_newer_rollout_with_an_unreadable_first_line_is_loud(self) -> None:
+        bad = self.unreadable("fresh", self.floor + 3600)
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(self.orchestrator), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(bad.name, errors)
+        self.assertFalse(output.exists())
+
+    def test_a_second_rollout_with_an_id_already_found_is_left_out_with_a_warning(self) -> None:
+        self.rollout("dup", [codex_meta("dup", "09:02:00", parent="orch", agent_path="/root/dup"),
+                             codex_usage("09:02:30", "dup", 50)])
+        copy = write_lines(self.root / "codex" / "sessions" / "2026" / "10" / "07"
+                           / "rollout-2026-10-07T00-00-00-dup.jsonl",
+                           [codex_meta("dup", "09:02:00", parent="orch", agent_path="/root/dup"),
+                            codex_usage("09:02:30", "dup", 50), codex_usage("09:03:30", "dup", 60)])
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(self.orchestrator), "--output", str(output))
+        self.assertEqual(0, code, errors)
+        self.assertNotIn("Error:", errors)
+        self.assertIn("Warning: ", errors)
+        self.assertIn(copy.name, errors)
+        text = output.read_bytes().decode("utf-8")
+        self.assertIn("- Calls of subagents: 1\n", text)
+        self.assertIn("| /root/dup | Codex | 1 | 50 |", text)
 
 
 class ScriptTest(unittest.TestCase):

@@ -17,7 +17,10 @@ the one of the two that is set; where both or neither is set, SESSION has to be 
 The subagents of a Claude Code session are `<transcript without .jsonl>/subagents/agent-<id>.jsonl`,
 each described by `agent-<id>.meta.json` beside it. The subagents of a Codex session are the rollouts
 under `<codex home>/sessions` whose session_meta names the orchestrator's id, or the id of a subagent
-already found, as its parent_thread_id. Each one is an agent of its own.
+already found, as its parent_thread_id. Each one is an agent of its own. A rollout last modified
+before the orchestrator's first call is not read; every other rollout under the home has its first
+line read, and one that cannot be read ends the run. A second rollout with an id already found is
+left out, and a `Warning:` line on stderr names it.
 
 A call of a Claude Code agent is one model response. Claude Code writes a response over several lines
 that share its id; each id counts once, from the line with the most output tokens. A response whose
@@ -67,10 +70,12 @@ class Call:
     at: datetime
     index: int
     context: int
-    read: int | None  # None where the record gives no cache read: a Codex call
-    write: int | None
-    write_5m: int | None
-    write_1h: int | None
+    # The cache figures of the call; 0 for a Codex call, whose record gives none. That they are
+    # unknown is held once, in `Agent.cache_known`, and no sum or rewrite is made without it.
+    read: int
+    write: int
+    write_5m: int
+    write_1h: int
 
 
 @dataclass
@@ -107,7 +112,8 @@ def identifier(holder: object, key: str, name: str, where: str) -> str:
 
 
 def read_time(entry: dict, where: str) -> datetime:
-    """The time of a line, in UTC. A missing or unreadable time ends the reading."""
+    """The time of a line as an aware time: a naive one is taken as UTC, another offset is kept.
+    A missing or unreadable time ends the reading."""
     value = member(entry, "timestamp", "timestamp", where)
     if not isinstance(value, str):
         raise MeasuresError(f"{where}: field timestamp is not a time")
@@ -271,19 +277,29 @@ def read_codex_calls(path: Path, ident: str) -> list[Call]:
         usage = member(payload, "usage", "payload.usage", where)
         input_tokens = whole(usage, "input_tokens", "payload.usage.input_tokens", where)
         calls.append(Call(at=read_time(entry, where), index=number, context=input_tokens,
-                          read=None, write=None, write_5m=None, write_1h=None))
+                          read=0, write=0, write_5m=0, write_1h=0))
     calls.sort(key=lambda call: (call.at, call.index))
     return calls
 
 
-def codex_subagents(home: Path, root: str) -> list[tuple[Path, RolloutMeta]]:
+def codex_subagents(home: Path, root: str,
+                    since: datetime | None) -> list[tuple[Path, RolloutMeta]]:
     """Every rollout under `home/sessions` that descends from `root`, as its path and identity. A
     rollout descends from a rollout whose id its parent_thread_id names; the search goes level by
-    level, each level in the order of the paths."""
+    level, each level in the order of the paths. A rollout last modified more than a second before
+    `since`, the time of the orchestrator's first call, cannot be one of its subagents and is not
+    read; every other rollout is, and an unreadable first line of one ends the reading. A second
+    rollout with an id already found is left out, and a warning on stderr names it."""
     children: dict[str, list[tuple[Path, RolloutMeta]]] = {}
     sessions = home / "sessions"
+    floor = None if since is None else since.timestamp() - 1
     if sessions.is_dir():
         for path in sorted(sessions.rglob("rollout-*.jsonl")):
+            try:
+                if floor is not None and path.stat().st_mtime < floor:
+                    continue
+            except OSError as error:
+                raise MeasuresError(f"cannot read {path}: {error}") from error
             meta = rollout_meta(path)
             if meta is not None and meta.parent is not None:
                 children.setdefault(meta.parent, []).append((path, meta))
@@ -292,10 +308,13 @@ def codex_subagents(home: Path, root: str) -> list[tuple[Path, RolloutMeta]]:
     queue = [root]
     while queue:
         for path, meta in children.get(queue.pop(0), []):
-            if meta.ident not in known:
-                known.add(meta.ident)
-                found.append((path, meta))
-                queue.append(meta.ident)
+            if meta.ident in known:
+                print(f"Warning: {path} has the id {meta.ident} of an agent already found; its "
+                      "calls are not counted", file=sys.stderr)
+                continue
+            known.add(meta.ident)
+            found.append((path, meta))
+            queue.append(meta.ident)
     return found
 
 
@@ -303,8 +322,10 @@ def read_codex_session(path: Path, meta: RolloutMeta, codex_home: Path) -> list[
     """The orchestrator of a Codex session and each subagent under it, each as an agent."""
     if meta.parent is not None:
         raise MeasuresError(f"{path} is a subagent's rollout, not an orchestrator's")
-    agents = [Agent(f"orchestrator {meta.ident}", True, read_codex_calls(path, meta.ident), CODEX)]
-    for sub_path, sub in codex_subagents(codex_home, meta.ident):
+    calls = read_codex_calls(path, meta.ident)
+    agents = [Agent(f"orchestrator {meta.ident}", True, calls, CODEX)]
+    since = min((call.at for call in calls), default=None)
+    for sub_path, sub in codex_subagents(codex_home, meta.ident, since):
         agents.append(Agent(sub.name, False, read_codex_calls(sub_path, sub.ident), CODEX))
     return agents
 
