@@ -11601,29 +11601,36 @@ tests in parallel.
 The script that runs the gate records, at each run, how many other gate runs by the script were going
 at the same time on the machine, from a registry that the script keeps in the user's own directory,
 outside every repository: an empty file for each run, made when the run starts and marked as ended
-when it ends, a run that has not ended counting for at most six hours and an ended one kept for a
-day. The audit compares the times of the gate between versions of the process — the median of each
+when it ends, a run that has not ended counting for at most six hours, an ended one kept for a day
+and an entry whose times cannot be, such as an end in the far future, deleted and counted for
+nothing. The audit compares the times of the gate between versions of the process — the median of each
 version and whether it falls against the previous version of the same series — only over the runs
-during which no other such run was going, and shows the other runs apart.
+that passed and during which no other such run was going, and shows the other runs apart.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-349
 - **Verification:** an agent compares a change with the decision:
-  - complies: the median of a version is taken over its runs with no other run alongside, and the
-    runs with company are listed apart; a version in which every run had company gets no median and
+  - complies: the median of a version is taken over its runs that passed with no other run
+    alongside, and the runs with company, the runs that failed and the runs whose exit code is
+    unknown are listed apart; a version in which every run had company or failed gets no median and
     no comparison, and its runs are listed apart;
   - violates: the median is taken over all runs; the shortest run of each version stands for it; the
-    count of other runs is taken for the load of the machine as a whole.
+    count of other runs is taken for the load of the machine as a whole; a run that failed enters
+    the median.
 - **Origin:** none
 
 *Rationale:* the same run of a product's gate has lasted 15 to 16 minutes on a free machine and 23
 to 40 minutes beside several sessions, so a median over all runs says mostly how loaded the machine
-was. The count of other runs shows only the runs by the script: a load of another kind is not seen,
-and a version in which every gate had company gets no comparison.
-*Rejected:* the shortest run of each version — a version with more cycles has more chances of a fast
-run and looks better, and one lucky run sets the result; the median of all runs, as for the other
-measures — at today's spread the comparison says mostly how loaded the machine was.
+was. A run that failed says how soon it failed, not how long the gate takes, and one such run alone
+on the machine would pull a median down and make a version look faster than it is. The count of
+other runs shows only the runs by the script: a load of another kind is not seen, and a version in
+which every gate had company or failed gets no comparison.
+*Rejected:* the runs that failed taken into the median — a run that stops early has a short time
+and makes the version look faster; the shortest run of each version — a version with more cycles has
+more chances of a fast run and looks better, and one lucky run sets the result; the median of all
+runs, as for the other measures — at today's spread the comparison says mostly how loaded the
+machine was.
 
 ### WAY-351 — How are the tokens written again to the prompt cache counted?
 
