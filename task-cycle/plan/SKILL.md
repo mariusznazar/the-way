@@ -170,6 +170,17 @@ Write the plan in this form; the script reads the slice headings and the fields 
   that changes behaviour names the test it starts from. They are the slice's focused checks — its
   tests and those of the code and invariants it reaches — never the product's gate, which the
   orchestrator runs once on the finished change (WAY-160).
+- Where a slice adds to a function or a file that stands over the threshold of the rule of size in
+  the product's coding guidelines (WAY-360), the plan begins with a slice that moves a part of that
+  function or file out without a change of behaviour, and the slice that adds depends on it. Read
+  the threshold in the product's decision on the rule that the guidelines name, and the size of
+  the function or the file from the code, or from the failure of the rule's test run on the base
+  in a separate worktree, which names each function and file over a threshold with its size
+  (WAY-356). The move's slice names, in its *Goal*, what moves and that behaviour does not change,
+  and its *Checks* are the tests that cover what moves. The move is a choice of how to make the
+  change, not an open design choice: write it under *Choices* and write no spec for it (WAY-135).
+  Where the product's guidelines hold no rule of size, or the rule reads `none —`, this bullet
+  asks nothing.
 - Order the slices so that each comes after what it depends on; the slices are made one after
   another in that order. Two slices change the same file only where one depends on the other.
 - No code: no function body, no test body, no text a file will hold. Name what is to exist — a

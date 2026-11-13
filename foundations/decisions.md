@@ -11972,6 +11972,43 @@ Important, that is, blocking — every departure from the form is a FAIL and a r
 fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
 have reached 6 of 32 runs.
 
+### WAY-360 — What does a change do where it adds to a function or a file that stands over the threshold of the rule of size?
+
+Where a slice of a plan adds to a function or a file that stands over the threshold of the product's
+rule of size, the plan begins with a slice that moves a part of that function or file out without a
+change of behaviour, writes the choice in its table of choices, and puts the slice that adds after it.
+The author of a change without a plan makes that move the first commit that changes the code. Such an addition is a choice of how to make the change and no open design choice, so it gets no
+spec (WAY-135).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136 · derives from WAY-355
+- **Verification:** an agent compares the plan, the author's commits and the record of choices with
+  the decision:
+  - complies: a task whose change adds a branch to a function that stands over its threshold gets a
+    plan whose first slice moves a part of that function into a function of its own, with the tests
+    that cover it as its checks, and whose second slice adds the branch, the move written in the
+    table of choices; the one author of the same task makes the move its first commit of code, names
+    it among its choices, and adds the branch in the commit after it;
+  - violates: a plan whose slice adds to a function over its threshold with no slice that moves a
+    part of it out; a spec written for such an addition; an author who adds in place and moves in the
+    same commit or after it; a move that changes what the function does.
+- **Origin:** none
+
+*Rationale:* a threshold stops a change only after the code is written, and where the rule's
+invariant is marked violated, an addition to a function not yet cleaned stops neither the test nor
+the review, which guards only a cleaned file and a new one (WAY-51); so the room is made before the
+addition. A move out with no change of behaviour is a change the tests that already cover the function
+can check, and the slice that adds then lands in a place under the threshold. Moving is a choice of
+how to make a change whose requirement the task and the foundation settle, so the plan's table of
+choices holds it, and the open design choice that WAY-135 sends to a spec is not met.
+*Rejected:* treating the addition as an open design choice, with a spec before the code — two further
+stages, the designer and the reviewer of the spec, at each such addition, and a change to WAY-135,
+whose reasoning ties the spec to a foundation entry that an agent designs; no change in the plan —
+where the rule's invariant is not marked violated, the excess shows only in the gate after the code
+is written, and where it is marked violated, an addition to a function not yet cleaned stops neither
+the test nor the review (WAY-51).
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
