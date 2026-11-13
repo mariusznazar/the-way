@@ -74,7 +74,8 @@ of the coding discipline in their places (WAY-171).
   rules follow it; a product that already has further rules takes it in between when it adds it. It
   is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind
   holds no such rule, and a product that goes without it reads `none — <PREFIX-NN>`, naming the
-  product's decision that departs from it with its reason (WAY-360, WAY-173).
+  product's decision that departs from it with its reason; a reviewer's finding about the structure
+  of such a product's code is then always Minor (WAY-360, WAY-173, WAY-363).
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of

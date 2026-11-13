@@ -86,7 +86,8 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     - the tool that counts: look first at what the product has, a linter that can run its size
       rules alone included (WAY-210); a new tool is a technology question of the task, put by
       `new_tools.md`;
-    - or a departure from the rule, with its reason.
+    - or a departure from the rule, with its reason. Say what goes with it: with no rule of size, a
+      reviewer's finding about the structure of the product's code is always Minor (WAY-363).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code, the rule of each standing check always; a rule no such test checks gets none,
   and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,

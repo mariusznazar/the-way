@@ -12095,8 +12095,10 @@ the change pushed over.
 ### WAY-363 — How does a reviewer grade a finding about the structure of code?
 
 A reviewer grades as Minor a finding about the structure of code that lies below the threshold of the
-rule of size in the product's coding guidelines, and judges its scope as for any finding (WAY-161). A
-finding about a function or a file over that threshold is graded as any other finding.
+rule of size in the product's coding guidelines, and one in a product that has no rule of size — it
+departed from the rule by a decision, or has no coding guidelines at all — and judges its scope as for
+any finding (WAY-161). A finding about a function or a file over a threshold is graded as any other
+finding.
 
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
@@ -12104,13 +12106,17 @@ finding about a function or a file over that threshold is graded as any other fi
 - **Verification:** an agent compares a review finding with the decision:
   - complies: a reviewer who finds that a change added forty lines to a function that stays under the
     threshold, or left a helper with no caller, grades each finding Minor, and the fix for Minor
-    findings (WAY-161) takes in what the change itself left; a finding that a function the change
-    pushed over the threshold stands over it is graded as any other finding; a finding about code from
-    before the change, which restructuring would reach, goes to the request's list as a finding outside
-    the task;
+    findings (WAY-161) takes in what the change itself left; a reviewer who finds that a script of
+    this repository, which has no coding guidelines (WAY-328), grew by forty lines in one function,
+    or a product that departed from the rule of size by a decision, grades the finding Minor; a
+    finding that a function the change pushed over the threshold stands over it is graded as any
+    other finding; a finding about code from before the change, which restructuring would reach,
+    goes to the request's list as a finding outside the task;
   - violates: a finding that a function grew but stays under the threshold is graded Important and
-    blocks the change; a finding about a function over the threshold is graded Minor because it is
-    about structure; the orchestrator regrades a finding of structure or moves it between the lists.
+    blocks the change; a finding about structure in a product with no rule of size is graded
+    Important and blocks the change; a finding about a function over a threshold is graded Minor
+    because it is about structure; the orchestrator regrades a finding of structure or moves it
+    between the lists.
 - **Origin:** none
 
 *Rationale:* whether a structure is good is a judgment, and a grade that follows it blocks or lets
@@ -12120,14 +12126,18 @@ opens (WAY-161), so what the change itself leaves, such as code with no user and
 true, is repaired in the review of the whole change, and the finding is left out of the blocking only.
 Where code stands over the threshold, a number settles it and not the reviewer's impression: the test
 of the rule of size stops the change, and where the rule's invariant is marked violated, the review
-that keeps a cleaned file or a new one from breaking it stops it (WAY-51). The reviewer still judges the
-scope of each finding, so a restructuring of code from before the change reaches the request's list
+that keeps a cleaned file or a new one from breaking it stops it (WAY-51). Where the product has no
+rule of size there is no threshold and no such test, so the same reasoning leaves a finding of
+structure Minor and not blocking. The reviewer still judges the scope of each finding, so a restructuring of code from before the change reaches the request's list
 and not the fix.
 *Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
 block the change and give a round of fixes, with the same chance in the grade as today for the form
 of an entry; findings of structure always outside the task's scope, on the request's list and for the
 review of the foundation — code with no user and a name no longer true, which the change itself
-left, are cleaned only by a separate task after the review of the foundation, a full cycle.
+left, are cleaned only by a separate task after the review of the foundation, a full cycle; the
+finding graded as any other where the product has no rule of size — with no threshold a finding of
+structure can block the change on the reviewer's impression and give a round of correction, with
+the same chance in the grade as today for the form of an entry.
 
 ### WAY-364 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
 

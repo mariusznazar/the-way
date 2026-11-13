@@ -44,7 +44,8 @@ in nothing, and the second in separate worktrees:
   pushed over a threshold. Where the rule's invariant is marked violated, its test stands marked as
   an expected failure (WAY-51); take the mark off in your separate worktrees, so that the test's
   message shows. Where that heading holds `none —`, or the product's guidelines hold no such rule,
-  there is no such test, and the first numbers and the diff are your material.
+  there is no such test, the first numbers and the diff are your material, and a finding of
+  structure is Minor (WAY-363).
 
 Name a growth by those numbers, read the functions the diff reaches in the files that grew, and
 grade each finding as section 3 of `SKILL.md` gives it (WAY-363).
