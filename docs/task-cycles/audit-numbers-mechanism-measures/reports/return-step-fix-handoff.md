@@ -1,9 +1,0 @@
-# Handoff — fix of the review's findings, the return step
-
-Delegation: the person who requested this cycle has delegated intermediate choices to the orchestrator; your questions go to the orchestrator, never to the human.
-
-Worktree: `the task's worktree`, branch `task/audit-numbers-mechanism-measures`. Reviewed head: `a1b2d471b96479ab9e26d5e3cfdcaad20f90a23b`; your fix range runs from it.
-
-Method: `make-change`, variant "the fix of a review's findings". You are the agent that took the return step, resumed. Read `task-cycle/change/fix.md` (the variant names it) before you change anything.
-
-Findings file: `reports/return-step-fix-findings.md` (in `.runs/task-cycles/audit-numbers-mechanism-measures/reports/`): one blocking finding, I1, in the reviewer's words; the reviewer's report is `reports/return-step-review-report.md`. Fix what the file holds. Orchestrator's ruling: make the clause the reviewer names in the three places, keeping the paragraph at three binding sentences; first check the code (`process-audit/audit_count.py` `section_table`, `fix_rounds_share`, test `test_the_column_files_named_is_never_a_missing_field`) yourself, and look once more for any other reading of an earlier form that the code makes and the entry omits (the reviewer found one; say in your report what you searched). Run `python -B elements/common/foundation_check.py` (the full check) and `python -B instruction-files/check_instructions.py .`; do not run the product's gate. Commit by path; write your report with the Write tool to `reports/return-step-fix-report.md`: the finding fixed (how, with the check) or contested, **Unread material**, **Searches not found or unclear**, the meaning sentences of WAY-344 as it now stands (English and Polish), and any choice with its rejected way and cost. Return the status, the commit, a one-line check result and the report path.
