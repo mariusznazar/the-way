@@ -27,5 +27,5 @@ Where the product has code:
   throwaway count kept under `.runs/coding/`, and for a few candidate thresholds count how many
   functions and files stand over each, and name the longest of each by place and size. The count
   judges no function: it goes to step 4 as the evidence the human sets the thresholds and the
-  exceptions from, and where the code is over a threshold, step 4 proposes the rule's invariant
-  marked violated (WAY-51).
+  exceptions from. Once the exceptions are settled, where code they do not name stands over a
+  threshold, step 4 proposes the rule's invariant marked violated (WAY-51).

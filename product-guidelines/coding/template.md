@@ -72,7 +72,7 @@ of the coding discipline in their places (WAY-171).
   file of a kind holds none of the six.
 - The required rule `### Size of a function and a file` follows the six, and the product's further
   rules follow it; a product that already has further rules takes it in between when it adds it. It
-  is no standing check and no rule of the linter's set. A file of a kind holds no such rule, and a
+  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind holds no such rule, and a
   product that goes without it reads `none — <PREFIX-NN>`, naming the product's decision that
   departs from it with its reason (WAY-355, WAY-173).
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
@@ -220,7 +220,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
   principle of the product's decision, in the change that brings it; where it points to a person,
   the number the product gives a user included, only with the human's consent; adding an item
   changes no decision (WAY-274).
-- **Size of a function and a file** — rule. It is no standing check, and the linter's set holds no
+- **Size of a function and a file** — rule. It is none of the three standing checks, and the linter's set holds no
   rule of it: the linter's rules block only where every report leads to a change worth making
   (WAY-203), while a function that stays whole over the threshold is an exception the product
   records. Size is the number of lines (WAY-355). Its text says that the thresholds and the
@@ -238,8 +238,8 @@ those decisions and invariants in its own foundation; the coding guidelines name
     a threshold, each with its size, and no command of its own that counts sizes stands in the
     guidelines or the instructions beside the gate (WAY-356, WAY-16). The test's configuration lists the exceptions of the
     decision and no other, so that adding one is a change of the decision, which the human
-    approves (WAY-172). Where the product's code is over a threshold when the rule enters, the
-    invariant is marked violated until the code is cleaned (WAY-51), and the review of each change
+    approves (WAY-172). Where code other than those exceptions stands over a threshold when the rule
+    enters, the invariant is marked violated until that code is cleaned (WAY-51), and the review of each change
     to the files of the parts the invariant names keeps a cleaned file or a new one from going over
     again. The invariant's *Part* names the parts holding the code it reads and the part holding the
     tool's configuration, as a standing check's does;

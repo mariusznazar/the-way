@@ -78,8 +78,8 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
       the human sees what a threshold stops and what is already over it; where the product has no
       code, put the thresholds as a question with the ways open and their cost, and say that no
       code of the product was tried. Say what a threshold means later: a function or a file over it
-      fails the test, and where the code is already over, the invariant stands marked violated until
-      it is cleaned (WAY-51);
+      fails the test, and where code other than the exceptions is already over, the invariant stands
+      marked violated until that code is cleaned (WAY-51);
     - the exceptions: each function or file that stays whole over a threshold, named by its place
       with the reason, which the human accepts one by one; later ones are added by a change of the
       decision, which the human approves (WAY-172);
@@ -110,8 +110,9 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for the rule of size, one invariant that no function and no file of the parts named is over its
     threshold except the exceptions of the decision, with the test the coding template's section
     "What each section carries" gives, run apart from the linter's run (WAY-355, WAY-356); where
-    the trial run found code over a threshold, it is marked violated by a change of the foundation
-    the human accepts, until the code is cleaned (WAY-51), and its weak point, that until then only
+    the trial run found code over a threshold that the exceptions, settled before this, do not name,
+    it is marked violated by a change of the foundation the human accepts, until that code is
+    cleaned (WAY-51), and its weak point, that until then only
     the review of each change to those files keeps a cleaned file or a new one under the threshold,
     is said when it is proposed.
 - **Weak points.** Name each when its choice is proposed:

@@ -11794,8 +11794,8 @@ the set of rules of the product's linter. A product sets its thresholds after a 
 existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
 a decision of its log that gives the reason (WAY-173), and a product that already has coding
 guidelines gets the rule by an ordinary extension, as WAY-278 gives it for the rules on failures and
-logs. Where the product's code is over a threshold, the rule's invariant is marked violated until the
-code is cleaned (WAY-51).
+logs. Where code other than the exceptions of the product's decision stands over a threshold, the
+rule's invariant is marked violated until that code is cleaned (WAY-51).
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -11966,8 +11966,8 @@ finding that the content of an entry does not agree with the code stays Importan
 - **Origin:** none
 
 *Rationale:* the same remark on the form of an entry was graded blocking in 9 runs of an experiment
-with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone, so the
-verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
+with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the conditions of the
+measurement stand in WAY-229), so the verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
 round of fixes, and a fix that fails leaves the request blocked for form alone (WAY-162); graded
 always Minor, a departure that makes a reader take an entry wrongly, such as a binding rule written in
 the rationale and not in a binding sentence, would not block and would not be repaired in the reviews
