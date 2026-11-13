@@ -11773,6 +11773,96 @@ state being settled — a state written by a cycle itself passes by, and the lin
 and a task is kept nowhere; no rule — the next state may get stuck and nobody sees it before a
 review, unless the reviewer thinks of it unprompted.
 
+### WAY-355 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
+
+The template of the coding discipline requires, in the general file of a product's coding guidelines,
+a rule of the size of a function and a file under the heading `### Size of a function and a file`,
+after the six rules on failures and logs, with an invariant of its own and a test of its own, outside
+the set of rules of the product's linter. A product sets its thresholds after a trial run on its
+existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
+a decision of its log that gives the reason (WAY-173), and a product that already has coding
+guidelines gets the rule by an ordinary extension, as WAY-278 gives it for the rules on failures and
+logs. Where the product's code is over a threshold, the rule's invariant is marked violated until the
+code is cleaned (WAY-51).
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-168
+- **Verification:** an agent compares the template, the skill of the coding guidelines and a
+  product's work with the decision:
+  - complies: the required form of the general file holds `### Size of a function and a file` after
+    `### Logging scope`, and the product's further rules follow it; a product whose code holds one
+    function far longer than the rest sets its thresholds after the trial run shows it, lists that
+    function as an exception with its reason in its decision where the human keeps it whole, and
+    marks the rule's invariant violated where other code stands over; a product of one small script
+    departs from the rule by a decision with its reason, and the heading holds `none — <PREFIX-NN>`;
+    a refresh of a product's coding guidelines that finds the heading missing proposes the rule, and
+    the human's yes makes the task an extension;
+  - violates: the template offers the rule as a further rule a product may take up; the rule's test
+    stands among the rules of the linter's set; a product leaves the heading out with no decision;
+    the thresholds stand in the rule's text or are taken from the template instead of standing in the
+    product's decision; a refresh passes over the missing heading in silence.
+- **Origin:** none
+
+*Rationale:* a product with no rule of size has no threshold, so a change stopped for standing over
+a threshold and a plan that makes room first do nothing there, and a rule a skill only proposes stays
+unadopted for as long as nobody takes the proposal up (WAY-202); required, the rule is left out only
+by a decision that gives the reason (WAY-173). The rule stands outside the linter's set because that
+set blocks only through rules every report of which leads to a change worth making (WAY-203), and a
+long function that is best left whole is a case the product knows and records as an exception, which
+keeps the threshold the product's choice and still lets it block. The thresholds come from a trial run
+on the product's own code, since only that shows what a threshold stops and what already stands over
+it, as the split of a linter's set comes from one (WAY-204). A threshold on a number was twice refused
+as a rule, for the share of copies the tests fail (WAY-252) and for the words of a skill (WAY-256),
+each as a number to chase; a size is a number the code itself holds, the product sets it from its own
+code, and an exception is the way out for a function worth keeping whole. A refresh stays within what
+the guidelines already cover and can only notice the rule's absence and put it to the human, where a
+no stays on record as a departure and the absence does not read as an oversight (WAY-278). The price:
+a product learns of the rule only at a change of its guidelines or when it opens an extension, a
+count of lines says nothing of whether a function is well made, and a function can be split only to
+stand under a threshold.
+*Rejected:* the rule proposed as a further rule a product may take up, with no decision on departing
+from it — a product with no rule has no threshold, so blocking a change over a threshold and the
+change in a task's plan do nothing there, and a skill that only proposes the checks leaves it so for
+as long as nobody takes the proposal up (WAY-202); no rule in the template, only the question about
+the structure of code in the review — nothing blocks, and the assessment of structure depends on the
+reviewer, with the same chance in the grade as today for a remark on the form of an entry.
+
+### WAY-356 — How does the review of a change get the sizes of functions and files from a product?
+
+The test of a product's rule of size, when it fails, names every function and file over a threshold
+with its size, and the reviewer of the whole change runs it as an ordinary test of the product's
+suite on the state before the change and on the state after it. A product has no command of its own
+that gives the sizes of functions: the one command that runs all of its tests stays the only one
+(WAY-16).
+
+- **Scope:** product-guidelines, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-355 · derives from WAY-16
+- **Verification:** an agent compares the template, the reviewer's run and a product's guidelines
+  with the decision:
+  - complies: a test of the rule of size that finds three functions and a file over their thresholds
+    fails with a message naming each of the four, with its place and its size; the reviewer of the
+    whole change runs that test in a worktree of the base and in one of the head, and reports the
+    functions and files named after the change that were not named before it;
+  - violates: the test stops at the first function over a threshold, or names a function with no
+    size; a product's guidelines or instructions name a command that prints the size of each function
+    beside the command that runs all the tests; the orchestrator runs a command of the product that
+    counts sizes before the review and hands the reviewer its output.
+- **Origin:** none
+
+*Rationale:* the test of the rule of size is already a test of the suite, so running it on the base
+and on the head costs the reviewer two runs and no new command, and the difference between its two
+failures shows what the change pushed over a threshold and what it left; a failure that names every
+function and file with its size gives the reviewer the numbers without a second tool. One command
+runs every test so that no list of commands written by hand drifts from the tests (WAY-16), and the
+rule of size needs no exception to that. The price: the test gives sizes only of what stands over a
+threshold, so the size of a function under its threshold shows only in the diff.
+*Rejected:* a command of the product that writes the size of each function of the files of a change,
+run by the orchestrator before the review of the whole change — a new decision with a second exception
+to WAY-16, a second command in every product and a step of the orchestrator in every cycle, for a
+count of functions under the threshold, which by the threshold are in order.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
