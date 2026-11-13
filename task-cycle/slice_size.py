@@ -32,8 +32,12 @@ The limits start with a wide margin and are corrected as cycles bring data:
   table "Compare models" gives "1M tokens" as the context window of Claude Fable 5.1, Claude Opus
   5.5, Claude Sonnet 5.5 and Claude Haiku 5.5, and its note on the context window says "1M tokens
   is roughly 555k words or 2.5M Unicode characters on the current tokenizer".
-- READ_LIMIT_TOKENS is a quarter of that window, which leaves three quarters for what the agent
-  reads again, the output of the commands it runs, and what it writes.
+- READ_LIMIT_TOKENS is 150 000 tokens. It was measured on the slices of one game product: 220
+  slices, of which 20 (9%) would reach that limit, among them 5 of its 10 longest agent runs and
+  25% of the input tokens of all its executors. Slices with a planned reading of 150 000 to 250 000
+  tokens ended with more than 100 model calls in 23 to 29% of cases, those under 150 000 tokens in
+  3 to 4%, and the 150 000 to 250 000 band used about 21 000 input tokens per changed line, against
+  13 000 to 16 000 for slices reading 50 000 to 150 000 tokens.
 - CHANGE_LIMIT is a starting value with no source.
 
 The report is Markdown, printed: a row for each slice with the files it changes, the characters
@@ -56,7 +60,7 @@ from pathlib import Path
 
 CONTEXT_WINDOW_TOKENS = 1_000_000
 CHARACTERS_PER_TOKEN = 2.5
-READ_LIMIT_TOKENS = CONTEXT_WINDOW_TOKENS // 4
+READ_LIMIT_TOKENS = 150_000
 CHANGE_LIMIT = 10
 
 SLICE_HEADING = re.compile(r"### Slice (\S+?)(?:\s+—.*)?\s*")
@@ -207,9 +211,8 @@ def report(sizes: list[Size]) -> str:
     lines = [
         "# Slice sizes",
         "",
-        f"Too large: more than {READ_LIMIT_TOKENS} estimated tokens to read, a quarter of a "
-        f"{CONTEXT_WINDOW_TOKENS}-token context window at {CHARACTERS_PER_TOKEN} characters a "
-        f"token, or more than {CHANGE_LIMIT} files to change.",
+        f"Too large: more than {READ_LIMIT_TOKENS} estimated tokens to read at "
+        f"{CHARACTERS_PER_TOKEN} characters a token, or more than {CHANGE_LIMIT} files to change.",
         "",
         "| Slice | Files to change | Characters to read | Estimated tokens | Verdict | Why |",
         "|---|---|---|---|---|---|",

@@ -75,14 +75,14 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(self.row(output, "1")[2], "6")
 
     def test_read_at_the_limit_fits_and_one_character_more_is_too_large(self) -> None:
-        self.file("at.txt", "a" * 625_000)
-        self.file("over.txt", "a" * 625_001)
+        self.file("at.txt", "a" * 375_000)
+        self.file("over.txt", "a" * 375_001)
         code, output, _ = self.run_plan(
             "### Slice 1\n- **Read:** `at.txt`\n\n### Slice 2\n- **Read:** `over.txt`\n")
         self.assertEqual(code, 1)
-        self.assertEqual(self.row(output, "1")[3:5], ["250000", "fits"])
+        self.assertEqual(self.row(output, "1")[3:5], ["150000", "fits"])
         self.assertEqual(self.row(output, "2")[3:6], [
-            "250001", "too large", "reads about 250001 tokens, more than 250000"])
+            "150001", "too large", "reads about 150001 tokens, more than 150000"])
 
     def test_more_than_ten_files_to_change_is_too_large(self) -> None:
         ten = " · ".join(f"`f{number}.py`" for number in range(10))
