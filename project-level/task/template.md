@@ -213,3 +213,10 @@ row of *Settlements to record* restates in one sentence what its *Source* names,
 writes its entry from the row. Keep each sentence of Description and Context in a separate list
 item. If the project source leaves a value open, ask or keep `TODO`; do not fill it from general
 knowledge.
+
+Where the document points at a place to change in a file, anywhere in it, it names the place by the
+heading it stands under or by a quotation of the text there, and gives a line number only as a hint
+beside that, such as "the paragraph that opens 'An item of'", about line 320; the cycle finds the
+place by the heading or the quotation (WAY-353). The *Source* under a question is no such pointer:
+it stays as the skeleton gives it, with the line and the revision, which say which text the line
+meant.

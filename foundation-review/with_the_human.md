@@ -12,19 +12,26 @@ analysis.
    change costs; your recommendation; and one question — change, leave, or check first. Wait for
    the answer before the next proposal. An answer that changes the shape of later proposals changes
    them.
-2. The groups of remarks, **a group at a time**. Show the group's kind, its count, one remark in
+2. The decisions that describe a transitional state, **one at a time**. Show the sentence of the
+   decision that describes the state, quoted whole, and what the decision says ends it; the two
+   answers — a task exists and the human names it, so that the review writes nothing, or none
+   exists and the review proposes creating one — with what each costs and your recommendation; and
+   one question: is there a task that ends this state? Wait for the answer before the next
+   decision (WAY-354).
+3. The groups of remarks, **a group at a time**. Show the group's kind, its count, one remark in
    full — the reviewer's words, the place, the state today and what it does to whom — and the
    effect of the rest in one sentence; the options (a collective task, a note to a task, leave),
    what each costs, your recommendation; and one question. Show the full table of the group only
    when the human asks for it.
-3. The collective task for small corrections of the foundation's wording, if there is one, last.
+4. The collective task for small corrections of the foundation's wording, if there is one, last.
 
 Write each decision under its proposal or group in the data file when it is made.
 
 ## The tasks that follow
 
-A decision to change something becomes a task in the backlog step 1 found, and the review makes
-the task and no change itself (WAY-302, WAY-14):
+A decision to change something, and a transitional state for which the human says that no task
+exists and agrees to one, becomes a task in the backlog step 1 found, and the review makes the task
+and no change itself (WAY-302, WAY-14, WAY-354):
 
 - Create the task in the form the backlog gives: an entry, and where the backlog holds short
   entries only, a task document in the task area, linked from the entry, with `Status: refining`

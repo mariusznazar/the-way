@@ -17,6 +17,16 @@ One proposal for each entry that needs a change, from `weak_points.md`. It holds
 Small corrections of wording that do not change what an entry binds are not proposals one by one:
 they gather into one collective task of the repository, listed in the data file.
 
+## Decisions that describe a transitional state
+
+Each decision of the list that `weak_points.md` gives for a transitional state is put to the human
+with the sentence that describes the state quoted whole, what the decision says ends it, and the
+question whether a task exists that ends it. Where the human names such a task, nothing is
+proposed. Where none exists, the proposal is to create one, and it holds what happens if none is
+made — the state stays in the product, and the decision goes on binding it — and what the task
+costs. A task made on the human's yes follows `with_the_human.md`. The entry of the decision is not
+changed and gains no field (WAY-354).
+
 ## Groups of remarks
 
 The remarks that go forward from `remarks.md` are grouped by what one cycle can fix together — the
@@ -45,7 +55,9 @@ with the date of the checked commit. It holds:
   stands;
 - one section for each group, with its kind, what it is about in one or two sentences, the number
   of remarks and a table of them, one line each (below);
-- one section for the proposals about the foundation and the weak points of `weak_points.md`;
+- one section for the proposals about the foundation, the weak points of `weak_points.md` and the
+  decisions that describe a transitional state, with the human's answer to each, whether a task
+  exists or none and one is proposed;
 - under each group and proposal, the human's decision once it is made, with its date.
 
 A table of remarks has the columns *Remark* (`<repository>#<request>-<k>`, with the numbers of both
