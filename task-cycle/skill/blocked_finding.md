@@ -8,7 +8,7 @@ slice's included — the change is blocked: run no third round and do not rule o
 the gate on the change as step 10 gives, at once, since no return step runs on this code, and make
 no further slice, no return step and no reconciliation with the target branch on code its review
 has not accepted (WAY-163). Run
-`task-cycle/cycle_stages.py` as step 12 gives, write the record, prepare its copy as "The record
+`task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py`, as step 12 gives, write the record, prepare its copy as "The record
 before it is committed" of `implement-task` gives and commit the copy and its removal as step 12
 gives them, then write the description by `task-cycle/skill/request_template.md` as
 step 13 gives, in its variant for a remaining blocking finding, linking the record by the SHA of the

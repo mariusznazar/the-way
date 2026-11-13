@@ -11193,27 +11193,43 @@ them is not counted.
 ### WAY-339 — When do the measures of the audit stop being comparable?
 
 A new price list, or a change of the form of a stage report, of the list of classes or of the
-instructions of the reviewer, starts a new series of measures. The audit compares measures only
-within one series, and judges a version of the process by the cycles that ran on it, never one week
-against another.
+instructions of the reviewer, starts a new series of measures, except for the measures of how a
+cycle's agents use context and the prompt cache (WAY-347) and the times of the gate (WAY-349): a new
+series of those starts only with a change of the script that counts them or of the script that
+records them, and no change of the instructions of the cycle, the reviewer's and the author's
+included, starts one. The audit compares measures only within one series, and judges a version of the
+process by the cycles that ran on it, never one week against another.
 
-- **Scope:** process-audit
+- **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares a change with the decision:
   - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
     not set against the median of the other; the cycles of one version of the process are compared
-    with the cycles of another version inside a series;
+    with the cycles of another version inside a series; a change of the reviewer's instructions
+    starts a new series of the cost and none of the measures of context and cache use or of the
+    gate times, whose cycles on the two sides of it are compared; a change of the script that
+    counts the measures of context and cache use starts a new series of those measures and none of
+    the cost;
   - violates: the number of remarks of one week is set against that of the week before, across a
-    change of the form of a stage report.
+    change of the form of a stage report; a change of the reviewer's or the author's instructions
+    divides the series of the gate times; a change of the script that records the gate times leaves
+    their series whole; the addition of the script that counts the measures of context and cache use
+    starts a new series of the cost.
 - **Origin:** none
 
 *Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the
 rise of remarks after WAY-260 shows, a change of the price list changes the cost of the same work,
 and a change of the list of classes or of the instructions of the reviewer changes what is counted
 and what is found. A number from before such a change says something about the change as well as
-about the process.
-*Rejected:* unknown
+about the process. The measures of context and cache use and the gate times are the numbers by
+which a change to the instructions of the cycle is judged, so a series that such a change started
+would never hold the two sides to compare; what changes their meaning is a change of the script that
+measures them, which is the one change that starts their series.
+*Rejected:* the changes that start the series of the cost, with the script that counts the measures
+of context and cache use added to them — the comparisons would almost never occur, since nearly
+every change made to improve the process touches those instructions, and adding the script to that
+list would end the series of the cost as well.
 
 ### WAY-340 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
 
@@ -11328,10 +11344,18 @@ changes, the whole reading of each file whose way of reading the change reworks 
 file, no other file and no other part of the script — and a missing field ends the script with exit
 code 2 and a message that names the file and the field, except that a script whose purpose is to
 check the form of a file reports a missing field whose presence it checks as a finding of its list,
-with exit code 1. Each reading of a file that the rule covers has one test that gives the file
-without one of the fields it needs and asserts the failure that names that field, the review of the
-change answering for the other fields; the *Scope* names every part of the-way's part map, and a
-change that adds a part to the part map adds it to this *Scope*.
+with exit code 1, and except that the command that counts the audit, in a file of a cycle's record
+that it reads from git history, gives the values that need a missing field as unknown, writes its
+result and ends with exit code 1 and a line `Error:` that names the file and the field — a field
+that an earlier form of the file never had being no missing field where the command reads the file
+as that form, which it does for a stage report that has no heading of its detailed section and holds
+a table of tokens by model, for one that has neither of its two time lines, and for one whose
+detailed section has no column *Files named*, and which gives the values that need that field as
+unknown, with no line `Error:` and no change of the exit code. Each reading of a file that the rule
+covers has one test that gives the file without one of the fields it needs and asserts the failure
+that names that field, the review of the change answering for the other fields; the *Scope* names
+every part of the-way's part map, and a change that adds a part to the part map adds it to this
+*Scope*.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -11345,15 +11369,28 @@ change that adds a part to the part map adds it to this *Scope*.
     reworks how a script reads the section headings of a report brings every field of that report
     under the check, adds one test that gives the report without one heading, and leaves the
     script's reading of other files as it was; a script whose purpose is to check the form of a file
-    lists an absent section it checks as a problem with exit code 1; a change that adds a part to
-    the part map adds its identifier to the *Scope* of this decision in the same change;
+    lists an absent section it checks as a problem with exit code 1; the command that counts the
+    audit meets a file of the measures of an old cycle's record, read from git history, with a key
+    renamed, gives the values that need that key as unknown, writes its result, and ends with exit
+    code 1 and a line `Error:` that names the file and the key, and its test gives the file without
+    that key and asserts that line; the command that counts the audit meets a stage report of the
+    form before the detailed section, one with neither of its two time lines, or one whose detailed
+    section has no column *Files named*, gives the values that need what that form never had as
+    unknown and ends with no line `Error:` for it, and its tests pin that; a change that adds a
+    part to the part map adds its identifier to the *Scope* of this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
-    error; a script that is no check of form lists an absent field as an item with exit code 1; a
-    script whose purpose is to check the form of a file stops with exit code 2 at an absent section
-    whose presence it checks; a change that reworks the reading of a file checks the field it added
-    and leaves the other fields of that file unchecked; a new script's reading of a file, or a
-    changed script's reworked reading of a file, has no test that gives the file without a field; a
-    change that adds a part to the part map leaves this *Scope* as it was.
+    error; a script that is neither a check of form nor the count of the audit lists an absent
+    field as an item with exit code 1; a script whose purpose is to check the form of a file stops
+    with exit code 2 at an absent section whose presence it checks; the command that counts the
+    audit, at a field missing in a file of an old cycle's record from git history, ends with exit
+    code 2 and writes no result, or gives the missing value as zero or empty; the command that
+    counts the audit ends with a line `Error:` for a field that the earlier form of a stage report
+    never had, so that every count of cycles of that form ends with exit code 1; the command that
+    counts the audit reads a stage report that holds one of its two time lines and not the other as
+    the earlier form, with no line `Error:`; a change that reworks the reading of a file checks the
+    field it added and leaves the other fields of that file unchecked; a new script's reading of a
+    file, or a changed script's reworked reading of a file, has no test that gives the file without
+    a field; a change that adds a part to the part map leaves this *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
@@ -11363,14 +11400,24 @@ product's commands. The-way departs from the guidelines of a product for its own
 no guideline of a product asks that a script check its input, and new code copies the code already
 there; this rule is the requirement that stands in the-way's own log. An error naming the field lets
 the author of the change or the cycle repair the file or the script at once; exit code 2 says the
-file was not read, apart from a listing of findings, which a caller carries out as findings. The rule
-covers the whole reading of a file a change reworks, so that the old reads of that file, which a
-change of format threatens most, are not left unchecked, and one test per reading, not one per field,
-keeps the cost of the check in proportion. The price: a change that reworks the reading of a file
-pays for the check of every field of that file; an existing script that no change touches stays as it
-is, so the rule protects new and changed readings first; and the review alone answers for the fields
-beyond the one each test gives up. Tests of a script's behaviour stand without an invariant, since
-WAY-12 concerns how a decision is checked.
+file was not read, apart from a listing of findings, which a caller carries out as findings, and
+apart from the count of the audit, whose file in the history of git no later change can mend and
+whose run, at night with no human present, would otherwise leave the session of the audit with no
+result at all, the figures of the register of problems included; the count writes what it could read,
+leaves unknown what the file does not give and ends with the error that names the field, so that the
+error is seen and the rest of the result is not lost. A field that an earlier form of a file never
+had is no loss of the file but the way that form was written, and the count of the audit reads the
+files of cycles of every form; read as missing, it would end every count in exit code 1 for as long
+as such files are counted, and an exit code that every run gives carries no signal. The rule covers
+the whole reading of a file a change reworks, so that the old reads of that file, which a change of
+format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
+the cost of the check in proportion. The price: a change that reworks the reading of a file
+pays for the check of every field of that file; a stage report that has lost its two time lines, its
+detailed section while a table of tokens by model remains, or the column *Files named* of that
+section, is read as the earlier form and gives unknown where the rule alone would give an error; an
+existing script that no change touches stays as it is, so the rule protects new and changed readings
+first; and the review alone answers for the fields beyond the one each test gives up. Tests of a
+script's behaviour stand without an invariant, since WAY-12 concerns how a decision is checked.
 *Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
 the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
 withdrawn after the-way's own guidelines are written the rule would have to be moved, and until then
@@ -11393,7 +11440,11 @@ orchestrator carries out a listing with exit code 1 as findings, and for the scr
 process remarks every item goes into the remarks word for word (WAY-294), so a missing section in a
 report would become a process remark and the report would stay uncorrected, the same quiet pass the
 rule prevents; a new exit code, such as 3 — each skill that reads exit codes would have to be
-extended.
+extended; exit code 2 with no result for the count of the audit — the count runs at night with no
+human present, so the session of the audit has no result, the numbers of the register of problems
+included, until someone mends the script; the exception for the stage report alone, the file of
+measures and the file of gate times keeping exit code 2 — a file of either kind from any old cycle
+that fits no form stops the whole weekly result.
 
 ### WAY-345 — How is the cost of one occurrence of a problem that the audit counts graded?
 
@@ -11456,6 +11507,185 @@ add a second measure of the same question and an extra table to read.
 weight — no step of the audit's session reads it, and whether cycles get cheaper is already
 measured by the cost of a cycle (WAY-337); the cost in both places — a longer result, and half of the
 new numbers fall in a table the session does not read.
+
+### WAY-347 — How are the measures of how a cycle's agents use context and the prompt cache counted?
+
+The measures of how a cycle's agents use the context and the prompt cache of the model — the number
+of model calls, the size of each call's context, the tokens written to the cache and the tokens
+written to it again — are counted by a script of their own into a file of their own in the cycle's
+record, and are never columns of the stage report.
+
+- **Scope:** task-cycle, process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-339
+- **Verification:** an agent compares a change with the decision:
+  - complies: a later change that adds one more measure of context or cache use adds it to the
+    script and the file of those measures, and the stage report keeps the columns it has;
+  - violates: a change adds a column of context or cache use to the stage report; the script of
+    those measures writes its numbers into the stage report.
+- **Origin:** none
+
+*Rationale:* a change of the form of the stage report starts a new series of measures (WAY-339), so a
+column added to the report for these measures would end the comparison of the cost of cycles across
+the change, while a file of its own changes no form of the report. The price: a second file in each
+cycle's record, and a second reading of the record for the audit.
+*Rejected:* new columns in the stage report — a change of the form of the stage report starts a new
+series of measures (WAY-339); a sentence added to WAY-339 saying that adding columns starts no series
+— a file of its own avoids the dispute with no change to that decision.
+
+### WAY-348 — Does the weekly count of the audit read the measures of context and cache use and the gate times, and compare them?
+
+The weekly count of the audit reads the measures of context and cache use (WAY-347) and the gate
+times (WAY-349) from the cycles' records and shows them: the values of each cycle and, for each
+version of the process, the median of each measure and whether it falls against the previous version
+of the same series.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-335 · derives from WAY-339
+- **Verification:** an agent compares a change with the decision:
+  - complies: the result of the count lists, for each cycle, its measures of context and cache use
+    and its gate times, and for each version of the process the median of each measure with the
+    answer whether it falls against the previous version of the same series, as it does for the
+    cost;
+  - violates: the count reads only the stage reports and leaves these numbers in the cycles'
+    records; the count lists the values of each cycle and no medians or comparison of versions; the
+    median of a version is set against that of a version of another series.
+- **Origin:** none
+
+*Rationale:* these numbers lie in the records of cycles, which the session of the audit does not
+open, and without medians and a comparison of versions the comparison of before and after is made by
+hand, so a change to the process cannot be said to have worked (WAY-335). The price: the count reads
+two more kinds of file of every cycle, so its result is longer and each kind is one more file it can
+meet in a form it cannot read (WAY-344).
+*Rejected:* only collecting the numbers in the cycles' records — they lie in directories the session
+of the audit does not open, and the comparison of before and after has to be made by hand; reading
+and showing the values of each cycle with no medians and no comparison of versions — by eye alone
+the human could compare nothing sensibly.
+
+### WAY-349 — How does the orchestrator of a task cycle run the product's gate so that the gate times reach the cycle's record?
+
+The orchestrator of a task cycle runs the product's gate through a script of the process at every
+run, the run on the starting state included. The script runs the gate the product declares, measures
+the time of the whole run and, where the output of the process's test runner reports the time of a
+directory of tests, the time of each such directory, in whatever order they come, and adds the run
+to a file in the cycle's record.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-160
+- **Verification:** an agent compares a cycle and its record with the decision:
+  - complies: the orchestrator runs the gate through the script on the starting state and on the
+    finished tree, and the cycle's record holds a file with the time of each run and of each
+    directory in it; the file holds times and no output of the gate (WAY-160); the run of the gate
+    remains the orchestrator's alone;
+  - violates: the orchestrator runs the command of the gate directly; the times are copied from the
+    output of the gate into the record by hand; the file holds the output of the gate; an author, an
+    executor or a reviewer runs the script.
+- **Origin:** none
+
+*Rationale:* a time that a script reads from the run cannot be copied wrongly, the audit reads a file
+whose form a script holds, and the script is an instrument whose change shows in the files, where a
+change to the habit of an agent leaves no trace. The price: a run of the gate outside the script
+leaves no time, and the time of the parts of a gate other than the directories of the process's test
+runner stays in the time of the whole run.
+*Rejected:* the orchestrator copying the times from the output into the record — copied numbers are
+sometimes wrong, the audit would read a table written by hand, and a change to the habit of an agent
+changes the instrument with no trace in the files; the test runner of the process writing the times
+to a file itself — it leaves no trace of a run by design, in a product with a build and tests
+of another kind it would not cover them, and it would collide with the task of running directories of
+tests in parallel.
+
+### WAY-350 — Which runs of the gate does the audit compare between versions of the process?
+
+The script that runs the gate records, at each run, how many other gate runs by the script were going
+at the same time on the machine, from a registry that the script keeps in the user's own directory,
+outside every repository: an empty file for each run, made when the run starts and marked as ended
+when it ends, a run that has not ended counting for at most six hours, an ended one kept for a day
+and an entry whose times cannot be, such as an end in the far future, deleted and counted for
+nothing. The audit compares the times of the gate between versions of the process — the median of each
+version and whether it falls against the previous version of the same series — only over the runs
+that passed and during which no other such run was going, and shows the other runs apart.
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-349
+- **Verification:** an agent compares a change with the decision:
+  - complies: the median of a version is taken over its runs that passed with no other run
+    alongside, and the runs with company, the runs that failed and the runs whose exit code is
+    unknown are listed apart; a version in which every run had company or failed gets no median and
+    no comparison, and its runs are listed apart;
+  - violates: the median is taken over all runs; the shortest run of each version stands for it; the
+    count of other runs is taken for the load of the machine as a whole; a run that failed enters
+    the median.
+- **Origin:** none
+
+*Rationale:* the same run of a product's gate has lasted 15 to 16 minutes on a free machine and 23
+to 40 minutes beside several sessions, so a median over all runs says mostly how loaded the machine
+was. A run that failed says how soon it failed, not how long the gate takes, and one such run alone
+on the machine would pull a median down and make a version look faster than it is. The count of
+other runs shows only the runs by the script: a load of another kind is not seen, and a version in
+which every gate had company or failed gets no comparison.
+*Rejected:* the runs that failed taken into the median — a run that stops early has a short time
+and makes the version look faster; the shortest run of each version — a version with more cycles has
+more chances of a fast run and looks better, and one lucky run sets the result; the median of all
+runs, as for the other measures — at today's spread the comparison says mostly how loaded the
+machine was.
+
+### WAY-351 — How are the tokens written again to the prompt cache counted?
+
+In the call of an agent after its first, the tokens written again to the prompt cache are what the
+previous call held in the cache, read and written together, and the present call did not read from
+it, at most as many as the present call wrote; they count only above 2 thousand tokens and only where
+the context of the call, its input, what it read from the cache and what it wrote to it together, did
+not shrink by 30% or more against the previous call, since such a shrink is a collapse of the
+conversation and no expiry of the cache.
+
+- **Scope:** task-cycle, process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-347
+- **Verification:** an agent compares a change with the decision:
+  - complies: the previous call held 50,000 tokens in the cache and had a context of 55,000; the
+    present call read 30,000 tokens from the cache, wrote 25,000 and has a context of 56,000, so
+    min(50,000 − 30,000; 25,000) = 20,000 tokens are written again and counted; a present call that
+    read 10,000, wrote 25,000 and has a context of 36,000 counts none, the context having shrunk by
+    more than 30%; a rewrite of 1,500 tokens counts none;
+  - violates: the tokens written again are taken as what the call wrote beyond the growth of the
+    context since the previous call; a call whose context shrank by 30% or more is counted as
+    writing again; a rewrite of 2,000 tokens or fewer is counted.
+- **Origin:** none
+
+*Rationale:* a collapse of the conversation drops part of the context, and the cache is written anew
+after it though nothing expired; counted as a rewrite, a collapse would make a change that adds
+collapses look like a worsening. The price: a collapse that shrinks the context by less than 30%
+counts as a rewrite, and a rewrite of 2 thousand tokens or fewer is not counted.
+*Rejected:* the tokens written beyond the growth of the context since the previous call — every
+collapse of the conversation looks like an expiry of the cache, so a change that adds collapses would
+look like a worsening.
+
+### WAY-352 — From which table of the stage report is the cost of a cycle counted?
+
+A cycle whose stage report has no detailed section is counted all the same: its cost is counted from
+the table of tokens by model, at the same price list and in the same way as the cost counted from the
+detailed section, and the share of the fix rounds is unknown for it.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-337
+- **Verification:** an agent compares a change with the decision:
+  - complies: a cycle whose stage report holds the table of tokens by model and no detailed section
+    has a cost at the dated price list and an unknown share of fix rounds, with the reason given;
+  - violates: such a cycle has no cost and is left out of the count; its share of fix rounds is
+    `0.0%`; its cost is counted at another price list than the cycles of the detailed section.
+- **Origin:** none
+
+*Rationale:* when the count was run on 2026-11-12, 7 of 138 cycles had a cost, because the older form
+of the stage report, which most cycles have, was passed over. The table of tokens by model holds the
+tokens of each model, from which the cost at constant prices is counted, and it ties no round to the
+turns that served it, so the share of the fix rounds stays unknown (WAY-337). The price: the count
+keeps a second way of reading a stage report for as long as cycles of the older form are counted, and
+a cycle of that form has no share.
+*Rejected:* unknown
 
 ## Withdrawn identifiers
 

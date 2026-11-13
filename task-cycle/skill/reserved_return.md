@@ -50,7 +50,8 @@ The order differs from step 12's in one point: the request opens on the commit t
 before the commit that removes it. It therefore never rests on a host accepting a request with no
 changed files, and the branch still ends with only the pair of step 12.
 
-1. Set the record's status to `blocked` and run `task-cycle/cycle_stages.py` as step 12 gives.
+1. Set the record's status to `blocked` and run `task-cycle/cycle_stages.py`, and beside it
+   `task-cycle/cycle_measures.py`, as step 12 gives.
 2. Prepare the copy of the record directory as "The record before it is committed" of
    `implement-task` gives, commit it as step 12 gives and push that commit. The request does not
    exist yet, so *Request URL and status* in the copy reads, word for word and alone on its line,

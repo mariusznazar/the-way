@@ -34,9 +34,10 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
 per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is neither
-a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or the price
-list names its option, `--locations` or `--prices`, never the path it was given (WAY-320).
+*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is
+neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or
+the price list names its option, `--locations` or `--prices`, never the path it was given
+(WAY-320).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -52,15 +53,20 @@ ones noted, and its values are read from the last copy, the most complete. For e
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
-- the cost at constant prices: each row of the section *Stages: start, waiting for tools and
-  tokens by model* of the copy's `stages.md` is priced at the list's prices, its input less its
-  cached input at the *Input* price, its cached input at the *Cached input* price and its output at
-  the *Output* price. Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in),
-  so they are priced as input: an approximation. A model the list gives no price for, a row that
-  does not read, a subagent stage with no token usage (the model `—`), a stage whose usage the
-  stage report could not read (the model `unknown`), a section where no stage has any, or a
-  `stages.md` without that section (an earlier form) gives the cost `unknown`, never zero; a row of
-  the orchestrator with no token usage, time it worked with no response of a model, costs nothing;
+- the cost at constant prices (WAY-337, WAY-352), from the copy's `stages.md` in either of its two
+  forms. The newer form is known by its heading: each row of the section *Stages: start, waiting
+  for tools and tokens by model* is priced at the list's prices, its input less its cached input at
+  the *Input* price, its cached input at the *Cached input* price and its output at the *Output*
+  price. The older form has no such section: it is known by its table of tokens by model, the one
+  table whose header row begins with *Model* and has the columns *Model*, *Total tokens*, *Input*,
+  *Cached input* and *Output*, found exactly once, and each of its rows is priced in the same way.
+  Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in), so they are priced
+  as input: an approximation. A model the list gives no price for, a row that does not read, a
+  cached input above its input, a subagent stage with no token usage (the model `—`), a stage or a
+  row whose usage the stage report could not read (the model `unknown`), a section where no stage
+  has any, a table of the older form with no row, or such a table written twice, gives the cost
+  `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
+  response of a model, costs nothing;
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
@@ -72,7 +78,9 @@ ones noted, and its values are read from the last copy, the most complete. For e
   no subagent turn was given a findings file, told by the word `findings` in its name as the check
   of process remarks tells one (WAY-294). It is `unknown`, with the reason, where the item is
   missing, doubled or names a round otherwise than by its findings file, where `stages.md` has no
-  column *Files named* (an earlier form), where a cell of it is not a list of files of `reports/`,
+  column *Files named* (an earlier form of the section), where `stages.md` is of the older form,
+  whose table of tokens by model gives no turns (the number of fix rounds is still read from the
+  record's item, as for the newer form), where a cell of it is not a list of files of `reports/`,
   where the rows of one turn disagree in their stage or their files, where a subagent turn's cell
   reads `unknown`, since that turn may serve a round, where a findings file the record names is
   named by fewer than two subagent turns, the fix and the review of that fix, or where a turn was
@@ -113,9 +121,43 @@ cycle that has one is not read, since its slices could change the answer. Q3, th
 median against the previous version of the same series, yes where lower, unknown where there is
 none.
 
+The measure versions (WAY-339, WAY-348, WAY-350): the same versions, in their own series, one kind of
+series for each instrument. A series of the mechanism measures of `mechanism_measures.md` begins at
+a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a series of
+the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` differs, by the same
+test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts as changed). No
+other change splits them: not the price list, a date of the register's list of classes, a change
+under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or `task-cycle/spec`, nor one of
+`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
+*Measure versions* gives, for each version of a series and each cycle-level measure, the number of
+cycles that give a value, their median (the rule of the median of the cost) and whether it falls
+against the previous version of the series, and for the gate times the total of the run and each
+directory any run of the version has: the median and *Falls* take only the runs that passed (exit
+code 0) during which no other gate run was going, and the runs not compared, those with another
+gate, with an unknown count, that failed or whose exit code is unknown, are counted and their median
+shown apart, never compared (WAY-350). A version in which no run passed alone, or no cycle gave a
+value, has no comparison; a version in which no cycle gives a value or no run a time has one row,
+with `—` for the measure, and one line in *Unknown values*. The values are kept as `Decimal` and a
+median that is a half is written with its decimal.
+
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
-result says why. The records, the `stages.md` files and the locations file are untrusted input:
+result says why. A field of `stages.md` that the form the file's own signs name needs and the file
+lacks is a missing field (WAY-344, which gives this command its own way to end): the values that
+need it are `unknown`, the result is written, and the run ends with exit 1 and, for each missing
+field, a line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `stages.md` of the
+copy lacks the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
+`Model`, `Input`, `Cached input` and `Output` of the table of the newer form's section, and that
+table itself, which a heading with no table misses (the column `Files named` is never missing: a
+section without it is the earlier form of the section); the columns `Input`, `Cached input` and
+`Output` of the older form's table, `Model` being its sign; the section and the table both, where
+the file has neither the heading nor a table beginning with `Model`; and, where the file has one of
+the lines `- Working time without waiting for tools:` and `- Waiting for tools:`, the other (a file
+with neither is an earlier form, read with both times unknown and no error). Every field of
+`stages.md` is under this check, since this reading of the file is reworked. Where every field
+stands in a table but in another order, or another column stands beside them, none is missing: the
+table is refused with a reason, as before. The records, the `stages.md` files and the locations
+file are untrusted input:
 their text reaches the result only as a commit, a number or a time it was read as, and a folder,
 a key or a name in a reason on one line, cut to 200 characters, with each control character and
 each bar written as `\\x..`, so that no cell of a table holds a bar; a bar and the text `\\x7c`
@@ -123,6 +165,23 @@ then read alike. No path written in them is followed, and nothing of them is run
 outside the years the platform reads gives *Committed* `unknown`. Git runs only to read, with no
 `GIT_` variable of the environment it is started in and no signature shown: `rev-parse`, `log`,
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
+
+The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
+`task-cycle/cycle_measures.py` (WAY-347) and `gate_times.md` by `task-cycle/gate_times.py`
+(WAY-349). A copy that holds neither is of an earlier cycle or of one whose script failed, and the
+record's *Verification* says which: their values are `unknown`, with that reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
+by its label; a label it lacks is a missing field, and then every value of the file is `unknown`. A
+label written twice, a value that is not what its label gives and a value `unknown` are `unknown`
+with a reason, and the count goes on. `gate_times.md` is read from its table of runs: the table
+itself and each of its columns `Started (UTC)`, `Exit code`, `Total seconds`, `Other gate runs at
+the same time`, `Directory` and `Directory seconds` are fields, and a file lacking one gives no
+runs and is a missing field. A row of the table is a run, its consecutive rows of the same four
+first cells being the directories of that run; a row of the wrong number of cells is a run of its
+own with every value `unknown`, and a cell of the form its column does not give is `unknown` with a
+reason. At most 500 runs of a file, 50 directories of a run and 200 characters of a directory are
+read, and a row after a line that is no row of the table is not read; each says so in *Unknown
+values*. Both are under the check of WAY-344, since their reading is new, and they end the run
+with exit 1 and an `Error:` line that names the file and the field, as `stages.md` does.
 
 The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
 gives: five tables, *Classes*, *Weights*, *Costs of an occurrence*, *Issues* and *Problems*, found
@@ -147,14 +206,14 @@ For each cycle, its problems by class and weight. For each issue whose *Fate* is
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
 does not hold it, never by date: the holding is `git merge-base --is-ancestor <fix> <pin>` in the
 checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
-short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a pin
-`unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the number
-of cycles its problems came back in, and the days it has waited: the cycles in which a problem of
-the issue stands, except the first of them, so `0` where it stands in one cycle only, and `at least
-n` where a refused row or a problem of a cycle not read may belong to a cycle not counted; and from
-the earliest commit date of the copies its problems' *Record* names to the day of the run,
-`unknown` where a problem's cycle is not known. An
-issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
+short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a
+pin `unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the
+number of cycles its problems came back in, and the days it has waited: the cycles in which a
+problem of the issue stands, except the first of them, so `0` where it stands in one cycle only,
+and `at least n` where a refused row or a problem of a cycle not read may belong to a cycle not
+counted; and from the earliest commit date of the copies its problems' *Record* names to the day
+of the run, `unknown` where a problem's cycle is not known. An issue `dropped` is counted apart,
+with no waiting. The issues are listed in the order of the
 register, never ranked by their counts (WAY-336). For each issue, whatever its fate, how many of its
 problems stand on each of the five levels of the cost of an occurrence (WAY-345, WAY-346): a cost
 counted by the issue and never by the cycle, and a different thing from the cost of a cycle in
@@ -168,17 +227,21 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
-number of fix rounds and the share of the cost in them. The sections *Problems by cycle*, *Fixed
+number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
+of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
+its gate times; the section *Measure versions* gives them per version. The sections *Problems by
+cycle*, *Fixed
 issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* give the register's
 counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
 
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
-read, or a table of the register refused as a whole, named in the result and in an `Error:` line on
-stderr; 2 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the
-locations file, the price list, the register or an entry it needs is missing or wrong, the register
-lacks a heading, a table or a column it needs, the register is larger than 4 MiB or not UTF-8, the
-result directory lies inside a repository to read or the checkout of the-way, or the result cannot
-be written.
+read, a table of the register refused as a whole, or a field missing in a `stages.md`, a
+`mechanism_measures.md` or a `gate_times.md`, named in the
+result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written,
+when an argument is wrong, the locations file, the price list, the register or an entry it needs is
+missing or wrong, the register lacks a heading, a table or a column it needs, the register is
+larger than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the
+checkout of the-way, or the result cannot be written.
 
 Standard library only.
 """
@@ -233,10 +296,23 @@ REMARKS_OPENER = re.compile(r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on th
 DURATION = re.compile(r"(\d{1,7}):([0-5]\d):([0-5]\d)")
 WORKING_LINE = "- Working time without waiting for tools:"
 WAITING_LINE = "- Waiting for tools:"
-STAGES_HEADING = "## Stages: start, waiting for tools and tokens by model"
+SECTION_TITLE = "Stages: start, waiting for tools and tokens by model"
+STAGES_HEADING = "## " + SECTION_TITLE
 STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
 FILES_COLUMN = "Files named"
+# The table of tokens by model, which every form of `stages.md` has and the older form is read
+# from: the table whose header row begins with `Model` (WAY-352).
+MODEL_COLUMN = "Model"
+OLDER_COLUMNS = [MODEL_COLUMN, "Total tokens", "Input", "Cached input", "Output"]
+OLDER_NEEDED = ("Input", "Cached input", "Output")
+# The fields of `stages.md` a form needs, as an `Error:` line names them (WAY-344): no backtick
+# stands in a name, since the line writes the name between backticks.
+FIELD_SECTION = f"section {SECTION_TITLE}"
+FIELD_SECTION_TABLE = f"table of the section {SECTION_TITLE}"
+FIELD_OLDER_TABLE = f"table with the first cell {MODEL_COLUMN}"
+OLDER_NO_TURNS = ("`stages.md` is of the older form, whose table of tokens by model gives no turns, "
+                  "so no round is tied to the turns that served it")
 NO_MODEL = "—"
 ORCHESTRATOR = "orchestrator"
 # A file of the cycle's `reports/` as `task-cycle/cycle_stages.py` writes it and as the record's
@@ -290,6 +366,44 @@ LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
 # *Unknown values* lists at most this many values the register leaves unknown.
 MAX_LISTED = 500
+# The two files of a cycle's record that the count reads (WAY-347, WAY-349), each written by its
+# script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
+# task-cycle/gate_times.py. A copy holding neither is an earlier form.
+MEASURES_FILE = "mechanism_measures.md"
+GATE_FILE = "gate_times.md"
+MEASURE_LABELS = (
+    "Calls in all", "Calls of the orchestrator", "Calls of subagents", "Mean context per call",
+    "Mean context per call of the orchestrator",
+    "Share of the context in calls above 200000 tokens",
+    "Context of the orchestrator's first call", "Context of the orchestrator's middle call",
+    "Context of the orchestrator's last call", "Cache written, 5 minutes", "Cache written, 1 hour",
+    "Cache written again by the orchestrator", "Calls of the orchestrator with a cache write again",
+    "Cache written again by subagents", "Calls of subagents with a cache write again",
+)
+SHARE_LABEL = "Share of the context in calls above 200000 tokens"
+MEASURE_WHOLE = re.compile(r"[0-9]{1,15}")
+MEASURE_SHARE = re.compile(r"([0-9]{1,3}\.[0-9])%")
+GATE_COLUMNS = ["Started (UTC)", "Exit code", "Total seconds", "Other gate runs at the same time",
+                "Directory", "Directory seconds"]
+GATE_RUN_COLUMNS = GATE_COLUMNS[:4]
+GATE_TABLE_FIELD = "table of the runs"
+GATE_STARTED = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}")
+GATE_CODE = re.compile(r"[0-9]{1,10}")
+GATE_TOTAL = re.compile(r"[0-9]{1,9}\.[0-9]{3}")
+GATE_OTHERS = re.compile(r"[0-9]{1,6}")
+GATE_SECONDS = re.compile(r"[0-9]{1,9}(?:\.[0-9]{1,9})?")
+# The runs and the directories of one run read from `gate_times.md`, the rest not read and said so.
+MAX_RUNS = 500
+MAX_DIRECTORIES = 50
+GATE_NONE = "—"
+DIRECTORY_SEPARATOR = " · "
+# The two instruments that start a series of the measures they give (WAY-339): a change of the one
+# starts a series of the mechanism measures, of the other a series of the gate times, and of
+# nothing else. The measures of a gate time are the total and each directory (WAY-350).
+MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
+GATE_SCRIPT = "task-cycle/gate_times.py"
+TOTAL_MEASURE = "Total time of the run"
+DIRECTORY_MEASURE = "Directory: "
 
 
 class AuditCountError(Exception):
@@ -457,6 +571,17 @@ class Git:
 
 
 @dataclass
+class GateRun:
+    """A run of `gate_times.md` as numbers, for the medians of a version: the count of other gate
+    runs at the same time, the total seconds, the seconds of each directory and the exit code, each
+    None where the file gives it as unknown or in a form that is not its column's."""
+    others: int | None
+    total: Decimal | None
+    directories: list[tuple[str, Decimal | None]] = field(default_factory=list)
+    code: int | None = None  # the exit code of the run, None where the file gives it as unknown
+
+
+@dataclass
 class Cycle:
     repository: str
     folder: str
@@ -481,6 +606,18 @@ class Cycle:
     planned: int | None = None
     too_large: int | None = None
     unknown: list[tuple[str, str]] = field(default_factory=list)
+    # The fields of `stages.md` a form needs that the copy lacks, as an `Error:` line names them
+    # (WAY-344): the run ends with exit code 1 where any cycle has one.
+    missing: list[str] = field(default_factory=list)
+    # The values of `mechanism_measures.md` by label, each as the file writes it; a label not here
+    # is unknown (WAY-347).
+    measures: dict[str, str] = field(default_factory=dict)
+    # The runs of `gate_times.md`, each as the cells after the repository and the record (WAY-349).
+    gate_runs: list[list[str]] = field(default_factory=list)
+    # The same runs as numbers, one for each of `gate_runs`, in the same order (WAY-350).
+    gate_timed: list[GateRun] = field(default_factory=list)
+    # The fields of the two files that the copy lacks, as (file, field), for the `Error:` line.
+    missing_in: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -599,6 +736,18 @@ def stages_time(lines: list[str], fenced: list[bool], prefix: str,
         return None, f"`stages.md` gives the {what} in a form that is not h:mm:ss"
     hours, minutes, seconds = (int(part) for part in match.groups())
     return hours * 3600 + minutes * 60 + seconds, None
+
+
+def has_line(lines: list[str], fenced: list[bool], prefix: str) -> bool:
+    """Whether a line of `stages.md` outside code fences begins with `prefix`."""
+    return any(not inside and line.startswith(prefix) for line, inside in zip(lines, fenced))
+
+
+def missing_line(cycle: Cycle, prefix: str) -> str:
+    """Record the time line `prefix` as a field `stages.md` lacks, and give the reason."""
+    name = f"line {prefix[2:-1]}"
+    cycle.missing.append(name)
+    return missing_reason(name)
 
 
 # Tables and the price list
@@ -754,48 +903,130 @@ def files_cell(text: str) -> tuple[frozenset[str] | None, bool]:
     return frozenset(files), True
 
 
-def stage_tokens(lines: list[str], fenced: list[bool]) -> tuple[list[StageTokens] | None, bool,
-                                                                 str | None]:
-    """The rows of the section of `stages.md` that gives each stage's tokens by model, whether its
-    table has the column *Files named*, or None with the reason: an earlier form has no such
-    section (WAY-337)."""
+@dataclass
+class StageTable:
+    """What `stages.md` gives for its cost, in the form its own signs name (WAY-337, WAY-352): the
+    rows of the section of the newer form, or of the table of tokens by model of the older form
+    (`older`); `named` is whether the section's table has the column *Files named*. `rows` is None
+    with the `reason` where they cannot be read; `missing` holds the fields the form needs that the
+    file lacks (WAY-344), which are no refusal of the form but a field not found."""
+    rows: list[StageTokens] | None = None
+    named: bool = False
+    older: bool = False
+    reason: str | None = None
+    missing: list[str] = field(default_factory=list)
+
+
+def missing_columns(found: list[str], needed, where: str) -> list[str]:
+    """The fields that name each column of `needed` that the header row `found` lacks, in the
+    order of `needed`."""
+    return [f"column {name} of the table {where}" for name in needed if name not in found]
+
+
+def stage_table(lines: list[str], fenced: list[bool]) -> StageTable:
+    """The rows `stages.md` gives for the cost. The newer form is known by the heading of its
+    section, and is read from the table of that section; without the heading the file is of the
+    older form, read from its table of tokens by model. A file with neither lacks the section and
+    the table (WAY-344)."""
     headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
                 if not inside and line.strip() == STAGES_HEADING]
-    if not headings:
-        return None, False, ("`stages.md` holds no section `Stages: start, waiting for tools and "
-                             "tokens by model`: an earlier form")
     if len(headings) > 1:
-        return None, False, "`stages.md` holds that section more than once"
+        return StageTable(reason="`stages.md` holds that section more than once")
+    if headings:
+        return section_table(lines, fenced, headings[0])
+    return older_table(lines, fenced)
+
+
+def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTable:
+    """The newer form: the rows of the table under the heading of the section. A heading with no
+    table, or a table whose header row lacks one of the columns the form needs, is a field missing;
+    the column *Files named* is never one: a section without it is the earlier form of the
+    section."""
     table: list[list[str]] = []
-    for line, inside in zip(lines[headings[0] + 1:], fenced[headings[0] + 1:]):
+    for line, inside in zip(lines[heading + 1:], fenced[heading + 1:]):
         if inside:
             continue
         if line.startswith("#"):
             break
         if line.startswith("|"):
             table.append(table_cells(line))
-    named = bool(table) and table[0] == STAGE_COLUMNS + [FILES_COLUMN]
-    if not table or (table[0] != STAGE_COLUMNS and not named):
-        return None, False, ("the table of the section in `stages.md` is not of the form the stage "
-                             "report gives")
+    if not table:
+        return StageTable(reason="the section in `stages.md` holds no table",
+                          missing=[FIELD_SECTION_TABLE])
+    absent = missing_columns(table[0], STAGE_COLUMNS, f"of the section {SECTION_TITLE}")
+    if absent:
+        return StageTable(reason="the table of the section in `stages.md` lacks a column",
+                          missing=absent)
+    named = table[0] == STAGE_COLUMNS + [FILES_COLUMN]
+    if table[0] != STAGE_COLUMNS and not named:
+        return StageTable(reason=("the table of the section in `stages.md` is not of the form the "
+                                  "stage report gives"))
     columns = len(table[0])
     body = [cells for cells in table[1:] if not is_separator(cells)]
     if not body:
-        return None, False, "the section in `stages.md` holds no stage row"
+        return StageTable(reason="the section in `stages.md` holds no stage row")
     rows: list[StageTokens] = []
     for cells in body:
         if len(cells) != columns:
-            return None, False, (f"a row of the section in `stages.md` has {len(cells)} cells, not "
-                                 f"{columns}")
+            return StageTable(reason=(f"a row of the section in `stages.md` has {len(cells)} "
+                                      f"cells, not {columns}"))
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
         if any(count is None for count in counts):
-            return None, False, ("a token count in the section of `stages.md` is not a number of at "
-                                 f"most {TOKEN_DIGITS} digits")
+            return StageTable(reason=("a token count in the section of `stages.md` is not a number "
+                                      f"of at most {TOKEN_DIGITS} digits"))
         row = StageTokens(cells[0], cells[1], cells[4], counts[0], counts[1], counts[2])
         if named:
             row.files, row.files_read = files_cell(cells[8])
         rows.append(row)
-    return rows, named, None
+    return StageTable(rows=rows, named=named)
+
+
+def older_table(lines: list[str], fenced: list[bool]) -> StageTable:
+    """The older form: the rows of the table of tokens by model, the one table of `stages.md`
+    whose header row begins with `Model`, found exactly once. Without it the file lacks the section
+    and the table; written twice, no row is chosen and the cost is unknown with no field missing;
+    a header row without one of the columns the cost needs is a field missing, and in another
+    order, or with another column beside them, none is and the table is refused."""
+    starts = [index for index, (line, inside) in enumerate(zip(lines, fenced))
+              if not inside and line.startswith("|") and table_cells(line)[:1] == [MODEL_COLUMN]
+              and (index == 0 or fenced[index - 1] or not lines[index - 1].startswith("|"))]
+    if not starts:
+        return StageTable(reason=("`stages.md` holds neither the section `" + SECTION_TITLE
+                                  + "` nor a table of tokens by model"),
+                          missing=[FIELD_SECTION, FIELD_OLDER_TABLE])
+    if len(starts) > 1:
+        return StageTable(reason="`stages.md` holds the table of tokens by model more than once")
+    start = starts[0]
+    header = table_cells(lines[start])
+    absent = missing_columns(header, OLDER_NEEDED, f"with the first cell {MODEL_COLUMN}")
+    if absent:
+        return StageTable(reason="the table of tokens by model in `stages.md` lacks a column",
+                          missing=absent)
+    form = "the table of tokens by model in `stages.md` is not of the form the stage report gives"
+    if header != OLDER_COLUMNS:
+        return StageTable(reason=form)
+    if (start + 1 >= len(lines) or fenced[start + 1] or not lines[start + 1].startswith("|")
+            or not is_separator(table_cells(lines[start + 1]))):
+        return StageTable(reason=form)
+    body: list[list[str]] = []
+    for index in range(start + 2, len(lines)):
+        if fenced[index] or not lines[index].startswith("|"):
+            break
+        body.append(table_cells(lines[index]))
+    if not body:
+        return StageTable(reason="the table of tokens by model in `stages.md` holds no model row")
+    rows: list[StageTokens] = []
+    for number, cells in enumerate(body, 1):
+        if len(cells) != len(OLDER_COLUMNS):
+            return StageTable(reason=(f"a row of the table of tokens by model in `stages.md` has "
+                                      f"{len(cells)} cells, not {len(OLDER_COLUMNS)}"))
+        counts = [token_count(cells[index]) for index in range(1, len(OLDER_COLUMNS))]
+        if any(count is None for count in counts):
+            return StageTable(reason=("a token count in the table of tokens by model in "
+                                      f"`stages.md` is not a number of at most {TOKEN_DIGITS} "
+                                      "digits"))
+        rows.append(StageTokens(str(number), cells[0], cells[0], counts[1], counts[2], counts[3]))
+    return StageTable(rows=rows, older=True)
 
 
 def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
@@ -1041,23 +1272,58 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
-        input_price, cached_price, output_price = price
-        costs.append((Decimal(row.input - row.cached) * input_price
-                      + Decimal(row.cached) * cached_price
-                      + Decimal(row.output) * output_price) / MILLION)
+        costs.append(cost_at(price, row))
     return costs, None
+
+
+def cost_at(price: tuple[Decimal, Decimal, Decimal], row: StageTokens) -> Decimal:
+    """The cost in dollars of a row at a price: its input less its cached input at the *Input*
+    price, its cached input at the *Cached input* price and its output at the *Output* price."""
+    input_price, cached_price, output_price = price
+    return (Decimal(row.input - row.cached) * input_price + Decimal(row.cached) * cached_price
+            + Decimal(row.output) * output_price) / MILLION
+
+
+def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
+    """The cost in dollars of each row of the table of tokens by model at the list's prices, as
+    `priced` gives it for the rows of the section, or None with the reason: a model `unknown`, a
+    cached input above its input, or a model with no price make the cost unknown."""
+    costs: list[Decimal] = []
+    for row in rows:
+        name = row.model[:TEXT_CAP]
+        if row.model == UNKNOWN:
+            return None, ("the table of tokens by model names the model `unknown`: its token usage "
+                          "was not read, or names no model")
+        if row.cached > row.input:
+            return None, f"the cached input of model `{name}` is above its input"
+        price = prices.table.get(row.model)
+        if price is None:
+            return None, f"the price list gives no price for model `{name}`"
+        costs.append(cost_at(price, row))
+    return costs, None
+
+
+def missing_reason(name: str, file: str = "stages.md") -> str:
+    return f"the file `{file}` of the copy lacks the field `{name}`"
 
 
 def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[bool] | None,
              record_reason: str | None, stages_lines: list[str], stages_fenced: list[bool],
              prices: Prices) -> None:
     """The cycle's cost at the list's prices and the share of its fix rounds in it; a value that
-    cannot be given is `unknown` with its reason, never zero."""
-    rows, named, reason = stage_tokens(stages_lines, stages_fenced)
-    if rows is None:
-        cycle.unknown += [("Cost", reason), ("Fix rounds share", reason)]
+    cannot be given is `unknown` with its reason, never zero. A field the form of `stages.md` needs
+    and the file lacks is also put on the cycle's `missing`, for the `Error:` line (WAY-344)."""
+    table = stage_table(stages_lines, stages_fenced)
+    if table.rows is None:
+        if table.missing:
+            for name in table.missing:
+                cycle.missing.append(name)
+                cycle.unknown += [("Cost", missing_reason(name)),
+                                  ("Fix rounds share", missing_reason(name))]
+        else:
+            cycle.unknown += [("Cost", table.reason), ("Fix rounds share", table.reason)]
         return
-    costs, reason = priced(rows, prices)
+    costs, reason = (priced_older if table.older else priced)(table.rows, prices)
     if costs is None:
         cycle.unknown += [("Cost", reason), ("Fix rounds share", reason)]
         return
@@ -1067,6 +1333,10 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
                           ("Fix rounds share", "the cost is at or above the command's limit")]
         return
     cycle.cost = total
+    if table.older:
+        # The table of tokens by model ties no round to the turns that served it: the share is
+        # unknown (WAY-352), but the number of rounds stands in the record.
+        cycle.unknown.append(("Fix rounds share", OLDER_NO_TURNS))
     if record_lines is None:
         cycle.unknown.append(("Fix rounds share", record_reason))
         return
@@ -1075,7 +1345,9 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
         cycle.unknown.append(("Fix rounds share", reason))
         return
     cycle.rounds = len(findings)
-    reason = fix_rounds_share(rows, costs, total, named, findings, cycle)
+    if table.older:
+        return
+    reason = fix_rounds_share(table.rows, costs, total, table.named, findings, cycle)
     if reason:
         cycle.unknown.append(("Fix rounds share", reason))
 
@@ -1162,6 +1434,191 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
         return None, f"`{name}` of the copy is not UTF-8"
 
 
+def read_optional(git: Git, entries: dict, prefix: bytes,
+                  name: str) -> tuple[str | None, str | None]:
+    """The text of a file of the copy that an earlier form lacks, or None with the reason: the
+    copy may be of an earlier cycle or of one whose script failed."""
+    path = prefix + name.encode("ascii")
+    if path not in entries:
+        return None, (f"the copy holds no `{name}`: an earlier cycle, or a script that failed "
+                      "(the record's *Verification* says which)")
+    return read_file(git, entries, path)
+
+
+def guarded_optional(git: Git, entries: dict, prefix: bytes,
+                     name: str) -> tuple[str | None, str | None]:
+    """`read_optional`, with a failure of git on this file given as its reason."""
+    try:
+        return read_optional(git, entries, prefix, name)
+    except (GitError, ValueError, UnicodeError) as error:
+        return None, f"git could not read the copy: {display(error)}"
+
+
+def measure_fits(label: str, value: str) -> bool:
+    """Whether a value of `mechanism_measures.md` is what its label gives: a whole number, and for
+    the share a number of percent up to 100."""
+    if label == SHARE_LABEL:
+        found = MEASURE_SHARE.fullmatch(value)
+        return found is not None and Decimal(found.group(1)) <= 100
+    return MEASURE_WHOLE.fullmatch(value) is not None
+
+
+def read_measures(cycle: Cycle, text: str | None, reason: str | None) -> None:
+    """Read the cycle-level lines of `mechanism_measures.md` by their labels (WAY-347). A label the
+    file lacks is a missing field: then every value of the file is unknown, and the field is named
+    for the `Error:` line (WAY-344). A label written twice, a value that is not what its label gives
+    or `unknown` is unknown with its reason, and the count goes on."""
+    if text is None:
+        cycle.unknown.append(("Mechanism measures", reason))
+        return
+    lines = remarks_check.split_lines(text)
+    fenced = remarks_check.fenced_flags(lines)
+    found = {label: header_fields(lines, fenced, label) for label in MEASURE_LABELS}
+    absent = [label for label in MEASURE_LABELS if not found[label]]
+    if absent:
+        for label in MEASURE_LABELS:
+            if label in absent:
+                cycle.missing_in.append((MEASURES_FILE, label))
+                cycle.unknown.append((label, missing_reason(label, MEASURES_FILE)))
+            else:
+                cycle.unknown.append((label, f"`{MEASURES_FILE}` lacks a field, so its values "
+                                             "are unknown"))
+        return
+    for label in MEASURE_LABELS:
+        values = found[label]
+        if len(values) > 1:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` holds the line `{label}` more than "
+                                         "once"))
+        elif values[0] == UNKNOWN:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it as unknown"))
+        elif measure_fits(label, values[0]):
+            cycle.measures[label] = values[0]
+        else:
+            cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it in a form that is not what "
+                                         "its label gives"))
+
+
+def gate_value(reasons: list[tuple[str, str]], column: str, value: str, pattern: re.Pattern,
+               why: str) -> str:
+    """A cell of a run in `gate_times.md` as written where it has the form of its column, else
+    `unknown` with the reason kept in `reasons` under the value `Gate runs: <column>`."""
+    if pattern.fullmatch(value):
+        return value
+    reasons.append((f"Gate runs: {column}",
+                    f"`{GATE_FILE}` gives it as unknown" if value == UNKNOWN else why))
+    return UNKNOWN
+
+
+def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
+    """Read the runs of `gate_times.md` from its table (WAY-349). A table lacking one of its six
+    columns, or lacking the table, is a missing field, and the runs are not read; a row of the wrong
+    number of cells is a run of its own with unknown values; the runs and the directories beyond the
+    limits are not read, and the reason is given."""
+    if text is None:
+        cycle.unknown.append(("Gate runs", reason))
+        return
+    lines = remarks_check.split_lines(text)
+    fenced = remarks_check.fenced_flags(lines)
+    header = next((index for index, (line, inside) in enumerate(zip(lines, fenced))
+                   if not inside and line.startswith("|")), None)
+    if header is None:
+        cycle.missing_in.append((GATE_FILE, GATE_TABLE_FIELD))
+        cycle.unknown.append(("Gate runs", missing_reason(GATE_TABLE_FIELD, GATE_FILE)))
+        return
+    names = table_cells(lines[header])
+    absent = [name for name in GATE_COLUMNS if name not in names]
+    if absent:
+        for name in absent:
+            field_name = f"column {name} of the table"
+            cycle.missing_in.append((GATE_FILE, field_name))
+            cycle.unknown.append(("Gate runs", missing_reason(field_name, GATE_FILE)))
+        return
+    at = {name: names.index(name) for name in GATE_COLUMNS}
+    reasons: list[tuple[str, str]] = []
+    # Each run: its four run cells, or None for a row of the wrong number of cells, and its
+    # directories as (name, seconds).
+    runs: list[tuple[list[str] | None, list[tuple[str, str]]]] = []
+    last: list[str] | None = None
+    cut_directories = False
+    table_end = len(lines)
+    for index in range(header + 1, len(lines)):
+        if fenced[index] or not lines[index].startswith("|"):
+            table_end = index
+            break
+        cells = table_cells(lines[index])
+        if is_separator(cells):
+            continue
+        # A row of the wrong number of cells is a run of its own, and the limit counts it too.
+        wide = len(cells) != len(names)
+        key = None if wide else [cells[at[name]] for name in GATE_RUN_COLUMNS]
+        if wide or last is None or key != last:
+            if len(runs) >= MAX_RUNS:
+                reasons.append(("Gate runs", f"`{GATE_FILE}` holds more than {MAX_RUNS} runs: the "
+                                             "rest are not read"))
+                break
+            if wide:
+                reasons.append(("Gate runs", f"a row of the table in `{GATE_FILE}` has "
+                                             f"{len(cells)} cells, not {len(names)}"))
+                runs.append((None, []))
+                last = None
+                continue
+            runs.append((key, []))
+            last = key
+        directory, seconds = cells[at["Directory"]], cells[at["Directory seconds"]]
+        if directory == GATE_NONE and seconds == GATE_NONE:
+            continue
+        directories = runs[-1][1]
+        if len(directories) >= MAX_DIRECTORIES:
+            cut_directories = True
+            continue
+        directories.append((directory, seconds))
+    if any(not fenced[index] and lines[index].startswith("|")
+           for index in range(table_end, len(lines))):
+        reasons.append(("Gate runs", f"`{GATE_FILE}` holds a row after a line that is not a row of "
+                                     "the table: the rows after it are not read"))
+    if cut_directories:
+        reasons.append(("Gate runs: Directories", f"a run in `{GATE_FILE}` lists more than "
+                                                  f"{MAX_DIRECTORIES} directories: the rest are "
+                                                  "not listed"))
+    for key, directories in runs:
+        if key is None:
+            cycle.gate_runs.append([UNKNOWN] * 5)
+            cycle.gate_timed.append(GateRun(None, None))
+            continue
+        started, code, total, others = [
+            gate_value(reasons, column, value, pattern, why)
+            for column, value, pattern, why in zip(
+                GATE_RUN_COLUMNS, key,
+                (GATE_STARTED, GATE_CODE, GATE_TOTAL, GATE_OTHERS),
+                ("a start is not written YYYY-MM-DD HH:MM:SS.mmm",
+                 "an exit code is not a whole number",
+                 "a total is not written as seconds to three decimals",
+                 "a count of other gate runs is not a whole number"))]
+        listed = []
+        # The numbers of the run: a directory written twice in it counts once, at its first time.
+        timed = GateRun(None if others == UNKNOWN else int(others),
+                        None if total == UNKNOWN else Decimal(total),
+                        code=None if code == UNKNOWN else int(code))
+        named: set[str] = set()
+        for name, seconds in directories:
+            seconds = gate_value(reasons, "Directory seconds", seconds, GATE_SECONDS,
+                                 "the seconds of a directory are not a number")
+            listed.append(f"{name[:TEXT_CAP]} " + (seconds if seconds == UNKNOWN
+                                                   else seconds + " s"))
+            if name[:TEXT_CAP] in named:
+                reasons.append(("Gate runs: Directories",
+                                f"a run in `{GATE_FILE}` lists a directory twice: only its first "
+                                "time is counted in the medians"))
+                continue
+            named.add(name[:TEXT_CAP])
+            timed.directories.append((name[:TEXT_CAP],
+                                      None if seconds == UNKNOWN else Decimal(seconds)))
+        cycle.gate_runs.append([started, code, total, others,
+                                DIRECTORY_SEPARATOR.join(listed) or GATE_NONE])
+        cycle.gate_timed.append(timed)
+    cycle.unknown.extend(dict.fromkeys(reasons))
+
+
 def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: Prices) -> None:
     """Read the values of a cycle from the copy its commit holds."""
     prefix = RECORDS.encode("ascii") + folder + b"/"
@@ -1173,6 +1630,12 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         reason = f"git could not read the copy: {display(error)}"
         record = stages = None
         record_reason = stages_reason = reason
+        measures = gate = (None, reason)
+    else:
+        # Each of the two optional files stands in a `try` of its own: a git failure on one leaves
+        # the files that were read.
+        measures, gate = (guarded_optional(git, entries, prefix, name)
+                          for name in (MEASURES_FILE, GATE_FILE))
     record_lines = record_fenced = None
     if record is None:
         cycle.unknown += [("Process pin", record_reason), ("Remarks", record_reason)]
@@ -1186,6 +1649,10 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         if reason:
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
+    # The two files after the record's own values, so that the rows of *Unknown values* of a
+    # cycle keep their order (WAY-347, WAY-349).
+    read_measures(cycle, *measures)
+    read_gate(cycle, *gate)
     working_name = "Working time without waiting for tools"
     if stages is None:
         cycle.unknown += [(working_name, stages_reason), ("Waiting for tools", stages_reason),
@@ -1193,11 +1660,19 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         return
     lines = remarks_check.split_lines(stages)
     fenced = remarks_check.fenced_flags(lines)
+    # A file with one of the two time lines and not the other lacks the other (WAY-344); a file with
+    # neither is an earlier form, whose two times are unknown with no field missing.
+    has_working = has_line(lines, fenced, WORKING_LINE)
+    has_waiting = has_line(lines, fenced, WAITING_LINE)
     cycle.working, reason = stages_time(lines, fenced, WORKING_LINE,
                                         "working time without waiting for tools")
+    if has_waiting and not has_working:
+        reason = missing_line(cycle, WORKING_LINE)
     if reason:
         cycle.unknown.append((working_name, reason))
     cycle.waiting, reason = stages_time(lines, fenced, WAITING_LINE, "waiting for tools")
+    if has_working and not has_waiting:
+        reason = missing_line(cycle, WAITING_LINE)
     if reason:
         cycle.unknown.append(("Waiting for tools", reason))
     add_cost(cycle, record_lines, record_fenced, record_reason, lines, fenced, prices)
@@ -1614,8 +2089,13 @@ class Ancestry:
     def changed(self, earlier: str, later: str) -> bool:
         """Whether the reviewed files of the-way differ between two full commit hashes; a git
         that fails counts as changed, so that a series is never joined by mistake (WAY-339)."""
+        return self.differs(earlier, later, TREE_PATHS)
+
+    def differs(self, earlier: str, later: str, paths: tuple[str, ...]) -> bool:
+        """Whether the files at `paths` differ between two full commit hashes of the-way, by
+        `git diff --quiet`: exit 1, or any failure, counts as changed."""
         try:
-            return self.git.code("diff", "--quiet", earlier, later, "--", *TREE_PATHS) != 0
+            return self.git.code("diff", "--quiet", earlier, later, "--", *paths) != 0
         except GitError:
             return True
 
@@ -1676,7 +2156,7 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                         f"row {problem.number} of `Problems`", why))
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
-    # as `at least n`, since the row's own figure is not in the count (the review's Important finding).
+    # as `at least n`, since the row's own figure is not in the count.
     refused_cycle: Counter = Counter()
     refused_issue: Counter = Counter()
     valid_issues = {name for name, _, _ in register.issues}
@@ -1824,6 +2304,8 @@ class Versions:
     series: list[Series] = field(default_factory=list)
     no_version: list[Cycle] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
+    # Every version, in the order of their dates: the series of the measures are made of them.
+    ordered: list["Version"] = field(default_factory=list)
 
 
 VERSION_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
@@ -1857,6 +2339,154 @@ def series_boundary(earlier: Version, later: Version, register: Register,
     if ancestry.changed(earlier.commit, later.commit):
         return "the reviewed files of the-way changed between the two versions"
     return None
+
+
+def instrument_series(versions: list[Version], ancestry: Ancestry, script: str) -> list[Series]:
+    """Split the versions, in the order of their dates, into series by the change of one script
+    alone: a series begins at a version whose `script` differs from the previous version's
+    (WAY-339). Nothing else splits it: not the price list, the register's list of classes or the
+    reviewed files of the cost."""
+    blocks: list[Series] = []
+    for version in versions:
+        if not blocks:
+            blocks.append(Series("the first version of the result", [version]))
+        elif ancestry.differs(blocks[-1].versions[-1].commit, version.commit, (script,)):
+            blocks.append(Series(f"`{script}` changed between the two versions", [version]))
+        else:
+            blocks[-1].versions.append(version)
+    return blocks
+
+
+@dataclass
+class MeasureVersions:
+    """The series of the mechanism measures and of the gate times, each with its rows, and the
+    answers of *Falls* that are unknown as (repository, record, value, why)."""
+    mechanism: list[Series] = field(default_factory=list)
+    gate: list[Series] = field(default_factory=list)
+    unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
+
+
+NO_MEASURE = "—"  # the measure cell of the one row of a version that gives no value
+MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
+GATE_HEADER = ["Version (commit)", "Measure", "Runs compared", "Median (seconds)", "Falls",
+               "Runs not compared", "Median of those (seconds)"]
+
+
+def median_text(median: Decimal | None, suffix: str = "") -> str:
+    """A median as the exact value of its Decimal, a half with its decimal, never in exponent
+    form."""
+    return UNKNOWN if median is None else format(median, "f") + suffix
+
+
+def falls_answer(version: Version, first: bool, median: Decimal | None,
+                 previous: Decimal | None, subject: str, rest: str, what: str,
+                 unknown: list[tuple[str, str, str, str]], name: str) -> str:
+    """`yes` where the median is lower than the previous version's of the same measure in the same
+    series, `no` where it is not, and `unknown`, with its reason kept in `unknown`, where the
+    version is the first of its series or either median is not known."""
+    if first:
+        why = "no previous version in the series"
+    elif median is None:
+        why = f"no {subject} of the version{rest} gives {what}, so its median is not known"
+    elif previous is None:
+        why = f"no {subject} of the previous version{rest} gives {what}"
+    else:
+        return "yes" if median < previous else "no"
+    unknown.append((THE_WAY, NONE, f"{name}, version {version.commit}", why))
+    return UNKNOWN
+
+
+def measure_number(label: str, text: str) -> Decimal:
+    """The value of a cycle-level line that `read_measures` kept: a whole number, or for the share
+    a number of percent with one decimal."""
+    return Decimal(text[:-1] if label == SHARE_LABEL else text)
+
+
+def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the mechanism measures: for each version and each cycle-level
+    measure, the median of the cycles that give a value and whether it falls."""
+    previous: dict[str, Decimal | None] = {}
+    for index, version in enumerate(block.versions):
+        medians: dict[str, Decimal | None] = {}
+        if not any(label in cycle.measures for cycle in version.cycles for label in MEASURE_LABELS):
+            # A version no cycle of which gives a value has one row and one line of reason.
+            block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN])
+            unknown.append((THE_WAY, NONE, f"Mechanism measures of version {version.commit}",
+                            "no cycle of this version gives a value: its copies hold no "
+                            f"`{MEASURES_FILE}` (an earlier cycle, or a script that failed; the "
+                            "record's *Verification* says which) or give none"))
+            previous = {}
+            continue
+        for label in MEASURE_LABELS:
+            values = [measure_number(label, cycle.measures[label])
+                      for cycle in version.cycles if label in cycle.measures]
+            median = median_of(values)
+            medians[label] = median
+            falls = falls_answer(version, index == 0, median, previous.get(label), "cycle", "",
+                                 "a value", unknown, f"Measure falls: {label}")
+            block.rows.append([version.commit, label, str(len(values)),
+                               median_text(median, "%" if label == SHARE_LABEL else ""), falls])
+        previous = medians
+
+
+def gate_values(version: Version) -> dict[str, tuple[list[Decimal], list[Decimal]]]:
+    """The times of the runs of a version, over all its cycles, by measure: the total first and
+    then each directory that any run has, by name. Each measure holds the values of the runs that
+    passed with no other gate and apart those of the runs not compared: with another gate, with an
+    unknown count, that failed or whose exit code is unknown; a run that does not give the time
+    adds to neither (WAY-350)."""
+    found: dict[str, tuple[list[Decimal], list[Decimal]]] = {TOTAL_MEASURE: ([], [])}
+    for cycle in version.cycles:
+        for run in cycle.gate_timed:
+            side = 0 if run.others == 0 and run.code == 0 else 1
+            if run.total is not None:
+                found[TOTAL_MEASURE][side].append(run.total)
+            for name, seconds in run.directories:
+                lists = found.setdefault(DIRECTORY_MEASURE + name, ([], []))
+                if seconds is not None:
+                    lists[side].append(seconds)
+    return {name: found[name] for name in [TOTAL_MEASURE, *sorted(found.keys() - {TOTAL_MEASURE})]}
+
+
+def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the gate times: for each version and each measure, the median of the
+    runs that passed with no other gate and whether it falls, and the runs not compared apart,
+    never compared (WAY-350). A version no run of which gives a time has one row and one line of
+    reason."""
+    previous: dict[str, Decimal | None] = {}
+    for index, version in enumerate(block.versions):
+        medians: dict[str, Decimal | None] = {}
+        values = gate_values(version)
+        if all(not alone and not apart for alone, apart in values.values()):
+            block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN, "0", UNKNOWN])
+            unknown.append((THE_WAY, NONE, f"Gate times of version {version.commit}",
+                            "no run of this version gives a time: its copies hold no "
+                            f"`{GATE_FILE}` (an earlier cycle, or a script that failed; the "
+                            "record's *Verification* says which) or give none"))
+            previous = {}
+            continue
+        for name, (alone, apart) in values.items():
+            median = median_of(alone)
+            medians[name] = median
+            falls = falls_answer(version, index == 0, median, previous.get(name), "run",
+                                 " that passed with no other gate", "this time", unknown,
+                                 f"Gate time falls: {name}")
+            block.rows.append([version.commit, name, str(len(alone)), median_text(median), falls,
+                               str(len(apart)), median_text(median_of(apart))])
+        previous = medians
+
+
+def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
+    """Group the versions into the series of each instrument and give the medians and the
+    comparison of each version within its own series (WAY-339, WAY-348, WAY-350)."""
+    result = MeasureVersions()
+    result.mechanism = instrument_series(versions.ordered, ancestry, MEASURES_SCRIPT)
+    result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPT)
+    for block in result.mechanism:
+        mechanism_rows(block, result.unknown)
+    for block in result.gate:
+        gate_rows(block, result.unknown)
+    return result
 
 
 def contradiction_of(version: Version) -> tuple[str, str | None]:
@@ -1920,6 +2550,7 @@ def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
             continue
         versions.append(Version(commit, stamp or 0, day, prices.date, members))
     versions.sort(key=lambda version: (version.stamp, version.commit))
+    result.ordered = versions
     for version in versions:
         if not result.series:
             result.series.append(Series("the first version of the result", [version]))
@@ -1991,6 +2622,56 @@ def versions_lines(versions: Versions) -> list[str]:
     return lines
 
 
+def measure_versions_lines(measured: MeasureVersions) -> list[str]:
+    """The section *Measure versions*: a table per series of each instrument, the median of each
+    measure of each version and whether it falls against the previous version of its series."""
+    lines = [
+        "## Measure versions",
+        "",
+        "The versions are those of *Process versions*, but the series are not: the measures of how "
+        "a cycle's agents use context and the prompt cache and the times of the gate are the "
+        "numbers by which a change to the instructions of the cycle is judged, so only a change of "
+        "the instrument that measures them splits them (WAY-339). A series of the mechanism "
+        f"measures begins at a version whose `{MEASURES_SCRIPT}` differs from the previous "
+        f"version's, and a series of the gate times at one whose `{GATE_SCRIPT}` differs, by "
+        "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
+        "date of the register's list of classes and a change under `task-cycle/change`, "
+        "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
+        "`task-cycle/cycle_stages.py` split neither, though they split the series of the cost. "
+        "Each series is its own subsection, a number of one series is never set beside a number of "
+        "another, and the cycles in no version stand in no series. *Falls* is `yes` where the "
+        "median is lower than the previous version's median of the same measure in the same "
+        "series, `no` where it is not, and `unknown` where the version is the first of its series "
+        "or either median is not known; *Unknown values* says why. A median is written as the "
+        "exact value, a half with its decimal.",
+        "",
+        "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
+        "and *Cycles with a value* counts them.",
+        "",
+        "*Gate times*: the runs are taken together over all the cycles of the version. The median "
+        "and *Falls* take only the runs that passed (exit code 0) during which no other gate run by "
+        "the script was going (*Runs compared*, WAY-350). The runs not compared are those with "
+        "another gate, with the count `unknown`, that failed (a failed run's time says how soon "
+        "it failed, not how long the gate takes) or whose exit code is unknown: they are counted "
+        "and their median shown apart in the last two columns and are never compared, so a "
+        "version in which no run passed alone has no comparison. Each count is of the runs that "
+        "give the time of its row, and a directory's median takes the runs that give its time. A "
+        "version in which no cycle gives a value, or no run a time, has one row, with `—` for the "
+        "measure, and one line in *Unknown values*.",
+        "",
+    ]
+    for title, blocks, header in (("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
+                                  ("Gate times", measured.gate, GATE_HEADER)):
+        for number, block in enumerate(blocks, 1):
+            lines += [f"### {title}, series {number}", "",
+                      f"Begins at this version: {block.begins}.", ""]
+            lines += table(header, block.rows)
+            lines.append("")
+    if lines[-1] == "":
+        lines.pop()
+    return lines
+
+
 # The result
 
 
@@ -2025,7 +2706,39 @@ def table(header: list[str], rows: list[list[str]]) -> list[str]:
     return lines
 
 
-def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions) -> str:
+def measures_lines(cycles: list[Cycle]) -> list[str]:
+    """The section *Mechanism measures*: one row per cycle, each label of the file a column."""
+    lines = [
+        "## Mechanism measures",
+        "",
+        "Written by `task-cycle/cycle_measures.py` into each cycle's record as "
+        "`mechanism_measures.md`; `unknown` is never zero, and *Unknown values* says why. The "
+        "table of agents stays in that file.",
+        "",
+    ]
+    rows = [[cycle.repository, cycle.record,
+             *[cycle.measures.get(label, UNKNOWN) for label in MEASURE_LABELS]]
+            for cycle in cycles]
+    return lines + table(["Repository", "Record", *MEASURE_LABELS], rows)
+
+
+def gate_lines(cycles: list[Cycle]) -> list[str]:
+    """The section *Gate runs*: one row per run, a cycle with no run having none."""
+    lines = [
+        "## Gate runs",
+        "",
+        "Written by `task-cycle/gate_times.py` into each cycle's record as `gate_times.md`, one row "
+        "per run of the gate; times are seconds, and `unknown` is never zero. *Directories* lists "
+        "each directory the gate printed with its seconds, and `—` where it printed none.",
+        "",
+    ]
+    rows = [[cycle.repository, cycle.record, *run] for cycle in cycles for run in cycle.gate_runs]
+    return lines + table(["Repository", "Record", "Started (UTC)", "Exit code", "Total seconds",
+                          "Other gate runs at the same time", "Directories"], rows)
+
+
+def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions,
+           measured: MeasureVersions) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
         "# Count of the audit of the process",
@@ -2068,7 +2781,9 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
         "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
-        "nothing. *Fix rounds* is the number of findings files the record's *Review rounds* "
+        "nothing. A cycle whose stage report has no section of stages is priced from its table of "
+        "tokens by model at the same prices, and its share of the cost in fix rounds is unknown "
+        "(WAY-352). *Fix rounds* is the number of findings files the record's *Review rounds* "
         "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "
         "those findings files — each fix and the review of that fix — over the cycle's cost. "
         "`unknown` has its reason in *Unknown values*.",
@@ -2082,7 +2797,8 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
             f"| {cell(cycle.repository)} | {cycle.record} | {cell(prices.date)} "
             f"| {money(cycle.cost)} | {UNKNOWN if cycle.rounds is None else cycle.rounds} "
             f"| {share_text(cycle.share)} |")
-    lines += ["", *versions_lines(versions), ""]
+    lines += ["", *measures_lines(cycles), "", *gate_lines(cycles), "", *versions_lines(versions),
+              "", *measure_versions_lines(measured), ""]
     lines += [
         "## Problems by cycle",
         "",
@@ -2221,8 +2937,10 @@ def main(argv: list[str] | None = None) -> int:
         reads = [read_repository(key, path, prices) for key, path in named.items()]
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
-        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown))
-        text = render(reads, prices, analysis, versions)
+        measured = measure_versions(versions, ancestry)
+        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown
+                                              + measured.unknown))
+        text = render(reads, prices, analysis, versions, measured)
         dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)
         write(results, LATEST, text)
@@ -2234,10 +2952,20 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: repository `{display(read.key)}`: {read.error}", file=sys.stderr)
     for why in register.errors:
         print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
+    # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-344): each is
+    # named here after the result is written. The folder is text of the history, so it is cut.
+    lacking = [(read, cycle, missing_reason(name)) for read in reads for cycle in read.cycles
+               for name in cycle.missing]
+    # The fields of mechanism_measures.md and gate_times.md are named the same way (WAY-347, WAY-349).
+    lacking += [(read, cycle, missing_reason(name, file)) for read in reads
+                for cycle in read.cycles for file, name in cycle.missing_in]
+    for read, cycle, reason in lacking:
+        print(f"Error: repository `{display(read.key[:TEXT_CAP])}`: cycle "
+              f"`{display(cycle.folder[:TEXT_CAP])}`: {reason}", file=sys.stderr)
     count = sum(len(read.cycles) for read in reads)
     print(f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
           f"{len(reads)} repositories.")
-    return 1 if failed or register.errors else 0
+    return 1 if failed or register.errors or lacking else 0
 
 
 if __name__ == "__main__":

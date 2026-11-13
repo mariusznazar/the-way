@@ -369,11 +369,16 @@ class Remarks(AuditCountCase):
 
 
 class Times(AuditCountCase):
+    # The table of tokens by model of the older form, so that a file read for its times is no file
+    # that lacks the section and the table (WAY-344).
+    TABLE = ("\n| Model | Total tokens | Input | Cached input | Output |\n|---|---|---|---|---|\n"
+             "| model-a | 110 | 100 | 0 | 10 |\n")
+
     def times_of(self, stages) -> tuple[dict, list[list[str]]]:
         product = self.repository()
         files = {"cycle.md": record()}
         if stages is not None:
-            files["stages.md"] = stages
+            files["stages.md"] = stages + self.TABLE
         product.cycle("a-task", files)
         self.write_locations(self.places(product=product))
         done = self.run_count()
@@ -703,6 +708,23 @@ STAGES_HEADER_NAMED = STAGES_HEADER.replace(
     "| Output | Files named |\n|---|---|---|---|---|---|---|---|---|\n")
 
 
+# The older form of the stage report: no section of stages, only the time lines and the table of
+# tokens by model, which every form has.
+TIME_LINES = ("- Working time without waiting for tools: 0:20:00\n"
+              "- Waiting for tools: 0:05:00\n")
+OLDER_HEADER = ("| Model | Total tokens | Input | Cached input | Output |\n"
+                "|---|---|---|---|---|\n")
+
+
+def older_row(model, input_, cached, output) -> str:
+    return f"| {model} | {input_ + output} | {input_} | {cached} | {output} |\n"
+
+
+def older_stages(*rows, header=OLDER_HEADER, times=TIME_LINES) -> str:
+    """A stage report with no section of stages, as the stage reports before it are."""
+    return "# Stages of the cycle run\n\n" + times + "\n" + header + "".join(rows)
+
+
 def stage_row(number, name, model, input_, cached, output, files=None) -> str:
     """A row of the stages section; with `files`, the row of the form that names the files each
     turn was given."""
@@ -973,12 +995,106 @@ class Cost(AuditCountCase):
         reasons = self.unknown_why("Cost")
         self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
 
-    def test_stages_md_without_the_per_model_section_leaves_the_cost_unknown(self):
-        stages = ("# Stages of the cycle run\n\n- Working time, orchestrator turns and subagent "
-                  "turns joined: 1:00:00\n")
-        self.assertEqual(0, self.count(stages).returncode)
+    def test_stages_md_without_the_section_is_priced_from_the_table_of_tokens_by_model(self):
+        # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and model-b 4 / 0.5 / 20:
+        # model-a is (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000; model-b is (500 - 100) * 4
+        # + 100 * 0.5 + 50 * 20 = 2650. The total is 10650.
+        stages = older_stages(older_row("model-a", 3000, 1000, 300),
+                              older_row("model-b", 500, 100, 50))
+        done = self.count(stages)
+        self.assertEqual(0, done.returncode, done.stderr)
+        row = self.cost_row()
+        self.assertEqual(["product", "2026-01-01", "0.010650"], [row[0], row[2], row[3]])
+        self.assertEqual([], self.unknown_why("Cost"))
+
+    def test_the_older_form_gives_no_share_and_says_why_but_its_rounds_are_read_from_the_record(self):
+        stages = older_stages(older_row("model-a", 3000, 1000, 300))
+        cases = (
+            ("one round", ONE_ROUND, ["0.008000", "1", "unknown"]),
+            ("none", "- Review rounds: none\n", ["0.008000", "0", "unknown"]),
+            ("prose", "- Review rounds: one round, fixed and reviewed.\n",
+             ["0.008000", "unknown", "unknown"]),
+        )
+        for label, rounds, expected in cases:
+            with self.subTest(label):
+                row, why = self.share_of(stages, fix_record(rounds=rounds))
+                self.assertEqual(expected, row[3:6])
+                self.assertTrue(any("gives no turns" in reason for reason in why), why)
+
+    def test_the_cost_of_the_section_is_read_as_before_where_both_forms_stand(self):
+        # `cycle_stages.py` writes the table of tokens by model and the section: the heading names
+        # the newer form, which is read as before, whatever the table holds.
+        stages = one_fix_round().replace(
+            "\n## Stages:", "\n" + OLDER_HEADER + older_row("model-a", 9_000_000, 0, 9_000_000)
+            + "\n## Stages:")
+        row, why = self.share_of(stages)
+        self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
+        self.assertEqual([], why)
+
+    def test_the_older_form_leaves_the_cost_unknown_where_a_row_cannot_be_priced(self):
+        good = older_row("model-b", 100, 0, 10)
+        cases = {
+            "a model the list lacks": (good + older_row("model-c", 100, 0, 10),
+                                       "no price for model `model-c`"),
+            "a model unknown": (good + older_row("unknown", 100, 0, 10),
+                                "names the model `unknown`"),
+            "a cached input above its input": (good + older_row("model-a", 100, 500, 10),
+                                               "above its input"),
+            "a count that is no number": (good + "| model-a | 110 | many | 0 | 10 |\n",
+                                          "token count"),
+            "a count of sixteen digits": (good + older_row("model-a", int("9" * 16), 0, 10),
+                                          "token count"),
+            "a total that is no number": (good + "| model-a | lots | 100 | 0 | 10 |\n",
+                                          "token count"),
+            "no row": ("", "no model row"),
+        }
+        for label, (rows, words) in cases.items():
+            with self.subTest(label):
+                done = self.count(older_stages(rows))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                row = self.cost_row()
+                self.assertEqual(["unknown", "unknown"], [row[3], row[5]])
+                self.assertTrue(any(words in why for why in self.unknown_why("Cost")),
+                                self.unknown_why("Cost"))
+
+    def test_a_table_of_tokens_by_model_written_twice_leaves_the_cost_unknown_with_no_error(self):
+        once = older_stages(older_row("model-a", 3000, 1000, 300))
+        done = self.count(once + "\n" + OLDER_HEADER + older_row("model-a", 1, 0, 1))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("unknown", self.cost_row()[3])
-        self.assertTrue(any("earlier form" in why for why in self.unknown_why("Cost")))
+        self.assertTrue(any("more than once" in why for why in self.unknown_why("Cost")))
+
+    def test_a_table_of_tokens_by_model_in_fenced_code_is_not_read(self):
+        stages = ("# Stages of the cycle run\n\n" + TIME_LINES + "\n```\n" + OLDER_HEADER
+                  + older_row("model-a", 3000, 1000, 300) + "```\n")
+        done = self.count(stages)
+        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertEqual("unknown", self.cost_row()[3])
+
+    def test_a_table_of_tokens_by_model_in_another_order_or_with_another_column_is_refused(self):
+        # Every column the cost needs is there, so no field is missing: the table is refused with
+        # a reason, the cost is unknown and the run is not ended with an error.
+        row = "| model-a | 3300 | 3000 | 1000 | 300 |\n"
+        cases = {
+            "swapped columns": (OLDER_HEADER.replace("| Input | Cached input |",
+                                                      "| Cached input | Input |"), row),
+            "another column beside them": (OLDER_HEADER.replace("| Output |", "| Output | Note |")
+                                           .replace("|---|---|---|---|---|",
+                                                    "|---|---|---|---|---|---|"),
+                                           row[:-1] + " x |\n"),
+            "without the total": (OLDER_HEADER.replace(" Total tokens |", "").replace(
+                "|---|---|---|---|---|", "|---|---|---|---|"), "| model-a | 3000 | 1000 | 300 |\n"),
+        }
+        for label, (header, body) in cases.items():
+            with self.subTest(label):
+                done = self.count(older_stages(body, header=header))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.cost_row()[3])
+                self.assertTrue(any("not of the form" in why for why in self.unknown_why("Cost")),
+                                self.unknown_why("Cost"))
 
     def test_cached_input_above_input_leaves_the_cost_unknown(self):
         stages = one_fix_round().replace("| 2000 | 1000 | 200 |", "| 2000 | 5000 | 200 |")
@@ -1109,6 +1225,481 @@ class Cost(AuditCountCase):
                 row, why = self.share_of(stages.replace(old, new))
                 self.assertEqual("unknown", row[5])
                 self.assertTrue(any("disagree" in reason for reason in why), why)
+
+
+SECTION = "Stages: start, waiting for tools and tokens by model"
+NEWER_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
+                 "Output"]
+
+
+class StagesForms(AuditCountCase):
+    """The reading of `stages.md` by its form, and a field the form needs that the file lacks
+    (WAY-344, as the settlement 6 of the task puts it for the count of the audit): the cost or the
+    time that needs it is unknown, the result is written, and the run ends with exit code 1 and an
+    `Error:` line that names the file and the field."""
+
+    def count(self, stages, folder="a-task"):
+        product = self.repository()
+        product.cycle(folder, {"cycle.md": record(), "stages.md": stages})
+        self.write_locations(self.places(product=product))
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES, encoding="utf-8")
+        return self.run_count("--prices", str(test_prices))
+
+    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True) -> str:
+        """The newer form: the table of tokens by model, then the section whose table has the
+        columns given."""
+        text = ("# Stages of the cycle run\n\n" + times + "\n" + OLDER_HEADER
+                + older_row("model-a", 1000, 0, 100) + f"\n## {SECTION}\n\nTimes are UTC.\n")
+        if table:
+            text += ("\n| " + " | ".join(columns) + " |\n|" + "---|" * len(columns) + "\n"
+                     + stage_row(1, "orchestrator", "model-a", 1000, 0, 100))
+        return text
+
+    def error_line(self, field, folder="a-task") -> str:
+        return (f"Error: repository `product`: cycle `{folder}`: the file `stages.md` of the copy "
+                f"lacks the field `{field}`")
+
+    def assert_missing(self, done, fields, cost_unknown=True) -> None:
+        """Exit code 1, the result written, one `Error:` line for each field and no other, and
+        the field named in a row of *Unknown values*."""
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual([self.error_line(field) for field in fields], errors)
+        [row] = self.rows("Cost")
+        self.assertEqual("unknown" if cost_unknown else "0.003000", row[3])
+        reasons = [unknown[3] for unknown in self.rows("Unknown values")]
+        for field in fields:
+            self.assertTrue(any(field in reason for reason in reasons), (field, reasons))
+
+    def test_a_column_of_the_newer_table_that_the_file_lacks_is_a_missing_field(self):
+        for column in NEWER_COLUMNS:
+            with self.subTest(column):
+                columns = [name for name in NEWER_COLUMNS if name != column]
+                done = self.count(self.newer(columns))
+                self.assert_missing(done, [f"column {column} of the table of the section {SECTION}"])
+
+    def test_a_column_that_stands_under_another_name_is_a_missing_field(self):
+        columns = [("Begin" if name == "Start" else name) for name in NEWER_COLUMNS]
+        done = self.count(self.newer(columns))
+        self.assert_missing(done, [f"column Start of the table of the section {SECTION}"])
+
+    def test_every_column_of_the_newer_table_that_is_lacking_is_named_once(self):
+        columns = [name for name in NEWER_COLUMNS if name not in ("Stage", "Output")]
+        done = self.count(self.newer(columns))
+        self.assert_missing(done, [f"column Stage of the table of the section {SECTION}",
+                                   f"column Output of the table of the section {SECTION}"])
+
+    def test_a_heading_with_no_table_at_all_misses_the_table(self):
+        done = self.count(self.newer(table=False))
+        self.assert_missing(done, [f"table of the section {SECTION}"])
+
+    def test_a_column_of_the_older_table_that_the_file_lacks_is_a_missing_field(self):
+        for column in ("Input", "Cached input", "Output"):
+            with self.subTest(column):
+                names = ["Model", "Total tokens", "Input", "Cached input", "Output"]
+                names.remove(column)
+                header = "| " + " | ".join(names) + " |\n|" + "---|" * len(names) + "\n"
+                done = self.count(older_stages("| model-a | 3300 | 3000 | 300 |\n", header=header))
+                self.assert_missing(done, [f"column {column} of the table with the first cell Model"])
+
+    def test_a_file_with_neither_the_section_nor_the_table_misses_both(self):
+        for label, stages in (("only times", "# Stages\n\n" + TIME_LINES),
+                              ("a table of another kind", "# Stages\n\n" + TIME_LINES
+                               + "\n| Name | Tokens |\n|---|---|\n| model-a | 100 |\n"),
+                              ("an empty file", "")):
+            with self.subTest(label):
+                done = self.count(stages)
+                self.assert_missing(done, [f"section {SECTION}",
+                                           "table with the first cell Model"])
+
+    def test_a_time_line_without_the_other_is_a_missing_field(self):
+        cases = (
+            ("the wait", "- Working time without waiting for tools: 0:20:00\n",
+             "line Waiting for tools", "0:20:00"),
+            ("the working time", "- Waiting for tools: 0:05:00\n",
+             "line Working time without waiting for tools", "0:05:00"),
+        )
+        for label, times, field, known in cases:
+            with self.subTest(label):
+                done = self.count(older_stages(older_row("model-a", 1000, 0, 100), times=times))
+                self.assert_missing(done, [field], cost_unknown=False)
+                [cycle] = self.cycles()
+                both = [cycle["Working time without waiting for tools"], cycle["Waiting for tools"]]
+                self.assertEqual(sorted([known, "unknown"]), sorted(both))
+
+    def test_neither_time_line_is_the_earlier_form_and_no_missing_field(self):
+        done = self.count(older_stages(older_row("model-a", 1000, 0, 100),
+                                       times="- Working time, orchestrator turns and subagent "
+                                             "turns joined: 0:30:28\n"))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        [cycle] = self.cycles()
+        self.assertEqual(["unknown", "unknown"], [cycle["Working time without waiting for tools"],
+                                                  cycle["Waiting for tools"]])
+
+    def test_the_column_files_named_is_never_a_missing_field(self):
+        done = self.count(self.newer())
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        self.assertEqual("0.003000", self.rows("Cost")[0][3])
+
+    def test_columns_in_another_order_or_with_another_column_miss_nothing_and_are_refused(self):
+        swapped = [("Cached input" if name == "Input" else "Input" if name == "Cached input"
+                    else name) for name in NEWER_COLUMNS]
+        for label, columns in (("swapped", swapped), ("a column beside", NEWER_COLUMNS + ["Note"])):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.rows("Cost")[0][3])
+                self.assertTrue(any("not of the form" in row[3]
+                                    for row in self.rows("Unknown values")))
+
+    def test_the_text_of_a_missing_field_error_is_cut_and_escaped(self):
+        folder = "x|" + "y" * 300 + "\x1b[2J" + "z"
+        done = self.count("# Stages\n", folder=folder)
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual(2, len(errors), errors)
+        for line in errors:
+            self.assertTrue(line.startswith("Error: repository `product`: cycle `x|yyy"), line)
+            self.assertIn("the file `stages.md` of the copy lacks the field `", line)
+            self.assertLess(len(line), 500)
+            self.assertEqual([], [char for char in line if not char.isprintable()])
+        self.assertEqual([], [char for char in self.latest()
+                              if not char.isprintable() and char != "\n"])
+
+    def test_a_file_lacking_a_field_does_not_stop_the_count_of_the_other_cycles(self):
+        product = self.repository()
+        _, parent = product.cycle("bad", {"cycle.md": record(), "stages.md": "# Stages\n"},
+                                  branch=None)
+        product.cycle("good", {"cycle.md": record(), "stages.md": self.newer()}, parent=parent,
+                      branch="main")
+        self.write_locations(self.places(product=product))
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES, encoding="utf-8")
+        done = self.run_count("--prices", str(test_prices))
+        self.assertEqual(1, done.returncode, done.stderr)
+        self.assertEqual(["0.003000", "unknown"], sorted(row[3] for row in self.rows("Cost")))
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual(2, len(errors), errors)
+        self.assertTrue(all("cycle `bad`" in line for line in errors), errors)
+
+
+MEASURES = "mechanism_measures.md"
+GATE = "gate_times.md"
+# The cycle-level lines of mechanism_measures.md, each with a value worked out by hand for the
+# test; the labels are those task-cycle/cycle_measures.py writes.
+MEASURE_VALUES = [
+    ("Calls in all", "12"),
+    ("Calls of the orchestrator", "5"),
+    ("Calls of subagents", "7"),
+    ("Mean context per call", "51000"),
+    ("Mean context per call of the orchestrator", "62000"),
+    ("Share of the context in calls above 200000 tokens", "12.5%"),
+    ("Context of the orchestrator's first call", "20000"),
+    ("Context of the orchestrator's middle call", "60000"),
+    ("Context of the orchestrator's last call", "90000"),
+    ("Cache written, 5 minutes", "3000"),
+    ("Cache written, 1 hour", "0"),
+    ("Cache written again by the orchestrator", "1500"),
+    ("Calls of the orchestrator with a cache write again", "2"),
+    ("Cache written again by subagents", "800"),
+    ("Calls of subagents with a cache write again", "1"),
+]
+MEASURE_LABELS = [label for label, _ in MEASURE_VALUES]
+GATE_HEADING = ("# Gate runs of the cycle\n\nEach row is one run by this script; times are seconds.\n\n")
+GATE_TABLE = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
+              "| Directory | Directory seconds |\n| --- | --- | --- | --- | --- | --- |\n")
+STARTED = "2026-11-11 10:00:00.000"
+
+
+def measures_file(values=MEASURE_VALUES) -> str:
+    """mechanism_measures.md as task-cycle/cycle_measures.py writes it, with the cycle-level lines
+    given and one row of the table of agents."""
+    lines = "".join(f"- {label}: {value}\n" for label, value in values)
+    return ("# Measures of the cycle run\n\n" + lines + "\n## Agents\n\n"
+            "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |\n"
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+            "| orchestrator a1 | Claude Code | 5 | 20000 | 60000 | 90000 | 3000 | 0 | 1500 | 2 |\n")
+
+
+def gate_row(started, code, total, others, directory="—", seconds="—") -> str:
+    return f"| {started} | {code} | {total} | {others} | {directory} | {seconds} |\n"
+
+
+def gate_file(table=GATE_TABLE, rows="") -> str:
+    """gate_times.md as task-cycle/gate_times.py writes it, with the table header given."""
+    return GATE_HEADING + table + rows
+
+
+class MeasuresCase(AuditCountCase):
+    """The two files of a cycle's record the count reads (WAY-347, WAY-349): a copy holding
+    neither is an earlier form, and a file lacking a field it needs is an error (WAY-344)."""
+
+    def count(self, files, folder="a-task"):
+        product = self.repository()
+        added, _ = product.cycle(folder, {"cycle.md": record(), **files})
+        self.write_locations(self.places(product=product))
+        return self.run_count(), added
+
+    def assert_missing(self, done, file, field, folder="a-task") -> None:
+        """Exit code 1 and one `Error:` line naming the file and the field, the result written."""
+        self.assertEqual(1, done.returncode, done.stderr)
+        errors = [line for line in done.stderr.decode("utf-8").splitlines()
+                  if line.startswith("Error:")]
+        self.assertEqual([f"Error: repository `product`: cycle `{folder}`: the file `{file}` of "
+                          f"the copy lacks the field `{field}`"], errors)
+        self.latest()
+
+    def unknown_rows(self, *values) -> list[list[str]]:
+        """The rows of *Unknown values* whose value is one of `values` or starts with `Gate runs`."""
+        return [row for row in self.rows("Unknown values")
+                if row[2] in values or row[2].startswith("Gate runs")]
+
+
+class MechanismMeasures(MeasuresCase):
+    def test_both_files_give_the_values_and_the_runs_of_the_cycle_worked_out_by_hand(self):
+        runs = (gate_row(STARTED, 0, "100.000", 0, "gate/b", "59.9")
+                + gate_row(STARTED, 0, "100.000", 0, "gate/a", "40.1")
+                + gate_row("2026-11-11 11:00:00.000", 1, "20.000", 2))
+        done, added = self.count({MEASURES: measures_file(), GATE: gate_file(rows=runs)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([
+            ["product", added, STARTED, "0", "100.000", "0", "gate/b 59.9 s · gate/a 40.1 s"],
+            ["product", added, "2026-11-11 11:00:00.000", "1", "20.000", "2", "—"],
+        ], self.rows("Gate runs"))
+
+    def test_a_copy_without_the_files_gives_unknown_values_with_their_reasons_and_no_error(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        self.assertEqual([["product", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertIn(["product", added, "Mechanism measures",
+                       "the copy holds no `mechanism_measures.md`: an earlier cycle, or a script that "
+                       "failed (the record's *Verification* says which)"],
+                      self.rows("Unknown values"))
+        self.assertIn(["product", added, "Gate runs",
+                       "the copy holds no `gate_times.md`: an earlier cycle, or a script that "
+                       "failed (the record's *Verification* says which)"],
+                      self.rows("Unknown values"))
+
+    def test_the_last_copy_is_read_where_a_later_copy_differs(self):
+        product = self.repository()
+        first, removed = product.cycle("a-task", {"cycle.md": record(), MEASURES: measures_file(),
+                                              GATE: gate_file(rows=gate_row(STARTED, 0, "1.000", 0))})
+        later = [("Calls in all", "99"), *MEASURE_VALUES[1:]]
+        again, _ = product.cycle("a-task", {"cycle.md": record(), MEASURES: measures_file(later),
+                                            GATE: gate_file()}, parent=removed)
+        self.write_locations(self.places(product=product))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        # The record column names the first copy; the values are those of the last one.
+        self.assertEqual([["product", first, *[value for _, value in later]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual(again, self.cycles()[0]["Later copies"])
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_measures_file_without_a_label_gives_every_value_unknown_and_exits_one(self):
+        values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
+        done, added = self.count({MEASURES: measures_file(values)})
+        self.assert_missing(done, MEASURES, "Calls of subagents")
+        self.assertEqual([["product", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertIn(["product", added, "Calls of subagents",
+                       "the file `mechanism_measures.md` of the copy lacks the field "
+                       "`Calls of subagents`"], self.rows("Unknown values"))
+
+    def test_a_doubled_label_and_malformed_values_are_unknown_with_no_error(self):
+        changed = dict(MEASURE_VALUES)
+        changed["Mean context per call"] = "5x"
+        changed["Cache written, 1 hour"] = "unknown"
+        changed["Share of the context in calls above 200000 tokens"] = "150.0%"
+        done, added = self.count({MEASURES: measures_file([("Calls in all", "13"),
+                                                          *changed.items()])})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        expected = {label: "unknown" for label in
+                    ("Calls in all", "Mean context per call", "Cache written, 1 hour",
+                     "Share of the context in calls above 200000 tokens")}
+        values = [expected.get(label, value) for label, value in MEASURE_VALUES]
+        self.assertEqual([["product", added, *values]], self.rows("Mechanism measures"))
+        reasons = {row[2]: row[3] for row in self.unknown_rows(*MEASURE_LABELS)}
+        self.assertIn("more than once", reasons["Calls in all"])
+        self.assertIn("not what its label gives", reasons["Mean context per call"])
+        self.assertIn("not what its label gives",
+                      reasons["Share of the context in calls above 200000 tokens"])
+        self.assertIn("as unknown", reasons["Cache written, 1 hour"])
+
+    def test_crafted_values_break_no_cell_and_read_no_text_into_a_reason(self):
+        changed = dict(MEASURE_VALUES)
+        changed["Calls in all"] = "1|2\x1b[2J" + "9" * 300
+        changed["Mean context per call"] = "x" * 5000
+        done, added = self.count({MEASURES: measures_file(list(changed.items()))})
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        [row] = self.rows("Mechanism measures")
+        self.assertEqual(2 + len(MEASURE_LABELS), len(row))
+        self.assertEqual("unknown", row[2])
+        self.assertEqual("unknown", row[5])
+        self.assertNotIn("x" * 50, text)
+
+
+class GateRunsMeasures(MeasuresCase):
+    def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
+        table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
+                 "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
+        done, added = self.count({GATE: gate_file(table=table)})
+        self.assert_missing(done, GATE, "column Exit code of the table")
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
+        done, added = self.count({GATE: gate_file(table="")})
+        self.assert_missing(done, GATE, "table of the runs")
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_table_with_no_run_gives_no_rows_and_no_error(self):
+        done, added = self.count({GATE: gate_file()})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_a_row_of_the_wrong_number_of_cells_is_its_own_unknown_run(self):
+        rows = (gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0")
+                + "| 2026-11-11 12:00:00.000 | 0 | 5.000 | 0 | gate/a |\n")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([
+            ["product", added, STARTED, "0", "5.000", "0", "gate/a 5.0 s"],
+            ["product", added, "unknown", "unknown", "unknown", "unknown", "unknown"],
+        ], self.rows("Gate runs"))
+        self.assertIn(["product", added, "Gate runs",
+                       "a row of the table in `gate_times.md` has 5 cells, not 6"],
+                      self.rows("Unknown values"))
+
+    def test_an_unreadable_total_and_seconds_are_unknown_with_their_reasons(self):
+        rows = gate_row("2026-11-11 13:00:00.000", 0, "12,5", 0, "gate/a", "one")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, "2026-11-11 13:00:00.000", "0", "unknown", "0",
+                           "gate/a unknown"]], self.rows("Gate runs"))
+        values = [row[2] for row in self.unknown_rows()]
+        self.assertIn("Gate runs: Total seconds", values)
+        self.assertIn("Gate runs: Directory seconds", values)
+
+    def test_bars_and_control_characters_in_a_directory_stay_in_one_cell(self):
+        rows = gate_row(STARTED, 0, "1.000", 0, "gate\\|x\x1b[2J\x07y", "1.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        [row] = self.rows("Gate runs")
+        self.assertEqual(7, len(row))
+        self.assertIn("gate", row[6])
+
+    def test_a_long_directory_name_is_cut(self):
+        rows = gate_row(STARTED, 0, "1.000", 0, "d" * 500, "1.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("d" * 201, self.latest())
+        self.assertIn("d" * 200, self.latest())
+
+    def test_runs_beyond_the_limit_are_not_read_and_say_so(self):
+        rows = "".join(gate_row(f"2026-11-11 10:00:00.{index:03}", 0, "1.000", 0, "gate/a", "1.0")
+                       for index in range(600))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(500, len(self.rows("Gate runs")))
+        self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
+
+    def test_a_flood_of_wrong_width_rows_after_a_valid_header_is_capped_too(self):
+        # Every row of the wrong number of cells is a run of its own, and the limit counts it
+        # (WAY-349): a crafted file of such rows costs bounded work and writes bounded rows.
+        rows = "| a | b |\n" * 600
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(500, len(self.rows("Gate runs")))
+        self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
+
+    def test_an_exit_code_above_255_is_read_as_written(self):
+        # A gate that crashes on Windows ends with a code such as 0xC000013A, as an unsigned number.
+        rows = gate_row(STARTED, 3221225786, "5.000", 0, "gate/a", "5.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "3221225786", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertEqual([], [row for row in self.unknown_rows() if "Exit code" in row[2]])
+
+    def test_an_exit_code_that_is_not_a_whole_number_is_unknown(self):
+        rows = gate_row(STARTED, "-1", "5.000", 0, "gate/a", "5.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "unknown", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertIn("an exit code is not a whole number",
+                      self.reasons_of(self.rows("Unknown values"), "Gate runs: Exit code"))
+
+    def test_a_row_after_a_line_that_ends_the_table_is_not_read_and_says_so(self):
+        rows = (gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0") + "\n"
+                + gate_row("2026-11-11 11:00:00.000", 0, "6.000", 0, "gate/b", "6.0"))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "0", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertIn(["product", added, "Gate runs",
+                       "`gate_times.md` holds a row after a line that is not a row of the table: "
+                       "the rows after it are not read"], self.rows("Unknown values"))
+
+    def test_text_after_the_table_with_no_row_in_it_says_nothing(self):
+        rows = gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0") + "\nA closing note.\n"
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(1, len(self.rows("Gate runs")))
+        self.assertEqual([], self.unknown_rows())
+
+    def test_a_git_failure_on_the_gate_file_leaves_the_files_that_were_read(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record(), GATE: gate_file()})
+        gate_blob = product.git("rev-parse", f"{added}:docs/task-cycles/a-task/{GATE}")
+
+        class Failing(audit_count.Git):
+            def run(self, *arguments):
+                if arguments[:2] == ("cat-file", "blob") and arguments[2] == gate_blob:
+                    raise audit_count.GitError("git cat-file failed (128): made up")
+                return super().run(*arguments)
+
+        cycle = audit_count.Cycle("product", "a-task", added, added)
+        audit_count.fill(cycle, Failing(product.root), added, b"a-task", True,
+                         audit_count.Prices("2026-11-11", {}))
+        reasons = dict(cycle.unknown)
+        self.assertIn("git could not read the copy", reasons["Gate runs"])
+        # The record was read: its remarks are counted and no reason about git stands for them.
+        self.assertEqual(0, cycle.remarks)
+        self.assertNotIn("Remarks", reasons)
+
+    def test_directories_beyond_the_limit_of_one_run_are_not_listed_and_say_so(self):
+        rows = "".join(gate_row(STARTED, 0, "1.000", 0, f"gate/d{index:02}", "1.0")
+                       for index in range(60))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        [row] = self.rows("Gate runs")
+        self.assertEqual(50, len(row[6].split(" · ")))
+        self.assertTrue(any("more than 50 directories" in unknown[3]
+                            for unknown in self.unknown_rows()))
 
 
 class RegisterCount(AuditCountCase):
@@ -1876,11 +2467,13 @@ class ProcessVersions(AuditCountCase):
         return STAGES_HEADER + stage_row(1, "orchestrator", "model-a", tokens, 0, 0)
 
     def add_cycles(self, product, specs) -> None:
-        """Each cycle as (folder, record text, tokens), chained so that all stay in the history."""
+        """Each cycle as (folder, record text, tokens), chained so that all stay in the history;
+        a fourth item is the text of its `stages.md`, where it is not the newer form."""
         parent = product.commit({"README.md": "a product\n"}, "Start")
-        for folder, text, tokens in specs:
+        for folder, text, tokens, *stages in specs:
             _, parent = product.cycle(folder, {"cycle.md": text,
-                                               "stages.md": self.stages_of(tokens)},
+                                               "stages.md": stages[0] if stages
+                                               else self.stages_of(tokens)},
                                       parent=parent, branch=None)
         product.branch("main", parent)
 
@@ -1940,6 +2533,40 @@ class ProcessVersions(AuditCountCase):
                            "unknown"]], self.series(1))
         self.assertEqual([[v2, "2025-10-10", "1", "1", "0.500000", "no", "0 of 0", "unknown",
                            "unknown"]], self.series(2))
+
+    def test_the_older_and_the_newer_form_of_the_stage_report_are_never_in_one_comparison(self):
+        # The form changes with `cycle_stages.py`, a file whose change starts a series; a change of
+        # the scripts that measure the mechanism or the gate does not. v1 to v3 are of the older
+        # form, v4 of the newer; the costs are 2, 1, 0.5 and 0.25 dollars. The median of v4 is not
+        # set against v3's: it begins its own series.
+        way = self.the_way()
+        measures = {"task-cycle/cycle_measures.py": "measures\n"}
+        gate = {**measures, "task-cycle/gate_times.py": "gate\n"}
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.FIRST + 86400, parent=v1, changed=measures)
+        v3 = self.version_at(way, self.FIRST + 2 * 86400, parent=v2, changed=gate)
+        v4 = self.version_at(way, self.FIRST + 3 * 86400, parent=v3,
+                             changed={**gate, "task-cycle/cycle_stages.py": "newer form\n"})
+        product = self.repository()
+
+        def older(tokens):
+            return older_stages(older_row("model-a", tokens, 0, 0))
+
+        self.add_cycles(product, [
+            ("one", process_record(v1), 1_000_000, older(1_000_000)),
+            ("two", process_record(v2), 500_000, older(500_000)),
+            ("three", process_record(v3), 250_000, older(250_000)),
+            ("four", process_record(v4), 125_000)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "no", "0 of 0", "unknown",
+                           "unknown"],
+                          [v2, "2025-10-10", "1", "1", "1.000000", "no", "0 of 0", "unknown",
+                           "yes"],
+                          [v3, "2025-10-11", "1", "1", "0.500000", "no", "0 of 0", "unknown",
+                           "yes"]], self.series(1))
+        self.assertEqual([[v4, "2025-10-12", "1", "1", "0.250000", "no", "0 of 0", "unknown",
+                           "unknown"]], self.series(2))
+        self.assertNotIn("### Series 3", self.latest())
 
     def test_the_questions_read_the_record_items_and_say_unknown_otherwise(self):
         way = self.the_way()
@@ -2128,6 +2755,354 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["the item `Plan` does not give one count of slices before the word "
                           "`slices`"],
                          [row[3] for row in unknown if row[2] == "Plan"])
+
+
+def gate_run(second, others, total, *directories, code=0) -> str:
+    """The rows of one run of gate_times.md: its start differs with `second`, so that runs stay
+    apart; each directory is (name, seconds), and a run with none has the one row with dashes;
+    `code` is the exit code written."""
+    started = f"2026-11-11 10:00:{second:02}.000"
+    if not directories:
+        return gate_row(started, code, total, others)
+    return "".join(gate_row(started, code, total, others, name, seconds)
+                   for name, seconds in directories)
+
+
+TOTAL = "Total time of the run"
+
+
+class MeasureVersions(AuditCountCase):
+    """The series of the mechanism measures and of the gate times, each by the change of its own
+    instrument alone, and the median of each measure of each version (WAY-339, WAY-348,
+    WAY-350). The helpers are those of ProcessVersions."""
+
+    FIRST = ProcessVersions.FIRST
+    BASE_FILES = ProcessVersions.BASE_FILES
+    the_way = ProcessVersions.the_way
+    version_at = ProcessVersions.version_at
+    run_versions = ProcessVersions.run_versions
+    series = ProcessVersions.series
+
+    def day(self, number) -> int:
+        return self.FIRST + number * 86400
+
+    def add_measured(self, product, specs) -> None:
+        """Each cycle as (folder, pin, values, runs), chained so that all stay in the history:
+        `values` maps a label of mechanism_measures.md to its value, the other labels keeping the
+        value of MEASURE_VALUES, and is None for a copy with no such file; `runs` is the rows of
+        gate_times.md, None for a copy with no such file."""
+        parent = product.commit({"README.md": "a product\n"}, "Start")
+        for folder, pin, values, runs in specs:
+            files = {"cycle.md": process_record(pin)}
+            if values is not None:
+                files[MEASURES] = measures_file([(label, values.get(label, default))
+                                                 for label, default in MEASURE_VALUES])
+            if runs is not None:
+                files[GATE] = gate_file(rows=runs)
+            _, parent = product.cycle(folder, files, parent=parent, branch=None)
+        product.branch("main", parent)
+
+    def section(self, kind, number) -> list[list[str]]:
+        text = self.latest()
+        heading = f"\n### {kind}, series {number}\n"
+        self.assertIn(heading, text, "the result has no such series")
+        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+        lines = [line for line in part.splitlines() if line.startswith("|")]
+        return [split_row(line) for line in lines[2:]]
+
+    def measure(self, number, label) -> list[list[str]]:
+        """The rows of a series of mechanism measures that are of one measure."""
+        return [row for row in self.section("Mechanism measures", number) if row[1] == label]
+
+    def gate(self, number, measure=TOTAL) -> list[list[str]]:
+        return [row for row in self.section("Gate times", number) if row[1] == measure]
+
+    def test_a_change_of_an_instrument_starts_only_the_series_of_its_own_measures(self):
+        # v2 changes the script of the measures, v3 the script of the gate times, v4 the reviewer's
+        # instructions and `cycle_stages.py`. The cost splits at v4 alone; the mechanism measures
+        # at v2 alone; the gate times at v3 alone, and no median is set across a split.
+        way = self.the_way()
+        measures = {"task-cycle/cycle_measures.py": "measures\n"}
+        both = {**measures, "task-cycle/gate_times.py": "gate\n"}
+        reviewed = {**both, "task-cycle/review/SKILL.md": "reviewer\n",
+                    "task-cycle/cycle_stages.py": "newer form\n"}
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1, changed=measures)
+        v3 = self.version_at(way, self.day(2), parent=v2, changed=both)
+        v4 = self.version_at(way, self.day(3), parent=v3, changed=reviewed)
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, {"Calls in all": "8"}, gate_run(2, 0, "90.000")),
+            ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "80.000")),
+            ("four", v4, {"Calls in all": "5"}, gate_run(4, 0, "70.000"))])
+        self.run_versions(way, product)
+        self.assertEqual([v1, v2, v3], [row[0] for row in self.series(1)])
+        self.assertEqual([v4], [row[0] for row in self.series(2)])
+        self.assertNotIn("### Series 3", self.latest())
+        calls = "Calls in all"
+        self.assertEqual([[v1, calls, "1", "10", "unknown"]], self.measure(1, calls))
+        self.assertEqual([[v2, calls, "1", "8", "unknown"], [v3, calls, "1", "9", "no"],
+                          [v4, calls, "1", "5", "yes"]], self.measure(2, calls))
+        self.assertNotIn("### Mechanism measures, series 3", self.latest())
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v2, TOTAL, "1", "90.000", "yes", "0", "unknown"]], self.gate(1))
+        self.assertEqual([[v3, TOTAL, "1", "80.000", "unknown", "0", "unknown"],
+                          [v4, TOTAL, "1", "70.000", "yes", "0", "unknown"]], self.gate(2))
+        self.assertNotIn("### Gate times, series 3", self.latest())
+        text = self.latest()
+        self.assertLess(text.index("## Process versions"), text.index("## Measure versions"))
+        self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
+
+    def test_the_reviewer_the_stage_script_and_the_list_of_classes_split_no_series_of_measures(self):
+        # v2 changes the reviewer's instructions, v3 `cycle_stages.py`, and a class is added on the
+        # day of v4: each splits the series of the cost and none splits the measures, whose
+        # medians fall from version to version across all three.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n"})
+        v3 = self.version_at(way, self.day(2), parent=v2,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n",
+                                      "task-cycle/cycle_stages.py": "newer form\n"})
+        v4 = self.version_at(way, self.day(3), parent=v3,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n",
+                                      "task-cycle/cycle_stages.py": "newer form\n"})
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, {"Calls in all": "9"}, gate_run(2, 0, "90.000")),
+            ("three", v3, {"Calls in all": "8"}, gate_run(3, 0, "80.000")),
+            ("four", v4, {"Calls in all": "7"}, gate_run(4, 0, "70.000"))])
+        self.register.write_text(register_text(classes=["| sharp | x | 2025-10-12 | none |"]),
+                                 encoding="utf-8")
+        self.run_versions(way, product)
+        self.assertEqual([[v1], [v2], [v3], [v4]],
+                         [[row[0] for row in self.series(number)] for number in (1, 2, 3, 4)])
+        self.assertEqual([[v1, "Calls in all", "1", "10", "unknown"],
+                          [v2, "Calls in all", "1", "9", "yes"],
+                          [v3, "Calls in all", "1", "8", "yes"],
+                          [v4, "Calls in all", "1", "7", "yes"]], self.measure(1, "Calls in all"))
+        self.assertEqual(["unknown", "yes", "yes", "yes"],
+                         [row[4] for row in self.gate(1)])
+        self.assertNotIn("### Mechanism measures, series 2", self.latest())
+        self.assertNotIn("### Gate times, series 2", self.latest())
+
+    def test_a_new_price_list_splits_no_series_of_measures(self):
+        # One price list prices a whole run, so no real run splits at it: the series of the
+        # measures are asked of the two versions directly, and ask git about their script alone.
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        asked = []
+
+        class Unchanged:
+            def differs(self, earlier, later, paths):
+                asked.append(tuple(paths))
+                return False
+
+        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        for script in ("task-cycle/cycle_measures.py", "task-cycle/gate_times.py"):
+            with self.subTest(script):
+                blocks = audit_count.instrument_series([earlier, later], Unchanged(), script)
+                self.assertEqual([[earlier, later]], [block.versions for block in blocks])
+                self.assertEqual((script,), asked[-1])
+        self.assertEqual("the price list changed",
+                         audit_count.series_boundary(earlier, later, audit_count.Register(), None))
+
+    def test_medians_and_falls_of_three_versions_over_an_odd_and_an_even_number_of_cycles(self):
+        # Calls in all: v1 has 10, 4 and 7 (median 7, odd), v2 has 6 and 9 (median 7.5, even, so
+        # not lower than 7), v3 has 2, 8, 5 and 6 (sorted 2, 5, 6, 8: median 5.5, lower than 7.5).
+        # The share has a value in 2 of 3 cycles of v1 (12.5 and 13.0: 12.75), in 1 of 2 of v2
+        # (12.0, lower) and in 2 of 4 of v3 (12.0 and 12.5: 12.25, not lower than 12.0). A cycle
+        # of no version, with 1 call, stands in no median.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        share = "Share of the context in calls above 200000 tokens"
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {"Calls in all": "10", share: "12.5%"}, None),
+            ("b", v1, {"Calls in all": "4", share: "13.0%"}, None),
+            ("c", v1, {"Calls in all": "7", share: "unknown"}, None),
+            ("d", v2, {"Calls in all": "6", share: "12.0%"}, None),
+            ("e", v2, {"Calls in all": "9", share: "unknown"}, None),
+            ("f", v3, {"Calls in all": "2", share: "12.0%"}, None),
+            ("g", v3, {"Calls in all": "8", share: "12.5%"}, None),
+            ("h", v3, {"Calls in all": "5", share: "unknown"}, None),
+            ("i", v3, {"Calls in all": "6", share: "unknown"}, None),
+            ("stray", "none", {"Calls in all": "1"}, None)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "Calls in all", "3", "7", "unknown"],
+                          [v2, "Calls in all", "2", "7.5", "no"],
+                          [v3, "Calls in all", "4", "5.5", "yes"]], self.measure(1, "Calls in all"))
+        self.assertEqual([[v1, share, "2", "12.75%", "unknown"],
+                          [v2, share, "1", "12.0%", "yes"],
+                          [v3, share, "2", "12.25%", "no"]], self.measure(1, share))
+        # A measure that does not change does not fall; every one of the fifteen has a row.
+        self.assertEqual([[v1, "Calls of subagents", "3", "7", "unknown"],
+                          [v2, "Calls of subagents", "2", "7", "no"],
+                          [v3, "Calls of subagents", "4", "7", "no"]],
+                         self.measure(1, "Calls of subagents"))
+        self.assertEqual(3 * len(MEASURE_LABELS), len(self.section("Mechanism measures", 1)))
+        unknown = self.rows("Unknown values")
+        self.assertEqual("no previous version in the series",
+                         self.reasons_of(unknown, f"Measure falls: Calls in all, version {v1}"))
+        self.assertEqual("", self.reasons_of(unknown, f"Measure falls: Calls in all, version {v2}"))
+
+    def test_the_gate_times_take_only_runs_with_no_other_gate_and_show_the_others_apart(self):
+        # Medians by hand. v1: total of the runs alone 100 and 110 (105.000), apart 200 (company: 1
+        # other gate) and 300 (count unknown): 250.000; gate/a alone 60.0 and 70.0 (65.0), apart
+        # 135.0; gate/b alone 40.0, apart 80.0. v2: alone 90 and 95 (92.500, lower than 105), apart
+        # 10.000 (it would pull the median down if it entered); gate/a 51.0, apart 1.0; no gate/b
+        # run. v3: total alone 100 (not lower than 92.5: apart 1.000 enters no comparison),
+        # gate/a in a run with company only, gate/b alone 41.0 with no previous gate/b. v4: every
+        # run has company, so no comparison.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        v4 = self.version_at(way, self.day(3), parent=v3)
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "100.000", ("gate/a", "60.0"), ("gate/b", "40.0"))
+             + gate_run(2, 1, "200.000", ("gate/a", "120.0"), ("gate/b", "80.0"))),
+            ("b", v1, {}, gate_run(3, 0, "110.000", ("gate/a", "70.0"))
+             + gate_run(4, "unknown", "300.000", ("gate/a", "150.0"))),
+            ("c", v2, {}, gate_run(5, 0, "90.000", ("gate/a", "50.0"))
+             + gate_run(6, 0, "95.000", ("gate/a", "52.0"))
+             + gate_run(7, 3, "10.000", ("gate/a", "1.0"))),
+            ("d", v3, {}, gate_run(8, 0, "100.000", ("gate/b", "41.0"))
+             + gate_run(9, 1, "1.000", ("gate/a", "0.5"))),
+            ("e", v4, {}, gate_run(10, 2, "50.000", ("gate/a", "20.0")))])
+        self.run_versions(way, product)
+        a, b = "Directory: gate/a", "Directory: gate/b"
+        self.assertEqual([
+            [v1, TOTAL, "2", "105.000", "unknown", "2", "250.000"],
+            [v1, a, "2", "65.0", "unknown", "2", "135.0"],
+            [v1, b, "1", "40.0", "unknown", "1", "80.0"],
+            [v2, TOTAL, "2", "92.500", "yes", "1", "10.000"],
+            [v2, a, "2", "51.0", "yes", "1", "1.0"],
+            [v3, TOTAL, "1", "100.000", "no", "1", "1.000"],
+            [v3, a, "0", "unknown", "unknown", "1", "0.5"],
+            [v3, b, "1", "41.0", "unknown", "0", "unknown"],
+            [v4, TOTAL, "0", "unknown", "unknown", "1", "50.000"],
+            [v4, a, "0", "unknown", "unknown", "1", "20.0"],
+        ], self.section("Gate times", 1))
+        unknown = self.rows("Unknown values")
+        self.assertIn("no previous version in the series",
+                      self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v1}"))
+        self.assertIn("no run of the version that passed with no other gate",
+                      self.reasons_of(unknown, f"Gate time falls: {TOTAL}, version {v4}"))
+        self.assertIn("no run of the previous version that passed with no other gate",
+                      self.reasons_of(unknown, f"Gate time falls: {b}, version {v3}"))
+
+    def test_a_version_with_no_cycle_that_gave_a_value_has_one_row_and_one_line_of_reason(self):
+        # v2's cycle has neither file: one row in each table, `—` for the measure and no median, and
+        # one line in *Unknown values* for each instrument instead of one for each measure. v3 has
+        # values, keeps its rows as they are, and is not compared with v2.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        v3 = self.version_at(way, self.day(2), parent=v2)
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, None, None),
+            ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "90.000"))])
+        self.run_versions(way, product)
+        calls = "Calls in all"
+        self.assertEqual([[v1, calls, "1", "10", "unknown"], [v3, calls, "1", "9", "unknown"]],
+                         self.measure(1, calls))
+        self.assertEqual([[v2, "—", "0", "unknown", "unknown"]], self.measure(1, "—"))
+        self.assertEqual(2 * len(MEASURE_LABELS) + 1, len(self.section("Mechanism measures", 1)))
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v3, TOTAL, "1", "90.000", "unknown", "0", "unknown"]], self.gate(1))
+        self.assertEqual([[v2, "—", "0", "unknown", "unknown", "0", "unknown"]],
+                         self.gate(1, "—"))
+        unknown = self.rows("Unknown values")
+        self.assertIn("no cycle of this version gives a value",
+                      self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
+        self.assertIn("an earlier cycle, or a script that failed",
+                      self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
+        self.assertIn("no run of this version gives a time",
+                      self.reasons_of(unknown, f"Gate times of version {v2}"))
+        self.assertEqual([], [row for row in unknown if row[2].startswith("Measure falls")
+                              and f"version {v2}" in row[2]])
+        self.assertEqual("no cycle of the previous version gives a value",
+                         self.reasons_of(unknown, f"Measure falls: {calls}, version {v3}"))
+
+    def test_a_failed_run_enters_no_median_and_is_shown_apart_with_the_runs_with_company(self):
+        # v1: passed and alone: 100.000 (gate/a 60.0). A run alone that exited 2 (5.000, gate/a
+        # 1.0) and one alone whose exit code is unknown (300.000) are not compared: apart, the
+        # median of 5.000 and 300.000 is 152.500. v2: passed and alone 90.000 (gate/a 50.0), so the
+        # total falls from 100.000 and gate/a from 60.0; a failed run alone, 2.000, is apart.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "100.000", ("gate/a", "60.0"))
+             + gate_run(2, 0, "5.000", ("gate/a", "1.0"), code=2)
+             + gate_run(3, 0, "300.000", code="unknown")),
+            ("b", v2, {}, gate_run(4, 0, "90.000", ("gate/a", "50.0"))
+             + gate_run(5, 0, "2.000", code=1))])
+        self.run_versions(way, product)
+        a = "Directory: gate/a"
+        self.assertEqual([
+            [v1, TOTAL, "1", "100.000", "unknown", "2", "152.500"],
+            [v1, a, "1", "60.0", "unknown", "1", "1.0"],
+            [v2, TOTAL, "1", "90.000", "yes", "1", "2.000"],
+            [v2, a, "1", "50.0", "yes", "0", "unknown"],
+        ], self.section("Gate times", 1))
+
+    def test_a_version_whose_only_run_failed_has_no_median_and_no_comparison(self):
+        # v1 passed (100.000); v2's only run failed (4.000): v2 has no median, no comparison, and
+        # its run is apart.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1)
+        product = self.repository()
+        self.add_measured(product, [("a", v1, {}, gate_run(1, 0, "100.000")),
+                                    ("b", v2, {}, gate_run(2, 0, "4.000", code=2))])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"],
+                          [v2, TOTAL, "0", "unknown", "unknown", "1", "4.000"]], self.gate(1))
+        self.assertIn("no run of the version that passed with no other gate",
+                      self.reasons_of(self.rows("Unknown values"),
+                                      f"Gate time falls: {TOTAL}, version {v2}"))
+
+    def test_a_directory_written_twice_in_one_run_counts_once_and_says_so(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        product = self.repository()
+        self.add_measured(product, [
+            ("a", v1, {}, gate_run(1, 0, "10.000", ("gate/a", "5.0"), ("gate/a", "7.0")))])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "Directory: gate/a", "1", "5.0", "unknown", "0", "unknown"]],
+                         self.gate(1, "Directory: gate/a"))
+        self.assertTrue(any("twice" in row[3] for row in self.rows("Unknown values")))
+
+    def test_crafted_directories_and_runs_break_no_cell_and_cost_bounded_work(self):
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        product = self.repository()
+        crafted = (gate_run(1, 0, "1.000", ("gate\\|x\x1b[2J\x07y", "1.0"), ("d" * 500, "2.0"))
+                   + "".join(gate_row(f"2026-11-11 11:00:00.{index:03}", 0, "1.000", 0,
+                                      f"gate/d{index}", "1.0") for index in range(700))
+                   + "| a | b |\n" * 30)
+        self.add_measured(product, [("a", v1, {}, crafted)])
+        self.run_versions(way, product)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        self.assertNotIn("d" * 201, text)
+        rows = self.section("Gate times", 1)
+        self.assertEqual({7}, {len(row) for row in rows})
+        # 500 runs are read, the first of them the crafted one: the total, its two directories and
+        # the 499 directories of the runs after it.
+        self.assertEqual(1 + 2 + 499, len(rows))
+        self.assertIn(["Directory: " + "d" * 200], [[row[1]] for row in rows])
 
 
 class PriceBoundary(unittest.TestCase):

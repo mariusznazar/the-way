@@ -99,6 +99,8 @@ them.
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation
 - **Trust boundary:** task-cycle/cycle_stages.py
+  task-cycle/cycle_measures.py
+  task-cycle/gate_times.py
 
 ## foundation-review
 
@@ -235,7 +237,7 @@ sentence and its exit codes.
 | a product pinned to a commit | both | untrusted |
 | git | them → us | trusted |
 | a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted |
-| a user's places outside every repository — the locations file and the places its entries name, such as the register of problems and the results of the audit | both | untrusted |
+| a user's places outside every repository — the locations file, the places its entries name, such as the register of problems and the results of the audit, and the registry of running gates that the script of the gate keeps | both | untrusted |
 
 ## Files left out on purpose
 

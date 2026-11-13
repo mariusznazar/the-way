@@ -96,8 +96,10 @@ names failed and unchecked checks and unresolved concerns. Repair an incomplete 
 before dependent work, and record corrections to stale paths or commit ranges. Record the evidence
 read for a question or finding in the questions table, rather than loading every stage's full
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
-During work this file, the frozen task, `stages.md`, `spec.md`, `plan.md`, `plan-size.md`,
-`request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
+During work this file, the frozen task, `stages.md` (step 12), `mechanism_measures.md` (step 12),
+`gate_times.md` (created by the first gate run, at step 2 where the pin moved, else at step 4; each
+later gate run appends to it), `spec.md`, `plan.md`, `plan-size.md`, `request.md` and `reports/`
+live under the ignored `.runs/task-cycles/<task-slug>/` directory. At the request, copy
 that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, clean
 the copy and check it as `task-cycle/skill/SKILL.md` ("The record before it is committed") gives,
 commit the copy and commit its removal immediately after; the request links the record by the SHA of
