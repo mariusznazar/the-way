@@ -57,8 +57,9 @@ judged, and which are not raised again (WAY-303, WAY-304).
 
 ## 4. List the proposals
 
-Read `proposals.md` beside this skill: the proposals about the foundation, the groups of remarks,
-and the data file that holds the lists (WAY-302).
+Read `proposals.md` beside this skill: the proposals about the foundation, the decisions that
+describe a transitional state, the groups of remarks, and the data file that holds the lists
+(WAY-302, WAY-354).
 
 ## 5. Have the set critiqued
 
@@ -78,7 +79,8 @@ remarks as groups, and the tasks that follow from the human's decisions (WAY-302
 
 ## 7. Mark the review done
 
-The review is done when the human has decided on every proposal and every group. Then mark it:
+The review is done when the human has decided on every proposal, has answered for every decision
+that describes a transitional state and has decided on every group. Then mark it:
 
 - Name the tag `foundation-review/YYYY-MM-DD` with today's date; where a tag of that date exists
   already, add `-2`, then `-3`. Put it on the checked commit of step 1, annotated, with

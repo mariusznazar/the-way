@@ -332,10 +332,12 @@ the order of their kinds.
 - An item of kind 4 for a check the agent did not run that the human can do by hand has a fifth part
   after the question: three to six numbered steps for the human — where to go, what to do and what
   the human should see — each in plain words, with no file name and no identifier of an entry, as
-  the top part asks (WAY-286). Where the way to the place is a file, a step describes the place, and
-  the item ends with its pointer to the lower part. The answers of the item stay the three of "Fix or
-  let through", and the human who checked by hand writes a remark after the check, as before. An
-  item for a check the human cannot do by hand has no steps (WAY-327).
+  the top part asks (WAY-286). A step may give a command to type, written without the name of a
+  file of the repository; where the place or the command cannot be told without such a name, the
+  step describes it in words and the item ends with its pointer to the lower part, where the name
+  stands. The answers of the item stay the three of "Fix or let through", and the human who checks
+  by hand writes a remark after the check. An item for a check the human cannot do by hand has no
+  steps (WAY-327).
 - An item of *Needed from you* that asks for an action outside the repository (kind 3) says what to
   do, why the request needs it and what happens without it.
 - An item of *You accept by merging* says what the cycle chose or wrote and why, in plain words,
@@ -383,11 +385,13 @@ The fifth part, for an item about a check the human can do by hand, stands after
    on the first day. Running the check in this request costs a session with a product that starts
    and a round of review; making a task of it leaves the page unchecked until someone opens it;
    letting it through accepts that risk. I recommend running it in this request, since the page is
-   the one thing the change added. Run it in this request, make a task of it, or let it through? If
-   you want to look first, and write a remark with what you saw:
+   the one thing the change added. Run it in this request, make a task of it, or let it through?
+   The steps of the check by hand, whose result you write down as a remark:
    1. Start the product and open the profile page from the menu.
    2. Change the display name and press Save.
    3. The page should show the new name, and it should still show it after you reload the page.
+
+   (Checks, 2)
 ```
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and

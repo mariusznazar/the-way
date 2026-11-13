@@ -10836,7 +10836,7 @@ round of correction with its review and the risk that stays, and where it can sh
 recommendation with its reason in one sentence; and asks a question with the answers to choose from.
 An item for a check the agent did not run that the human can do by hand has a fifth part, three to
 six steps for the human — where to go, what to do and what the human should see — and keeps its
-answers; the human who checks by hand writes a remark after the check, as before. The agent that
+answers; the human who checks by hand writes a remark after the check. The agent that
 writes the description checks every such item against these four, and the item for a check the human
 can do by hand against the fifth as well, before the request opens, and fills in what is missing.
 
@@ -10850,8 +10850,8 @@ can do by hand against the fifth as well, before the request opens, and fills in
     that wrote the description read each item of the first two groups against the four parts before
     the form check, and added the missing way and its cost to an item that had none; an item about a
     screen of the product that the agent did not check and a person can open gives three steps — open
-    the page, press the button, the page should show the saved value — and the same three answers as
-    before;
+    the page, press the button, the page should show the saved value — and the three answers of its
+    group;
   - violates: an item reads "the return step was skipped; merge without it?", with no word on who
     will feel it, what the other ways cost or what the writer would do; the description is
     published with an item of the first two groups that was not read against the four parts; an item
@@ -11717,8 +11717,7 @@ template of the task document gives it, the line with the revision.
     or to the section under a heading, and gives the line beside it as a hint; the source of an
     answer under a question reads a file, a line and a revision;
   - violates: a task document sends the cycle to a place by a line number alone; the source of an
-    answer leaves out the line or the revision; a script is run before the cycle starts to check
-    that every file, line and entry a task document names still exists.
+    answer leaves out the line or the revision.
 - **Origin:** none
 
 *Rationale:* a line number names a place that moves when the file changes, so an agent that opens
@@ -11760,12 +11759,12 @@ other proposals (WAY-302). A decision's entry carries no field for that task.
 state, and nothing leads from the decision to that work, so the state can stay in the code for good
 with nobody seeing it before a review. The review already reads every decision against the product
 (WAY-305) and turns a proposal the human accepts into a task (WAY-302), so it is where a missing
-task shows. The human is asked, and the review does not search, since the tasks of a product lie
-outside its repository (WAY-320) and an identifier of a task that an entry could name exists only
-for a task of a project plan (WAY-329). A word does not pick the decisions: a search of the log by
-"until" and kindred words on 2026-11-12 found them mostly in ordinary rules. The price: the
-reading can miss a decision or list an ordinary rule, and the human is asked again at each review
-about a decision whose state still stands.
+task shows. The human is asked, since the tasks of a product lie outside its repository (WAY-320)
+and only the line of a task of a project plan has an identifier that a decision derives (WAY-329),
+so an entry has no name to give a task outside a plan. A word does not pick the decisions: a
+search of the log by "until" and kindred words on 2026-11-12 found them mostly in ordinary rules.
+The price: the reading can miss a decision or list an ordinary rule, and the human is asked again
+at each review about a decision whose state still stands.
 *Rejected:* a field in a decision's entry that names the task, as the card the point came from has
 it — it changes WAY-24 and the template of decisions, collides with WAY-01, needs a way for an
 entry to name a task of a list that lies outside the repository, needs the task to exist before the
