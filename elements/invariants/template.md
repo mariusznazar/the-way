@@ -1,13 +1,5 @@
 # Invariant entry template
 
-> **Draft.** This template is written ahead of the decisions it still waits for, so that they can
-> be settled against real entries instead of imagined ones. A rule that cites no decision is a
-> proposal settled during the element's research, waiting for its decision. Until those decisions
-> are written, nothing here binds beyond what the cited decisions already say, and the template
-> does not reach the main branch
-> (`TODO — decision pending: which decision keeps a draft template off the main branch until its
-> decisions are written`).
-
 This file defines how an invariant entry is written. An invariant names its method of checking and
 says nothing about why, or about what was rejected (WAY-08, WAY-22). Its status comes from running
 its test, never from a status written by hand, and a rule no cheap test can check is kept by review
@@ -25,13 +17,10 @@ holds what is particular to an invariant (WAY-35).
   entry the file holds its withdrawn identifiers (WAY-64).
 - The identifier names what the sentence constrains, never what it demands, so that a reworded
   sentence leaves it true; where another entry constrains the same thing, it adds the aspect this
-  one protects, as `script-imports` and `script-subprocesses`
-  (`TODO — decision pending: which decision sets how an invariant's identifier is named`).
+  one protects, as `script-imports` and `script-subprocesses`.
 - An entry is edited in place and holds only its current wording; it carries no version, and its
   earlier wordings are read from git (WAY-07). An entry that takes in a clause of another keeps its
-  identifier, and the other is split
-  (`TODO — decision pending: which decision sets that an entry taking in a clause of another keeps
-  its identifier`).
+  identifier, and the other is split (WAY-64).
 
 ## Form of an entry
 
@@ -67,9 +56,8 @@ gives (WAY-64).
   input made up for it is the method of a sentence about the check it exercises, never of one about
   the data that check reads (WAY-61).
 - A test cites each invariant it checks, at the test, as a line `invariant: <identifier>` in the
-  comment form of its file's language (WAY-65). A test stands in a file of code; a Markdown file
-  holds no citing test (`TODO — decision pending: which decision sets that a citing test stands in a
-  file of code`).
+  comment form of its file's language (WAY-65). A test stands in a file of code (WAY-61); a Markdown
+  file holds no citing test.
 - An invariant's result is `pass` where every test citing it ran and passed, and `fail` where one of
   them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
@@ -103,10 +91,9 @@ gives (WAY-64).
   made onto (WAY-60). A sentence that is to hold on the main branch alone holds where
   `{merge-onto}` exists (WAY-60).
 - A sentence may be about a check the product itself holds, as it may be about anything else the
-  product holds: whether a check belongs to the product is settled by the part map
-  (`TODO — decision pending: which decision lets the part map settle whether a check belongs to
-  the product`), and the method of such a sentence is a test feeding that check input made up for
-  it (WAY-61). Such a sentence names `{fork-point}` or `{merge-onto}` in quotation marks where it is
+  product holds: whether a check belongs to the product is settled by the part map (WAY-44), and the
+  method of such a sentence is a test feeding that check input made up for it (WAY-61). Such a
+  sentence names `{fork-point}` or `{merge-onto}` in quotation marks where it is
   what the check is given (WAY-60, WAY-61). Quoted text, in this template, is text between
   quotation marks; a value in backticks is not quoted.
 - A sentence that bounds or equates a quantity measured while the product runs names its bound or
@@ -155,9 +142,7 @@ gives (WAY-64).
   unread by a change that can make it false, and nothing shows it, so a writer in doubt names more
   (WAY-62).
 - *Part* has no third value. A sentence no commit of this product can make false is not an
-  invariant of this product: it belongs to the foundation of the product whose commits
-  decide it (`TODO — decision pending: which decision sets that a sentence no commit of the product
-  can make false belongs to another product's foundation`).
+  invariant of this product (WAY-22, WAY-62).
 - A change, against `{fork-point}`, reaches an entry that names `every` or a part the change
   touches, or that a test the change alters cites, and the agent making the change reads every
   entry it reaches (WAY-62).
@@ -177,9 +162,7 @@ gives (WAY-64).
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it
-(`TODO — decision pending: which decision keeps a field in an element's template only while it is
-read`).
+A field stays in this template only while someone or something reads it (WAY-05).
 
 | Field | Who reads it, when |
 |---|---|

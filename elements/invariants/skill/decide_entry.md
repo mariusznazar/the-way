@@ -9,8 +9,7 @@
 - Apply the test in the decision template's section "Decision or invariant": a rule that records
   a choice goes through `record-decision` first, and the invariant is written as derived from it.
   A reason found behind recovered behaviour is not recovered as a decision in this change (WAY-28);
-  one the human gives is (`TODO — decision pending: which decision sets that a reason the human
-  gives for recovered behaviour is written as a decision`).
+  one the human gives is written as a decision (WAY-22, WAY-29).
 - When the rule holds more than one sentence can state, propose one entry per sentence; the
   template says what one sentence may join.
 - Search the file, including its withdrawn identifiers, for an entry this rule would change:

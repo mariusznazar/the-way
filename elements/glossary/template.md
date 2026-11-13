@@ -36,10 +36,9 @@ template holds what is particular to a glossary entry (WAY-35).
   which no other entry of the file holds (WAY-93).
 - A sentence depends on a term by using its word (WAY-97). An entry carries no version and is
   edited in place, its meaning included (WAY-07, WAY-97).
-- The language of an entry follows `elements/common/rules.md` (WAY-72). How a word the product
-  shows the people who use it in another language stands in an entry is
-  `TODO — decision pending: how does a word the product shows in another language stand in a
-  glossary entry? (WAY-72)`.
+- The language of an entry follows `elements/common/rules.md` (WAY-72). An entry keeps the English
+  term; a word the product shows its users in another language stays in the product's files, not in
+  the glossary (WAY-72, WAY-99).
 
 ## Which words take an entry
 
@@ -100,9 +99,7 @@ template holds what is particular to a glossary entry (WAY-35).
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it
-(`TODO — decision pending: which decision keeps a field in an element's template only while it is
-read`).
+A field stays in this template only while someone or something reads it (WAY-05).
 
 | Field | Who reads it, when |
 |---|---|
