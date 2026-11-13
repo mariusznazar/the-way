@@ -11703,6 +11703,38 @@ keeps a second way of reading a stage report for as long as cycles of the older 
 a cycle of that form has no share.
 *Rejected:* unknown
 
+### WAY-353 — How does a task document point at a place to change in a file?
+
+A task document points at a place to change in a file by a heading or a quotation, and a line
+number given beside it is only a hint. The source under the answer to a question stays as the
+template of the task document gives it, the line with the revision.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a task document with the decision:
+  - complies: a task document sends the cycle to the paragraph that opens with a quoted sentence,
+    or to the section under a heading, and gives the line beside it as a hint; the source of an
+    answer under a question reads a file, a line and a revision;
+  - violates: a task document sends the cycle to a place by a line number alone; the source of an
+    answer leaves out the line or the revision; a script is run before the cycle starts to check
+    that every file, line and entry a task document names still exists.
+- **Origin:** none
+
+*Rationale:* a line number names a place that moves when the file changes, so an agent that opens
+the file at that line may find other text and has to look for the place, while a heading or a
+quotation finds it again after the lines have moved. The line stays in the source of an answer
+because the revision beside it says which text the line meant. In the register of problems of
+2026-11-12, 80 rows in 45 of 83 cycles were a stale reference; one occurrence cost nothing 35
+times, a few steps of an agent 44 times and a stage once, and no round and no time of the human.
+The price: a heading or a quotation can vanish as a line can, and about 40 of those 80 rows stood in
+orders to agents and in plans written during a cycle, which this rule does not reach.
+*Rejected:* a script that checks, before a cycle starts, the files, lines and entries a task names —
+it catches about 15 of the 80 rows, each worth a few steps of an agent, and costs a script with
+tests and a step at the start of every cycle; a line given with a revision as the source of an
+answer moves by design, so the script would read the file at that revision or report false alarms;
+no rule — rows keep coming, about one in a cycle, each worth nothing or a few steps of an agent.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

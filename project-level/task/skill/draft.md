@@ -21,6 +21,10 @@ Keep Description to what an implementer needs to take the task. Put likely follo
 Context. If a block's place is uncertain, move it to Context. Do not ask questions merely to fill
 Context, and do not invent acceptance criteria.
 
+Point at a place to change in a file by the heading it stands under or by a quotation of the text
+there, and give a line number only as a hint beside it, as the template gives (WAY-353). The
+*Source* of an answer under a question keeps its line and its revision.
+
 Show the whole current task document when asking for a wording decision. A suggestion not
 supported by the human or an approved source appears as `Proposal:` outside the document and enters
 it only after acceptance.
