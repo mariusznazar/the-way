@@ -227,9 +227,10 @@ foundation element, `elements/common/` for what the elements share, `relation-mo
 `installation/`, `agent-instructions/`, `instruction-files/`, `project-level/`,
 `product-guidelines/`, `foundation-review/`, `process-audit/` and `task-cycle/` — the files that
 configure the whole repository, which its part map gives to the `repository` part (WAY-44), the root
-agent instruction files and the project skill entry points under `.claude/skills/` and
-`.agents/skills/`, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
-describes the repository. A directory reaches the main branch only once it holds what its part
+agent instruction files, the project skill entry points under `.claude/skills/` and
+`.agents/skills/` and the copies of the cycle's agent type definitions under `.claude/agents/`,
+which the map gives to `agent-instructions` (WAY-44), and a `README.md` that describes the
+repository. A directory reaches the main branch only once it holds what its part
 requires: an element its template and rules, examples or a pointer to entries of the-way that serve
 as its examples, and a skill that writes its entries; `elements/common/` the rules of form and the
 way of working the elements' templates and skills share, the script that checks a foundation, the
@@ -268,7 +269,9 @@ checked by `elements/common/foundation_check.py`.
     write them and the checks of a definition and a plan stand in `project-level/`; the agent
     instructions have their own part and root entry points; the project skill entry points under
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
-    the script that generates them stands with its test in `agent-instructions/`; the principles,
+    the script that generates them stands with its test in `agent-instructions/`; the copies of
+    the cycle's agent type definitions under `.claude/agents/` stand there too, generated from the
+    definitions in `task-cycle/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
     styleguide discipline stand together in `product-guidelines/`; the skill of the review of a
@@ -930,8 +933,9 @@ changes of the-way at once.
   belong to each product's foundation, since no commit of the-way decides them:
   - complies: a product's foundation holds the invariants "this repository pins a commit of
     the-way" and "CI runs only that commit's scripts"; a task that needs a newer skill moves the
-    pin in its branch's first commit, before its route is judged, the entry points and guidance the
-    installer rewrote included, and carries what the newer version changes for the product;
+    pin in its branch's first commit, before its route is judged, the entry points, the agent type
+    definitions and the guidance the installer rewrote included, and carries what the newer version
+    changes for the product;
   - violates: a product's CI fetches the latest the-way on every run; a skill in a product session
     comes from a copy of the-way other than the pinned commit; a product moves its pin after every
     change of the-way, though none of its tasks needs one; a task cycle moves the pin after its
@@ -7868,7 +7872,10 @@ An agent the orchestrator dispatches waits for a command that may run longer tha
 its prompt cache — a container build, a mutation run, a test suite a check names — by running it in
 the background and reading its output between waits each shorter than that lifetime, never in one
 wait past it; in Claude Code a subagent's cache lives five minutes by default, so each wait stays
-under about four. Where the harness states no cache lifetime, the agent waits as the harness allows.
+under about four. The one author's cache lives an hour, which the author's type sets (WAY-368), and
+its waits stay under about four minutes as well, since Claude Code falls back to five minutes where a
+subscription spends usage credits. Where the harness states no cache lifetime, the agent waits as the
+harness allows.
 
 - **Scope:** task-cycle
 - **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
@@ -7876,24 +7883,41 @@ under about four. Where the harness states no cache lifetime, the agent waits as
   so the cache stays warm as long as you keep working." · § "Cache lifetime" — "a one-hour TTL
   that keeps the cache warm through longer breaks but charges a higher rate for cache writes" ·
   § "Subagents and the cache" — "Subagents fall outside the main-conversation TTL bucket, so they
-  get five minutes even on a subscription until you choose a longer one."; read 2026-10-27
+  get five minutes even on a subscription until you choose a longer one."; read 2026-10-27 ·
+  https://code.claude.com/docs/en/sub-agents.md § the frontmatter reference, row `experimental` —
+  "Claude Code ignores any other value, ignores `1h` while your Claude subscription is using usage
+  credits, and reads the field only from subagent files"; read 2026-11-13
 - **Relations:** none
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:
   - complies: a reviewer in Claude Code starts the mutation run its review needs in the background
-    and reads its output every four minutes until it ends;
+    and reads its output every four minutes until it ends; the one author, whose cache lives an
+    hour, reads the output of a build it started in the background every four minutes as well;
   - violates: a subagent in Claude Code waits ten minutes in one command for a test suite to end; an
     agent's next step after a wait past its cache's lifetime writes its whole context to the cache
-    again.
+    again; the one author waits twenty minutes in one command on the strength of its hour; the type
+    of a reviewer or of an executor sets the hour.
 - **Origin:** none
 
 *Rationale:* an agent whose cache has expired pays at its next step to write its whole context
 again, while a check between waits reads that context from the cache at a fraction of that price;
 a longer cache, where a harness offers one, costs more at every write, also in work that never
-waits.
+waits. The one author is the exception, since it alone is resumed after each review and for the
+return step, and each such break outlasts five minutes. In a probe of the cache, a subagent with the
+hour, resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and wrote 123,
+where a control with five minutes wrote its whole 4,786 anew. Where the session was started again
+with its saved conversation resumed, the hour did not help: the agent wrote its whole context anew at
+2.0 times the price of input, where a write to a five-minute cache costs 1.25 times, in one try,
+twice; the account in *Rejected* does not cover a restart. The price: an hour that Claude Code ignores while a
+subscription spends usage credits leaves the author at five minutes, so its waits keep to four.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
-the few that wait.
+the few that wait: counted on the session records of past cycles of one game product and of the-way,
+an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a cycle of
+the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6% and, where the
+author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it raises the cost of
+a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game cycle and by 1.0% in
+a cycle of the-way itself.
 
 ### WAY-256 — Where does a fragment of a skill stand?
 
@@ -12292,6 +12316,130 @@ that repeats the final run of the earlier cycle on the same files, and red most 
 of the machine rather than the code; no run on the starting state at all, with the failing tests
 checked on the starting state only when the final gate fails — a variant shown and not chosen, its
 cost not given.
+
+### WAY-368 — Which agents run the stages of a task cycle in Claude Code?
+
+In Claude Code, a task cycle dispatches the one author of a change without a plan as an agent of the
+type `the-way-author` and every other stage agent as an agent of the type `the-way-stage`, two types
+of the-way's own that give their agent every tool of the session except the skill tool. Each type
+has a body of its own saying what it is, and only the type of the one author has the prompt cache
+lifetime that WAY-255 gives that agent. A stage agent reaches each method, and each skill a method
+names, as a file by its path, never by calling a skill; the installer writes the definitions of the
+pinned commit into a product, replacing and deleting only its own files, and the copies a session on
+the-way itself loads are generated from them and tracked.
+
+- **Scope:** task-cycle, installation, agent-instructions
+- **Based on:** https://code.claude.com/docs/en/sub-agents.md § "Preload skills" — "To prevent a
+  subagent from invoking skills entirely, omit `Skill` from the `tools` list or add it to
+  `disallowedTools`."; read 2026-11-13 · https://code.claude.com/docs/en/sub-agents.md § the
+  frontmatter reference, row `experimental` — "Set its `cacheTtl` key to `5m` or `1h` to choose the
+  prompt cache lifetime for this subagent's requests"; read 2026-11-13 ·
+  https://code.claude.com/docs/en/sub-agents.md § the note on detecting changes to subagent files —
+  "The watcher covers only directories that existed when the session started, so after creating a
+  scope's first agent file in a new `agents` directory, restart to load it."; read 2026-11-13
+- **Relations:** derives from WAY-125 · derives from WAY-127 · derives from WAY-34
+- **Verification:** an agent compares a change with the decision:
+  - complies: in Claude Code the orchestrator dispatches the one author with the type
+    `the-way-author` and the planner, an executor of a slice and a reviewer with `the-way-stage`;
+    each handoff gives the path of the method's file; a definition names no tool of the session and
+    sets no model; a definition added to the-way is written into a product by the installer and has
+    its generated copy in the tracked directory of the session on the-way;
+  - violates: the orchestrator dispatches a reviewer with the harness's general agent in a session
+    that has the types and records no reason; a handoff tells a stage agent to call a skill; a
+    definition lists tools by name or gives the skill tool back; the definition of a type other than
+    the one author's sets the hour lifetime; the installer overwrites a file of a product that is
+    not its own.
+- **Origin:** none
+
+*Rationale:* a stage agent started as a general subagent carries the list of every skill of its
+session before it reads its first file, and few agents of a cycle use a skill: in the session records
+of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252. A probe
+on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a subagent at
+36,711 tokens with the skill tool and 21,759 without it: the list of skills (29,896 characters)
+disappeared whole, the definitions of the tools shrank from 13 tools (31,547 characters) to 9
+(22,639), and the instruction files (23,658 characters) stayed. A type with every tool of the session
+but the skill tool starts about two thousand tokens larger than the probe's agent, which had a narrow
+list of tools, so the start is lighter by about 37% where the probe's was by 41%; both are estimates
+from the table of tool definitions, not measurements. The gain of the lighter start was estimated, for
+the narrow list of tools, at about 4.5% of a cycle's cost. A definition with no body gives its agent a
+system prompt of 1,722 characters in place of the 3,158 of a general subagent, so each type has a
+body that says what it is. The tools of connected servers, a browser's among them, stay, so an agent
+that has to look at an interface can, and the-way names no tool of a plugin that a product may not
+have. An agent without the skill tool reads a method as a file, which is how its handoff already
+gives it (WAY-125, WAY-148); and the personal skill of the same name that the list showed beside a
+skill of the-way, which an agent could take for it, is no longer shown. Two types and not one, since
+only the one author is resumed, after each review and for the return step, and a cache of five
+minutes is written again after each such break: in a probe of the cache, a subagent with the hour,
+resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and wrote 123, where a
+control with five minutes wrote its whole 4,786 anew (WAY-255 holds the account of the hour). The definitions come from the pinned commit like the entry points of the skills (WAY-34), and
+a session on the-way itself has tracked copies as it has those entry points (WAY-127), so that its
+cycles use the types as well. The price: an agent of these types cannot call a skill, a personal
+skill for work with a browser included; Claude Code loads the types of a directory that existed when
+the session started, so a session started before the installer or a checkout created that directory
+has no such types, and its cycle dispatches as before (WAY-370).
+*Rejected:* three types, with a narrow list of tools and a third type with the browser tools named —
+the-way would write into its file the names of the tools of one user's plugin, and in a product
+without it the type would have nothing to check an interface with; the orchestrator would decide at
+each dispatch whether a stage looks at an interface; and the one author of a change to an interface
+would need a fourth type; two narrow types, with the stages that look at an interface dispatched as a
+plain subagent as before — the cycle of a change to an interface would have neither the lighter start
+nor the author's hour of cache, and the orchestrator chooses the type for each stage anyway.
+
+### WAY-369 — Do the agent types of a task cycle start with the instruction files?
+
+The agent types of a task cycle start with the instruction files that Claude Code loads into an agent
+of the session, the user's and the product's; no definition of a type sets the field that starts an
+agent without them.
+
+- **Scope:** task-cycle
+- **Based on:** https://code.claude.com/docs/en/sub-agents.md § the frontmatter reference, row
+  `omitClaudeMd` — "Set to `true` to start this subagent without the user, project, and local
+  CLAUDE.md files"; read 2026-11-13
+- **Relations:** derives from WAY-368
+- **Verification:** an agent compares a change with the decision:
+  - complies: a definition of a type holds the fields `name`, `description`, the denied tools and, for
+    the one author, the cache lifetime;
+  - violates: a definition sets the field that starts the agent without the instruction files.
+- **Origin:** none
+
+*Rationale:* the instruction files are the part of the start that the types keep. The field that
+drops them drops the user's file, which holds the rules of git, of scripts and of privacy, and the
+product's file together, and the product's file alone cannot be kept; the start without them was measured at 10.5 thousand
+tokens, against 21,759 for the agent of the first probe with them. A later decision may reverse this where the handoffs of the stages begin to name the product's instruction
+file themselves.
+*Rejected:* start without the instruction files — the start falls to 10.5 thousand tokens, but the
+agent loses at once the user's global instruction file (the rules of git, of scripts and of privacy)
+and the product's instruction file, and the product's file alone cannot be kept.
+
+### WAY-370 — What does a task cycle do where the session has none of the-way's agent types?
+
+Where the session has none of the-way's agent types, because the harness is not Claude Code or the
+session started before Claude Code could load them, the task cycle dispatches each stage as it would
+without them and writes in its record that the stage ran without its type. The-way defines no agent
+types for Codex.
+
+- **Scope:** task-cycle, installation
+- **Based on:** https://learn.chatgpt.com/codex/agent-configuration/subagents § where custom agents
+  are defined — "or `.codex/agents/` for project-scoped agents."; read 2026-11-13 ·
+  https://learn.chatgpt.com/codex/agent-configuration/subagents § skills of a custom agent —
+  "Disable individual skills with `skills.config`"; read 2026-11-13
+- **Relations:** derives from WAY-368
+- **Verification:** an agent compares a cycle and its record with the decision:
+  - complies: a cycle in Codex dispatches its stages as the harness does without the types, and its
+    record says in each dispatch's row that the stage ran without its type and why; a product
+    installation writes no Codex agent definition;
+  - violates: a cycle dispatches a stage without its type in a session that has the types and writes
+    nothing of it into its record; the installer writes a definition for Codex.
+- **Origin:** none
+
+*Rationale:* the sessions from which the gain of the types was counted hold none of Codex, so no
+probe showed a gain there. A Codex agent type has no list of tools, and the skills it must not show
+are turned off one by one by their path, so the list kept in the process would grow with every skill
+added to the-way and need care in each change. A stage dispatched without its type loses only the
+saving: its handoff already names the method by its file, so the stage reads the same text.
+*Rejected:* types for Codex too, defined in the directory Codex reads project agents from — the list
+of skills they turn off grows with every skill and the process would have to keep it, and no probe
+showed a gain.
 
 ## Withdrawn identifiers
 

@@ -57,6 +57,14 @@ RUNS = ".runs/"
 # point's path that does not is the product's own.
 OWN_MARK = f"The process for this repository is pinned as the Git submodule `{SUBMODULE}`"
 OWN_DESCRIPTION = " Use this product's pinned the-way commit."
+# The definitions of the agent types the task cycle dispatches its stages with, which Claude Code
+# reads from .claude/agents; Codex has none. Each definition ends its description with the
+# mark, whatever commit wrote it; a file at a definition's path that does not is the product's own.
+AGENT_TYPES = ("the-way-stage", "the-way-author")
+AGENT_SOURCE = "task-cycle/agent-types"
+AGENT_DIRECTORY = ".claude/agents"
+OWN_AGENT_MARK = "Dispatched only by the task cycle of the-way."
+AGENT_HEAD = re.compile(r"---\r?\nname: (.+?)\r?\ndescription: (.+?)\r?\n")
 # Codex reads AGENTS.override.md instead of AGENTS.md, and at most this many bytes of them.
 CODEX_OVERRIDE = "AGENTS.override.md"
 CODEX_LIMIT = 32 * 1024
@@ -141,6 +149,17 @@ def skill_wrapper(path: str, name: str, commit: str) -> str:
             f"Where this skill or a file it reads names another the-way skill — {sibling_names()} "
             "— use this product's project skill of the same name with the `the-way-` prefix, "
             "never an unprefixed one.\n")
+
+
+def agent_definition(name: str, commit: str) -> str:
+    """The definition of one agent type at `commit`, as it stands there: the installer copies it
+    and adds nothing, since the definition is the same in the-way and in a product."""
+    path = f"{AGENT_SOURCE}/{name}.md"
+    text = committed(path, commit)
+    head = AGENT_HEAD.match(text)
+    if not head or head.group(1) != name or not head.group(2).endswith(OWN_AGENT_MARK):
+        raise RuntimeError(f"Unexpected agent definition {path} at {commit}")
+    return text
 
 
 def product_guidance() -> str:
@@ -308,6 +327,37 @@ def owned_entry_point(path: Path) -> bool:
                 header.group(2).endswith(OWN_DESCRIPTION) and OWN_MARK in text)
 
 
+def owned_agent_definition(path: Path) -> bool:
+    """Whether the file at an agent definition's path is one the installer wrote, at this commit
+    or an earlier one: a regular UTF-8 file named `the-way-<words>.md` whose header names the type
+    of its file name and whose description ends with the mark of the definitions."""
+    if path.is_symlink() or not path.is_file():
+        return False
+    try:
+        text = path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        return False
+    head = AGENT_HEAD.match(text)
+    return bool(head and path.suffix == ".md" and path.stem.startswith("the-way-") and
+                head.group(1) == path.stem and head.group(2).endswith(OWN_AGENT_MARK))
+
+
+def owned(path: Path) -> bool:
+    """Whether the file at a path the installer writes is the installer's own."""
+    return owned_entry_point(path) if path.name == "SKILL.md" else owned_agent_definition(path)
+
+
+def stale_agent_definitions(target: Path) -> list[Path]:
+    """The installer's definitions of agent types this commit of the-way no longer has. A file the
+    installer did not write stays, whatever its name."""
+    agents = target / AGENT_DIRECTORY
+    if (target / ".claude").is_symlink() or agents.is_symlink() or not agents.is_dir():
+        return []
+    return [entry for entry in sorted(agents.iterdir())
+            if entry.name.startswith("the-way-") and entry.suffix == ".md" and
+            entry.stem not in AGENT_TYPES and owned_agent_definition(entry)]
+
+
 def stale_entry_points(target: Path) -> list[Path]:
     """The installer's entry points of skills this commit of the-way no longer has. An entry
     point the installer did not write stays, whatever its name."""
@@ -347,6 +397,8 @@ def plan(target: Path, commit: str, url: str) -> tuple[
         wrapper = skill_wrapper(path, name, commit)
         for directory in SKILL_DIRECTORIES:
             files[target / directory / "skills" / f"the-way-{name}" / "SKILL.md"] = wrapper
+    for name in AGENT_TYPES:
+        files[target / AGENT_DIRECTORY / f"{name}.md"] = agent_definition(name, commit)
     shared = {target / AGENTS: agents_change(target / AGENTS),
               target / IGNORE: ignore_change(target / IGNORE),
               target / CLAUDE: claude_change(target / CLAUDE)}
@@ -394,7 +446,7 @@ def plan(target: Path, commit: str, url: str) -> tuple[
         if path.parts[-2] == "foundations":
             if not path.is_file() or path.is_symlink():
                 raise RuntimeError(f"Existing foundation path is not a regular file: {path}")
-        elif not owned_entry_point(path):
+        elif not owned(path):
             raise RuntimeError(f"Existing integration file differs: {path}")
     if pin and os.path.lexists(submodule_path / ".git"):
         checked_out = git("-C", SUBMODULE, "rev-parse", "HEAD", cwd=target).stdout.strip()
@@ -409,7 +461,8 @@ def plan(target: Path, commit: str, url: str) -> tuple[
             raise RuntimeError(f"{SUBMODULE} has uncommitted changes, so its pin is not moved: " +
                                ", ".join(line[3:] for line in changed) +
                                "; commit or discard them in the-way and run again")
-    return files, shared, stale_entry_points(target), pin is None, initialize, moved_from
+    stale = stale_entry_points(target) + stale_agent_definitions(target)
+    return files, shared, stale, pin is None, initialize, moved_from
 
 
 def going_back(target: Path, pin: str, commit: str) -> bool:
@@ -526,7 +579,8 @@ def run() -> int:
         elif actions[path] == "REPLACE":
             print(shown_diff(name, path.read_bytes().decode("utf-8"), content))
     for path in stale:
-        print(f"DELETE {path.relative_to(target).as_posix()} (its skill is no longer in the-way)")
+        gone = "skill" if path.name == "SKILL.md" else "agent type"
+        print(f"DELETE {path.relative_to(target).as_posix()} (its {gone} is no longer in the-way)")
     for path, (action, text) in shared.items():
         name = path.relative_to(target).as_posix()
         print(f"{action} {name}")
@@ -589,7 +643,7 @@ def run() -> int:
             path.write_bytes(content.encode("utf-8"))
     for path in stale:
         path.unlink()
-        if not any(path.parent.iterdir()):
+        if path.name == "SKILL.md" and not any(path.parent.iterdir()):
             path.parent.rmdir()
     for path, (action, text) in shared.items():
         if action == "CREATE":

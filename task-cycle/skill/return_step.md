@@ -7,8 +7,8 @@ It compares with the code the entries the change writes or changes, those the ta
 the search of the foundation found, and the part map of the touched parts, and corrects in the same
 change whatever no longer matches (WAY-11). It writes, as the foundation step writes, each source
 outside the product that the change rests on and the foundation does not hold, as an environment
-fact; a word the change uses in a meaning for which WAY-95 gives it an entry, through
-`record-glossary-term`; a row of *Settlements to record* or a projected entry the code makes
+fact; a word the change uses in a meaning for which WAY-95 gives it an entry, by following
+`elements/glossary/skill/SKILL.md`; a row of *Settlements to record* or a projected entry the code makes
 true that the foundation step missed; and a choice that binds after the merge
 (WAY-36). Where the task or its spec explicitly excludes an entry for a choice, that exclusion
 prevails over the rule for a choice that binds after the merge: the choice stays a row of the

@@ -2,7 +2,8 @@
 
 This directory owns the first connection between a product repository and the-way. The installer
 pins one commit of this repository, creates the five empty foundation files, makes its project skills
-available to Claude Code and Codex in local and cloud sessions, gives both tools
+available to Claude Code and Codex in local and cloud sessions, gives Claude Code the definitions of
+the two agent types its task cycle dispatches its stages with, gives both tools
 the same guidance for working with the pinned process, and makes Git ignore the working files of
 the-way's skills. It does not write product entries or start the product's task cycle. The
 `installation` part is in `foundations/part_map.md`; WAY-09 describes its place in this repository
@@ -56,6 +57,7 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
 | `.claude/skills/the-way-*/SKILL.md` | Project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, `maintain-styleguide`, `maintain-coding-guidelines`, and `maintain-testing-guidelines`. Each checks that the gitlink and the `.the-way` checkout show the same commit, reads its source skill from `.the-way` and each file the skill names there when the step that names it comes, then sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. It names no commit. The installer owns it and rewrites it when the pin moves; do not edit it by hand. |
 | `.agents/skills/the-way-*/SKILL.md` | The same entry points for Codex, byte for byte. |
+| `.claude/agents/the-way-stage.md`, `.claude/agents/the-way-author.md` | The definitions of the two agent types Claude Code dispatches the stages of a task cycle with: `the-way-stage` for every stage, and `the-way-author` for the one author, whose prompt cache lives an hour. Each gives its agent every tool of the session except the skill tool and a body of its own, so the agent starts without the list of skills and reads the method of its stage from a file. They are copies of `task-cycle/agent-types/` at the pinned commit, byte for byte, and name no commit. The installer owns them and rewrites them when the pin moves; do not edit them by hand. Codex has no such files. |
 | `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, the-way's methods in a task cycle even where a plugin offers its own, running the-way's scripts as `.the-way/<path>`, the empty part map's report and the skill that writes the first map, and running the product's tests with its one command before a merge, `elements/common/foundation_check.py` among them, or that check on its own while the command does not run it. It names no commit. The installer owns the block and rewrites it in place when the pin moves; do not edit it by hand, and keep the product's own instructions outside the markers. |
 | `CLAUDE.md` | Created at the product root with the sole line `@AGENTS.md` when absent, so Claude Code receives the shared guidance and the product's other instructions in `AGENTS.md`. An existing file is preserved byte for byte. |
 | `.gitignore` | The line `.runs/`, under which the-way's skills keep their working files: a task cycle's record, the reports of research and the conversation of a project's refinement. |
@@ -63,6 +65,11 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 The `implement-task` entry point requires a harness that can dispatch subagents; the skill checks
 it before starting a task cycle. The methods the cycle uses are skills of the-way, installed with
 it.
+
+Claude Code loads the files of `.claude/agents/` when a session starts, and follows a change to one
+without a restart only in a directory that existed at the start: a session started before the
+installer created `.claude/agents/` does not have the two types until it is restarted, and the
+cycle then dispatches its stages as it does where a harness has no such types (`implement-task`).
 
 The product commits the gitlink, `.gitmodules`, the foundation files, the `.claude` and `.agents`
 files, `AGENTS.md`, `CLAUDE.md` and `.gitignore` as one product change. The installer stages only
@@ -145,13 +152,17 @@ it must be the one `.gitmodules` holds. The installer stops before writing when 
 uncommitted changes to files git tracks, and names them; it warns about files git does not track
 there, which the move keeps. It checks that the commit can be fetched from that URL, checks it out
 in `.the-way` and stages the gitlink. It rewrites what it owns to match the new commit: its block in
-`AGENTS.md`, where the block stands, and the skill entry points in both tool directories. It
+`AGENTS.md`, where the block stands, the skill entry points in both tool directories and the agent
+type definitions in `.claude/agents/`. It
 creates the entry points of skills the commit adds and deletes those of skills the commit no longer
-has. An entry point is its own, whatever commit wrote it, when its header names the skill of its
+has, and deletes the definition of an agent type the commit no longer has. An entry point is its own, whatever commit wrote it, when its header names the skill of its
 directory, its description ends with "Use this product's pinned the-way commit." and it points to
-`.the-way`. It leaves the foundation
-files, root `CLAUDE.md` and every other file as they are, and stops before writing on a file at an
-entry point's path that is not its own. Commit the gitlink together with everything the installer
+`.the-way`. A definition is its own, whatever commit wrote it, when it is a regular UTF-8 file
+`.claude/agents/the-way-<words>.md` whose header names the type of its file name and whose description ends with
+"Dispatched only by the task cycle of the-way." It leaves the foundation
+files, root `CLAUDE.md` and every other file, every other file of `.claude/agents/` included, as
+they are, and stops before writing on a file at an entry point's or a definition's path that is not
+its own. Commit the gitlink together with everything the installer
 rewrote; where nothing reads differently at the new commit, the gitlink is the only change. The
 block and the entry points are generated: an edit by hand is lost at the next move. Only when
 moving from an older pin that installed `.claude/rules/the-way.md`, remove that old rule; the
@@ -166,7 +177,10 @@ foundation in the form of an earlier the-way is brought to the current form with
 ## Existing files and incomplete setup
 
 An existing foundation file is preserved byte for byte. A file at an entry point's path is
-rewritten when it is the installer's own entry point and stops the run otherwise.
+rewritten when it is the installer's own entry point and stops the run otherwise; a file at a
+definition's path in `.claude/agents/` is treated the same way, and so is a directory, a symlink or
+a file that is not UTF-8 text there, or a `.claude` or `.claude/agents` that is a symlink or not a
+directory.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line
@@ -223,7 +237,12 @@ of an ignored `.the-way`, the four warnings, creation and preservation of root `
 the absence of a generated Claude rule, the empty files in the current form with the foundation
 check's report on them, the `maintain-styleguide` entry points and the foundation check the block
 names, the `maintain-coding-guidelines` and `maintain-testing-guidelines` entry points and the refusal of a conflicting file, a
-directory or a non-UTF-8 file at their path in either skill directory, and initialization in a
+directory or a non-UTF-8 file at their path in either skill directory, the agent type definitions
+(shown by the plan, written unchanged, an own definition of an earlier commit rewritten, the product's
+other files of `.claude/agents/` kept, the definition of a type the commit lacks deleted and no other,
+a moved pin rewriting one and deleting another, and the refusal, before anything is written, of a
+file that is not the installer's, a directory, a symlink, a non-UTF-8 file and a `.claude` or
+`.claude/agents` that is a symlink or a file), and initialization in a
 fresh checkout.
 A symlinked `AGENTS.md` or `.gitignore` is refused by the same check as a directory but is not
 tested, since creating a symlink needs extra rights on Windows. They
