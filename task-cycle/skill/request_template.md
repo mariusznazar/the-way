@@ -316,7 +316,12 @@ the order of their kinds.
   plain words what started the correction — your remarks, your answer to an item of this request,
   or only the refreshing of the target branch — and whether the cycle judged that the task or the
   foundation required what the correction changed, or did not, so that you see that judgment at
-  the merge.
+  the merge. For `target-branch · none` the cycle judged nothing, and the sentence says so, such as
+  "This correction only refreshed the branch from the target branch at your request; nothing else
+  changed, and the cycle made no judgment of whether the task required anything." Where a correction
+  has two sources, the one sentence carries each pair once, such as "This correction answered your
+  remark about a defect the task required, and it refreshed the branch from the target branch at
+  your request, which the cycle judged nothing about."
 
 **What an item carries.**
 
