@@ -2863,6 +2863,63 @@ class MeasureVersions(AuditCountCase):
         self.assertLess(text.index("## Process versions"), text.index("## Measure versions"))
         self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
 
+    def test_a_change_of_the_test_runner_starts_a_new_series_of_gate_times_only(self):
+        # v2 changes the test runner of the gate, v3 the script of the measures. The gate times
+        # split at v2 alone, the mechanism measures at v3 alone, and the reason of the split
+        # names the file that changed. Medians: the gate series of v2 and v3 has 90 and 80, so v3
+        # falls; v1 stands alone in its series.
+        way = self.the_way()
+        v1 = self.version_at(way, self.day(0))
+        v2 = self.version_at(way, self.day(1), parent=v1,
+                             changed={"gate/run_tests.py": "runner\n"})
+        # A commit lists the files it keeps, so v3 lists the runner again, unchanged.
+        v3 = self.version_at(way, self.day(2), parent=v2,
+                             changed={"gate/run_tests.py": "runner\n",
+                                      "task-cycle/cycle_measures.py": "measures\n"})
+        product = self.repository()
+        self.add_measured(product, [
+            ("one", v1, {"Calls in all": "10"}, gate_run(1, 0, "100.000")),
+            ("two", v2, {"Calls in all": "9"}, gate_run(2, 0, "90.000")),
+            ("three", v3, {"Calls in all": "8"}, gate_run(3, 0, "80.000"))])
+        self.run_versions(way, product)
+        calls = "Calls in all"
+        self.assertEqual([[v1, calls, "1", "10", "unknown"], [v2, calls, "1", "9", "yes"]],
+                         self.measure(1, calls))
+        self.assertEqual([[v3, calls, "1", "8", "unknown"]], self.measure(2, calls))
+        self.assertEqual([[v1, TOTAL, "1", "100.000", "unknown", "0", "unknown"]], self.gate(1))
+        self.assertEqual([[v2, TOTAL, "1", "90.000", "unknown", "0", "unknown"],
+                          [v3, TOTAL, "1", "80.000", "yes", "0", "unknown"]], self.gate(2))
+        self.assertIn("Begins at this version: `gate/run_tests.py` changed between the two versions.",
+                      self.latest())
+
+    def test_the_reason_of_a_gate_split_names_the_scripts_that_changed(self):
+        # Asked of two versions directly: the gate times split at a change of either of their
+        # scripts and the reason names the ones that changed, in the order of the scripts; the
+        # mechanism measures split at no change of the test runner.
+        sys.path.insert(0, str(HERE))
+        import audit_count
+
+        class Changed:
+            def __init__(self, paths):
+                self.paths = paths
+
+            def differs(self, earlier, later, paths):
+                return any(path in self.paths for path in paths)
+
+        scripts = ("task-cycle/gate_times.py", "gate/run_tests.py")
+        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        runner = audit_count.instrument_series([earlier, later], Changed({"gate/run_tests.py"}),
+                                               scripts)
+        self.assertEqual("`gate/run_tests.py` changed between the two versions", runner[1].begins)
+        both = audit_count.instrument_series([earlier, later], Changed(set(scripts)), scripts)
+        self.assertEqual("`task-cycle/gate_times.py` and `gate/run_tests.py` changed between the "
+                         "two versions", both[1].begins)
+        measures = audit_count.instrument_series([earlier, later],
+                                                 Changed({"gate/run_tests.py"}),
+                                                 ("task-cycle/cycle_measures.py",))
+        self.assertEqual([[earlier, later]], [block.versions for block in measures])
+
     def test_the_reviewer_the_stage_script_and_the_list_of_classes_split_no_series_of_measures(self):
         # v2 changes the reviewer's instructions, v3 `cycle_stages.py`, and a class is added on the
         # day of v4: each splits the series of the cost and none splits the measures, whose
@@ -2899,7 +2956,7 @@ class MeasureVersions(AuditCountCase):
 
     def test_a_new_price_list_splits_no_series_of_measures(self):
         # One price list prices a whole run, so no real run splits at it: the series of the
-        # measures are asked of the two versions directly, and ask git about their script alone.
+        # measures are asked of the two versions directly, and ask git about their scripts alone.
         sys.path.insert(0, str(HERE))
         import audit_count
         asked = []
@@ -2911,11 +2968,12 @@ class MeasureVersions(AuditCountCase):
 
         earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
         later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
-        for script in ("task-cycle/cycle_measures.py", "task-cycle/gate_times.py"):
-            with self.subTest(script):
-                blocks = audit_count.instrument_series([earlier, later], Unchanged(), script)
+        for scripts in (("task-cycle/cycle_measures.py",),
+                        ("task-cycle/gate_times.py", "gate/run_tests.py")):
+            with self.subTest(scripts):
+                blocks = audit_count.instrument_series([earlier, later], Unchanged(), scripts)
                 self.assertEqual([[earlier, later]], [block.versions for block in blocks])
-                self.assertEqual((script,), asked[-1])
+                self.assertEqual(scripts, asked[-1])
         self.assertEqual("the price list changed",
                          audit_count.series_boundary(earlier, later, audit_count.Register(), None))
 

@@ -124,11 +124,12 @@ none.
 The measure versions (WAY-339, WAY-348, WAY-350): the same versions, in their own series, one kind of
 series for each instrument. A series of the mechanism measures of `mechanism_measures.md` begins at
 a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a series of
-the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` differs, by the same
-test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts as changed). No
-other change splits them: not the price list, a date of the register's list of classes, a change
-under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or `task-cycle/spec`, nor one of
-`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
+the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `gate/run_tests.py`
+differs, by the same test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts
+as changed). No other change splits them: not the price list, a date of the register's list of
+classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
+`task-cycle/spec`, nor one of `task-cycle/cycle_stages.py`, and neither script splits a series of
+the cost. The section
 *Measure versions* gives, for each version of a series and each cycle-level measure, the number of
 cycles that give a value, their median (the rule of the median of the cost) and whether it falls
 against the previous version of the series, and for the gate times the total of the run and each
@@ -397,11 +398,14 @@ MAX_RUNS = 500
 MAX_DIRECTORIES = 50
 GATE_NONE = "—"
 DIRECTORY_SEPARATOR = " · "
-# The two instruments that start a series of the measures they give (WAY-339): a change of the one
-# starts a series of the mechanism measures, of the other a series of the gate times, and of
-# nothing else. The measures of a gate time are the total and each directory (WAY-350).
+# The instruments that start a series of the measures they give (WAY-339): a change of the one
+# starts a series of the mechanism measures, a change of one of the gate's scripts a series of the
+# gate times, and nothing else does. The test runner of the gate is one of them: its output gives
+# the time of each directory. The measures of a gate time are the total and each directory (WAY-350).
 MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
 GATE_SCRIPT = "task-cycle/gate_times.py"
+GATE_TEST_RUNNER = "gate/run_tests.py"
+GATE_SCRIPTS = (GATE_SCRIPT, GATE_TEST_RUNNER)
 TOTAL_MEASURE = "Total time of the run"
 DIRECTORY_MEASURE = "Directory: "
 
@@ -2341,19 +2345,25 @@ def series_boundary(earlier: Version, later: Version, register: Register,
     return None
 
 
-def instrument_series(versions: list[Version], ancestry: Ancestry, script: str) -> list[Series]:
-    """Split the versions, in the order of their dates, into series by the change of one script
-    alone: a series begins at a version whose `script` differs from the previous version's
-    (WAY-339). Nothing else splits it: not the price list, the register's list of classes or the
-    reviewed files of the cost."""
+def instrument_series(versions: list[Version], ancestry: Ancestry,
+                      scripts: tuple[str, ...]) -> list[Series]:
+    """Split the versions, in the order of their dates, into series by the change of the scripts
+    alone: a series begins at a version whose files at `scripts` differ from the previous
+    version's (WAY-339), and its reason names the scripts that changed. Nothing else splits it:
+    not the price list, the register's list of classes or the reviewed files of the cost."""
     blocks: list[Series] = []
     for version in versions:
         if not blocks:
             blocks.append(Series("the first version of the result", [version]))
-        elif ancestry.differs(blocks[-1].versions[-1].commit, version.commit, (script,)):
-            blocks.append(Series(f"`{script}` changed between the two versions", [version]))
-        else:
+            continue
+        earlier = blocks[-1].versions[-1].commit
+        if not ancestry.differs(earlier, version.commit, scripts):
             blocks[-1].versions.append(version)
+            continue
+        changed = [script for script in scripts
+                   if ancestry.differs(earlier, version.commit, (script,))] or list(scripts)
+        names = " and ".join(f"`{script}`" for script in changed)
+        blocks.append(Series(f"{names} changed between the two versions", [version]))
     return blocks
 
 
@@ -2480,8 +2490,8 @@ def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     """Group the versions into the series of each instrument and give the medians and the
     comparison of each version within its own series (WAY-339, WAY-348, WAY-350)."""
     result = MeasureVersions()
-    result.mechanism = instrument_series(versions.ordered, ancestry, MEASURES_SCRIPT)
-    result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPT)
+    result.mechanism = instrument_series(versions.ordered, ancestry, (MEASURES_SCRIPT,))
+    result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPTS)
     for block in result.mechanism:
         mechanism_rows(block, result.unknown)
     for block in result.gate:
@@ -2633,7 +2643,8 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "numbers by which a change to the instructions of the cycle is judged, so only a change of "
         "the instrument that measures them splits them (WAY-339). A series of the mechanism "
         f"measures begins at a version whose `{MEASURES_SCRIPT}` differs from the previous "
-        f"version's, and a series of the gate times at one whose `{GATE_SCRIPT}` differs, by "
+        f"version's, and a series of the gate times at one whose `{GATE_SCRIPT}` or "
+        f"`{GATE_TEST_RUNNER}` differs, by "
         "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
         "date of the register's list of classes and a change under `task-cycle/change`, "
         "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
