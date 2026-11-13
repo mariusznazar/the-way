@@ -10,9 +10,12 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
 import change_file_sizes  # noqa: E402
+
+SCRIPT = HERE / "change_file_sizes.py"
 
 IDENTITY = ["-c", "user.name=Test", "-c", "user.email=test@example.invalid",
             "-c", "commit.gpgsign=false"]
@@ -244,12 +247,11 @@ class ChangeFileSizesTest(unittest.TestCase):
         base = self.commit()
         self.write("zażółć.md", "a\nb\n")
         head = self.commit()
-        script = Path(change_file_sizes.__file__)
-        run = subprocess.run([sys.executable, "-B", str(script), base, head, "--root",
+        run = subprocess.run([sys.executable, "-B", str(SCRIPT), base, head, "--root",
                               str(self.root)], capture_output=True)
         self.assertEqual(run.returncode, 0, run.stderr)
         self.assertIn("| `zażółć.md` | 1 | 2 | +1 | modified |", run.stdout.decode("utf-8"))
-        failed = subprocess.run([sys.executable, "-B", str(script), "absent", head, "--root",
+        failed = subprocess.run([sys.executable, "-B", str(SCRIPT), "absent", head, "--root",
                                  str(self.root)], capture_output=True)
         self.assertEqual(failed.returncode, 2)
         self.assertEqual(failed.stdout, b"")
