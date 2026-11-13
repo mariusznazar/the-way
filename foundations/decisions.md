@@ -11346,11 +11346,13 @@ code 2 and a message that names the file and the field, except that a script who
 check the form of a file reports a missing field whose presence it checks as a finding of its list,
 with exit code 1, and except that the command that counts the audit, in a file of a cycle's record
 that it reads from git history, gives the values that need a missing field as unknown, writes its
-result and ends with exit code 1 and a line `Error:` that names the file and the field. Each
-reading of a file that the rule covers has one test that gives the file without one of the fields it
-needs and asserts the failure that names that field, the review of the change answering for the
-other fields; the *Scope* names every part of the-way's part map, and a change that adds a part to
-the part map adds it to this *Scope*.
+result and ends with exit code 1 and a line `Error:` that names the file and the field. A field
+that an earlier form of a file never had is not missing where the file's other signs name that form:
+a file of the earlier form gives the values that need that field as unknown, with no line `Error:`
+and no change of the exit code. Each reading of a file that the rule covers has one test that gives
+the file without one of the fields it needs and asserts the failure that names that field, the
+review of the change answering for the other fields; the *Scope* names every part of the-way's part
+map, and a change that adds a part to the part map adds it to this *Scope*.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -11368,14 +11370,18 @@ the part map adds it to this *Scope*.
     audit meets a file of the measures of an old cycle's record, read from git history, with a key
     renamed, gives the values that need that key as unknown, writes its result, and ends with exit
     code 1 and a line `Error:` that names the file and the key, and its test gives the file without
-    that key and asserts that line; a change that adds a part to the part map adds its identifier to
-    the *Scope* of this decision in the same change;
+    that key and asserts that line; the command that counts the audit meets a file of the form
+    before a field was added, whose other signs name that form, gives the values that need the field
+    as unknown and ends with no line `Error:` for it, and its test pins that; a change that adds a
+    part to the part map adds its identifier to the *Scope* of this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
     field as an item with exit code 1; a script whose purpose is to check the form of a file stops
     with exit code 2 at an absent section whose presence it checks; the command that counts the
     audit, at a field missing in a file of an old cycle's record from git history, ends with exit
-    code 2 and writes no result, or gives the missing value as zero or empty; a change that reworks
+    code 2 and writes no result, or gives the missing value as zero or empty; the command that
+    counts the audit ends with a line `Error:` for a field that the earlier form of a file never
+    had, so that every count of cycles of that form ends with exit code 1; a change that reworks
     the reading of a file checks the field it added and leaves the other fields of that file
     unchecked; a new script's reading of a file, or a
     changed script's reworked reading of a file, has no test that gives the file without a field; a
@@ -11394,13 +11400,18 @@ apart from the count of the audit, whose file in the history of git no later cha
 whose run, at night with no human present, would otherwise leave the session of the audit with no
 result at all, the figures of the register of problems included; the count writes what it could read,
 leaves unknown what the file does not give and ends with the error that names the field, so that the
-error is seen and the rest of the result is not lost. The rule covers the whole reading of a file a
-change reworks, so that the old reads of that file, which a change of format threatens most, are not
-left unchecked, and one test per reading, not one per field, keeps the cost of the check in proportion. The price: a change that reworks the reading of a file
-pays for the check of every field of that file; an existing script that no change touches stays as it
-is, so the rule protects new and changed readings first; and the review alone answers for the fields
-beyond the one each test gives up. Tests of a script's behaviour stand without an invariant, since
-WAY-12 concerns how a decision is checked.
+error is seen and the rest of the result is not lost. A field that an earlier form of a file never
+had is no loss of the file but the way that form was written, and the count of the audit reads the
+files of cycles of every form; read as missing, it would end every count in exit code 1 for as long
+as such files are counted, and an exit code that every run gives carries no signal. The rule covers
+the whole reading of a file a change reworks, so that the old reads of that file, which a change of
+format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
+the cost of the check in proportion. The price: a change that reworks the reading of a file
+pays for the check of every field of that file; a file that has drifted into the look of an earlier
+form gives unknown where the rule alone would give an error; an existing script that no change
+touches stays as it is, so the rule protects new and changed readings first; and the review alone
+answers for the fields beyond the one each test gives up. Tests of a script's behaviour stand
+without an invariant, since WAY-12 concerns how a decision is checked.
 *Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
 the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
 withdrawn after the-way's own guidelines are written the rule would have to be moved, and until then
@@ -11582,10 +11593,12 @@ tests in parallel.
 ### WAY-350 — Which runs of the gate does the audit compare between versions of the process?
 
 The script that runs the gate records, at each run, how many other gate runs by the script were going
-at the same time on the machine. The audit compares the times of the gate between versions of the
-process — the median of each version and whether it falls against the previous version of the same
-series — only over the runs during which no other such run was going, and shows the other runs
-apart.
+at the same time on the machine, from a registry that the script keeps in the user's own directory,
+outside every repository: an empty file for each run, made when the run starts and marked as ended
+when it ends, a run that has not ended counting for at most six hours and an ended one kept for a
+day. The audit compares the times of the gate between versions of the process — the median of each
+version and whether it falls against the previous version of the same series — only over the runs
+during which no other such run was going, and shows the other runs apart.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
