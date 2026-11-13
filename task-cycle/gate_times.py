@@ -22,8 +22,10 @@ named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_
 The other runs counted are those whose interval met this run's: an ended one that started before this
 run ended and ended after it started; a running one that started before this run ended and no more
 than six hours before it. Ended runs over a day old and running runs over six hours old are deleted at
-the start of a run. A name of another form is left alone and counted for nothing. Where the registry
-cannot be made or listed, a `Warning:` goes to stderr and the count is `unknown`.
+the start of a run. An entry whose time cannot be (an end or a start more than a minute after the
+present, or an end before its start) is deleted at the start of a run as well and counted for nothing,
+so that one damaged or hand-made file cannot count as another run for ever. A name of another form is
+left alone and counted for nothing. Where the registry cannot be made or listed, a `Warning:` goes to stderr and the count is `unknown`.
 
 The record is Markdown in UTF-8 with LF line ends, appended to PATH. Where PATH is missing or empty, its
 heading and table header are written first.
@@ -52,6 +54,7 @@ from pathlib import Path
 HOUR_MS = 3600 * 1000
 DAY_MS = 24 * HOUR_MS
 RUNNING_LIMIT_MS = 6 * HOUR_MS
+CLOCK_SLACK_MS = 60 * 1000  # a time this far after the present is still a clock's difference
 CHUNK = 65536
 LINE_LIMIT = 1 << 20  # a line is read for the times up to this many bytes, so that memory stays bounded
 MAX_DIRECTORIES = 50  # the audit lists no more directories of a run
@@ -186,6 +189,14 @@ def parse_name(name: str) -> tuple[int, int | None, str] | None:
     return None
 
 
+def malformed(start: int, end: int | None, now: int) -> bool:
+    """Whether an entry has a time that cannot be: a start or an end more than a minute after
+    `now`, or an end before its start."""
+    if start > now + CLOCK_SLACK_MS:
+        return True
+    return end is not None and (end > now + CLOCK_SLACK_MS or end < start)
+
+
 def prepare(folder: Path, now: int) -> bool:
     """Makes the registry and deletes the entries that are too old to count; False where it cannot be
     made or listed."""
@@ -197,7 +208,7 @@ def prepare(folder: Path, now: int) -> bool:
                 continue
             start, end, _ = entry
             stale = start < now - RUNNING_LIMIT_MS if end is None else end < now - DAY_MS
-            if stale:
+            if stale or malformed(start, end, now):
                 try:
                     (folder / name).unlink()
                 except OSError as error:
@@ -222,6 +233,8 @@ def count_others(folder: Path, token: str, start: int, end: int) -> str:
         if entry is None or entry[2] == token:
             continue
         begin, finish, _ = entry
+        if malformed(begin, finish, end):
+            continue
         if finish is None:
             met = begin < end and begin >= end - RUNNING_LIMIT_MS
         else:

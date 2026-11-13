@@ -247,6 +247,42 @@ class RegistryTest(GateTimesTest):
         self.assertIsNotNone(ENDED.match(name), name)
         self.assertEqual(0, os.path.getsize(self.registry / name))
 
+    def test_entries_with_a_time_that_cannot_be_are_deleted_and_count_for_nothing(self) -> None:
+        # Malformed: an end more than a minute after the present, an end before the start, a start
+        # more than a minute after the present (ended or running). Each is deleted at the start of
+        # a run; a valid run still going is counted, and a run that ends 30 seconds ahead is not
+        # malformed and stays.
+        self.registry.mkdir(parents=True)
+        t0 = now_ms()
+        malformed = [f"{t0 - 1000}_{t0 + 3 * DAY}_farend.run",
+                     f"{t0 + DAY}_{t0 + DAY + 1000}_farstart.run",
+                     f"{t0 - 1000}_{t0 - 5000}_reversed.run",
+                     f"{t0 + DAY}_running_farrunning.run",
+                     f"{t0 - 1000}_{t0 + 2 * HOUR}_farend2.run"]
+        kept = [f"{t0 - 60000}_running_valid.run", f"{t0 - 1000}_{t0 + 30000}_nearend.run"]
+        for name in malformed + kept:
+            (self.registry / name).touch()
+        result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n"))
+        self.assertEqual(0, result.returncode, result.stderr)
+        listing = set(os.listdir(self.registry))
+        for name in malformed:
+            self.assertNotIn(name, listing)
+        for name in kept:
+            self.assertIn(name, listing)
+        # Counted: the valid running one, and the entry that ends 30 seconds ahead (its interval
+        # met this run's); the malformed ones count for nothing.
+        self.assertEqual("2", self.rows()[0][3])
+
+    def test_a_malformed_entry_that_cannot_be_deleted_still_counts_for_nothing(self) -> None:
+        # A directory in the place of a file cannot be unlinked: a warning, and no count.
+        self.registry.mkdir(parents=True)
+        t0 = now_ms()
+        stuck = self.registry / f"{t0 - 1000}_{t0 + 3 * DAY}_stuck.run"
+        stuck.mkdir()
+        result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n"))
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("0", self.rows()[0][3])
+
     def test_unusable_registry_gives_unknown_and_the_gate_still_runs(self) -> None:
         self.registry.write_text("not a folder", encoding="utf-8")
         marker = self.root / "ran.txt"
