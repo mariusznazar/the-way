@@ -378,7 +378,8 @@ contradicts a decision.
     (step 2), the run on the base (step 4), this run, and the reruns of steps 9 and 12 that this step
     governs. The gate's output passes through unchanged. The script's exit code is the gate's, and
     the orchestrator records it with the command as before; an exit code 2 that comes with an
-    `Error: gate_times.py:` line on stderr is the script's own failure, not the gate's. Record its
+    `Error: gate_times.py:` line on stderr is the script's own failure, not the gate's, and the
+    orchestrator does as step 12 gives for a measuring script. Record its
     command, exit code and the failures it names under *Verification*, with each check that failed or
     did not run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
     any review of it are done, on the tree they leave: the return step needs no result of the gate,
@@ -463,7 +464,13 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Beside it, run
     `task-cycle/cycle_measures.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/mechanism_measures.md`, naming the same sessions in the same way: it
-    counts the context and the prompt cache of the cycle's agents. Run the process remarks check on
+    counts the context and the prompt cache of the cycle's agents. Where
+    `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends with exit code 2 and an
+    `Error:` line, record the command, the exit code and the `Error:` line under *Verification* of
+    the record and, in the request's *Checks*, as a check that did not run; fix the call where the
+    call was wrong and run it again; never write the file by hand. A cycle whose file stays missing
+    stays missing, and the record's *Verification* tells it from an earlier cycle. Run the process
+    remarks check on
     the record as "The process remarks check" gives, before the description is written, so that a
     listing you hold wrong reaches the description. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the
