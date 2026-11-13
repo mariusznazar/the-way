@@ -12131,10 +12131,11 @@ the change pushed over.
 ### WAY-363 — How does a reviewer grade a finding about the structure of code?
 
 A reviewer grades as Minor a finding about the structure of code that lies below the threshold of the
-rule of size in the product's coding guidelines, and one in a product that has no rule of size — it
-departed from the rule by a decision, or has no coding guidelines at all — and judges its scope as for
-any finding (WAY-161). A finding about a function or a file over a threshold is graded as any other
-finding.
+rule of size in the product's coding guidelines, and every such finding in a product that has no rule
+of size, whatever the reason: for example, it departed from the rule by a decision, it has no
+coding guidelines at all, or its guidelines were written before the rule existed. The reviewer judges
+its scope as for any finding (WAY-161). A finding about a function or a file over a threshold is
+graded as any other finding.
 
 - **Scope:** task-cycle, product-guidelines
 - **Based on:** none
@@ -12144,10 +12145,11 @@ finding.
     threshold, or left a helper with no caller, grades each finding Minor, and the fix for Minor
     findings (WAY-161) takes in what the change itself left; a reviewer who finds that a script of
     this repository, which has no coding guidelines (WAY-328), grew by forty lines in one function,
-    or a product that departed from the rule of size by a decision, grades the finding Minor; a
-    finding that a function the change pushed over the threshold stands over it is graded as any
-    other finding; a finding about code from before the change, which restructuring would reach,
-    goes to the request's list as a finding outside the task;
+    or a product that departed from the rule of size by a decision, or whose guidelines were written
+    before the rule and hold none of it, grades the finding Minor; a finding that a function the
+    change pushed over the threshold stands over it is graded as any other finding; a finding about
+    code from before the change, which restructuring would reach, goes to the request's list as a
+    finding outside the task;
   - violates: a finding that a function grew but stays under the threshold is graded Important and
     blocks the change; a finding about structure in a product with no rule of size is graded
     Important and blocks the change; a finding about a function over a threshold is graded Minor
@@ -12164,8 +12166,8 @@ Where code stands over the threshold, a number settles it and not the reviewer's
 of the rule of size stops the change, and where the rule's invariant is marked violated, the review
 that keeps a cleaned file or a new one from breaking it stops it (WAY-51). Where the product has no
 rule of size there is no threshold and no such test, so the same reasoning leaves a finding of
-structure Minor and not blocking. The reviewer still judges the scope of each finding, so a restructuring of code from before the change reaches the request's list
-and not the fix.
+structure Minor and not blocking. The reviewer still judges the scope of each finding, so a
+restructuring of code from before the change reaches the request's list and not the fix.
 *Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
 block the change and give a round of fixes, with the same chance in the grade as today for the form
 of an entry; findings of structure always outside the task's scope, on the request's list and for the

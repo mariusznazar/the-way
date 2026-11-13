@@ -125,9 +125,10 @@ finding. This does not reach the renaming of a word with two meanings (WAY-99), 
 the change writes or changes is graded as the paragraph above gives (WAY-297).
 A finding about the structure of code that lies below the threshold of the rule of size in the
 product's coding guidelines is Minor, and so is every such finding where the product has no rule
-of size — it departed from the rule by a decision, or it has no coding guidelines at all — and you
-judge its scope as for any finding; a finding about a function or a file over a threshold is graded
-as any other finding (WAY-363).
+of size, whatever the reason: for example, the product departed from the rule by a decision, it has
+no coding guidelines at all, or its guidelines were written before the rule existed. You judge its
+scope as for any finding; a finding about a function or a file over a threshold is graded as any
+other finding (WAY-363).
 A finding that a foundation entry departs from the form of its template, where the entry's content
 agrees with the code, is Minor unless it cites a sentence a reader would read wrongly through the
 departure; with such a sentence it is graded as any other finding. A finding that the entry's
