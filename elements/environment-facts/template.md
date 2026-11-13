@@ -21,8 +21,7 @@ holds what is particular to an environment fact (WAY-35).
   its last entry the file carries its withdrawn identifiers, in the form, with the *Why* and the
   *Successors*, that `elements/common/rules.md` gives.
 - The identifier names what the fact is about, never its value or the edition it cites, so that a
-  new edition leaves it true: `json-text`, not `json-rfc-8259`
-  (`TODO — decision pending: which decision sets how an environment fact's identifier is named`).
+  new edition leaves it true: `json-text`, not `json-rfc-8259`.
 - An entry is edited in place and holds only its current wording; it carries no version, and its
   earlier wordings are read from git (WAY-07).
 
@@ -55,18 +54,14 @@ identifiers.
   takes the finding across publishers (WAY-85).
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
   makes its sentence true (WAY-73). A fact about what runs an invariant's test — how a tool behaves
-  under the runner's configuration, which interpreter runs a script — is no such fact
-  (`TODO — decision pending: which decision sets that a fact about what runs a test is not one an
-  invariant rests on`).
+  under the runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact, its source the place where that state is shown. A
   choice of such a setting is a decision only where the product declares it, and that decision
   rests on the fact (WAY-84).
 - A fact may be about something outside that depends on the product — a product that pins it and
   reads one of its surfaces — only where a decision about that surface would be called into question
-  were it no longer true. The partners themselves stay in the part map's external context
-  (`TODO — decision pending: which decision sets when a fact may be about something outside that
-  depends on the product`).
+  were it no longer true. The partners themselves stay in the part map's external context (WAY-90).
 - A task's return step writes, in the same change, each source outside the product that the change
   rests on and the foundation does not yet hold, as a fact where this section asks for one (WAY-11).
 - A fact stands only while an invariant's *Rests on* or a decision's *Based on* names it (WAY-73).
@@ -77,14 +72,11 @@ identifiers.
   to change. Pages of one document published together in one edition count as one source. That is
   the most an entry holds, not a reason to join: two facts from one edition whose sentences are
   about different things stand as two entries (WAY-76).
-- The sentence states what is true of the world today, in the present tense
-  (`TODO — decision pending: which decision sets that a fact's sentence is in the present tense`),
-  and nothing it says is an invariant (WAY-76).
+- The sentence states what is true of the world today, and nothing it says is an invariant (WAY-76).
 - The sentence says no more than its source says: where the source recommends, the sentence does
   not require (WAY-80).
-- The sentence names an edition of its source only where the product stands on that edition
-  (`TODO — decision pending: which decision sets that a fact's sentence names an edition only where
-  the product stands on it`). What the fact is true of is shown by the edition its source cites, or,
+- The sentence names an edition of its source only where the product stands on that edition. What
+  the fact is true of is shown by the edition its source cites, or,
   for a source that publishes no editions, by the date it was read; the entry has no field that
   names it again (WAY-77).
 - The sentence holds no word whose meaning moves with the date, such as "latest" or "newest"
@@ -96,8 +88,10 @@ identifiers.
 
 ## Source
 
-- Every entry has a source; a fact without one is not written (WAY-80), and finding it is a task
-  (`TODO — decision pending: which decision sets that finding a missing source is a task`).
+- Every entry has a source; a fact without one is not written (WAY-80). An invariant whose
+  *Rests on* names a missing fact takes `TODO — <the fact, with its source>` there, and a decision
+  whose *Based on* names a missing source takes `TODO — <what is missing, with its source>`; a change
+  that leaves one there puts it before the human (WAY-71).
 - A source takes one of three forms (WAY-80):
   - an edition with its publisher's own address, the place in it, the passage the fact rests on word
     for word, and the date read. An address the publisher moves to newer text is no edition,
@@ -120,8 +114,7 @@ identifiers.
   taken from one run of text — a paragraph, a list item or a table cell; a rule spread over several
   runs is quoted as several passages of the same place, joined by ` · ` (WAY-80).
 - A citation that names no edition names the edition its dependant stands on, where the dependant's
-  sentence names one, and otherwise the edition in force on the date the citation was read
-  (`TODO — decision pending: which decision sets which edition a citation naming none takes`).
+  sentence names one, and otherwise the edition in force on the date the citation was read.
 - A fact resting on a whole section of rules — a pattern syntax, an algorithm — quotes the sentence
   of the source that sets those rules, and names the section by its place alone, where the edition
   has an address of its own (WAY-80).
@@ -149,9 +142,7 @@ identifiers.
   the new sentence and corrected in the same change (WAY-33).
 - A newer edition of a source, or a newer release of a tool the sentence names, leaves the fact true
   of the one it names, and an announced revision changes nothing until the new edition is out
-  (WAY-82). Moving the product to another release is a decision's to make
-  (`TODO — decision pending: which decision sets that moving the product to another release of a
-  tool is a decision's to make`).
+  (WAY-82).
 - An entry names no date or condition for its review, and no decision citing it names one for it
   (WAY-82, WAY-24).
 
@@ -171,17 +162,13 @@ withdrawn in the same change, with that in *Why* (WAY-64, WAY-73).
 - A binding rule — a law, a contract, a licence — needs no adoption: what it requires is a fact,
   and the product is held to it until a human settles, in a decision, that the rule does not apply
   (WAY-86).
-- A descriptive source — an RFC, a list of modules — needs nothing beyond the fact
-  (`TODO — decision pending: which decision sets that a descriptive source needs nothing beyond the
-  fact`).
+- A descriptive source — an RFC, a list of modules — needs nothing beyond the fact.
 - A likeness an agent notices between the product and a requirement nothing has adopted or applied
   goes to a human as a question: "do we adopt this?" or "does this bind us?" (WAY-86).
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it
-(`TODO — decision pending: which decision keeps a field in an element's template only while it is
-read`).
+A field stays in this template only while someone or something reads it (WAY-05).
 
 | Field | Who reads it, when |
 |---|---|

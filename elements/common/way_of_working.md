@@ -25,8 +25,7 @@ Every skill of the-way that asks the human asks this way
 - A question stands as plain text in the conversation, never in a tool that opens a separate panel
   for a question or its options.
 - A question of decision — a choice that settles something in a file — gives the ways open, what
-  each costs, and a recommendation; the question with a proposed answer and its reason of step 4.1
-  is one such.
+  each costs, and a recommendation.
 - Once the human has chosen, and the choice enters the binding part of an entry, ask one question
   against the answer given: its anchor quoted from a sentence of the human or of the material the
   work starts from, asking whether the choice still holds against it. A choice that ends with the
@@ -126,23 +125,19 @@ looks for in its element. The search is not repeated before the merge and leaves
 - Take every value from its source — the conversation, a document the human names, the product's
   files, the output of a command run for it — never from memory. A value the source does not give
   is a question in step 4 that proposes where to look for it, never the value itself, and the draft
-  takes it only as read there (WAY-80 for the source of a fact and of a citation;
-  `TODO — decision pending: which decision sets that any other value the source does not give is
-  asked for, never taken from memory`).
+  takes it only as read there (WAY-80 for the source of a fact and of a citation).
 - A field its source is silent on is a question in step 4, never a `none` the agent writes
-  (`TODO — decision pending: which decision sets that a field its source is silent on is asked
-  about before anything is written in it`); what stays open after step 4 is written as `rules.md`
-  gives it (WAY-71).
+  (WAY-71); it is asked about before anything is written in it. What stays open after step 4 is
+  written as `rules.md` gives it (WAY-71).
 - A value that a closed list of the template does not hold is a question in step 4, never the
   nearest value on the list with a reason why it will do (WAY-54); the list grows as the template
   says.
 
 ## 4. Ask, show, write
 
-1. Ask in one round about everything still open, each question with a proposed answer and the
-   reason for it
-   (`TODO — decision pending: which decision sets that the questions of one entry are asked in one
-   round, each with a proposed answer`).
+1. Ask in one round about everything still open, as »How a skill asks« gives it (WAY-113): a value
+   the source does not give, with where to look for it and never the value itself; a choice, with
+   the ways open, what each costs and a recommendation; a question of assessment, open.
 2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
    human's language. Write it on your recommendation; ask before writing only where you have no
    recommendation or the entry would change the meaning of an approved decision beyond what the
@@ -156,11 +151,9 @@ looks for in its element. The search is not repeated before the merge and leaves
    (WAY-321). Fix what the entry broke and run it again; an error the entry did not cause goes to
    the human.
 4. What follows from the entry goes through these steps one at a time, each through the skill of
-   its element
-   (`TODO — decision pending: which decision sets that the entries following from one entry are
-   written one at a time`): every entry that names this one, when its binding part changes
-   (WAY-02, WAY-33); every link the entry names that the foundation does not
-   hold yet (WAY-17); and each finding of step 2. The skill names what follows in its element.
+   its element: every entry that names this one, when its binding part changes (WAY-02, WAY-33);
+   every link the entry names that the foundation does not hold yet (WAY-17); and each finding of
+   step 2. The skill names what follows in its element.
 
 ## Projected mode
 

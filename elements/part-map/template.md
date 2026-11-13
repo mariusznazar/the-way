@@ -16,8 +16,8 @@ to the part map (WAY-35).
 
 - The whole map is one Markdown file, `foundations/part_map.md`, of the shape below (WAY-40).
 - It holds two kinds of entry — a **part** and a **surface** (WAY-40) — and three lists that are
-  not entries: the external context, the files left out on purpose and the withdrawn identifiers
-  (`TODO — decision pending: which decision sets the lists the map holds besides its entries`).
+  not entries: the external context (WAY-48), the files left out on purpose (WAY-44) and the
+  withdrawn identifiers (WAY-41).
 - An allowed dependency and a trust boundary are fields of the part they belong to, never entries
   of their own (WAY-40, WAY-48). A critical flow has no entry (WAY-45).
 - An entry is edited in place and carries no version; its history stays in git (WAY-07). A change
@@ -64,8 +64,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
   say — rather than files one by one, so that adding or moving a file inside a directory leaves the
   map as it is (WAY-44).
 - A part whose tool does not exist yet holds no files (`Files: none`); every file git tracks
-  still belongs to exactly one part
-  (`TODO — decision pending: which decision lets a part hold no files`).
+  still belongs to exactly one part.
 - Tests belong to the part they test. Generated files belong to the part of their generator
   (WAY-44).
 - The files that serve the tests of several parts — a helper the tests of two parts import, say —
@@ -146,9 +145,8 @@ any other, run with the rest of the suite (WAY-45).
 | <who or what> | them → us · us → them · both | trusted · untrusted · — |
 ```
 
-A row names no part and no file
-(`TODO — decision pending: which decision sets what a row of the external context names`). It is
-read by whoever records a trust boundary at the part that handles the exchange (WAY-48).
+A row names no part and no file. It is read by whoever records a trust boundary at the part that
+handles the exchange (WAY-48).
 
 ## Files left out on purpose
 
@@ -167,9 +165,7 @@ After the last entry the map carries its withdrawn identifiers, in the form, wit
 
 ## Fields and their readers
 
-A field stays in this template only while someone or something reads it
-(`TODO — decision pending: which decision keeps a field in an element's template only while it is
-read`).
+A field stays in this template only while someone or something reads it (WAY-05).
 
 | Field | Who reads it, when |
 |---|---|
