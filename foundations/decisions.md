@@ -11346,13 +11346,15 @@ code 2 and a message that names the file and the field, except that a script who
 check the form of a file reports a missing field whose presence it checks as a finding of its list,
 with exit code 1, and except that the command that counts the audit, in a file of a cycle's record
 that it reads from git history, gives the values that need a missing field as unknown, writes its
-result and ends with exit code 1 and a line `Error:` that names the file and the field. A field
-that an earlier form of a file never had is not missing where the file's other signs name that form:
-a file of the earlier form gives the values that need that field as unknown, with no line `Error:`
-and no change of the exit code. Each reading of a file that the rule covers has one test that gives
-the file without one of the fields it needs and asserts the failure that names that field, the
-review of the change answering for the other fields; the *Scope* names every part of the-way's part
-map, and a change that adds a part to the part map adds it to this *Scope*.
+result and ends with exit code 1 and a line `Error:` that names the file and the field — a field
+that an earlier form of the file never had being no missing field where the command reads the file
+as that form, which it does for a stage report that has no heading of its detailed section and holds
+a table of tokens by model, and for one that has neither of its two time lines, and which gives the
+values that need that field as unknown, with no line `Error:` and no change of the exit code. Each
+reading of a file that the rule covers has one test that gives the file without one of the fields it
+needs and asserts the failure that names that field, the review of the change answering for the
+other fields; the *Scope* names every part of the-way's part map, and a change that adds a part to
+the part map adds it to this *Scope*.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -11370,22 +11372,24 @@ map, and a change that adds a part to the part map adds it to this *Scope*.
     audit meets a file of the measures of an old cycle's record, read from git history, with a key
     renamed, gives the values that need that key as unknown, writes its result, and ends with exit
     code 1 and a line `Error:` that names the file and the key, and its test gives the file without
-    that key and asserts that line; the command that counts the audit meets a file of the form
-    before a field was added, whose other signs name that form, gives the values that need the field
-    as unknown and ends with no line `Error:` for it, and its test pins that; a change that adds a
-    part to the part map adds its identifier to the *Scope* of this decision in the same change;
+    that key and asserts that line; the command that counts the audit meets a stage report of the
+    form before the detailed section, or one with neither of its two time lines, gives the values
+    that need what that form never had as unknown and ends with no line `Error:` for it, and its
+    tests pin that; a change that adds a part to the part map adds its identifier to the *Scope* of
+    this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
     field as an item with exit code 1; a script whose purpose is to check the form of a file stops
     with exit code 2 at an absent section whose presence it checks; the command that counts the
     audit, at a field missing in a file of an old cycle's record from git history, ends with exit
     code 2 and writes no result, or gives the missing value as zero or empty; the command that
-    counts the audit ends with a line `Error:` for a field that the earlier form of a file never
-    had, so that every count of cycles of that form ends with exit code 1; a change that reworks
-    the reading of a file checks the field it added and leaves the other fields of that file
-    unchecked; a new script's reading of a file, or a
-    changed script's reworked reading of a file, has no test that gives the file without a field; a
-    change that adds a part to the part map leaves this *Scope* as it was.
+    counts the audit ends with a line `Error:` for a field that the earlier form of a stage report
+    never had, so that every count of cycles of that form ends with exit code 1; the command that
+    counts the audit reads a stage report that holds one of its two time lines and not the other as
+    the earlier form, with no line `Error:`; a change that reworks the reading of a file checks the
+    field it added and leaves the other fields of that file unchecked; a new script's reading of a
+    file, or a changed script's reworked reading of a file, has no test that gives the file without
+    a field; a change that adds a part to the part map leaves this *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
@@ -11407,10 +11411,11 @@ as such files are counted, and an exit code that every run gives carries no sign
 the whole reading of a file a change reworks, so that the old reads of that file, which a change of
 format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
 the cost of the check in proportion. The price: a change that reworks the reading of a file
-pays for the check of every field of that file; a file that has drifted into the look of an earlier
-form gives unknown where the rule alone would give an error; an existing script that no change
-touches stays as it is, so the rule protects new and changed readings first; and the review alone
-answers for the fields beyond the one each test gives up. Tests of a script's behaviour stand
+pays for the check of every field of that file; a stage report that has lost its two time lines, or
+its detailed section while a table of tokens by model remains, is read as the earlier form and gives
+unknown where the rule alone would give an error; an existing script that no change touches stays as
+it is, so the rule protects new and changed readings first; and the review alone answers for the
+fields beyond the one each test gives up. Tests of a script's behaviour stand
 without an invariant, since WAY-12 concerns how a decision is checked.
 *Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
 the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
