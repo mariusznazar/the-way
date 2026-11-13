@@ -27,6 +27,18 @@ entry says is absent, a read of the published table a fact quotes. A check that 
 server, an account, money or a long run is not run: the line names the check that would settle the
 weak point and says it was not run, and the proposal for the human says what the check would cost.
 
+## Decisions that describe a transitional state
+
+Beside the weak points, read each decision's binding sentences for a transitional state of the
+product: a state that holds until work later than the change that brought the decision ends it,
+such as two forms of one control until the last screen moves to a new library (WAY-354). List each
+decision that describes one. The words "until" and kindred ones stand mostly in ordinary rules, so
+no search by a word gives the list; it is made by reading. A rule that ends with its own change is
+no entry of the log (WAY-36) and gives none. For each, write one line: the decision, the sentence
+that describes the state, and what the decision says ends it. The review does not look for the task
+that ends the state, since the tasks of a product lie outside its repository and the entry of a
+decision names none; step 6 asks the human at each whether such a task exists.
+
 ## Environment facts
 
 For each fact, open its source at the address it gives and compare the passage with the fact's

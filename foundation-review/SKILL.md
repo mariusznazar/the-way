@@ -47,8 +47,8 @@ review tag (WAY-300); the human may start it at any time.
 
 Read all of the foundation of the repository, each file whole: `foundations/decisions.md`,
 `invariants.md`, `glossary.md`, `part_map.md` and `environment_facts.md`. Read `weak_points.md`
-beside this skill for what to look for in each entry and for the checks to run (WAY-24, WAY-82,
-WAY-305).
+beside this skill for what to look for in each entry, for the checks to run and for the decisions
+that describe a transitional state (WAY-24, WAY-82, WAY-305, WAY-354).
 
 ## 3. Check the unfixed remarks of the requests
 
@@ -73,8 +73,8 @@ critiqued.
 ## 6. Go through it with the human
 
 Read `with_the_human.md` beside this skill for the order and the form: the proposals about the
-foundation one by one, the groups of remarks as groups, and the tasks that follow from the human's
-decisions (WAY-302).
+foundation one by one, the decisions that describe a transitional state one by one, the groups of
+remarks as groups, and the tasks that follow from the human's decisions (WAY-302, WAY-354).
 
 ## 7. Mark the review done
 

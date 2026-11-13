@@ -11735,6 +11735,45 @@ tests and a step at the start of every cycle; a line given with a revision as th
 answer moves by design, so the script would read the file at that revision or report false alarms;
 no rule — rows keep coming, about one in a cycle, each worth nothing or a few steps of an agent.
 
+### WAY-354 — What does a review of the foundation do with a decision that describes a transitional state?
+
+A review of the foundation lists the decisions that describe a transitional state of the product,
+found by reading their binding sentences and not by a word, and asks the human at each whether a
+task exists that ends that state; where none exists, it proposes creating one, as it does for its
+other proposals (WAY-302). A decision's entry carries no field for that task.
+
+- **Scope:** decisions, foundation-review
+- **Based on:** none
+- **Relations:** derives from WAY-24 · derives from WAY-302
+- **Verification:** an agent compares the review and the template of decisions with the decision:
+  - complies: the review lists a decision that says a shared control has two forms until the last
+    screen moves to a new library, shows the sentence, asks the human whether a task ends that
+    state, and, the human answering that none does, proposes the task and makes it on the human's
+    yes; a rule such as "the tempo stays until the player picks another" is not listed;
+  - violates: the review lists a decision because the word "until" stands in it; the entry of a
+    decision gains a field that names the task; the question is put at the refinement of a task
+    that settles the state, in place of the review; the review makes the task with no yes from the
+    human.
+- **Origin:** none
+
+*Rationale:* a decision that describes a state "for now" binds for as long as no work ends the
+state, and nothing leads from the decision to that work, so the state can stay in the code for good
+with nobody seeing it before a review. The review already reads every decision against the product
+(WAY-305) and turns a proposal the human accepts into a task (WAY-302), so it is where a missing
+task shows. The human is asked, and the review does not search, since the tasks of a product lie
+outside its repository (WAY-320) and an identifier of a task that an entry could name exists only
+for a task of a project plan (WAY-329). A word does not pick the decisions: a search of the log by
+"until" and kindred words on 2026-11-12 found them mostly in ordinary rules. The price: the
+reading can miss a decision or list an ordinary rule, and the human is asked again at each review
+about a decision whose state still stands.
+*Rejected:* a field in a decision's entry that names the task, as the card the point came from has
+it — it changes WAY-24 and the template of decisions, collides with WAY-01, needs a way for an
+entry to name a task of a list that lies outside the repository, needs the task to exist before the
+decision is written, and a pointer ages; a question at the refinement of a task about what ends the
+state being settled — a state written by a cycle itself passes by, and the link between a decision
+and a task is kept nowhere; no rule — the next state may get stuck and nobody sees it before a
+review, unless the reviewer thinks of it unprompted.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
