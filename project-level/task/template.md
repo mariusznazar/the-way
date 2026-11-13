@@ -14,6 +14,7 @@ status values and `none` / `TODO` markers in English so an agent can resume the 
 
 Status: refining
 Project relation: independent | plan item: <the project plan's file name> — <the task's name in the plan> | source only: <project definition>
+Defect introduced by: none | <the address of the request, or of the commit where the change came without one, that introduced the defect; one address for each change, joined by ` · `> | unknown — <why the change cannot be established>
 
 ## Description
 
@@ -97,7 +98,19 @@ sections always appear. `Status:` reads `refining`, `waiting for human`, or `rea
 `Project relation:` records whether the task is independent, belongs to an item of an approved
 project plan, or only uses an approved project definition as a source. A task that uses a
 definition without plan membership never acquires that plan's assignments or dependencies.
-`TODO` marks a missing answer; never use it to make an unfinished task look ready.
+`Defect introduced by:` stands in every task, and the agent that refines the task fills it from
+the history of the lines the task changes and from the human's report, never the cycle
+(WAY-354). The line reads `none` in a task that does not fix a defect found after a merge. A task
+fixes one when it removes a defect against what the task of an earlier merged change, or the
+foundation, required when that change was merged, or a regression, something that worked and
+that the earlier change's task did not tell it to change; a new need, a change of mind, a gap of
+the earlier task, a thing it did not foresee, and maintenance such as updating a dependency are
+none of these (WAY-353). The line of a fixing task names the request that introduced the defect
+by its address, with one address for each change where the defects come from several, joined by
+` · `; a change that came without a request is named by the address of its commit; where the
+change cannot be established, the line reads `unknown — ` and the reason, in the document's
+language. A task document written before this line has none, and a missing line means that the
+task was not assessed, never `none`. `TODO` marks a missing answer; never use it to make an unfinished task look ready.
 `ready for approval` is a conversation turn result, never a value of `Status:`. Every task,
 including a manually refined one with no candidates, waits for the human to see and accept its
 complete final document before `ready for cycle` (WAY-124). Candidate selection and Human-action
