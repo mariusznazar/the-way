@@ -207,6 +207,48 @@ In the report of a trial of a shorter guidelines file in one product, all 45 run
 
 - **Source:** https://github.com/mariusznazar/loop2/blob/9c0dfc8faa7b3024dfa1e488b18b955f087b57a0/docs/task-cycles/proba-krotszych-wytycznych/request.md § What you will see — "Three small trial tasks with hidden tests were made, each done five times by a fresh agent with the old file, five times with the shorter one and, added at the end on a request relayed from another session as your decision, five times with no guidelines file at all. All 45 runs passed their test: 5 of 5 with the old file, 5 of 5 with the shorter one and 5 of 5 without the file, on each of the three tasks." · § Cost — "The stage table counts 92 stages and 52 subagents, with 2 h 44 min of agent time added up, and 95.2 million tokens in all (90.6 million of them input read from the cache; 0.63 million written), every one of them on one model, Sonnet 5.5."; read 2026-11-08
 
+## claude-code-subagent-skills-denied
+
+Claude Code prevents a subagent from invoking skills when its definition omits `Skill` from its `tools` list or adds it to `disallowedTools`.
+
+- **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Preload skills into subagents — "To prevent a subagent from invoking skills entirely, omit Skill from the tools list or add it to disallowedTools."; read 2026-11-13
+
+## claude-code-subagent-cache-ttl
+
+Claude Code, on v2.1.248 or later, takes the prompt cache lifetime of a subagent's requests, `5m` or `1h`, from the `cacheTtl` key inside the `experimental` map of its definition.
+
+- **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Frontmatter reference — "Set its cacheTtl key to 5m or 1h to choose the prompt cache lifetime for this subagent's requests" · § Frontmatter reference — "Requires Claude Code v2.1.248 or later" · § Frontmatter reference — "Write cacheTtl inside the experimental map, not at the top level of the frontmatter."; read 2026-11-13
+
+## claude-code-subagent-cache-ttl-credits
+
+Claude Code ignores the `1h` cache lifetime of a subagent while the user's Claude subscription is using usage credits.
+
+- **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Frontmatter reference — "ignores 1h while your Claude subscription is using usage credits"; read 2026-11-13
+
+## claude-code-subagent-agent-directories
+
+Claude Code follows changes to subagent files only in directories that existed when the session started, so the first agent file created in a new `agents` directory needs a restart to load.
+
+- **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Write subagent files — "The watcher covers only directories that existed when the session started, so after creating a scope's first agent file in a new agents directory, restart to load it."; read 2026-11-13
+
+## claude-code-subagent-instruction-files
+
+Claude Code, on v2.1.271 or later, starts a subagent without the user, project and local `CLAUDE.md` files in its initial context when its definition sets `omitClaudeMd` to `true`.
+
+- **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Frontmatter reference — "Set to true to start this subagent without the user, project, and local CLAUDE.md files in its initial context" · § Frontmatter reference — "Requires Claude Code v2.1.271 or later"; read 2026-11-13
+
+## codex-project-agents
+
+Codex reads the custom agents of a project from standalone TOML files under `.codex/agents/`, one agent in each file.
+
+- **Source:** https://learn.chatgpt.com/docs/agent-configuration/subagents (archived: http://web.archive.org/web/20261028074900/https://learn.chatgpt.com/docs/agent-configuration/subagents, 2026-10-28) § Custom agents — "To define your own custom agents, add standalone TOML files under ~/.codex/agents/ for personal agents or .codex/agents/ for project-scoped agents." · § Custom agents — "Each file defines one custom agent."; read 2026-11-13
+
+## codex-agent-skills-config
+
+In the configuration of a custom agent, Codex disables an individual skill with the setting `skills.config`.
+
+- **Source:** https://learn.chatgpt.com/docs/agent-configuration/subagents (archived: http://web.archive.org/web/20261028074900/https://learn.chatgpt.com/docs/agent-configuration/subagents, 2026-10-28) § Custom agents — "Disable individual skills with skills.config or bundled skills with skills.bundled.enabled = false."; read 2026-11-13
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

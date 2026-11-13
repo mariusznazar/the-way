@@ -15,8 +15,9 @@ this skill holds only how the plan is written.
 This skill lives in `task-cycle/plan/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the
 session's working directory; in a product, it is the product's pinned `.the-way`. The script
-`task-cycle/slice_size.py` is there, and each skill named below is the project skill of that name
-with the `the-way-` prefix.
+`task-cycle/slice_size.py` is there. Where the planner has no skill tool, as in the cycle's types, a
+skill this file or a file it reads names is the `SKILL.md` whose frontmatter `name:` is that name,
+read as a file under the same root.
 
 The planner is a fresh agent the orchestrator of `implement-task` dispatches when the change
 needs division, including after a reviewed spec or an oversized one-author attempt (WAY-136).
@@ -126,7 +127,8 @@ Write the plan in this form; the script reads the slice headings and the fields 
 - *Change* names every file the slice changes or creates. When a deterministic command writes
   multiple files as one unit, list one path pattern per output directory in *Change*, each counted
   as one file; for skill entry points, the patterns are `.claude/skills/the-way-*/SKILL.md` and
-  `.agents/skills/the-way-*/SKILL.md`. Every slice that changes an input to the command runs it at
+  `.agents/skills/the-way-*/SKILL.md`, and for the copies of the definitions of agent types
+  `.claude/agents/the-way-*.md`. Every slice that changes an input to the command runs it at
   the end of its work, handles any obsolete output paths it reports for removal, and commits all
   of its output; its *Goal* names the command and carries the complete action: after changing an
   input, run the command, handle any obsolete output paths it reports for removal, and commit all
