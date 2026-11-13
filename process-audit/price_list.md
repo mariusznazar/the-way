@@ -6,7 +6,8 @@ Prices of the models the cycles' `stages.md` name, read from the providers' publ
 - List date: 2026-11-11
 
 Unit: USD per million tokens, as the pages state them. The date above is the day the pages were
-read; a new list with another date starts a new series of measures (WAY-339).
+read; a new list with another date starts a new series of the cost and of no mechanism measure or
+gate time (WAY-339).
 
 How the command uses the columns: *Input* of `stages.md` includes the part of the input read from a
 cache, so a stage's cost is its input minus its cached input at the *Input* price, its cached input at

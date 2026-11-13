@@ -130,10 +130,12 @@ set the task's state.
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
    once. Record the base commit and the checks already failing on it. Run those checks on the base
    alone: finish them before anything changes a tracked file of the worktree, or run them in a
-   separate checkout of the base commit under the worktree's ignored `.runs/`, deleted when they
-   end. The gate's run on the base is one of the gate runs step 10 gives: it goes through
-   `task-cycle/gate_times.py` from that checkout, with `--output ../task-cycles/<task-slug>/gate_times.md`,
-   which reaches the worktree's record directory from a checkout directly under its `.runs/`. In a product that checkout gets its dependencies installed, as the product's own rules give,
+   separate checkout of the base commit directly under the worktree's ignored `.runs/`, deleted
+   when they end. The gate's run on the base is one of the gate runs step 10 gives: it goes through
+   `task-cycle/gate_times.py` from that checkout, with
+   `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the worktree's record
+   directory from a checkout directly under its `.runs/`. In a product that checkout gets its
+   dependencies installed, as the product's own rules give,
    and its `.the-way` populated before the checks run; otherwise they fail for that reason and not on
    the base. Keep a frozen copy of the task document with its original path and its approval date or
    source commit. Where step 2 moved the pin, the branch, its base and those checks already stand.

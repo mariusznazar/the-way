@@ -194,9 +194,10 @@ class where it is one; what it means; and the day of the session as the date it 
 human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register
 that the entry `problem_register` names, which lies in the user's place and never in a repository,
 and change nothing else of it. Adding a class gives no problem a class (WAY-330): a problem's class
-in *Problems* stays the user's tool's to write. The date starts a new series of measures, and the
-next count reads the class; offer to run the count again as step 2 gives. Where the human says no,
-or names a class the list already holds, the problem's row is a correction for the user's tool.
+in *Problems* stays the user's tool's to write. The date starts a new series of the cost and of no
+mechanism measure or gate time (WAY-339), and the next count reads the class; offer to run the count
+again as step 2 gives. Where the human says no, or names a class the list already holds, the
+problem's row is a correction for the user's tool.
 
 Where the register itself seems wrong to the human otherwise, such as a problem under another class
 or an issue whose fate has changed, the correction is the user's own tool's to make: note it in the

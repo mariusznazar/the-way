@@ -62,8 +62,8 @@ its name, its meaning and the day it is added — and on your yes adds its row t
 your register; the problem is never given the nearest class instead (WAY-333). A row of *Problems*
 whose class the list lacks is refused by the count until then. A change of what a class means is
 written as that class withdrawn and a new class, under a new name, added on the same date. Each date
-in *Added* or *Withdrawn* starts a new series of measures, and the audit compares measures only
-within one series (WAY-339).
+in *Added* or *Withdrawn* starts a new series of the cost and of no mechanism measure or gate
+time, and the audit compares measures only within one series (WAY-339).
 
 ## Weights
 
