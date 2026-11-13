@@ -55,7 +55,8 @@ with the evidence and stop.
    items. Every reset of the task branch to its base stops at that commit. The review of the whole
    change checks that commit: it holds only the gitlink, at
    the commit the task names, and what the installer owns: the `the-way-*` entry points in
-   `.claude/skills/` and `.agents/skills/`, in `AGENTS.md` the block between its markers, and the
+   `.claude/skills/` and `.agents/skills/`, the `the-way-*.md` definitions of agent types in
+   `.claude/agents/`, in `AGENTS.md` the block between its markers, and the
    removal of `.claude/rules/the-way.md` where an older pin installed it.
    Read the foundation by "Reading the foundation" in `elements/common/way_of_working.md`, and the
    product's guidelines by `product-guidelines/reading.md`, for the parts the task's required
@@ -63,9 +64,12 @@ with the evidence and stop.
    the judgments of step 4. A finding of the guidelines' reading takes the route the procedure
    names.
 3. Require a harness that can dispatch subagents, and the methods of the stages in the pinned
-   the-way, each a project skill with the `the-way-` prefix: `write-spec`, `plan-task`,
-   `make-change` and `review-change`. Each stage agent reads the `SKILL.md` of its stage's method
-   whole, and a file the method names, one beside that `SKILL.md` included, only when the step or
+   the-way, four files: `task-cycle/spec/SKILL.md` (`write-spec`), `task-cycle/plan/SKILL.md`
+   (`plan-task`), `task-cycle/change/SKILL.md` (`make-change`) and
+   `task-cycle/review/SKILL.md` (`review-change`). The name labels its method here and in the
+   record; an agent reaches the method by its file's path, never by calling a skill. Each stage
+   agent reads the `SKILL.md` of its stage's method whole, and a file the method names, one beside
+   that `SKILL.md` included, only when the step or
    variant that names the file comes; you read this skill and no method you do not conduct. Without
    subagents this cycle cannot run in that harness.
 
@@ -186,8 +190,9 @@ The agent of the plan's *Foundation entries* and a fresh agent of the return ste
 rows, and their handoff names their stage instead. For the foundation step, the handoff names
 `task-cycle/skill/foundation_step.md`, and for the return step `task-cycle/skill/return_step.md`
 with it, since the return step writes as the foundation step writes, each by its path in the
-pinned the-way; the agent reads each whole, and the skill of an element when it writes an entry of
-that element. For a review, it gives the range to review and the author's report. For a fix, it
+pinned the-way; the agent reads each whole, and the `SKILL.md` of an element, at the path
+`task-cycle/skill/foundation_step.md` gives, when it writes an entry of that element. For a review,
+it gives the range to review and the author's report. For a fix, it
 gives the findings file, which you write in the reviewer's words from the review's blocking
 findings and, after them, the Minor findings of the review of the whole change within the task
 ("The end of a code review"); the fix's range runs from the reviewed head, and the review of the
@@ -196,6 +201,15 @@ one of the review of that fix, names the findings file by its path in `reports/`
 `reports/<file>.md`, besides the handoff that names it, and no other message does: the audit of
 the process ties a turn to its fix round by that path (WAY-337). No handoff tells an agent to run
 the product's gate; its run is yours (step 10, WAY-160).
+
+In Claude Code, dispatch each stage agent as an agent of one of the pinned the-way's two types:
+`the-way-author` for the one author of a change without a plan, resumed or replaced on the same
+branch, and `the-way-stage` for every other stage agent. Neither has the skill tool: the handoff
+gives the path of every method, and a skill that a method names by its name alone is read as a file
+too, as `task-cycle/skill/foundation_step.md` gives. Where the agent types that your dispatch tool offers hold no such type — another
+harness, or a session started before `.claude/agents/` held the definitions — dispatch the stage as
+you would without them, and write in the record's row of that dispatch that it ran without its type
+and why (WAY-370).
 
 You decide what each agent reads, and its handoff names it (WAY-150, WAY-213): the foundation
 entries by identifier — those of the task's *Decisions in play*, and the decisions, invariants and
@@ -208,8 +222,8 @@ reviewer of a slice get stands in `task-cycle/skill/planning.md`, which step 8 n
 and values stay in their own files: copy a section of the plan, spec or task into the handoff word
 for word, never restated in other words, and name its file as its address (WAY-148). The reviewer
 of the whole change selects its own foundation and guidelines, by the parts of the change, and an
-agent writing a foundation entry reads as the element's skill gives. You alone read `cycle.md`: an
-answer or choice that binds an agent goes into its handoff or the message that resumes it.
+agent writing a foundation entry reads as the element's `SKILL.md` gives. You alone read
+`cycle.md`: an answer or choice that binds an agent goes into its handoff or the message that resumes it.
 
 Wait for an agent through the harness's completion notification or one blocking wait at the
 longest duration its live tool contract and active instructions permit. In Codex, use
@@ -317,7 +331,8 @@ returns `blocked` with a question for the human, and at step 7 for a finding tha
 contradicts a decision.
 
 9. Make the change and have it reviewed.
-   - **One author.** Dispatch a fresh author with `make-change`, on the class of model you set
+   - **One author.** Dispatch a fresh author of the type `the-way-author` with `make-change`, on
+     the class of model you set
      for it (step 4) and the harness's model closest to it, as sub-step 2 of the planned route
      gives for a slice, recorded under *Author* — with the frozen task, any reviewed spec and the
      checks the move of the pin carried (step 2). It does the foundation step with its

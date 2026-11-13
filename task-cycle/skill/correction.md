@@ -26,7 +26,7 @@ choice:
 Take a link to the request, or to a comment holding the human's remarks, as the input. Work on that
 request's branch and in its worktree. First merge, never rebase, the remote target branch, the
 the-way pin included, and verify that the pinned checkout matches the product's gitlink. Where that
-merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `review-change`, with
+merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `review-change` (`task-cycle/review/SKILL.md`), with
 a dispatch that asks whether the two sides still hold together and names the foundation entries the
 merge brought in that bear on the parts the change touches, as step 12 of `implement-task` gives
 (WAY-306, WAY-150), and the agents that own the checks the merge touches run them again. The remarks
@@ -34,7 +34,7 @@ bind; record them as new events, and write them word for word, as the human gave
 `reports/correction-<n>-remarks.md` of the record, `<n>` counting the corrections from 1, also
 where they came in conversation or concern only the refreshing of the target branch (WAY-357).
 Keep the recorded route for the affected work: dispatch the
-correction with `make-change`, resuming the author where possible, and have it reviewed with
+correction with `make-change` (`task-cycle/change/SKILL.md`), resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code
 review" gives. A new open design choice, a reserved choice or an oversized attempt follows the
 recovery "Design and execution choice" gives, with its reset base recorded. Repeat only what the

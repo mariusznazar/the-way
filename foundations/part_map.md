@@ -92,8 +92,8 @@ backlog is made, given its dependencies and moved to ready.
 
 ## task-cycle
 
-The part answers for the steps a task runs through and for the review its change gets along
-them.
+The part answers for the steps a task runs through, for the review its change gets along
+them and for the definitions of the agent types that run those steps in Claude Code.
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -146,12 +146,15 @@ The part answers for the files that configure the repository itself rather than 
 
 The part answers for the instructions agents read when they work on this repository, for the
 project skill entry points that make the-way's skills visible to sessions on it and the script that
-generates them, and for the hooks and the configuration of agents' tools and of CI that direct them.
+generates them, for the copies of the cycle's agent type definitions that make those types available
+to sessions on it and the script that generates them, and for the hooks and the configuration of
+agents' tools and of CI that direct them.
 
 - **Files:** /AGENTS.md
   /CLAUDE.md
   agent-instructions/**
   .claude/skills/**
+  .claude/agents/**
   .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines
@@ -196,14 +199,16 @@ argument and its exit codes.
 
 ## installation-command
 
-The command that installs a pinned the-way checkout, empty foundation files, project skills, agent
-guidance for Claude Code and Codex and a `.runs/` ignore line in a product, or moves the product's
-pin to the checkout's commit, keeps its preview and confirmation. Of the files it finds, it
-rewrites only its own — the skill entry points it wrote, which point to `.the-way`, and its marked
-block in `AGENTS.md`, where the block stands — and deletes only its own entry points of skills the
-commit lacks; to another existing file of the working tree it adds only the `.the-way` section of
-`.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line at the end of
-`.gitignore`.
+The command that installs a pinned the-way checkout, empty foundation files, project skills, the
+definitions of the cycle's agent types for Claude Code, agent guidance for Claude Code and Codex and
+a `.runs/` ignore line in a product, or moves the product's pin to the checkout's commit, keeps its
+preview and confirmation. Of the files it finds, it rewrites only its own — the skill entry points
+it wrote, which point to `.the-way`, the agent type definitions it wrote, whose description ends
+with the sentence every definition of the-way ends with, and its marked block in `AGENTS.md`, where
+the block stands — and deletes only its own entry points of skills and its own definitions of agent
+types the commit lacks; to another existing file of the working tree it adds only the `.the-way`
+section of `.gitmodules`, a marked block at the end of `AGENTS.md` and the `.runs/` line at the end
+of `.gitignore`.
 
 - **Relied on by:** a product pinned to a commit of the-way
 

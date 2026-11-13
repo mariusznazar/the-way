@@ -5,7 +5,7 @@ its plan, and what each slice's handoff carries.
 
 ## The planner and the review of the plan
 
-Only on the planning route, dispatch a fresh planner with `plan-task`, the frozen task, any
+Only on the planning route, dispatch a fresh planner with `plan-task` (`task-cycle/plan/SKILL.md`), the frozen task, any
 reviewed spec and the checks the move of the pin carried (step 2). It writes `plan.md` and its
 size report `plan-size.md` in the record's directory and returns before any slice is made;
 where it returns an open design choice instead, continue at step 6 with its report, and where it

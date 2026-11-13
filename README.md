@@ -106,10 +106,11 @@ names an existing entry, every entry has the fields its template gives, every in
   its own only where it touches a trust boundary or holds an operation that cannot be undone —, then
   the product's full tests and the return step. It keeps the cycle record on the
   task branch, with the time, models and tokens of each stage counted from the agents' session
-  transcripts.
-- `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root and the skill entry points in
-  `.claude/skills/` and `.agents/skills/` — instructions for agents working on the-way itself, and
-  the script that generates those entry points.
+  transcripts. Its definitions of the two agent types Claude Code dispatches the stages with are in
+  `task-cycle/agent-types/`.
+- `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root, the skill entry points in
+  `.claude/skills/` and `.agents/skills/` and the copies of those definitions in `.claude/agents/` —
+  instructions for agents working on the-way itself, and the scripts that generate those files.
 - `instruction-files/` — the principles by which instruction files for coding agents are written,
   judged and kept, how Claude Code, Codex and Cursor load them, the skill that applies them, and
   the script that checks instruction files.
@@ -144,8 +145,11 @@ moving a skill, or changing its description, run:
 python -B agent-instructions/skill_entry_points.py --write
 ```
 
-and commit what it writes. A product gets the same skills, pointing to its pinned `.the-way`, from
-the installer; see `installation/README.md`.
+and commit what it writes. After changing a definition in `task-cycle/agent-types/`, run
+`python -B agent-instructions/agent_type_copies.py --write` the same way: it copies each definition
+into `.claude/agents/`, where Claude Code finds the agent types of a session on the-way. A product
+gets the same skills, pointing to its pinned `.the-way`, and the same definitions, from the
+installer; see `installation/README.md`.
 
 ## Running the tests
 

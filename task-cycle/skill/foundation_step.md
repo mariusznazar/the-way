@@ -8,9 +8,16 @@ The foundation step writes the entries the task carries: each row of *Settlement
 as an entry of its kind, one no code makes true included — its meaning the row's and its wording the
 writer's (WAY-134); each projected entry of the task's sources that its code makes true or its plan
 item assigns, whole as the readiness gate approved it, or the part the code makes true (WAY-126);
-and each entry a reviewed spec or the plan names. Each is written through the pinned skill of its
-element, on the task branch, to reach the main branch with the code in the request, and none is left
-for later (WAY-01). A row whose settlement the writer's search of the whole foundation (WAY-33)
+and each entry a reviewed spec or the plan names. Each is written by following the pinned `SKILL.md`
+of its element, on the task branch, to reach the main branch with the code in the request, and none
+is left for later (WAY-01). That file is `elements/decisions/skill/SKILL.md` for a decision,
+`elements/invariants/skill/SKILL.md` for an invariant, `elements/glossary/skill/SKILL.md` for a
+glossary term, `elements/part-map/skill/SKILL.md` for a part of the map and
+`elements/environment-facts/skill/SKILL.md` for an environment fact, in the pinned the-way; a skill
+that file or a file it reads names by its name alone — `record-invariant`, `update-part-map` or
+another — is the `SKILL.md` whose frontmatter `name:` is that name, which a search of the files
+named `SKILL.md` for that line finds, and the writer reads it as a file where it has no skill tool, as the cycle's types have none
+(WAY-368). A row whose settlement the writer's search of the whole foundation (WAY-33)
 finds already stated becomes no second entry: the writer ties the row to that entry, and the request
 names both, as `task-cycle/skill/request_template.md` gives (WAY-134). A plan member writes only the
 projected entries its plan item assigns; one that falls to another item returns to the plan through
