@@ -67,14 +67,14 @@ of the coding discipline in their places (WAY-171).
   order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
   product's decision that departs from it with its reason (WAY-171, WAY-202).
 - The six required rules on failures and logs, from `### Recording a failure` to `### Logging scope`,
-  follow the standing checks in the order above, and the product's further rules follow those; a
-  product that already has further rules takes the six in between when it adds them (WAY-271). A
-  file of a kind holds none of the six.
+  follow the standing checks in the order above, and the rule of size below and then the product's
+  further rules follow those; a product that already has further rules takes the six in between
+  when it adds them (WAY-271). A file of a kind holds none of the six.
 - The required rule `### Size of a function and a file` follows the six, and the product's further
   rules follow it; a product that already has further rules takes it in between when it adds it. It
-  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind holds no such rule, and a
-  product that goes without it reads `none — <PREFIX-NN>`, naming the product's decision that
-  departs from it with its reason (WAY-355, WAY-173).
+  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind
+  holds no such rule, and a product that goes without it reads `none — <PREFIX-NN>`, naming the
+  product's decision that departs from it with its reason (WAY-355, WAY-173).
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
   included (WAY-208).
 - `## When to read` gives the condition under which an agent reads the file: before any change of
