@@ -9172,7 +9172,8 @@ unread, the unfixed findings the product's user or the human working with the pr
 decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
 actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
 a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
-error of the form check that the cycle holds wrong (WAY-291), each descriptive `TODO` in an
+error of the form check that the cycle holds wrong (WAY-291), the pairs that give the cause of a
+correction after the request opened (WAY-356), each descriptive `TODO` in an
 invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
 after the change (WAY-71), and the foundation entries the human did not see at the task document — in
 three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
@@ -9198,7 +9199,10 @@ while each remaining finding stands with its place in the code in the lower part
     `none` alone in the section; a request with one choice beyond the task and nothing else keeps
     all three headings, with `none` under the first two; a request whose
     cycle holds a listing of the remarks check wrong, or an error of the form check wrong, names it
-    in that section; a request a remaining finding blocks says in that section, in plain words,
+    in that section; a request after a correction made for a remark of the human puts one sentence
+    in *You accept by merging* that says the correction answered the remark and whether the cycle
+    judged that the task required what the correction changed, so the section does not read `none`;
+    a request a remaining finding blocks says in that section, in plain words,
     what the human is to decide about it, and names the return step and the reconciliation it did not
     run under *Needed from you*, while the finding's place and reason stand in the lower part; a
     request whose review of the whole change read 40 of 151 selected decisions whole and
@@ -9220,7 +9224,9 @@ while each remaining finding stands with its place in the code in the lower part
     skipped step is named only in the last line of the checks; a blocked
     request is written in a shape of its own; the incomplete reading of the review of the whole
     change stands only in the lower part, or stands in the section in every request whatever the
-    reviewer did; the section reads `none` while an invariant's *Rests on* or *Derives from* or a
+    reviewer did; the section reads `none` after a correction, or the sentence of the correction's
+    pairs stands only in the lower part; the section reads `none` while an invariant's *Rests on*
+    or *Derives from* or a
     decision's *Based on* holds a descriptive `TODO` on the merged tree, or such a gap
     stands under *Needed from you* or under *You accept by merging* with no way to answer it.
 - **Origin:** none
@@ -9234,7 +9240,9 @@ human seeing them at the merge, and this section is where the merge shows them. 
 whole change that read only part of what it selected, and did not run through the rest by title,
 passes as a full review unless the human is told, and the human is the one who can decide to merge
 on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
-the section keeps its `none` for requests that can be merged. A descriptive `TODO` that stands in
+the section keeps its `none` for requests that can be merged. The cause of a correction stands here
+because the judgment whether the task required what the correction changed is the cycle's own, and
+the merge is where the human sees it. A descriptive `TODO` that stands in
 an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
 is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
 it names as missing, for the human to have the missing thing written in the request, make a task of
@@ -11686,6 +11694,184 @@ turns that served it, so the share of the fix rounds stays unknown (WAY-337). Th
 keeps a second way of reading a stage report for as long as cycles of the older form are counted, and
 a cycle of that form has no share.
 *Rejected:* unknown
+
+### WAY-353 — Which task fixes a defect found after a merge?
+
+A task fixes a defect found after a merge when it removes a defect against what the task of an
+earlier merged change, or the foundation, required when that change was merged, or a regression,
+which is the breaking of something that worked and that the earlier change's task did not tell it
+to change. A new need, a change of mind, a gap of the earlier task, a thing it did not foresee, and
+maintenance such as updating a dependency are no such defect.
+
+- **Scope:** project-level, task-cycle, process-audit
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: a task that restores a check which a merged change broke, though the task of that
+    change did not tell it to touch the check, fixes a defect found after a merge; a task that adds
+    a field because the human now wants one, a task that handles a case the earlier task never
+    mentioned, and a task that updates a dependency fix none;
+  - violates: a task that handles a case the earlier task did not foresee is counted as fixing a
+    defect of that earlier change; a task that restores what a merged change broke is left out
+    because the earlier task did not mention it.
+- **Origin:** none
+
+*Rationale:* the narrow test keeps what the review of a change let through apart from what the
+refinement of its task did not foresee, so the count answers whether, for example, a cheaper model
+of the review lets more through. A wider test mixes the two.
+*Rejected:* broadly, every task that mends something a merged change did wrong or did not foresee —
+a cheap judgment, but the number mixes what the review let through with what the refinement did not
+foresee, so it does not answer whether, for example, a cheaper model of the review lets more
+through; broadly, with the kind of the defect in the line ("defect against the requirements" or "gap
+of the task") — one more judgment for each such task, a second class in the register and a second
+result to read, while nothing waits for a measure of the gaps of tasks today.
+
+### WAY-354 — Where is a defect found after a merge recorded, and in what form?
+
+A defect found after a merge is recorded in two places: the line `Defect introduced by:` under
+`Project relation:` in the header of the task document of the task that fixes it, which is the
+source, and a problem of the class `defect-found-after-merge` in the register of problems, which
+counts it. Every task document carries the line, which reads `none` in a task that fixes no defect
+of WAY-353, and otherwise the address of the request that introduced the defect, one address for
+each change where the defects come from several, joined by ` · `, the address of the commit for a
+change that came without a request, or `unknown — <why the change cannot be established>`; the
+agent that refines the task fills it, never the cycle. A task document written before the line has
+none, and a missing line means that the task was not assessed, never `none`.
+
+- **Scope:** project-level, task-cycle, process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-330
+- **Verification:** an agent compares a change with the decision:
+  - complies: a task that removes a regression introduced by a merged request carries that
+    request's address in the line, and a task that fixes defects of two merged requests carries two
+    addresses joined by ` · `; a task that fixes a defect which a commit made without a request
+    carries the address of that commit; a task whose change cannot be established reads `unknown`
+    with the reason; a task that adds a new function reads `none`; a task document with no line is
+    read as not assessed;
+  - violates: the line stands only in a task that fixes a defect, or in the section *Context*; the
+    cycle fills the line; a missing line is read as `none`; a change that came without a request is
+    named `unknown` where its commit is known.
+- **Origin:** none
+
+*Rationale:* the line in the task that fixes the defect is the source, and the class in the register
+counts it, so neither is left to guess: a line alone counts nothing, and a class alone, filled by
+the nightly review, would make the review guess which change introduced the defect. The line stands
+in every task, so that a forgotten line shows as a missing one and not as a task that fixes
+nothing. A task written before the line was never assessed, which `none` would say it was.
+*Rejected:* the line alone in the document of the fixing task — it counts nothing; the class alone
+in the register, filled by the nightly review — the review has to guess; the line only in a fixing
+task — a forgotten line looks the same as the task that is no fixing one, so the defect leaves the
+measure without a trace; an item in the section *Context* — free text, so the nightly review would
+have to recognise the field in the text, and a missing field is just as invisible; a commit in
+place of the request — the request has to be looked for from the commit, and a commit does not say
+that the change did not pass through a request.
+
+### WAY-355 — Where does the cycle record the cause of a correction after the request opened?
+
+The cycle record holds one line for each correction made after the request opened, in an item of its
+request handoff that stands before the process remarks, and the line gives the cause of the
+correction and names a file of the record's reports; the title of the commit that adds a copy of
+the record holds no cause. The human's remarks of a correction are written word for word into that
+file, also where they came in conversation or concern only the refreshing of the target branch.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148
+- **Verification:** an agent compares a cycle record with the decision:
+  - complies: a correction made for a remark of the human leaves one line in the record that gives
+    its cause and names the file holding the remark as the human wrote it; a correction that only
+    refreshed the target branch at the human's request leaves a line and a file as well; the title
+    of the commit that adds the next copy of the record gives no cause;
+  - violates: the cause stands only in the title of a commit; the remarks of a correction that came
+    in conversation stand only as an event of the record, with no file; the line stands after the
+    process remarks, or in a file beside the record.
+- **Origin:** none
+
+*Rationale:* the record is the cycle's only log (WAY-148), and the cause of a correction stands where
+the nightly review of cycles reads, which the title of a commit is not. A file that the line names
+gives the line a place to point to, which an event of the record alone does not.
+*Rejected:* the title of the commit that adds the next copy of the record — nothing checks it, since
+the messages of commits are not checked, it collides with the rules for the commits of a product,
+and the cause would stand outside the record that the nightly review reads; both places — two
+records that can drift apart, and the second adds nothing.
+
+### WAY-356 — What causes does the line of a correction give?
+
+The line of a correction gives each pair `<source> · <kind>` of the correction once. The source is
+read, not judged: `item <n>` is the human's answer to an item of the request's section for the
+human's decisions, `<n>` being the number of that item's kind in the template of the request's
+description and not its number in a given description; `remark` is a remark of the human outside
+any item; `target-branch` is a correction that exists only to refresh the target branch at the
+human's request. The kind is the judgment of the agent that leads the cycle by one test against the
+documents — `defect` where the approved task or the foundation required what the correction
+changes, or it is a regression, as WAY-353 gives it, `not-required` where it was not required, and
+`none` only with `target-branch` — and the request's description after the correction shows the
+pairs in one sentence (WAY-287).
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-355
+- **Verification:** an agent compares a cycle record with the decision:
+  - complies: a correction made for a remark in which the human found a defect the task required
+    gives the pair `remark · defect`; a correction made for the human's answer to the item of
+    unfixed findings, where the finding was a defect the cycle saw and left, gives `item 8 · defect`,
+    8 being the kind of that item in the template; a correction that only refreshes the target
+    branch gives `target-branch · none`; a correction with two sources gives two pairs, each once;
+  - violates: the source `item 3` names the third item of the request's description; a kind is
+    written for `remark` other than `defect` and `not-required`; `target-branch` has a kind other
+    than `none`; the source is judged by the agent and not read from what started the correction.
+- **Origin:** none
+
+*Rationale:* a pair keeps apart who raised a correction, which is read, and what was wrong, which is
+judged, so that two numbers come out of the pairs: a defect that the review of the change let
+through, `remark · defect`, and a defect that the cycle saw and left, `item · defect`. The human
+sees the cycle's judgment of the kind at the merge, in the sentence of the request's description.
+*Rejected:* five causes judged by the agent — `defect-missed`, `requirement-changed`, `task-gap`,
+`raised-by-cycle` and `target-branch`: they mix who raised a correction with what was wrong, and on
+the 20 corrections examined when this was settled 15 were `raised-by-cycle` alone, under which real
+defects hide, such as one that the cycle put before the human and the human told it to fix, so the
+defect the review let through would come out near zero; `target-branch` "without remarks of the
+human" does not occur, since every correction starts with the merge of the target branch; three
+causes with no split of the human's remarks — a remark, an item the cycle put before the human, the
+target branch: cheap and checkable, but they do not separate a defect the review let through from a
+change of mind.
+
+### WAY-357 — How does the template of the register of problems record a defect found at the request or after the merge?
+
+The template of the register of problems starts its list of classes also with
+`defect-found-at-request`, a defect that the review let through and the human found before the
+merge, given by the pair `remark · defect` of a correction, and `defect-found-after-merge`, a defect
+found by the task that fixes it, named in its line `Defect introduced by:`; the pair `item · defect`
+goes to the class `known-problem-left`. The row of a problem found after the merge holds in *Record* the last copy of
+the record of the cycle that introduced the defect and `after the merge` in *Stages*, and the row of
+a problem found at the request holds in *Record* the copy of the record that carries the line of the
+correction and `at the request` in *Stages*.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-330 · derives from WAY-333
+- **Verification:** an agent compares a change with the decision:
+  - complies: the template's list of classes holds `defect-found-at-request` and
+    `defect-found-after-merge` beside the classes it held; a problem named by the line
+    `Defect introduced by:` of a fixing task has the class `defect-found-after-merge`, the commit
+    that adds the last copy of the record of the cycle that introduced the defect in *Record* and
+    `after the merge` in *Stages*; a correction's pair `item · defect` is a problem of the class
+    `known-problem-left`;
+  - violates: a problem found after a merge is given the nearest class the list held; its *Stages*
+    names a stage of the cycle that introduced the defect; the pair `item · defect` is given the
+    class `defect-found-at-request`.
+- **Origin:** none
+
+*Rationale:* no stage of the cycle that introduced a defect found after the merge reported it, so
+what the template said of the stages that reported a problem cannot hold for that row, and the row
+names in *Record* the cycle that introduced the defect, which is counted under the version of the
+process on which that cycle passed its review (WAY-335). A template that carries the two classes
+and the sentences for the columns keeps the line `Defect introduced by:` of the tasks of the-way
+with a route to counting for everyone who keeps a register.
+*Rejected:* the template unchanged, everything in the user's own tool — the template keeps saying
+that every problem comes from a stage report, the nightly review departs from the description that
+is to lead it, and the line in the tasks of the-way has no route to counting for anyone but its
+author.
 
 ## Withdrawn identifiers
 
