@@ -363,6 +363,15 @@ class Remarks(AuditCountCase):
         self.assertEqual("1", self.remarks_of("- Process remarks on the-way:\n  - one\n",
                                               extra=fenced)[0])
 
+    def test_the_corrections_item_before_the_remarks_item_is_not_among_its_entries(self):
+        corrections = ("- Corrections after the request opened:\n"
+                       "  - correction 1, remarks `reports/correction-1-remarks.md`: remark · defect\n"
+                       "  - correction 2, remarks `reports/correction-2-remarks.md`: "
+                       "target-branch · none\n")
+        count, unknown = self.remarks_of(corrections + "- Process remarks on the-way:\n  - one\n")
+        self.assertEqual("1", count)
+        self.assertEqual([], unknown)
+
     def test_items_after_the_remarks_item_are_not_its_entries(self):
         self.assertEqual("0", self.remarks_of("- Process remarks on the-way: none\n"
                                               "- Another item:\n  - its own entry\n")[0])

@@ -388,6 +388,22 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(self.listing(out), [])
         self.assertTrue(out.splitlines()[-1].startswith("checked: "), out)
 
+    def test_a_corrections_item_and_a_file_of_the_humans_remarks_change_nothing(self) -> None:
+        cycle = ("# Record\n\n## Request handoff\n\n- Request URL and status: draft\n"
+                 "- Corrections after the request opened:\n"
+                 "  - correction 1, remarks `reports/correction-1-remarks.md`: "
+                 "remark · defect, item 8 · not-required\n"
+                 "- Process remarks on the-way:\n"
+                 "  - `make-change`, reports/02-author-report.md: item one\n")
+        record = self.record(cycle, {
+            "02-author-report.md": section("item one"),
+            "correction-1-remarks.md": "The human's remarks, word for word.\n"})
+        code, out, err = run_main([record])
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(self.listing(out), [])
+        self.assertEqual(out.splitlines()[-1], "checked: 2 reports, 1 items other than none, "
+                         "0 not in the process remarks")
+
     def test_a_report_without_the_section_gives_no_item_and_exit_zero(self) -> None:
         record = self.record(cycle_with("none"), {
             "02-author-report.md": "# Report\n\n## Checks\n\n- `python -B x.py` exit 0\n"})
@@ -547,6 +563,15 @@ class TemplateTest(unittest.TestCase):
         entry = "`stage`, `path/report.md`: Unclear: a thing"
         filled = tail.split("\n", 1)[0] + "\n  - " + entry + "\n"
         self.assertIn(entry, remarks_check.remark_blocks(filled)[0])
+
+    def test_the_corrections_item_before_the_remarks_is_no_part_of_their_block(self) -> None:
+        text = TEMPLATE.read_text(encoding="utf-8")
+        tail = text[text.index("- Corrections after the request opened:"):]
+        self.assertLess(tail.index("- Corrections after the request opened:"),
+                        tail.index("- Process remarks on the-way:"))
+        blocks = remarks_check.remark_blocks(tail)
+        self.assertEqual(len(blocks), 1)
+        self.assertNotIn("correction <n>", blocks[0])
 
 
 if __name__ == "__main__":
