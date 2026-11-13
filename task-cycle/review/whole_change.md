@@ -30,7 +30,8 @@ the report into the findings file of the fix that follows them (WAY-161).
 
 Judge, besides the task, what the change leaves in the structure of the code: the growth of a
 function or a file, code that has no user after the change, and a name that stopped being true
-(WAY-357). Take your numbers from two runs of your own, none in the reviewed worktree:
+(WAY-357). Take your numbers from two runs of your own, the first in the reviewed worktree, which it changes
+in nothing, and the second in separate worktrees:
 
 - the lines of each changed file before the change and after it: from the root of the repository,
   `python -B task-cycle/change_file_sizes.py <base> <head>` on the dispatch's range, in a product
