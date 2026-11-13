@@ -49,6 +49,8 @@ needs and cannot find ends the run with an error that names it (WAY-344).
 | known-problem-left | a problem known in the cycle and left without a fix | start | none |
 | stale-reference | a reference in a task or a plan to a file, a line, an entry or a name that no longer holds | start | none |
 | process-remark | a remark about the process itself: its instructions, its steps or its tools | start | none |
+| defect-found-at-request | a defect that the review of a change let through and the human found before the merge: a correction whose line in the record gives the pair `remark · defect` | start | none |
+| defect-found-after-merge | a defect found after the merge by a task that fixes it, named by the line `Defect introduced by:` of that task | start | none |
 
 - *Class*: the name by which a problem names its class.
 - *Meaning*: what a problem of the class is.
@@ -56,6 +58,9 @@ needs and cannot find ends the run with an error that names it (WAY-344).
   was added.
 - *Withdrawn*: `none`, or the date from which no problem is given the class. A withdrawn class keeps
   its row, so that the problems given it earlier stay readable.
+- A correction's pair `item · defect`, a defect that the cycle saw and left and that the human had
+  fixed in a correction, is a problem of the class `known-problem-left`; the two classes added
+  above take the pair `remark · defect` and the line `Defect introduced by:`.
 
 The list widens: where a problem fits no class, a session of the audit puts a new class before you —
 its name, its meaning and the day it is added — and on your yes adds its row to this table, here in
@@ -114,9 +119,15 @@ business. Adapt the meanings, never the levels.
 - *Record*: the commit that adds the copy of the cycle's record to that repository, as the template
   of the record gives it (`task-cycle/record_template.md`); with *Repository* it names the cycle the
   problem comes from. Where a cycle committed its copy more than once, after a correction, it is the
-  commit of the copy that holds the report the problem was found in.
+  commit of the copy that holds the report the problem was found in. For a problem of the class
+  `defect-found-after-merge`, it is the commit that adds the last copy of the record of the cycle
+  that introduced the defect; for a problem of the class `defect-found-at-request`, the commit
+  that adds the copy of the record that holds the line of the correction in which the human found
+  it.
 - *Stages*: the stages of the cycle that reported the problem, by the names its record gives them,
-  joined by ` · `.
+  joined by ` · `. No stage of the cycle that introduced a defect found after the merge reported
+  it, so for a problem of the class `defect-found-after-merge` it reads `after the merge`; for a
+  problem of the class `defect-found-at-request` it reads `at the request`.
 - *What*: the problem, in one line.
 - *Class*: the name of a class from *Classes*.
 - *Weight*: a level from *Weights*.
