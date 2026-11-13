@@ -56,8 +56,10 @@ These hold at every step.
   change WAY-339 names. The mechanism measures (the numbers of how each cycle's agents use context
   and the prompt cache, from the cycle's `mechanism_measures.md`) and the gate times (the time of
   each run of the product's gate, from `gate_times.md`) have series of their own (WAY-348, WAY-350):
-  a new series of them begins only at a change of the script that measures them,
-  `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py`. A change of the instructions of the
+  a new series of the mechanism measures begins only at a change of `task-cycle/cycle_measures.py`,
+  and a new series of the gate times only at a change of `task-cycle/gate_times.py` or of
+  `gate/run_tests.py`, the test runner whose output gives the time of each directory (WAY-339). The
+  reason of a new series names the file or files that changed. A change of the instructions of the
   cycle, of the reviewer or of the author starts none of them, and neither does a new price list.
   Set no number of one series beside a number of another, no number of the measures or the gate
   times beside a number of the cost, and no week's count beside the week before; a version of the

@@ -11232,11 +11232,12 @@ A new price list, or a change of the form of a stage report, of the list of clas
 instructions of the reviewer, starts a new series of measures, except for the measures of how a
 cycle's agents use context and the prompt cache (WAY-347) and the times of the gate (WAY-349): a new
 series of those starts only with a change of the script that counts them or of the script that
-records them, and no change of the instructions of the cycle, the reviewer's and the author's
-included, starts one. The audit compares measures only within one series, and judges a version of the
-process by the cycles that ran on it, never one week against another.
+records them, and, for the times of the gate, also with a change of the test runner of the gate, whose
+output gives the time of each of its directories; no change of the instructions of the cycle, the
+reviewer's and the author's included, starts one. The audit compares measures only within one series,
+and judges a version of the process by the cycles that ran on it, never one week against another.
 
-- **Scope:** process-audit, task-cycle
+- **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares a change with the decision:
@@ -11246,12 +11247,13 @@ process by the cycles that ran on it, never one week against another.
     starts a new series of the cost and none of the measures of context and cache use or of the
     gate times, whose cycles on the two sides of it are compared; a change of the script that
     counts the measures of context and cache use starts a new series of those measures and none of
-    the cost;
+    the cost; a change of the test runner of the gate starts a new series of the gate times and none
+    of the cost or of the measures of context and cache use;
   - violates: the number of remarks of one week is set against that of the week before, across a
     change of the form of a stage report; a change of the reviewer's or the author's instructions
-    divides the series of the gate times; a change of the script that records the gate times leaves
-    their series whole; the addition of the script that counts the measures of context and cache use
-    starts a new series of the cost.
+    divides the series of the gate times; a change of the test runner of the gate leaves the series
+    of the gate times whole; the addition of the script that counts the measures of context and cache
+    use starts a new series of the cost.
 - **Origin:** none
 
 *Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the
@@ -11261,11 +11263,21 @@ and what is found. A number from before such a change says something about the c
 about the process. The measures of context and cache use and the gate times are the numbers by
 which a change to the instructions of the cycle is judged, so a series that such a change started
 would never hold the two sides to compare; what changes their meaning is a change of the script that
-measures them, which is the one change that starts their series.
+measures them, or of the test runner whose output the times of the directories are read from, and
+those are the changes that start their series. The test runner decides how the directories of the gate
+run, one after another or together, so a change of it changes what a time of the gate measures; it
+measures nothing itself, but it fixes what the measuring script records.
 *Rejected:* the changes that start the series of the cost, with the script that counts the measures
 of context and cache use added to them — the comparisons would almost never occur, since nearly
 every change made to improve the process touches those instructions, and adding the script to that
-list would end the series of the cost as well.
+list would end the series of the cost as well. For the gate times, a mark on each run of how many
+directories ran at once, which would split the runs by that mark and not by a change of a script — it
+changes the test runner, the script that records the times, the tables of WAY-349 and WAY-350 and the
+reading of the audit, it leaves the runs made since the change to parallel directories mixed with the
+earlier ones until this change is merged, and the old records would need a reading for the runs that
+carry no mark. And no split of the gate times at all, which leaves the times of the two ways of running
+the gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
+the old.
 
 ### WAY-340 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
 
