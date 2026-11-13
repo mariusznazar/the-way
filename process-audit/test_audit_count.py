@@ -1631,6 +1631,64 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual(500, len(self.rows("Gate runs")))
         self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
 
+    def test_an_exit_code_above_255_is_read_as_written(self):
+        # A gate that crashes on Windows ends with a code such as 0xC000013A, as an unsigned number.
+        rows = gate_row(STARTED, 3221225786, "5.000", 0, "gate/a", "5.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "3221225786", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertEqual([], [row for row in self.unknown_rows() if "Exit code" in row[2]])
+
+    def test_an_exit_code_that_is_not_a_whole_number_is_unknown(self):
+        rows = gate_row(STARTED, "-1", "5.000", 0, "gate/a", "5.0")
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "unknown", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertIn("an exit code is not a whole number",
+                      self.reasons_of(self.rows("Unknown values"), "Gate runs: Exit code"))
+
+    def test_a_row_after_a_line_that_ends_the_table_is_not_read_and_says_so(self):
+        rows = (gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0") + "\n"
+                + gate_row("2026-11-11 11:00:00.000", 0, "6.000", 0, "gate/b", "6.0"))
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([["product", added, STARTED, "0", "5.000", "0", "gate/a 5.0 s"]],
+                         self.rows("Gate runs"))
+        self.assertIn(["product", added, "Gate runs",
+                       "`gate_times.md` holds a row after a line that is not a row of the table: "
+                       "the rows after it are not read"], self.rows("Unknown values"))
+
+    def test_text_after_the_table_with_no_row_in_it_says_nothing(self):
+        rows = gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0") + "\nA closing note.\n"
+        done, added = self.count({GATE: gate_file(rows=rows)})
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(1, len(self.rows("Gate runs")))
+        self.assertEqual([], self.unknown_rows())
+
+    def test_a_git_failure_on_the_gate_file_leaves_the_files_that_were_read(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record(), GATE: gate_file()})
+        gate_blob = product.git("rev-parse", f"{added}:docs/task-cycles/a-task/{GATE}")
+
+        class Failing(audit_count.Git):
+            def run(self, *arguments):
+                if arguments[:2] == ("cat-file", "blob") and arguments[2] == gate_blob:
+                    raise audit_count.GitError("git cat-file failed (128): made up")
+                return super().run(*arguments)
+
+        cycle = audit_count.Cycle("product", "a-task", added, added)
+        audit_count.fill(cycle, Failing(product.root), added, b"a-task", True,
+                         audit_count.Prices("2026-11-11", {}))
+        reasons = dict(cycle.unknown)
+        self.assertIn("git could not read the copy", reasons["Gate runs"])
+        # The record was read: its remarks are counted and no reason about git stands for them.
+        self.assertEqual(0, cycle.remarks)
+        self.assertNotIn("Remarks", reasons)
+
     def test_directories_beyond_the_limit_of_one_run_are_not_listed_and_say_so(self):
         rows = "".join(gate_row(STARTED, 0, "1.000", 0, f"gate/d{index:02}", "1.0")
                        for index in range(60))

@@ -34,9 +34,10 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
 per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is neither
-a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or the price
-list names its option, `--locations` or `--prices`, never the path it was given (WAY-320).
+*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is
+neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or
+the price list names its option, `--locations` or `--prices`, never the path it was given
+(WAY-320).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -140,10 +141,10 @@ decimal.
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. A field of `stages.md` that the form the file's own signs name needs and the file
-lacks is a missing field (WAY-344, which gives this command its own way to end): the values that need it
-are `unknown`, the result is written, and the run ends with exit 1 and, for each missing field, a
-line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `stages.md` of the copy lacks
-the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
+lacks is a missing field (WAY-344, which gives this command its own way to end): the values that
+need it are `unknown`, the result is written, and the run ends with exit 1 and, for each missing
+field, a line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `stages.md` of the
+copy lacks the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
 `Model`, `Input`, `Cached input` and `Output` of the table of the newer form's section, and that
 table itself, which a heading with no table misses (the column `Files named` is never missing: a
 section without it is the earlier form of the section); the columns `Input`, `Cached input` and
@@ -162,6 +163,23 @@ then read alike. No path written in them is followed, and nothing of them is run
 outside the years the platform reads gives *Committed* `unknown`. Git runs only to read, with no
 `GIT_` variable of the environment it is started in and no signature shown: `rev-parse`, `log`,
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
+
+The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
+`task-cycle/cycle_measures.py` (WAY-347) and `gate_times.md` by `task-cycle/gate_times.py`
+(WAY-349). A copy that holds neither is an earlier form: their values are `unknown`, with the
+reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
+by its label; a label it lacks is a missing field, and then every value of the file is `unknown`. A
+label written twice, a value that is not what its label gives and a value `unknown` are `unknown`
+with a reason, and the count goes on. `gate_times.md` is read from its table of runs: the table
+itself and each of its columns `Started (UTC)`, `Exit code`, `Total seconds`, `Other gate runs at
+the same time`, `Directory` and `Directory seconds` are fields, and a file lacking one gives no
+runs and is a missing field. A row of the table is a run, its consecutive rows of the same four
+first cells being the directories of that run; a row of the wrong number of cells is a run of its
+own with every value `unknown`, and a cell of the form its column does not give is `unknown` with a
+reason. At most 500 runs of a file, 50 directories of a run and 200 characters of a directory are
+read, and a row after a line that is no row of the table is not read; each says so in *Unknown
+values*. Both are under the check of WAY-344, since their reading is new, and they end the run
+with exit 1 and an `Error:` line that names the file and the field, as `stages.md` does.
 
 The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
 gives: five tables, *Classes*, *Weights*, *Costs of an occurrence*, *Issues* and *Problems*, found
@@ -186,14 +204,14 @@ For each cycle, its problems by class and weight. For each issue whose *Fate* is
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
 does not hold it, never by date: the holding is `git merge-base --is-ancestor <fix> <pin>` in the
 checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
-short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a pin
-`unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the number
-of cycles its problems came back in, and the days it has waited: the cycles in which a problem of
-the issue stands, except the first of them, so `0` where it stands in one cycle only, and `at least
-n` where a refused row or a problem of a cycle not read may belong to a cycle not counted; and from
-the earliest commit date of the copies its problems' *Record* names to the day of the run,
-`unknown` where a problem's cycle is not known. An
-issue `dropped` is counted apart, with no waiting. The issues are listed in the order of the
+short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a
+pin `unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the
+number of cycles its problems came back in, and the days it has waited: the cycles in which a
+problem of the issue stands, except the first of them, so `0` where it stands in one cycle only,
+and `at least n` where a refused row or a problem of a cycle not read may belong to a cycle not
+counted; and from the earliest commit date of the copies its problems' *Record* names to the day
+of the run, `unknown` where a problem's cycle is not known. An issue `dropped` is counted apart,
+with no waiting. The issues are listed in the order of the
 register, never ranked by their counts (WAY-336). For each issue, whatever its fate, how many of its
 problems stand on each of the five levels of the cost of an occurrence (WAY-345, WAY-346): a cost
 counted by the issue and never by the cycle, and a different thing from the cost of a cycle in
@@ -207,17 +225,21 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
-number of fix rounds and the share of the cost in them. The sections *Problems by cycle*, *Fixed
+number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
+of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
+its gate times; the section *Measure versions* gives them per version. The sections *Problems by
+cycle*, *Fixed
 issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* give the register's
 counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
 
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
-read, a table of the register refused as a whole, or a field missing in a `stages.md`, named in the
-result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written, when an argument is wrong, the
-locations file, the price list, the register or an entry it needs is missing or wrong, the register
-lacks a heading, a table or a column it needs, the register is larger than 4 MiB or not UTF-8, the
-result directory lies inside a repository to read or the checkout of the-way, or the result cannot
-be written.
+read, a table of the register refused as a whole, or a field missing in a `stages.md`, a
+`mechanism_measures.md` or a `gate_times.md`, named in the
+result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written,
+when an argument is wrong, the locations file, the price list, the register or an entry it needs is
+missing or wrong, the register lacks a heading, a table or a column it needs, the register is
+larger than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the
+checkout of the-way, or the result cannot be written.
 
 Standard library only.
 """
@@ -364,7 +386,7 @@ GATE_COLUMNS = ["Started (UTC)", "Exit code", "Total seconds", "Other gate runs 
 GATE_RUN_COLUMNS = GATE_COLUMNS[:4]
 GATE_TABLE_FIELD = "table of the runs"
 GATE_STARTED = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}")
-GATE_CODE = re.compile(r"[0-9]{1,3}")
+GATE_CODE = re.compile(r"[0-9]{1,10}")
 GATE_TOTAL = re.compile(r"[0-9]{1,9}\.[0-9]{3}")
 GATE_OTHERS = re.compile(r"[0-9]{1,6}")
 GATE_SECONDS = re.compile(r"[0-9]{1,9}(?:\.[0-9]{1,9})?")
@@ -1409,12 +1431,22 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
         return None, f"`{name}` of the copy is not UTF-8"
 
 
-def read_optional(git: Git, entries: dict, prefix: bytes, name: str) -> tuple[str | None, str | None]:
+def read_optional(git: Git, entries: dict, prefix: bytes,
+                  name: str) -> tuple[str | None, str | None]:
     """The text of a file of the copy that an earlier form lacks, or None with the reason."""
     path = prefix + name.encode("ascii")
     if path not in entries:
         return None, f"the copy holds no `{name}`: an earlier form"
     return read_file(git, entries, path)
+
+
+def guarded_optional(git: Git, entries: dict, prefix: bytes,
+                     name: str) -> tuple[str | None, str | None]:
+    """`read_optional`, with a failure of git on this file given as its reason."""
+    try:
+        return read_optional(git, entries, prefix, name)
+    except (GitError, ValueError, UnicodeError) as error:
+        return None, f"git could not read the copy: {display(error)}"
 
 
 def measure_fits(label: str, value: str) -> bool:
@@ -1503,8 +1535,10 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
     runs: list[tuple[list[str] | None, list[tuple[str, str]]]] = []
     last: list[str] | None = None
     cut_directories = False
+    table_end = len(lines)
     for index in range(header + 1, len(lines)):
         if fenced[index] or not lines[index].startswith("|"):
+            table_end = index
             break
         cells = table_cells(lines[index])
         if is_separator(cells):
@@ -1533,6 +1567,10 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
             cut_directories = True
             continue
         directories.append((directory, seconds))
+    if any(not fenced[index] and lines[index].startswith("|")
+           for index in range(table_end, len(lines))):
+        reasons.append(("Gate runs", f"`{GATE_FILE}` holds a row after a line that is not a row of "
+                                     "the table: the rows after it are not read"))
     if cut_directories:
         reasons.append(("Gate runs: Directories", f"a run in `{GATE_FILE}` lists more than "
                                                   f"{MAX_DIRECTORIES} directories: the rest are "
@@ -1582,13 +1620,16 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         entries = tree_entries(git, commit)
         record, record_reason = read_file(git, entries, prefix + b"cycle.md")
         stages, stages_reason = read_file(git, entries, prefix + b"stages.md")
-        measures = read_optional(git, entries, prefix, MEASURES_FILE)
-        gate = read_optional(git, entries, prefix, GATE_FILE)
     except (GitError, ValueError, UnicodeError) as error:
         reason = f"git could not read the copy: {display(error)}"
         record = stages = None
         record_reason = stages_reason = reason
         measures = gate = (None, reason)
+    else:
+        # Each of the two optional files stands in a `try` of its own: a git failure on one leaves
+        # the files that were read.
+        measures, gate = (guarded_optional(git, entries, prefix, name)
+                          for name in (MEASURES_FILE, GATE_FILE))
     record_lines = record_fenced = None
     if record is None:
         cycle.unknown += [("Process pin", record_reason), ("Remarks", record_reason)]
@@ -2109,7 +2150,7 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                         f"row {problem.number} of `Problems`", why))
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
-    # as `at least n`, since the row's own figure is not in the count (the review's Important finding).
+    # as `at least n`, since the row's own figure is not in the count.
     refused_cycle: Counter = Counter()
     refused_issue: Counter = Counter()
     valid_issues = {name for name, _, _ in register.issues}
@@ -2325,7 +2366,8 @@ GATE_HEADER = ["Version (commit)", "Measure", "Runs with no other gate", "Median
 
 
 def median_text(median: Decimal | None, suffix: str = "") -> str:
-    """A median as the exact value of its Decimal, a half with its decimal, never in exponent form."""
+    """A median as the exact value of its Decimal, a half with its decimal, never in exponent
+    form."""
     return UNKNOWN if median is None else format(median, "f") + suffix
 
 
