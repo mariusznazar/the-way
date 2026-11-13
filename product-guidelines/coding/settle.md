@@ -66,7 +66,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     first guidelines, at any extension whatever else the task is about, and at a refresh
     `recognize.md` sends here, the product's one decision on the rule of the size of a function and
     a file, adopting it or departing from it with its reason; the task is not ready without it
-    (WAY-355). A heading holding `none —` is no absence. It takes, asked after the trial run of
+    (WAY-360). A heading holding `none —` is no absence. It takes, asked after the trial run of
     sizes that `trial_run.md` gives, on the product's existing code, and where the product has no
     code, with no trial run:
     - the rule, shown by its effect: a function or a file that grows past its size stops a change
@@ -109,7 +109,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     of these (WAY-271);
   - for the rule of size, one invariant that no function and no file of the parts named is over its
     threshold except the exceptions of the decision, with the test the coding template's section
-    "What each section carries" gives, run apart from the linter's run (WAY-355, WAY-356); where
+    "What each section carries" gives, run apart from the linter's run (WAY-360, WAY-361); where
     the trial run found code over a threshold that the exceptions, settled before this, do not name,
     it is marked violated by a change of the foundation the human accepts, until that code is
     cleaned (WAY-51), and its weak point, that until then only
@@ -138,7 +138,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     dies whole writes only what it manages to (WAY-272);
   - for the rule of size, that a count of lines says nothing of whether a function is well made, and
     that a function can be split only to stand under a threshold, which the exceptions and the
-    review's question about the structure of the code a change leaves are there to meet (WAY-355).
+    review's question about the structure of the code a change leaves are there to meet (WAY-360).
 - **The top of the audit's list.** Where step 3's audit ran, the proposal of which causes of the top
   the task takes joins the set, and the human decides on it, as "At step 4" in
   `product-guidelines/audit_end.md` gives (WAY-284).

@@ -11785,7 +11785,7 @@ state being settled — a state written by a cycle itself passes by, and the lin
 and a task is kept nowhere; no rule — the next state may get stuck and nobody sees it before a
 review, unless the reviewer thinks of it unprompted.
 
-### WAY-355 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
+### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
 
 The template of the coding discipline requires, in the general file of a product's coding guidelines,
 a rule of the size of a function and a file under the heading `### Size of a function and a file`,
@@ -11840,7 +11840,7 @@ as long as nobody takes the proposal up (WAY-202); no rule in the template, only
 the structure of code in the review — nothing blocks, and the assessment of structure depends on the
 reviewer, with the same chance in the grade as today for a remark on the form of an entry.
 
-### WAY-356 — How does the review of a change get the sizes of functions and files from a product?
+### WAY-361 — How does the review of a change get the sizes of functions and files from a product?
 
 The test of a product's rule of size, when it fails, names every function and file over a threshold
 with its size, and the reviewer of the whole change runs it as an ordinary test of the product's
@@ -11850,7 +11850,7 @@ that gives the sizes of functions: the one command that runs all of its tests st
 
 - **Scope:** product-guidelines, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-355 · derives from WAY-16
+- **Relations:** derives from WAY-360 · derives from WAY-16
 - **Verification:** an agent compares the template, the reviewer's run and a product's guidelines
   with the decision:
   - complies: a test of the rule of size that finds three functions and a file over their thresholds
@@ -11875,17 +11875,17 @@ run by the orchestrator before the review of the whole change — a new decision
 to WAY-16, a second command in every product and a step of the orchestrator in every cycle, for a
 count of functions under the threshold, which by the threshold are in order.
 
-### WAY-357 — What does the review of the whole change ask about the structure of the code a change leaves, and from which numbers?
+### WAY-362 — What does the review of the whole change ask about the structure of the code a change leaves, and from which numbers?
 
 The reviewer of the whole change judges what the change leaves in the structure of the code: the
 growth of a function or a file, code that has no user after the change, and a name that stopped being
 true. It takes its numbers from a script of the-way that gives, for the range of the change, the lines
 of each changed file before the change and after it, and from the test of the product's rule of size
-(WAY-356), run on the state before the change and on the state after it.
+(WAY-361), run on the state before the change and on the state after it.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-136 · derives from WAY-356
+- **Relations:** derives from WAY-136 · derives from WAY-361
 - **Verification:** an agent compares the review of the whole change with the decision:
   - complies: the reviewer's report names a file that grew from 410 lines to 520 by the script's two
     numbers, names the function the diff reaches in it, and reports that the test of the rule of size
@@ -11902,11 +11902,11 @@ a function reached 456 lines and another 781 unnoticed. A reviewer of the whole
 change reads every file the change touches and so is the one place where the structure it leaves can
 be judged; the lines of each changed file before and after, and the functions and files over a
 threshold on both states, turn the question from an impression into a reading with numbers. The
-threshold's test names what stands over it (WAY-356), and the difference between its runs shows what
+threshold's test names what stands over it (WAY-361), and the difference between its runs shows what
 the change pushed over.
 *Rejected:* unknown
 
-### WAY-358 — How does a reviewer grade a finding about the structure of code?
+### WAY-363 — How does a reviewer grade a finding about the structure of code?
 
 A reviewer grades as Minor a finding about the structure of code that lies below the threshold of the
 rule of size in the product's coding guidelines, and judges its scope as for any finding (WAY-161). A
@@ -11929,7 +11929,7 @@ finding about a function or a file over that threshold is graded as any other fi
 
 *Rationale:* whether a structure is good is a judgment, and a grade that follows it blocks or lets
 through a change by the reviewer's impression, with the same chance in the grade that a remark on the
-form of an entry shows (WAY-359). A Minor finding within the task is still fixed before the request
+form of an entry shows (WAY-364). A Minor finding within the task is still fixed before the request
 opens (WAY-161), so what the change itself leaves, such as code with no user and a name no longer
 true, is repaired in the review of the whole change, and the finding is left out of the blocking only.
 Where code stands over the threshold, a number settles it and not the reviewer's impression: the test
@@ -11943,7 +11943,7 @@ of an entry; findings of structure always outside the task's scope, on the reque
 review of the foundation — code with no user and a name no longer true, which the change itself
 left, are cleaned only by a separate task after the review of the foundation, a full cycle.
 
-### WAY-359 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
+### WAY-364 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
 
 A reviewer grades as Minor a finding that a foundation entry departs from the form of its template,
 where the entry's content agrees with the code, unless the finding cites a sentence a reader would
@@ -11984,7 +11984,7 @@ Important, that is, blocking — every departure from the form is a FAIL and a r
 fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
 have reached 6 of 32 runs.
 
-### WAY-360 — What does a change do where it adds to a function or a file that stands over the threshold of the rule of size?
+### WAY-365 — What does a change do where it adds to a function or a file that stands over the threshold of the rule of size?
 
 Where a slice of a plan adds to a function or a file that stands over the threshold of the product's
 rule of size, the plan begins with a slice that moves a part of that function or file out without a
@@ -11994,7 +11994,7 @@ spec (WAY-135).
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-136 · derives from WAY-355
+- **Relations:** derives from WAY-136 · derives from WAY-360
 - **Verification:** an agent compares the plan, the author's commits and the record of choices with
   the decision:
   - complies: a task whose change adds a branch to a function that stands over its threshold gets a

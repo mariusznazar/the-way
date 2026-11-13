@@ -22,7 +22,7 @@ Where the product has code:
   list, told by its effect, its place the number of files, with no rule's name, and the output's
   path stays in *Context* (WAY-281). The rules that went among the examples flagged sound code and
   yield no cause. The formatter's count never enters the list: a reformatting is no finding.
-- **Trial run of sizes** (WAY-355). In the same scratch worktree, count the lines of every function
+- **Trial run of sizes** (WAY-360). In the same scratch worktree, count the lines of every function
   and every file of the parts the rule of size reads, with the tool the product already has or a
   throwaway count kept under `.runs/coding/`, and for a few candidate thresholds count how many
   functions and files stand over each, and name the longest of each by place and size. The count

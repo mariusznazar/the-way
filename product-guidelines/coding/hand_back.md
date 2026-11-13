@@ -13,7 +13,7 @@ only those the kind touches, as "A new kind" in step 3 of `SKILL.md` gives.
   rules in place, a heading holding `none —` among them, checks nothing of them. The same holds
   for the product's decision on the rule of size, which a task of the first guidelines, of an
   extension or of a refresh that met the check of `recognize.md` has among the choices settled,
-  adopted with its thresholds and exceptions or departed from with its reason (WAY-355).
+  adopted with its thresholds and exceptions or departed from with its reason (WAY-360).
 - Where step 3's audit ran, check what "Before handing back" in `product-guidelines/audit_end.md`
   gives.
 - Where the human answered yes to a backlog task for a deferred `grave` cause, follow "A deferred

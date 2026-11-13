@@ -22,7 +22,7 @@ gives.
   - where the task settles the rule of size, write `### Size of a function and a file` in
     `guidelines/coding.md`, or its marker, and, where the task adopts it, configure the tool that
     counts sizes with the thresholds and the exceptions of the decision and write the test of the
-    rule's invariant as the coding template gives (WAY-355, WAY-356);
+    rule's invariant as the coding template gives (WAY-360, WAY-361);
   - write the test of each new invariant in the product's suite, seen failing once (WAY-08,
     WAY-61);
   - apply `maintain-instruction-files` for the pointer in the product's root `AGENTS.md`, outside

@@ -38,7 +38,7 @@
   stands in the coding template and stays in English; a heading holding `none —` is no absence.
   Where it is missing, propose the rule as `settle.md` words it, and the human's yes or no goes as
   the bullet above gives for the rules on failures and logs: the yes makes the task an extension,
-  and the no is a departure with its reason (WAY-355).
+  and the no is a departure with its reason (WAY-360).
 
 A refresh updates or corrects accepted guidelines within the scope they already cover,
 including adapting them to a new version of a tool the product uses. An extension covers something
