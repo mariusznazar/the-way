@@ -4912,7 +4912,10 @@ an invariant's test, which is seen failing once in its own right (WAY-08). The r
 agent harness's practice for its workers the naming of the requirement most likely to be false and
 the check that would catch it.
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
-would attack its own work before review.
+would attack its own work before review; a review without the author's report — a reviewer of the
+orchestrator's class without the report caught 4 and 3 of the 14 reference errors, with the report 5
+and 6, and used more tokens, 112.47 million against 90.20 million in eight runs; the conditions of
+the measurement stand in WAY-229.
 
 ### WAY-165 — What must an answer to each matter of an agent's way to the running product settle?
 
@@ -6882,8 +6885,14 @@ and on the route without a plan the orchestrator, who judged that one agent can 
 knows what that agent faces. A failure gets one retry a class higher before the cycle stops, which
 costs less than running every slice on the strongest class and less than stopping at the first
 failure of a cheaper one; the slice's own review where it has one, and the review of the whole
-change, find what a cheaper model got wrong. Classes in general terms survive the release of new
-models and fit any harness.
+change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on four
+merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on each
+change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
+could not run the product's tests, and worked on a reviewer's instruction newer than the changes
+they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in 4 of the 8 runs,
+each time a change in which the original review had found a blocking flaw, repaired later, and a
+reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
+8. Classes in general terms survive the release of new models and fit any harness.
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
@@ -6893,8 +6902,11 @@ orchestrator's class — it pays a second agent to read the foundation again, wh
 return step judges it on that class; the orchestrator's class as the default — it leaves the cheaper
 class to a judgment made slice by slice and rarely taken; retries without bound, or on the same
 class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or a
-review — their errors reach every later step; model names in the process — they age with every
-release.
+review — their errors reach every later step; two runs of a reviewer of a cheaper class in place of
+one run of the orchestrator's class — both runs together caught 5 of the 14 reference errors, as
+many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
+verdict, since a change with three blocking flaws got a PASS in both; model names in the process —
+they age with every release.
 
 ### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
 
