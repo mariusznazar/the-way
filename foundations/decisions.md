@@ -11274,9 +11274,10 @@ every change made to improve the process touches those instructions, and adding 
 list would end the series of the cost as well. For the gate times, a mark on each run of how many
 directories ran at once, which would split the runs by that mark and not by a change of a script — it
 changes the test runner, the script that records the times, the tables of WAY-349 and WAY-350 and the
-reading of the audit, it leaves the runs made between the move to parallel directories and this decision mixed with the
-earlier ones, and the old records would need a reading for the runs that carry no mark. And no split of the gate times at all, which leaves the times of the two ways of running
-the gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
+reading of the audit, it leaves the runs made between the move to parallel directories and this
+decision mixed with the earlier ones, and the old records would need a reading for the runs that carry
+no mark. And no split of the gate times at all, which leaves the times of the two ways of running the
+gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
 the old.
 
 ### WAY-340 — Does the audit replay frozen earlier tasks on an old and a new version of the process?
