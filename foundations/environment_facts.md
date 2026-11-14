@@ -251,9 +251,9 @@ In the configuration of a custom agent, Codex disables an individual skill with 
 
 ## python-junction-detection
 
-In Python 3.14, `os.path.isjunction` returns true for an existing directory entry that is a junction, and always returns false where the current platform supports no junctions.
+In Python 3.14, `Path.is_junction` returns true if the path points to a junction and false for any other type of file, and only Windows supports junctions.
 
-- **Source:** https://docs.python.org/3.14/library/os.path.html (archived: http://web.archive.org/web/20261024070950/https://docs.python.org/3.14/library/os.path.html, 2026-10-24) § os.path.isjunction — "Return True if path refers to an existing directory entry that is a junction. Always return False if junctions are not supported on the current platform."; read 2026-11-14
+- **Source:** https://docs.python.org/3.14/library/pathlib.html (archived: http://web.archive.org/web/20261021035154/https://docs.python.org/3.14/library/pathlib.html, 2026-10-21) § Path.is_junction — "Return True if the path points to a junction, and False for any other type of file. Currently only Windows supports junctions."; read 2026-11-14
 
 ## Withdrawn identifiers
 
