@@ -8,10 +8,11 @@ ROOT is a directory of the product's git repository, the working directory by de
 repository it lies in is checked: the files of `foundations/`, the files of `guidelines/` and
 every other file git tracks. The script reads files and asks git; it writes nothing.
 
-The switch `--skip-test-citations` skips the last report named below, the invariant that reads
-`test` and has no citing line. It is for the run made right after an entry is written, when the
-test of an invariant that reads `test` may be written by a later slice of the same change (WAY-61).
-Any other run, the one command that runs a product's tests included, leaves it out.
+The switch `--skip-test-citations` skips only the report of an invariant that reads `test` and has
+no citing line, the one that begins "an invariant whose *Method* reads `test`" below. It is for
+the run made right after an entry is written, when the test of an invariant that reads `test` may
+be written by a later slice of the same change (WAY-61). Any other run, the one command that runs
+a product's tests included, leaves it out.
 
 What it reports, each as `path:line: message`, a path alone where a line has no number:
 
@@ -86,8 +87,9 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   second report. The switch `--skip-test-citations` skips none of this;
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
   base once every run of spaces and line breaks is made one space) is listed at its heading line,
-  when no file other than Markdown that cites it by `invariant:`, at the base or now, differs
-  between the base and the working tree: a changed, added or deleted file counts as changed. An
+  when no file other than Markdown that cites it by `invariant:` now differs between the base and
+  the working tree; a file the change deleted cites nothing now, so it leaves the invariant with no
+  citing file. An
   invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
   and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
   the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
@@ -735,8 +737,8 @@ class Foundation:
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
-        other than Markdown that cites it, at the base or now, differs between the base and the
-        working tree (WAY-03). An invariant the base lacks, or lacking *Method* or *Part* at either
+        other than Markdown that cites it now differs between the base and the working tree
+        (WAY-03). An invariant the base lacks, or lacking *Method* or *Part* at either
         state, is left out. The listing is no error."""
         if not self.base or self.base_files.get(INVARIANTS) is None:
             return
@@ -756,11 +758,6 @@ class Foundation:
             return
         changed = {path for path in diff.split("\0") if path}
         citing = {}
-        code, listing = git(self.root, "ls-tree", "-r", "-z", "--name-only", self.base)
-        for path in (listing.split("\0") if code == 0 else []):
-            if path and not path.endswith(".md"):
-                for name in cited_names(at_commit(self.root, self.base, path) or []):
-                    citing.setdefault(name, set()).add(path)
         for path in tracked:
             if not path.endswith(".md"):
                 for name in cited_names(read(self.root, path)):
