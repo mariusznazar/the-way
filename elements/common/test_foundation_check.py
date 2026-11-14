@@ -197,9 +197,26 @@ class Product:
                 continue
             full = os.path.join(self.root, *path.split("/"))
             os.makedirs(os.path.dirname(full), exist_ok=True)
-            with open(full, "w", encoding="utf-8", newline="\n") as handle:
-                handle.write(text)
+            with open(full, "wb") as handle:
+                handle.write(text if isinstance(text, bytes) else text.encode("utf-8"))
         git(self.root, "add", "-A")
+
+    def on_branch(self, name):
+        """Make `name` the branch the next commit goes on; works before the first commit too."""
+        git(self.root, "symbolic-ref", "HEAD", "refs/heads/" + name)
+
+    def write(self, path, text):
+        """Write a file and add it to git's index."""
+        full = os.path.join(self.root, *path.split("/"))
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "wb") as handle:
+            handle.write(text if isinstance(text, bytes) else text.encode("utf-8"))
+        git(self.root, "add", "--", path)
+
+    def commit(self):
+        """Commit the index, the author given by options and no network anywhere."""
+        git(self.root, "-c", "user.name=Test", "-c", "user.email=test@example.org", "-c",
+            "commit.gpgsign=false", "commit", "-q", "--no-verify", "-m", "a commit")
 
     def check(self, *args, cwd=None):
         """(exit code, report) of the script run on the product."""
@@ -1118,6 +1135,119 @@ class FoundationCheckTest(unittest.TestCase):
                   newline="\n") as handle:
             handle.write('// decision: ABC-01 "stands nowhere in the entry"\n')
         self.assertPasses(product.check())
+
+    # --- the commit the branch left, and the line written where it is not known ---------------
+
+    UNKNOWN_BASE = ("foundations/decisions.md: listed: the commit the branch left the main branch "
+                    "from is not known, so nothing was compared with it")
+    NO_DECISIONS_AT_BASE = ("foundations/decisions.md: listed: the commit the branch left the main "
+                            "branch from holds no readable foundations/decisions.md, so nothing "
+                            "of it was compared")
+    NO_INVARIANTS_AT_BASE = ("foundations/invariants.md: listed: the commit the branch left the "
+                             "main branch from holds no readable foundations/invariants.md, so "
+                             "nothing of it was compared")
+
+    def lines(self, result, code=0):
+        """The lines of a report whose exit code is `code`."""
+        self.assertEqual(result[0], code, result[1])
+        return result[1].splitlines()
+
+    def committed(self, branch, **changes):
+        """The good product with some files replaced or (None) left out, committed on a branch."""
+        files = dict(FILES)
+        files.update({path.replace("__", "/").replace("_dot_", "."): text
+                      for path, text in changes.items()})
+        product = Product(self, files)
+        product.on_branch(branch)
+        product.commit()
+        return product
+
+    def test_no_commit_and_a_log_with_a_decision_lists_the_unknown_base(self):
+        self.assertEqual(self.lines(self.run_on()), [self.UNKNOWN_BASE, "0 errors"])
+
+    def test_listed_line_stands_after_the_errors_and_before_the_count(self):
+        readme = "# The game\n\nSee ABC-07.\n"
+        self.assertEqual(self.lines(self.run_on(README_dot_md=readme), 1),
+                         ["README.md:3: `ABC-07` names no decision of the log",
+                          self.UNKNOWN_BASE, "1 error"])
+
+    def test_no_commit_and_an_empty_log_writes_no_such_line(self):
+        empty = self.run_on(foundations__decisions_dot_md="# Decision log\n")[1]
+        self.assertNotIn("listed:", empty)
+        self.assertIn("listed:", self.run_on()[1])
+
+    def test_commits_on_no_main_branch_leave_the_base_unknown(self):
+        product = self.committed("topic")
+        self.assertEqual(self.lines(product.check()), [self.UNKNOWN_BASE, "0 errors"])
+
+    def test_base_on_main(self):
+        product = self.committed("topic")
+        self.assertEqual(self.lines(product.check()), [self.UNKNOWN_BASE, "0 errors"])
+        git(product.root, "branch", "main")
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_base_on_master_where_there_is_no_main(self):
+        product = self.committed("topic")
+        self.assertEqual(self.lines(product.check()), [self.UNKNOWN_BASE, "0 errors"])
+        git(product.root, "branch", "master")
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_remote_head_naming_another_branch_is_preferred_over_main(self):
+        product = self.committed("main")
+        # `work` shares no history with `main`, so `main` gives no base for it.
+        git(product.root, "checkout", "-q", "--orphan", "work")
+        product.write("notes.txt", "other notes\n")  # the same root commit would be `main` itself
+        product.commit()
+        self.assertEqual(self.lines(product.check()), [self.UNKNOWN_BASE, "0 errors"])
+        git(product.root, "update-ref", "refs/remotes/origin/trunk", "HEAD")
+        git(product.root, "symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/trunk")
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_remote_head_naming_a_branch_that_does_not_exist_leaves_main(self):
+        product = self.committed("topic")
+        git(product.root, "branch", "main")
+        git(product.root, "symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/gone")
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_base_lacking_the_decisions_is_unknown_for_them(self):
+        product = self.committed("main", foundations__decisions_dot_md=None)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", DECISIONS)
+        product.commit()
+        self.assertEqual(self.lines(product.check()), [self.NO_DECISIONS_AT_BASE, "0 errors"])
+
+    def test_base_lacking_the_invariants_is_unknown_for_them(self):
+        product = self.committed("main", foundations__invariants_dot_md=None)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/invariants.md", INVARIANTS)
+        product.commit()
+        self.assertEqual(self.lines(product.check()), [self.NO_INVARIANTS_AT_BASE, "0 errors"])
+
+    def test_base_lacking_both_files_writes_a_line_for_each(self):
+        product = self.committed("main", foundations__decisions_dot_md=None,
+                                 foundations__invariants_dot_md=None)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", DECISIONS)
+        product.write("foundations/invariants.md", INVARIANTS)
+        product.commit()
+        self.assertEqual(self.lines(product.check()),
+                         [self.NO_DECISIONS_AT_BASE, self.NO_INVARIANTS_AT_BASE, "0 errors"])
+
+    def test_base_holding_a_file_git_cannot_read_as_text_is_no_exit_2(self):
+        product = self.committed("main", foundations__decisions_dot_md=b"\xff\xfe not text\n")
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", DECISIONS)
+        product.commit()
+        self.assertEqual(self.lines(product.check()), [self.NO_DECISIONS_AT_BASE, "0 errors"])
+
+    def test_base_lacking_the_files_and_an_empty_log_writes_no_line(self):
+        product = self.committed("main", foundations__decisions_dot_md=None,
+                                 foundations__invariants_dot_md=None)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", "# Decision log\n")
+        product.write("foundations/invariants.md", INVARIANTS)
+        product.commit()
+        self.assertNotIn("listed:", product.check()[1])
 
     # --- the-way's own foundation -------------------------------------------------------------
 

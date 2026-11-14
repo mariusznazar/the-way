@@ -13,7 +13,7 @@ The switch `--skip-test-citations` skips the last report named below, the invari
 test of an invariant that reads `test` may be written by a later slice of the same change (WAY-61).
 Any other run, the one command that runs a product's tests included, leaves it out.
 
-What it reports, each as `path:line: message`:
+What it reports, each as `path:line: message`, a path alone where a line has no number:
 
 - an identifier standing twice: a decision number among the entries and the withdrawn numbers of
   the decision log; an identifier among the
@@ -76,6 +76,22 @@ What it reports, each as `path:line: message`:
   so a sentence wrapped over lines matches. A line in a Markdown file or in a file git does not
   track counts for nothing.
 
+Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
+and before the count line. A listed line is no error: it is counted nowhere and changes no exit
+code, and no message of one holds a count of errors.
+
+The state the branch left. The script asks git itself and takes no input for it. The main branch is
+the one `refs/remotes/origin/HEAD` names; where that does not exist, the local branch `main`; where
+that does not exist, `master`. The commit the branch left it from is `git merge-base HEAD` that
+branch (the `{fork-point}` of `elements/common/rules.md`); `fork_point` gives it and `at_commit`
+reads a file as that commit holds it, for the checks that compare the foundation with it. Where
+there is no such branch or no merge base (no remote HEAD, no `main`, no `master`, a shallow history,
+no commit), the base is unknown, and so it is for a file the base lacks or git cannot give as UTF-8
+text: `foundations/decisions.md` or `foundations/invariants.md`, never read as an empty file. An
+unknown base is one listed line that names the file, written only where the working tree's
+`foundations/decisions.md` holds at least one decision. A failure to read the base is never an
+error and never exit code 2.
+
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT lies in no git repository,
 or git cannot list or match its files.
 """
@@ -98,6 +114,12 @@ GUIDELINES = re.compile(r"^guidelines/[^/]+\.md$")
 WITHDRAWN = "Withdrawn identifiers"
 LEFT_OUT = "Files left out on purpose"
 SKIP_TEST_CITATIONS = "--skip-test-citations"
+# The branches that may be the main branch, in the order the script takes the first that exists.
+MAIN_BRANCHES = ("refs/remotes/origin/HEAD", "refs/heads/main", "refs/heads/master")
+# The files of the foundation that the script reads at the commit the branch left.
+BASE_FILES = (DECISIONS, INVARIANTS)
+UNKNOWN_BASE = ("the commit the branch left the main branch from is not known, so nothing was "
+                "compared with it")
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -143,10 +165,16 @@ SURFACE_FIELDS = {"Relied on by": lambda value: value not in EMPTY}
 class Report:
     def __init__(self):
         self.errors = {}
+        self.listed = {}
 
     def error(self, path, line, message):
         where = "%s:%d" % (path, line) if line else path
         self.errors.setdefault("%s: %s" % (where, message), None)
+
+    def note(self, path, line, message):
+        """A line that is no error: it is written after the errors and counted nowhere."""
+        where = "%s:%d" % (path, line) if line else path
+        self.listed.setdefault("%s: listed: %s" % (where, message), None)
 
 
 def git(root, *args, stdin=None):
@@ -157,6 +185,29 @@ def git(root, *args, stdin=None):
     except OSError as error:
         return None, str(error)
     return result.returncode, result.stdout
+
+
+def fork_point(root):
+    """The commit the branch left the main branch from, as `git merge-base HEAD` the first of
+    MAIN_BRANCHES that exists gives it, or None where there is no such branch or no merge base."""
+    for branch in MAIN_BRANCHES:
+        code, tip = git(root, "rev-parse", "--verify", "--quiet", branch + "^{commit}")
+        if code == 0 and tip.strip():
+            code, base = git(root, "merge-base", "HEAD", tip.strip())
+            return base.strip() if code == 0 and base.strip() else None
+    return None
+
+
+def at_commit(root, commit, path):
+    """The lines of a file as a commit holds it, or None where the commit holds no file of that
+    name or git cannot give it as UTF-8 text. A file the commit lacks is no empty file."""
+    try:
+        result = subprocess.run(["git", "show", "%s:%s" % (commit, path)], cwd=root,
+                                capture_output=True)
+        text = result.stdout.decode("utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    return text.replace("\r\n", "\n").split("\n") if result.returncode == 0 else None
 
 
 def read(root, path):
@@ -310,6 +361,8 @@ class Foundation:
         self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
         self.bodies = {}  # decision number -> the lines of its unversioned entry
         self.held = {}  # number as written -> [(path, line)] of each `decision:` line naming it
+        self.base = None  # the commit the branch left the main branch from, or None where unknown
+        self.base_files = {}  # path of BASE_FILES -> the lines at the base, or None where unknown
 
     # --- identifiers ----------------------------------------------------------------------------
 
@@ -564,6 +617,28 @@ class Foundation:
             self.report.error(path, line, "the entry lacks %s" % ", ".join(
                 "*%s*" % name for name in names))
 
+    # --- the state the branch left --------------------------------------------------------------
+
+    def read_base(self):
+        """Learn the commit the branch left and read at it the files of BASE_FILES."""
+        self.base = fork_point(self.root)
+        self.base_files = {path: at_commit(self.root, self.base, path) if self.base else None
+                           for path in BASE_FILES}
+
+    def list_unknown_base(self):
+        """List, for the base or for each file the base lacks, that nothing was compared. It is
+        written only where the working tree's log holds a decision: with none there is nothing the
+        base could have been compared for."""
+        if not self.numbers:
+            return
+        if not self.base:
+            self.report.note(DECISIONS, 0, UNKNOWN_BASE)
+            return
+        for path in BASE_FILES:
+            if self.base_files[path] is None:
+                self.report.note(path, 0, "the commit the branch left the main branch from holds "
+                                          "no readable %s, so nothing of it was compared" % path)
+
     def check_decision_line(self, path, number, value):
         """Report a `decision:` line that gives no decision number, names no decision of the log or
         a withdrawn one, or quotes no sentence of its entry's binding sentences."""
@@ -736,6 +811,8 @@ def run(root, skip_test_citations=False):
     foundation.check_successors()
     foundation.check_foundation_references()
     foundation.check_fields()
+    foundation.read_base()
+    foundation.list_unknown_base()
     for path in tracked:
         lines = foundation.files.get(path) or read(root, path)
         foundation.check_decision_numbers(path, lines)
@@ -749,7 +826,8 @@ def run(root, skip_test_citations=False):
         return ["git cannot match the path patterns of the part map"], 2
     lines = list(report.errors)
     count = len(lines)
-    return lines + ["%d error%s" % (count, "" if count == 1 else "s")], 1 if count else 0
+    return (lines + list(report.listed) + ["%d error%s" % (count, "" if count == 1 else "s")],
+            1 if count else 0)
 
 
 def main(argv=None):
