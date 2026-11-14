@@ -83,7 +83,7 @@ Defect introduced by: none | <the address of the request, or of the commit where
 
 Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD
 
-| # | Settlement | Kind | Source | What the cycle would otherwise guess |
+| # | Settlement | Goes to | Source | What the cycle would otherwise guess |
 |---|---|---|---|---|
 | 1 | <one sentence, in the human's words> | decision | <the human's answer or a line of this document> | <a concrete choice the cycle would make> |
 
@@ -200,9 +200,14 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   `find-foundation-entries` builds the candidates and the human cuts them; only accepted rows stay.
   A row that repeats a choice the human made between ways shown enters accepted, and the human cuts
   only the rows the agent derived (WAY-115, WAY-134).
-  *Settlement* is one sentence in the human's words, in the document's language. *Kind* reads
-  `decision`, `invariant`, `glossary term` or `environment fact`; an environment fact stands only
-  where a kept decision or invariant rests on it, and a change of the part map is never a row.
+  *Settlement* is one sentence in the human's words, in the document's language. *Goes to* names
+  the place the settlement goes, as the questions of "Where it goes" in
+  `elements/decisions/template.md` give it: an entry of the log (`decision`, `invariant`,
+  `glossary term` or `environment fact`), a sentence of an entry already in the log, a skill or
+  instruction file, the guidelines of a discipline, or the product's data or code, each named as
+  those questions name it. A settlement those questions answer "nothing" is a rejected row with
+  that reason. An environment fact stands only where a kept decision or invariant rests on it, and
+  a change of the part map is never a row.
   *Source* names the human's answer, or the line of this document, that carries the settlement.
   For a settlement the human chose among ways shown, *Source* names the question whose *Not
   chosen* keeps the other ways, or, for a choice made outside *Questions to settle* — such as at a

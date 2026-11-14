@@ -5,8 +5,8 @@ agent of a plan's *Foundation entries*, or the agent of the return step, which w
 writes — and by the orchestrator of `implement-task` where its skill names this file.
 
 The foundation step writes the entries the task carries: each row of *Settlements to record* whole,
-as an entry of its kind, one no code makes true included — its meaning the row's and its wording the
-writer's (WAY-134); each projected entry of the task's sources that its code makes true or its plan
+in the place its column *Goes to* names — as an entry of its kind where the column names an entry —
+one no code makes true included — its meaning the row's and its wording the writer's (WAY-134); each projected entry of the task's sources that its code makes true or its plan
 item assigns, whole as the readiness gate approved it, or the part the code makes true (WAY-126);
 and each entry a reviewed spec or the plan names. Each is written by following the pinned `SKILL.md`
 of its element, on the task branch, to reach the main branch with the code in the request, and none

@@ -4,8 +4,10 @@
 - Drop first each candidate whose settlement an entry read in step 1 already states: it is no
   candidate, and no row of the table.
 - Each candidate is a row: its number; the settlement in one sentence, in the language of the
-  conversation; its kind; its source — the human's words, the material and its place, or a section
-  of the definition; what the next reader would have to guess without it.
+  conversation; its kind, which the definition variant's table keeps as *Kind* and in task mode
+  the lines of the task variant give in the column *Goes to*; its source — the human's words, the
+  material and its place, or a section of the definition; what the next reader would have to guess
+  without it.
 - The last column names a concrete thing a task would do or choose — "the data model of a team and
   its chest", "whether a button may run an action at once". A row with nothing concrete there is
   shown as rejected, with its reason, and is not proposed.
