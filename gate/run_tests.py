@@ -14,7 +14,8 @@ the gate of every product that pins the runner, and the option is the way back f
 tests fail under the load, which can still take a new version of the runner with no change to the
 process. Each directory's report is printed whole when its run ends, under a line
 `== <directory>` and never mixed with another's, so the reports stand in the order the
-directories end, not in the order of their names. A last line counts the tests and names each directory that failed, in the order of
+directories end, not in the order of their names. A last line counts the tests and names each
+directory that failed, in the order of
 their names. Given DIRECTORY, it runs only the tests
 `python -m unittest discover -s DIRECTORY -p "test_*.py"` finds there, and `--jobs` changes nothing.
 The report for a person is the one `unittest` prints. A skipped test is named there, with its

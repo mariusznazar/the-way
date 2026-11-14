@@ -4,7 +4,8 @@ For each missing styleguide, general coding file or testing guidelines found by 
 reading, place a guidelines task before its consumers and make them depend on it; reuse an
 adequate task the plan already holds. Placing it in the breakdown makes the dependencies visible
 before work is handed out, which leaving the discovery to refinement would not, as the plan would
-lack a prerequisite its own consumers already need. One guidelines task may carry both a missing coding and a
+lack a prerequisite its own consumers already need. One guidelines task may carry both a missing
+coding and a
 missing testing file (WAY-247). Respect scoped departures and the guidelines-writing task's exemption.
 Assign a genuinely first kind's exemplar, kind guidelines and index row to the task creating
 its first file, not to a separate prerequisite; an existing unindexed kind has its existing

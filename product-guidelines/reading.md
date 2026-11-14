@@ -86,7 +86,8 @@ into being:
   guidelines (WAY-251): it belongs to this task, through `maintain-testing-guidelines` in
   refinement, and is not left for the task cycle (WAY-172, WAY-199).
 - Where files of an unindexed kind already exist, name that discrepancy and route their
-  comparison and exemplar selection through `maintain-coding-guidelines`, which judges each file, compares them and proposes the exemplar. Do not
+  comparison and exemplar selection through `maintain-coding-guidelines`, which judges each file,
+  compares them and proposes the exemplar. Do not
   call the next file the first or use the finding to authorize an unrelated audit.
 
 ## Hand the findings back

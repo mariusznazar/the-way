@@ -57,8 +57,8 @@ gives.
   the data that check reads (WAY-61).
 - A test cites each invariant it checks, at the test, as a line `invariant: <identifier>` in the
   comment form of its file's language. The citation stands at the test because that is where the
-  outcome is given (WAY-61). A test stands in a file of code (WAY-61, WAY-321); a Markdown file holds
-  no citing test.
+  outcome is given (WAY-61). A test stands in a file of code (WAY-61, WAY-321); a Markdown file
+  holds no citing test.
 - An invariant's result is `pass` where every test citing it ran and passed, and `fail` where one of
   them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before

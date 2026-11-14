@@ -42,8 +42,8 @@ file.
   not apply answers it like any choice, giving every part the matter asks as the template gives it
   — "the tool prints to the console, the record lives as long as the run, an agent reads it from
   the terminal" for the logs, for instance — and that answer settles the matter, so it does not come
-  back open when the step is resumed. A matter struck would be settled with no answer, and the agent of
-  the cycle would then guess where it reads the logs or how it operates the product. In the same
+  back open when the step is resumed. A matter struck would be settled with no answer, and the agent
+  of the cycle would then guess where it reads the logs or how it operates the product. In the same
   message ask, as one question of
   assessment for the whole list, whether the human has a preference or a constraint for any open
   choice; "I do not know" is an answer. Write the answers, a preference as a nested item under its

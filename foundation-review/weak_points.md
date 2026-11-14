@@ -25,8 +25,9 @@ repository, acts on no account or server and costs nothing beyond the reading. T
 ones: an audit of the lock file for known vulnerabilities, a search of the code for a pattern the
 entry says is absent, a read of the published table a fact quotes. A check that needs a running
 server, an account, money or a long run is not run: the line names the check that would settle the
-weak point and says it was not run, and the proposal for the human says what the check would cost. A check that only reads is cheap enough
-to run at every review, where a check that acts would cost more than the review.
+weak point and says it was not run, and the proposal for the human says what the check would cost. A
+check that only reads is cheap enough to run at every review, where a check that acts would cost
+more than the review.
 
 ## Decisions that describe a transitional state
 

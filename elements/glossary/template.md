@@ -83,7 +83,8 @@ template holds what is particular to a glossary entry (WAY-35).
 - **Not:** <meaning> — <what carries it, or TODO> · … | none
 ```
 
-- The definition is one sentence; it is the entry's binding part (WAY-94). A definition of one sentence is read whole beside every use of its word.
+- The definition is one sentence; it is the entry's binding part (WAY-94). A definition of one
+  sentence is read whole beside every use of its word.
 - *Not* names each meaning the word carried in the files git tracks, besides its
   definition and a meaning a reader who knows the product's field gives it, with what carries it
   now: the term of another entry, an identifier in backticks, a value of a template's closed list

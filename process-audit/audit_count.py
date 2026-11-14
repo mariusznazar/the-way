@@ -51,7 +51,7 @@ ones noted, and its values are read from the last copy, the most complete. For e
   the line says the pin moved; for a cycle of the-way's own history, whose line names no commit,
   the commit of its line `Target branch and base`; the agents of such a cycle read the process from
   the worktree the cycle changes, which begins at that commit, so that commit is the process the
-  cycle started under.
+  cycle started under;
 - *Remarks*: the number of entries under the record's item `Process remarks on the-way`, `0`
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
@@ -131,7 +131,8 @@ series for each instrument. The count reads these measures and shows them with a
 comparison for each version, because the numbers lie in the records of cycles, which the session
 of the audit does not open, and a comparison of before and after made by hand cannot say that a
 change to the process worked. A series of the mechanism measures of `mechanism_measures.md`
-begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a series of
+begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
+series of
 the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `gate/run_tests.py`
 differs, by the same test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts
 as changed). No other change splits them: not the price list, a date of the register's list of

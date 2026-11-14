@@ -13,7 +13,8 @@ Output, in this order:
 1. The check script's errors and warnings, each with what it means in each tool in use, and its
    `info` lines that say something was not read or not checked.
 2. A table with one row per fragment of every file: the quoted fragment with `file:line`, the
-   verdict — keep, move, remove or reword — the criterion it stands on, its reason and its ground. The criterion, in every row whatever the verdict: when an agent needs the rule and
+   verdict — keep, move, remove or reword — the criterion it stands on, its reason and its ground.
+   The criterion, in every row whatever the verdict: when an agent needs the rule and
    whether an agent recognises that moment when it comes, so that the human can disagree with the
    criterion and not only with the verdict. The reason: for keep, the conditions the fragment
    meets — for a line of the main file, the three conditions; for move, the target; for remove,

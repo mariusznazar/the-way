@@ -156,7 +156,8 @@ request link and set the task's state.
    merged: `git rev-parse <base>^{tree}` and `git rev-parse <base>^2^{tree}` print the same
    identifier; a base with no second parent is no such commit. If it is, do not run the
    gate on the base. The final gate of the earlier cycle ran on the files the base now holds, so a
-   run on the base would repeat it and add a full run of the gate to the wait of every cycle. Take the list of the tests failing before the change from the final gate of the
+   run on the base would repeat it and add a full run of the gate to the wait of every cycle. Take
+   the list of the tests failing before the change from the final gate of the
    cycle of the merged branch, also where that gate was red, from the record of that cycle in the
    history of git: the merged branch's own copy of its cycle record,
    `docs/task-cycles/<merged-task-slug>/cycle.md`, where `<merged-task-slug>` is the slug of the
@@ -271,7 +272,8 @@ in part, decide before you act on its status: resume the agent to read it, carry
 handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
 nothing the agent judged. Going on at the status alone would let an unread decision pass through a
 stage that looks complete, and an error hidden in it would reach the request. A decision the
-reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
+reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the
+status is `done`, `done with concerns`, `questions`, `returned`,
 `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
 `returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
@@ -283,7 +285,8 @@ material** or its **Searches not found or unclear** (WAY-260), save one returnin
 (WAY-164), returns to its agent for repair the same way (WAY-148); `none` is an answer, a missing
 section is not. The section of unread material stands apart from the account of what the agent
 looked for, because that account goes into the process remarks word for word and an unread file
-usually concerns one change, not the process. An agent that returns `questions` gets your answers as step 6 answers the
+usually concerns one change, not the process. An agent that returns `questions` gets your answers as
+step 6 answers the
 designer's — from an approved source, otherwise, except for a reserved choice, the smallest
 reversible reading that fulfils the task, recorded as an autonomous choice — and is resumed, with
 no mechanical check and no review until it returns its work. `blocked` is for a missing fact or
@@ -454,7 +457,8 @@ contradicts a decision.
    The reviewer reads the full diff of the range it reviews. For progression use the changed files
    with their line counts and the review's first line; read the evidence only when a question about
    a finding needs it, never to change a reviewer's grade or scope. The independent reviewer already
-   reads the change for correctness, so repeating that read in coordination costs attention. The Minor findings of this review within the task are fixed before
+   reads the change for correctness, so repeating that read in coordination costs attention. The
+   Minor findings of this review within the task are fixed before
    step 10, as "The end of a code review" gives (WAY-161).
 10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
     included, or the code a revert of that fix leaves, through the script of the pinned the-way:

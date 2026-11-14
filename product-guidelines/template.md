@@ -10,9 +10,10 @@ look of the product stands alone with its reason in one sentence and its *Decisi
 (WAY-168). No script checks the form of guidelines: the review of a change that writes or changes
 them compares them with this template and, where the-way gives one, the template of their
 discipline, and `elements/common/foundation_check.py` reports a decision number, a rule's invariant
-or a part of *Applies to* that the foundation does not hold, or holds as withdrawn. The form of a file of guidelines misleads no agent that reads it, while
-what a rule says can and only a reading judges that, but a reference that names no entry does
-mislead and a check of references finds it in every file at once.
+or a part of *Applies to* that the foundation does not hold, or holds as withdrawn. The form of a
+file of guidelines misleads no agent that reads it, while what a rule says can and only a reading
+judges that, but a reference that names no entry does mislead and a check of references finds it in
+every file at once.
 
 A rule below that a decision of the-way sets cites that decision. Nothing of this template is copied
 into a product: a product's guidelines follow it at the commit the product pins (WAY-34).
@@ -91,7 +92,8 @@ sections and required rules to it at the places it names.
   a decision of the product's log nor a value taken from a configuration file, such as the version of
   a tool; it says what the author of the code is to do. A sentence that lists what the code or the
   product is today goes stale when the code changes, and a sentence that repeats a decision or a
-  value of a configuration file is a second copy that drifts from the first. The list of `### Logging scope`, which WAY-274
+  value of a configuration file is a second copy that drifts from the first. The list of
+  `### Logging scope`, which WAY-274
   gives as the product's promise and no inventory of its code, is no such state (WAY-312, WAY-274).
 - **What holds no rule is an example**: it stands under `## Examples`, under a `### ` heading of its
   own, and carries no *Decision* field. A rule with *Decision* `none` binds, so it is a rule, not an

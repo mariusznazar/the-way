@@ -74,7 +74,8 @@ scope are yours.
   `product-guidelines/template.md` (in a product, `.the-way/product-guidelines/template.md`) and,
   where the-way gives one, the template of their discipline,
   `product-guidelines/<discipline>/template.md` (in a product,
-  `.the-way/product-guidelines/<discipline>/template.md`), at the commit of the-way the product pins.
+  `.the-way/product-guidelines/<discipline>/template.md`), at the commit of the-way the product
+  pins.
 - A reserved choice: does the change settle a language, a framework, a library, a store of data, a
   way of logging in or a place to run that the task, the spec and the foundation do not settle?
   Read `project-level/technology/reserved_choices.md` (in a product,
@@ -117,8 +118,8 @@ action, so a visual fault can change behaviour as seriously as incorrect code, a
 draws the line without a second severity scale. A departure from a guideline example blocks only
 through the consequence you name for the user or for the code. The same holds for a departure from
 the part of an exemplar no script checks. Binding rules and their invariants keep their force, and
-this criterion gives the orchestrator no authority to regrade or discard your finding. Examples teach
-useful ways without acquiring the force of approved rules, and a comparison with no concrete
+this criterion gives the orchestrator no authority to regrade or discard your finding. Examples
+teach useful ways without acquiring the force of approved rules, and a comparison with no concrete
 consequence turns taste into a blocker. Something the plan or the task
 mandates is still a finding when it is a defect; name it so.
 A finding that a change departs from a foundation entry it writes or changes is

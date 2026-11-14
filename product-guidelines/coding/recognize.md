@@ -2,7 +2,8 @@
 
 - Name the parts of the product's map that hold code, the scripts of its build included, however
   small. An agent left free does something different in every task, and a small part of code drifts
-  as surely as a large one. Before the first code, name the parts the product's plan gives that code; where
+  as surely as a large one. Before the first code, name the parts the product's plan gives that
+  code; where
   the map holds no part for it yet, its identifier is a question of the task, and *To do* gains
   adding that part, with the files the task creates, through `update-part-map`.
 - Read the product's root `AGENTS.md` whole, of which `refine-task` read only the section

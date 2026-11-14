@@ -88,7 +88,8 @@ free.
 
 Put the causes in one order of repair, from `grave` down; within one weight the cause that removes
 more and reaches less stands first. The weight says what is at stake, so it comes first, and
-within one weight what is left to ask is where the work goes furthest. Beside its fix each cause shows two plain facts and no
+within one weight what is left to ask is where the work goes furthest. Beside its fix each cause
+shows two plain facts and no
 score:
 
 - `Removes:` how much of the problem goes with that one fix: its count of places, or what goes where
