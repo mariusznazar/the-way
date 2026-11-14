@@ -1,0 +1,12 @@
+# Handoff: the return step
+
+You are the one author, resumed for the return step (step 11 of the cycle). The change is reviewed:
+`PASS 44c1d99` for the whole change and `PASS 4e3c4cf` for the fix of its Minor findings. Head:
+`4e3c4cf`.
+
+- Read `task-cycle/skill/return_step.md` whole, and `task-cycle/skill/foundation_step.md` whole, since the return step writes as the foundation step writes; read the `SKILL.md` of an element (path in `foundation_step.md`) only when you write an entry of that element.
+- Compare with the files of the repository, and correct in the same change whatever no longer matches: the entry WAY-146 (edited in place), the entries the task names under *Decisions in play* (WAY-13, WAY-143, WAY-120, WAY-146), those your search of the foundation found for WAY-146 (WAY-33), and the part map entry `project-level`. Compare WAY-146's binding sentence, *Rationale*, *Verification*, *Rejected*, `project-level/plan/skill/cut_tasks.md`, `project-level/plan/skill/critique_plan.md` and `project-level/plan/template.md` with each other and with the two rows of *Settlements to record* in the frozen task (`.runs/task-cycles/oversized-plan-tasks/task.md`). The task's rows are both written by the edit of WAY-146: confirm it and write no second entry.
+- Environment facts, glossary terms (WAY-95), invariants: write one only where the return step's rules require it; the task sets no invariant. Say for each of the entries of the return step in your report what you compared and found, or `none`.
+- The cosmetic Minor of the fix review (a 116-character line at `cut_tasks.md:5` and a short stray line `(WAY-13); a script` at `foundations/decisions.md:4227`) is not yours to fix: leave it, the request lists it.
+- Run `python -B elements/common/foundation_check.py` again if you change anything. Do not run the gate. Commit by path only if you change something; otherwise commit nothing.
+- Report: `.runs/task-cycles/oversized-plan-tasks/reports/author-return-report.md`, in the form `return_step.md` and the method ask for, with the fields of the record's *Return step* (foundation compared with code, decisions written or changed, invariants, environment facts, glossary terms, part-map changes, projected entries, rows of *Settlements to record* written), **Unread material** and **Searches not found or unclear**. Return status, commits (or `none`), a one-line check result and the path.
