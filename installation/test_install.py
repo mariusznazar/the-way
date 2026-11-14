@@ -26,6 +26,13 @@ def command(*args: str, cwd: Path, input_text: str | None = None) -> subprocess.
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
 
 
+def make_writable(function, path, error) -> None:
+    """The `onexc` handler of `shutil.rmtree` for a Git repository, whose objects are read-only
+    on Windows."""
+    os.chmod(path, stat.S_IWRITE)
+    function(path)
+
+
 class InstallTest(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="the-way-install-test-")
@@ -680,9 +687,11 @@ class InstallTest(unittest.TestCase):
             self.skipTest(f"Junctions unavailable: {error}")
         self.assertTrue(link.is_junction() and not link.is_symlink(), link)
 
-    def another_product(self, name: str) -> None:
-        """A new empty Git repository to install in, which `self.product` names from here on."""
-        self.product = Path(self.temporary.name) / name
+    def empty_product(self) -> None:
+        """Make `self.product` a new empty Git repository again, so that a subtest starts as a new
+        one. It assigns nothing to `self.product`, which the check of `cross-part-imports` reads
+        to work out the files the tests run."""
+        shutil.rmtree(self.product, onexc=make_writable)
         self.product.mkdir()
         self.assertEqual(command("git", "init", "-q", str(self.product), cwd=SOURCE).returncode, 0)
 
@@ -704,7 +713,7 @@ class InstallTest(unittest.TestCase):
                          "foundations"):
             for args in ((), ("--apply",)):
                 with self.subTest(junction=relative, args=args):
-                    self.another_product(f"product-{relative.replace('/', '-')}{len(args)}")
+                    self.empty_product()
                     self.junction(relative, outside)
                     before = self.tree_of(self.product), self.tree_of(outside)
                     result = self.install(*args, input_text="y\n")
@@ -721,7 +730,7 @@ class InstallTest(unittest.TestCase):
                                     self.commit).replace("the-way-record-decision", "the-way-gone")
         for directory in (".claude", ".agents"):
             with self.subTest(directory=directory):
-                self.another_product(f"product-stale{directory[1:]}")
+                self.empty_product()
                 outside = Path(self.temporary.name) / f"outside-stale{directory[1:]}"
                 outside.mkdir()
                 (outside / "SKILL.md").write_text(own, encoding="utf-8", newline="\n")
@@ -755,7 +764,7 @@ class InstallTest(unittest.TestCase):
         )
         for number, (junction, relative, content, scan) in enumerate(cases):
             with self.subTest(junction=junction, scan=scan.__name__):
-                self.another_product(f"product-scan-{number}")
+                self.empty_product()
                 if junction is None:
                     held = self.product / relative
                 else:
@@ -775,13 +784,9 @@ class InstallTest(unittest.TestCase):
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
 
-        def writable(function, path, error) -> None:
-            os.chmod(path, stat.S_IWRITE)
-            function(path)
-
         # The junction leads to a checkout of the pinned commit, which the installer would accept
         # as the submodule if it went through the junction.
-        shutil.rmtree(self.product / ".the-way", onexc=writable)
+        shutil.rmtree(self.product / ".the-way", onexc=make_writable)
         self.junction(".the-way", self.source)
         self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
                                  cwd=self.product).stdout.strip(), self.commit)
