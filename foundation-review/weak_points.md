@@ -17,7 +17,7 @@ accepted risk that a *Rationale* or *Rejected* states or a *Based on* quote impl
 signal while no change brings in a version of it", "costs a review round for each blocked change",
 "the sources are private". For each, write one line: the entry, the weak point in the entry's own
 words, the product's state today with the place or the command that shows it, and what it means
-for the decision — still accepted at this cost, the cost has grown, or the cause is gone (WAY-305).
+for the decision — still accepted at this cost, the cost has grown, or the cause is gone.
 
 Run the check a weak point lacks, where it is cheap and by reading alone: it reads files, the
 history, a published page or the output of a command that only reports, changes nothing in the
@@ -25,13 +25,14 @@ repository, acts on no account or server and costs nothing beyond the reading. T
 ones: an audit of the lock file for known vulnerabilities, a search of the code for a pattern the
 entry says is absent, a read of the published table a fact quotes. A check that needs a running
 server, an account, money or a long run is not run: the line names the check that would settle the
-weak point and says it was not run, and the proposal for the human says what the check would cost.
+weak point and says it was not run, and the proposal for the human says what the check would cost. A check that only reads is cheap enough
+to run at every review, where a check that acts would cost more than the review.
 
 ## Decisions that describe a transitional state
 
 Beside the weak points, read each decision's binding sentences for a transitional state of the
 product: a state that holds until work later than the change that brought the decision ends it,
-such as two forms of one control until the last screen moves to a new library (WAY-354). List each
+such as two forms of one control until the last screen moves to a new library. List each
 decision that describes one. The words "until" and kindred ones stand mostly in ordinary rules, so
 no search by a word gives the list; it is made by reading. A rule that ends with its own change is
 no entry of the log (WAY-36) and gives none. For each, write one line: the decision, the sentence
