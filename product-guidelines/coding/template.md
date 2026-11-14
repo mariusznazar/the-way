@@ -21,7 +21,7 @@ backticks or fenced code, the language of the text, a dropped section or rule �
 
 The general file `guidelines/coding.md` holds the form of the fenced block of this section: the
 form of `product-guidelines/template.md` with the section `## Kinds of code` and the required rules
-of the coding discipline in their places (WAY-171).
+of the coding discipline in their places.
 
 ```markdown
 # Coding guidelines — <the product>
@@ -62,22 +62,25 @@ of the coding discipline in their places (WAY-171).
   check, and the rule of size its own, as the section "What each section carries" gives; any other
   rule names an invariant where a cheap test checks it on a
   convention of the product's code, and otherwise reads `none`, the review of each change the rule
-  reaches comparing the change with it (WAY-168, WAY-202, WAY-360).
+  reaches comparing the change with it (WAY-168, WAY-360).
 - The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
   order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
-  product's decision that departs from it with its reason (WAY-171, WAY-202).
+  product's decision that departs from it with its reason. The task that writes a product's coding
+  guidelines is complete only once the product's log holds, for each of the three standing checks, a
+  decision adopting it or departing from it with the reason. A product whose code no standing check
+  reads changes its style and takes in a known vulnerability with no signal.
 - The six required rules on failures and logs, from `### Recording a failure` to `### Logging scope`,
   follow the standing checks in the order above, and the rule of size below and then the product's
   further rules follow those; a product that already has further rules takes the six in between
-  when it adds them (WAY-271). A file of a kind holds none of the six.
+  when it adds them. A file of a kind holds none of the six.
 - The required rule `### Size of a function and a file` follows the six, and the product's further
   rules follow it; a product that already has further rules takes it in between when it adds it. It
-  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind
+  is none of the three standing checks and no rule of the linter's set. A file of a kind
   holds no such rule, and a product that goes without it reads `none — <PREFIX-NN>`, naming the
   product's decision that departs from it with its reason; a reviewer's finding about the structure
   of such a product's code is then always Minor (WAY-360, WAY-173, WAY-363).
 - *Applies to* names every part of the product's map that holds code, the scripts of its build
-  included (WAY-208).
+  included.
 - `## When to read` gives the condition under which an agent reads the file: before any change of
   the product's code (WAY-212).
 - `## Kinds of code` holds the table of the product's files of a kind, one row for each, with when
@@ -88,8 +91,7 @@ of the coding discipline in their places (WAY-171).
 ## Required form of a kind
 
 A file `guidelines/coding-<kind>.md` holds the form of the fenced block of this section: the form of
-`product-guidelines/template.md` with the section `## Files of this kind` in its place (WAY-171,
-WAY-199).
+`product-guidelines/template.md` with the section `## Files of this kind` in its place (WAY-199).
 
 ```markdown
 # Coding guidelines — <kind>
@@ -117,11 +119,11 @@ WAY-199).
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
   template of guidelines gives a rule, and its *Invariant* names the invariant whose test checks
-  the rule on the files of the kind (WAY-171, WAY-198).
+  the rule on the files of the kind (WAY-198).
 - The file's name holds the identifier of its kind, as the decision designating the kind's exemplar
   gives it: words of lower-case letters and digits joined by single hyphens, as `endpoint` or
   `background-job` (WAY-167). A kind is code of the product other than its tests (WAY-231).
-- *Applies to* names the parts of the product's map that the files of the kind lie in (WAY-171).
+- *Applies to* names the parts of the product's map that the files of the kind lie in.
 - `## When to read` gives the condition under which an agent reads the file: before adding or
   changing a file of its kind (WAY-212).
 
@@ -141,25 +143,27 @@ those decisions and invariants in its own foundation; the coding guidelines name
   No row stands for a kind that has no exemplar yet (WAY-167).
 - **Linter** — rule. *Decision*: the product's decision adopting the linter and its set of rules,
   naming the set, its edition, the parts it reads and the rules of the set that stand among the
-  examples for the reports they give that lead to no change of code worth making (WAY-86, WAY-202,
-  WAY-203, WAY-204). *Invariant*: that no file of the parts named breaks a rule of the set that
+  examples for the reports they give that lead to no change of code worth making (WAY-203,
+  WAY-204). *Invariant*: that no file of the parts named breaks a rule of the set that
   blocks, resting on the environment fact of the set's edition (WAY-203, WAY-73). A comment in the
   code that turns off a rule that blocks has no effect: where the tool can be told so by a flag or
   its configuration, the invariant's test runs it so, and where it cannot, the review of each
-  change finds such a comment; a fault of one file is fixed in that file (WAY-203, WAY-207,
+  change finds such a comment; a fault of one file is fixed in that file (WAY-203,
   WAY-173). Turning a rule that blocks off in the linter's configuration is a change of the
-  adopting decision; the rule of the linter carries this one invariant, and the review of each
-  change to the configuration holds the configuration to the decision (WAY-207).
+  adopting decision, which the human approves; the rule of the linter carries this one invariant,
+  and the review of each change to the configuration holds the configuration to the decision. A
+  rule of the linter reads every file of the parts it covers, so turning it off for one file's sake
+  changes what binds all the others, unseen by the task that made the change.
 
   Where the product's code already breaks the rules that block, the invariant is marked violated
   until the code is cleaned (WAY-205, WAY-51).
 - **Formatter** — rule. *Decision*: the product's decision adopting the formatter and its
-  configuration (WAY-202). *Invariant*: that every file of the parts named stands as the formatter
+  configuration. *Invariant*: that every file of the parts named stands as the formatter
   leaves it. A product whose code does not stand so when the formatter enters is reformatted whole,
   once, by the task that brings the formatter (WAY-205).
 - **Dependency audit** — rule. *Decision*: the product's decision adopting the audit, naming its
   tool, the advisory database it reads and the severity from which a vulnerability counts; the skill
-  puts that severity to the human with every severity among the ways (WAY-202, WAY-206, WAY-60).
+  puts that severity to the human with every severity among the ways (WAY-206, WAY-60).
   *Invariant*: that the change against `{fork-point}` brings in no version of a dependency with a
   known vulnerability of at least that severity, as that database gives it when the check runs
   (WAY-206).
@@ -169,21 +173,23 @@ those decisions and invariants in its own foundation; the coding guidelines name
   lockfile it reads. A change of a configuration file or of the lockfile alone thus reaches it
   (WAY-62).
 - **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
-  decision that departs from it with its reason (WAY-202, WAY-171).
+  decision that departs from it with its reason.
 - **The rules on failures and logs** — the six rules below. They are no standing checks: no tool
-  comes with them, and each is a rule of the whole of the code (WAY-271). They say how code writes to
+  comes with them, and each is a rule of the whole of the code. They say how code writes to
   the product's logs and what the product promises to log; where the logs go, how long they live and
   how a human learns of a failure stay with the step that settles technology (WAY-165, WAY-270).
+  An agent that reaches a running product's logs finds there only what the code wrote, so what the
+  code writes decides whether a failure can be diagnosed at all.
   Each carries:
   - *Decision*: the product's one decision on these rules, apart from the decision adopting this
     template, which holds in at most three binding sentences which of the rules it adopts and what it
     departs from, the form of a log line, the principle of its logging scope and the boundary of what
-    an agent adds alone (WAY-279). The decision a degraded mode takes is not named here, or the rule
+    an agent adds alone. The decision a degraded mode takes is not named here, or the rule
     would change with every such decision;
   - *Invariant*: `none`, unless a cheap test checks the whole rule on a convention of the product's
     code. A test that catches only a fragment, such as an empty block that catches an error, is a
     rule of the product's linter under that linter's invariant, once it passes the trial WAY-203
-    gives, and not a rule of these (WAY-271);
+    gives, and not a rule of these;
   - *Good* and *Bad*: this template proposes none; the product writes them or `none`, and neither
     copies the list of `### Logging scope`.
 
@@ -194,7 +200,10 @@ those decisions and invariants in its own foundation; the coding guidelines name
   failed outside service included; an expected refusal, such as a wrong password, is an ordinary
   answer, which the rule does not reach. A failure is written always with its cause, the original
   error and not a bare string, once, where code handles it. Each separately running program of the
-  product has one last-resort handler, which writes what no code handled (WAY-272).
+  product has one last-resort handler, which writes what no code handled. A line written once,
+  where code handles the failure, keeps one failure from reading as several, the original error
+  keeps the cause a string loses, and a failure no code handled would leave no trace at all without
+  a last-resort handler.
 - **Hiding a failure** — rule. A failure is turned neither into an "all fine" answer nor into an
   empty list. A degraded mode, in which the product goes on without one function, is allowed only
   where a task sets it, recording it as a decision of the product, and it always leaves a line in
@@ -205,9 +214,9 @@ those decisions and invariants in its own foundation; the coding guidelines name
   line, the name the list gives it, so that a search finds the whole case, in the form of a line the
   product's decision gives. A line outside a case flow, such as one at the
   start of a program or one of a build script, carries none. A line from the last-resort handler
-  need carry none (WAY-275).
-- **Business events** — rule. Each business event `### Logging scope` lists leaves a log line
-  (WAY-275).
+  need carry none.
+- **Business events** — rule. Each business event `### Logging scope` lists leaves a log line.
+  The events give what happened before a failure, which lines of failures alone do not.
 - **Secrets and personal data** — rule. The logs hold no secret, with no exception, so an identifier
   that is a secret stays out even where it stands on the list. They hold no personal data, the
   identifiers `### Logging scope` lists being the one exception, to this ban alone. Code writes no
@@ -258,7 +267,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
   Exactly one row is the exemplar's, and the binding sentences of its decision name in backticks
   that path and the kind's identifier (WAY-198, WAY-199). The audit that writes or refreshes the
   file lists every file of the kind the product then holds, with its status; a file added after
-  that audit takes no row until the guidelines are refreshed or extended (WAY-200).
+  that audit takes no row until the guidelines are refreshed or extended.
 - **Rules of a file of a kind** — what a script can check of the exemplar: where a file of the kind
   lies, what it calls, how it validates its input; a rule and an invariant each (WAY-198).
 - **`## Examples`** — example. The rest of the exemplar (WAY-198), and the rules of the linter's set
@@ -266,12 +275,12 @@ those decisions and invariants in its own foundation; the coding guidelines name
   names it (WAY-203); nothing here binds (WAY-168).
 - **`## Where in code`** — in the general file, the configuration files of the standing checks and
   the product's tests of their invariants; in a file of a kind, the directories its files lie in;
-  no value is copied from them (WAY-171).
+  no value is copied from them.
 
 ## Departing from the rules on failures and logs
 
 A product departs from these rules only by its one decision on them, which gives the reason; a later
-departure edits that decision in place, approved as WAY-30 and WAY-172 give (WAY-173, WAY-279). The
+departure edits that decision in place, approved as WAY-30 and WAY-172 give (WAY-173). The
 ways below stand in the order they are taken: the first that does what the product wants is the one
 it takes.
 
@@ -284,16 +293,16 @@ it takes.
    on whole objects and request bodies, and its precedence over `### Recording a failure` for a
    secret. An original error that quotes a secret is written without it, with its kind, code and
    place; one that quotes personal data is written as it stands. The line `Personal data` is a field
-   of the rule `### Secrets and personal data` that this template adds to the rule's four fields
-   (WAY-171), so its name stays in English in whatever language the product writes its guidelines,
-   as the names of fields do (WAY-310). Only this ban departs in this way, because WAY-276 names it
+   of the rule `### Secrets and personal data` that this template adds to the rule's four fields,
+   so its name stays in English in whatever language the product writes its guidelines,
+   as the names of fields do. Only this ban departs in this way, because WAY-276 names it
    alone.
 3. **From one rule.** That heading holds only `none — <PREFIX-NN>`, naming the product's decision,
    and the others stay. A rule whose subject has gone reads `none —` too, with the same decision, so
-   a departure from `### Logging scope` puts the marker on three headings (WAY-171, WAY-279).
+   a departure from `### Logging scope` puts the marker on three headings.
 4. **From all of them.** Each of the six headings stands, holding only `none — <PREFIX-NN>`, and the
    list goes; the product's decision says so with its reason and holds nothing else, no principle,
-   boundary or form of a line, and no question of a library comes (WAY-171, WAY-279).
+   boundary or form of a line, and no question of a library comes.
 
 Text the decision keeps as an example may stand under `## Examples` (WAY-168). What a kept rule still
 needs:
@@ -314,19 +323,18 @@ needs:
   declared dependencies and lockfile, and the test of each of its invariants runs that pinned
   version from the product's own environment, never a version fetched when the check runs: a
   command is the same on every run (WAY-61). A new version of a linter that changes the edition of
-  the adopted set is a change of the adopting decision and of the set's environment fact (WAY-86,
-  WAY-172). The advisory database the audit reads is read as it stands when the check runs
-  (WAY-206).
+  the adopted set is a change of the adopting decision and of the set's environment fact (WAY-172).
+  The advisory database the audit reads is read as it stands when the check runs (WAY-206).
 - **One environment fact for each edition of a set.** The fact's sentence holds which rules the set
   holds at the edition the decision adopts, quoting the page of the tool's documentation of that
   version that lists them: one edition of one source, one thing — the set's membership — and one
-  reason to change, a new edition (WAY-76). A rule of a set is a requirement whose content the
+  reason to change, a new edition. A rule of a set is a requirement whose content the
   pinned tool carries out, so the invariant takes from the set its membership alone, where a
-  criterion of WCAG, a requirement of its own in prose, stands as a fact of its own (WAY-191). The
+  criterion of WCAG, a requirement of its own in prose, stands as a fact of its own. The
   invariant of the rules that block rests on that fact (WAY-73); no fact stands for each rule.
 - **The rules that block stand in the adopting decision**, as the set taken whole less the rules it
   keeps among the examples (WAY-60, WAY-204); the review of each change to the linter's
-  configuration keeps the configuration to them (WAY-207).
+  configuration keeps the configuration to them.
 - **Comments that turn a rule off** have no effect where the tool can be told so, and the review of
   each change finds them where it cannot, as `### Linter` has it above (WAY-203, WAY-173).
 - **The test of each invariant.** Each invariant of a standing check has a test in the product's
@@ -340,9 +348,8 @@ needs:
 For the author who writes the coding guidelines in a task's cycle:
 
 - Take every tool, library, set of rules, exemplar, status and departure from the task's settlements
-  and from the decisions the task's foundation step wrote, never from memory (WAY-172, WAY-211,
-  WAY-277).
-- Point to the configuration and to the code; copy no value into the guidelines (WAY-171). The list
+  and from the decisions the task's foundation step wrote, never from memory (WAY-172).
+- Point to the configuration and to the code; copy no value into the guidelines. The list
   of `### Logging scope` is no such copy: it is the product's promise, written from the task's
   settlements (WAY-274).
 - A choice the task did not settle is a question that stops the cycle at a blocked draft request,

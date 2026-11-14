@@ -8,23 +8,25 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
 - **New tools.** For each new tool or library left as a technology question of the task, read
   `new_tools.md` beside this skill.
 - **The library that writes a log line.** Look first at what the product has: a way of writing the
-  chosen form of a line that the product or its language already gives raises no question (WAY-210).
+  chosen form of a line that the product or its language already gives raises no question.
   Where the form needs a library, the choice stands as a technology question of the task, put to the
   human by `new_tools.md`, with no research, and a library chosen is a decision of its own in the
-  product's log (WAY-277). Where that library meets the test of
+  product's log. A cycle that needs such a library chooses none alone. A library that writes log
+  lines reaches every file that writes one, so its choice is met once, by the human who adopts the
+  rules, beside the form of a line that shows the need for it. Where that library meets the test of
   `project-level/technology/reserved_choices.md`, as one that adds something to run or pay for, it
   is a reserved choice: refinement runs `settle-technology` at the task document instead, and the
   task is not ready until the human has settled it (WAY-268).
 - **What it settles.**
   - for each standing check, the product's decision adopting it or departing from it with its
-    reason; the task is not ready without one for each (WAY-202);
+    reason; the task is not ready without one for each;
   - for each standing check, the version of its tool, at which the task's cycle installs and pins
     it (the coding template's section "The tools of the standing checks"), beside the edition of
     the linter's set;
   - for the linter, its tool, its set, the set's edition, the parts it reads and the split of the
     set, said together with what the split means later: a fault of one file is fixed in that file,
     and turning a rule off for the whole product takes a change of this decision, approved by the
-    human (WAY-203, WAY-204, WAY-207). The split rests on the trial run of the set the human
+    human (WAY-203, WAY-204). The split rests on the trial run of the set the human
     chooses: where the human chooses a tool or a set other than the one the trial run tried, run the
     trial again on the chosen one, as `trial_run.md` gives, for the split alone and before it is
     proposed;
@@ -32,17 +34,17 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for the audit of dependencies, its tool, the advisory database it reads and the severity from
     which a vulnerability counts, every severity among the ways (WAY-206);
   - for each kind the product holds files of, and each new kind, its exemplar, the status of each
-    of its files and the rules a script checks of the exemplar (WAY-198, WAY-199, WAY-200,
-    WAY-201);
+    of its files and the rules a script checks of the exemplar (WAY-198, WAY-199);
   - the product's decision adopting the coding template, and each departure from it by a decision
     with its reason (WAY-173);
   - where `guidelines/coding.md` does not yet hold them, at the first guidelines, at any extension
     whatever else the task is about, and at a refresh `recognize.md` sends here, the product's one
     decision on the rules on failures and logs, adopting them or departing from them with its reason,
-    apart from the decision adopting the coding template; the task is not ready without it
-    (WAY-271, WAY-278, WAY-279). A heading of `guidelines/coding.md` holding `none —` is no absence,
-    at the first guidelines and at an extension as at a refresh: that departure is already decided,
-    and the product is asked nothing of those rules anew. It takes:
+    apart from the decision adopting the coding template; the task is not ready without it.
+    One entry gives the same shape whichever way the rules reach a product, and a product that adds
+    them leaves its older decision alone. A heading of `guidelines/coding.md` holding `none —` is no
+    absence, at the first guidelines and at an extension as at a refresh: that departure is already
+    decided, and the product is asked nothing of those rules anew. It takes:
     - the rules, asked of as a whole. First say in plain words what logs are: the running record of
       what the product does, which someone reads when something has gone wrong. Then show the rules
       by their effect: when something goes wrong for a user the logs say what broke and why, the
@@ -53,7 +55,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
       template gives: a human who leaves `### Logging scope` hears that two more rules go, and one who
       drops `### Secrets and personal data` hears that the ban on secrets goes. A wish to log what
       points to a person is put first as an item of the list (WAY-174, WAY-274, WAY-276);
-    - the form of a log line (WAY-275). The human hears a case flow as everything the product did
+    - the form of a log line. The human hears a case flow as everything the product did
       for one order or one request;
     - the principle of the logging scope: which identifiers and which business events the product
       logs, and the boundary of what an agent adds alone, an item that fits the principle, an
@@ -84,19 +86,19 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
       with the reason, which the human accepts one by one; later ones are added by a change of the
       decision, which the human approves (WAY-172);
     - the tool that counts: look first at what the product has, a linter that can run its size
-      rules alone included (WAY-210); a new tool is a technology question of the task, put by
+      rules alone included; a new tool is a technology question of the task, put by
       `new_tools.md`;
     - or a departure from the rule, with its reason. Say what goes with it: with no rule of size, a
       reviewer's finding about the structure of the product's code is always Minor (WAY-363).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code, the rule of each standing check always; a rule no such test checks gets none,
-  and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,
+  and the review of each change it reaches compares the change with it (WAY-168). Propose,
   each with a test of the product's suite (WAY-61):
   - for the rule of each standing check, the invariants the coding template's section "What each
     section carries" names for it, with the parts it gives them;
   - for the linter, the flag or the configuration by which its test makes a comment that turns a
     rule off have no effect, where the tool has one, and the review of each change to the linter's
-    configuration as what keeps that configuration to the decision (WAY-203, WAY-207);
+    configuration as what keeps that configuration to the decision (WAY-203);
   - where the code breaks the rules that block, the linter's invariant marked violated by a change
     of the foundation the human accepts, until the code is cleaned (WAY-205, WAY-51); its weak
     point, that until then no test shows a report coming back into a cleaned file or reaching a new
@@ -107,7 +109,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for a rule on failures and logs, none, unless a cheap test checks the whole rule. A test that
     catches only a fragment of one, such as an empty block that catches an error, is a rule of the
     linter's set under the linter's invariant, once it passes the trial WAY-203 gives, and no rule
-    of these (WAY-271);
+    of these;
   - for the rule of size, one invariant that no function and no file of the parts named is over its
     threshold except the exceptions of the decision, with the test the coding template's section
     "What each section carries" gives, run apart from the linter's run (WAY-360, WAY-361); where
@@ -132,11 +134,11 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for what counts as a failure, that an agent and the reviewer judge the line between a failure
     and a refusal, and that a degraded mode leaves a line while the user sees a working page, so
     nobody knows unless someone reads the logs; how a human learns of a failure belongs to the step
-    that settles technology (WAY-272, WAY-273, WAY-270);
+    that settles technology (WAY-273, WAY-270);
   - for the business events, that the rule covers only listed events and the agent adds them, so a
-    function nobody lists leaves no line (WAY-275);
+    function nobody lists leaves no line;
   - for the last-resort handler, that it usually writes without identifiers, and that a program that
-    dies whole writes only what it manages to (WAY-272);
+    dies whole writes only what it manages to;
   - for the rule of size, that a count of lines says nothing of whether a function is well made, and
     that a function can be split only to stand under a threshold, which the exceptions and the
     review's question about the structure of the code a change leaves are there to meet (WAY-360).
