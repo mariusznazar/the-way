@@ -42,7 +42,7 @@ such part; none where there is no such part>
 
 - The question names a choice someone could answer otherwise; "what do we take from X" or "what
   changed" is no question, and what such a list carries goes to the decisions that carry each rule
-  (WAY-19).
+  (WAY-19). How a decision that adopts a practice from outside names it stands in WAY-100.
 - *Scope* names parts of the part map, never file paths (WAY-21).
 - *Based on* names every source outside the product that the decision rests on, joined by ` · `:
   once the environment facts element has entries, an environment fact entry, by its identifier
@@ -204,7 +204,9 @@ A field stays in the template only while someone or something reads it (WAY-05).
 ## Relations and precedence
 
 - *Relations* use a closed list of two types: `derives from` — a higher decision this one serves;
-  `narrows` — a decision this one deliberately goes against in a narrower area (WAY-32).
+  `narrows` — a decision this one deliberately goes against in a narrower area. The list is closed
+  because a relation type each author reads differently tells a reader nothing, so each type is
+  defined once.
 - A relation names the other decision by its number alone, as `derives from WAY-01` (WAY-02), and
   is written in the entry that depends on the other (WAY-18).
 - Where two decisions both apply and collide, the one that prevails names the other in
@@ -293,6 +295,9 @@ A decision recovered from the code of a product (WAY-29):
 - *Rationale* and *Rejected* are `unknown`, quoted from a source with that source, or given by a
   human who knows them. A rationale an agent proposes goes to a human as a question, never into the
   entry.
+- The description of the commit, or of the merged request, that brought the shape of the code is a
+  source: the agent looks there before it writes `unknown`, and quotes what it finds with the
+  identifier of the commit.
 
 ## Examples
 
