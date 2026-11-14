@@ -75,9 +75,10 @@ with the evidence and stop.
 
 The cycle writes only in the task's worktree, the working copies of its agents included ("Working
 copies" below), and changes nothing outside the product repository, except the fast-forward of the
-checkout in step 4, the account of the request named below and the registry of running gates that
-`task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a directory of empty files that holds
-no content of the cycle; reading outside it stays with the agent (WAY-140). A remark about the-way,
+checkout and the removal of the directories of finished tasks, both in step 4, the account of the
+request named below and the registry of running gates that `task-cycle/gate_times.py` keeps in the
+user's `~/.the-way/`, a directory of empty files that holds no content of the cycle; reading
+outside it stays with the agent (WAY-140). A remark about the-way,
 the user's agent instructions or another repository goes into the record's process remarks, never
 into the request. For each stage report, copy every item under **Searches not found or unclear**
 that is not `none` word for word into those remarks, with the stage name and full report path; keep
@@ -126,10 +127,25 @@ request link and set the task's state.
    document does not name joins that list for the human to place, and opens the request the same
    way.
    In the-way itself, first bring the checkout the session works in up to the remote target branch,
-   the one change the cycle makes to a checkout outside the task's worktree: fetch, and where it stands behind,
-   fast-forward it when it is on that branch with a clean tree and no local commits, then start
-   again from the entry point that started the cycle; where it cannot fast-forward, stop and say
-   so.
+   one of the two changes the cycle makes to checkouts outside the task's worktree (WAY-298): fetch,
+   and where it stands behind, fast-forward it when it is on that branch with a clean tree and no
+   local commits, then start again from the entry point that started the cycle; where it cannot
+   fast-forward, stop and say so.
+   Then remove the working directories of finished tasks, the other of the two changes (WAY-375), in
+   the-way itself after that fast-forward and in a product at once: run `python -B
+   task-cycle/remove_merged_worktrees.py --apply --target <target branch>` from the root of the
+   repository (in a product, the path starts with `.the-way/`), `<target branch>` being the remote
+   branch the request merges into, named without the remote. The script removes a directory only
+   where its tree is clean, every commit of it is on the remote, its branch is merged and it belongs
+   to a cycle, and it removes no branch; a correction after review does not run it. Record in the
+   Events its command and exit code. An exit code other than 0 stops nothing: 1 says a removal
+   failed, 2 that the script itself failed, as when its fetch did; record the message and go on.
+   Take from its output the lines under "Directories of cycles that stay for a human decision", each
+   a directory of a cycle that it kept, with its name, its branch and its reason and with no
+   absolute path, and hold them until step 5 makes the record: they go to the record's item
+   *Directories of earlier tasks kept* and, as `task-cycle/skill/request_template.md` gives, to the
+   description, the way a remainder of an agent's working copy goes (WAY-373). A directory outside
+   every cycle shows only in the script's output.
    Create a task branch from the current target branch under the product's git rules, in an
    isolated worktree where its instructions and tools allow; only a correction after review reuses
    a branch. Never overwrite another worker's changes or let two writing agents edit one worktree at
@@ -164,9 +180,10 @@ request link and set the task's state.
    the pin, the branch, its base and those checks already stand.
 5. Keep the name `<task-slug>` that step 2 gave the task. Create the ignored record
    `.runs/task-cycles/<task-slug>/cycle.md` in the task's worktree from
-   `task-cycle/record_template.md` of the pinned the-way and fill it as its sections give; it is
-   the cycle's only log (WAY-148). Keep each full handoff and report beside it in `reports/`, with
-   secrets and personal data removed; never copy diffs or files git holds — name the commits.
+   `task-cycle/record_template.md` of the pinned the-way and fill it as its sections give, the
+   directories of earlier tasks that step 4 kept among them; it is the cycle's only log (WAY-148).
+   Keep each full handoff and report beside it in `reports/`, with secrets and personal data
+   removed; never copy diffs or files git holds — name the commits.
    Append each event before the dispatch that depends on it, so that another session can resume
    from the record, the worktree and the commits. Record every question, answer and choice with the
    option rejected, its cost if wrong and what used it; no hidden reasoning and no output bearing
@@ -548,7 +565,8 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     it. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
-    Keep the worktree for corrections.
+    Keep the worktree for corrections; it stands until the task's branch is merged, and the script
+    of step 4 removes it at the start of a later cycle.
 13. Before you write the description, count the merges since the last review of the foundation: in
     the worktree's root (in a product, the path starts with `.the-way/`), after a fetch, run
     `python -B task-cycle/review_reminder.py origin/<target branch>`. When its last line reads
@@ -566,7 +584,8 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     classification as evidence with the check, not as a separate record of the selected parts
     (WAY-261). Never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
-    review round and skipped stage, and every remainder of a working copy that a report names. The
+    review round and skipped stage, every remainder of a working copy that a report names and every
+    directory of an earlier task that the script of step 4 kept. The
     final report names any write to the task's backlog entry.
     The request is the human's first decision point.
 

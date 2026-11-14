@@ -199,6 +199,9 @@ invariant covers it.
 - Working copies left: <`none`, or for each remainder of a working copy that a report or the
   orchestrator's own removal names: the agent, the path from the repository's root and the reason
   it stayed>
+- Directories of earlier tasks kept: <`none`, or for each directory of a cycle that the script of
+  step 4 of `task-cycle/skill/SKILL.md` left standing, one line: its name, its branch and the
+  reason, with no absolute path>
 - Corrections after the request opened: <`none`, or the lines under this line>
   - correction <n>, remarks `reports/<file>.md`: <each pair `<source> · <kind>` of the correction
     once, joined by `, `>
