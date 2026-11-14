@@ -9061,7 +9061,7 @@ whose dependencies and build output are ignored.
 | WAY-195 | withdrawn: what coding guidelines take from outside is no question a decision answers; each piece binds through the decision that carries it, with its source in *Based on* (WAY-100) | WAY-100 |
 | WAY-196 | withdrawn: what checks a rule of coding guidelines stands in WAY-168 and WAY-198, and the invariants of a standing check in WAY-202 | WAY-168 · WAY-198 · WAY-202 |
 | WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
-| WAY-200 | its rule, the answer to "Who designates a product's exemplar for a kind of code, and when?", stands in `product-guidelines/coding/kinds.md` | none |
+| WAY-200 | its rule, the answer to "Who designates a product's exemplar for a kind of code, and when?", stands in `product-guidelines/coding/kinds.md` and `product-guidelines/coding/SKILL.md` | none |
 | WAY-201 | its rule, the answer to "How does the coding-guidelines skill's audit of a product with code end?", stands in `product-guidelines/coding/kinds.md` | none |
 | WAY-202 | its rule, the answer to "Which standing checks must a product's coding guidelines settle, and from when do they bind?", stands in `product-guidelines/coding/template.md` | none |
 | WAY-207 | its rule, the answer to "Where is a fault of one file of a product's code fixed?", stands in `product-guidelines/coding/template.md` | none |
