@@ -96,8 +96,9 @@ scope are yours.
   copy, as the dispatch's paragraph on working copies gives.
 - Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run
   them in a worktree of the head commit, in your directory for working copies that the dispatch
-  names, when they need files changed; never change the reviewed worktree, its index or branch. The full suite is the cycle's own run before
-  the request; do not repeat it. A check you could not run is unverified, and says why.
+  names, when they need files changed; never change the reviewed worktree, its index or branch. The
+  full suite is the cycle's own run before the request; do not repeat it. A check you could not run
+  is unverified, and says why.
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
   about four minutes, reading its output between them (WAY-255).

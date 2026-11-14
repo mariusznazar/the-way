@@ -12848,7 +12848,8 @@ agent removes its copy, keeps in the cycle's reports what its report needs and s
 where the copy stood and that it was removed; where a removal fails, the agent finishes and names
 the remainder with its path in the report, and the cycle carries it to its record and to the
 description of the request, where the human sees it, and goes on. The same holds for the separate
-checkouts that the orchestrator makes.
+checkouts that the orchestrator makes, while the files that a product's own tools and tests make by
+themselves are no working copy of the agent and stand outside it.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -12867,10 +12868,11 @@ checkouts that the orchestrator makes.
 *Rationale:* agents of the cycle left copies outside the task's directory that they could not
 remove afterwards, and the human cleaned them by hand; agents of one cycle that shared the scratch
 directory of the session overwrote each other's scripts, so that a run of one agent could run a
-script of another. The ignored working directory of the task's worktree is inside the task's own directory, a
-directory for each agent keeps the scripts of two agents apart, and what stands there goes with the
-task's directory, so the human has nothing of the cycle to clean elsewhere. The price taken: an agent that cannot remove its copy leaves a remainder
-that stays until the task's directory is removed, and the human sees it in the request.
+script of another. The ignored working directory of the task's worktree is inside the task's own
+directory, a directory for each agent keeps the scripts of two agents apart, and what stands there
+goes with the task's directory, so the human has nothing of the cycle to clean elsewhere. The price
+taken: an agent that cannot remove its copy leaves a remainder that stays until the task's directory
+is removed, and the human sees it in the request.
 *Rejected:* a copy that stands outside the task's directory until the agent returns — it goes
 against keeping the writes of an agent inside the task's directory; a failed removal that stops the
 cycle — the cycle would stop for a thing the human removes with one command.

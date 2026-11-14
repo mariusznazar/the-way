@@ -335,10 +335,6 @@ the order of their kinds.
   has two sources, the one sentence carries each pair once, such as "This correction answered your
   remark about a defect the task required, and it refreshed the branch from the target branch at
   your request, which the cycle judged nothing about."
-- **18.** *A working copy an agent could not remove* (`SKILL.md`, "Working copies"), from the
-  record's item *Working copies left*: in plain words that an agent's working copy stayed in the
-  ignored working directory of the task and why, that nothing waits for it, and that it is removed by hand or goes when the task's directory goes. One item
-  for all of them; the paths stand in *Checks*. A cycle with no such remainder has no such item.
 
 **What an item carries.**
 
@@ -421,6 +417,10 @@ The fifth part, for an item about a check the human can do by hand, stands after
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
+Where an agent could not remove a working copy (`SKILL.md`, "Working copies"), one plain sentence
+that a copy of an agent's check stayed in the ignored working directory of the task, that nothing
+waits for it and that it is removed by hand or goes when the task's directory goes; the paths stand
+in *Checks*.
 
 **How to merge.** A merge that keeps the commits, since the link to the record survives only then;
 where the product's rules squash or rebase, that limitation named. For a blocked request, what to do
