@@ -222,7 +222,10 @@ outside any item; `target-branch` is a correction that exists only to refresh th
 the human's request. The kind is the orchestrator's judgment by one test against the documents,
 `defect` where what the correction changes was required by the approved task or by the foundation,
 or is a regression, as `project-level/task/template.md` gives it for a task that fixes a defect;
-`not-required` where it was not required; `none`, only with `target-branch`. The item
+`not-required` where it was not required; `none`, only with `target-branch`. A pair keeps apart
+who raised a correction, which is read, and what was wrong, which is judged, so that two numbers
+come out of the pairs: a defect that the review of the change let through, `remark · defect`, and
+a defect that the cycle saw and left, `item · defect`. The item
 stands before the process remarks, which stay the last item of the record. The title of the commit
 that adds a copy of the record holds no cause. The cause stands in the record because the record is
 the cycle's only log and the place the nightly review of cycles reads, which the title of a commit
