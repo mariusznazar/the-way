@@ -148,12 +148,14 @@ those decisions and invariants in its own foundation; the coding guidelines name
   blocks, resting on the environment fact of the set's edition (WAY-203, WAY-73). A comment in the
   code that turns off a rule that blocks has no effect: where the tool can be told so by a flag or
   its configuration, the invariant's test runs it so, and where it cannot, the review of each
-  change finds such a comment; a fault of one file is fixed in that file (WAY-203,
-  WAY-173). Turning a rule that blocks off in the linter's configuration is a change of the
-  adopting decision, which the human approves; the rule of the linter carries this one invariant,
-  and the review of each change to the configuration holds the configuration to the decision. A
-  rule of the linter reads every file of the parts it covers, so turning it off for one file's sake
-  changes what binds all the others, unseen by the task that made the change.
+  change finds such a comment; a fault of one file is fixed in that file, and the exemplar of its
+  kind is not changed for that file's sake (WAY-203, WAY-173). Turning a rule that blocks off in
+  the linter's configuration is a change of the adopting decision, which the human approves; the
+  rule of the linter carries this one invariant, and the review of each change to the
+  configuration holds the configuration to the decision. A rule of the linter reads every file of
+  the parts it covers, so turning it off for one file's sake changes what binds all the others,
+  unseen by the task that made the change; and the exemplar is what every later file of its kind
+  follows, so changing it for one file's sake changes what binds all the later ones.
 
   Where the product's code already breaks the rules that block, the invariant is marked violated
   until the code is cleaned (WAY-205, WAY-51).
