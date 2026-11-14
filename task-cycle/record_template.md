@@ -163,7 +163,7 @@ For a UI change, record the author's or executor's state check and screenshot in
 components and states, method, observed result and evidence. The evidence of a screenshot is the
 address of the place where it lies, never the file, which the record's copy must not hold
 (WAY-316); where the foundation settles no place for screenshots, record that the screenshot was
-inspected and kept nowhere (WAY-317). Carry a screenshot unchecked for no settled route, or a failed
+inspected and kept nowhere. Carry a screenshot unchecked for no settled route, or a failed
 settled route with its actual result, to the request; code inspection does not establish rendered
 appearance.
 
@@ -212,7 +212,7 @@ invariant covers it.
     `task-cycle/remarks_check.py` the cycle holds wrong>
 
 The corrections stand as one line for each correction after the request opened, written by the
-orchestrator when the correction's record is prepared (WAY-357); the file in `reports/` holds the
+orchestrator when the correction's record is prepared; the file in `reports/` holds the
 human's remarks of that correction word for word, also where they came in conversation or concern
 only the refreshing of the target branch. A pair is the source and the kind of a cause. The source
 is read, not judged: `item <n>` is the human's answer to an item of the request's *For you to
@@ -222,8 +222,11 @@ outside any item; `target-branch` is a correction that exists only to refresh th
 the human's request. The kind is the orchestrator's judgment by one test against the documents,
 `defect` where what the correction changes was required by the approved task or by the foundation,
 or is a regression, as `project-level/task/template.md` gives it for a task that fixes a defect;
-`not-required` where it was not required; `none`, only with `target-branch` (WAY-358). The item
-stands before the process remarks, which stay the last item of the record.
+`not-required` where it was not required; `none`, only with `target-branch`. The item
+stands before the process remarks, which stay the last item of the record. The title of the commit
+that adds a copy of the record holds no cause. The cause stands in the record because the record is
+the cycle's only log and the place the nightly review of cycles reads, which the title of a commit
+is not.
 
 The remarks stand in this form only: the item that opens with `Process remarks on the-way`, the
 entries indented under it, one for each item of each stage report, repeated items kept apart, and
