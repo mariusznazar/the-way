@@ -12965,7 +12965,9 @@ The script touches only the checkouts that `git worktree list` names for the rep
 main checkout, the directory it is run in or a detached directory outside the cycle's, and it
 removes directories only, never a branch, local or remote. Removing a checkout that git names, also
 one that stands outside the repository's own directory, is a change to the repository's state and no
-effect outside the repository in the sense of WAY-140, so it needs no human action.
+effect outside the repository in the sense of WAY-140, so the script that a cycle runs needs no act
+of a human; the first clearing of the directories that gathered before the script, which a task
+document places as a human action, is the human's act.
 
 - **Scope:** task-cycle
 - **Based on:** none
