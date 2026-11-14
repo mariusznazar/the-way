@@ -565,10 +565,14 @@ class NetworkShapesOffWindows(CheckTestCase):
             for token in ("\\\\host\\share\\x.md", "//host/share/x.md"):
                 self.assert_network(token)
 
-    def test_net_and_network_are_mount_points_of_macos_only(self):
+    def test_net_and_network_are_mount_points_on_macos(self):
         self.platform("darwin")
         self.assert_network("/net/host/x.md")
         self.assert_network("/Network/Servers/x.md")
+
+    def test_net_is_no_mount_point_on_linux(self):
+        # One platform for each test: the guard of an earlier `platform` call stays in force, and
+        # that of macOS would flag the lookup this test expects.
         self.platform("linux")
         calls = self.stub_lookup()  # on Linux this path is looked up like any other
         self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
