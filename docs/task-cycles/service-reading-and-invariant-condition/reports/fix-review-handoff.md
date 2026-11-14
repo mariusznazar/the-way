@@ -1,5 +1,0 @@
-# Handoff to the reviewer of the fix
-
-You reviewed the whole change (FAIL `8680824`). Review the author's fix once, as `task-cycle/review/SKILL.md` gives for the review of a fix: range `8680824..4f26b6b` (one commit `4f26b6b`), in the same worktree. Findings it answers: `reports/whole-change-findings.md` (your B1 and M1-M5, in your words); fix report: `.runs/task-cycles/service-reading-and-invariant-condition/reports/fix-report.md`; frozen task `.runs/task-cycles/service-reading-and-invariant-condition/task.md`; answers of step 4 as before (no trust boundary, no irreversible operation). Check each finding is fixed as you graded it, that the fix introduces no new Critical or Important finding, and that the foundation check and the directory tests still pass. A Minor finding that remains or is new does not block. You run no full gate.
-
-Write the report to `.runs/task-cycles/service-reading-and-invariant-condition/reports/fix-review-report.md`, first line `PASS <sha>` or `FAIL <sha>`, with **Unread material**, **Searches not found or unclear**, and each check with its command and exit code. Return the first line, the checks and the path.
