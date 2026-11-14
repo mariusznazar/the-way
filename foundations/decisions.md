@@ -812,9 +812,9 @@ the part map's rule for assigning files.
 *Rationale:* an agent can apply only decisions it sees. The part map already assigns files to
 parts, so using those parts as scope makes the governing decisions discoverable without copying
 paths into each entry. Scope alone selects widely, since a part of a process or a product is
-governed by many decisions: measured on the-way's own log by a search of its *Scope* lines, about
-half of its decisions name the part of the task cycle, so a change to that part selects about half
-the log. Topics cannot be derived from changed files, so in a log divided into topical sections an
+governed by many decisions: measured on 2026-11-15 on the-way's own log, by a search of the *Scope*
+lines of all its decisions, about half of them name the part of the task cycle, so a change to that
+part selects about half the log. Topics cannot be derived from changed files, so in a log divided into topical sections an
 agent chooses the sections of its work's topics by their headings and sentences, while scope still
 finds, from the files a change touches, each decision outside those sections that governs a touched
 part, whose question the agent then runs through (WAY-150); topics narrow the reading and scope
