@@ -1038,6 +1038,87 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertEqual(code, 2, report)
         self.assertIn("usage: foundation_check.py", report)
 
+    # --- the line `decision:` of a test that holds a sentence of a decision -------------------
+
+    def decision_test(self, *lines, **changes):
+        """The good product with a test file holding each line as a comment, under one test."""
+        text = "def test_saved():\n" + "".join("    # %s\n" % line for line in lines) + \
+            "    assert True\n"
+        return self.run_on(tests__test_decision_dot_py=text, **changes)
+
+    def test_decision_line_quoting_a_sentence_passes(self):
+        # decision: WAY-12 "A test that holds a sentence of a decision carries beside it a line"
+        self.assertPasses(self.decision_test('decision: ABC-01 "A game is saved to one file"'))
+
+    def test_decision_line_quoting_no_sentence_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01 "A game is stored in a cloud"'),
+                         "tests/test_decision.py:2: the quotation stands in no binding sentence "
+                         "of `ABC-01`", "1 error")
+
+    def test_decision_line_quoting_only_rationale_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01 "one file is easy to copy"'),
+                         "tests/test_decision.py:2: the quotation stands in no binding sentence "
+                         "of `ABC-01`", "1 error")
+
+    def test_decision_line_quoting_inside_a_sentence_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01 "game is saved to one file"'),
+                         "tests/test_decision.py:2: the quotation does not begin a sentence of "
+                         "`ABC-01`", "1 error")
+
+    def test_decision_line_quotation_wrapped_over_two_lines_passes(self):
+        decisions = self.edit(DECISIONS, "A game is saved to one file.",
+                              "A game is saved\nto one file.")
+        self.assertPasses(self.decision_test('decision: ABC-01 "A game is saved to one file"',
+                                             foundations__decisions_dot_md=decisions))
+
+    def test_decision_line_quoting_fewer_than_three_words_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01 "A game"'),
+                         "tests/test_decision.py:2: the quotation has fewer than three words",
+                         "1 error")
+
+    def test_decision_line_without_quotation_fails(self):
+        self.assertFails(self.decision_test("decision: ABC-01"),
+                         "tests/test_decision.py:2: `decision:` gives no quotation of the sentence",
+                         "1 error")
+
+    def test_decision_line_with_text_after_quotation_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01 "A game is saved to one file" more'),
+                         "tests/test_decision.py:2: `decision:` has text after the quotation",
+                         "1 error")
+
+    def test_decision_line_naming_no_decision_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-07 "A game is saved to one file"'),
+                         "tests/test_decision.py:2: `ABC-07` names no decision of the log",
+                         "1 error")
+
+    def test_decision_line_naming_a_withdrawn_decision_fails(self):
+        self.assertFails(self.decision_test(
+            'decision: ABC-03 "A game is saved to one file"',
+            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION),
+            "tests/test_decision.py:2: `ABC-03` is withdrawn; name its successor", "1 error")
+
+    def test_decision_line_without_number_fails(self):
+        self.assertFails(self.decision_test('decision: "A game is saved to one file"'),
+                         "tests/test_decision.py:2: `decision:` gives no decision number as the "
+                         "log writes it", "1 error")
+
+    def test_decision_line_number_with_a_suffix_fails(self):
+        self.assertFails(self.decision_test('decision: ABC-01/1 "A game is saved to one file"'),
+                         "tests/test_decision.py:2: `decision:` gives no decision number as the "
+                         "log writes it", "1 error")
+
+    def test_decision_line_in_markdown_counts_for_nothing(self):
+        readme = ("# The game\n\nSaves follow ABC-01 and ABC-02.\n\n"
+                  '<!-- decision: "stands nowhere" -->\n')
+        self.assertPasses(self.run_on(README_dot_md=readme))
+
+    def test_decision_line_in_untracked_file_counts_for_nothing(self):
+        product = Product(self, FILES)
+        with open(os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8",
+                  newline="\n") as handle:
+            handle.write('// decision: ABC-01 "stands nowhere in the entry"\n')
+        self.assertPasses(product.check())
+
     # --- the-way's own foundation -------------------------------------------------------------
 
     def test_the_way_foundation_passes(self):

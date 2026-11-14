@@ -65,7 +65,16 @@ What it reports, each as `path:line: message`:
   and a file on that list that a part claims;
 - an invariant whose *Method* reads `test` and that no comment line `invariant: <identifier>`
   names in a file git tracks other than Markdown: no test cites it (WAY-61). A line in a Markdown
-  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`.
+  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`;
+- a comment line `decision: <number> "<quotation>"` in a file other than Markdown, which a test
+  that holds a sentence of a decision carries (WAY-12): no decision number as the log writes it;
+  a number that names no decision of the log or a withdrawn one; no quotation, or text after it; a
+  quotation that stands in no binding sentence of that decision's entry, does not begin one of its
+  sentences, or has fewer than three words. The binding sentences of an entry are the paragraphs
+  before its first field, where its *Rationale* and *Rejected* stand after the fields. Words of the
+  quotation and of the entry are compared with every run of spaces and line breaks made one space,
+  so a sentence wrapped over lines matches. A line in a Markdown file or in a file git does not
+  track counts for nothing.
 
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT lies in no git repository,
 or git cannot list or match its files.
@@ -98,8 +107,9 @@ FINGERPRINTED = re.compile(r"(?<![A-Za-z0-9./@-])(%s)@[0-9a-f]{8}(?![0-9A-Za-z])
 NAMED_ANY = r"(?:%s)(?:[@/][0-9a-z]+)?" % WORDS
 VERIFIED = re.compile(r"invariants:\s*(%s(?:\s*·\s*%s)*)" % (NAMED_ANY, NAMED_ANY))
 DETECTED = re.compile(r"detected\s+by\s+(%s)" % WORDS)
-# A comment line reading `invariant:` cites all that follows, which is one word.
-CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant):(.*?)"
+# A comment line reading `invariant:` cites all that follows, which is one word; one reading
+# `decision:` gives a decision number and a quotation.
+CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
                       r"(?:\*/|-->)?\s*$")
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
@@ -245,6 +255,24 @@ def unquoted(found, name):
         start += len(piece) + 1
 
 
+def binding(body):
+    """The binding sentences of an entry, as paragraphs: the lines before its first field, or
+    before its *Rationale* or *Rejected*, cut into paragraphs at blank lines, each with every run of
+    spaces and line breaks made one space and its ends trimmed."""
+    paragraphs, current = [], []
+    for _, line in body:
+        if FIELD.match(line) or line.startswith(("*Rationale:*", "*Rejected:*")):
+            break
+        if line.strip():
+            current.append(line)
+        elif current:
+            paragraphs.append(" ".join(" ".join(current).split()))
+            current = []
+    if current:
+        paragraphs.append(" ".join(" ".join(current).split()))
+    return paragraphs
+
+
 def table(lines, title):
     """(line number, cells) of each row of the table under `## title`, header and separator
     row left out, the header's cells first as row 0."""
@@ -280,6 +308,8 @@ class Foundation:
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
         self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
+        self.bodies = {}  # decision number -> the lines of its unversioned entry
+        self.held = {}  # number as written -> [(path, line)] of each `decision:` line naming it
 
     # --- identifiers ----------------------------------------------------------------------------
 
@@ -292,7 +322,7 @@ class Foundation:
         self.prefix = first.group(1)
         self.number = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
         seen = {}
-        for number, heading, _ in blocks(lines, "### "):
+        for number, heading, body in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+)(?:/([0-9]+))? — " % self.prefix, heading)
             if not match:
                 continue
@@ -300,6 +330,8 @@ class Foundation:
             version = int(match.group(2)) if match.group(2) else None
             label = "%s-%02d" % (self.prefix, key)
             self.numbers.add(key)
+            if version is None:
+                self.bodies[key] = body
             for earlier, line in seen.get(key, []):
                 if version is None or earlier is None or earlier == version:
                     twice = label if version is None or earlier is None else "%s/%d" % (
@@ -532,13 +564,57 @@ class Foundation:
             self.report.error(path, line, "the entry lacks %s" % ", ".join(
                 "*%s*" % name for name in names))
 
+    def check_decision_line(self, path, number, value):
+        """Report a `decision:` line that gives no decision number, names no decision of the log or
+        a withdrawn one, or quotes no sentence of its entry's binding sentences."""
+        parts = value.split(None, 1)
+        token = parts[0] if parts else ""
+        rest = parts[1] if len(parts) > 1 else ""
+        if not re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]+", token):
+            self.report.error(path, number, "`decision:` gives no decision number as the log "
+                                            "writes it")
+            return
+        self.held.setdefault(token, []).append((path, number))
+        if not self.prefix or not re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token):
+            self.report.error(path, number, "`%s` names no decision of the log" % token)
+            return
+        self.refer_decisions(path, number, token)
+        key = int(token.rsplit("-", 1)[1])
+        if key not in self.numbers:
+            return
+        quoted = re.match(r'"([^"]*)"', rest)
+        if not quoted:
+            self.report.error(path, number, "`decision:` gives no quotation of the sentence")
+            return
+        if rest[quoted.end():].strip():
+            self.report.error(path, number, "`decision:` has text after the quotation")
+            return
+        quote = " ".join(quoted.group(1).split())
+        if len(quote.split()) < 3:
+            self.report.error(path, number, "the quotation has fewer than three words")
+            return
+        found, starts = False, False
+        for paragraph in binding(self.bodies.get(key, [])):
+            for match in re.finditer(re.escape(quote), paragraph):
+                found = True
+                if match.start() == 0 or paragraph[:match.start()].endswith(". "):
+                    starts = True
+        if not found:
+            self.report.error(path, number, "the quotation stands in no binding sentence of `%s`"
+                              % token)
+        elif not starts:
+            self.report.error(path, number, "the quotation does not begin a sentence of `%s`"
+                              % token)
+
     def check_citations(self, path, lines):
         for number, line in enumerate(lines, start=1):
             match = CITATION.match(line)
             if not match:
                 continue
             value = match.group(2).strip()
-            if len(value.split()) != 1:
+            if match.group(1) == "decision":
+                self.check_decision_line(path, number, value)
+            elif len(value.split()) != 1:
                 self.report.error(path, number, "`%s: %s` cites no one identifier"
                                   % (match.group(1), value))
             else:
