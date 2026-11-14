@@ -20,8 +20,5 @@
   strike it. The human accepts or rejects only the rows you derived from the material or from the
   human's loose words (WAY-134); this holds only until the task's cycle starts (WAY-315).
 - Write the table where, and with the row states, those lines give.
-- The working table stays until the step ends, each accepted row is recorded in it as it is worked
-  through, and the step then replaces the table with its `Candidates:` line recording how many rows
-  were shown and accepted.
 - No search of the whole foundation runs here; those lines say who makes it. A candidate that
   collides with an entry read in step 1 is shown beside it.

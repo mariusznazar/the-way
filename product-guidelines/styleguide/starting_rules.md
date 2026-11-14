@@ -1,7 +1,6 @@
 # Starting rules
 
-The styleguide of a user interface comes into being before that user interface's first screen. A
-first screen built with no rules is the screen every later one copies.
+A first screen built with no rules is the screen every later one copies.
 
 For the first styleguide, with or without screens, and at every refresh or extension:
 

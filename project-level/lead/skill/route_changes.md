@@ -15,9 +15,7 @@ Read from step 5 of `SKILL.md`. The edit of the definition and its gate stand in
   (WAY-145). Present the complete proposed change, sources, consequences, ways/costs and
   recommendation; record the answer before the owning agent applies it. Moving a question
   within approved scope with its logged reason alone needs no definition gate; changing the
-  definition does, by `definition_change.md`. You change definition text yourself only when that
-  text is already before you and needs no reading of other definition sections or the foundation;
-  otherwise you delegate the edit. A project can change direction while refinement proceeds, but
-  its approved definition is the basis of every task, so a change of it keeps the full gate and a
-  fresh plan check, which costs another review and prevents a task from becoming ready against an
-  obsolete basis. Do not let a refiner expand its task to conceal either mismatch.
+  definition does, by `definition_change.md`. A project can change direction while refinement
+  proceeds, but its approved definition is the basis of every task, so a change of it keeps the full
+  gate and a fresh plan check, which costs another review and prevents a task from becoming ready
+  against an obsolete basis. Do not let a refiner expand its task to conceal either mismatch.

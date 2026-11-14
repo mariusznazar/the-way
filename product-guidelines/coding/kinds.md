@@ -7,11 +7,10 @@ Where the product has code:
   one kind whose files the product already has), name that kind alone with its files: this is the
   comparison that judges every existing file of the kind, compares them and proposes the exemplar
   with `copy` or `do not copy` for each file, the human approving the decision that designates it,
-  covering that kind and no other, and no audit. Where the product holds no file of a kind, the
-  exemplar of that kind is designated by the task that creates its first file. Who designates the
-  exemplar follows from the state of the product: a first file built with no exemplar is the file
-  every later one copies, and with several files a choice made without comparing them makes
-  whichever file an agent finds into law. For each kind, judge every file of it the product holds,
+  covering that kind and no other, and no audit. Who designates the exemplar follows from the state
+  of the product: a first file built with no exemplar is the file every later one copies, and with
+  several files a choice made without comparing them makes whichever file an agent finds into law.
+  For each kind, judge every file of it the product holds,
   compare them, and propose:
   - its exemplar, with one sentence of what the product gains by it, such as "every new endpoint
     checks its input as this one does", since the human who approves the exemplar does not judge
