@@ -713,9 +713,10 @@ no stop — decisions that nothing holds keep arriving and the list grows.
 ### WAY-18 — How is a product's decision log kept?
 
 A product keeps all its decisions in one log, whatever they are about. The log holds one entry for
-each decision in force and says what binds today with no view generated from it. A link between
-entries is written at one end only; the one exception is a decision's invariants, which its
-*Verification* names while each of them names the decision in *Derives from*.
+each decision in force and itself says what binds today, with no view generated from it kept in
+its place; the index of a selection of decisions that an agent writes on demand (WAY-150) is no
+such view. A link between entries is written at one end only; the one exception is a decision's
+invariants, which its *Verification* names while each of them names the decision in *Derives from*.
 
 A log may be divided into topical sections, each a heading with one sentence of what it covers, its
 entries keeping their numbers; in a log so divided a new entry stands at the end of the section of
@@ -814,11 +815,11 @@ parts, so using those parts as scope makes the governing decisions discoverable 
 paths into each entry. Scope alone selects widely, since a part of a process or a product is
 governed by many decisions: measured on 2026-11-15 on the-way's own log, by a search of the *Scope*
 lines of all its decisions, about half of them name the part of the task cycle, so a change to that
-part selects about half the log. Topics cannot be derived from changed files, so in a log divided into topical sections an
-agent chooses the sections of its work's topics by their headings and sentences, while scope still
-finds, from the files a change touches, each decision outside those sections that governs a touched
-part, whose question the agent then runs through (WAY-150); topics narrow the reading and scope
-keeps a governing decision from being lost.
+part selects about half the log. Topics cannot be derived from changed files, so in a log divided
+into topical sections an agent chooses the sections of its work's topics by their headings and
+sentences, while scope still finds, from the files a change touches, each decision outside those
+sections that governs a touched part, whose question the agent then runs through (WAY-150); topics
+narrow the reading and scope keeps a governing decision from being lost.
 *Rejected:* file paths in each decision — duplicate the map; topics in place of scope — they cannot
 be derived from a change, and a decision of another topic that governs a touched part would be lost
 without a trace; no scope — relevant decisions get lost among the rest.
@@ -1470,16 +1471,17 @@ work names no file yet, from the responsibilities it changes; finds by a touched
 the decisions whose *Scope* names it and the invariants whose *Part* names it or `every`, and adds
 the invariants a test the work alters cites, the decisions whose sentence such a test holds by a
 line `decision:`, the decisions the task's *Decisions in play* or the work's source names, the
-touched parts' entries of the map and the entries these link to as far as the work needs. Whoever
-selects reads the index of the decisions it selects and opens whole only those the work changes,
-goes against or proposes another answer to — that one with its rejected options — those the task or the work's
-source names, those whose sentence a test the work alters holds by a line `decision:` and those
-whose binding sentences leave open what the work has to do, and it reads every other selected entry
-whole, reading more entries where relevance is uncertain and a whole file only where it is short;
-the reviewer of the whole change reads the index of its whole selection and states in its report
-how many decisions it read whole. The selection is neither recorded nor compared with every *Scope*
-of the log, and the search of the whole foundation (WAY-33) and the whole reading of templates,
-rules and examples keep their domain.
+touched parts' entries of the map and the entries these link to as far as the work needs. Of the
+decisions it selects, whoever selects reads the index and opens whole only the decisions the work
+changes, goes against or proposes another answer to — that one with its rejected options — those
+the task or the work's source names, those whose sentence a test the work alters holds by a line
+`decision:` and those whose binding sentences leave open what the work has to do; each selected
+entry that is no decision — an invariant, an entry of the map of a touched part, or an entry other
+than a decision that these link to — it reads whole, and it reads more entries where relevance is
+uncertain and a whole file only where it is short; the reviewer of the whole change reads the index
+of its whole selection and states in its report how many decisions it read whole. The selection is
+neither recorded nor compared with every *Scope* of the log, and the search of the whole foundation
+(WAY-33) and the whole reading of templates, rules and examples keep their domain.
 
 The index of a selection of decisions is no file of the repository: a script of the-way writes it
 on demand into a file the agent names, and it gives for each selected decision its number, its
@@ -1491,7 +1493,7 @@ place of those found by *Scope* in the selection whose index it reads, and it ru
 questions alone of the decisions outside those sections whose *Scope* names a touched part and opens
 whole each whose question points to a bearing on the work. In a log without topical sections the
 decisions are selected by the parts the work touches, and their index takes the place of reading
-them whole.
+each of them whole, the decisions the first paragraph names being opened whole as it gives.
 
 Outside the task cycle the agent doing the work selects its own reading, while in the task cycle
 the orchestrator selects for its own judgments and for each handoff, which names the foundation
@@ -1577,12 +1579,12 @@ whole reading is broken in every cycle, the reviewer knows most of the decisions
 and the share grows with every task; the log split into two files, the binding sentences in one and
 the reasoning in the other under the same numbers — set aside, to be weighed if the index does not
 suffice, at the cost of changing every entry once, together with the check and the skills that read
-entries; in a log with topical sections, the sections of the work's topics alone — the cheapest, but a
-decision of another topic that governs a touched part is lost without a trace; the sections of the
-work's topics for every agent but the reviewer of the whole change, which reads the index of its
-whole selection by parts — the reviewer gains nothing from the division; a record of the selection
-compared with every *Scope* of the log — it costs every piece of work and records reading, not
-understanding; each agent of a task cycle selecting for itself — every agent pays for the same
+entries; in a log with topical sections, the sections of the work's topics alone — the cheapest,
+but a decision of another topic that governs a touched part is lost without a trace; the sections
+of the work's topics for every agent but the reviewer of the whole change, which reads the index of
+its whole selection by parts — the reviewer gains nothing from the division; a record of the
+selection compared with every *Scope* of the log — it costs every piece of work and records reading,
+not understanding; each agent of a task cycle selecting for itself — every agent pays for the same
 reading again; the orchestrator's selection with no reach left to the agent — a missing entry is
 guessed at instead of read; the reviewer of the whole change reading only the orchestrator's
 selection — a gap in the selection would reach the request unchecked.
@@ -6499,8 +6501,9 @@ while each remaining finding stands with its place in the code in the lower part
     whether to have what stayed unread read in the request, make a task of it or let it through,
     and so does a request whose reviewer read the index of all 151 and named two decisions bearing
     on the change as unread, while a request whose reviewer read the index of all 151, opened 40 of
-    them whole and named no decision of the change as unread has no such item; a request whose merged tree holds an invariant that
-    reads `Rests on: TODO — the store of documents, once a task chooses it`, written by the change or
+    them whole and named no decision of the change as unread has no such item; a request whose
+    merged tree holds an invariant that reads
+    `Rests on: TODO — the store of documents, once a task chooses it`, written by the change or
     standing from before, puts it under *Fix or let through* with the rule of that invariant and the
     missing store, and so does a request whose merged tree holds a decision that reads
     `Based on: TODO — the source of the save format` or an invariant that reads
