@@ -144,8 +144,12 @@ class InstallTest(unittest.TestCase):
                          "too", ".runs/",
                          "`python -B .the-way/instruction-files/check_instructions.py` too; "
                          "an error that script reports stops the tests, and a warning does not",
-                         "CI runs the one command on every merge request, with `.the-way` at the "
-                         "commit this repository pins",
+                         "Where this repository has a CI file, CI runs the one command on every "
+                         "merge request, with `.the-way` at the commit this repository pins, and "
+                         "its result is a check this repository requires before a merge, which "
+                         "the repository's owner may bypass",
+                         "While it has none, nothing but you runs the tests before a merge, and "
+                         "you say so when you report",
                          "claimed by no part", "`the-way-update-part-map`", "never a pass",
                          "even where an installed plugin offers methods of its own"):
             self.assertIn(fragment, guidance)

@@ -201,11 +201,13 @@ def product_guidance() -> str:
             f"`python -B {SUBMODULE}/instruction-files/check_instructions.py` too; an error that "
             "script reports stops the tests, and a warning does not. While the one command does "
             "not run one of these two checks, run it on its own and report the check as left "
-            "unchecked by the one command. A check that did not run is never a pass. CI runs the "
-            f"one command on every merge request, with `{SUBMODULE}` at the commit this "
-            "repository pins, and its result is a check this repository requires before a merge; "
-            f"`{SUBMODULE}/installation/README.md`, section \"Run the one command in CI\", says "
-            "what the CI file of this repository holds.\n")
+            "unchecked by the one command. A check that did not run is never a pass. Where this "
+            "repository has a CI file, CI runs the one command on every merge request, with "
+            f"`{SUBMODULE}` at the commit this repository pins, and its result is a check this "
+            "repository requires before a merge, which the repository's owner may bypass. While "
+            "it has none, nothing but you runs the tests before a merge, and you say so when you "
+            f"report. `{SUBMODULE}/installation/README.md`, section \"Run the one command in "
+            "CI\", says what the CI file of this repository holds.\n")
 
 
 def agents_block() -> str:
