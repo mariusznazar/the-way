@@ -7,7 +7,9 @@
     WAY-61);
   - apply `maintain-instruction-files` for the pointer in the product's root `AGENTS.md`, outside
     the block the-way's installer writes: one line naming `guidelines/testing.md` in backticks with
-    the condition of writing or changing a test, naming no command (WAY-245, WAY-16);
+    the condition of writing or changing a test, naming no command (WAY-16). Without the pointer a
+    session outside the task cycle can miss the testing guidelines, and a path with its condition
+    costs one line;
   - through `update-part-map`, add each part step 1 found missing for the tests the product's plan
     gives (WAY-44);
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map

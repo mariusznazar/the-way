@@ -65,7 +65,9 @@ carries takes no approval.
   property test — say in plain words what it means (WAY-174, WAY-113).
 - Extend what exists: the recipes are written for the test tool the product runs, never for a
   second tool beside it. A new test tool or a library of property tests is a technology choice:
-  record it as a question of the task, never settle it (WAY-248, WAY-121).
+  record it as a question of the task, never settle it (WAY-121). A tool the product already runs,
+  even a worse one, beats a better one brought in, since its tests and the people working on them
+  already follow it and two tools over one suite split its conventions.
 - A choice found in the product's tests — a configuration of the test tool, a habit its tests
   share — is a proposal, never a rule, until the human settles it. An existing choice the human
   keeps becomes a decision whose rationale is the human's words or `unknown`, never one the agent
@@ -88,7 +90,7 @@ its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task temp
 `elements/common/way_of_working.md`, the product's foundation as it selected it, and the guidelines
 of the parts the task touches — is not read again. A session that has not read them in this
 conversation — it opened this skill directly, or resumed the work in a new one — goes through
-`refine-task` steps 1 and 2 first (WAY-266).
+`refine-task` steps 1 and 2 first.
 
 ## 1. Recognize
 
