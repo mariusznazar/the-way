@@ -184,7 +184,5 @@ the definition does not stand word for word with a task or an answer (WAY-146; i
 The plan's independent critique judges what no script tells apart: whether each task that is not
 preparatory ends with something checkable in the running product, whether each technical element
 enters with the first task that uses it, whether each question stands where the definition puts it
-or the change log gives its move, whether a quoted answer settles its question, and whether a task
-is too large, which it is when its goal joins two or more effects that can each be checked alone in
-the running product and merged before the others (WAY-146). A check a script can make is never left
-to the critique (WAY-146).
+or the change log gives its move, and whether a quoted answer settles its question (WAY-146). A
+check a script can make is never left to the critique (WAY-146).

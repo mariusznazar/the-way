@@ -526,9 +526,8 @@ cannot be undone are the risks a review aimed at them catches and an ordinary re
 two questions name them at the start without computing anything. Size does tell how much
 preparation a change needs: a small change can be made without a plan, while the checks on the
 finished change stay whole and a human still decides on what cannot be undone. Beyond preparing and
-making the change size tells nothing worth deciding on: a split for size alone adds a whole cycle,
-with its review, its tests and its request, and gives no better or cheaper result. Returning
-knowledge alters what a task delivers, so a human sets it.
+making the change size tells nothing worth deciding on, and a split for size alone has no reason of
+its own (WAY-372). Returning knowledge alters what a task delivers, so a human sets it.
 *Rejected:* checks as sharp as a criticality computed from the parts a change touches, with the path
 that merges it chosen by whether it changes the foundation, recorded at the start and recalculated
 after each diff — every cycle computes and records them, and a part with no failure modes recorded
@@ -4351,12 +4350,8 @@ definition stands in the plan word for word, with a task of the plan or an answe
 independent critique then judges, against the definition, what no script tells apart: whether each
 task that is not preparatory ends with something checkable in the running product, whether each
 technical element enters with the first task that uses it, whether each question stands where the
-definition puts it or the log of changes gives its move, whether a quoted answer settles its
-question, and whether a task is too large, which it is when its goal joins two or more effects that
-can each be checked alone in the running product and merged before the others. A check a script can
-make is never left to the critique, and no script judges a task's size; a task the critique finds
-too large goes to the human as a question, with its split and the choice to keep the task, and the
-plan's author never splits it for its size alone.
+definition puts it or the log of changes gives its move, and whether a quoted answer settles its
+question. A check a script can make is never left to the critique.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -4365,15 +4360,10 @@ plan's author never splits it for its size alone.
   compares the work with the decision:
   - complies: the critique finds a task ending with tables no screen reads and a question placed in
     another task than the definition names with no line in the log, while the script reports a
-    projected decision no task writes; the critique marks as too large a task of a game's plan that
-    joins account creation, login, account blocking, confirmation of the address, password reset and
-    mail, and gathers eight of the fourteen open questions of its definition, and the split goes to
-    the human as a question with the choice to keep the task; a task whose one effect is that a
-    blocked player loses the session and cannot log in is not marked;
+    projected decision no task writes;
   - violates: the critique is asked whether every item of In scope has a task; the plan reaches the
     human with a question the script would have found unplaced; the agent that wrote the plan
-    judges its own tasks; the author splits the account task for its size alone, or the critique
-    passes it without a word on its size; a script counts a task's questions against a threshold.
+    judges its own tasks.
 - **Origin:** none
 
 *Rationale:* a rule a script can decide holds every time the script runs, while an agent asked the
@@ -4381,23 +4371,11 @@ same thing answers well most of the time and costs a reading of the whole plan; 
 cannot tell — whether an end can be checked, whether an element came early, whether a question was
 moved or answered in full — needs a reader who did not write the plan, since its writer applied the
 rules it would be checking. The rule takes from the practice of a roadmap its review of the plan
-before it is handed on, split between a script and a reader who did not write the plan. Size is a
-judgment no script can make without a number, and a number fitted to one case stops tasks that are
-right to stand; the reader who did not write the plan judges it, and the choice to split, which
-costs a whole cycle, stays with the human. A task that gathers clearly more open questions, projected
-entries or In scope items than the rest of the plan is only a signal to look at it.
+before it is handed on, split between a script and a reader who did not write the plan.
 *Rejected:* the author checking its own plan against the rules before writing it — the same agent
 applies and judges them; checks of a plan's form across several copies of each task — a plan holding
 each task once has no copies to compare; an agent checking what a script decides — it costs more
-and sometimes misses; a numeric threshold for a task's size, set at one third of the open questions
-of the definition — a threshold fitted to one case would stop a task that is right to stand, and each
-false alarm forces a split, a whole cycle, or a mechanism of exceptions, where size is only a signal
-(WAY-13); a script
-that prints each task's counts with no threshold — a new kind of output for the script, with tests
-of its own, for a small gain, since the critic reads the whole plan in any case; the plan's author
-splitting a task after the critique's remark, as it does for every other remark — the author may
-split too finely, and each needless split is a whole cycle the human meets only in the handed-over
-plan.
+and sometimes misses.
 
 ### WAY-147 — How is a task of a project plan named, and what does its cycle take from the name?
 
@@ -12785,19 +12763,19 @@ than at 150 000 with no added long run.
 
 ### WAY-372 — When is a task split into several tasks?
 
-A task is split only where the split makes the work better or cheaper; time does not count, so that
-a part is ready sooner is no reason. Whoever proposes a split names its reason, and the reasons are
-three: a part cannot start or finish without something outside the refinement of the task, such as
-access the agent lacks or another task's result; the parts change different repositories, since the
-cycle writes only in the product's repository; or a later step of the refinement offers a separate
-task. A task's size alone is no reason: for it an agent says nothing of a split — no mention, no
-question, no recommendation — and the human, who sees the whole document, may ask for a split.
+A split of a task is proposed only where it makes the work better or cheaper; time does not count,
+so that a part is ready sooner is no reason. Whoever proposes a split names its reason, and the
+reasons are three: a part cannot start or finish without something outside the refinement of the
+task, such as access the agent lacks or another task's result; the parts change different
+repositories (WAY-140); or a later step of the refinement offers a separate task. A task's size
+alone is no reason: for it an agent says nothing of a split — no mention, no question, no
+recommendation — and a split the human asks for, who sees the whole document, stands without one.
 
 A project plan cuts its tasks by WAY-143 and by these reasons, never by a task's size alone.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-13 · derives from WAY-143
+- **Relations:** derives from WAY-13 · derives from WAY-140 · derives from WAY-143
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task whose parts change two repositories, the agent proposes the split and
     names that reason; refining a large task of one product, whose parts all start and finish
@@ -12812,8 +12790,8 @@ A project plan cuts its tasks by WAY-143 and by these reasons, never by a task's
 tests and its own request to merge, so it costs a whole cycle more, and it earns that cost only
 where the work comes out better or cheaper; a part ready sooner is neither. The three reasons are
 the cases where a split gives something one task cannot: a part that cannot start or finish alone
-would wait inside one task and no cycle could end it, and work in several repositories cannot be one
-task while the cycle writes only in one. Naming the reason makes the proposal checkable, which a
+would wait inside one task and no cycle could end it, and parts in different repositories are not
+one change. Naming the reason makes the proposal checkable, which a
 bare "better" is not, since an agent readily makes one up. A word about a task's size draws a
 question, and the question returns at every larger task, while the human who sees the whole document
 at its acceptance can ask for a split without it.
