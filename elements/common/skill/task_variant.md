@@ -15,6 +15,8 @@ and no entry is written.
 
 - Read in `project-level/task/template.md` the section "Settlements to record" and its rule under
   "What each section carries" in full.
+- Read in `elements/decisions/template.md` the bullet **Where it goes:** under "Decision or
+  invariant": the questions that give the column *Goes to*.
 - Read the projected entries the task's *Decisions in play* carries, so that no candidate repeats
   one.
 
@@ -22,8 +24,10 @@ and no entry is written.
 
 - Take each item of "Need", "To do", "Acceptance criteria" and "Out of scope", each answer under
   "Questions to settle" and each answer of the human in the conversation. A candidate is a
-  decision, an invariant, a glossary term, or an environment fact a candidate decision or
-  invariant rests on — never a change of the part map.
+  settlement that the questions of "Where it goes:" place; a candidate that is a decision passes
+  those questions in their order before its row, and its first "yes" gives its column *Goes to*,
+  written in the form the paragraph "Settlements to record" of the template gives.
+  A change of the part map is never a candidate.
 - Its settlement is in the human's words, and the last column names what the task's cycle would do
   or choose without it.
 - Write the table under "Settlements to record" with a column *State* after the template's
@@ -51,5 +55,5 @@ WAY-134).
 Once no row is `waiting`, take out the rejected rows and the column *State*, and write above the
 table the line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD`, as
 `project-level/task/template.md` gives it, renumbering the rows that stay; with no row accepted,
-`none` stands below the line in place of the table. Tell `refine-task` how many rows of each kind
-were kept.
+`none` stands below the line in place of the table. Tell `refine-task` how many rows of each place
+(*Goes to*) were kept.

@@ -226,7 +226,7 @@ those decisions and invariants in its own foundation; the testing guidelines nam
   a convention of the code and otherwise `none` (WAY-168).
 - **`## Recipes`** — for each level, the same fields in this order (WAY-241). A field that binds ends
   with the identifier of the product's decision that carries it, in parentheses, as
-  `(<PREFIX-NN>)`; a field naming no decision stands as an example (WAY-241, WAY-168). A field that
+  `(<PREFIX-NN>)`; a field naming no decision stands as an example (WAY-241, WAY-173). A field that
   repeats another level's reads "as in `<level>`" (WAY-241).
   1. *Purpose* — what the level is for, and when not to use it;
   2. *Files* — where the level's files lie and how they are named;

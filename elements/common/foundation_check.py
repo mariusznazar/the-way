@@ -8,12 +8,13 @@ ROOT is a directory of the product's git repository, the working directory by de
 repository it lies in is checked: the files of `foundations/`, the files of `guidelines/` and
 every other file git tracks. The script reads files and asks git; it writes nothing.
 
-The switch `--skip-test-citations` skips the last report named below, the invariant that reads
-`test` and has no citing line. It is for the run made right after an entry is written, when the
-test of an invariant that reads `test` may be written by a later slice of the same change (WAY-61).
-Any other run, the one command that runs a product's tests included, leaves it out.
+The switch `--skip-test-citations` skips only the report of an invariant that reads `test` and has
+no citing line, the one that begins "an invariant whose *Method* reads `test`" below. It is for
+the run made right after an entry is written, when the test of an invariant that reads `test` may
+be written by a later slice of the same change (WAY-61). Any other run, the one command that runs
+a product's tests included, leaves it out.
 
-What it reports, each as `path:line: message`:
+What it reports, each as `path:line: message`, a path alone where a line has no number:
 
 - an identifier standing twice: a decision number among the entries and the withdrawn numbers of
   the decision log; an identifier among the
@@ -65,7 +66,49 @@ What it reports, each as `path:line: message`:
   and a file on that list that a part claims;
 - an invariant whose *Method* reads `test` and that no comment line `invariant: <identifier>`
   names in a file git tracks other than Markdown: no test cites it (WAY-61). A line in a Markdown
-  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`.
+  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`;
+- a comment line `decision: <number> "<quotation>"` in a file other than Markdown, which a test
+  that holds a sentence of a decision carries (WAY-12): no decision number as the log writes it;
+  a number that names no decision of the log or a withdrawn one; no quotation, or text after it; a
+  quotation that stands in no binding sentence of that decision's entry, does not begin one of its
+  sentences, or has fewer than three words. The binding sentences of an entry are the paragraphs
+  before its first field, where its *Rationale* and *Rejected* stand after the fields. Words of the
+  quotation and of the entry are compared with every run of spaces and line breaks made one space,
+  so a sentence wrapped over lines matches. A line in a Markdown file or in a file git does not
+  track counts for nothing;
+- a decision that nothing holds (WAY-12). A decision is held when its *Verification* names an
+  invariant after `invariants:`, when a line `decision:` of a file the report above reads names its
+  number, valid or not, or when its *Verification* holds a line that begins `- complies:` and one
+  that begins `- violates:`. A decision that the change adds, or whose binding sentences differ from
+  those at the base once every run of spaces and line breaks is made one space, and that nothing
+  holds, is an error at its heading line; any other that nothing holds is a line of the second kind
+  below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
+  the earlier form and one that lacks *Verification* are left to the report of fields above, with no
+  second report. The switch `--skip-test-citations` skips none of this;
+- an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
+  base once every run of spaces and line breaks is made one space) is listed at its heading line,
+  when no file other than Markdown that cites it by `invariant:` now differs between the base and
+  the working tree and none that cited it at the base was deleted; where a deleted file was the
+  only one that cited it, the invariant has no citing file now. An
+  invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
+  and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
+  the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
+
+Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
+and before the count line. A listed line is no error: it is counted nowhere and changes no exit
+code, and no message of one holds a count of errors.
+
+The state the branch left. The script asks git itself and takes no input for it. The main branch is
+the one `refs/remotes/origin/HEAD` names; where that does not exist, the local branch `main`; where
+that does not exist, `master`. The commit the branch left it from is `git merge-base HEAD` that
+branch (the `{fork-point}` of `elements/common/rules.md`); `fork_point` gives it and `at_commit`
+reads a file as that commit holds it, for the checks that compare the foundation with it. Where
+there is no such branch or no merge base (no remote HEAD, no `main`, no `master`, a shallow history,
+no commit), the base is unknown, and so it is for a file the base lacks or git cannot give as UTF-8
+text: `foundations/decisions.md` or `foundations/invariants.md`, never read as an empty file. An
+unknown base is one listed line that names the file, written only where the working tree's
+`foundations/decisions.md` holds at least one decision. A failure to read the base is never an
+error and never exit code 2.
 
 Exit code: 0 without errors, 1 with errors, 2 when it cannot run — ROOT lies in no git repository,
 or git cannot list or match its files.
@@ -89,6 +132,12 @@ GUIDELINES = re.compile(r"^guidelines/[^/]+\.md$")
 WITHDRAWN = "Withdrawn identifiers"
 LEFT_OUT = "Files left out on purpose"
 SKIP_TEST_CITATIONS = "--skip-test-citations"
+# The branches that may be the main branch, in the order the script takes the first that exists.
+MAIN_BRANCHES = ("refs/remotes/origin/HEAD", "refs/heads/main", "refs/heads/master")
+# The files of the foundation that the script reads at the commit the branch left.
+BASE_FILES = (DECISIONS, INVARIANTS)
+UNKNOWN_BASE = ("the commit the branch left the main branch from is not known, so nothing was "
+                "compared with it")
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -98,8 +147,9 @@ FINGERPRINTED = re.compile(r"(?<![A-Za-z0-9./@-])(%s)@[0-9a-f]{8}(?![0-9A-Za-z])
 NAMED_ANY = r"(?:%s)(?:[@/][0-9a-z]+)?" % WORDS
 VERIFIED = re.compile(r"invariants:\s*(%s(?:\s*·\s*%s)*)" % (NAMED_ANY, NAMED_ANY))
 DETECTED = re.compile(r"detected\s+by\s+(%s)" % WORDS)
-# A comment line reading `invariant:` cites all that follows, which is one word.
-CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant):(.*?)"
+# A comment line reading `invariant:` cites all that follows, which is one word; one reading
+# `decision:` gives a decision number and a quotation.
+CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
                       r"(?:\*/|-->)?\s*$")
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
@@ -133,10 +183,16 @@ SURFACE_FIELDS = {"Relied on by": lambda value: value not in EMPTY}
 class Report:
     def __init__(self):
         self.errors = {}
+        self.listed = {}
 
     def error(self, path, line, message):
         where = "%s:%d" % (path, line) if line else path
         self.errors.setdefault("%s: %s" % (where, message), None)
+
+    def note(self, path, line, message):
+        """A line that is no error: it is written after the errors and counted nowhere."""
+        where = "%s:%d" % (path, line) if line else path
+        self.listed.setdefault("%s: listed: %s" % (where, message), None)
 
 
 def git(root, *args, stdin=None):
@@ -147,6 +203,29 @@ def git(root, *args, stdin=None):
     except OSError as error:
         return None, str(error)
     return result.returncode, result.stdout
+
+
+def fork_point(root):
+    """The commit the branch left the main branch from, as `git merge-base HEAD` the first of
+    MAIN_BRANCHES that exists gives it, or None where there is no such branch or no merge base."""
+    for branch in MAIN_BRANCHES:
+        code, tip = git(root, "rev-parse", "--verify", "--quiet", branch + "^{commit}")
+        if code == 0 and tip.strip():
+            code, base = git(root, "merge-base", "HEAD", tip.strip())
+            return base.strip() if code == 0 and base.strip() else None
+    return None
+
+
+def at_commit(root, commit, path):
+    """The lines of a file as a commit holds it, or None where the commit holds no file of that
+    name or git cannot give it as UTF-8 text. A file the commit lacks is no empty file."""
+    try:
+        result = subprocess.run(["git", "show", "%s:%s" % (commit, path)], cwd=root,
+                                capture_output=True)
+        text = result.stdout.decode("utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
+    return text.replace("\r\n", "\n").split("\n") if result.returncode == 0 else None
 
 
 def read(root, path):
@@ -245,6 +324,24 @@ def unquoted(found, name):
         start += len(piece) + 1
 
 
+def binding(body):
+    """The binding sentences of an entry, as paragraphs: the lines before its first field, or
+    before its *Rationale* or *Rejected*, cut into paragraphs at blank lines, each with every run of
+    spaces and line breaks made one space and its ends trimmed."""
+    paragraphs, current = [], []
+    for _, line in body:
+        if FIELD.match(line) or line.startswith(("*Rationale:*", "*Rejected:*")):
+            break
+        if line.strip():
+            current.append(line)
+        elif current:
+            paragraphs.append(" ".join(" ".join(current).split()))
+            current = []
+    if current:
+        paragraphs.append(" ".join(" ".join(current).split()))
+    return paragraphs
+
+
 def table(lines, title):
     """(line number, cells) of each row of the table under `## title`, header and separator
     row left out, the header's cells first as row 0."""
@@ -265,6 +362,34 @@ def items(value):
             if item.strip()]
 
 
+def cited_names(lines):
+    """The identifiers that the lines `invariant: <identifier>` of a file cite, each once."""
+    names = set()
+    for line in lines:
+        match = CITATION.match(line)
+        if match and match.group(1) == "invariant" and len(match.group(2).split()) == 1:
+            named = NAMED.fullmatch(match.group(2).strip())
+            if named:
+                names.add(named.group(1))
+    return names
+
+
+def invariant_entries(lines):
+    """{identifier: (heading line, sentence, fields)} of each unversioned invariant of a file, its
+    sentence the binding text before its first field, normalised as `binding` gives. An entry of
+    the earlier form is left out, as the check of fields leaves it; the first of two is kept."""
+    found = {}
+    for number, heading, body in blocks(lines, "## "):
+        match = ENTRY.match(heading)
+        if not match or "/" in heading:
+            continue
+        entry_fields = fields(body)
+        if EARLIER & set(entry_fields):
+            continue
+        found.setdefault(match.group(1), (number, " ".join(binding(body)), entry_fields))
+    return found
+
+
 class Foundation:
     def __init__(self, root, report):
         self.root, self.report = root, report
@@ -280,6 +405,11 @@ class Foundation:
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
         self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
+        self.bodies = {}  # decision number -> the lines of its unversioned entry
+        self.headings = {}  # decision number -> the line number of its unversioned heading
+        self.held = {}  # number as written -> [(path, line)] of each `decision:` line naming it
+        self.base = None  # the commit the branch left the main branch from, or None where unknown
+        self.base_files = {}  # path of BASE_FILES -> the lines at the base, or None where unknown
 
     # --- identifiers ----------------------------------------------------------------------------
 
@@ -292,7 +422,7 @@ class Foundation:
         self.prefix = first.group(1)
         self.number = re.compile(r"(?<![A-Za-z0-9-])%s-([0-9]+)(?![0-9])" % self.prefix)
         seen = {}
-        for number, heading, _ in blocks(lines, "### "):
+        for number, heading, body in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+)(?:/([0-9]+))? — " % self.prefix, heading)
             if not match:
                 continue
@@ -300,6 +430,9 @@ class Foundation:
             version = int(match.group(2)) if match.group(2) else None
             label = "%s-%02d" % (self.prefix, key)
             self.numbers.add(key)
+            if version is None:
+                self.bodies[key] = body
+                self.headings[key] = number
             for earlier, line in seen.get(key, []):
                 if version is None or earlier is None or earlier == version:
                     twice = label if version is None or earlier is None else "%s/%d" % (
@@ -532,13 +665,170 @@ class Foundation:
             self.report.error(path, line, "the entry lacks %s" % ", ".join(
                 "*%s*" % name for name in names))
 
+    # --- the state the branch left --------------------------------------------------------------
+
+    def read_base(self):
+        """Learn the commit the branch left and read at it the files of BASE_FILES."""
+        self.base = fork_point(self.root)
+        self.base_files = {path: at_commit(self.root, self.base, path) if self.base else None
+                           for path in BASE_FILES}
+
+    def list_unknown_base(self):
+        """List, for the base or for each file the base lacks, that nothing was compared. It is
+        written only where the working tree's log holds a decision: with none there is nothing the
+        base could have been compared for."""
+        if not self.numbers:
+            return
+        if not self.base:
+            self.report.note(DECISIONS, 0, UNKNOWN_BASE)
+            return
+        for path in BASE_FILES:
+            if self.base_files[path] is None:
+                self.report.note(path, 0, "the commit the branch left the main branch from holds "
+                                          "no readable %s, so nothing of it was compared" % path)
+
+    def base_sentences(self):
+        """{number: the binding sentences, normalised} of each unversioned entry of the log at the
+        base, or None where the base or its log is unknown."""
+        lines = self.base_files.get(DECISIONS)
+        if lines is None or not self.prefix:
+            return None
+        found = {}
+        for _, heading, body in blocks(lines, "### "):
+            match = re.match(r"^### %s-([0-9]+) — " % re.escape(self.prefix), heading)
+            if match:
+                found[int(match.group(1))] = " ".join(binding(body))
+        return found
+
+    def held_by_pair(self, value):
+        """Whether a *Verification* holds a line that begins `- complies:` and one that begins
+        `- violates:`."""
+        lines = value.split("\n")
+        return (any(line.startswith("- complies:") for line in lines)
+                and any(line.startswith("- violates:") for line in lines))
+
+    def check_held(self):
+        """Report each decision that nothing holds: no invariant after `invariants:`, no line
+        `decision:` that names it, no pair of lines `- complies:` and `- violates:` (WAY-12). One
+        that the change adds or whose binding sentences it alters is an error at its heading; any
+        other is listed. An entry of the earlier form (it has no unversioned heading) and one that
+        lacks *Verification* are left to `check_fields`. The switch `--skip-test-citations` has no
+        part in it."""
+        before = self.base_sentences()
+        named = {int(token.rsplit("-", 1)[1]) for token in self.held
+                 if self.prefix and re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token)}
+        nothing = ("no invariant after `invariants:`, no test with a line `decision:` that names "
+                   "it, no pair of `- complies:` and `- violates:` lines")
+        for key, body in sorted(self.bodies.items()):
+            found = fields(body)
+            if "Verification" not in found:
+                continue
+            if key in named or self.held_by_pair(found["Verification"][0]) or any(
+                    word not in EMPTY for word, _ in located(found, "Verification", VERIFIED)):
+                continue
+            label = "%s-%02d" % (self.prefix, key)
+            if before is not None and before.get(key) != " ".join(binding(body)):
+                self.report.error(DECISIONS, self.headings[key],
+                                  "`%s` is added or changed by this change and nothing holds it: "
+                                  "%s" % (label, nothing))
+            else:
+                self.report.note(DECISIONS, self.headings[key],
+                                 "`%s` is held by nothing: %s" % (label, nothing))
+
+    def list_invariants(self, tracked):
+        """List each invariant that reads `test` and whose sentence a change reworded, when no file
+        other than Markdown that cites it now differs between the base and the working tree and no
+        such file that cited it at the base was deleted (WAY-03). An invariant the base lacks, or
+        lacking *Method* or *Part* at either state, is left out. The listing is no error."""
+        if not self.base or self.base_files.get(INVARIANTS) is None:
+            return
+        before = invariant_entries(self.base_files[INVARIANTS])
+        candidates = []
+        for name, (number, sentence, found) in invariant_entries(self.files[INVARIANTS]).items():
+            if name not in before:
+                continue
+            old_found = before[name][2]
+            if all(field in found and field in old_found for field in ("Method", "Part")) \
+                    and found["Method"][0] == "test" and sentence != before[name][1]:
+                candidates.append((name, number))
+        if not candidates:
+            return
+        code, diff = git(self.root, "diff", "--name-only", "--no-renames", "--diff-filter=D", "-z",
+                         self.base)
+        if code != 0:
+            return
+        lost = set()  # the identifiers that a file the change deleted cited at the base
+        for path in diff.split("\0"):
+            if path and not path.endswith(".md"):
+                lost |= cited_names(at_commit(self.root, self.base, path) or [])
+        code, diff = git(self.root, "diff", "--name-only", "--no-renames", "-z", self.base)
+        if code != 0:
+            return
+        changed = {path for path in diff.split("\0") if path}
+        citing = {}
+        for path in tracked:
+            if not path.endswith(".md"):
+                for name in cited_names(read(self.root, path)):
+                    citing.setdefault(name, set()).add(path)
+        for name, number in candidates:
+            paths = citing.get(name, set())
+            if paths and name not in lost and not paths & changed:
+                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is "
+                                 "changed by this change, while no file citing it changed (%s): "
+                                 "name it in the request, saying what the sentence now says"
+                                 % (name, ", ".join(sorted(paths))))
+
+    def check_decision_line(self, path, number, value):
+        """Report a `decision:` line that gives no decision number, names no decision of the log or
+        a withdrawn one, or quotes no sentence of its entry's binding sentences."""
+        parts = value.split(None, 1)
+        token = parts[0] if parts else ""
+        rest = parts[1] if len(parts) > 1 else ""
+        if not re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]+", token):
+            self.report.error(path, number, "`decision:` gives no decision number as the log "
+                                            "writes it")
+            return
+        self.held.setdefault(token, []).append((path, number))
+        if not self.prefix or not re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token):
+            self.report.error(path, number, "`%s` names no decision of the log" % token)
+            return
+        self.refer_decisions(path, number, token)
+        key = int(token.rsplit("-", 1)[1])
+        if key not in self.numbers:
+            return
+        quoted = re.match(r'"([^"]*)"', rest)
+        if not quoted:
+            self.report.error(path, number, "`decision:` gives no quotation of the sentence")
+            return
+        if rest[quoted.end():].strip():
+            self.report.error(path, number, "`decision:` has text after the quotation")
+            return
+        quote = " ".join(quoted.group(1).split())
+        if len(quote.split()) < 3:
+            self.report.error(path, number, "the quotation has fewer than three words")
+            return
+        found, starts = False, False
+        for paragraph in binding(self.bodies.get(key, [])):
+            for match in re.finditer(re.escape(quote), paragraph):
+                found = True
+                if match.start() == 0 or paragraph[:match.start()].endswith(". "):
+                    starts = True
+        if not found:
+            self.report.error(path, number, "the quotation stands in no binding sentence of `%s`"
+                              % token)
+        elif not starts:
+            self.report.error(path, number, "the quotation does not begin a sentence of `%s`"
+                              % token)
+
     def check_citations(self, path, lines):
         for number, line in enumerate(lines, start=1):
             match = CITATION.match(line)
             if not match:
                 continue
             value = match.group(2).strip()
-            if len(value.split()) != 1:
+            if match.group(1) == "decision":
+                self.check_decision_line(path, number, value)
+            elif len(value.split()) != 1:
                 self.report.error(path, number, "`%s: %s` cites no one identifier"
                                   % (match.group(1), value))
             else:
@@ -660,6 +950,8 @@ def run(root, skip_test_citations=False):
     foundation.check_successors()
     foundation.check_foundation_references()
     foundation.check_fields()
+    foundation.read_base()
+    foundation.list_unknown_base()
     for path in tracked:
         lines = foundation.files.get(path) or read(root, path)
         foundation.check_decision_numbers(path, lines)
@@ -667,13 +959,16 @@ def run(root, skip_test_citations=False):
             foundation.check_citations(path, lines)
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
+    foundation.check_held()
+    foundation.list_invariants(tracked)
     if not skip_test_citations:
         foundation.check_test_citations()
     if not foundation.check_files(tracked):
         return ["git cannot match the path patterns of the part map"], 2
     lines = list(report.errors)
     count = len(lines)
-    return lines + ["%d error%s" % (count, "" if count == 1 else "s")], 1 if count else 0
+    return (lines + list(report.listed) + ["%d error%s" % (count, "" if count == 1 else "s")],
+            1 if count else 0)
 
 
 def main(argv=None):

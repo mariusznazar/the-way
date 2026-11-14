@@ -42,6 +42,11 @@ fingerprint and no version beside it, and names an entry the foundation holds. A
 the process records one, is the first eight characters, in lower-case hexadecimal, of the SHA-256
 digest of a text encoded in UTF-8, taken after every run of spaces and line breaks is replaced by a
 single space and both ends are trimmed; nothing else in the text is changed before it is digested.
+The one reference that carries more than the identifier is the line `decision:` of a test that holds
+a sentence of a decision: it gives the number and, in straight double quotation marks, the start of
+that sentence — from where a sentence of the entry begins, three words or more, compared after
+every run of spaces and line breaks is replaced by a single space — so that a test whose sentence
+was reworded is found, while a reference anywhere else names a decision by its number alone.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   product-guidelines
@@ -50,36 +55,60 @@ single space and both ends are trimmed; nothing else in the text is changed befo
 - **Verification:** invariants: fingerprint-definition. For a reference by identifier alone, an
   agent compares the change with the decision:
   - complies: a test names the invariant it checks as `invariant: map-reference-target`; a
-    decision relates to another as `derives from WAY-01`;
+    decision relates to another as `derives from WAY-01`; a test that holds a sentence of WAY-12
+    names it as `decision: WAY-12 "A decision is held when its"`, the number first and the start
+    of the sentence after it;
   - violates: a new relation reads `derives from WAY-01@60960941`; a test cites
-    `invariant: map-reference-target/1`.
+    `invariant: map-reference-target/1`; a line `decision:` gives the number with a suffix, or a
+    fingerprint beside the quotation; a relation between two decisions carries a quotation.
 - **Origin:** none
 
 *Rationale:* an identifier outlives every rewording of its entry, so a reference by it stays valid,
 and one naming no entry leads nowhere; what a change to an entry touches is found by the search its
 author makes of the foundation (WAY-33), not by marks every reference carries and every rewording
-renews. The digest is defined once, so a fingerprint recorded anywhere is computed the same way.
+renews. The digest is defined once, so a fingerprint recorded anywhere is computed the same way. A
+number alone at a test points to the whole entry, which says nothing of the sentence the test
+holds, and the quoted start lets a check find that sentence in the entry and point to the test of a
+sentence that has since been reworded. The price: each rewording of a sentence a test holds needs
+the quotation corrected, which the check points to.
 *Rejected:* a fingerprint beside each reference that relies on the entry's binding part — every
 rewording makes its author renew marks that change no meaning, and flags raised for nothing get
 cleared unread; a version beside a reference — a reference relies on what the entry says today;
 flags from the kind of change — a misnamed kind silences them; the full 64-character digest —
-unreadable, nothing gained.
+unreadable, nothing gained; the number alone in the line of a test — the entry it points to is
+larger than the sentence the test holds, so the weakness of a number that stands for a part of a
+question stays; numbered sentences or paragraphs, as a suffix of the number — a reordering of
+sentences breaks the references, and a suffix beside a number is read as a version.
 
 ### WAY-03 — Who may change an invariant test, and when?
 
 Any change may alter an invariant test, in any step of its task, implementation included. A change
-that alters an invariant test names that test in its request, so that the agent reviewing the
-change and the human merging it see it.
+that alters an invariant test, or a test that holds a sentence of a decision by a line `decision:`,
+names that test in its request, so that the agent reviewing the change and the human merging it see
+it.
+
+The check of the foundation lists an invariant whose method is `test`, whose sentence a change has
+reworded and which a file cites by a line `invariant:`, when no file that cites it has changed
+since the commit the branch left the main branch from. A change whose check lists such an invariant
+names it in its request in plain words, giving what its sentence now says and that the test that
+checks it was left as it was. The listing stops no change.
 
 - **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification
 - **Relations:** derives from WAY-01
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: which invariants the check lists for a reworded sentence, and that the
+  listing stops no change. An agent compares a change with the part no test holds:
   - complies: an implementer whose code an invariant test stops fixes the code, or, where the test
-    reads its sentence wrongly, fixes the test and names it in the request;
+    reads its sentence wrongly, fixes the test and names it in the request; a change that adds,
+    drops or alters a test that holds a sentence of a decision by a line `decision:`, or alters its
+    line, names that test in its request; a change that corrects the sentence of an invariant and
+    leaves its test as it was names the invariant in its request, saying what the sentence now says;
   - violates: a change alters an invariant test and its request does not name it; a test that read
     its sentence rightly is weakened so that the code passes, even where the request names it; a
-    task goes back to an earlier step of its cycle only because an invariant test has to change.
+    task goes back to an earlier step of its cycle only because an invariant test has to change; a
+    change weakens a test that holds a sentence of a decision by a line `decision:`, or drops its
+    line, and its request is silent; the check lists an invariant for a corrected sentence and the
+    request does not name it.
 - **Origin:** none
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
@@ -87,7 +116,12 @@ turns green, and the foundation lies. Naming every change to an invariant test i
 that move in front of the reviewer, who did not make the change, and of the human at the merge
 (WAY-10), while a test that reads its sentence wrongly is fixed where it is found. Naming is
 enough where a block is not, because a changed test is read against the sentence it cites by
-someone who did not change it, before the change merges.
+someone who did not change it, before the change merges. A test that holds a sentence of a decision
+checks that sentence as an invariant test checks its own, so it is named and read in the same way.
+A sentence corrected while its test stays is the one change that leaves the test out of the
+change's diff, so nothing in the diff names it and only the listing brings it before the reviewer
+and the human; it is listed and not stopped, since a sentence reworded in words alone changes no
+meaning and the listing can be wrong.
 *Rejected:* invariant tests read-only during implementation, kept so by a check at the merge, with
 a return to the foundation step for every change of one — each needed fix of a test stops the task;
 a local hook — one switch skips it; a written rule "do not change the tests" — prose stops nothing.
@@ -123,16 +157,17 @@ checking.
 
 ### WAY-05 — How is a decision entry written?
 
-A decision entry opens with one to three binding sentences — in the present tense, describing
-a state that is to be true, concrete enough to check — followed by fields a script or an agent
-reads, then rationale and rejected options in prose, which, where the entry's author writes it
-rather than quotes a source, names no file, script or count — a count being how many files, tests or
-entries of its foundation the product holds; a measurement the choice rests on may stand, with what
-was measured and under which conditions, never as a general bound — nor what the process's own tools
-do or lack today, and does not tell how the decision was reached. A field stays in the template only
-while someone or something reads it, and what a decision forces on later work stands in a binding
-sentence or a field, never in prose. An example in `elements/decisions/` names a decision of the
-log by its number instead of copying it.
+A decision entry opens with one to three binding sentences that answer its question — in the
+present tense, describing a state that is to be true, concrete enough to check — and one paragraph
+of one to three binding sentences for each part of another question that it answers, followed by
+fields a script or an agent reads, then rationale and rejected options in prose, which, where the
+entry's author writes it rather than quotes a source, names no file, script or count — a count
+being how many files, tests or entries of its foundation the product holds; a measurement the
+choice rests on may stand, with what was measured and under which conditions, never as a general
+bound — nor what the process's own tools do or lack today, and does not tell how the decision was
+reached. A field stays in the template only while someone or something reads it, and what a
+decision forces on later work stands in a binding sentence or a field, never in prose. An example
+in `elements/decisions/` names a decision of the log by its number instead of copying it.
 
 - **Scope:** decisions
 - **Based on:** none
@@ -145,6 +180,12 @@ log by its number instead of copying it.
     shorter ones';
   - violates: a rationale gives 'at most 12 loops' with no conditions, or how many entries the log
     held when the decision was taken.
+  For the binding sentences, an agent compares the change with the decision:
+  - complies: an entry answers its question in a paragraph of two sentences and gives the part of
+    another question that it answers its own paragraph of one sentence;
+  - violates: an entry answers its question in a paragraph of five sentences; a part of another
+    question is folded into the paragraph of the main question, which then runs past three
+    sentences.
 - **Origin:** none
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
@@ -152,13 +193,18 @@ reasons they are given, so what binds stays short and checkable, reasoning below
 nobody reads goes empty, and long lists of fields stop people recording decisions. The prose gives
 only what a reader needs to understand the choice: the history of the product or of the decision —
 what the product held, how the choice was reached — is information the reader does not need, while a
-measurement the choice rests on is a reason for the choice.
+measurement the choice rests on is a reason for the choice. A part of a question that an entry
+already answers is a paragraph of its own, so that what binds each part stays as short as what
+binds the main question, and a reader or a test finds its sentences without sifting the rest.
 *Rejected:* prose without fields — nothing a script can read reliably; many fields and relations —
 fields without a reader; a hand-written status — every entry of the log binds; a one-sentence
 entry — no reasoning beside the rule; "will" or "should" — an intent, not a state; capitals such as
 MUST — shouting reads worse, not stronger; examples written for the template — an example with gaps
 teaches gaps; a rule of the template changed only with a decision citing its number — the template
-is the-way's own text, changed and reviewed like any other change to it.
+is the-way's own text, changed and reviewed like any other change to it; no number of sentences,
+each binding sentence answering the question of the entry or a part of it — nothing keeps an entry
+short, and the principle that what binds is short weakens; a higher fixed limit — a number with no
+ground that breaks at the first topic with more parts than it allows.
 
 ### WAY-07 — How is a foundation entry changed?
 
@@ -351,9 +397,11 @@ foundation found, and the part map of the parts the task touched, and corrects i
 whatever no longer matches. In the same change it writes the sources outside the product that the
 change rests on and the foundation does not yet hold, as environment facts, a word the change uses
 in a meaning for which WAY-95 gives it an entry, as a glossary term, and the accepted settlements
-(WAY-134) and projected entries (WAY-126) the task carries that are not yet written. It writes an
-invariant only for a rule the task, a decision or a human sets, never for code behaviour merely
-because no invariant covers it.
+(WAY-134), each in the place the questions of the decisions template give it and as an entry of the
+decision log only where it passes all of them and where someone who does not know the decision would
+do otherwise and a test that stops them would not tell them why, and projected entries (WAY-126) the
+task carries that are not yet written. It writes an invariant only for a rule the task, a decision
+or a human sets, never for code behaviour merely because no invariant covers it.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
@@ -363,17 +411,25 @@ because no invariant covers it.
   - complies: the return step finds that a part-map entry still names a file the change removed and
     corrects it; the release notes of a library the change rests on are written as an environment
     fact; a replaceable layout calculation stays in ordinary tests; an invariant the task's
-    settlement sets is written;
+    settlement sets is written; an accepted settlement that is an instruction for how an agent
+    works is written into the skill that holds it, not into the log;
   - violates: a decision the change makes false is left for a later task; behaviour of the diff
     becomes an invariant only because no invariant covers it; an accepted settlement or an
-    applicable projected entry is left out.
+    applicable projected entry is left out; an accepted settlement that the questions send to a
+    skill, to guidelines or to the product's data or code is written as an entry of the log.
 - **Origin:** none
 
 *Rationale:* some of the foundation is learned only in implementation, and a change that drifted
 from an entry does not report it; comparing what the change touched with the code finds that drift
 where it arises, at the cost of reading only those entries. Facts and words are written because,
 like rules, they are learned in code. An invariant written for behaviour no task, decision or human
-sets binds a detail nobody chose, and its test fails on later changes nobody objects to.
+sets binds a detail nobody chose, and its test fails on later changes nobody objects to. A
+settlement that binds after the merge is written where its reader looks for it and where a later
+change meets it, which for many settlements is a skill, guidelines or the product's data or code
+and not a second copy of it in the log; the step that finds what no longer matches applies the same
+questions as the step that writes the entries first, so the two do not place one settlement in two
+places. An entry that nobody would act against, or whose test already tells why, only repeats what
+the code says.
 *Rejected:* the foundation changed only at the foundation step — what implementation teaches stays
 in the code; a search of the diff and the task's log for every behaviour no invariant covers, each
 turned into an invariant where a later change could break a requirement — it costs a large share of
@@ -383,32 +439,60 @@ can change it without meeting a foundation check.
 ### WAY-12 — How is a decision checked?
 
 A decision names in *Verification* the invariants derived from it, by the identifiers of their
-entries, where such invariants exist, and tests live only with invariants. A decision may also
-carry a pair of examples — a change that complies and one that violates — with which an agent
-compares a change with what no invariant of the decision checks; the violating example is a change
-whose code goes against the decision while its entry stays as it is, never one that replaces the
-decision together with its code.
+entries, where such invariants exist, and the tests that hold its sentences, by a clause that gives
+the parts of the sentences they hold in words and no path, no test name and no number. A test that
+holds a sentence of a decision carries beside it a line `decision:` that gives the number of the
+decision and the start of that sentence, and the decision keeps its rationale and its rejected
+options whole. A decision may also carry a pair of examples — a change that complies and one that
+violates — only for the part of its sentences that no invariant and no test checks, with which an
+agent compares a change with that part; the violating example is a change whose code goes against
+the decision while its entry stays as it is, never one that replaces the decision together with its
+code.
+
+A decision is held when its *Verification* names an invariant, when a test holds a sentence of it
+by a line `decision:` that names its number, or when it carries a pair of examples. The check of
+the foundation reports as an error a decision that a change adds, or whose binding sentences the
+change alters, and that nothing holds. Any other decision that nothing holds stands in a list the
+check prints, and the list stops no change.
 
 - **Scope:** decisions, invariants
 - **Based on:** llm-decision-violation-detection
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: that a line `decision:` of a test names a decision of the log and quotes
+  the start of one of its binding sentences; which decisions the check counts as held; the error
+  for a decision a change adds or alters that nothing holds, and the list of any other. An agent
+  compares a change with the part no invariant and no test holds:
   - complies: a decision on the product's direction carries a complying and a violating example
-    and names no invariant; a decision with a derived invariant names it after `invariants:`;
+    and names no invariant; a decision with a derived invariant names it after `invariants:`; a
+    decision whose sentence a test holds is named at that test by a line `decision:`, names such
+    tests by a clause with no path and keeps a pair of examples only for the part of its sentences
+    that no test holds, its rationale and rejected options staying whole;
   - violates: a decision names an invariant whose *Derives from* names another decision; a
     decision asks for a human's assessment recorded in its entry; the violating example of a
     decision is a change that takes an option the decision did not take and rewrites the decision
-    in the same request.
+    in the same request; a decision names a test that holds its sentence by the test's file or
+    name; a decision whose sentence a test holds loses its rationale and its rejected options
+    together with its pair of examples.
 - **Origin:** none
 
 *Rationale:* a test checks an invariant on every commit; a decision about direction or trade-offs
 often cannot be. Agents judge explicit, code-readable decisions well and deployment- or
 organisation-dependent ones poorly, a finding this decision takes across publishers (WAY-85), so a
-pair of examples marks the line where it helps, and the human who accepts a change sees the rest.
+pair of examples marks the line where it helps, and the human who accepts a change sees the rest. A
+sentence of a decision that a test holds is checked on every commit as an invariant is, and its link
+to the decision stands once, at the test, so the decision names such tests only in words and keeps
+no second copy of the link that breaks when a file moves. Where a test holds a sentence the pair of
+examples says nothing more, but the reasoning and the rejected options stay, since a test cannot
+say why. A decision that nothing holds is a rule nobody can tell is followed, so a change that adds
+or alters one holds it before it merges, while the older ones are listed and wait, because a gate
+that stopped every change until each of them was held would stop all work.
 *Rejected:* a rule in code as the only check — decisions that cannot be written as a rule go
 unchecked; a level of verification named in every decision, a human's assessment among the levels
 — the level adds nothing to the invariants named and the examples given, and every change already
-reaches a human before it binds (WAY-14).
+reaches a human before it binds (WAY-14); the behaviour of a product left out of the log
+altogether — the variants tried and rejected are lost; an error for every decision that nothing
+holds — no change to a product passes until all the older ones are brought up; only a list, with
+no stop — decisions that nothing holds keep arriving and the list grows.
 
 ### WAY-13 — What sets the weight of a task's process?
 
@@ -500,15 +584,20 @@ command of their own — of two commands an agent runs one.
 
 ### WAY-17 — Which links between foundation entries are mandatory?
 
-Every link of the chain fact → decision → invariant → test is written in the entry that depends
-on the other, and none is optional: a decision and an invariant name the environment facts they
-rest on, an invariant derived from a decision names that decision, and a check names its
-invariant.
+Every link of the chain fact → decision → invariant → test is written in the entry that depends on
+the other, and none is optional: a decision and an invariant name the environment facts they rest
+on, an invariant derived from a decision names that decision, and a check names its invariant, or,
+where it holds a decision's sentence by a line `decision:`, that decision, with no invariant
+between.
 
 - **Scope:** decisions, invariants, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-02
-- **Verification:** none
+- **Verification:** an agent compares the change with the decision:
+  - complies: a test that holds a sentence of a decision carries a line `decision:` naming that
+    decision, and no invariant is written between them; a test that checks an invariant carries a
+    line `invariant:` naming it;
+  - violates: a test that checks an invariant or holds a decision's sentence names neither.
 - **Origin:** none
 
 *Rationale:* the chain is the path a change travels, so a missing link breaks it without a sign,
@@ -549,24 +638,32 @@ merged each change (WAY-14); a field for an entry's topic — nothing reads it (
 ### WAY-19 — How are decisions numbered?
 
 A number stands for the question a decision answers, carries the product's prefix and is given
-in the order entries are written; a new question gets the next free number, and a new rule next
-to an existing decision is a new question. A new answer to a question the log holds rewrites that
-question's entry. When a new decision answers a question that an older one answered in passing, the
-sentence moves to the new decision, and the older one loses it in the same change.
+in the order entries are written; a new question gets the next free number, a question independent
+of every existing entry included, while a part of the question an existing entry answers is a
+sentence of that entry where it cannot change without changing that entry. A new answer to a
+question the log holds rewrites that question's entry. When a new decision answers a question that
+an older one answered in passing, the sentence moves to the new decision, and the older one loses it
+in the same change.
 
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** derives from WAY-02
 - **Verification:** an agent compares the change with the decision:
-  - complies: a new rule for who accepts a decision is written into WAY-14; when a decision on a
-    question arrives, an older decision that answered it in passing loses that sentence;
-  - violates: the same question gets a second number; the sentence stays in both decisions.
+  - complies: a new rule for who accepts a decision, which cannot change without changing WAY-14,
+    is written into WAY-14; a rule that answers a question no entry holds gets the next free
+    number; when a decision on a question arrives, an older decision that answered it in passing
+    loses that sentence;
+  - violates: the same question gets a second number; the sentence stays in both decisions; a part
+    of a question that WAY-14 answers gets a number of its own although it cannot change without
+    changing WAY-14.
 - **Origin:** none
 
 *Rationale:* a permanent number lets references survive a change (WAY-02); a new answer rewrites
 the one entry, so no reader assembles the decision from pieces; a sentence answered in passing
-moves, because two entries answering one question drift apart; the product's prefix keeps numbers
-of different products apart in references.
+moves, because two entries answering one question drift apart; a part of a question that cannot
+change apart from its entry stands in that entry for the same reason, and a question that can
+change on its own keeps a number of its own; the product's prefix keeps numbers of different
+products apart in references.
 *Rejected:* a new number for every change, the old entry marked as replaced — references rewired or
 left on a dead entry; numbering by topic — topics move, and numbers would move with them; a new
 version of the number for every change — a reader assembles what binds from many copies (WAY-07).
@@ -597,7 +694,11 @@ An invariant says nothing about why or what was rejected; a decision is a choice
 options, with its rationale, and it binds later work until a change replaces, narrows or withdraws
 it, including what cannot be checked on a commit — direction, trade-off principles, non-goals. A
 rule that records a choice is a decision, and what of it a commit can make false is written as an
-invariant derived from it; a rule with no choice behind it is an invariant alone.
+invariant derived from it, unless a test holds that sentence by a line `decision:`, in which case
+the decision gets no derived invariant for it; an invariant stands for a rule with no choice behind
+it and for a rule on which several decisions stand. A single text, number, list or location is no
+entry of the log: it stands in the product's data or code, with the test that holds it and, where
+its reason is not obvious, a comment at the value.
 
 - **Scope:** decisions, invariants
 - **Based on:** none
@@ -605,16 +706,28 @@ invariant derived from it; a rule with no choice behind it is an invariant alone
 - **Verification:** an agent compares the change with the decision:
   - complies: "the product has no multiplayer" is a decision, and "no screen offers a second
     player" an invariant derived from it; "a saved game is never lost on reload" is an invariant
-    with a test;
-  - violates: a non-goal that a commit can break is left without a derived invariant; an
-    invariant carries a rationale and rejected options.
+    with a test; a sentence of a decision on how long a transition lasts is held by a test with a
+    line `decision:` and gets no invariant; the text of a button stands in the product's code with
+    the test that holds it;
+  - violates: a non-goal that a commit can break is left with neither a derived invariant nor a
+    test holding it by a line `decision:`; an invariant carries a rationale and rejected options; a
+    sentence of a decision that a test holds by a line `decision:` also gets a derived invariant; a
+    single text of a screen is written as a decision.
 - **Origin:** none
 
 *Rationale:* an invariant is checked mechanically on every commit, a decision weighed when a later
 choice is made; a checkable rule left only in a decision's prose escapes the gate, and a choice
-written only as an invariant loses its reasons.
+written only as an invariant loses its reasons. A sentence a test holds by a line `decision:` is
+already checked on every commit and tied to its decision at the test, so an invariant beside it
+would be a second entry for the same test and the same rule. A single value carries no choice
+that a later reader could take otherwise, so its entry would repeat what the code and its test say,
+while a comment at the value keeps a reason that is not obvious where the value is changed.
 *Rejected:* one kind of entry for both — either the gate reads prose or the reasons are lost;
-moving a checkable sentence out of its decision — the rule would be cut off from its reason.
+moving a checkable sentence out of its decision — the rule would be cut off from its reason, which
+holds for a sentence, while a single value, which carries no choice, goes to the product's data or
+code with its test and comment; a derived invariant for each checkable part of a new decision, the
+line `decision:` only marking tests that already mention a number — the change comes down to
+tidying old tests, and new decisions go on producing a decision and an invariant in pairs.
 
 ### WAY-24 — How is a decision that rests on a prediction reviewed?
 
@@ -2766,15 +2879,14 @@ shown only the entries no row carries.
 ### WAY-115 — How are foundation entries found in a project's source?
 
 The agent reads the project's sources in full and selects and reads the product's foundation under
-WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind,
-its source and the concrete
-choice or action the next reader would otherwise have to guess; a row without such a consequence
-is shown as rejected. The human accepts or rejects the rows the agent derived before they are
-handed to the skills of their kinds, while a row that repeats a choice the human made between ways
-shown enters the table accepted, marked as the human's choice, and stays unless the human strikes
-it; each accepted row is recorded as it is worked through. The definition keeps the
-working table until the step ends, then replaces it with a `Candidates:` line recording how many
-rows were shown and accepted.
+WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind or
+its place, its source and the concrete choice or action the next reader would otherwise have to
+guess; a row without such a consequence is shown as rejected. The human accepts or rejects the rows
+the agent derived before they are handed to the skills of their kinds, while a row that repeats a
+choice the human made between ways shown enters the table accepted, marked as the human's choice,
+and stays unless the human strikes it; each accepted row is recorded as it is worked through. The
+definition keeps the working table until the step ends, then replaces it with a `Candidates:` line
+recording how many rows were shown and accepted.
 
 - **Scope:** elements-common, project-level
 - **Based on:** none
@@ -3545,23 +3657,26 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
 document and the conversation that refined it, in the form WAY-115 gives with each settlement in
-the human's words, and the task document keeps the rows the human accepts, those that repeat a
-choice the human made between ways shown included unless the human struck them, and, where the
-human chose among ways shown, each way not chosen, under the answer to its question or, for a
-choice made outside the task's questions, in the source of the row it settles; the agent refining
-the task presents the table, or, in orchestrated refinement, the project orchestrator as WAY-154
-and WAY-155 give. A candidate is a decision, an invariant, a glossary term, or an environment fact
-a candidate decision or invariant rests on, and a settlement that a current entry the refinement
-reads for the parts the task touches, or a projected entry the task carries, already states is no
-candidate. The
-task's cycle writes each kept row whole into the foundation in its foundation step, or in its
-return step where the foundation step missed it, one that no code makes true included, keeping its
-meaning and choosing its wording, and gives a decision written from a row as its rejected options
-only the ways not chosen that the row's source keeps, `none considered` where the human said so, or
-`unknown`; where that meaning cannot hold, or the entry needs any other value neither the row nor
-the cycle's work gives, the cycle asks the human through a blocked draft request rather than write
-another entry, and otherwise the entry's meaning is the one the human accepted with the row in the
-task document (WAY-114); a kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
+the human's words and, in place of its kind, the place it goes to by the questions of the decisions
+template, and the task document keeps the rows the human accepts, one that goes outside the decision
+log included and those that repeat a choice the human made between ways shown included unless the
+human struck them, and, where the human chose among ways shown, each way not chosen, under the
+answer to its question or, for a choice made outside the task's questions, in the source of the row
+it settles; the agent refining the task presents the table, or, in orchestrated refinement, the
+project orchestrator as WAY-154 and WAY-155 give. A candidate is a decision, an invariant, a
+glossary term, or an environment fact a candidate decision or invariant rests on, or a settlement
+that goes to another place those questions give — a skill or an instruction file, the guidelines of
+a discipline, or the data or code of the product — and a settlement that a current entry the
+refinement reads for the parts the task touches, or a projected entry the task carries, already
+states is no candidate. The task's cycle writes each kept row whole in the place its column gives,
+in the same change as the code, in its foundation step, or in its return step where the foundation
+step missed it, one that no code makes true included, keeping its meaning and choosing its wording,
+and gives a decision written from a row as its rejected options only the ways not chosen that the
+row's source keeps, `none considered` where the human said so, or `unknown`; where that meaning
+cannot hold, or the entry needs any other value neither the row nor the cycle's work gives, the
+cycle asks the human through a blocked draft request rather than write another entry, and otherwise
+the entry's meaning is the one the human accepted with the row in the task document (WAY-114); a
+kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
 becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
@@ -3571,71 +3686,78 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
-    code and lists it in the lower part of the request's description; a task whose refinement found nothing carries the counting
-    line with none below it; in an orchestrated round the project orchestrator shows the candidate
-    table and required challenge questions while the refiner records the human's answers; the
-    cycle's search finds a decision of an untouched part that already states a kept row, and the
-    request names the row with that decision instead of a new one; a decision row whose question
-    keeps two ways the human did not choose gives its decision those two as rejected options, and
-    one whose source keeps none, or keeps only ways that answer another part of the question,
-    gives `unknown` with no question to the human; the row that repeats the choice the human made
-    between two ways shown stands in the table accepted and marked, while the rows the agent
-    derived from the material wait for the human;
+    code and lists it in the lower part of the request's description; a task whose refinement found
+    nothing carries the counting line with none below it; in an orchestrated round the project
+    orchestrator shows the candidate table and required challenge questions while the refiner
+    records the human's answers; the cycle's search finds a decision of an untouched part that
+    already states a kept row, and the request names the row with that decision instead of a new
+    one; a decision row whose question keeps two ways the human did not choose gives its decision
+    those two as rejected options, and one whose source keeps none, or keeps only ways that answer
+    another part of the question, gives `unknown` with no question to the human; the row that
+    repeats the choice the human made between two ways shown stands in the table accepted and
+    marked, while the rows the agent derived from the material wait for the human; a rule of how an
+    agent works that only one skill holds stands in the table as a row that goes to that skill, the
+    human accepts it with the other rows, and the cycle writes the line in the skill in the same
+    change as the code;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
-    because no code makes it true; the refinement writes whole entries into the task document; a
-    kept row repeats a rule a current decision the refinement read states; the cycle writes a
-    second entry for a rule its search found already stated; an orchestrated refiner asks the human
-    directly about candidates or substitutes its own acceptance; a task document keeps the human's
-    choice among ways shown without the ways not chosen; the cycle fills a decision's rejected
-    options with ways it derives from what the cycle would otherwise guess, or blocks the request
-    to ask the human for them; a row that repeats the human's choice between ways shown waits for
-    the human's acceptance like a row the agent derived.
+    because no code makes it true; a settlement that goes to a skill, to guidelines or to the
+    product's code is left out of the table because it is no entry, or is written into the log as a
+    decision; the refinement writes whole entries into the task document; a kept row repeats a rule
+    a current decision the refinement read states; the cycle writes a second entry for a rule its
+    search found already stated; an orchestrated refiner asks the human directly about candidates or
+    substitutes its own acceptance; a task document keeps the human's choice among ways shown
+    without the ways not chosen; the cycle fills a decision's rejected options with ways it derives
+    from what the cycle would otherwise guess, or blocks the request to ask the human for them; a
+    row that repeats the human's choice between ways shown waits for the human's acceptance like a
+    row the agent derived.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
-one a project settles, yet with no place in the task document it reaches the cycle as an answer to
-a question, where it reads as one more choice the cycle may make otherwise. A row in the human's
-words carries the meaning into the cycle without a second point of acceptance: the wording stays
-the agent's, as for every entry a cycle writes, the human judged the meaning when accepting the row,
-and the merge does not ask again, while the review of the whole change reads the entry against the
-row. A row that repeats a choice the human made between ways shown carries that choice already, so
-it enters accepted and the human cuts only the rows the agent derived; asked again, the human
-would answer what the choice settled, and the price is that the row is the agent's summary of a
-choice the human did not read at the choice, so a wrong summary is caught only by reading the table
-when the document is accepted. A
-table read from the whole document finds a settlement said in passing, and its column of what the
-cycle would guess drops one no reader would miss. Refinement compares the candidates with the
-entries it reads for the task's parts; what no link joins, the one search of the whole foundation
-finds once the cycle has settled the entry (WAY-33), and a rule already stated keeps one entry. A
-meaning that cannot hold goes back to the human before the request because the human settled it,
-and finding the change only at the merge would leave code already written for another meaning. In
-an orchestrated round a single human-facing agent keeps these choices together without making the
-refiner a second channel to the human. The ways the human saw and did not choose outlive the
-conversation that showed them only in the task document. A rejected option the writer of an entry
-derives reads as one the human weighed, and an agent that proposes it later has to say what has
-changed for a way nobody turned down, so a way kept from the refinement is written and a missing
-one is `unknown`, which tells the reader nobody knows what was weighed.
-*Rejected:* whole entries written while the task is refined, as a project definition projects
-them — a task has no gate to approve their wording, and refining a task would weigh as much as
-defining a project; noting a settlement only when the human states one — a settlement said in
-passing in the request is missed, and the agent alone decides what binds; letting the cycle change
-or drop a settlement and show the difference in the request — the human's settlement could be
-reversed and seen only once the code is written; decisions and invariants alone — a word whose
-meaning the human settled would be defined by the cycle; a search of the whole foundation when a
-task's candidates are named — it repeats the cycle's search on wording not yet settled; the ways
-not chosen of every choice kept in the source of its row — they would have to be carried from the
-question to the building of the table, a cell of the table takes no line break, and an
-orchestrated refiner transfers answers into the task's questions, not into its table; the rule of
-rejected options in the templates alone — this decision would still have the cycle ask the human
-where the template has it write `unknown`, and an agent comparing a change with this decision would
-take `unknown` for a breach; the rule as part of WAY-29 — its question is a decision recovered from
-code, a new rule beside an existing one is a new question (WAY-19), and with this decision still
-having the cycle ask, the two would need a precedence; a decision of its own — one more entry,
-while this one has to be corrected anyway; every row accepted separately, as before — a second
-consent to the same choice; rows that repeat a choice kept out of the table, the cycle writing the
-decision straight from the answer under the question — the sieve of choices that bind no longer
-after the merge goes (the column of what the cycle would otherwise guess), the cycle itself judges
-which choice to enter, and this decision needs a stronger rebuild.
+one a project settles, yet with no place in the task document it reaches the cycle as an answer to a
+question, where it reads as one more choice the cycle may make otherwise; the same holds for one
+that goes to a skill, to guidelines or to the product's data or code, which the human also sees and
+accepts in the table, since a settlement the cycle placed on its own would bind with a place and a
+wording nobody approved. A row in the human's words carries the meaning into the cycle without a
+second point of acceptance: the wording stays the agent's, as for every entry a cycle writes, the
+human judged the meaning when accepting the row, and the merge does not ask again, while the review
+of the whole change reads the entry against the row. A row that repeats a choice the human made
+between ways shown carries that choice already, so it enters accepted and the human cuts only the
+rows the agent derived; asked again, the human would answer what the choice settled, and the price
+is that the row is the agent's summary of a choice the human did not read at the choice, so a wrong
+summary is caught only by reading the table when the document is accepted. A table read from the
+whole document finds a settlement said in passing, and its column of what the cycle would guess
+drops one no reader would miss. Refinement compares the candidates with the entries it reads for the
+task's parts; what no link joins, the one search of the whole foundation finds once the cycle has
+settled the entry (WAY-33), and a rule already stated keeps one entry. A meaning that cannot hold
+goes back to the human before the request because the human settled it, and finding the change only
+at the merge would leave code already written for another meaning. In an orchestrated round a single
+human-facing agent keeps these choices together without making the refiner a second channel to the
+human. The ways the human saw and did not choose outlive the conversation that showed them only in
+the task document. A rejected option the writer of an entry derives reads as one the human weighed,
+and an agent that proposes it later has to say what has changed for a way nobody turned down, so a
+way kept from the refinement is written and a missing one is `unknown`, which tells the reader
+nobody knows what was weighed.
+*Rejected:* whole entries written while the task is refined, as a project definition projects them —
+a task has no gate to approve their wording, and refining a task would weigh as much as defining a
+project; noting a settlement only when the human states one — a settlement said in passing in the
+request is missed, and the agent alone decides what binds; letting the cycle change or drop a
+settlement and show the difference in the request — the human's settlement could be reversed and
+seen only once the code is written; decisions and invariants alone — a word whose meaning the human
+settled would be defined by the cycle; a search of the whole foundation when a task's candidates are
+named — it repeats the cycle's search on wording not yet settled; the ways not chosen of every
+choice kept in the source of its row — they would have to be carried from the question to the
+building of the table, a cell of the table takes no line break, and an orchestrated refiner
+transfers answers into the task's questions, not into its table; the rule of rejected options in the
+templates alone — this decision would still have the cycle ask the human where the template has it
+write `unknown`, and an agent comparing a change with this decision would take `unknown` for a
+breach; the rule as part of WAY-29 — its question is a decision recovered from code, and the rule
+can change apart from it, so it is a question of its own (WAY-19), and with this decision still
+having the cycle ask, the two would need a precedence; a decision of its own — one more entry, while
+this one has to be corrected anyway; every row accepted separately, as before — a second consent to
+the same choice; rows that repeat a choice kept out of the table, the cycle writing the decision
+straight from the answer under the question — the sieve of choices that bind no longer after the
+merge goes (the column of what the cycle would otherwise guess), the cycle itself judges which
+choice to enter, and this decision needs a stronger rebuild.
 
 ### WAY-135 — When does a task's cycle write a spec?
 
@@ -5161,21 +5283,23 @@ whoever carries out its tasks, as its instruction files and skills do.
 
 *Rationale:* a spec lives as long as its task and holds only what entered it, while guidelines are
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
-because they hold no rule of their own, only how to apply rules the foundation's entries carry, so
-the five elements stay as WAY-04 closes them. They direct whoever carries out tasks, like instruction
-files and skills, so they belong to that part, whose files change every later task (WAY-44), and an
-instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
-fixed names lets a check find them in every product; a product whose screens and admin panel are
-drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
-styleguide to the files it governs, so that a renamed part shows. Coding guidelines are cut by the
-kind of code rather than by part, since a kind such as an endpoint can live in more than one part
-while its exemplar is one: the general file holds what binds the whole of the code once, and an
-agent reads, beside it, only the files of the kinds its work touches, which the general file's
-table names with when to read each, as Open Mercato's table leading from a task to the guides to
-read does. The kind's identifier comes from the decision designating
-its exemplar, so that a file of a kind stands only where a human has approved what it holds.
-*Rejected:* guidelines as a sixth element of the foundation — what binds in them is already carried
-and checked by decisions and invariants, and the list of elements would no longer be closed; an
+because the choices that bind in them are carried by the foundation's entries, which the guidelines
+apply, and the rules of their own that they hold only say how to write code, tests or the look of
+the product, so the five elements stay as WAY-04 closes them. They direct whoever carries out tasks,
+like instruction files and skills, so they belong to that part, whose files change every later task
+(WAY-44), and an instruction file leads to them as to knowledge needed now and then (WAY-128). One
+directory with fixed names lets a check find them in every product; a product whose screens and
+admin panel are drawn by two parts keeps a styleguide for each, and the part's identifier in the
+name ties a styleguide to the files it governs, so that a renamed part shows. Coding guidelines are
+cut by the kind of code rather than by part, since a kind such as an endpoint can live in more than
+one part while its exemplar is one: the general file holds what binds the whole of the code once,
+and an agent reads, beside it, only the files of the kinds its work touches, which the general
+file's table names with when to read each, as Open Mercato's table leading from a task to the guides
+to read does. The kind's identifier comes from the decision designating its exemplar, so that a file
+of a kind stands only where a human has approved what it holds.
+*Rejected:* guidelines as a sixth element of the foundation — what binds in them and carries a
+choice is already carried and checked by decisions and invariants, the rest only says how to write,
+and the list of elements would no longer be closed; an
 extract a script composes from the foundation's entries — it holds what the entries say, never how
 to apply a rule or a use that follows it and one that breaks it; a styleguide in documentation
 beside the code — it directs whoever carries out tasks, whose files WAY-44 gives a part of their
@@ -5191,13 +5315,15 @@ general file — the standing checks have no place.
 
 ### WAY-168 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
 
-A binding rule of a product's guidelines names by identifier the decision of the product's log that
-carries its choice and says what to do and how, and may give a use that follows it and one that
-breaks it, each in one line, while its reasons and rejected options stand in that decision alone;
-what a product's guidelines hold that names no such decision is an example, not a rule. A rule
-names an invariant only where a cheap test of the product's suite checks the rule on a convention of
-the product's code; a rule no such test can check names none, and the review of each change the rule
-reaches compares the change with it.
+A binding rule of a product's guidelines says what to do and how, and may give a use that follows
+it and one that breaks it, each in one line; what the guidelines hold that states no rule is an
+example. A rule that executes a choice of the product with a real cost names by identifier the
+decision of the product's log that carries the choice, while its reasons and rejected options stand
+in that decision alone, and a rule that only says how to write code, tests or the look of the
+product reads `none` in *Decision* and gives its reason in one sentence. A rule names an invariant
+only where a cheap test of the product's suite checks the rule on a convention of the product's
+code; a rule no such test can check names none, and the review of each change the rule reaches
+compares the change with it.
 
 - **Scope:** product-guidelines, decisions, invariants, task-cycle
 - **Based on:** none
@@ -5208,10 +5334,14 @@ reaches compares the change with it.
     the store of data, and gives in one line each a test that sets up its data through the fixtures
     and one that writes rows straight into the store; a rule that red marks only what deletes names
     its decision and no invariant, and the review of a change to the screens compares their buttons
-    with it; a sentence on how one team likes to name its branches, which no decision carries,
-    stands among the examples;
-  - violates: a rule of a styleguide repeats its decision's rationale and rejected options; an agent
-    holds a change to a rule that names no decision; a rule whose meaning only a reading can judge
+    with it; a rule that a test is named after the behaviour it checks, which carries no choice
+    with a real cost, stands in the testing guidelines with *Decision* reading `none` and its
+    reason in one sentence; a sentence on how one team likes to name its branches, which states no
+    rule, stands among the examples;
+  - violates: a rule of a styleguide repeats its decision's rationale and rejected options; a rule
+    that executes a choice with a real cost reads `none` in *Decision*; a rule that only says how to
+    write carries a paragraph of reasons and rejected options; a rule whose meaning only a reading
+    can judge
     names an invariant an agent checks; a rule carries whole files as cases run against the test of
     its invariant.
 - **Origin:** none
@@ -5221,12 +5351,15 @@ work of one discipline: an agent changing a product's screens needs what to do a
 account of why. A choice that binds is a decision (WAY-22), and a product keeps every decision in
 one log (WAY-18), where a collision with the product's other choices can be found and the search of
 the whole foundation sees it (WAY-33); named by its identifier, the decision carries its reasons
-once, and a change that rewords it brings the rule in line (WAY-169). A rule naming no decision
-would bind with a choice nobody approved, so it is an example; where a rule gives a use that follows
-it and one that breaks it, they mark its line, as a pair of examples marks a decision's, and like
-that pair they are optional (WAY-12). A rule of guidelines that an instruction file leads to thus
-carries a decision the product records, the case in which WAY-130 lets a rule stand with no mistake
-behind it. A cheap test on a convention of the code catches a breach of its rule on every change for
+once, and a change that rewords it brings the rule in line (WAY-169). A rule that only says how to
+write code, tests or the look of the product holds no choice that costs anything to take otherwise,
+so a decision for it would repeat the rule in a second place with nothing weighed there, and one
+sentence of reason beside the rule is enough to apply it; the human approves such a rule before the
+code as a row of the task's table or, for one the cycle found, at the merge (WAY-172). Where a rule
+gives a use that follows it and one that breaks it, they mark its line, as a pair of examples marks
+a decision's, and like that pair they are optional (WAY-12). A rule of guidelines that an
+instruction file leads to and that carries a choice thus carries a decision the product records,
+the case in which WAY-130 lets a rule stand with no mistake behind it. A cheap test on a convention of the code catches a breach of its rule on every change for
 little, while a rule whose meaning only a reading can judge is read by the review that reads every
 change anyway (WAY-08); an agent run as its check would cost more than that review and could flag
 sound code unseen.
@@ -5309,8 +5442,9 @@ Every file of a product's guidelines holds, in this order, the header lines *Dis
 *Applies to*, the latter naming parts of the product's map, and the sections `## When to read`,
 `## Rules`, `## Examples` and `## Where in code`, with what the template of its discipline adds at
 the places that template names, and each rule of `## Rules` stands under a heading of its own with
-the fields *Decision*, *Invariant*, *Good* and *Bad*, the last two reading `none` where the rule
-gives no such use. `## Where in code` names by their paths the files and directories of the
+the fields *Decision*, *Invariant*, *Good* and *Bad*, *Decision* reading `none` where the rule only
+says how to write code, tests or the look of the product and *Good* and *Bad* reading `none` where
+the rule gives no such use. `## Where in code` names by their paths the files and directories of the
 product the guidelines point to and copies no value from them, and a section or a rule that a
 template of the-way requires and the product drops holds only `none —` followed by the product's
 decision that departs from it. The headings, header lines, field names, values of closed lists and
@@ -5322,15 +5456,17 @@ writes its guidelines in.
 - **Relations:** derives from WAY-168
 - **Verification:** an agent compares the change with the decision:
   - complies: a product whose team writes in Polish writes the rules and examples of its styleguide
-    in Polish under the English headings and fields;
+    in Polish under the English headings and fields; a rule that only says how to write stands under
+    its heading with *Decision* reading `none`;
   - violates: a product translates the headings of its guidelines, and the-way's templates and
     skills no longer find them; a styleguide copies the values of its colours under
-    `## Where in code`.
+    `## Where in code`; a rule that executes a choice with a real cost reads `none` in *Decision*.
 - **Origin:** none
 
 *Rationale:* one form lets an agent and a reviewer find the same sections in the guidelines of every
 discipline, and a discipline's template only adds to it, so guidelines of a discipline the-way gives
-no template of still have one; the fields carry what a rule holds beside its entries (WAY-168). A
+no template of still have one; the fields carry what a rule holds beside its entries (WAY-168), and
+*Decision* reads `none` for a rule with no entry beside it. A
 copy of a value the code holds goes stale, so the guidelines point to it (WAY-225). A part a
 template requires is dropped only by a decision, so a departure is the product's own approved
 choice, visible where the part would stand. The structural words stay in English because the-way's
@@ -5349,13 +5485,18 @@ required part left out with no word — a departure would look like an omission.
 
 ### WAY-172 — How is a new or changed meaning of a product's guidelines approved?
 
-A new or changed meaning of a product's guidelines is a decision of the product's log, new or
-changed, and the code that uses it is made only once the human who accepts decisions (WAY-14) has
-approved it, in the document of the task that needs it, as WAY-30 has a change to a decision
-approved, or, where that document does not settle it, at a blocked draft request on whose branch
-the cycle proposes the decision. Using a meaning that a decision of the product's log already
-carries takes no approval, and neither does changing a value that keeps its meaning. In the area of
-new and changed meanings of a product's guidelines this decision prevails over WAY-114, under which
+A new or changed meaning of a product's guidelines that carries a choice with a real cost is a
+decision of the product's log, new or changed, and the code that uses it is made only once the
+human who accepts decisions (WAY-14) has approved it, in the document of the task that needs it, as
+WAY-30 has a change to a decision approved, or, where that document does not settle it, at a
+blocked draft request on whose branch the cycle proposes the decision. A new or changed rule that
+only says how to write code, tests or the look of the product, with no decision, is accepted by the
+human as a row of the task's table of settlements before the code that uses it, or, where the cycle
+found the rule itself, at the merge from the request's description, and a rule of a template of
+the-way binds a product only through a decision of its log that adopts it (WAY-173). Using a
+meaning that a decision of the product's log already carries takes no approval, and neither does
+changing a value that keeps its meaning; in the area of new and changed meanings of a product's
+guidelines that carry a choice with a real cost, this decision prevails over WAY-114, under which
 an agent writes such an entry on its own recommendation for the human to accept at the merge.
 
 - **Scope:** product-guidelines, decisions, project-level, task-cycle
@@ -5368,10 +5509,16 @@ an agent writes such an entry on its own recommendation for the human to accept 
     that use it; a cycle whose screen needs a role the task did not settle proposes the role's
     decision on the task branch, opens a blocked draft request, and makes the screen only once the
     human has approved it; a cycle darkens the value of the role of the button that saves to reach
-    the contrast its decision asks for, its meaning kept, and asks no one;
+    the contrast its decision asks for, its meaning kept, and asks no one; a task's table carries a
+    row that goes to the testing guidelines, "a test is named after the behaviour it checks", the
+    human accepts it before the code, and the cycle writes the rule with *Decision* reading `none`;
+    a cycle that finds such a rule itself writes it, names it in the request among what the human
+    did not see in the task, and the human accepts it at the merge;
   - violates: a cycle writes a new role's decision on its own recommendation and leaves it to the
     merge; the orchestrator's go-ahead stands for the approval of a new meaning; a screen that uses
-    an existing role waits for the human.
+    an existing role waits for the human; a cycle stops on a blocked draft request for a rule that
+    only says how to write; a cycle writes a rule that executes a choice with a real cost with
+    *Decision* reading `none`.
 - **Origin:** none
 
 *Rationale:* a meaning of guidelines binds every later screen, and code built on one the human never
@@ -5380,12 +5527,21 @@ where WAY-30 already puts a change to a decision; the task's document is where t
 the cycle is to build on (WAY-124), and a blocked draft request is where the human meets a decision
 the cycle cannot make alone (WAY-227). A meaning a decision already carries was approved with it,
 and a value changed with its meaning kept changes no rule, since the rule is the meaning and the
-value stands in the code (WAY-225), so neither waits. Without the precedence, a cycle meeting such a
-meaning would face this decision and WAY-114 with nothing to choose between them (WAY-25).
-*Rejected:* a new meaning written by the cycle and shown at the merge, as WAY-114 gives it — code is
-built on a meaning the human has not seen, and turning it down reworks the screens; approval with
-the plan — in a cycle the human sees the request, not the plan (WAY-227, WAY-136); approval of every
-use of a meaning — every screen would wait for the human.
+value stands in the code (WAY-225), so neither waits. A rule that only says how to write binds no
+choice that costs anything to take otherwise, so the human sees it before the code as a row of the
+task's table, and one the cycle found itself is applied by the code before the human sees it and is
+accepted at the merge, a price paid so that a cycle does not stop at every small rule. Without the
+precedence, a cycle meeting such a meaning would face this decision and WAY-114 with nothing to
+choose between them (WAY-25).
+*Rejected:* a new meaning that carries a choice with a real cost, written by the cycle and shown at
+the merge, as WAY-114 gives it — code is built on a meaning the human has not seen, and turning it
+down reworks the screens; approval with the plan — in a cycle the human sees the request, not the
+plan (WAY-227, WAY-136); approval of every use of a meaning — every screen would wait for the
+human; every rule with no decision waiting as one with a decision does, a cycle that finds a new
+rule stopping on a blocked request — cycles would stop at small rules such as one that a test's name
+describes behaviour; the same as chosen, and in addition the rules of the-way's template that only
+say how to write entering a product's guidelines with no decision adopting them — a rule would bind
+the product from outside its log, and a departure from it would have no place to stand.
 
 ### WAY-173 — Does what the-way's template of a discipline of guidelines carries bind a product directly?
 
@@ -7487,7 +7643,7 @@ tool of its own.
 
 *Rationale:* the same fields for every level let an agent find what binds at any level in one place,
 and a small product writes a field once and points to it from the others. A field binds only where a
-decision of the product carries it (WAY-168), so the template's defaults for the build of a test,
+decision of the product carries it (WAY-173), so the template's defaults for the build of a test,
 its doubles, its data and its time are proposals a product adopts or departs from. One command runs
 every test (WAY-16), so the recipe gives that command and how far it narrows, and a command of the
 tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
@@ -9566,11 +9722,16 @@ missing block could not be told from one that was forgotten.
 ### WAY-293 — What prevails where a task or its spec excludes the entry for a choice?
 
 Where a task or its spec explicitly excludes an entry in the foundation for a choice, that exclusion
-prevails over the rule that a choice binding after the merge is written into the foundation, and the
-choice stays a row of the cycle record's questions table; without such an exclusion the rule applies
-as before. In the area of choices that a task or its spec explicitly excludes from the foundation,
-this decision prevails over WAY-22 and WAY-18. A candidate left out of a task's *Settlements to
-record* is no exclusion.
+prevails over the rule that a choice binding after the merge goes to the place the questions of the
+decisions template give it, and the choice stays a row of the cycle record's questions table;
+without such an exclusion the rule applies as before. In the area of choices that a task or its spec
+explicitly excludes from the foundation, this decision prevails over WAY-22 and WAY-18. A candidate
+left out of a task's *Settlements to record* is no exclusion.
+
+In the log of the-way, a rule that stands in one skill or template of the-way stands there with one
+sentence of its reason. It is an entry of the log only where it carries a choice with a real cost,
+one for which someone could reasonably propose the rejected way, and the skill or template then
+names that decision.
 
 - **Scope:** decisions, task-cycle
 - **Based on:** none
@@ -9579,30 +9740,45 @@ record* is no exclusion.
   decision:
   - complies: a spec that says the choice of a form gets no entry in the foundation leaves that
     choice as a row of the questions table, and the cycle writes no entry for it; a task that
-    excludes nothing has each choice that binds after the merge written as an entry;
-  - violates: the cycle writes an entry for a choice the task or its spec excludes; a choice is
-    left out of the foundation because it looks small, with no exclusion in the task or its spec; a
-    candidate the human did not accept into the task's *Settlements to record* is taken for an
-    exclusion.
+    excludes nothing has each choice that binds after the merge written in the place the questions
+    give it; a rule of how an agent works that stands in one skill of the-way stands there with a
+    sentence of its reason and no entry, while a choice of the process that someone could
+    reasonably take otherwise has an entry that the skill names;
+  - violates: the cycle writes an entry for a choice the task or its spec excludes; a choice that
+    passes the questions is left out of the foundation because it looks small, with no exclusion in
+    the task or its spec; a candidate the human did not accept into the task's *Settlements to
+    record* is taken for an exclusion; a rule that only one template of the-way holds is written as
+    a decision beside it, repeating its text; a skill states a choice with a real cost and names no
+    decision.
 - **Origin:** none
 
 *Rationale:* without a recorded precedence, a cycle meets a task or spec that says "no entry" beside
-a rule that a choice binding after the merge becomes an entry, and beside WAY-22 and WAY-18, which
-give every choice that records a rule a place in the one log; the agent that meets the collision
-may not settle it silently (WAY-25). A task or spec that excludes an entry says so in words, so the
-exception is limited to what was said and the default stays: a choice that binds after the merge
-enters the log. The choice is not lost, since its row stays in the questions table, and the section
-for the human's decisions puts the cycle's choices beyond the task before the human (WAY-287). The
-price is that the reasons for rejecting the other ways of such a choice
-go with the spec; that a later change can rework its rule without contradicting any entry; and that
-nothing in the foundation says the choice has no entry.
+a rule that a choice binding after the merge goes to the place the questions give, and beside WAY-22
+and WAY-18, which give every choice that records a rule a place in the one log; the agent that meets
+the collision may not settle it silently (WAY-25). A task or spec that excludes an entry says so in
+words, so the exception is limited to what was said and the default stays: a choice that binds
+after the merge goes to the place the questions give it. The choice is not lost, since its row stays
+in the questions table, and the section for the human's decisions puts the cycle's choices beyond
+the task before the human (WAY-287). The price is that the reasons for rejecting the other ways of
+such a choice go with the spec; that a later change can rework its rule without contradicting any
+entry; and that nothing in the foundation says the choice has no entry. In the log of the-way, whose
+product is its skills and templates, a rule written in one of them with its reason beside it is
+found where it acts, and an entry beside it would repeat that text and drift from it; a choice with
+a real cost keeps its entry, since its reasons and rejected ways would otherwise be lost and a later
+change could rework the rule with no entry to contradict.
 *Rejected:* an exception for every choice written in the text of a skill or template, with no entry,
-unless the task or spec asks for one — the reasons and rejected ways of such a choice are lost with
-the spec, a later change can rework the rule without contradicting any entry, and the exception goes
-against WAY-22 and WAY-18; no change — the return step is left without a precedence between the
-exclusion and the rule that a choice binding after the merge is written into the foundation, and the
-choice is weighed again at each stage that meets it; letting only the task exclude an entry, not its spec — where a spec excludes the entry for each of
-several choices, the cycle writes a decision for every one of them and the log grows.
+unless the task or spec asks for one — for a choice with a real cost, and for a product's log, the
+reasons and rejected ways of such a choice are lost with the spec, a later change can rework the
+rule without contradicting any entry, and the exception goes against WAY-22 and WAY-18, while for
+the rest of the-way's log it is taken as the second paragraph gives it; the log of the-way with no
+question that sends an instruction for how an agent works to a skill, every rule of a skill or a
+template staying a decision — the log goes on growing at its pace, many of its entries only
+repeating one template or skill; no change — the
+return step is left without a precedence between the exclusion and the rule that a choice binding
+after the merge goes to the place the questions give, and the choice is weighed again at each stage
+that meets it; letting only the task exclude an entry, not its spec — where a spec excludes the
+entry for each of several choices, the cycle writes a decision for every one of them and the log
+grows.
 
 ### WAY-294 — How does the cycle make sure its process remarks hold every item its stage reports give?
 

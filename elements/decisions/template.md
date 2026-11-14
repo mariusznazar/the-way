@@ -22,13 +22,16 @@ particular to a decision (WAY-35).
 ```markdown
 ### WAY-NN — <the question this decision answers>
 
-<1–3 binding sentences>
+<1–3 binding sentences that answer the question>
+
+<1–3 binding sentences for a part of another question this entry answers, one paragraph for each
+such part; none where there is no such part>
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
 - **Relations:** derives from WAY-x · narrows WAY-y | none
-- **Verification:** invariants: <identifier> · <identifier>. An agent compares a change with the
-  decision:
+- **Verification:** invariants: <identifier> · <identifier>. tests: <the parts of the sentences they
+  hold, in words>. An agent compares a change with the part no invariant and no test holds:
   - complies: <…>
   - violates: <…>
 - **Origin:** <where the full reasoning lives> | recovered from the code at <place> | none
@@ -96,18 +99,20 @@ A field stays in the template only while someone or something reads it (WAY-05).
 |---|---|
 | number (heading) | references from entries, tests and code (WAY-02); `elements/common/foundation_check.py`, which reports a number the log does not hold |
 | question (heading) | the author and the skill: does the log already answer this question (WAY-19) |
-| binding sentences | an agent comparing a change with the decision (WAY-12); the author's search of the foundation (WAY-33) |
+| binding sentences | an agent comparing a change with the decision (WAY-12); the author's search of the foundation (WAY-33); `foundation_check.py`, which compares them with the quotation of each line `decision:` of a test (WAY-02) and with those at the base to find a decision a change alters (WAY-12) |
 | Scope | finding the decisions for a change (WAY-21); `foundation_check.py`, which reports a part the map does not hold |
 | Based on | the author of a change to a fact or a source, searching for what rests on it (WAY-33); `foundation_check.py`, which reports a fact the foundation does not hold |
 | Relations | an agent meeting two decisions that collide (WAY-25); the author's search of the foundation (WAY-33) |
-| Verification | its invariants: whoever looks for the checks of the decision, and `foundation_check.py`, which reports an invariant the foundation does not hold; its pair of examples: an agent comparing a change with the decision (WAY-12) |
+| Verification | its invariants: whoever looks for the checks of the decision, and `foundation_check.py`, which reports an invariant the foundation does not hold; its clause `tests:`: an agent comparing a change with the decision, who learns which parts of the sentences a test holds, while the script does not read the clause (WAY-12); its pair of examples, for the part no invariant and no test holds: an agent comparing a change with the decision (WAY-12) |
 | Origin | whoever wants to change the decision and needs the full reasoning (WAY-29) |
 | Rationale | the agent in a borderline case; a human considering a change |
 | Rejected | the agent proposing an option already weighed, who says what has changed since; the search of the foundation (WAY-33) |
 
 ## Binding sentences
 
-- One to three sentences: the first paragraph under the heading (WAY-05).
+- One to three sentences answer the question of the heading, in the first paragraph under it. A part
+  of another question that the entry answers (WAY-19) has its own paragraph after that one, also of
+  one to three sentences, one paragraph for each part (WAY-05).
 - Present tense, describing a state that is to be true, concrete enough to check (WAY-05).
 - Normative words — *must*, *must not* — appear only here, in lower case.
 - The words *should* and *will*, exclamation marks and the keywords of RFC 2119 in capitals (MUST,
@@ -133,15 +138,41 @@ A field stays in the template only while someone or something reads it (WAY-05).
 - **Plan test:** does the rule still bind once the change that brings it is merged? No — it
   belongs to the plan of that work, or to the choices of its cycle record where no plan is
   written, not to the log (WAY-36).
-- Tests live only with invariants; a decision names in *Verification* the invariants derived from
-  it (WAY-12).
+- **Where it goes:** a settlement that passed the plan test goes through five questions, in this
+  order. The first "yes" names its place; what passes all five is an entry of the log.
+  1. "Is it an instruction for how an agent works?" — it goes to a skill or an instruction file.
+  2. "Is it a rule only for how to write code, tests or the look of the product?" — it goes to the
+     guidelines of that discipline, as a rule with its reason in one sentence; a rule that carries a
+     choice with a real cost stays a decision and the rule names it.
+  3. "Is it a single text, number, list or location?" — it goes to the product's data or code, with
+     the test that holds it and, where the reason is not obvious, a comment at the value.
+  4. "Is it only the lack of a feature?" — it is not written, unless another entry stands on it
+     (WAY-26).
+  5. "Does an entry of the log already answer the question it answers, in whole or in part?" — it
+     becomes a sentence of that entry ("Changing a decision").
+
+  An entry stands only where someone who does not know the decision would do otherwise and a test
+  that stops them would not tell them why.
+
+  In the log of the-way itself, question 1 reads "Is it an instruction for how an agent works and
+  does it stand in one skill or template of the-way?": the rule stands there with one sentence of
+  its reason, and is an entry only where it carries a choice with a real cost, one for which someone
+  could reasonably propose the rejected way, in which case the skill or template names the
+  decision. In a product's log question 1 stays as above (WAY-293).
+- A test holds a decision's sentence by a line `decision:` ("Verification"); a sentence so held gets
+  no invariant derived from the decision, and an invariant stays for a rule with no choice behind it
+  and for a rule on which several decisions stand (WAY-22). A decision names in *Verification* the
+  invariants derived from it and, by the clause `tests:`, the tests that hold its sentences
+  (WAY-12).
 
 ## Changing a decision
 
 - A number stands for the question a decision answers, carries the product's prefix and is given
-  in the order entries are written; a new question gets the next free number, and a new rule next
-  to an existing decision is a new question (WAY-19). No entry and no withdrawn number holds the
-  next free number.
+  in the order entries are written; a new question gets the next free number, a question
+  independent of every existing entry included (WAY-19). A part of the question an existing entry
+  answers is a sentence of that entry, in a paragraph of its own ("Binding sentences"), where it
+  cannot change without changing that entry; a part that can change on its own is a question of its
+  own with its own number (WAY-19). No entry and no withdrawn number holds the next free number.
 - A change to a decision edits its entry in place: the binding sentences, the fields, *Rationale*
   and *Rejected* describe the decision as it then stands, never the change (WAY-07, WAY-19).
 - A human accepts the changed meaning by merging the request that carries the change (WAY-14),
@@ -191,14 +222,35 @@ A field stays in the template only while someone or something reads it (WAY-05).
 - *Verification* names, after `invariants:`, the invariants of the product's invariants file that
   derive from the decision, each by its identifier, and only where such invariants exist; each of
   them names the decision in *Derives from* (WAY-12, WAY-17).
+- A test that holds a sentence of the decision carries beside it a line `decision:`: a comment in a
+  tracked file other than Markdown, in the comment forms of the line `invariant:`, that holds
+  `decision:`, one decision number as its heading writes it, and one quotation in straight double
+  quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The quotation
+  holds no `"`, begins at the start of a sentence of the entry's binding sentences — the start of
+  them, the start of one of their paragraphs, or the first word after a full stop and a space — and
+  holds at least three words; it stands in the binding sentences once every run of spaces and line
+  breaks is replaced by a single space. The line stands at the test that holds the sentence
+  (WAY-02).
+- *Verification* names the tests that hold the sentences of the decision by the clause
+  `tests: <the parts of the sentences they hold, in words>`, with no path, no test name and no
+  number: the lines `decision:` find the tests, so the clause is no second copy of the link, and
+  the script does not read it (WAY-12, WAY-18).
 - A pair of examples is optional: `complies:` a change that keeps the decision and `violates:` one
-  that breaks it, for an agent comparing a change with what no invariant of the decision checks
-  (WAY-12). The violating example is code that goes against the decision while its entry stays as
-  it is, never a change that replaces the decision together with its code (WAY-12).
-- With neither, *Verification* is `none`. Either part stands alone:
+  that breaks it, for an agent comparing a change with the part of the sentences that no invariant
+  and no test checks (WAY-12). A decision whose sentence a test holds in whole carries no pair; one
+  whose test holds part of it carries a pair only for the part no test holds. The violating example
+  is code that goes against the decision while its entry stays as it is, never a change that
+  replaces the decision together with its code (WAY-12).
+- A decision whose sentence a test holds keeps its *Rationale* and *Rejected* whole: a test cannot
+  say why, and the pair of examples is all that goes (WAY-12).
+- With none of these, *Verification* is `none`. Each part stands alone:
 
 ```markdown
 - **Verification:** invariants: <identifier> · <identifier>.
+```
+
+```markdown
+- **Verification:** tests: <the parts of the sentences they hold, in words>.
 ```
 
 ```markdown
@@ -219,7 +271,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
   non-goal: where later work builds on it, a decision states what the product does today (WAY-26).
   Non-goals live only at product level; a task's exclusions live in its plan,
   or in the choices of its cycle record where no plan is written (WAY-36).
-  A non-goal that can be checked on a commit gets a derived invariant (WAY-22).
+  A non-goal that can be checked on a commit gets a derived invariant, or a test that holds its
+  sentence by a line `decision:` and no invariant (WAY-22).
 
 ## Origin
 

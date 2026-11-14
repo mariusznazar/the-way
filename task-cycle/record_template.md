@@ -181,7 +181,9 @@ appearance.
   used in another meaning than its entry gives, written or corrected, or none>
 - Part-map changes: <identifiers or none>
 - Projected entries written whole or in part: <identifiers or none>
-- Rows of *Settlements to record* written: <row number and identifier for each row, or none>
+- Rows of *Settlements to record* written: <row number and identifier for each row, or for a row
+  that goes to a skill, a guidelines file or the code of the product, its place in place of the
+  identifier; or none>
 
 The return step corrects in the same change whatever no longer matches. It writes an invariant
 only for a rule the task, a decision or the human sets, never for behaviour merely because no
