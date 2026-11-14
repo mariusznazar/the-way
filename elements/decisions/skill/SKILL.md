@@ -31,8 +31,15 @@ the search of the foundation adds for this element.
 - *Based on*: sort what the source offers as a reason before filling the field — what is not yet
   known, or the decider's own motive, is no source outside the product.
 - *Verification*: name the invariants the invariants file holds that derive from this decision,
-  and those step 4.4 writes; add a pair of examples where the human gives one or accepts one you
-  propose.
+  and those step 4.4 writes; name the tests that hold its sentences in the clause `tests:`, once
+  their lines `decision:` stand (the template's "Verification"); add a pair of examples only for the
+  part of the sentences that no invariant and no test holds, where the human gives one or accepts
+  one you propose.
+- *Verification*, where a test of a later slice of the same change will hold a sentence of this
+  decision: carry a pair of examples for that part for now. The run of the foundation check made
+  right after the entry is written reports a decision the change altered with nothing holding it,
+  and the switch of step 3 does not skip that report; the pair holds it until the test stands. The
+  return step removes the pair's part the test holds.
 
 ## 4. Ask, show, write
 
