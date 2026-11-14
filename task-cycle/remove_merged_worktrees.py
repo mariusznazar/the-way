@@ -13,15 +13,16 @@ nothing else. A removal cannot be undone.
 
 The remote is `origin` unless `--remote` names another, and the target branch, the one pull requests
 merge into, is the branch `--target` names on it, else the branch the remote's `HEAD` names, else
-`main`, else `master`. Before it judges, the script fetches the remote (`git fetch --no-tags`, never
-`--prune`), unless `--no-fetch` has it judge by the remote-tracking refs as they stand, which can
-only make it keep a directory it would remove. Where the fetch fails the script stops and judges
-nothing.
+`main`, else `master`. Before it judges, the script fetches the remote (`git fetch --no-tags
+--no-prune`, so that no setting of `fetch.prune` takes away a remote-tracking ref), unless
+`--no-fetch` has it judge by the remote-tracking refs as they stand, which can only make it keep a
+directory it would remove. Where the fetch fails the script stops and judges nothing.
 
 A directory is marked `remove` only where all of these hold at once:
 
-- the tree is clean: no change in a tracked file and no new file git does not ignore; files git
-  ignores do not count;
+- the tree is clean as git's own check of `git worktree remove` reads it: no change in a tracked file
+  or in a submodule, whatever the configuration says of ignoring submodules, and no new file git does
+  not ignore; files git ignores do not count;
 - every commit of the directory is on the remote, as a remote-tracking ref of the remote contains
   it;
 - its branch is merged: the branch's tip is the second parent of a merge commit on the first-parent
@@ -75,6 +76,9 @@ KNOWN_CACHES = frozenset({
     "coverage", ".gradle", "target", ".DS_Store", "Thumbs.db",
 })
 BASE_COPY = re.compile(r"base(?:-(?:check|fix)(?:-(?P<task>[A-Za-z0-9][A-Za-z0-9._-]*))?)?")
+# The sentence of git's refusal to remove a checkout that holds a populated submodule; the rest of its
+# message names the path, which can hold any word.
+SUBMODULE_REFUSAL = b"working trees containing submodules cannot be moved or removed"
 IGNORED_SHOWN = 12  # the ignored paths shown for one directory; the rest are counted
 ENVIRONMENT = {"GIT_TERMINAL_PROMPT": "0", "LC_ALL": "C"}
 
@@ -217,7 +221,7 @@ class Repository:
         return text(found.stdout).strip()
 
     def fetch(self) -> None:
-        done = git(self.top, "fetch", "--no-tags", self.remote)
+        done = git(self.top, "fetch", "--no-tags", "--no-prune", self.remote)
         if done.returncode != 0:
             raise CleanupError(f"git fetch {self.remote} failed: {first_line(done.stderr)}")
 
@@ -325,9 +329,12 @@ class Cleanup:
                 and same(lines[1], self.repository.common))
 
     def inspect_state(self, entry: Entry) -> None:
-        status = git(entry.path, "status", "--porcelain", "-z", "--untracked-files=normal")
+        # `--ignore-submodules=none` is git's own check in `git worktree remove`, which a submodule
+        # declared `ignore` in the configuration would otherwise hide.
+        status = git(entry.path, "status", "--porcelain", "-z", "--untracked-files=normal",
+                     "--ignore-submodules=none")
         if status.returncode != 0:
-            entry.hard.append(f"git cannot read its state: {first_line(status.stderr)}")
+            entry.hard.append("git cannot read its state")
         elif status.stdout:
             entry.hard.append("uncommitted changes: a tracked file changed or a new file that "
                               "git does not ignore")
@@ -421,7 +428,7 @@ def removal_order(entries: list[Entry]) -> list[Entry]:
 def remove_entry(repository: Repository, entry: Entry) -> str | None:
     """Removes one directory with `git worktree remove`; None on success, else what went wrong."""
     done = git(repository.top, "worktree", "remove", entry.path)
-    if done.returncode != 0 and b"submodule" in done.stderr.lower():
+    if done.returncode != 0 and SUBMODULE_REFUSAL in done.stderr:
         # Git refuses to remove a checkout holding a populated submodule without `--force`; the
         # tree and the submodule were found clean above.
         done = git(repository.top, "worktree", "remove", "--force", entry.path)

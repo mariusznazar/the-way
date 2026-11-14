@@ -16,8 +16,14 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+
+import remove_merged_worktrees  # noqa: E402
+
 SCRIPT = HERE / "remove_merged_worktrees.py"
 LINE = re.compile(r"^(remove|keep)\s+(.+?)  \[(.*?)\]  (.*)$")
 LIST_HEADER = "Directories of cycles that stay for a human decision"
@@ -477,6 +483,25 @@ class ApplyTest(unittest.TestCase):
         self.assertFalse(merged.exists())
         self.assertEqual("precious\n", (outside / "keep.txt").read_text(encoding="utf-8"))
 
+    def test_a_listed_path_that_is_a_junction_is_kept(self) -> None:
+        # Breaks if a path that is a Windows junction is read as a plain directory.
+        try:
+            import _winapi
+        except ImportError:
+            self.skipTest("this system has no junctions")
+        merged = self.fx.task("merged")
+        moved = self.fx.root / "moved"
+        merged.rename(moved)
+        try:
+            _winapi.CreateJunction(str(moved), str(merged))
+        except OSError:
+            moved.rename(merged)
+            self.skipTest("this system makes no junction")
+        result = self.fx.run("--apply")
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertTrue((moved / "a.txt").is_file())
+        self.assertIn("symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2])
+
     def test_a_listed_path_that_is_a_link_is_kept(self) -> None:
         merged = self.fx.task("merged")
         moved = self.fx.root / "moved"
@@ -491,22 +516,47 @@ class ApplyTest(unittest.TestCase):
         self.assertTrue(moved.is_dir())
         self.assertIn("symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2])
 
-    def test_a_populated_submodule_does_not_keep_a_clean_directory(self) -> None:
-        # The checkout of a product holds its `.the-way` submodule, which git removes only forced.
+    def add_submodule(self, ignore: str | None = None) -> None:
+        """Gives the main checkout a submodule `.the-way`, as a product has, optionally declared
+        `ignore` in `.gitmodules`."""
         sub = self.fx.root / "sub"
         git(self.fx.root, "init", "-b", "main", str(sub))
         write(sub / "s.txt")
         git(sub, "add", "s.txt")
         git(sub, "commit", "-m", "sub")
         git(self.fx.main, "submodule", "add", str(sub), ".the-way")
+        if ignore:
+            git(self.fx.main, "config", "-f", ".gitmodules", "submodule..the-way.ignore", ignore)
+            git(self.fx.main, "add", ".gitmodules")
         git(self.fx.main, "commit", "-m", "add the submodule")
         git(self.fx.main, "push", "origin", self.fx.target)
+
+    def test_a_populated_submodule_does_not_keep_a_clean_directory(self) -> None:
+        # The checkout of a product holds its `.the-way` submodule, which git removes only forced.
+        self.add_submodule()
         merged = self.fx.task("merged")
         git(merged, "submodule", "update", "--init")
         self.assertTrue((merged / ".the-way" / "s.txt").is_file())
         result = self.fx.run("--apply")
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
         self.assertFalse(merged.exists())
+
+    def test_a_change_in_a_submodule_that_the_configuration_hides_keeps_the_directory(self) -> None:
+        # Breaks if the status of the tree honours `ignore` of a submodule: the forced removal that
+        # git needs for a populated submodule would then take uncommitted work with it.
+        self.add_submodule(ignore="all")
+        merged = self.fx.task("merged")
+        git(merged, "submodule", "update", "--init")
+        write(merged / ".the-way" / "s.txt", "UNCOMMITTED WORK\n")
+        write(merged / ".the-way" / "new.txt")
+        self.assertEqual("", git(merged, "status", "--porcelain"))
+        self.assertNotEqual("", git(merged, "status", "--porcelain", "--ignore-submodules=none"))
+        result = self.fx.run("--apply")
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertTrue((merged / ".the-way" / "new.txt").is_file())
+        decision = self.fx.decisions(result.stdout)["wt/merged"]
+        self.assertEqual("keep", decision[0])
+        self.assertIn("uncommitted changes", decision[2])
 
     def test_a_removal_that_fails_is_reported_and_the_others_go_on(self) -> None:
         stuck = self.fx.task("stuck")
@@ -544,6 +594,7 @@ class ApplyTest(unittest.TestCase):
         # Breaks if the fetch prunes: the remote-tracking branch of a merged task, deleted on the
         # host, is the evidence that the state reader of a project plan still reads.
         self.fx.task("merged")
+        git(self.fx.main, "config", "fetch.prune", "true")
         git(self.fx.origin, "branch", "-D", "task/merged")
         result = self.fx.run()
         self.assertEqual(0, result.returncode, result.stderr)
@@ -558,6 +609,42 @@ class ApplyTest(unittest.TestCase):
             return handle.close
         held.chmod(stat.S_IRUSR | stat.S_IXUSR)
         return lambda: held.chmod(stat.S_IRWXU)
+
+
+class RefusalTest(unittest.TestCase):
+    """The script's two readings of what git says, on messages made up for the case."""
+
+    def test_only_gits_sentence_about_submodules_makes_the_removal_forced(self) -> None:
+        # Breaks if the word "submodule" anywhere in the message, the directory's path included,
+        # turns a refusal for changed files into a forced removal.
+        entry = remove_merged_worktrees.Entry(path="repos/fix-submodule-handling")
+        calls = []
+
+        def refuse(directory, *arguments):
+            calls.append(arguments)
+            message = (b"fatal: 'repos/fix-submodule-handling' contains modified or untracked files, "
+                       b"use --force to delete it")
+            return subprocess.CompletedProcess(arguments, 128, b"", message)
+
+        with mock.patch.object(remove_merged_worktrees, "git", refuse):
+            problem = remove_merged_worktrees.remove_entry(SimpleNamespace(top="repos"), entry)
+        self.assertIn("contains modified or untracked files", problem)
+        self.assertEqual([("worktree", "remove", entry.path)], calls)
+
+    def test_a_reason_for_the_list_never_holds_what_git_says_of_a_path(self) -> None:
+        # Breaks if git's message, which names the path, reaches the line the cycle copies.
+        entry = remove_merged_worktrees.Entry(path="repos/wt", head="a" * 40, branch="task/x")
+
+        def fail(directory, *arguments):
+            message = b"fatal: cannot read repos/secret-dir/wt"
+            return subprocess.CompletedProcess(arguments, 128, b"", message)
+
+        repository = SimpleNamespace(remote="origin", target_name="origin/main",
+                                     pushed=lambda commit: True, merged=lambda commit: True)
+        cleanup = remove_merged_worktrees.Cleanup(repository, [entry], [])
+        with mock.patch.object(remove_merged_worktrees, "git", fail):
+            cleanup.inspect_state(entry)
+        self.assertEqual(["git cannot read its state"], entry.hard)
 
 
 class ErrorTest(unittest.TestCase):
