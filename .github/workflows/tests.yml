@@ -1,0 +1,42 @@
+# The one command of the-way's tests, on every pull request into `foundations` (WAY-16).
+#
+# It runs on Linux, not on Windows: the tests that need POSIX (links, loops of links, a FIFO) cannot
+# run on the Windows machine the work is made on, and Windows is checked by the gate that the task
+# cycle runs on that machine before a request opens. The job's name, `tests`, stays as it is: the
+# branch rule that requires this check names it.
+#
+# The trigger is `pull_request`, never `pull_request_target`: the code of a request runs with a
+# read-only token and no secret. No step uses the text of the request (its title, its branch name,
+# its description). The actions stand at the commits of their releases, so that a moved tag changes
+# nothing.
+name: tests
+
+on:
+  pull_request:
+    branches: [foundations]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      # The whole history, so that `foundation_check.py` finds the commit the branch left
+      # `foundations` from (`git merge-base HEAD`); the checkout of a pull request sets no
+      # `origin/HEAD`, which the script takes the main branch from, so the next step sets it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/foundations
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+      - run: python -B gate/run_tests.py

@@ -65,6 +65,13 @@ made, `python -B gate/run_tests.py <directory>` runs the tests of one directory.
 `gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
 which does not rest on the runner it checks.
 
+The same command runs in CI, on Linux, on every pull request into `foundations`
+(`.github/workflows/tests.yml`; WAY-16). Its job is named `tests`; the owner of the repository sets
+that check as required before a merge in the branch rules of `foundations`, with a bypass for the
+owner, a setting of the host that no file of the repository holds. The tests that need POSIX —
+links, loops of links, a FIFO — run there and not on Windows, and Windows is checked by the run on the
+change as it goes into the request. CI runs no other checking command.
+
 The author of the change, or the agent that leads the work, asks an agent that did not make the
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position
 the change carries out, and the foundation entries the change touches, and reviews the change
@@ -95,6 +102,10 @@ lists nothing, the block in the language of the task document included (WAY-308,
 ```
 python -B task-cycle/private_paths_check.py <description file>
 ```
+
+Once the request is open, wait for the CI run on it and put its result into the description under
+*Checks*; a red result is a failure of the gate, which the change fixes before the request goes to
+Mariusz (`task-cycle/skill/SKILL.md`, step 12).
 
 Mariusz merges the request; the merge accepts the change and each entry he did not see at the task
 document, those its section for the human's decisions puts before him (WAY-114).

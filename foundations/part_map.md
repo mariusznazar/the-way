@@ -159,6 +159,7 @@ agents' tools and of CI that direct them.
   .claude/skills/**
   .claude/agents/**
   .agents/skills/**
+  .github/workflows/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines
 - **Trust boundary:** none
