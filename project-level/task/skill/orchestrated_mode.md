@@ -12,7 +12,7 @@ to guess or overwrite another task.
   human goes into your conversation turn, then you end the turn. This includes task location, a
   missing entry of the task place's rules (the human's agreement to write it into the locations file
   is recorded in the conversation, and you write it then), which task to refine, goal/scope/wording,
-  conflicting decisions, deployment-work splits, Human-action placement/completion, candidate
+  conflicting decisions, Human-action placement/completion, candidate
   acceptance/rejection, questions against choices and final complete-document approval. Supply
   complete material, available ways, costs and a recommendation where "How a skill asks" requires
   them. Never ask the human directly.

@@ -502,8 +502,9 @@ trust boundary (WAY-48), and does it hold an operation that cannot be undone —
 which either answer is yes gets a review aimed at that risk; an operation that cannot be undone is
 only prepared, and a human performs it after deciding at the request. A task's size may lighten how
 its change is prepared and made — its plan and the number of agents making it — never the outcome
-it has to reach or the checks run on the finished change, and otherwise serves only as a signal to
-split it; only a human sets a task to return knowledge instead of a change, which merges nothing.
+it has to reach or the checks run on the finished change, and outside preparing and making the
+change it decides nothing; only a human sets a task to return knowledge instead of a change, which
+merges nothing.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -515,7 +516,8 @@ split it; only a human sets a task to return knowledge instead of a change, whic
     entries included, is made without a plan and gets the same tests and review as any change;
   - violates: a small task skips its review; the cycle runs a migration that cannot be undone; a
     change to a trust boundary's files is reviewed like any other; an agent turns a task into one
-    that returns knowledge instead of a change without a human setting it so.
+    that returns knowledge instead of a change without a human setting it so; a large task is
+    treated as a reason to split it, or to lighten its checks, because of its size.
 - **Origin:** none
 
 *Rationale:* size misleads about what can go wrong: a rename across many files is easy to undo, a
@@ -523,8 +525,10 @@ one-line change to a stored format can destroy every user's data. What a strange
 cannot be undone are the risks a review aimed at them catches and an ordinary review may pass, and
 two questions name them at the start without computing anything. Size does tell how much
 preparation a change needs: a small change can be made without a plan, while the checks on the
-finished change stay whole and a human still decides on what cannot be undone. Returning knowledge
-alters what a task delivers, so a human sets it.
+finished change stay whole and a human still decides on what cannot be undone. Beyond preparing and
+making the change size tells nothing worth deciding on: a split for size alone adds a whole cycle,
+with its review, its tests and its request, and gives no better or cheaper result. Returning
+knowledge alters what a task delivers, so a human sets it.
 *Rejected:* checks as sharp as a criticality computed from the parts a change touches, with the path
 that merges it chosen by whether it changes the foundation, recorded at the start and recalculated
 after each diff — every cycle computes and records them, and a part with no failure modes recorded
@@ -12778,6 +12782,57 @@ of executors among them, and those 10 would take 12% of the input tokens of all 
 tokens — 34 slices would need division (15%), with the same 5 of the 10 long runs of executors as at
 150 000, and those 34 would take 34% of the input tokens of all executors, which is 14 slices more
 than at 150 000 with no added long run.
+
+### WAY-372 — When is a task split into several tasks?
+
+A task is split only where the split makes the work better or cheaper; time does not count, so that
+a part is ready sooner is no reason. Whoever proposes a split names its reason, and the reasons are
+three: a part cannot start or finish without something outside the refinement of the task, such as
+access the agent lacks or another task's result; the parts change different repositories, since the
+cycle writes only in the product's repository; or a later step of the refinement offers a separate
+task. A task's size alone is no reason: for it an agent says nothing of a split — no mention, no
+question, no recommendation — and the human, who sees the whole document, may ask for a split.
+
+A project plan cuts its tasks by WAY-143 and by these reasons, never by a task's size alone.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-13 · derives from WAY-143
+- **Verification:** an agent compares the work with the decision:
+  - complies: refining a task whose parts change two repositories, the agent proposes the split and
+    names that reason; refining a large task of one product, whose parts all start and finish
+    without anything outside it, the agent says nothing of a split, and a split the human asks for
+    is made;
+  - violates: the agent proposes a split because a part would be ready sooner; the agent mentions
+    that a task is large, asks whether to split it or recommends the split; a split is proposed
+    with no reason named; a plan's author cuts a task for its size alone.
+- **Origin:** none
+
+*Rationale:* a split gives a part of the work a cycle of its own, with its own review, its own full
+tests and its own request to merge, so it costs a whole cycle more, and it earns that cost only
+where the work comes out better or cheaper; a part ready sooner is neither. The three reasons are
+the cases where a split gives something one task cannot: a part that cannot start or finish alone
+would wait inside one task and no cycle could end it, and work in several repositories cannot be one
+task while the cycle writes only in one. Naming the reason makes the proposal checkable, which a
+bare "better" is not, since an agent readily makes one up. A word about a task's size draws a
+question, and the question returns at every larger task, while the human who sees the whole document
+at its acceptance can ask for a split without it.
+*Rejected:* a split sensible only where the work comes out faster, cheaper and better all at once —
+it passes practically only a split where one task would not go through one cycle anyway, and it
+rejects even a better result paid for with a second cycle; a split sensible where any one of the
+three holds — it passes "two cycles in parallel finish sooner", though dearer, the very argument the
+human refuses; besides the three reasons, a risky part beside an independent one — the review aimed
+at risk and the human's decision at the request already handle risk, and the split gives only that
+the independent part merges without waiting, which is "sooner"; besides the three reasons, a request
+to merge too large for a sensible review — at refinement the agent knows the size of the task, not
+of the future change, so it is size in disguise; a general test in place of the list, the agent
+proposing where it names what will be better or cheaper — the agent readily makes up a plausible
+"better", which is the problem; one sentence on a task's size, with no question and no
+recommendation — the mention still tempts the agent to ask, so the instruction would have to forbid
+the question outright; the agent asking on a large task as before — the question returns at every
+larger task; the plan's cut left as it was — the rule stays, and so does the disagreement between
+the refinement and the plan's cut; a task of its own for the plan's cut — one more refinement and
+one more cycle.
 
 ## Withdrawn identifiers
 
