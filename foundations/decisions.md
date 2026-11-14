@@ -1764,7 +1764,8 @@ question, each a second copy of its quote; a fact named with its fingerprint, re
 changes — the author's search finds the decision without it (WAY-33); the partners of the part
 map's external context as linked facts — a new link with no known consumer; for a measurement the
 product's people made, a summary of it with its conditions kept as a file of this repository that a
-fact would name at a fixed commit — a new form of source beside those an environment fact takes, a new kind of file
+fact would name at a fixed commit — a new form of source beside those an environment fact takes, a
+new kind of file
 with a rule on what it may not carry, and a summary to write and clean for each experiment, with the
 decisions that carry such figures rewritten and a fact written for each; the figure with a note that
 it comes from the author's private notes in place of a source — it points a reader to a source the
@@ -2986,8 +2987,8 @@ only by failing it; a local hook as the keeper of every rule — one switch skip
 ### WAY-134 — How does a task carry what its refinement settles for the foundation?
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
-document and the conversation that refined it, in the form of the candidate table of the skills of the
-elements (`elements/common/skill/build_table.md`) with each settlement in
+document and the conversation that refined it, in the form of the candidate table of the skills of
+the elements (`elements/common/skill/build_table.md`) with each settlement in
 the human's words and, in place of its kind, the place it goes to by the questions of the decisions
 template, and the task document keeps the rows the human accepts, one that goes outside the decision
 log included and those that repeat a choice the human made between ways shown included unless the
@@ -4936,13 +4937,14 @@ when the check runs, so that a change brings in nothing known to be vulnerable t
 points follow. A vulnerability found in a dependency the product already holds gives no signal while
 no change brings in a version of it. A later run on the same commit may record `fail` where an
 earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
-a check is answered as any check that gives different verdicts on one commit is, by a fix of the test with no
-quarantine recorded, which this decision leaves unchanged.
+a check is answered as any check that gives different verdicts on one commit is, by a fix of the
+test with no quarantine recorded, which this decision leaves unchanged.
 *Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
 published that morning; a copy of the database the product commits — nothing moves it apart from a
 change, so it ages without bound, and a change bringing in a version first flagged after it passes;
-the rule on a check that gives different verdicts on one commit narrowed so that a later `fail` on the
-same commit is no such check — a new meaning of that rule for a rare case; a fixed threshold of severity for every product — the
+the rule on a check that gives different verdicts on one commit narrowed so that a later `fail` on
+the same commit is no such check — a new meaning of that rule for a rare case; a fixed threshold of
+severity for every product — the
 severity is the product's choice.
 
 ### WAY-212 — How does a product's instruction file lead to its coding guidelines?
@@ -5048,7 +5050,8 @@ cannot make false.
 
 ### WAY-215 — What happens to a task that needs missing discipline guidelines?
 
-Unless an approved departure under the shared reading of product guidelines applies, a task changing a user interface with no styleguide,
+Unless an approved departure under the shared reading of product guidelines applies, a task changing
+a user interface with no styleguide,
 writing code in a product with no general coding guidelines or writing or changing a test in a
 product with no testing guidelines, whether or not the product already has screens, code or tests,
 stays in refinement as `waiting for human` with a *Questions to settle* question awaiting the merge
@@ -5092,7 +5095,8 @@ guidelines with no wait — tests written meanwhile set the patterns every later
 ### WAY-216 — What does refinement assign to a task creating an unindexed kind of code?
 
 A task that creates the first file of a kind of code whose row the general coding index lacks
-gains in *To do* the designation of that kind's exemplar as the skill `maintain-coding-guidelines` gives it and its kind guidelines
+gains in *To do* the designation of that kind's exemplar as the skill `maintain-coding-guidelines`
+gives it and its kind guidelines
 with their index row, without waiting for a separate exemplar task, and in a product that has
 coding guidelines it settles and checks, of the standing checks, only those the kind touches.
 Where files of the kind already exist, refinement records that discrepancy and routes exemplar
@@ -5138,7 +5142,8 @@ designating the next instance regardless of existing code — it bypasses compar
 the coding-guidelines skill left as they were, with the gap described as a proposal — an agent on
 the comparison goes on improvising and may make a full audit; the wording "Neither task is an
 extension under WAY-251, and neither takes research of the standing checks" — it takes research
-from a task that is an extension for another reason, against the rule that an extension researches; only the checks the kind
+from a task that is an extension for another reason, against the rule that an extension researches;
+only the checks the kind
 touches, with no exception for a new language — the tool for that language would be chosen on a
 route without research of tools; no standing check for the kind, the exemption from research read
 literally — a script in a new language would enter without a linter.
@@ -5936,10 +5941,12 @@ deleting such a test is a change of an existing test under WAY-233.
 *Rationale:* a test that passes on a second run hides the fault that made it fail, in the test or in
 the product, and each run again trades that fault's cause for a green result; a verdict of the gate
 means something only while a red run is answered. A flaky test disabled or deleted loses its check
-as surely as a test skipped for a failing change, so it takes the same cause and evidence. The rule on a check that gives different verdicts on one commit
+as surely as a test skipped for a failing change, so it takes the same cause and evidence. The rule
+on a check that gives different verdicts on one commit
 gives the test of an invariant the same answer.
 *Rejected:* a quarantine of flaky tests, with a limit for fixing them — a second state of tests to
-keep, which ages, as that rule refuses it for the tests of invariants; automatic runs again in the gate
+keep, which ages, as that rule refuses it for the tests of invariants; automatic runs again in the
+gate
 — the fault stays hidden; every flaky test fixed before the next change — unrelated work stops for
 it.
 
@@ -6310,7 +6317,7 @@ points to another file.
 
 - **Scope:** instruction-files
 - **Based on:** claude-skill-nested-references
-- **Relations:** derives from WAY-256
+- **Relations:** derives from WAY-256 · derives from WAY-100
 - **Verification:** an agent compares the change with the decision:
   - complies: the step that judges a skill names the file of skills, and the rule on emphasis,
     which every kind needs, stands once in `SKILL.md`;
@@ -6819,10 +6826,11 @@ without the human's approval.
 The template of the coding discipline holds that the logs hold no secret, and no personal data, the
 identifiers on the list of the product's logging scope being an exception to this second ban alone,
 and no whole object or request body, which does not touch the error itself. Where an original error
-quotes such values this rule prevails over the rule that a failure is written with its original error,
-and the error is written without them, with its kind, code and place in the code; an identifier on that list that is a secret stays out of a line,
-this rule prevailing over the rule that a line of a case flow carries the identifiers the
-logging scope lists. The ban on personal data is the template's choice and no
+quotes such values this rule prevails over the rule that a failure is written with its original
+error, and the error is written without them, with its kind, code and place in the code; an
+identifier on that list that is a secret stays out of a line, this rule prevailing over the rule
+that a line of a case flow carries the identifiers the logging scope lists. The ban on personal data
+is the template's choice and no
 restatement of law, so a product may depart from that ban with a reason, the rest of the rule
 standing and the law binding the product regardless.
 
@@ -7053,7 +7061,8 @@ incomplete reading of the review in one group with what the request cannot go on
 step is a matter of doing it here or letting it through, so the group would mix two matters; only
 the groups that hold an item — shorter, but a group with nothing in it cannot be told from a
 forgotten one, by the human or by the script; three sections of the description in place of the
-groups — it changes the skeleton of the request's description and every reference to the section, and gives the
+groups — it changes the skeleton of the request's description and every reference to the section,
+and gives the
 human nothing beyond headings in one section; bold lines in place of headings — they look the same,
 but the script cannot tell them from plain text and checks nothing.
 
@@ -7488,9 +7497,9 @@ brackets, `[[:space:]]`, with one of the twelve POSIX names between the colons (
 `blank`, `cntrl`, `digit`, `graph`, `lower`, `print`, `punct`, `space`, `upper`, `xdigit`), and no
 letter for the start of a drive when a backslash stands before it. It takes no text for an absolute
 path when all that follows the drive letter and its colon is escape sequences of a newline, a tab or
-a carriage return (`\n`, `\t`, `\r`), so a message ending in a letter, a colon and such a sequence is
-not listed; a path written with a real name, a Git Bash path, a link after a space or a mark and a
-text stuck to such a sequence stay listed.
+a carriage return (`\n`, `\t`, `\r`), so a message ending in a letter, a colon and such a sequence
+is not listed; a path written with a real name, a Git Bash path, a link after a space or a mark and
+a text stuck to such a sequence stay listed.
 
 - **Scope:** task-cycle, agent-instructions, project-level
 - **Based on:** none
@@ -7536,24 +7545,25 @@ gave, so each item reaches the remarks once before any word changes; the cleanin
 so that a report's item and its entry in the remarks keep reading alike. The price taken: a private
 name in plain words passes, and a list of such names can be added by a task of its own when one
 appears; the pattern lists some text that is neither a path nor a link, such as a code sample, which
-the orchestrator writes so that the pattern passes it; one more check in every cycle. The patterns were written for the prose a cycle publishes, and code
-holds shapes that look like their targets and are not. A trial on every tracked file of one public
-product on 2026-11-09, with these rules and the rule of WAY-320 that a note link counts only in a
-Markdown file, listed exactly the nine real paths and the one example of a Git Bash path written on
-purpose, where the patterns without them had also listed 78 texts that were neither: 73 of them
-`[[...]]`, among them an array inside an array in code, a character class of the shell and slots
-of a specification quoted word for word, and 5 the end of a message or a regular expression. Each
-rule is narrow, so that what a real path or link can look like stays listed. The price taken: a
-directory of the root of a disk with a one-letter name, written `n`, `t` or `r` and standing alone
-after the colon, is not listed; a link stuck to a word, which Obsidian renders as a link, is not
-listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
-by rewriting the string. A character class of the shell in double brackets is code too, though a
-command quoted in a Markdown file holds it: a run of the check on 2026-11-11 over the commands in
-the Markdown files of one product listed twelve such texts, all of them one of the twelve classes.
-Both runs are this product's own, and their record is not open to a reader of this repository. The
-twelve names are listed one by one, not matched by a general shape, so a text with another name
-between the colons stays listed, since it may be a note. The price taken: a note whose title is one
-of these names between colons is not listed, and a name a shell adds later needs the list changed.
+the orchestrator writes so that the pattern passes it; one more check in every cycle. The patterns
+were written for the prose a cycle publishes, and code holds shapes that look like their targets and
+are not. A trial on every tracked file of one public product on 2026-11-09, with these rules and the
+rule of WAY-320 that a note link counts only in a Markdown file, listed exactly the nine real paths
+and the one example of a Git Bash path written on purpose, where the patterns without them had also
+listed 78 texts that were neither: 73 of them `[[...]]`, among them an array inside an array in
+code, a character class of the shell and slots of a specification quoted word for word, and 5 the
+end of a message or a regular expression. Each rule is narrow, so that what a real path or link can
+look like stays listed. The price taken: a directory of the root of a disk with a one-letter name,
+written `n`, `t` or `r` and standing alone after the colon, is not listed; a link stuck to a word,
+which Obsidian renders as a link, is not listed; and a text stuck to an escape sequence still gives
+a false hit, which the product removes by rewriting the string. A character class of the shell in
+double brackets is code too, though a command quoted in a Markdown file holds it: a run of the check
+on 2026-11-11 over the commands in the Markdown files of one product listed twelve such texts, all
+of them one of the twelve classes. Both runs are this product's own, and their record is not open to
+a reader of this repository. The twelve names are listed one by one, not matched by a general shape,
+so a text with another name between the colons stays listed, since it may be a note. The price
+taken: a note whose title is one of these names between colons is not listed, and a name a shell
+adds later needs the list changed.
 *Rejected:* patterns and a list of private words in a file in the home directory — accepted first,
 then given up after the search of the history: almost nothing was left to put on the list, and it
 costs a file to remember, a step of the human before a cycle and code that today catches almost
@@ -7561,22 +7571,22 @@ nothing; patterns and a list kept in the notes, whose place the process knows on
 environment variable — the same costs and a variable to set on every machine, and without it the
 script checks the patterns alone; patterns and the orchestrator's own judgment, which replaces what
 it takes to be private — one more reading of the whole record in every cycle, an omission passes
-silently, and the names of a public and of a private repository look alike in text; the product lists the Markdown
-file holding the quoted specification among the skipped files — every real path later written in
-that file of its foundation passes; no change to the rule for a link — the check of that product
-fails while the quoted fact stands in its foundation, and the quote cannot be reworded, since an
-environment fact quotes its source word for word; a small letter for a drive in code starts no path
-— it passes every path written with a small letter, the home directory of a user in the form some
-tools print it included; recognising strings and regular expressions for each language — a parser
-for each language a product adds, out of proportion to the few texts it frees; no change to the
-rule for a drive — the product rewrites each such string and every later message of that form hits
-again, or lists its files and a real path in them passes; no exception for every double-bracketed
-text between colons — a note whose title is written between colons, in double brackets, passes, a
-cost the check cannot see; no exception for every `[[` that a parenthesis or another mark follows —
-it cuts real links whose titles begin with a parenthesis, as a vault holds them; the exception only
-in the check of tracked files — two sets of rules to keep and to describe apart, and a cycle copy
-that quotes such a command still gives the false hit, which the cycle removes by rewriting it in
-words.
+silently, and the names of a public and of a private repository look alike in text; the product
+lists the Markdown file holding the quoted specification among the skipped files — every real path
+later written in that file of its foundation passes; no change to the rule for a link — the check of
+that product fails while the quoted fact stands in its foundation, and the quote cannot be reworded,
+since an environment fact quotes its source word for word; a small letter for a drive in code starts
+no path — it passes every path written with a small letter, the home directory of a user in the form
+some tools print it included; recognising strings and regular expressions for each language — a
+parser for each language a product adds, out of proportion to the few texts it frees; no change to
+the rule for a drive — the product rewrites each such string and every later message of that form
+hits again, or lists its files and a real path in them passes; no exception for every
+double-bracketed text between colons — a note whose title is written between colons, in double
+brackets, passes, a cost the check cannot see; no exception for every `[[` that a parenthesis or
+another mark follows — it cuts real links whose titles begin with a parenthesis, as a vault holds
+them; the exception only in the check of tracked files — two sets of rules to keep and to describe
+apart, and a cycle copy that quotes such a command still gives the false hit, which the cycle
+removes by rewriting it in words.
 
 ### WAY-312 — Which sentences does a rule of a product's guidelines not hold?
 
@@ -7745,8 +7755,8 @@ commit adds to it included. A screenshot is evidence for the time of acceptance:
 clear its place after a long time, and the images of old requests then stop showing.
 
 Where a change alters what a screen shows and the foundation of the product settles no place for
-screenshots, the author inspects the screenshot as the author's check of a user-interface change gives and the
-request shows none: the
+screenshots, the author inspects the screenshot as the author's check of a user-interface change
+gives and the request shows none: the
 section of its description for the human's decisions says that no screenshot is shown and why, and
 the cycle does not stop. A screenshot left unchecked for want of a settled way to the running
 product is reported as that check gives and needs no second item.
@@ -8000,7 +8010,8 @@ reached its repository on 2026-11-06.
 ### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
 
 The-way departs, for its own code and its own tests, from the general coding guidelines and from the
-testing guidelines of a product, under the shared reading of product guidelines: in each part named in *Scope*, neither is missing, so
+testing guidelines of a product, under the shared reading of product guidelines: in each part named
+in *Scope*, neither is missing, so
 a task of the-way that writes code, or writes or changes a test, in such a part waits for neither.
 The *Scope* names every part of the-way's part map, and a change that adds a part to the part map adds
 that part to this decision's *Scope*. A separate task that writes the general coding guidelines of
@@ -8184,7 +8195,8 @@ of context and cache use added to them — the comparisons would almost never oc
 every change made to improve the process touches those instructions, and adding the script to that
 list would end the series of the cost as well. For the gate times, a mark on each run of how many
 directories ran at once, which would split the runs by that mark and not by a change of a script — it
-changes the test runner, the script that records the times, the tables of the gate times and of WAY-350 and the
+changes the test runner, the script that records the times, the tables of the gate times and of
+WAY-350 and the
 reading of the audit, it leaves the runs made between the move to parallel directories and this
 decision mixed with the earlier ones, and the old records would need a reading for the runs that carry
 no mark. And no split of the gate times at all, which leaves the times of the two ways of running the
@@ -8383,7 +8395,8 @@ after the six rules on failures and logs, with an invariant of its own and a tes
 the set of rules of the product's linter. A product sets its thresholds after a trial run on its
 existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
 a decision of its log that gives the reason (WAY-173), and a product that already has coding
-guidelines gets the rule by an ordinary extension, as the skill `maintain-coding-guidelines` gives it for the rules on failures and
+guidelines gets the rule by an ordinary extension, as the skill `maintain-coding-guidelines` gives
+it for the rules on failures and
 logs. Where code other than the exceptions of the product's decision stands over a threshold, the
 rule's invariant is marked violated until that code is cleaned (WAY-51).
 
@@ -8671,10 +8684,10 @@ without it the type would have nothing to check an interface with; the orchestra
 each dispatch whether a stage looks at an interface; and the one author of a change to an interface
 would need a fourth type; two narrow types, with the stages that look at an interface dispatched as
 a plain subagent as before — the cycle of a change to an interface would have neither the lighter
-start nor the author's hour of cache, and the orchestrator chooses the type for each stage anyway; start without the instruction files —
-the start falls to 10.5 thousand tokens, but the agent loses at once the user's global instruction
-file (the rules of git, of scripts and of privacy) and the product's instruction file, and the
-product's file alone cannot be kept.
+start nor the author's hour of cache, and the orchestrator chooses the type for each stage anyway;
+start without the instruction files — the start falls to 10.5 thousand tokens, but the agent loses
+at once the user's global instruction file (the rules of git, of scripts and of privacy) and the
+product's instruction file, and the product's file alone cannot be kept.
 
 ### WAY-370 — What does a task cycle do where the session has none of the-way's agent types?
 
