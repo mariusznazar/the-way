@@ -1447,6 +1447,13 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertIn("`save-round-trip` reads `test` and no test cites it", report)
         self.assertNotIn("listed:", report)
 
+    def test_one_of_two_citing_files_deleted_is_a_change_and_not_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        base = {"tests__saving_dot_test_dot_js": "// invariant: save-round-trip\n"}
+        product = self.reworded(base=base)
+        git(product.root, "rm", "-q", "tests/saving.test.js")
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
     def test_reworded_sentence_in_spacing_only_is_not_listed(self):
         # decision: WAY-03 "The check of the foundation lists an invariant whose method"
         invariants = self.edit(INVARIANTS, self.OLD_SENTENCE,

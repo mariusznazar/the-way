@@ -88,8 +88,8 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
   base once every run of spaces and line breaks is made one space) is listed at its heading line,
   when no file other than Markdown that cites it by `invariant:` now differs between the base and
-  the working tree; a file the change deleted cites nothing now, so it leaves the invariant with no
-  citing file. An
+  the working tree and none that cited it at the base was deleted; where a deleted file was the
+  only one that cited it, the invariant has no citing file now. An
   invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
   and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
   the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
@@ -737,9 +737,9 @@ class Foundation:
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
-        other than Markdown that cites it now differs between the base and the working tree
-        (WAY-03). An invariant the base lacks, or lacking *Method* or *Part* at either
-        state, is left out. The listing is no error."""
+        other than Markdown that cites it now differs between the base and the working tree and no
+        such file that cited it at the base was deleted (WAY-03). An invariant the base lacks, or
+        lacking *Method* or *Part* at either state, is left out. The listing is no error."""
         if not self.base or self.base_files.get(INVARIANTS) is None:
             return
         before = invariant_entries(self.base_files[INVARIANTS])
@@ -753,6 +753,14 @@ class Foundation:
                 candidates.append((name, number))
         if not candidates:
             return
+        code, diff = git(self.root, "diff", "--name-only", "--no-renames", "--diff-filter=D", "-z",
+                         self.base)
+        if code != 0:
+            return
+        lost = set()  # the identifiers that a file the change deleted cited at the base
+        for path in diff.split("\0"):
+            if path and not path.endswith(".md"):
+                lost |= cited_names(at_commit(self.root, self.base, path) or [])
         code, diff = git(self.root, "diff", "--name-only", "--no-renames", "-z", self.base)
         if code != 0:
             return
@@ -764,7 +772,7 @@ class Foundation:
                     citing.setdefault(name, set()).add(path)
         for name, number in candidates:
             paths = citing.get(name, set())
-            if paths and not paths & changed:
+            if paths and name not in lost and not paths & changed:
                 self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is "
                                  "changed by this change, while no file citing it changed (%s): "
                                  "name it in the request, saying what the sentence now says"
