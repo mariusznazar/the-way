@@ -1,0 +1,77 @@
+== relation-model
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.004s
+
+OK
+== instruction-files
+......................s........ssss.....................................................................
+skipped: test_check_instructions.LargeAndOddFiles.test_a_fifo_named_like_an_instruction_file_does_not_stop_the_run: no FIFO on this platform
+skipped: test_check_instructions.LinkChains.test_a_dot_dot_after_a_directory_link_is_resolved_as_the_system_does: needs the real path of a link, as on POSIX
+skipped: test_check_instructions.LinkChains.test_a_link_loop_is_reported_as_unreadable_and_the_run_goes_on: needs the real path of a link, as on POSIX
+skipped: test_check_instructions.LinkChains.test_an_absolute_link_out_of_the_repository_is_not_read: needs the real path of a link, as on POSIX
+skipped: test_check_instructions.LinkChains.test_every_directory_link_is_reported_wherever_it_points: needs the real path of a link, as on POSIX
+----------------------------------------------------------------------
+Ran 104 tests in 10.443s
+
+OK (skipped=5)
+== agent-instructions
+.........................
+----------------------------------------------------------------------
+Ran 25 tests in 28.290s
+
+OK
+== gate
+....................................
+----------------------------------------------------------------------
+Ran 36 tests in 70.360s
+
+OK
+== elements/part-map
+.......................................
+----------------------------------------------------------------------
+Ran 39 tests in 85.816s
+
+OK
+== task-cycle
+....................................................................................Warning: Claude Code session `named`, e3: no `agent-e3.meta.json`, so it is named by its id
+......Warning: Claude Code session `live`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+Warning: Claude Code session `live`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+Warning: Claude Code session `live`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+.Warning: Claude Code session `lost`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+.......................Warning: Codex session `orchw`, /root/odd: 1 call(s) of a type the reader does not recognise (web_search_call): their waits are unknown
+.Warning: Codex session `livec`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+Warning: Codex session `livec`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+Warning: Codex session `livec`, the orchestrator: 1 tool call(s) with no readable result: their waits are unknown
+.Warning: Codex session `orchu`: the orchestrator's transcript holds no token usage
+..Warning: Codex session `orchx`, the orchestrator: 1 exec call(s) that call a subagent tool: their time is left out of the waits
+....................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 394 tests in 137.099s
+
+OK
+== elements/common
+................................................................................................................................................
+----------------------------------------------------------------------
+Ran 144 tests in 199.483s
+
+OK
+== project-level
+...................................................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 275 tests in 420.164s
+
+OK
+== process-audit
+......................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 182 tests in 827.121s
+
+OK
+== installation
+........................................................
+----------------------------------------------------------------------
+Ran 56 tests in 890.475s
+
+OK
+1267 tests in 10 directories; every directory passed
