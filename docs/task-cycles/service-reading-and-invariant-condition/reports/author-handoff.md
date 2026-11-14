@@ -1,0 +1,26 @@
+# Handoff to the one author of the change
+
+Delegation: the person who requested this cycle delegated intermediate choices to the orchestrator; no answer here is that person's approval. The cycle has no human contact before the request, so ask no one: questions go to the orchestrator in your report.
+
+Worktree (work only here, from its root): `the worktree's root`
+Branch: `task/service-reading-and-invariant-condition`, base `0e1cd3cd804433f7a82ffb631e96917ef74c1040` (head of `foundations`). The task document quotes decisions as they stood on `f749cfc`; the log has moved (PR #120 changed `foundations/decisions.md` and `elements/invariants/template.md`), so read WAY-80, WAY-84, WAY-60 and the two templates as they stand in the worktree and fit the task's wording to that form, naming each difference in your report.
+
+Method: `task-cycle/change/SKILL.md` of the worktree, read whole. Your variant, in the words of its row: "the whole change as the one author". Read a file the method names only when the step that names it comes.
+
+Stage and boundary: make the whole change the task requires, with its foundation step (the foundation entries the task's *Settlements to record* carry, written as `task-cycle/skill/foundation_step.md` gives: read that file whole, and the `SKILL.md` of an element at the path it gives when you write an entry of that element), commit it, run the own-work check of the method, and return. Do not run the product's gate (the orchestrator runs it); run the focused checks the method asks for, e.g. `python -B gate/run_tests.py <directory>` for the directories you change and `python -B elements/common/foundation_check.py`. You do not open a request, merge or write the record of the cycle.
+
+Frozen task, read whole: `.runs/task-cycles/service-reading-and-invariant-condition/task.md` (copy of the task document; its status is `ready for cycle`, human actions `none`). Its items 1-8 of *To do*, *Questions to settle*, *Decisions in play* and *Settlements to record* (rows 1-6) bind you; *Questions carried to cycle* holds one question you answer: whether `elements/common/foundation_check.py` reads a fact entry whose *Source* has a code block with a multi-line command under it. Answer it by running the check on such an entry (a temporary entry you do not commit) and fix the check if it fails, with a test.
+
+Spec and plan: none (no open design choice; one author without a plan).
+
+Answers of step 4: trust boundary: no; irreversible operation: no.
+
+What you read (the orchestrator's selection, WAY-150):
+- Decisions, each whole: WAY-80, WAY-84, WAY-60, WAY-82, WAY-35, WAY-58, WAY-328 (the task's *Decisions in play*); and WAY-61 (an invariant's method `test`), WAY-33 (the search after a settled entry), WAY-07 (edit a decision in place). Beyond them, select by the step 1 of the skill of each element you write an entry of (`elements/decisions/skill/SKILL.md`, `elements/invariants/skill/SKILL.md`), as it gives; the touched parts are `decisions`, `environment-facts`, `invariants`, `elements-common` and `gate` (and the file `README.md`, left out of the map on purpose, and `agent-instructions/README.md` if the form of the check it describes changes).
+- Invariants: `test-method-citation`, `tracked-file-private-paths` (an existing invariant of the-way whose test reads the real tracked files: use it as the example of the form), `skill-rule-source`, `element-directory-contents`.
+- Files whole: `elements/environment-facts/template.md`, `elements/environment-facts/skill/draft.md`, `elements/invariants/template.md`, `README.md` (the list of the foundation's elements and the row of `environment_facts.md`), `foundations/part_map.md` (to place the new test in a part and check the part's *Files*).
+- The glossary entries of the terms you use.
+
+Wording for the three decision changes (task, *Decisions in play* and *To do* 1-3, 5, 7): take it from there; edit each decision in place (WAY-07) and keep its form; make no change to a decision beyond the task's. Points of the task that are template text only (item 6) change no decision. The new invariant (item 8) is written as the invariants skill gives, with method `test`, derived from WAY-35, and the test cites it by `invariant: <identifier>` and fails when a tracked file under `elements/` holds the text `decision pending`; show in your report its failing run (a made-up file or a seeded text, never committed) and its passing run. Where PR #120's form of the test lines (`decision:`) or of the check needs a line the task does not mention, follow the form as it stands. After the entries are settled, search the foundation once for the entries the change touches, as the method gives (WAY-33).
+
+Report: write the full report to `.runs/task-cycles/service-reading-and-invariant-condition/reports/author-report.md` as the method gives it, with the sections **Unread material** and **Searches not found or unclear** (each `none` if so), the own-work check, each check with its command and exit code, the answer to the carried question, each difference between the task's quotation of a decision and the log as it stands, and the meaning sentences and mark of each foundation entry you write. Return its status, commits, a one-line check result and the report's path.
