@@ -1,7 +1,8 @@
 # Reading the definition and plan
 
 The original definition and plan remain authoritative, and every check runs on them whole, as
-`SKILL.md` gives under "Rules that hold across the steps" (WAY-151).
+`SKILL.md` gives under "Rules that hold across the steps". Whole verification protects the complete
+project, though the reading of it is selected.
 
 - Before choosing work at start or resume, inspect the complete heading structure, status and
   header, gate record and document revisions. Inventory every top-level In scope item in its

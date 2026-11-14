@@ -1,7 +1,7 @@
 # Work on an existing plan
 
 Run `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole file and read it
-by `reading_definition_and_plan.md` beside this skill (WAY-151).
+by `reading_definition_and_plan.md` beside this skill.
 
 - A plan whose status reads `draft` goes on from the first step its sections leave unfinished; a
   plan handed over changes only as its change log records, and a finding that the definition's

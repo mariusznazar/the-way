@@ -85,11 +85,11 @@ No file git tracks contains a link into a repository that a reader not signed in
 
 ## tracked-file-private-paths
 
-No file git tracks, other than `task-cycle/private_paths_check.py`, `task-cycle/test_private_paths_check.py`, `instruction-files/check_instructions.py` and `instruction-files/test_check_instructions.py`, contains an absolute path or, in a Markdown file, a note link, as WAY-309 and WAY-323 name them.
+No file git tracks, other than `task-cycle/private_paths_check.py`, `task-cycle/test_private_paths_check.py`, `instruction-files/check_instructions.py` and `instruction-files/test_check_instructions.py`, contains an absolute path or, in a Markdown file, a note link, as WAY-309 names them.
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-320 · WAY-309 · WAY-323 · WAY-324
+- **Derives from:** WAY-320 · WAY-309 · WAY-324
 - **Part:** every
 - **Violated:** no
 
@@ -159,7 +159,7 @@ Every part map identifier a field of a foundation entry names is an entry of the
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-41
+- **Derives from:** WAY-02
 - **Part:** every
 - **Violated:** no
 
@@ -210,7 +210,7 @@ repeated or unexpected required second-level section, or required sections out o
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-108
+- **Derives from:** none
 - **Part:** project-level
 - **Violated:** no
 
@@ -351,7 +351,7 @@ No Python file git tracks imports a Python file git tracks of another part that 
 
 - **Method:** test
 - **Rests on:** git-path-patterns
-- **Derives from:** WAY-299 · WAY-44
+- **Derives from:** WAY-44
 - **Part:** every
 - **Violated:** no
 

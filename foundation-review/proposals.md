@@ -25,12 +25,13 @@ question whether a task exists that ends it. Where the human names such a task, 
 proposed. Where none exists, the proposal is to create one, and it holds what happens if none is
 made — the state stays in the product, and the decision goes on binding it — and what the task
 costs. A task made on the human's yes follows `with_the_human.md`. The entry of the decision is not
-changed and gains no field (WAY-354).
+changed and gains no field: the tasks of a product lie outside its repository, so an entry has no
+name to give a task that stands in no project plan.
 
 ## Groups of remarks
 
 The remarks that go forward from `remarks.md` are grouped by what one cycle can fix together — the
-same file or area, the same kind of fix, the same moment — into these kinds (WAY-302):
+same file or area, the same kind of fix, the same moment — into these kinds:
 
 - **a collective task** of the repository, a few in all, never one for each theme: a cycle fixes
   its remarks together, and a small remark is no task of its own;

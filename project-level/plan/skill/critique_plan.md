@@ -5,7 +5,7 @@ request it through the conversation file, as `delegated_mode.md` beside this ski
 verify and settle its observations as this step requires.
 
 - Run `critique` once on the exact authoritative plan, with the definition, the product's complete
-  part map, relevant foundation and applicable rules as its sources (WAY-120, WAY-146, WAY-151).
+  part map, relevant foundation and applicable rules as its sources (WAY-120, WAY-146).
   The critic reads the complete plan, in manageable batches if useful, and every source unit
   needed for all tasks, technical elements, question moves and quoted answers. The author's
   selection and inventories never limit the critic's inspection; complete the whole plan's

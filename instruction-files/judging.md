@@ -13,8 +13,8 @@ Output, in this order:
 1. The check script's errors and warnings, each with what it means in each tool in use, and its
    `info` lines that say something was not read or not checked.
 2. A table with one row per fragment of every file: the quoted fragment with `file:line`, the
-   verdict — keep, move, remove or reword — the criterion it stands on, its reason and its ground
-   (WAY-257). The criterion, in every row whatever the verdict: when an agent needs the rule and
+   verdict — keep, move, remove or reword — the criterion it stands on, its reason and its ground.
+   The criterion, in every row whatever the verdict: when an agent needs the rule and
    whether an agent recognises that moment when it comes, so that the human can disagree with the
    criterion and not only with the verdict. The reason: for keep, the conditions the fragment
    meets — for a line of the main file, the three conditions; for move, the target; for remove,
@@ -27,7 +27,8 @@ Output, in this order:
    A fragment that goes to several places when judged, one part kept and another moved, gets a row
    for each part, each with one of the four verdicts and none of its own, such as a split. A
    proposal to add a rule or to change one stands in the table in a row of its own, never inside
-   the reason of another row (WAY-311).
+   the reason of another row. A human disputes a judgement row by row, and a row that holds two
+   verdicts, or a proposal folded into another row's reason, can be disputed only as a whole.
 3. Contradictions between files that load together.
 
 The table is a batch of decisions; edit nothing until it is accepted.

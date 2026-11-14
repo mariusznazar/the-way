@@ -18,7 +18,7 @@ at it, and you keep the closed request's link under *Context*, so that the new r
 from the old (WAY-269).
 
 Fill the header line `Defect introduced by:` in every task, as `project-level/task/template.md`
-gives it (WAY-356); the cycle never fills it. From the history of the lines the task changes and
+gives it; the cycle never fills it. From the history of the lines the task changes and
 from the human's report of the defect, set `none` where the task does not fix a defect found
 after a merge, the addresses of the requests, or commits, that introduced the defect, or
 `unknown` with the reason; apply the template's test of what such a
@@ -32,7 +32,7 @@ Context. If a block's place is uncertain, move it to Context. Do not ask questio
 Context, and do not invent acceptance criteria.
 
 Point at a place to change in a file by the heading it stands under or by a quotation of the text
-there, and give a line number only as a hint beside it, as the template gives (WAY-353). The
+there, and give a line number only as a hint beside it, as the template gives. The
 *Source* of an answer under a question keeps its line and its revision.
 
 Show the whole current task document when asking for a wording decision. A suggestion not

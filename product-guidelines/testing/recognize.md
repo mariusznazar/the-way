@@ -1,7 +1,7 @@
 # Recognize
 
 - Name the parts of the product's map that have tests: the parts whose code its tests check and the
-  parts that hold its test files (WAY-246, WAY-248). Before the first test, name the parts the
+  parts that hold its test files. Before the first test, name the parts the
   product's plan gives tests; where the map holds no part for them yet, its identifier is a question
   of the task, and *To do* gains adding that part, with the files the task creates, through
   `update-part-map`.
@@ -13,7 +13,7 @@
   boundaries its part map records (WAY-150, WAY-48).
 - Find in the product's files what it has for those tests — a test tool, with its configuration and
   version; levels; directories of tests; doubles; tests of invariants; or nothing — and whether it
-  has testing guidelines. Say plainly when it has nothing (WAY-248).
+  has testing guidelines. Say plainly when it has nothing.
 - That gives the mode, and modes combine:
   - no tests: the starting set of step 2, so that the testing guidelines come into being before the
     first task that writes the product's tests (WAY-244);

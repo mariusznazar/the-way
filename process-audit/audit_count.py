@@ -1,8 +1,7 @@
 """The counting command of the audit of the process: the cycles whose records the user's
 repositories hold in their history, and for each the version of the-way it ran on, its number of
-process remarks and its times (WAY-330, WAY-332, WAY-338, WAY-341); and the problems of the user's
-register of problems counted against those cycles (WAY-330, WAY-333 to WAY-336, WAY-345,
-WAY-346).
+process remarks and its times (WAY-330); and the problems of the user's
+register of problems counted against those cycles (WAY-330).
 
 Usage:
 
@@ -26,6 +25,8 @@ The places it needs are entries of the user's locations file (WAY-320), read as
   checkout. Each `--repository KEY` names a repository to read; without one, it reads every key
   that holds an entry `repository`. The-way's own checkout is the entry `repository` under
   `the-way`, and where that entry is missing, the checkout this script lies in.
+  The command finds every place it needs by itself, since it runs with no human present, and the
+  session that reads its result finds the same places by the same names.
 
 A path is absolute or starts with `~`. Where the file, a key, an entry or the path an entry holds
 is missing, or an entry is not a path, the command writes nothing and names it in an `Error:` line
@@ -48,18 +49,22 @@ ones noted, and its values are read from the last copy, the most complete. For e
 - *Process pin*: the version of the-way the cycle ran on — the commit the record's header line
   `Process pin` names (in earlier records `Process pin and ...`), or the commit it moved to where
   the line says the pin moved; for a cycle of the-way's own history, whose line names no commit,
-  the commit of its line `Target branch and base`;
+  the commit of its line `Target branch and base`; the agents of such a cycle read the process from
+  the worktree the cycle changes, which begins at that commit, so that commit is the process the
+  cycle started under;
 - *Remarks*: the number of entries under the record's item `Process remarks on the-way`, `0`
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
-- the cost at constant prices (WAY-337, WAY-352), from the copy's `stages.md` in either of its two
+- the cost at constant prices (WAY-337), from the copy's `stages.md` in either of its two
   forms. The newer form is known by its heading: each row of the section *Stages: start, waiting
   for tools and tokens by model* is priced at the list's prices, its input less its cached input at
   the *Input* price, its cached input at the *Cached input* price and its output at the *Output*
   price. The older form has no such section: it is known by its table of tokens by model, the one
   table whose header row begins with *Model* and has the columns *Model*, *Total tokens*, *Input*,
   *Cached input* and *Output*, found exactly once, and each of its rows is priced in the same way.
+  The older form is the form most cycles have, so a count that passed it over would leave most
+  cycles with no cost.
   Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in), so they are priced
   as input: an approximation. A model the list gives no price for, a row that does not read, a
   cached input above its input, a subagent stage with no token usage (the model `—`), a stage or a
@@ -87,7 +92,7 @@ ones noted, and its values are read from the last copy, the most complete. For e
   given a findings file the record does not name: a wrong figure is worse than `unknown`. The cost
   is still given.
 
-The process versions (WAY-339, WAY-341): each cycle is grouped by the version of the-way its
+The process versions (WAY-339): each cycle is grouped by the version of the-way its
 *Process pin* resolves to, the full commit that `git rev-parse --disambiguate` names in the
 checkout of the-way. A cycle whose pin is unknown, does not resolve, is ambiguous, or whose commit
 has no readable date stands apart as *no version*, with its reason, and is in no series. Versions
@@ -121,9 +126,13 @@ cycle that has one is not read, since its slices could change the answer. Q3, th
 median against the previous version of the same series, yes where lower, unknown where there is
 none.
 
-The measure versions (WAY-339, WAY-348, WAY-350): the same versions, in their own series, one kind of
-series for each instrument. A series of the mechanism measures of `mechanism_measures.md` begins at
-a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a series of
+The measure versions (WAY-339, WAY-350): the same versions, in their own series, one kind of
+series for each instrument. The count reads these measures and shows them with a median and a
+comparison for each version, because the numbers lie in the records of cycles, which the session
+of the audit does not open, and a comparison of before and after made by hand cannot say that a
+change to the process worked. A series of the mechanism measures of `mechanism_measures.md`
+begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
+series of
 the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `gate/run_tests.py`
 differs, by the same test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts
 as changed). No other change splits them: not the price list, a date of the register's list of
@@ -168,8 +177,8 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
 
 The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
-`task-cycle/cycle_measures.py` (WAY-347) and `gate_times.md` by `task-cycle/gate_times.py`
-(WAY-349). A copy that holds neither is of an earlier cycle or of one whose script failed, and the
+`task-cycle/cycle_measures.py` (WAY-339) and `gate_times.md` by `task-cycle/gate_times.py`.
+A copy that holds neither is of an earlier cycle or of one whose script failed, and the
 record's *Verification* says which: their values are `unknown`, with that reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
 by its label; a label it lacks is a missing field, and then every value of the file is `unknown`. A
 label written twice, a value that is not what its label gives and a value `unknown` are `unknown`
@@ -199,7 +208,7 @@ cycle and the issue it names: each count of that cycle or issue reads `at least 
 not in it. What else depends on a refused row or table is `unknown`. A problem whose cycle no named
 repository holds is `unknown`, not dropped, and so is a
 problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
-read `at least n`. A problem is counted once, by its row (WAY-334); a cycle copied again after a
+read `at least n`. A problem is counted once, by its row; a cycle copied again after a
 correction is one cycle, and its problems are counted once. *Unknown values* lists at most 500
 values the register leaves unknown, and says how many more there are.
 
@@ -208,23 +217,23 @@ problems in the cycles whose *Process pin* holds the fix, and apart those in the
 does not hold it, never by date: the holding is `git merge-base --is-ancestor <fix> <pin>` in the
 checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
 short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a
-pin `unknown` gives `unknown` with its reason (WAY-335). For each issue whose *Fate* is `open`, the
+pin `unknown` gives `unknown` with its reason. For each issue whose *Fate* is `open`, the
 number of cycles its problems came back in, and the days it has waited: the cycles in which a
 problem of the issue stands, except the first of them, so `0` where it stands in one cycle only,
 and `at least n` where a refused row or a problem of a cycle not read may belong to a cycle not
 counted; and from the earliest commit date of the copies its problems' *Record* names to the day
 of the run, `unknown` where a problem's cycle is not known. An issue `dropped` is counted apart,
 with no waiting. The issues are listed in the order of the
-register, never ranked by their counts (WAY-336). For each issue, whatever its fate, how many of its
-problems stand on each of the five levels of the cost of an occurrence (WAY-345, WAY-346): a cost
+register, never ranked by their counts. For each issue, whatever its fate, how many of its
+problems stand on each of the five levels of the cost of an occurrence: a cost
 counted by the issue and never by the cycle, and a different thing from the cost of a cycle in
 money, which the section *Cost* gives (WAY-337). A level counts the issue's problems by their rows,
 whether or not their cycles are read.
 
 The result is Markdown in UTF-8 with LF line ends, the same bytes for the same input, written to
 `count-<YYYY-MM-DD>.md`, the date of the run, and `count-latest.md` in the directory of
-`audit_results`, never inside a repository it reads or the checkout of the-way, read or not
-(WAY-332): a section *Repositories*, a table of each
+`audit_results`, never inside a repository it reads or the checkout of the-way, read or not:
+a section *Repositories*, a table of each
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
 *Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
@@ -303,7 +312,7 @@ STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "
                  "Output"]
 FILES_COLUMN = "Files named"
 # The table of tokens by model, which every form of `stages.md` has and the older form is read
-# from: the table whose header row begins with `Model` (WAY-352).
+# from: the table whose header row begins with `Model`.
 MODEL_COLUMN = "Model"
 OLDER_COLUMNS = [MODEL_COLUMN, "Total tokens", "Input", "Cached input", "Output"]
 OLDER_NEEDED = ("Input", "Cached input", "Output")
@@ -367,7 +376,7 @@ LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
 # *Unknown values* lists at most this many values the register leaves unknown.
 MAX_LISTED = 500
-# The two files of a cycle's record that the count reads (WAY-347, WAY-349), each written by its
+# The two files of a cycle's record that the count reads (WAY-339), each written by its
 # script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
 # task-cycle/gate_times.py. A copy holding neither is an earlier form.
 MEASURES_FILE = "mechanism_measures.md"
@@ -614,9 +623,9 @@ class Cycle:
     # (WAY-344): the run ends with exit code 1 where any cycle has one.
     missing: list[str] = field(default_factory=list)
     # The values of `mechanism_measures.md` by label, each as the file writes it; a label not here
-    # is unknown (WAY-347).
+    # is unknown.
     measures: dict[str, str] = field(default_factory=dict)
-    # The runs of `gate_times.md`, each as the cells after the repository and the record (WAY-349).
+    # The runs of `gate_times.md`, each as the cells after the repository and the record.
     gate_runs: list[list[str]] = field(default_factory=list)
     # The same runs as numbers, one for each of `gate_runs`, in the same order (WAY-350).
     gate_timed: list[GateRun] = field(default_factory=list)
@@ -909,7 +918,7 @@ def files_cell(text: str) -> tuple[frozenset[str] | None, bool]:
 
 @dataclass
 class StageTable:
-    """What `stages.md` gives for its cost, in the form its own signs name (WAY-337, WAY-352): the
+    """What `stages.md` gives for its cost, in the form its own signs name (WAY-337): the
     rows of the section of the newer form, or of the table of tokens by model of the older form
     (`older`); `named` is whether the section's table has the column *Files named*. `rows` is None
     with the `reason` where they cannot be read; `missing` holds the fields the form needs that the
@@ -1339,7 +1348,7 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
     cycle.cost = total
     if table.older:
         # The table of tokens by model ties no round to the turns that served it: the share is
-        # unknown (WAY-352), but the number of rounds stands in the record.
+        # unknown, but the number of rounds stands in the record.
         cycle.unknown.append(("Fix rounds share", OLDER_NO_TURNS))
     if record_lines is None:
         cycle.unknown.append(("Fix rounds share", record_reason))
@@ -1468,7 +1477,7 @@ def measure_fits(label: str, value: str) -> bool:
 
 
 def read_measures(cycle: Cycle, text: str | None, reason: str | None) -> None:
-    """Read the cycle-level lines of `mechanism_measures.md` by their labels (WAY-347). A label the
+    """Read the cycle-level lines of `mechanism_measures.md` by their labels. A label the
     file lacks is a missing field: then every value of the file is unknown, and the field is named
     for the `Error:` line (WAY-344). A label written twice, a value that is not what its label gives
     or `unknown` is unknown with its reason, and the count goes on."""
@@ -1514,7 +1523,7 @@ def gate_value(reasons: list[tuple[str, str]], column: str, value: str, pattern:
 
 
 def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
-    """Read the runs of `gate_times.md` from its table (WAY-349). A table lacking one of its six
+    """Read the runs of `gate_times.md` from its table. A table lacking one of its six
     columns, or lacking the table, is a missing field, and the runs are not read; a row of the wrong
     number of cells is a run of its own with unknown values; the runs and the directories beyond the
     limits are not read, and the reason is given."""
@@ -1654,7 +1663,7 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
     # The two files after the record's own values, so that the rows of *Unknown values* of a
-    # cycle keep their order (WAY-347, WAY-349).
+    # cycle keep their order.
     read_measures(cycle, *measures)
     read_gate(cycle, *gate)
     working_name = "Working time without waiting for tools"
@@ -1741,10 +1750,10 @@ REGISTER_TABLES = (
     ("Problems", ["Repository", "Record", "Stages", "What", "Class", "Weight",
                   "Cost of an occurrence", "Issue"]),
 )
-# The scale of weight has these four levels and no other (WAY-333).
+# The scale of weight has these four levels and no other.
 LEVELS = ["no problem", "Minor", "Important", "Critical"]
 # The scale of the cost of an occurrence has these five levels, each dearer than the one before, and
-# no other (WAY-345). It is a different thing from the cost of a cycle in money (WAY-337).
+# no other. It is a different thing from the cost of a cycle in money (WAY-337).
 COST_LEVELS = ["nothing", "steps", "stage", "round", "human"]
 FATES = ["open", "fixed", "dropped"]
 FIXED = "fixed"
@@ -1784,7 +1793,7 @@ class Register:
     problems: list[Problem] = field(default_factory=list)
     # The Repository, Record and Issue texts of each refused row of *Problems*, as the row gives them
     # (Issue empty where the row is too short to have one): a refused row still belongs to the cycle
-    # and the issue it names, and the counts that include it say so (WAY-336).
+    # and the issue it names, and the counts that include it say so.
     refused_problems: list[tuple[str, str, str]] = field(default_factory=list)
     refused: list[tuple[str, str, str, str]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -2013,7 +2022,7 @@ def read_register(path: Path) -> Register:
 
 class Ancestry:
     """Whether the checkout of the-way holds a version: the answer of `git merge-base
-    --is-ancestor`, asked of the checkout the entry `repository` under `the-way` names (WAY-335).
+    --is-ancestor`, asked of the checkout the entry `repository` under `the-way` names.
     A git that cannot read the checkout makes every answer unknown, with the reason."""
 
     def __init__(self, git: Git):
@@ -2124,8 +2133,8 @@ class Analysis:
 def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
             today: date) -> Analysis:
     """Count the register's problems against the cycles the reads found: per cycle by class and
-    weight (WAY-334), per fixed issue by whether the pin of its cycles holds the fix (WAY-335), and
-    per open issue the cycles it came back in and the days it has waited (WAY-336)."""
+    weight, per fixed issue by whether the pin of its cycles holds the fix, and
+    per open issue the cycles it came back in and the days it has waited."""
     cycles = [cycle for read in reads for cycle in read.cycles]
     # Each commit that adds a copy of a record, with the cycles whose copy it adds: one commit may
     # add the records of several cycles, and then it names none of them.
@@ -2280,7 +2289,7 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows, listed)
 
 
-# The process versions (WAY-339, WAY-341)
+# The process versions (WAY-339)
 
 
 @dataclass
@@ -2488,7 +2497,7 @@ def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
 
 def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     """Group the versions into the series of each instrument and give the medians and the
-    comparison of each version within its own series (WAY-339, WAY-348, WAY-350)."""
+    comparison of each version within its own series (WAY-339, WAY-350)."""
     result = MeasureVersions()
     result.mechanism = instrument_series(versions.ordered, ancestry, (MEASURES_SCRIPT,))
     result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPTS)
@@ -2533,7 +2542,7 @@ def too_large_of(version: Version) -> tuple[str, str, str | None]:
 def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
                      prices: Prices) -> Versions:
     """Group the cycles by their version, split the versions into series, and answer the three
-    questions of each version within its own series (WAY-339, WAY-341)."""
+    questions of each version within its own series (WAY-339)."""
     result = Versions()
     groups: dict[str, list[Cycle]] = {}
     for read in reads:
@@ -2793,8 +2802,8 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
         "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
         "nothing. A cycle whose stage report has no section of stages is priced from its table of "
-        "tokens by model at the same prices, and its share of the cost in fix rounds is unknown "
-        "(WAY-352). *Fix rounds* is the number of findings files the record's *Review rounds* "
+        "tokens by model at the same prices, and its share of the cost in fix rounds is unknown. "
+        "*Fix rounds* is the number of findings files the record's *Review rounds* "
         "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "
         "those findings files — each fix and the review of that fix — over the cycle's cost. "
         "`unknown` has its reason in *Unknown values*.",
@@ -2813,7 +2822,7 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
     lines += [
         "## Problems by cycle",
         "",
-        "The problems of the register by class and weight, each problem once (WAY-334); a cycle "
+        "The problems of the register by class and weight, each problem once; a cycle "
         "with no problem has one row, `none`. *Refused rows* are rows of *Problems* that name this "
         "cycle and were refused for a class, weight, cost of an occurrence or issue the register "
         "lacks; a count with one reads `at least n`, as the refused row is not in it. A count "
@@ -2829,7 +2838,7 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "## Fixed issues",
         "",
         "A fixed issue's problems count apart by whether the *Process pin* of their cycle holds "
-        "the fix, by the commit and never by date (WAY-335). `unknown` where the fix is not in the "
+        "the fix, by the commit and never by date. `unknown` where the fix is not in the "
         "checkout of the-way, and the reasons are in *Unknown values*. *Refused rows* are refused "
         "rows of *Problems* that name this issue; a count with one reads `at least n`.",
         "",
@@ -2848,7 +2857,7 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "counts from the earliest commit date of the copies its problems' *Record* names to the "
         "day of the run; `—` where the issue has no problem yet. A count of problems with refused "
         "rows of the issue reads `at least n`. The issues are in the order of the register, never "
-        "ranked by their counts (WAY-336), and the weighing is the human's.",
+        "ranked by their counts, and the weighing is the human's.",
         "",
     ]
     lines += table(["Issue", "Cycles its problems came back in", "Problems",
@@ -2875,7 +2884,7 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "section *Cost* gives in money. A problem counts by its row, whether or not its cycle is "
         "read. *Refused rows* are refused rows of *Problems* that name this issue; a count with one "
         "reads `at least n`. The issues are in the order of the register, never ranked by their "
-        "costs (WAY-336), and the weighing is the human's.",
+        "costs, and the weighing is the human's.",
         "",
     ]
     lines += table(["Issue", "Fate", *COST_LEVELS, "Refused rows"], analysis.cost_rows)
@@ -2934,8 +2943,7 @@ def main(argv: list[str] | None = None) -> int:
         results = entry_path(locations, THE_WAY, RESULTS_ENTRY, "directory")
         named = repositories(locations, args.repository)
         the_way = the_way_checkout(locations)
-        # No repository holds the results, the-way's included, whether this run reads it or not
-        # (WAY-332).
+        # No repository holds the results, the-way's included, whether this run reads it or not.
         for key, path in [*named.items(), (THE_WAY, the_way)]:
             if inside(results, path):
                 raise AuditCountError(f"the directory of the entry `{RESULTS_ENTRY}` under "
@@ -2967,7 +2975,7 @@ def main(argv: list[str] | None = None) -> int:
     # named here after the result is written. The folder is text of the history, so it is cut.
     lacking = [(read, cycle, missing_reason(name)) for read in reads for cycle in read.cycles
                for name in cycle.missing]
-    # The fields of mechanism_measures.md and gate_times.md are named the same way (WAY-347, WAY-349).
+    # The fields of mechanism_measures.md and gate_times.md are named the same way.
     lacking += [(read, cycle, missing_reason(name, file)) for read in reads
                 for cycle in read.cycles for file, name in cycle.missing_in]
     for read, cycle, reason in lacking:

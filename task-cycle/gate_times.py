@@ -1,5 +1,6 @@
 """Runs the product's gate for the task cycle, relays its output, and appends the times of the run to
-the cycle's record (WAY-349, WAY-350).
+the cycle's record (WAY-350). The script reads the times from the run, so that none is copied
+wrongly, and the audit reads a file whose form the script holds.
 
 Usage, from the root of the repository:
 

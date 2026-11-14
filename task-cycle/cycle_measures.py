@@ -344,7 +344,10 @@ def read_session(path: Path, codex_home: Path) -> list[Agent]:
 def rewrites(calls: list[Call]) -> list[int]:
     """The tokens written again in each call of an agent that counts as a rewrite. What the earlier
     call held in the cache and the later one did not read, at most what the later one wrote; it
-    counts only above the floor, and not where the context fell by 30% or more."""
+    counts only above the floor, and not where the context fell by 30% or more. A collapse of the
+    conversation drops part of the context and the cache is written anew after it though nothing
+    expired, so counted as a rewrite it would make a change that adds collapses look like a
+    worsening."""
     counted = []
     for before, after in zip(calls, calls[1:]):
         held = before.read + before.write

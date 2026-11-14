@@ -97,8 +97,7 @@ judgement, the file a rule is placed in, the files to be written — then follow
 ## Where a rule stands
 
 A rule's place is set by what should trigger it — not by how many rules an area has or how long
-they are (WAY-128). Two questions settle it, for every rule and every fragment of a file
-(WAY-257):
+they are (WAY-128). Two questions settle it, for every rule and every fragment of a file:
 
 1. **When does an agent need it?** In every session, when working with certain files, during an
    activity or at one step or in one variant of it, every time without exception, or now and then

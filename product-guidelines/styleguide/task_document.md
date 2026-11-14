@@ -5,7 +5,7 @@
     `.the-way/product-guidelines/styleguide/template.md`, as its section "Writing the file" gives;
   - put the value of each role into the product's file of design tokens with its source, naming for
     each role the value and its source as the human settled them, or the exact address of the
-    source and the item in it the value is read from (WAY-182);
+    source and the item in it the value is read from;
   - build the page of every state, or extend it;
   - write the test of each new invariant in the product's suite;
   - apply `maintain-instruction-files` for two changes: a pointer in the product's root
@@ -14,7 +14,8 @@
     `<part>`; and the rule against values written in place of design tokens in that part's files,
     standing where that skill places a rule for some files, saying what keeps it — the product's
     invariant, or the review of each change while that invariant is marked violated — and naming
-    no command of its own (WAY-192);
+    no command of its own. A styleguide no instruction leads to is not found by an agent in a new
+    session, and a path with its condition costs one line and is read when the condition comes;
   - for the product's first guidelines: add `guidelines/**` to the files of the part of the map
     whose files direct whoever carries out its tasks, through `update-part-map` (WAY-167);
   - one item for the fix of each cause of the audit's list the task takes, naming the cause by its

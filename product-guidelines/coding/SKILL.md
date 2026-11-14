@@ -68,9 +68,10 @@ carries takes no approval.
   does for the product (WAY-174, WAY-113).
 - Extend what exists: rules are added to the linter the product runs, never a second linter beside
   it, and a way of writing log lines the product or its language already gives raises no question.
+  An existing tool, even a worse one, beats a better one brought in, since the code and the people
+  working on it already follow it and two linters over one code disagree.
   A new linter, formatter or audit of dependencies, or a library a chosen form of a log line needs,
-  is a technology choice: record it as a question of the task, never settle it (WAY-210, WAY-121,
-  WAY-277).
+  is a technology choice: record it as a question of the task, never settle it (WAY-121).
 - A choice found in the product's files — a tool's configuration, a habit its files share — is a
   proposal, never a rule, until the human settles it. An existing choice the human keeps becomes a
   decision whose rationale is the human's words or `unknown`, never one the agent infers (WAY-29).
@@ -97,7 +98,9 @@ its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task temp
 `elements/common/way_of_working.md`, the product's foundation as it selected it, and the guidelines
 of the parts the task touches — is not read again. A session that has not read them in this
 conversation — it opened this skill directly, or resumed the work in a new one — goes through
-`refine-task` steps 1 and 2 first (WAY-266).
+`refine-task` steps 1 and 2 first. A skill of guidelines takes over inside the refinement of a
+task, whose template and sources `refine-task` has read, and a session that did not pass through
+that refinement lacks them.
 
 ## 1. Recognize
 
@@ -128,10 +131,11 @@ full unless an earlier step did, and `kinds.md` alone, for that kind; there is n
 route, and that comparison, being no audit, has no such end.
 
 - **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
-  exemplar, and its file of guidelines comes into being with it (WAY-200, WAY-209): step 4 settles
-  the kind's identifier, the path the file takes and the rules a script checks of it. In a product
-  that has coding guidelines, step 4 settles and step 5 checks, of the standing checks, only those
-  the kind touches, and no check anew that the kind does not touch. A kind in a language that none
+  exemplar, and its file of guidelines comes into being with it: step 4 settles
+  the kind's identifier, the path the file takes and the rules a script checks of it. A first file
+  built with no exemplar is the file every later one copies. In a product that has coding
+  guidelines, step 4 settles and step 5 checks, of the standing checks, only those the kind touches,
+  and no check anew that the kind does not touch. A kind in a language that none
   of the product's standing checks reads makes the task an extension of the coding guidelines
   (WAY-251), so that step 2's research and step 3's trial run and audit run as for one (WAY-216).
 

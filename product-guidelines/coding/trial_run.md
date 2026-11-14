@@ -20,7 +20,7 @@ Where the product has code:
   (WAY-205).
 - Group the reports of the rules that block by one reason: each reason is a cause of the audit's
   list, told by its effect, its place the number of files, with no rule's name, and the output's
-  path stays in *Context* (WAY-281). The rules that went among the examples flagged sound code and
+  path stays in *Context*. The rules that went among the examples flagged sound code and
   yield no cause. The formatter's count never enters the list: a reformatting is no finding.
 - **Trial run of sizes** (WAY-360). In the same scratch worktree, count the lines of every function
   and every file of the parts the rule of size reads, with the tool the product already has or a

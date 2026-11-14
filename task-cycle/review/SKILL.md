@@ -74,8 +74,8 @@ scope are yours.
   `product-guidelines/template.md` (in a product, `.the-way/product-guidelines/template.md`) and,
   where the-way gives one, the template of their discipline,
   `product-guidelines/<discipline>/template.md` (in a product,
-  `.the-way/product-guidelines/<discipline>/template.md`), at the commit of the-way the product pins
-  (WAY-170).
+  `.the-way/product-guidelines/<discipline>/template.md`), at the commit of the-way the product
+  pins.
 - A reserved choice: does the change settle a language, a framework, a library, a store of data, a
   way of logging in or a place to run that the task, the spec and the foundation do not settle?
   Read `project-level/technology/reserved_choices.md` (in a product,
@@ -89,10 +89,10 @@ scope are yours.
 - The author's own-work check: does the requirement it names fit where this change is weakest, and
   would its check catch that requirement unmet?
 - For a user interface, the states the applicable styleguide requires and the author's screenshot
-  evidence (WAY-219); a screenshot file among the commits of the range is a finding (WAY-316). A
+  evidence; a screenshot file among the commits of the range is a finding (WAY-316). A
   screenshot you take to show the human lies in the place the foundation settles for screenshots,
   outside the product's repository, and your report names its address; where the foundation settles
-  none, keep none (WAY-316, WAY-317). The file the screenshot tool writes by itself is a working
+  none, keep none (WAY-316). The file the screenshot tool writes by itself is a working
   copy, as the dispatch's paragraph on working copies gives.
 - Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run
   them in a worktree of the head commit, in your directory for working copies that the dispatch
@@ -113,8 +113,14 @@ scope are yours.
 - **Minor** — polish, style, broader coverage that would be nice.
 
 Grade an appearance finding by its effect on the user, neither Minor because it is visual nor
-blocking because it is visible (WAY-220). A departure from a guideline example blocks only through
-the consequence you name for the user or for the code (WAY-221). Something the plan or the task
+blocking because it is visible. Appearance can carry the meaning by which a person chooses an
+action, so a visual fault can change behaviour as seriously as incorrect code, and its consequence
+draws the line without a second severity scale. A departure from a guideline example blocks only
+through the consequence you name for the user or for the code. The same holds for a departure from
+the part of an exemplar no script checks. Binding rules and their invariants keep their force, and
+this criterion gives the orchestrator no authority to regrade or discard your finding. Examples
+teach useful ways without acquiring the force of approved rules, and a comparison with no concrete
+consequence turns taste into a blocker. Something the plan or the task
 mandates is still a finding when it is a defect; name it so.
 A finding that a change departs from a foundation entry it writes or changes is
 Important when the change's files do what the entry forbids, fail to do what it

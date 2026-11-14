@@ -76,12 +76,11 @@ lower part, as `task-cycle/skill/request_template.md` gives.
 ## Integrate into `foundations`
 
 Open a request to merge the task branch into `foundations`. Its description follows
-`task-cycle/skill/request_template.md` (WAY-286). Where no task cycle ran, *Cost* reads `none` and
+`task-cycle/skill/request_template.md`. Where no task cycle ran, *Cost* reads `none` and
 *Course of the cycle* holds **Task and sources** alone, its other labels reading `none`; the agent
 leading the work judges which findings the user of a product or a person working with the process
 will feel (WAY-289). Before the request opens, and before each later edit of its description, check
-the description and correct it as the template gives, an error you hold wrong included (WAY-290,
-WAY-291):
+the description and correct it as the template gives, an error you hold wrong included:
 
 ```
 python -B task-cycle/request_check.py <description file> --task <document the change carries out>

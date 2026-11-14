@@ -3,7 +3,7 @@
 What the audits of `maintain-coding-guidelines`, `maintain-styleguide` and
 `maintain-testing-guidelines` do alike, so that they end alike: every finding belongs to one cause,
 every cause has one weight, the causes stand in one order of repair, the first few are gone back to
-and put to the human, and the rest stay in the task document (WAY-280 to WAY-285). Read it from the
+and put to the human, and the rest stay in the task document (WAY-280, WAY-284). Read it from the
 checkout or pinned the-way the skill runs from, at each step of the skill that names it. It binds
 these skills, never a product's code, screens or tests (WAY-173), and a weight blocks nothing.
 
@@ -19,8 +19,10 @@ including "The list"; steps 4 and 5 take the last two.
 ## Merge into causes
 
 Merge every finding into a cause: several violations from one source are one cause and one fix, and
-each finding belongs to one cause (WAY-281). Two faults stay two causes where no one fix removes
-both. Tell each cause in one sentence of its effect on the user or the owner.
+each finding belongs to one cause. Two faults stay two causes where no one fix removes
+both. Tell each cause in one sentence of its effect on the user or the owner. A reformatting of
+the code is no finding. One fix removes a source and not a place, so violations of one source
+listed one by one would read as many problems and hide what to repair.
 
 ## Weigh
 
@@ -46,7 +48,7 @@ A weight has no link to a critical flow: a flaw inside one is not `grave` for th
 ## A task joining code and tests
 
 A task carrying a product's coding and testing guidelines (WAY-247) has one list, one order and one
-top, made once, at the end of the audit that runs last (WAY-282). Which discipline runs first is
+top, made once, at the end of the audit that runs last. Which discipline runs first is
 free.
 
 - **Whether this audit stops.** Run the other skill's step 1 now, by the file this skill's step 3
@@ -68,7 +70,7 @@ free.
   audit stopped, so that the other discipline's audit will not run in this task, the skill of the
   stopped audit returns and closes the list as the audit that runs last does: it numbers the causes,
   makes the top and goes back to each cause of the top, and puts the top to the human as "At step 4"
-  gives (WAY-282).
+  gives.
 - **The audit that runs last** takes up the causes standing in *Context*, which carry the first
   audit's work over where the two skills run in separate sessions. From here they are the list's,
   whichever discipline found them. Merge causes of the two audits only where one fix removes both,
@@ -85,7 +87,9 @@ free.
 ## Order
 
 Put the causes in one order of repair, from `grave` down; within one weight the cause that removes
-more and reaches less stands first (WAY-282). Beside its fix each cause shows two plain facts and no
+more and reaches less stands first. The weight says what is at stake, so it comes first, and
+within one weight what is left to ask is where the work goes furthest. Beside its fix each cause
+shows two plain facts and no
 score:
 
 - `Removes:` how much of the problem goes with that one fix: its count of places, or what goes where
@@ -99,15 +103,20 @@ ratio: a count of places is no number on the scale, and a weight is never turned
 
 ## The top of the list
 
-The top is the first causes of the order, counted over the whole audit and never by level of tests
-(WAY-283): as many as the larger of three and the number of `grave` causes; then, up to five, the
+The top is the first causes of the order, counted over the whole audit and never by level of tests:
+as many as the larger of three and the number of `grave` causes; then, up to five, the
 next cause while it weighs as much as the one before it. Over five `grave` causes it holds all of
-them and nothing more. With fewer than three causes it holds all of them.
+them and nothing more. With fewer than three causes it holds all of them. The list of files marked
+`do not copy` stands apart from this limit. A few causes with a place and an effect can be weighed
+by a human who is no specialist and a whole list cannot, so the limit reaches only what the human
+gets, and the files marked `do not copy` tell the next agent what not to copy.
 
 ## Go back
 
 Before step 4, go back to each cause of the top: return to the places it names and see whether the
-effect it describes occurs (WAY-285). This is your own check, made before the set of proposals is
+effect it describes occurs. The human spends attention on the top and a repair may follow it, so
+each of its causes is read again with one aim, to see whether its effect occurs, which listing it
+did not ask. This is your own check, made before the set of proposals is
 complete. A cause takes the form of the discipline that found it:
 
 - **Code:** follow the way from the input to the harm, through the lines.
@@ -150,7 +159,7 @@ with its details nested below it, as *Questions to settle* nests them:
   - Checked: <the places gone back to and what was seen>
 ```
 
-- `Category:` stands in a styleguide's list alone, one category for each cause (WAY-187).
+- `Category:` stands in a styleguide's list alone, one category for each cause.
 - `Checked:` holds also the weight the cause had where the check lowered it. In its place,
   `Unchecked:` says what could not be seen and why. One of them stands on every cause the check went
   back to: the top, and a cause the check lowered out of it, which keeps its mark. A cause the human

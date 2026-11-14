@@ -4,15 +4,16 @@ Read by the orchestrator of `implement-task` wherever it writes or rewrites a re
 description — step 13, a slice failed twice at step 9.4, `blocked_finding.md`, `reserved_return.md`
 and `correction.md` — and by the agent leading a change to the-way that `agent-instructions/README.md`
 sends here. Every request of a cycle, blocked, reserved or corrected, has this one skeleton
-(WAY-286, WAY-287).
+(WAY-287). The skeleton puts the same thing in the same place in every request, so the human finds
+it without reading the rest.
 
 ## Write, check, publish
 
 1. Write the description into `.runs/task-cycles/<task-slug>/request.md`, beside the record.
 2. Before the form check, read each item of *Needed from you* and of *Fix or let through* against
    the four parts "What an item carries" gives for an item in which the human chooses, and an item
-   for a check the human can do by hand against its fifth part as well, and write what is missing
-   (WAY-327). The script cannot do this, since it judges no content.
+   for a check the human can do by hand against its fifth part as well, and write what is missing.
+   The script cannot do this, since it judges no content.
 3. Check its form, from the worktree's root — in a product, the path starts with `.the-way/`:
 
    ```
@@ -21,7 +22,10 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
 
    `--task` is the frozen task document of the record. The script checks the headings, the three
    groups of *For you to decide*, content or `none` in each section and the block's language, and
-   judges no content (WAY-290).
+   judges no content. The check runs before the request opens, since an agent writing from the
+   template can lose or move a section or a group, and nobody would notice until the human reads
+   the request; the content is left to the agent that writes it, since a script cannot judge
+   whether it is complete and true.
 4. Exit 1 lists each problem as `line <n>: <what is wrong and what to write>`. Correct the file at
    each line and run the form check again, until it exits 0. Exit 2 is no error of the form: fix
    the call, or the file that could not be read.
@@ -48,10 +52,12 @@ sends here. Every request of a cycle, blocked, reserved or corrected, has this o
 
 **An error you hold wrong.** The language measure can read a correct block, or a task document
 full of quoted English names, as English, and the script itself can err. Where you hold a reported
-error wrong, with evidence you can name (WAY-291):
+error wrong, with evidence you can name:
 
 1. Do not change the description to silence it: never write `none` into the block, and never put
-   the block into English, on a language error you hold wrong.
+   the block into English, on a language error you hold wrong. A cycle that corrected until the
+   script passed would remove the block the human reads with nothing saying so, or would never
+   open the request.
 2. Run the script once more on the final file, so that the error stands as the check's result.
 3. Publish that file; the request opens, or stays, a draft. The first line reads
    `**State: draft** — the form check reports an error the cycle holds wrong`, or keeps `blocked`
@@ -152,15 +158,15 @@ sections of its own, omit this heading altogether: it is not written with `none`
 ## The two parts and the language
 
 - The whole description is in English. Its **top part** — the state line through *How to merge* —
-  is written for the human in plain words, with no file names and no identifiers of entries
-  (WAY-286). The **block** repeats the top part in the task document's language, the headings
+  is written for the human in plain words, with no file names and no identifiers of entries. The
+  **block** repeats the top part in the task document's language, the headings
   translated, the three group headings of *For you to decide* among them, directly after *How to
   merge*; where the task document is in English, the block holds only `none` after its summary
-  (WAY-288, WAY-292).
+  (WAY-288).
 - The **lower part** — *Technical changes* through *Course of the cycle* — holds the evidence for
   agents and for a human who checks closely. Each of its items opens with a sentence a human
   understands without the code: what it concerns, what was not checked or what can break, and how
-  much that matters; the places in the code and the identifiers follow (WAY-286).
+  much that matters; the places in the code and the identifiers follow.
 
 ## The top part
 
@@ -175,10 +181,11 @@ product, what its user sees; in the-way, how the work with the process changes. 
 alters what a screen shows, the screenshots that the author or the reviewer shows the human stand
 here as images, each from the place the product's foundation settles for screenshots, which the
 reports name; no file of the repository or of the record's copy is linked as an image (WAY-316).
-Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so
-(WAY-317). Of the artifacts of the check only screenshots reach the description: describe motion in
-words, and leave logs and outputs in the reports (WAY-318). *Underneath*: one or two sentences on
-what is under the change.
+Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so.
+Of the artifacts of the check only screenshots reach the description: describe motion in words, and
+leave logs and outputs in the reports. A screenshot is read at a glance in the description, while
+logs and outputs are read in the reports by the agents and the humans who check closely, where they
+already stand. *Underneath*: one or two sentences on what is under the change.
 
 **For you to decide.** Everything whose merge needs the human's yes, and nothing else, in three
 groups under headings of their own (WAY-287). The three groups stand in every request, in this
@@ -228,7 +235,7 @@ the order of their kinds.
   return step, a review, the reconciliation with the target branch, a slice not made, the gate; a
   check of the final gate run that failed or did not run, save one that fails on the base too — by
   the run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a
-  check the change needed that an author reports as not done — a screenshot unchecked (WAY-219), a
+  check the change needed that an author reports as not done — a screenshot unchecked, a
   missing state check or a missing own-work check (WAY-164). A check the skill does not call for
   this change is none, and a check that failed and passed again stays in *Checks* (WAY-261). The
   stages a blocked request did not run because it stopped are kind 1's, not these. The answer "do it
@@ -248,7 +255,7 @@ the order of their kinds.
   with its kind and grade; the judgment decides no fix and no block.
 - **9.** *Decisions of the task's own sections*: each item of those sections that waits on a yes,
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
-- **14.** *An incomplete reading by the review of the whole change* (WAY-326, WAY-287), from the
+- **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
   **Unread material** of that review's report and of its fix review's, and from the record: where
   the reviewer did not run through the rest of its selection by title, or itself named a decision
   concerning the change as unread, and the gap was not closed on the way, by the reviewer or a fresh
@@ -294,8 +301,8 @@ the order of their kinds.
   under *Foundation entries*. Also here: a guidelines rule with no decision that the cycle found
   itself, named as a rule whose *Decision* reads `none`, with one plain sentence of what it asks for;
   the human accepts it at the merge (WAY-172).
-- **7.** *Changed invariant tests, surfaces and Violated marks*, in plain words (WAY-03, WAY-49,
-  WAY-51), from the changed files read against the invariants file and the part map, and from the
+- **7.** *Changed invariant tests, surfaces and Violated marks*, in plain words (WAY-03, WAY-51),
+  from the changed files read against the invariants file and the part map, and from the
   record's *Return step*. The writer of this description runs
   `python -B elements/common/foundation_check.py` (in a product,
   `.the-way/elements/common/foundation_check.py`) on the finished change, without
@@ -317,14 +324,14 @@ the order of their kinds.
   `Project relation:` line of the task copy and the cycle cleaned it: in plain words which of the
   two lines it was, never its text, and that the reader of a project plan's state may now report a
   conflict for this task.
-- **13.** *No screenshot of a changed screen* (WAY-317), where the change alters what a screen
+- **13.** *No screenshot of a changed screen* (WAY-316), where the change alters what a screen
   shows, the author inspected a screenshot, and the product's foundation settles no place for
   screenshots, so the request shows none: in plain words that the screen was looked at and is not
   shown, and that the product has settled no place for screenshots. A screenshot left unchecked for
   want of a settled way to the running product stands in item 4 and takes no item here.
 - **15.** *A form error held wrong* ("An error you hold wrong", above): in plain words what the
   script reported and why the cycle holds it wrong.
-- **17.** *The cause of a correction* (WAY-287, WAY-358), in the description after a correction: one
+- **17.** *The cause of a correction* (WAY-287), in the description after a correction: one
   sentence, from the pairs `source · kind` of the correction's line in the record, that says in
   plain words what started the correction — your remarks, your answer to an item of this request,
   or only the refreshing of the target branch — and whether the cycle judged that the task or the
@@ -341,7 +348,7 @@ the order of their kinds.
 - An item in which the human chooses — each item of *Needed from you* and of *Fix or let through*
   but one that asks for an action outside the repository — has four parts, and the agent that
   writes the description checks every such item against them and fills what is missing before it
-  checks the form (WAY-327):
+  checks the form:
   1. what happens, concretely: who will feel it — the product's user or the person working with the
      process — when and in what situation; with no name of a step of the process and no number of
      an entry, and a name that cannot be avoided followed, at its first mention, by one sentence on
@@ -353,12 +360,13 @@ the order of their kinds.
 - An item of kind 4 for a check the agent did not run that the human can do by hand has a fifth part
   after the question: three to six numbered steps for the human — where to go, what to do and what
   the human should see — each in plain words, with no file name and no identifier of an entry, as
-  the top part asks (WAY-286). A step may give a command to type, written without the name of a
+  the top part asks. A step may give a command to type, written without the name of a
   file of the repository; where the place or the command cannot be told without such a name, the
   step describes it in words and the item ends with its pointer to the lower part, where the name
   stands. The answers of the item stay the three of "Fix or let through", and the human who checks
   by hand writes a remark after the check. An item for a check the human cannot do by hand has no
-  steps (WAY-327).
+  steps. The steps stand in the item so that the human has them where the request asks the
+  question, and does not have to ask the agent or look for them in the lower part.
 - An item of *Needed from you* that asks for an action outside the repository (kind 3) says what to
   do, why the request needs it and what happens without it.
 - An item of *You accept by merging* says what the cycle chose or wrote and why, in plain words,
@@ -448,9 +456,9 @@ for a check that failed and passed when run again the number of cycle runs in wh
 passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
 of failing tests it took from the earlier cycle's final gate with the commit and the file it was
 taken from, and the result of the run of the failing tests on the base where step 4 of
-`task-cycle/skill/SKILL.md` gave that run (WAY-367); what each own-work check showed (WAY-164); the
+`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); the
 user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
-failure of a settled one included (WAY-219); the form check's last run; the check of private
+failure of a settled one included; the form check's last run; the check of private
 paths' last run on the description and its last run on the copy of the record, each with its
 command and exit code (WAY-309); the image check's last run on the copy of the record, with its
 command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
@@ -462,7 +470,7 @@ standing, with its name, its branch and its reason, and no absolute path.
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
 one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row
 tied to an entry already stated, with that entry (WAY-134); each invariant test the change alters
-(WAY-03), each surface it alters (WAY-49) and each *Violated* mark it sets or clears (WAY-51).
+(WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).
 Each invariant that the foundation check lists for a corrected sentence stands here too, as the top
 part's *You accept by merging* gives it, and each test that holds a sentence of a decision by a line
 `decision:`, where the change adds, drops or alters the test or its line (WAY-03, WAY-12). A
@@ -505,7 +513,7 @@ reads `none` under its heading.
 
 | Variant | First line | *For you to decide* | Lower part |
 |---|---|---|---|
-| A blocking finding remains (`blocked_finding.md`, WAY-162, WAY-163) | `**State: blocked** — a review finding remained after its one fix` | in *Needed from you*, each remaining finding in plain words, with "Fix it as the finding says, or keep the code despite it?"; what has not run on that code — the return step, the reconciliation, the slices not made | **Blocking findings left**: each with its place, reason and what the fix tried; *Cost* the cost so far with the rounds; *Checks* naming what has not run |
+| A blocking finding remains (`blocked_finding.md`, WAY-162) | `**State: blocked** — a review finding remained after its one fix` | in *Needed from you*, each remaining finding in plain words, with "Fix it as the finding says, or keep the code despite it?"; what has not run on that code — the return step, the reconciliation, the slices not made | **Blocking findings left**: each with its place, reason and what the fix tried; *Cost* the cost so far with the rounds; *Checks* naming what has not run |
 | A slice failed twice (step 9.4) | `**State: blocked** — a slice failed with two agents` | in *Needed from you*, what failed, in plain words, and what the cycle needs to go on; the stages not run — the review of the whole change, the return step, the reconciliation | **Route**: both failures with the classes tried, each slice made that no review judged |
 | A reserved choice (`reserved_return.md`, WAY-269) | `**State: blocked** — the cycle met a technology choice only you make` | in *Needed from you*, the choice, by what the product needs it for; the ways seen, marked as not researched, with no recommendation; what happens next: close the request, and refinement takes the choice as its note | *Technical changes* `none`; *Foundation entries* `none`; *Checks*: the checks failing on the base, from its run or from the list step 4 took, and each stage not run with why, the gate among them; **Route**: where it showed (stage, task item), the limb of the rule, what was searched, the discarded attempt and its report; *How to merge*: do not merge, close |
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |

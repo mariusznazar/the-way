@@ -7,10 +7,15 @@ Usage, from the root of the repository:
 Without DIRECTORY, it runs the tests of every directory that holds a `test_*.py` file git tracks
 and the working tree still has, each directory in a process of its own, so that test modules of the
 same name in two directories never meet. The directories run at the same time, all of them at once
-unless `--jobs N` limits how many run at once; `--jobs 1` runs them one after another. Each
-directory's report is printed whole when its run ends, under a line `== <directory>` and never
-mixed with another's, so the reports stand in the order the directories end, not in the order of
-their names. A last line counts the tests and names each directory that failed, in the order of
+unless `--jobs N` limits how many run at once; `--jobs 1` runs them one after another. A product
+that needs its directories one after another writes `--jobs 1` into the command of its gate, which
+remains the one command of WAY-16. The directories run at once by default because that shortens
+the gate of every product that pins the runner, and the option is the way back for a product whose
+tests fail under the load, which can still take a new version of the runner with no change to the
+process. Each directory's report is printed whole when its run ends, under a line
+`== <directory>` and never mixed with another's, so the reports stand in the order the
+directories end, not in the order of their names. A last line counts the tests and names each
+directory that failed, in the order of
 their names. Given DIRECTORY, it runs only the tests
 `python -m unittest discover -s DIRECTORY -p "test_*.py"` finds there, and `--jobs` changes nothing.
 The report for a person is the one `unittest` prints. A skipped test is named there, with its

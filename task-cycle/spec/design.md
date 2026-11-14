@@ -24,6 +24,10 @@ returns.
   reserves it, what you searched and the ways you saw.
 - Weigh two or three ways with their costs and recommend one. Leave out every feature the task does
   not need.
+- Where the choice the spec settles rebuilds code that already exists, look in the description of
+  the commit or of the merged request that brought the shape of that code for the reason of it, and
+  quote what you find with the identifier of the commit. Where that description holds no reason, ask
+  the orchestrator, as above; write no reason of your own for the code.
 - Divide what you design into units that each do one thing, behind an interface that says what the
   unit does, how it is used and what it depends on.
 

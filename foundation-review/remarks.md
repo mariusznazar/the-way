@@ -2,12 +2,16 @@
 
 Read at step 3 of `SKILL.md`. The requests are those step 1 listed, of this repository only: a
 review reads the unfixed remarks of its own repository, and the review of the-way reads a product's
-requests only for evidence about the decisions of the-way (WAY-304).
+requests only for evidence about the decisions of the-way. Each review reads the remarks of the
+repository it answers for, so none of them judges a remark twice and the review of the-way does not
+grow with each product. No other periodic review reads these remarks. One review reads them
+together with the foundation, which rules out two judgments of the same remarks in two places that
+can disagree.
 
 ## Which remarks
 
 In each request's description, and in the comments under it, read every remark the cycle left
-unfixed (WAY-303):
+unfixed:
 
 - the Minor findings, and the findings the reviewer marked outside the task's scope;
 - the questions put to the human at the merge, those that ask whether a finding becomes a task

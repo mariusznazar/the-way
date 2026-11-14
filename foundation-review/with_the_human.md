@@ -17,7 +17,7 @@ analysis.
    answers — a task exists and the human names it, so that the review writes nothing, or none
    exists and the review proposes creating one — with what each costs and your recommendation; and
    one question: is there a task that ends this state? Wait for the answer before the next
-   decision (WAY-354).
+   decision.
 3. The groups of remarks, **a group at a time**. Show the group's kind, its count, one remark in
    full — the reviewer's words, the place, the state today and what it does to whom — and the
    effect of the rest in one sentence; the options (a collective task, a note to a task, leave),
@@ -31,7 +31,7 @@ Write each decision under its proposal or group in the data file when it is made
 
 A decision to change something, and a transitional state for which the human says that no task
 exists and agrees to one, becomes a task in the backlog step 1 found, and the review makes the task
-and no change itself (WAY-302, WAY-14, WAY-354):
+and no change itself (WAY-14):
 
 - Create the task in the form the backlog gives: an entry, and where the backlog holds short
   entries only, a task document in the task area, linked from the entry, with `Status: refining`

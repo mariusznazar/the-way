@@ -43,7 +43,7 @@ follows from the entry.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for a
-term (WAY-117):
+term:
 
 In projected mode, read `projected.md` beside this skill for choosing the words and
 rewriting their uses.

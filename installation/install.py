@@ -122,7 +122,11 @@ def sibling_names() -> str:
 
 def skill_wrapper(path: str, name: str, commit: str) -> str:
     """The entry point of one skill, with its description at `commit`. It names no commit, since
-    the gitlink records it; the installer rewrites it whenever a moved pin reads differently."""
+    the gitlink records it; the installer rewrites it whenever a moved pin reads differently. The
+    text tells the agent to read the skill in full but a file it names only when the step or variant
+    that names it comes, because the full skill gives the agent the picture of the work, its shared
+    rules and its pointers, while a file read at its moment keeps the rules for other work out of
+    the instructions in play."""
     original = committed(path, commit)
     original_name = re.search(r"^name: (.+)$", original, re.M)
     if not original_name or original_name.group(1) != name:

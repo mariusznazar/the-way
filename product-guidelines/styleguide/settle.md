@@ -9,24 +9,26 @@
   decision with its reason (WAY-173). Ask also what no reading of the code can tell: the names the
   team uses, the exceptions it keeps on purpose.
 - **Accessibility.** First ask whether a law or a contract binds the accessibility of the user
-  interface: what one requires is an environment fact, and no adoption is needed (WAY-86). Then
+  interface: what one requires is an environment fact, and no adoption is needed. Then
   propose the decision adopting WCAG, recommending the newest edition that is a W3C Recommendation
   when the decision is written, named by its number as read on the W3C's page in this session, never
   from memory, at level AA, for every screen of the user interface; propose another way only where
-  the human chooses it, and write nothing the human has not accepted (WAY-191, WAY-80). Each success
+  the human chooses it, and write nothing the human has not accepted. Each success
   criterion an invariant takes a condition from — contrast and visible focus at least — becomes an
-  environment fact, with its source as WAY-80 gives it (WAY-191).
+  environment fact, with its source in the form the environment-facts template gives (section
+  Source). A threshold written into an invariant with no adopted catalogue is a number from WCAG
+  without its source, and no reader can tell which edition it follows.
 - **Which criterion, which ratio.** Put to the human, as a question with a recommendation shown by
   what the user sees — "small text on any background stays readable for someone who sees less
   well" — the criterion of the adopted edition each invariant takes its condition from, and the one
   ratio the contrast test holds every pair of a background and its text to, read from that
   criterion's passage: the stricter one wherever the size of the text on a pair is not known.
   Record both with the facts of WCAG, so that the invariant's condition stands in a decision and
-  its fact (WAY-60, WAY-191).
+  its fact (WAY-60).
 - **Invariants.** Propose an invariant only for a rule a cheap test of the product's suite checks on
   a convention of the product's code; the review compares each change with every other rule, each
   role in its meaning among them (WAY-168). Propose:
-  - the three first invariants WAY-189 gives, each with its test in the product's suite: no value
+  - the three first invariants, each with its test in the product's suite: no value
     written in place of a design token, visible focus on every control, and the contrast of every
     pair of a background and its text;
   - the product's decision that the rule against values written in place of design tokens names,

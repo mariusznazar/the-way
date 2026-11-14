@@ -83,7 +83,7 @@ the user's agent instructions or another repository goes into the record's proce
 into the request. For each stage report, copy every item under **Searches not found or unclear**
 that is not `none` word for word into those remarks, with the stage name and full report path; keep
 repeated items separate (WAY-260). The remarks stand in the one form `task-cycle/record_template.md`
-gives (WAY-296), and before every commit that adds the record, "The record before it is committed"
+gives, and before every commit that adds the record, "The record before it is committed"
 below compares them with the reports (WAY-294) and cleans and checks the copy it commits (WAY-308,
 WAY-309, WAY-316). The account of its request is the cycle's own: in the task's entry in the backlog
 the product names (WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the
@@ -127,10 +127,12 @@ request link and set the task's state.
    document does not name joins that list for the human to place, and opens the request the same
    way.
    In the-way itself, first bring the checkout the session works in up to the remote target branch,
-   one of the two changes the cycle makes to checkouts outside the task's worktree (WAY-298): fetch,
+   one of the two changes the cycle makes to checkouts outside the task's worktree: fetch,
    and where it stands behind, fast-forward it when it is on that branch with a clean tree and no
    local commits, then start again from the entry point that started the cycle; where it cannot
-   fast-forward, stop and say so.
+   fast-forward, stop and say so. A cycle started from a copy that stands behind its remote reads an
+   older skill and entry point with nothing to show it, so a copy that cannot be brought up to date
+   is shown to the human instead of being worked from.
    Then remove the working directories of finished tasks, the other of the two changes (WAY-375), in
    the-way itself after that fast-forward and in a product at once: run `python -B
    task-cycle/remove_merged_worktrees.py --apply --target <target branch>` from the root of the
@@ -152,8 +154,10 @@ request link and set the task's state.
    once. Record the base commit and the checks already failing on it. First check in git whether the
    base is a merge commit whose tree of files is identical to the tree of the head of the branch it
    merged: `git rev-parse <base>^{tree}` and `git rev-parse <base>^2^{tree}` print the same
-   identifier (WAY-367); a base with no second parent is no such commit. If it is, do not run the
-   gate on the base. Take the list of the tests failing before the change from the final gate of the
+   identifier; a base with no second parent is no such commit. If it is, do not run the
+   gate on the base. The final gate of the earlier cycle ran on the files the base now holds, so a
+   run on the base would repeat it and add a full run of the gate to the wait of every cycle. Take
+   the list of the tests failing before the change from the final gate of the
    cycle of the merged branch, also where that gate was red, from the record of that cycle in the
    history of git: the merged branch's own copy of its cycle record,
    `docs/task-cycles/<merged-task-slug>/cycle.md`, where `<merged-task-slug>` is the slug of the
@@ -260,24 +264,29 @@ runs no test or other check and returns no check result), and the report's path;
 questions and concerns, each reach beyond its handoff, its **Unread material** — what its handoff
 names, or for the reviewer of the whole change its own selection, that stayed unread or was read in
 part, or `none` — and **Searches not found or unclear** — each thing looked for and not found or
-unclear, or `none` — stand in the report (WAY-148, WAY-260, WAY-325, WAY-326). In every report read
+unclear, or `none` — stand in the report (WAY-148, WAY-260). In every report read
 its checks, reaches, unread material, searches and working copies; read the rest of it where the
 status is other than `done`. A reach shows where your selection fell short: add what it found to the
 handoffs that follow. Where a report says that something its handoff names stayed unread or was read
 in part, decide before you act on its status: resume the agent to read it, carry the gap into the
 handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
-nothing the agent judged. A decision the reviewer of the whole change read by title as WAY-150 gives
-is no gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
+nothing the agent judged. Going on at the status alone would let an unread decision pass through a
+stage that looks complete, and an error hidden in it would reach the request. A decision the
+reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the
+status is `done`, `done with concerns`, `questions`, `returned`,
 `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
 `returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
 `reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and
 exit code; a report missing either returns to its agent for repair before dependent
-work, and a claim that tests passed does not repair it (WAY-159). A report that lacks its **Unread
-material** (WAY-326) or its **Searches not found or unclear** (WAY-260), save one returning
+work, and a claim that tests passed does not repair it. A report that lacks its **Unread
+material** or its **Searches not found or unclear** (WAY-260), save one returning
 `questions`, or a `make-change` report of `done` or `done with concerns` without its own-work check
 (WAY-164), returns to its agent for repair the same way (WAY-148); `none` is an answer, a missing
-section is not. An agent that returns `questions` gets your answers as step 6 answers the
+section is not. The section of unread material stands apart from the account of what the agent
+looked for, because that account goes into the process remarks word for word and an unread file
+usually concerns one change, not the process. An agent that returns `questions` gets your answers as
+step 6 answers the
 designer's — from an approved source, otherwise, except for a reserved choice, the smallest
 reversible reading that fulfils the task, recorded as an autonomous choice — and is resumed, with
 no mechanical check and no review until it returns its work. `blocked` is for a missing fact or
@@ -406,7 +415,7 @@ contradicts a decision.
         command and exit code, its **Unread material**, its **Searches not found or unclear** and
         its own-work check. Uncommitted work returns to the executor to commit, and a check without
         its command or exit code, or a report missing one of these sections, returns the report for
-        repair (WAY-148, WAY-159, WAY-164, WAY-260, WAY-326); any other mismatch goes as
+        repair (WAY-148, WAY-164, WAY-260); any other mismatch goes as
         information to the review that judges the slice and does not return it.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
@@ -445,9 +454,11 @@ contradicts a decision.
    the task moved the pin, it is told of that commit and given the checks the move carried. It
    selects its own foundation and guidelines, judges every slice that had no review of its own, and
    names for each blocking finding the slice it comes from, or that it comes from none (WAY-136).
-   For progression use the changed files with their line counts and the review's first line
-   (WAY-158); read the evidence only when a question about a finding needs it, never to change a
-   reviewer's grade or scope. The Minor findings of this review within the task are fixed before
+   The reviewer reads the full diff of the range it reviews. For progression use the changed files
+   with their line counts and the review's first line; read the evidence only when a question about
+   a finding needs it, never to change a reviewer's grade or scope. The independent reviewer already
+   reads the change for correctness, so repeating that read in coordination costs attention. The
+   Minor findings of this review within the task are fixed before
    step 10, as "The end of a code review" gives (WAY-161).
 10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
     included, or the code a revert of that fix leaves, through the script of the pinned the-way:
@@ -456,7 +467,9 @@ contradicts a decision.
     it (the-way's is `python -B gate/run_tests.py`; in a product the script's path starts with
     `.the-way/`). Every run of the gate goes this way: the run on the commit that moved the pin
     (step 2), the run on the base where step 4 requires it, this run, and the reruns of steps 9 and
-    12 that this step governs. The gate's output passes through unchanged. The script's exit code is
+    12 that this step governs. A time that a script reads from the run cannot be copied wrongly, and
+    a change to the script shows in the files, where a change to an agent's habit leaves no trace.
+    The gate's output passes through unchanged. The script's exit code is
     the gate's, and the orchestrator records it with the command as before; an exit code 2 that
     comes with an `Error: gate_times.py:` line on stderr is the script's own failure, not the
     gate's, and the orchestrator does as step 12 gives for a measuring script. Record its
@@ -464,9 +477,11 @@ contradicts a decision.
     did not run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
     any review of it are done, on the tree they leave: the return step needs no result of the gate,
     so one run covers both. Where the gate then fails and its fix changes code, the return step
-    compares that fix's range too. The authors' focused checks are not rerun merely to go on
-    (WAY-159); a change, a failure or disputed evidence calls for the affected
-    checks again, by the agent that owns them. A check that fails in a cycle run and passes when run
+    compares that fix's range too. The authors' focused checks are not rerun merely to go on;
+    a change, a failure or disputed evidence calls for the affected
+    checks again, by the agent that owns them. Repeating a completed check for coordination spends
+    time without checking another state, while a changed state or an unresolved failure needs new
+    evidence. A check that fails in a cycle run and passes when run
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
     WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
     Apply this rule even when the product has no *Flaky tests* section in its guidelines.
@@ -482,7 +497,7 @@ contradicts a decision.
 Every code review of the cycle — of a slice, of the whole change, of the return step, of the
 reconciliation with the target branch and of a correction — is made by an agent that did not make
 the change, with `review-change`, which holds its grades, its criteria for appearance and for
-guideline examples (WAY-220, WAY-221), and what blocks. The reviewer alone grades and scopes: the
+guideline examples, and what blocks. The reviewer alone grades and scopes: the
 handoff names no finding wrong, Minor or outside the scope, though it may carry the author's
 evidence on a contested finding, and you move no finding from one kind to another (WAY-161).
 
@@ -579,7 +594,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     takes its content from and the variants of a blocked, reserved or corrected request; check its
     form with `task-cycle/request_check.py` and its text for private paths with
     `task-cycle/private_paths_check.py`, and correct it until both checks pass, as the template
-    gives, and publish it from that file (WAY-286, WAY-290, WAY-309). Recover the task's parts from its
+    gives, and publish it from that file (WAY-309). Recover the task's parts from its
     frozen task and changed files through the part map when preparing the request, and keep that
     classification as evidence with the check, not as a separate record of the selected parts
     (WAY-261). Never present partial work as complete.

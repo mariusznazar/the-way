@@ -7,5 +7,4 @@ Step 3 of the skill `define-project`, whose `SKILL.md` lies beside this file.
   and offer to record the answer as that file gives.
 - Once the human has confirmed the goal, write the definition there without asking: the confirmed
   goal, `TODO` in every other section but the gate record, which the template gives, and the
-  status line. Give the definition's full path in the same message
-  (WAY-112).
+  status line. Give the definition's full path in the same message.

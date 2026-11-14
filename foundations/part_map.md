@@ -81,7 +81,8 @@ breakdown of an approved definition into a project plan and the check of that pl
 refinement of a task before its implementation cycle, whether the task belongs to a project,
 uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
 refinement and evidence-backed upkeep of task states, and for how the line of a task in the product's
-backlog is made, given its dependencies and moved to ready.
+backlog is made, given its dependencies and moved to ready, and for the tests of its readiness
+check, its plan check and its reader of task-cycle evidence for plan states.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -117,7 +118,9 @@ review done.
 
 The part answers for the audit of whether the process gets better, cheaper and faster across
 cycles: the template of the register of problems, the dated price list of models, the command that
-counts the audit and the skill that leads its weekly session.
+counts the audit and the skill that leads its weekly session. It is a part of its own because it
+answers how the whole process fares over many cycles, which is not how one task is carried out, so
+what only work on the audit needs stays out of what every agent of the cycle reads.
 
 - **Files:** process-audit/**
 - **Depends on:** task-cycle · project-level
@@ -125,8 +128,8 @@ counts the audit and the skill that leads its weekly session.
 
 ## gate
 
-The part answers for the command that runs every test of the-way, and for the tests of critical
-flows.
+The part answers for the command that runs every test of the-way, with its tests, and for the tests
+of critical flows.
 
 - **Files:** gate/**
 - **Depends on:** none
@@ -164,7 +167,8 @@ agents' tools and of CI that direct them.
 
 The part answers for the principles by which instruction files for coding agents are written,
 judged and kept, for the account of how Claude Code, Codex and Cursor load them, and for the skill
-that applies those principles with the script that checks instruction files mechanically.
+that applies those principles with the script that checks instruction files mechanically and its
+tests.
 
 - **Files:** instruction-files/**
 - **Depends on:** decisions · environment-facts · installation
@@ -172,7 +176,8 @@ that applies those principles with the script that checks instruction files mech
 
 ## installation
 
-The part answers for preparing a product repository to use one pinned commit of the-way.
+The part answers for preparing a product repository to use one pinned commit of the-way: the
+installer, its tests and a README explaining how a product uses the pinned version.
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -262,6 +267,6 @@ sentence and its exit codes.
 | invariants-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | environment-facts-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | glossary-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
-| guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines (WAY-170) | none |
+| guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines | none |
 | wording-reaches-dependants | withdrawn: a critical flow has no entry in the map, and no reference carries a fingerprint | none |
 | skills-reach-the-way-sessions | withdrawn: a critical flow has no entry in the map; the invariant skill-entry-points and its test hold it | none |

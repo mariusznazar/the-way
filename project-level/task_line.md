@@ -33,7 +33,7 @@ place. The-way gives its derivation, so that a refiner can write the identifier 
 that task's line exists, from the plan and the task's name in the plan alone: the plan's file name
 without its extension, joined by `-` to the task's name in the plan, in lower case, each run of
 characters other than lower-case letters and digits, hyphens included, turned into one `-`, none at
-either end (WAY-329). The task `forest-on-hex-grid` of the plan file `player-game.md` has the
+either end. The task `forest-on-hex-grid` of the plan file `player-game.md` has the
 identifier `player-game-forest-on-hex-grid`. A task that belongs to no plan has no identifier from
 the-way; a line of it takes one only where the rules require it.
 

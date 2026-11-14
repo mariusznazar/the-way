@@ -1,7 +1,7 @@
 # Reading a product's guidelines
 
 Use this procedure whenever an agent's work touches a product's user interface, code or tests: in task
-refinement (WAY-214), in project breakdown (WAY-218) and in the task cycle (WAY-213). Read it from
+refinement, in project breakdown and in the task cycle (WAY-213). Read it from
 the checkout or pinned the-way the calling workflow uses.
 
 Who selects: outside the task cycle, the agent doing the work selects the guidelines of the parts
@@ -27,7 +27,7 @@ a user interface, writes code or writes or changes a test, and which kinds of co
 changes. A backend's admin
 panel is a user interface; helper and build scripts are code. Names and file extensions alone do
 not settle the classification. An API or terminal alone is no user interface in the styleguide's
-sense (WAY-183).
+sense.
 
 If the map has no part for the work, keep its identity as a question in the owning workflow until
 settled; additions to the map follow that workflow's foundation rules and known files, not
@@ -43,9 +43,10 @@ matches the work. The general coding file stays in the reading when no kind row 
 unindexed kind does not remove it. Never replace a file with excerpts or a review checklist.
 
 A current decision of the product's log that departs from a discipline's guidelines applies only
-to the parts and work it expressly covers (WAY-217): for them, an absent file of that discipline
+to the parts and work it expressly covers: for them, an absent file of that discipline
 is not missing; a departure for one part does not exempt another. An agent cannot infer a
-departure from the absence of a file.
+departure from the absence of a file. A product can knowingly decline guidance through its own
+decision, and forcing its creation afterwards would cancel that choice.
 
 Name missing, malformed or contradictory metadata as a finding to resolve, including an index row
 whose file is absent. An uncertain condition is a question, not a nonmatching row. Never silently
@@ -85,14 +86,15 @@ into being:
   guidelines (WAY-251): it belongs to this task, through `maintain-testing-guidelines` in
   refinement, and is not left for the task cycle (WAY-172, WAY-199).
 - Where files of an unindexed kind already exist, name that discrepancy and route their
-  comparison and exemplar selection through `maintain-coding-guidelines` under WAY-200. Do not
+  comparison and exemplar selection through `maintain-coding-guidelines`, which judges each file,
+  compares them and proposes the exemplar. Do not
   call the next file the first or use the finding to authorize an unrelated audit.
 
 ## Hand the findings back
 
 Give each finding, its source and consequence to the owning workflow: `refine-task` places
 questions, prerequisite work and the return after its merge (WAY-215); `plan-project` places
-preparatory tasks and dependencies within the approved definition (WAY-218). An agent of the task
+preparatory tasks and dependencies within the approved definition. An agent of the task
 cycle names its finding in its report, and the orchestrator in the cycle record: one that changes
 what the task needs stops the cycle, which opens a blocked draft request showing it, as
 `implement-task` gives where the required outcome cannot be made; one needing a foundation entry the

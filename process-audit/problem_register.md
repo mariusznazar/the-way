@@ -15,12 +15,15 @@ Copy it to a place of your own, adapt it to your needs, and let your own tool fi
 - You adapt the template to your needs: the meaning of a class, the list of classes, the words of
   this text. What the counting command of the audit reads keeps the form the next section gives.
 - A problem is a lapse that the process let through in one cycle. A problem that several stages of
-  one cycle report is one problem: one row, which names every stage that reported it (WAY-334).
+  one cycle report is one problem: one row, which names every stage that reported it. Counting each
+  report would make the number of problems follow the number of stages that looked at a thing rather
+  than the number of lapses of the process, and the register keeps the stages that reported a
+  problem, so counting it once loses nothing.
 - An issue is the one matter that like problems of several cycles make: the problems that one fix of
   the process would remove belong to one issue.
 - A problem has a weight and, apart from it, a cost of an occurrence. The weight says how far the
   problem endangered the change; the cost of an occurrence says what one occurrence of it cost, on
-  the five levels of *Costs of an occurrence* (WAY-345). The cost of an occurrence is no cost of a
+  the five levels of *Costs of an occurrence*. The cost of an occurrence is no cost of a
   cycle, which the count gives in money in its section *Cost*.
 
 ## What the counting command reads
@@ -60,15 +63,19 @@ needs and cannot find ends the run with an error that names it (WAY-344).
   its row, so that the problems given it earlier stay readable.
 - A correction's pair `item · defect`, a defect that the cycle saw and left and that the human had
   fixed in a correction, is a problem of the class `known-problem-left`; the two classes added
-  above take the pair `remark · defect` and the line `Defect introduced by:`.
+  above take the pair `remark · defect` and the line `Defect introduced by:`. The template carries
+  the two classes so that the line `Defect introduced by:` of the tasks of the-way has a route to
+  counting for everyone who keeps a register.
 
 The list widens: where a problem fits no class, a session of the audit puts a new class before you —
 its name, its meaning and the day it is added — and on your yes adds its row to this table, here in
-your register; the problem is never given the nearest class instead (WAY-333). A row of *Problems*
-whose class the list lacks is refused by the count until then. A change of what a class means is
-written as that class withdrawn and a new class, under a new name, added on the same date. Each date
-in *Added* or *Withdrawn* starts a new series of the cost and of no mechanism measure or gate
-time, and the audit compares measures only within one series (WAY-339).
+your register; the problem is never given the nearest class instead. A list that the audit widens
+follows what the sessions find, where a closed list would give a problem it lacks a class for a
+wrong class. A row of *Problems* whose class the list lacks is refused by the count until then. A
+change of what a class means is written as that class withdrawn and a new class, under a new name,
+added on the same date. Each date in *Added* or *Withdrawn* starts a new series of the cost and of
+no mechanism measure or gate time, and the audit compares measures only within one series
+(WAY-339).
 
 ## Weights
 
@@ -80,7 +87,7 @@ time, and the audit compares measures only within one series (WAY-339).
 | Critical | as the review of a cycle grades a finding Critical: a bug, a security hole, data loss, broken functionality |
 
 The scale has these four levels and gains no other: Minor, Important and Critical are the grades of
-the review of a cycle (WAY-161), and no problem is the level below them (WAY-333). Adapt the
+the review of a cycle (WAY-161), and no problem is the level below them. Adapt the
 meanings, never the levels.
 
 ## Costs of an occurrence
@@ -93,9 +100,11 @@ meanings, never the levels.
 | round | an extra run of an agent: a round of fixes, an extra merge with the target branch, a new review, a slice made again |
 | human | the human's time: a question, a decision, a manual check, a fix after the merge |
 
-The scale has these five levels, each dearer than the one before, and gains no other (WAY-345). A
+The scale has these five levels, each dearer than the one before, and gains no other. A
 problem has the highest level its actual cost reached; what it could have cost is the weight's
-business. Adapt the meanings, never the levels.
+business. Adapt the meanings, never the levels. A scale the counting command knows in order lets it
+count the levels as a scale, where a list the user widens would make cost a category with no order,
+and each change to the list would break a series of measures.
 
 ## Issues
 
@@ -107,7 +116,7 @@ business. Adapt the meanings, never the levels.
 - *Fate*: `open` while no fix is in place, `fixed` once a fix is in the-way, or `dropped` once you
   decide to leave the matter without a fix.
 - *Fix*: for a `fixed` issue, the commit of the-way that holds the fix; otherwise `none`. A cycle
-  whose version of the-way contains that commit ran with the fix, whatever its date (WAY-335).
+  whose version of the-way contains that commit ran with the fix, whatever its date.
 
 ## Problems
 

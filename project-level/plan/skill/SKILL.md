@@ -23,12 +23,12 @@ The breakdown reads the product's foundation and the definition and writes nothi
 ## Delegated work while leading a plan
 
 When `lead-project` dispatches you through a refinement conversation path, read
-`delegated_mode.md` beside this skill first (WAY-156): it holds what that path changes in the
+`delegated_mode.md` beside this skill first: it holds what that path changes in the
 workflow below, and the files of steps 5, 6 and 7 point back to it.
 
 ## Rules that hold across the steps
 
-The original definition and plan remain authoritative (WAY-151). Run every readiness, fingerprint
+The original definition and plan remain authoritative. Run every readiness, fingerprint
 and plan check on those whole files at their original paths, never on selected excerpts or a
 reduced copy. Selection is no reading cap; read a small file whole where useful.
 

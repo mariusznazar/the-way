@@ -31,7 +31,8 @@ exemplar changes through those discipline skills under WAY-172 and WAY-199.
 
 For a genuinely first unindexed kind, add to *To do* designation of its first file as exemplar, its
 kind guidelines and the general index row through `maintain-coding-guidelines`, without a separate
-exemplar wait. Existing unindexed files instead need the comparison WAY-200 requires; record the
+exemplar wait. Existing unindexed files instead need the comparison of the existing files of the
+kind (judge each, propose the exemplar) that `maintain-coding-guidelines` makes; record the
 discrepancy and route that work within this task's scope, and for a plan member respect its plan
 boundary.
 

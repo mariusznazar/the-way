@@ -14,14 +14,13 @@ directly (WAY-173). A rule below that a decision of the-way sets cites that deci
 form every file of guidelines keeps — the header lines, the fields of a rule, references, code in
 backticks or fenced code, the language of the text, a dropped section or rule — stand in
 `product-guidelines/template.md`; this template holds what is particular to testing guidelines. No
-script checks its form (WAY-170).
+script checks its form.
 
 ## Required form
 
 The file `guidelines/testing.md` holds the form of the fenced block of this section: the form of
 `product-guidelines/template.md` with the sections `## Levels`, `## Recipes` and
-`## Not tested on purpose` and the required rules of the testing discipline in their places
-(WAY-171).
+`## Not tested on purpose` and the required rules of the testing discipline in their places.
 
 ```markdown
 # Testing guidelines — <the product>
@@ -79,7 +78,7 @@ The file `guidelines/testing.md` holds the form of the fenced block of this sect
 ```
 
 - Each `### ` under `## Rules` carries the fields *Decision*, *Invariant*, *Good* and *Bad* the
-  template of guidelines gives a rule (WAY-171). Its *Invariant* reads `none` for every required
+  template of guidelines gives a rule. Its *Invariant* reads `none` for every required
   rule but `### Trust boundaries`, which names the refusal invariant of each trust boundary of the
   product (WAY-235); a further rule names an invariant where a cheap test checks it on a convention
   of the product's code, and otherwise reads `none`, the review of each change the rule reaches
@@ -87,17 +86,19 @@ The file `guidelines/testing.md` holds the form of the fenced block of this sect
   own: the product writes them, or `none`.
 - The required rules stand in the order above, and each that the product goes without reads
   `none — <PREFIX-NN>`, naming the product's decision that departs from it with its reason
-  (WAY-171, WAY-173). The product's further rules follow them.
+  (WAY-173). The product's further rules follow them.
 - `## Recipes` holds one `### <level>` for each level the table of `## Levels` names, with the
   fields above in that order (WAY-241).
-- A required section the product drops reads `none — <PREFIX-NN>` as well (WAY-171). This marker
+- A required section the product drops reads `none — <PREFIX-NN>` as well. This marker
   differs from the plain `none` of `## Not tested on purpose`, which says that the product excludes
   nothing (WAY-237).
 - *Applies to* names every part of the product's map whose code the product's tests check and
   every part that holds test files; before the product's first test, the parts the product's plan
-  gives tests (WAY-246).
+  gives tests.
 - `## When to read` gives the condition under which an agent reads the file: before writing or
-  changing a test (WAY-246).
+  changing a test. The condition serves the pointer of the instruction file and an agent outside the
+  cycle, while the cycle selects the file by the parts of *Applies to* alone, since a condition
+  judged before a diff exists could drop the file from an agent that then writes a test.
 
 ## What each section carries
 
@@ -112,7 +113,7 @@ those decisions and invariants in its own foundation; the testing guidelines nam
     field, a narrower meaning included — "integration" above all — is a term of the product's
     glossary, defined there by the resources a test of that level may touch, such as files, the
     network or a browser, whether or not a sentence would be read wrongly; the table names that term
-    and copies no definition, so that the meaning stands once (WAY-240, WAY-226). A level whose name
+    and copies no definition, so that the meaning stands once (WAY-240). A level whose name
     means what the field means takes no definition;
   - the table of parts, one row for each part *Applies to* names: *Part*, its identifier; *Where its
     complexity lies*, one sentence of whether the part's complexity lies in computation or in its
@@ -258,8 +259,8 @@ those decisions and invariants in its own foundation; the testing guidelines nam
   duplicate of another test, a test of trivial code, a loop over nearly identical inputs; nothing
   here binds (WAY-168).
 - **`## Where in code`** — the configuration files of the test tools, the directories of each
-  level's tests and the exemplar tests, each a path git tracks, with no value copied from them
-  (WAY-171). Before the product's first test it names what git already tracks of these, and it may
+  level's tests and the exemplar tests, each a path git tracks, with no value copied from them.
+  Before the product's first test it names what git already tracks of these, and it may
   hold no item.
 
 ## Writing the file
@@ -269,6 +270,6 @@ For the author who writes the testing guidelines in a task's cycle:
 - Take every level, document that is a source, exemplar, exclusion, departure and field of a recipe
   that binds from the task's settlements and from the decisions the task's foundation step wrote,
   never from memory (WAY-172).
-- Point to the configuration and to the tests; copy no value into the guidelines (WAY-171).
+- Point to the configuration and to the tests; copy no value into the guidelines.
 - A choice the task did not settle is a question that stops the cycle at a blocked draft request,
   never a rule, a row or a field (WAY-172).

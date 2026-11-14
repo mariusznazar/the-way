@@ -53,7 +53,7 @@ the search of the foundation adds for this element.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for a
-decision (WAY-117):
+decision:
 
 - Step 1: ask for no prefix for a new decision; the task that writes it into the log asks for the
   prefix when the log has no entries. A projected change of an existing decision keeps its

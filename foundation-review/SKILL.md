@@ -9,10 +9,12 @@ Reviews the foundation of one repository against the repository as it is today, 
 in one session: it reads every entry, sets the reasoning each decision gives against what the
 product and its cycles show, checks the unfixed remarks that merged requests left behind, lists
 what to change, has the whole list critiqued, goes through it with the human and marks the review
-done with a tag (WAY-24, WAY-302). It changes nothing in the foundation or the code: a proposal the
+done with a tag (WAY-24). It changes nothing in the foundation or the code: a proposal the
 human accepts becomes a task of the product's backlog, and the change reaches the foundation
-through that task's cycle (WAY-14). One skill serves every product, and a review is made for one
-repository at a time (WAY-304).
+through that task's cycle (WAY-14). A change to a decision passes the review of an agent that did
+not make it and the search of the foundation, and a review that made the change itself would turn
+into a small task cycle. One skill serves every product, and a review is made for one
+repository at a time.
 
 This skill lives in `foundation-review/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the
@@ -31,11 +33,11 @@ review tag (WAY-300); the human may start it at any time.
   Write it down at once.
 - Find the last review: `git describe --tags --abbrev=0 --match 'foundation-review/*' <main
   branch>`, from the main branch and never from a task branch. A repository with no such tag
-  answers that it found no names; its review begins at the start of its history (WAY-301).
+  answers that it found no names; its review begins at the start of its history.
 - List the requests merged since: `git rev-list --merges --first-parent <tag>..<main branch>`,
   without the range for a repository with no tag; each merge names its request. Where the human
   names a request up to which another repository's review has already read the requests of this
-  one, begin after it (WAY-304). A product that squashes or rebases its merges has no merge commit
+  one, begin after it. A product that squashes or rebases its merges has no merge commit
   to list: read the requests from the host's list of merged requests instead.
 - Find where the product keeps its tasks: the `## Backlog` section of the root `AGENTS.md`, read as
   `project-level/backlog_place.md` gives, which also says what to do where the place is missing.
@@ -48,18 +50,17 @@ review tag (WAY-300); the human may start it at any time.
 Read all of the foundation of the repository, each file whole: `foundations/decisions.md`,
 `invariants.md`, `glossary.md`, `part_map.md` and `environment_facts.md`. Read `weak_points.md`
 beside this skill for what to look for in each entry, for the checks to run and for the decisions
-that describe a transitional state (WAY-24, WAY-82, WAY-305, WAY-354).
+that describe a transitional state (WAY-24, WAY-82).
 
 ## 3. Check the unfixed remarks of the requests
 
 Read `remarks.md` beside this skill: which remarks of the requests of step 1 are read, how each is
-judged, and which are not raised again (WAY-303, WAY-304).
+judged, and which are not raised again.
 
 ## 4. List the proposals
 
 Read `proposals.md` beside this skill: the proposals about the foundation, the decisions that
-describe a transitional state, the groups of remarks, and the data file that holds the lists
-(WAY-302, WAY-354).
+describe a transitional state, the groups of remarks, and the data file that holds the lists.
 
 ## 5. Have the set critiqued
 
@@ -75,7 +76,7 @@ critiqued.
 
 Read `with_the_human.md` beside this skill for the order and the form: the proposals about the
 foundation one by one, the decisions that describe a transitional state one by one, the groups of
-remarks as groups, and the tasks that follow from the human's decisions (WAY-302, WAY-354).
+remarks as groups, and the tasks that follow from the human's decisions.
 
 ## 7. Mark the review done
 
@@ -84,8 +85,9 @@ that describes a transitional state and has decided on every group. Then mark it
 
 - Name the tag `foundation-review/YYYY-MM-DD` with today's date; where a tag of that date exists
   already, add `-2`, then `-3`. Put it on the checked commit of step 1, annotated, with
-  `git tag -a <name> -m "<message>" <checked commit>`, also when the review changed nothing
-  (WAY-301).
+  `git tag -a <name> -m "<message>" <checked commit>`, also when the review changed nothing.
+  A tag stays where the review was made, also when the review changes nothing, and gives the count
+  a starting point in git itself, with no file kept in step by hand.
 - The message gives the number of items checked and no title of a task or of a private note: the
   repository may be public.
 - Show the human the name, the commit and the message, and push the tag with

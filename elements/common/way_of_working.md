@@ -92,7 +92,7 @@ gives.
    and the decisions of step 2 link to — *Relations*, *Based on*, *Verification*, *Derives from*,
    *Rests on* — as far as the work needs them, each whole.
 4. Read the glossary entries of the terms the work uses: of the product's glossary and, in a
-   product other than the-way, of the-way's glossary at the pinned commit (WAY-226).
+   product other than the-way, of the-way's glossary at the pinned commit.
 
 The selection is not recorded, nor compared with every *Scope* of the log (WAY-150). Where
 relevance is uncertain, read more entries; read a file whole only where it is short, such as the
@@ -112,7 +112,10 @@ nowhere else says so. The search also asks:
   an entry and which the glossary does not yet hold: such a word goes through
   `record-glossary-term` (WAY-95, WAY-99);
 - whether the change brings what entries of the foundation wait for — an element's template, the
-  part map, a script; each such entry is fixed in the same change (WAY-37).
+  part map, a script; each such entry is fixed in the same change, because an entry that says what
+  holds until something exists turns false when it arrives, nothing leads from the arrival to what
+  waits for it, and the authors of the waiting entries may be gone, so a fix left for later goes
+  missing.
 
 Each finding becomes a link the element's template gives, a change to one of the entries, or a
 question in step 4, before the entry is accepted (WAY-33). The skill names what else the search
@@ -125,7 +128,8 @@ looks for in its element. The search is not repeated before the merge and leaves
 - Take every value from its source — the conversation, a document the human names, the product's
   files, the output of a command run for it — never from memory. A value the source does not give
   is a question in step 4 that proposes where to look for it, never the value itself, and the draft
-  takes it only as read there (WAY-80 for the source of a fact and of a citation).
+  takes it only as read there (for the source of a fact, the environment-facts template, section
+  'Source'; for a citation, the decisions template).
 - A field its source is silent on is a question in step 4, never a `none` the agent writes
   (WAY-71); it is asked about before anything is written in it. What stays open after step 4 is
   written as `rules.md` gives it (WAY-71).
@@ -158,4 +162,4 @@ looks for in its element. The search is not repeated before the merge and leaves
 ## Projected mode
 
 When writing an entry projected into a project definition, read `projected_mode.md` beside
-this file for the differences from the steps above (WAY-117).
+this file for the differences from the steps above.

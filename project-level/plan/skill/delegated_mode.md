@@ -2,8 +2,7 @@
 
 When `lead-project` dispatches you through a refinement conversation path, read that file and
 `project-level/lead/conversation_template.md` first. Verify its product, plan and process pin,
-read all turns and the requested change, and follow this workflow with these routing differences
-(WAY-156):
+read all turns and the requested change, and follow this workflow with these routing differences:
 
 - Own the structural plan edit while your turn runs. The project orchestrator pauses its own
   State/Document/log writes; refiners write only separate task documents/conversations and

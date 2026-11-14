@@ -1,5 +1,6 @@
 """The number of lines of each file a change touches, before the change and after it — the numbers
-the review of the whole change reads for the structure of the code it leaves (WAY-362).
+the review of the whole change reads for the structure of the code it leaves. A diff shows the lines
+a change adds, not the size of the file they reach, which these numbers give.
 
 Usage:
 

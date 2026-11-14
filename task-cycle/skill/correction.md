@@ -7,7 +7,7 @@ In the-way itself, before anything else, fetch, and bring what the session works
 target branch. Where the session works in a copy of the target branch, fast-forward it as step 4 of
 `implement-task` gives, or stop and say so; where it works in the request's worktree, merge the
 remote target branch into it and, where that merge changes code the cycle reviewed, have it reviewed
-and its affected checks run as the merge in the paragraph below is (WAY-306). In both cases, where
+and its affected checks run as the merge in the paragraph below is. In both cases, where
 something came in, start again from the entry point that started the cycle.
 
 Then read the field *Reserved choice* of the request's record, in the kept worktree or in the
@@ -29,10 +29,13 @@ the-way pin included, and verify that the pinned checkout matches the product's 
 merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `review-change` (`task-cycle/review/SKILL.md`), with
 a dispatch that asks whether the two sides still hold together and names the foundation entries the
 merge brought in that bear on the parts the change touches, as step 12 of `implement-task` gives
-(WAY-306, WAY-150), and the agents that own the checks the merge touches run them again. The remarks
+(WAY-150), and the agents that own the checks the merge touches run them again. The reviewer's
+range is the commits of the merge the dispatch gives. A merge can bring in a rule or code that the
+change goes against, or that meets the change at a seam neither side shows alone, which is why the
+dispatch asks whether the two sides still hold together. The remarks
 bind; record them as new events, and write them word for word, as the human gave them, into
 `reports/correction-<n>-remarks.md` of the record, `<n>` counting the corrections from 1, also
-where they came in conversation or concern only the refreshing of the target branch (WAY-357).
+where they came in conversation or concern only the refreshing of the target branch.
 Keep the recorded route for the affected work: dispatch the
 correction with `make-change` (`task-cycle/change/SKILL.md`), resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code
@@ -43,7 +46,7 @@ repeat the record's pair of commits from step 12, preparing the copy before it a
 ("The record before it is committed") gives, with every report of the cycle in the record, the
 correction's own among them. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
-accepted despite the finding, then run what has not run on that code (WAY-163). Rewrite
+accepted despite the finding, then run what has not run on that code. Rewrite
 `request.md` by `task-cycle/skill/request_template.md`, in its variant for a correction, for the
 state after the correction, with the link to the record's new commit and with the pairs of the
 correction in one sentence as the item of kind 17 in *You accept by merging* (WAY-287), check it
@@ -51,7 +54,7 @@ as the template gives, and edit the request's description from it.
 
 Before the record's copy is prepared, add the correction's line to the record's item *Corrections
 after the request opened*, as `task-cycle/record_template.md` gives it: the file of the remarks and
-each pair `<source> · <kind>` of the correction once (WAY-357, WAY-358). Take the source from what
+each pair `<source> · <kind>` of the correction once. Take the source from what
 started the correction: `item <n>` for the human's answer to an item of the request's *For you to
 decide*, `<n>` being the number of that item's kind in `request_template.md`, as in item 8
 below, never the number the item had in the description; `remark` for a remark of the human

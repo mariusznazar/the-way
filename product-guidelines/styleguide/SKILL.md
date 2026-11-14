@@ -71,7 +71,7 @@ its steps 1 and 2 — its own `project-level/task/skill/SKILL.md`, the task temp
 `project-level/task/template.md`, the section "How a skill asks" of
 `elements/common/way_of_working.md`, and the product's foundation as it selected it — is not read
 again. A session that has not read them in this conversation — it opened this skill directly, or
-resumed the work in a new one — goes through `refine-task` steps 1 and 2 first (WAY-266).
+resumed the work in a new one — goes through `refine-task` steps 1 and 2 first.
 
 ## 1. Recognize
 

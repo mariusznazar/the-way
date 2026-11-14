@@ -38,7 +38,7 @@ follows from the entry.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for a
-fact (WAY-117):
+fact:
 
 - Step 2: a fact is projected only where a projected decision's *Based on* or a projected
   invariant's *Rests on* names it (WAY-73, WAY-90).

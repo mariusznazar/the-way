@@ -6,11 +6,13 @@ description: Use when the weekly audit of the process has to be led with the hum
 # Audit the process
 
 Leads the weekly audit of the process with a human, in one session of its own, apart from any
-weekly review (WAY-341). It reads the latest result of the counting command, `audit_count.py` beside
-this file, puts before the human the matters to weigh, and writes down what the human decided to
-weigh and what the human set aside. It changes nothing in any repository; in the register of problems
-it changes nothing but the list of classes, which it widens on the human's yes (step 3). A matter the
-human takes into work becomes a task through the human's own backlog, not through this session.
+weekly review. A session of its own keeps the audit from sharing the time and the subject of the
+weekly review, and a count made on the night before leaves its result ready when the session begins.
+It reads the latest result of the counting command, `audit_count.py` beside this file, puts before
+the human the matters to weigh, and writes down what the human decided to weigh and what the human
+set aside. It changes nothing in any repository; in the register of problems it changes nothing but
+the list of classes, which it widens on the human's yes (step 3). A matter the human takes into work
+becomes a task through the human's own backlog, not through this session.
 
 This skill lives in `process-audit/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the session's
@@ -25,9 +27,8 @@ with `process-audit/` starts at that root, and the command runs from there.
   reads the register that an entry of the locations file names (WAY-330).
 - **The counting.** `python -B process-audit/audit_count.py` asks nothing and reads nothing from
   stdin, so a system scheduler can start it with no one present. It runs on the night from Friday to
-  Saturday, and the session finds its result ready (WAY-341).
-- **The weekly task.** A task the human keeps in the backlog, once a week, starts the session
-  (WAY-341).
+  Saturday, and the session finds its result ready.
+- **The weekly task.** A task the human keeps in the backlog, once a week, starts the session.
 - Setting up the scheduler and adding the weekly task are human actions (WAY-140). Where either is
   missing, say so to the human and do neither.
 
@@ -35,12 +36,12 @@ with `process-audit/` starts at that root, and the command runs from there.
 
 These hold at every step.
 
-- **How often an issue comes back is material, never a priority** (WAY-336). An issue is the one
+- **How often an issue comes back is material, never a priority**. An issue is the one
   matter that like problems of several cycles make. Give no issue a priority, an order of urgency or
   a recommended rank from how often it returned or how long it has waited, and list issues in the
   order the count gives, which is the register's. The human weighs what a return costs and what its
   fix costs.
-- **The cost of an occurrence is material, never a priority** (WAY-346, WAY-336). It is the level,
+- **The cost of an occurrence is material, never a priority**. It is the level,
   on the five of the register's table *Costs of an occurrence*, that one occurrence of a problem
   cost: `nothing`, `steps`, `stage`, `round` or `human`, each dearer than the one before. It is no
   cost of a cycle, which *Cost* gives in money, and no weight, which says how far a problem
@@ -55,7 +56,7 @@ These hold at every step.
   `task-cycle/cycle_stages.py`, whatever the change, so that it compares less and never across a
   change WAY-339 names. The mechanism measures (the numbers of how each cycle's agents use context
   and the prompt cache, from the cycle's `mechanism_measures.md`) and the gate times (the time of
-  each run of the product's gate, from `gate_times.md`) have series of their own (WAY-348, WAY-350):
+  each run of the product's gate, from `gate_times.md`) have series of their own (WAY-350):
   a new series of the mechanism measures begins only at a change of `task-cycle/cycle_measures.py`,
   and a new series of the gate times only at a change of `task-cycle/gate_times.py` or of
   `gate/run_tests.py`, the test runner whose output gives the time of each directory (WAY-339). The
@@ -64,18 +65,24 @@ These hold at every step.
   Set no number of one series beside a number of another, no number of the measures or the gate
   times beside a number of the cost, and no week's count beside the week before; a version of the
   process is judged by the cycles that ran on it.
-- **No frozen earlier tasks are replayed on an old and a new version** (WAY-340). Where the human
-  asks for such a comparison, say that the audit holds no such set and judges a version by its own
-  cycles.
-- **Whether a fix works is read from the version, never from the date** (WAY-335): the count sets the
+- **No frozen earlier tasks are replayed on an old and a new version**. Where the human asks for
+  such a comparison, say that the audit holds no such set and judges a version by its own cycles.
+  Cycles run on every version in any case and each record names its version, so the audit has
+  material about every version without a cycle made only to measure, and a replay would cost a
+  cycle for each task and each version.
+- **Whether a fix works is read from the version, never from the date**: the count sets the
   problems of the cycles whose version of the-way holds the fix apart from those of the cycles whose
-  version lacks it. Do not set problems before a fix's date against problems after it.
+  version lacks it. Do not set problems before a fix's date against problems after it. A cycle's
+  record names the version of the-way the cycle ran on, so a cycle made after the date of a fix can
+  still run on a version without it.
 - **`unknown` stays `unknown`, and `at least n` stays `at least n`.** Do not read either as zero or
   as `n`, and do not fill a value from another source. A `—` in *Days waiting* means the issue has no
   problem yet.
-- **The results lie outside every repository** (WAY-332). Write the audit's result nowhere else, and
+- **The results lie outside every repository**. Write the audit's result nowhere else, and
   write no path an entry of the locations file holds, nor its content, into a file of a repository
-  or a report: name the entry (WAY-320).
+  or a report: name the entry (WAY-320). The repository of the-way is public, and the results carry
+  the names of products and the content of remarks from their cycles, which the history of a
+  repository keeps after a later change removes them.
 
 ## 1. Find the places
 
@@ -194,7 +201,7 @@ two outcomes: the human weighs it further, or sets it aside.
 
 **A class the list lacks.** Where a row refused for its class, or the human's own reading of a
 problem, shows a problem that no class of the register's *Classes* fits, the list widens; the
-problem is never given the nearest class instead (WAY-333). Read that row of the register, and put
+problem is never given the nearest class instead. Read that row of the register, and put
 before the human a new class: its name, lower-case letters, digits and hyphens, the refused row's
 class where it is one; what it means; and the day of the session as the date it is added. On the
 human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register

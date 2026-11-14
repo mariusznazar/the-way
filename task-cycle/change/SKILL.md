@@ -144,7 +144,9 @@ Write the full report to the dispatch's report path:
 - each check you ran as its command and exit code, the failing run of each test written first and
   of each invariant's test included; each check you did not run, with the reason;
 - the own-work check of section 3: the requirement, the check and what it showed; when a check
-  failed and passed when run again, both runs as command and exit code (WAY-262);
+  failed and passed when run again, both runs as command and exit code, since the passing rerun
+  alone would hide the failure from the orchestrator, which relies on the report instead of
+  rerunning focused checks;
 - each reach beyond the dispatch (section 1): what, where and why;
 - each working copy you made: where it stood and that you removed it, or the remainder with its
   full path and the reason it stayed;

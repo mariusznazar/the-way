@@ -24,10 +24,11 @@ A stage is either one turn of a subagent the orchestrator started — from the p
 working, when it starts or in a later follow-up, to its answer — or a stretch in which the
 orchestrator works while no such turn runs. A subagent turn lasts from its first to its last entry;
 a stretch of the orchestrator counts only the time inside the orchestrator's own turns, so waiting
-for the human is left out. A token count belongs to the stage running when its entry is written:
-the subagent's to the turn it falls in, the orchestrator's to the subagent turn then running or to
-the orchestrator's stretch; while several subagent turns run at once, the orchestrator's tokens go
-to a row of their own naming them, rather than being split by a guess.
+for the human is left out. That wait depends on when the human reads, not on the process. A token
+count belongs to the stage running when its entry is written: the subagent's to the turn it falls
+in, the orchestrator's to the subagent turn then running or to the orchestrator's stretch; while
+several subagent turns run at once, the orchestrator's tokens go to a row of their own naming them,
+rather than being split by a guess.
 
 Tokens are counted as each tool reports them per model response: input with the part read from a
 cache, and output with reasoning. Claude Code writes one response over several lines that repeat

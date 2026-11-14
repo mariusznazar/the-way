@@ -11,7 +11,7 @@ keeps it as a row of the task document. It writes no entry itself. The rules of 
 its element's template; how a skill asks stands in `elements/common/way_of_working.md`. This skill
 serves a project definition and the refinement of a task for now; the breakdown of a project, the
 return step of a task (WAY-11) and the entry of the process into an existing product (WAY-28) will
-call it too, each adding what it needs (WAY-115, WAY-134).
+call it too, each adding what it needs (WAY-134).
 
 This skill lives in `elements/common/skill/` of the-way. In the-way itself, the-way is the
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`

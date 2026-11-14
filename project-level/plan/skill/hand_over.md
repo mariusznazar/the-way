@@ -14,6 +14,6 @@ gives.
   side by side shown to the human as the first bullet gives (WAY-230).
 - On the human's word, set the status to `handed over YYYY-MM-DD` and add the line to the change
   log. Point to `lead-project` as the next step: it proposes human-confirmed rounds, delegates
-  member-task refinement through `refine-task` and maintains evidenced plan states (WAY-152).
+  member-task refinement through `refine-task` and maintains evidenced plan states.
   The human starts cycles separately, under each task's stable name (WAY-147); leading starts
   none. In delegated mode return this handover material through the conversation.

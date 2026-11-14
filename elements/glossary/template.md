@@ -14,9 +14,10 @@ template holds what is particular to a glossary entry (WAY-35).
 
 - The glossary of the-way holds the words of the process — what its templates, decisions and
   entries name. A product's glossary holds the words of its domain. In the-way, whose product is
-  the process, the two are one file (WAY-226).
+  the process, the two are one file.
 - A product takes the words of the process from the-way at the commit it pins, and its glossary
-  defines none of them again (WAY-226).
+  defines none of them again. A definition of a word of the process stands once, in the-way, because
+  copies drift between products.
 - A word that the glossary of the-way holds, or the last word of a term it holds, in any of its
   forms, takes a qualifier in a sentence of the product's foundation that could otherwise be read in
   the other meaning — "castle gate" for "gate" where "the gate opens" could be read as the command
@@ -36,9 +37,9 @@ template holds what is particular to a glossary entry (WAY-35).
   which no other entry of the file holds (WAY-93).
 - A sentence depends on a term by using its word (WAY-97). An entry carries no version and is
   edited in place, its meaning included (WAY-07, WAY-97).
-- The language of an entry follows `elements/common/rules.md` (WAY-72). An entry keeps the English
+- The language of an entry follows `elements/common/rules.md`. An entry keeps the English
   term; a word the product shows its users in another language stays in the product's files, not in
-  the glossary (WAY-72, WAY-99).
+  the glossary (WAY-99).
 
 ## Which words take an entry
 
@@ -82,7 +83,8 @@ template holds what is particular to a glossary entry (WAY-35).
 - **Not:** <meaning> — <what carries it, or TODO> · … | none
 ```
 
-- The definition is one sentence; it is the entry's binding part (WAY-94, WAY-96).
+- The definition is one sentence; it is the entry's binding part (WAY-94). A definition of one
+  sentence is read whole beside every use of its word.
 - *Not* names each meaning the word carried in the files git tracks, besides its
   definition and a meaning a reader who knows the product's field gives it, with what carries it
   now: the term of another entry, an identifier in backticks, a value of a template's closed list

@@ -129,7 +129,7 @@ class RowsTest(GateTimesTest):
 class RunnerOutputTest(GateTimesTest):
     """The output of the gate's own test runner, whose directories run at the same time and whose
     reports come whole, in the order the directories end, are read as the blocks of the script's
-    form (WAY-349)."""
+    form."""
 
     def test_directories_that_end_out_of_the_order_of_their_names_each_get_their_own_time(self) -> None:
         repo = self.root / "repo"

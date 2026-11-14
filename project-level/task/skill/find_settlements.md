@@ -22,7 +22,7 @@ A row that repeats a choice the human made between ways shown, such as an answer
 to settle* that keeps its *Not chosen* or a settled technology question of a run of
 `settle-technology`, enters the table already `accepted`, marked as the human's choice, and stays
 unless the human strikes it; the human accepts or rejects only the rows you derived from the
-material or from the human's loose words (WAY-115, WAY-134); this holds only until the task's cycle
+material or from the human's loose words (WAY-134); this holds only until the task's cycle
 starts (WAY-315). The run writes no row, and the cycle writes no decision of a technology choice
 otherwise, so its settled question is always shown.
 
