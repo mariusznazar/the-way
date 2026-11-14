@@ -202,11 +202,11 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   only the rows the agent derived (WAY-115, WAY-134).
   *Settlement* is one sentence in the human's words, in the document's language. *Goes to* names
   the place the settlement goes, as the questions of "Where it goes" in
-  `elements/decisions/template.md` give it: an entry of the log (`decision`, `invariant`,
-  `glossary term` or `environment fact`), a sentence of an entry already in the log, a skill or
-  instruction file, the guidelines of a discipline, or the product's data or code, each named as
-  those questions name it. A settlement those questions answer "nothing" is a rejected row with
-  that reason. An environment fact stands only where a kept decision or invariant rests on it, and
+  `elements/decisions/template.md` give it, and reads one of: `decision`, `invariant`,
+  `glossary term` or `environment fact` for an entry of the log; `sentence of <PREFIX-NN>` for a
+  sentence of an entry already in the log; `skill or instruction file: <name or path>`;
+  `guidelines: <discipline>`; or `data or code: <place>`. A settlement those questions answer
+  "nothing" is a rejected row with that reason. An environment fact stands only where a kept decision or invariant rests on it, and
   a change of the part map is never a row.
   *Source* names the human's answer, or the line of this document, that carries the settlement.
   For a settlement the human chose among ways shown, *Source* names the question whose *Not

@@ -25,7 +25,8 @@ and no entry is written.
 - Take each item of "Need", "To do", "Acceptance criteria" and "Out of scope", each answer under
   "Questions to settle" and each answer of the human in the conversation. A candidate is a
   settlement that the questions of "Where it goes:" place; a candidate that is a decision passes
-  those questions in their order before its row, and its first "yes" gives its column *Goes to*.
+  those questions in their order before its row, and its first "yes" gives its column *Goes to*,
+  written in the form the paragraph "Settlements to record" of the template gives.
   A change of the part map is never a candidate.
 - Its settlement is in the human's words, and the last column names what the task's cycle would do
   or choose without it.
