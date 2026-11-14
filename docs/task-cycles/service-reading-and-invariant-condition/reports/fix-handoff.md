@@ -1,9 +1,0 @@
-# Handoff to the author for the fix of the review's findings
-
-Variant under `task-cycle/change/SKILL.md`, in the words of its row: "the fix of a review's findings". Same worktree `the worktree's root`, same branch, the reviewed head `8680824`; your fix range runs from there.
-
-Findings file: `reports/whole-change-findings.md` (full path `.runs/task-cycles/service-reading-and-invariant-condition/reports/whole-change-findings.md`), copied from the reviewer's report: blocking finding B1 and Minor findings M1-M5, all within the task. Fix every one, the blocking finding first; where you hold a finding wrong, answer it with evidence in your report instead (the reviewer alone grades). The full review report, if you need the evidence, is `.runs/task-cycles/service-reading-and-invariant-condition/reports/whole-change-review-report.md`.
-
-Orchestrator's notes (no finding moved or regraded): for M1, the reviewer's way out inside the template is a second paragraph for a part of another question (WAY-05) or merging a new sentence into an existing one; for M2, drop the claim or make the test hold what a break would change — a test that catches nothing is the worse choice; for B1, the binding sentence of WAY-80 and the task's row 3 are the ceiling of what the template may say.
-
-Run the checks the fixes touch again (`python -B elements/common/foundation_check.py`, `python -B gate/run_tests.py elements/common`, and the invariant's test); do not run the full gate. Commit the fix as new commits. Write your report to `.runs/task-cycles/service-reading-and-invariant-condition/reports/fix-report.md` as the method gives, with **Unread material**, **Searches not found or unclear**, each check with its command and exit code, the own-work check, and for each finding what you did. Return status, commits, a one-line check result and the path.
