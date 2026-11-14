@@ -89,7 +89,7 @@ the check:
 
 1. An invariant in `foundations/invariants.md` with the method `test`, whose sentence says that no
    file git tracks, other than the files it names, holds an absolute path or, in a Markdown file, a
-   note link, as WAY-309 and WAY-323 name them. The files it names are those that write example
+   note link, as WAY-309 names them. The files it names are those that write example
    paths on purpose; each stands between backticks, as git writes its path, and the command skips
    exactly the files so written. Every text between backticks in the sentence is read as the path
    of such a file, so the sentence holds no other backticked text. `tracked-file-private-paths` in
