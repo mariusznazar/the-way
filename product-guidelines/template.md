@@ -8,10 +8,9 @@ names, by identifier, the decision of the product's log that carries the choice,
 rejected options stand in that decision alone. A rule that only says how to write code, tests or the
 look of the product stands alone with its reason in one sentence and its *Decision* reads `none`
 (WAY-168). No script checks the form of guidelines: the review of a change that writes or changes
-them compares them with this template and, where the-way gives one, the template of their discipline,
-and
-`elements/common/foundation_check.py` reports a decision number, a rule's invariant or a part of
-*Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
+them compares them with this template and, where the-way gives one, the template of their
+discipline, and `elements/common/foundation_check.py` reports a decision number, a rule's invariant
+or a part of *Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
 
 A rule below that a decision of the-way sets cites that decision. Nothing of this template is copied
 into a product: a product's guidelines follow it at the commit the product pins (WAY-34).
