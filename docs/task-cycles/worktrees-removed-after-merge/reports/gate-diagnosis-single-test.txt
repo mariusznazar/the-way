@@ -1,0 +1,6 @@
+head run 1 exit 0 2 s
+base run 1 exit 0 1 s
+head run 2 exit 1 120 s
+base run 2 exit 1 121 s
+head run 3 exit 0 1 s
+base run 3 exit 0 1 s
