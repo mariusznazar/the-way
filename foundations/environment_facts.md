@@ -255,6 +255,24 @@ In Python 3.14, `Path.is_junction` returns true if the path points to a junction
 
 - **Source:** https://docs.python.org/3.14/library/pathlib.html (archived: http://web.archive.org/web/20261021035154/https://docs.python.org/3.14/library/pathlib.html, 2026-10-21) § Path.is_junction — "Return True if the path points to a junction, and False for any other type of file. Currently only Windows supports junctions."; read 2026-11-14
 
+## github-dependabot-alerts
+
+On GitHub, repository administrators and organization owners can enable Dependabot alerts for their repositories, and Dependabot scans a repository's default branch and sends alerts when a new vulnerability is added to the GitHub Advisory Database or when the repository's dependency graph changes.
+
+- **Source:** https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts (archived: https://web.archive.org/web/20260107142947/https://docs.github.com/en/code-security/dependabot/dependabot-alerts/about-dependabot-alerts, 2026-01-07) § Who can enable alerts? — "Repository administrators and organization owners can enable Dependabot alerts for their repositories and organizations." · § When Dependabot sends alerts — "Dependabot scans your repository's default branch and sends alerts when:" · § When Dependabot sends alerts — "A new vulnerability is added to the GitHub Advisory Database" · § When Dependabot sends alerts — "Your dependency graph changes—for example, when you push commits that update packages or versions"; read 2026-11-14
+
+## github-required-status-checks
+
+On GitHub, a ruleset can require status checks, and then all the required status checks must pass before collaborators can merge changes into the branch or tag that the ruleset targets.
+
+- **Source:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets (archived: https://web.archive.org/web/20261109032616/https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets, 2026-11-09) § Require status checks to pass before merging — "Required status checks ensure that all required CI tests are passing before collaborators can make changes to a branch or tag targeted by your ruleset." · § Require status checks to pass before merging — "After enabling required status checks, all required status checks must pass before collaborators can merge changes into the branch or tag."; read 2026-11-14
+
+## github-ruleset-bypass
+
+On GitHub, a ruleset can allow certain users to bypass its rules, and repository admins, organization owners and enterprise owners are among those eligible for bypass access.
+
+- **Source:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository (archived: https://web.archive.org/web/20260822111548/https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository, 2026-08-22) § Creating rulesets for a repository — "When you create a ruleset, you can allow certain users to bypass the rules in the ruleset." · § Granting bypass permissions for your branch or tag ruleset — "You can grant certain roles, teams, or apps bypass permissions for your ruleset. The following are eligible for bypass access:" · § Granting bypass permissions for your branch or tag ruleset — "Repository admins, organization owners, and enterprise owners"; read 2026-11-14
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

@@ -553,7 +553,10 @@ result of that run is a check the repository requires before a merge, and the ow
 repository may bypass it.
 
 - **Scope:** invariants, agent-instructions, task-cycle, gate, installation
-- **Based on:** none
+- **Based on:** github-required-status-checks · github-ruleset-bypass · TODO — a reading, as
+  WAY-84 asks for a setting changed outside the repository, of the rule of the branch `foundations`
+  of the-way that requires the check `tests` with a bypass for the owner, once the owner has set it;
+  no such rule stands yet
 - **Relations:** derives from WAY-34
 - **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
   everyone and for its run in CI, an agent compares the change with the decision:
@@ -4061,9 +4064,12 @@ The task-cycle orchestrator itself runs the product's gate on the tree that goes
 and the request gives its command and exit code and names each check that failed or did not run; a
 check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
 author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
-it. Where CI runs on the open request, the orchestrator waits for its result before the request is
-marked ready, treats a red result as a failed gate — a fix and its review — and puts the result into
-the request's description.
+it. Where CI runs on a request whose code is finished — one open for review, or one that waits only
+for human actions in the cycle — the orchestrator waits for the result of the run on each head it
+pushes to it, a correction's included, treats a red result as a failed gate — a fix and its review —
+and puts the result into the request's description; a request the cycle leaves blocked for unfinished
+code is out of that wait, its description saying that the result of the run stands on the request's
+page and was not waited for.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -4073,13 +4079,16 @@ the request's description.
     and again where the merge with the target branch changed it, and the request gives the command
     and its exit code; the orchestrator, with CI running on the request, waits for the run on the
     commit it pushed last, finds it red, has the failure fixed and the fix reviewed, waits for the
-    run on the fixed commit and writes that result into the description;
+    run on the fixed commit and writes that result into the description; after the human's remarks it
+    waits again for the run on the corrected head; a request blocked for a remaining blocking finding
+    says in its description that the result of the run was not waited for;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
     its fix changes code, and the return step does not compare the fix's range; the request is
     marked ready while the CI run on it still goes; a red CI result is left for the human to find;
-    the description names no CI result where CI ran on the request.
+    the description names no CI result where CI ran on a request whose code is finished; a
+    correction pushes a corrected head and the description keeps the result of the earlier head.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
@@ -4094,7 +4103,10 @@ on the tree it changes; the merge with the target branch is the one change to th
 follow. The CI run on the request is a run on a system other than the cycle's own, so a failure that
 shows only there would reach the human, and come back as a round of corrections, were the request
 handed over before it; it adds to the cycle's gate and replaces nothing, so a failure that shows
-only on the cycle's own system stays caught there. The price is that a failure of the gate comes
+only on the cycle's own system stays caught there. Every push to a request with finished code
+starts a new run, so the wait follows each head, a correction's too; a request blocked for unfinished
+code gets no wait, since its code will change and a run on it settles nothing the human decides, and
+its page still shows the run. The price is that a failure of the gate comes
 after the return step, and that the human receives the request later, by the time CI takes.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
@@ -4987,7 +4999,7 @@ alerts; the skill proposes that the product turn them on, and a human turns them
 - **Based on:**
   https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/.github/workflows/audit.yml
   § lines 23-24 — "The ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on
-  advisories it introduces."; read 2026-10-18
+  advisories it introduces."; read 2026-10-18 · github-dependabot-alerts
 - **Relations:** derives from WAY-202 · derives from WAY-60 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
@@ -5013,10 +5025,10 @@ in the decision that adopts the audit (WAY-60), and the severity is the product'
 severity among the ways. The tools stand at pinned versions, while the database is read as it stands
 when the check runs, so that a change brings in nothing known to be vulnerable that day. The audit
 sees only what a change brings in, so a vulnerability found in a dependency the product already holds
-reaches the product through the alerts of its repository's service, which read the whole set of
-dependencies with no change needed and tell the owner of the repository; the owner answers with a task
-that raises the library. They are a setting of the service, no file of the repository, so a human
-turns them on. Two weak points follow. The alerts are set outside the repository, so nothing in it
+reaches the product through the alerts of its repository's service, which scan the repository when a
+new vulnerability is published and not only when a change brings in a version, and are enabled by
+the repository's administrators; the owner answers an alert with a task that raises the library.
+They are a setting of the service, no file of the repository, so a human turns them on. Two weak points follow. The alerts are set outside the repository, so nothing in it
 shows whether they are on, and they stay off until a human turns them on. A later run on the same
 commit may record `fail` where an
 earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
