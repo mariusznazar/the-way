@@ -96,7 +96,8 @@ checks it was left as it was. The listing stops no change.
 - **Scope:** invariants, task-cycle, agent-instructions
 - **Based on:** impossiblebench-test-modification
 - **Relations:** derives from WAY-01
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: which invariants the check lists for a reworded sentence, and that the
+  listing stops no change. An agent compares a change with the part no test holds:
   - complies: an implementer whose code an invariant test stops fixes the code, or, where the test
     reads its sentence wrongly, fixes the test and names it in the request; a change that adds,
     drops or alters the line `decision:` of a test names that test in its request; a change that
@@ -456,7 +457,10 @@ check prints, and the list stops no change.
 - **Scope:** decisions, invariants
 - **Based on:** llm-decision-violation-detection
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: that a line `decision:` of a test names a decision of the log and quotes
+  the start of one of its binding sentences; which decisions the check counts as held; the error
+  for a decision a change adds or alters that nothing holds, and the list of any other. An agent
+  compares a change with the part no invariant and no test holds:
   - complies: a decision on the product's direction carries a complying and a violating example
     and names no invariant; a decision with a derived invariant names it after `invariants:`; a
     decision whose sentence a test holds is named at that test by a line `decision:`, names such
