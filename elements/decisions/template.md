@@ -11,7 +11,11 @@ particular to a decision (WAY-35).
 ## Where entries go
 
 - A product keeps all its decisions in one log, `foundations/decisions.md`, whatever they are
-  about; the log has no topical sections, and a new entry goes at its end (WAY-18).
+  about (WAY-18). The log may have topical sections, each a `## ` heading with one sentence of what
+  it covers, its entries keeping their numbers. In a log so divided a new entry goes at the end of
+  the section of its topic, or, where no section fits, into a new section, heading and sentence,
+  opened at the end of the log before the list of withdrawn numbers; the request that adds the
+  entry names that section. A log without topical sections takes a new entry at its end.
 - Each decision is one entry under its number, with no version: a change edits the entry in place,
   on the main branch as before it, and the entry holds only its current wording (WAY-07).
 - Numbers carry the product's prefix (WAY-19). The forms below use `WAY`, the prefix of this
@@ -98,9 +102,9 @@ A field stays in the template only while someone or something reads it (WAY-05).
 | Field | Who reads it, when |
 |---|---|
 | number (heading) | references from entries, tests and code (WAY-02); `elements/common/foundation_check.py`, which reports a number the log does not hold |
-| question (heading) | the author and the skill: does the log already answer this question (WAY-19) |
-| binding sentences | an agent comparing a change with the decision (WAY-12); the author's search of the foundation (WAY-33); `foundation_check.py`, which compares them with the quotation of each line `decision:` of a test (WAY-02) and with those at the base to find a decision a change alters (WAY-12) |
-| Scope | finding the decisions for a change (WAY-21); `foundation_check.py`, which reports a part the map does not hold |
+| question (heading) | the author and the skill: does the log already answer this question (WAY-19); an agent reading the index of a selection of decisions (WAY-150) |
+| binding sentences | an agent comparing a change with the decision (WAY-12); an agent reading the index of a selection of decisions (WAY-150); the author's search of the foundation (WAY-33); `foundation_check.py`, which compares them with the quotation of each line `decision:` of a test (WAY-02) and with those at the base to find a decision a change alters (WAY-12) |
+| Scope | finding the decisions for a change (WAY-21); the index of a selection of decisions, which gives it beside each (WAY-150); `foundation_check.py`, which reports a part the map does not hold |
 | Based on | the author of a change to a fact or a source, searching for what rests on it (WAY-33); `foundation_check.py`, which reports a fact the foundation does not hold |
 | Relations | an agent meeting two decisions that collide (WAY-25); the author's search of the foundation (WAY-33) |
 | Verification | its invariants: whoever looks for the checks of the decision, and `foundation_check.py`, which reports an invariant the foundation does not hold; its clause `tests:`: an agent comparing a change with the decision, who learns which parts of the sentences a test holds, while the script does not read the clause (WAY-12); its pair of examples, for the part no invariant and no test holds: an agent comparing a change with the decision (WAY-12) |
@@ -186,8 +190,9 @@ A field stays in the template only while someone or something reads it (WAY-05).
 ## Withdrawn numbers
 
 - A withdrawn number stays withdrawn: it never names a decision again, and nothing refers to it.
-- The log carries its withdrawn numbers in one list after its last entry, in this form; a log
-  with none leaves the list out:
+- The log carries its withdrawn numbers in one list after its last entry — in a log divided into
+  topical sections, after its last section, under the heading below, which is no section — in this
+  form; a log with none leaves the list out:
 
   ```markdown
   ## Withdrawn identifiers
