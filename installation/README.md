@@ -167,7 +167,7 @@ The CI file of a product:
 The result is a required check. Set it in the branch rules of the main branch as required before a
 merge, with the repository's owner allowed to bypass. A check that only shows lets a red request be
 merged by oversight; the bypass lets the owner merge while the CI itself is broken. Give the job a
-name that stays: the rule names the check, which on GitHub is named by the job's name.
+name that stays: the rule names the check.
 
 ## Moving the pin
 
