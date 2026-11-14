@@ -52,6 +52,12 @@ identifiers.
   behave the same is no part of the fact; a decision citing a finding none of whose measured models
   comes from a publisher whose models the process's agents run on says in its rationale that it
   takes the finding across publishers (WAY-85).
+- A measurement that the product's own people made — its author and its agents — and whose record a
+  reader of the product's repository cannot open is written as no fact: the decision keeps its
+  result in its *Rationale* or *Rejected*, with what was measured and under which conditions, and
+  says there that the measurement is the product's own and that its record is not open to a reader
+  (WAY-90). A measurement whose report a reader can open at an address is a citation, and a fact
+  where this section asks for one.
 - An invariant names in *Rests on* only the facts holding a condition that decides whether a commit
   makes its sentence true (WAY-73). A fact about what runs an invariant's test — how a tool behaves
   under the runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
