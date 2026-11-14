@@ -74,7 +74,16 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   before its first field, where its *Rationale* and *Rejected* stand after the fields. Words of the
   quotation and of the entry are compared with every run of spaces and line breaks made one space,
   so a sentence wrapped over lines matches. A line in a Markdown file or in a file git does not
-  track counts for nothing.
+  track counts for nothing;
+- a decision that nothing holds (WAY-12). A decision is held when its *Verification* names an
+  invariant after `invariants:`, when a line `decision:` of a file the report above reads names its
+  number, valid or not, or when its *Verification* holds a line that begins `- complies:` and one
+  that begins `- violates:`. A decision that the change adds, or whose binding sentences differ from
+  those at the base once every run of spaces and line breaks is made one space, and that nothing
+  holds, is an error at its heading line; any other that nothing holds is a line of the second kind
+  below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
+  the earlier form and one that lacks *Verification* are left to the report of fields above, with no
+  second report. The switch `--skip-test-citations` skips none of this.
 
 Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
 and before the count line. A listed line is no error: it is counted nowhere and changes no exit
@@ -360,6 +369,7 @@ class Foundation:
         self.parts = set()
         self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
         self.bodies = {}  # decision number -> the lines of its unversioned entry
+        self.headings = {}  # decision number -> the line number of its unversioned heading
         self.held = {}  # number as written -> [(path, line)] of each `decision:` line naming it
         self.base = None  # the commit the branch left the main branch from, or None where unknown
         self.base_files = {}  # path of BASE_FILES -> the lines at the base, or None where unknown
@@ -385,6 +395,7 @@ class Foundation:
             self.numbers.add(key)
             if version is None:
                 self.bodies[key] = body
+                self.headings[key] = number
             for earlier, line in seen.get(key, []):
                 if version is None or earlier is None or earlier == version:
                     twice = label if version is None or earlier is None else "%s/%d" % (
@@ -639,6 +650,54 @@ class Foundation:
                 self.report.note(path, 0, "the commit the branch left the main branch from holds "
                                           "no readable %s, so nothing of it was compared" % path)
 
+    def base_sentences(self):
+        """{number: the binding sentences, normalised} of each unversioned entry of the log at the
+        base, or None where the base or its log is unknown."""
+        lines = self.base_files.get(DECISIONS)
+        if lines is None or not self.prefix:
+            return None
+        found = {}
+        for _, heading, body in blocks(lines, "### "):
+            match = re.match(r"^### %s-([0-9]+) — " % re.escape(self.prefix), heading)
+            if match:
+                found[int(match.group(1))] = " ".join(binding(body))
+        return found
+
+    def held_by_pair(self, value):
+        """Whether a *Verification* holds a line that begins `- complies:` and one that begins
+        `- violates:`."""
+        lines = value.split("\n")
+        return (any(line.startswith("- complies:") for line in lines)
+                and any(line.startswith("- violates:") for line in lines))
+
+    def check_held(self):
+        """Report each decision that nothing holds: no invariant after `invariants:`, no line
+        `decision:` that names it, no pair of lines `- complies:` and `- violates:` (WAY-12). One
+        that the change adds or whose binding sentences it alters is an error at its heading; any
+        other is listed. An entry of the earlier form (it has no unversioned heading) and one that
+        lacks *Verification* are left to `check_fields`. The switch `--skip-test-citations` has no
+        part in it."""
+        before = self.base_sentences()
+        named = {int(token.rsplit("-", 1)[1]) for token in self.held
+                 if self.prefix and re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token)}
+        nothing = ("no invariant after `invariants:`, no test with a line `decision:` that names "
+                   "it, no pair of `- complies:` and `- violates:` lines")
+        for key, body in sorted(self.bodies.items()):
+            found = fields(body)
+            if "Verification" not in found:
+                continue
+            if key in named or self.held_by_pair(found["Verification"][0]) or any(
+                    word not in EMPTY for word, _ in located(found, "Verification", VERIFIED)):
+                continue
+            label = "%s-%02d" % (self.prefix, key)
+            if before is not None and before.get(key) != " ".join(binding(body)):
+                self.report.error(DECISIONS, self.headings[key],
+                                  "`%s` is added or changed by this change and nothing holds it: "
+                                  "%s" % (label, nothing))
+            else:
+                self.report.note(DECISIONS, self.headings[key],
+                                 "`%s` is held by nothing: %s" % (label, nothing))
+
     def check_decision_line(self, path, number, value):
         """Report a `decision:` line that gives no decision number, names no decision of the log or
         a withdrawn one, or quotes no sentence of its entry's binding sentences."""
@@ -820,6 +879,7 @@ def run(root, skip_test_citations=False):
             foundation.check_citations(path, lines)
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
+    foundation.check_held()
     if not skip_test_citations:
         foundation.check_test_citations()
     if not foundation.check_files(tracked):

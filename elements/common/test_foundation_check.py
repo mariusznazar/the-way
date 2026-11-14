@@ -1249,6 +1249,162 @@ class FoundationCheckTest(unittest.TestCase):
         product.commit()
         self.assertNotIn("listed:", product.check()[1])
 
+    # --- a decision that nothing holds --------------------------------------------------------
+
+    # ABC-03 stands at line 29 of the log of the good product once it is added to its end.
+    NOT_HELD = "foundations/decisions.md:29: `ABC-03`"
+    LISTED = "foundations/decisions.md:29: listed: `ABC-03`"
+    NOTHING = "- **Verification:** an agent compares the change with the decision."
+    BY_INVARIANT = "- **Verification:** invariants: clock-steady."
+    BY_PAIR = ("- **Verification:** an agent compares the change with the decision:\n"
+               "  - complies: a save sits in one folder;\n"
+               "  - violates: a save is sent to a server.")
+    STORE_TEST = ("def test_store():\n"
+                  "    # decision: ABC-03 \"A save is stored in one folder\"\n"
+                  "    assert True\n")
+
+    def decision(self, verification, sentence="A save is stored in one folder.",
+                 rationale="a folder is known.", heading="ABC-03"):
+        """An entry ABC-03 of the log, its *Verification* given whole."""
+        return ("### %s — Where is a save stored?\n\n%s\n\n- **Scope:** core\n"
+                "- **Based on:** none\n- **Relations:** none\n%s\n- **Origin:** none\n\n"
+                "*Rationale:* %s\n*Rejected:* a cloud\n"
+                % (heading, sentence, verification, rationale))
+
+    def on_topic(self, decisions, base=DECISIONS, **files):
+        """The good product with the log `base` committed on `main`, then the log `decisions` and
+        the files written, not committed, on a branch `topic` that left it."""
+        product = self.committed("main", foundations__decisions_dot_md=base)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", decisions)
+        for path, text in files.items():
+            product.write(path.replace("__", "/").replace("_dot_", "."), text)
+        return product
+
+    def test_new_decision_that_nothing_holds_is_an_error(self):
+        # decision: WAY-12 "The check of the foundation reports as an error"
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING))
+        self.assertFails(product.check(), self.NOT_HELD, "1 error")
+        self.assertNotIn("listed: `ABC-03`", product.check()[1])
+
+    def test_new_decision_held_by_an_invariant_passes(self):
+        # decision: WAY-12 "A decision is held when its"
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.BY_INVARIANT))
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_new_decision_held_by_a_pair_of_examples_passes(self):
+        # decision: WAY-12 "A decision is held when its"
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.BY_PAIR))
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_new_decision_held_by_a_line_decision_passes(self):
+        # decision: WAY-12 "A decision is held when its"
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
+                                tests__test_store_dot_py=self.STORE_TEST)
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_new_decision_held_by_a_stale_line_decision_is_reported_once(self):
+        stale = self.STORE_TEST.replace("one folder", "two folders")
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
+                                tests__test_store_dot_py=stale)
+        self.assertEqual(self.lines(product.check(), 1),
+                         ["tests/test_store.py:2: the quotation stands in no binding sentence of "
+                          "`ABC-03`", "1 error"])
+
+    def test_new_decision_with_only_one_half_of_a_pair_is_not_held(self):
+        half = "- **Verification:** an agent compares the change with the decision:\n" \
+               "  - complies: a save sits in one folder."
+        product = self.on_topic(DECISIONS + "\n" + self.decision(half))
+        self.assertFails(product.check(), self.NOT_HELD, "1 error")
+
+    def test_new_decision_naming_no_invariant_after_invariants_is_not_held(self):
+        product = self.on_topic(DECISIONS + "\n" + self.decision("- **Verification:** "
+                                                                "invariants: none."))
+        self.assertFails(product.check(), self.NOT_HELD, "1 error")
+
+    def test_line_decision_in_a_markdown_file_holds_nothing(self):
+        notes = "# The game\n\nSaves follow ABC-01.\n\n" \
+                "<!-- decision: ABC-03 \"A save is stored in one folder\" -->\n"
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
+                                README_dot_md=notes)
+        self.assertFails(product.check(), self.NOT_HELD, "1 error")
+
+    def test_decision_whose_binding_sentence_changed_and_none_held_is_an_error(self):
+        # decision: WAY-12 "The check of the foundation reports as an error"
+        base = DECISIONS + "\n" + self.decision(self.NOTHING)
+        product = self.on_topic(DECISIONS + "\n" + self.decision(
+            self.NOTHING, sentence="A save is stored in two folders."), base=base)
+        self.assertFails(product.check(), self.NOT_HELD, "1 error")
+
+    def test_decision_whose_binding_sentence_changed_and_held_passes(self):
+        base = DECISIONS + "\n" + self.decision(self.NOTHING)
+        product = self.on_topic(DECISIONS + "\n" + self.decision(
+            self.BY_PAIR, sentence="A save is stored in two folders."), base=base)
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_decision_with_only_its_rationale_changed_is_listed(self):
+        # decision: WAY-12 "Any other decision that nothing holds stands"
+        base = DECISIONS + "\n" + self.decision(self.NOTHING)
+        product = self.on_topic(DECISIONS + "\n" + self.decision(
+            self.NOTHING, rationale="a folder is easy to find."), base=base)
+        code, report = product.check()
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED, report)
+        self.assertIn("0 errors", report)
+
+    def test_decision_with_only_its_spacing_changed_is_listed(self):
+        base = DECISIONS + "\n" + self.decision(self.NOTHING)
+        product = self.on_topic(DECISIONS + "\n" + self.decision(
+            self.NOTHING, sentence="A save   is stored\nin one  folder."), base=base)
+        code, report = product.check()
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED, report)
+
+    def test_old_decision_that_nothing_holds_is_listed_after_the_errors(self):
+        # decision: WAY-12 "Any other decision that nothing holds stands"
+        base = DECISIONS + "\n" + self.decision(self.NOTHING)
+        product = self.on_topic(base + "\n" + self.decision(self.NOTHING, heading="ABC-04"),
+                                base=base)
+        lines = self.lines(product.check(), 1)
+        self.assertEqual(len(lines), 3, lines)
+        self.assertTrue(lines[0].startswith("foundations/decisions.md:42: `ABC-04`"), lines)
+        self.assertTrue(lines[1].startswith(self.LISTED), lines)
+        self.assertEqual(lines[2], "1 error")
+
+    def test_decision_that_nothing_holds_is_listed_where_the_base_is_unknown(self):
+        code, report = self.run_on(foundations__decisions_dot_md=DECISIONS + "\n" +
+                                   self.decision(self.NOTHING))
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED, report)
+
+    def test_decision_that_nothing_holds_is_listed_where_the_base_lacks_the_log(self):
+        product = self.committed("main", foundations__decisions_dot_md=None)
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", DECISIONS + "\n" + self.decision(self.NOTHING))
+        code, report = product.check()
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED, report)
+
+    def test_entry_lacking_its_verification_is_left_to_the_check_of_fields(self):
+        entry = self.decision(self.NOTHING).replace(self.NOTHING + "\n", "")
+        product = self.on_topic(DECISIONS + "\n" + entry)
+        self.assertEqual(self.lines(product.check(), 1),
+                         ["foundations/decisions.md:29: the entry lacks *Verification*",
+                          "1 error"])
+
+    def test_entry_of_the_earlier_form_is_left_to_the_check_of_fields(self):
+        entry = self.decision(self.NOTHING, heading="ABC-03/1")
+        product = self.on_topic(DECISIONS + "\n" + entry)
+        code, report = product.check()
+        self.assertEqual(code, 1, report)
+        self.assertIn("`ABC-03/1` stands in the earlier form", report)
+        self.assertIn("1 error", report)
+        self.assertNotIn("nothing holds", report)
+
+    def test_skip_switch_skips_nothing_of_the_decisions_nothing_holds(self):
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING))
+        self.assertFails(product.check("--skip-test-citations"), self.NOT_HELD, "1 error")
+
     # --- the-way's own foundation -------------------------------------------------------------
 
     def test_the_way_foundation_passes(self):
