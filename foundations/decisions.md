@@ -594,10 +594,15 @@ from a changed finding would find no decision about agents that rests on it.
 ### WAY-18 — How is a product's decision log kept?
 
 A product keeps all its decisions in one log, whatever they are about. The log holds one entry for
-each decision in force, in the order the entries were written, and says what binds today with no
-view generated from it. A link between entries is written at one end only; the one exception is a
-decision's invariants, which its *Verification* names while each of them names the decision in
-*Derives from*.
+each decision in force and says what binds today with no view generated from it. A link between
+entries is written at one end only; the one exception is a decision's invariants, which its
+*Verification* names while each of them names the decision in *Derives from*.
+
+A log may be divided into topical sections, each a heading with one sentence of what it covers, its
+entries keeping their numbers; in a log so divided a new entry stands at the end of the section of
+its topic, or, where no section fits, in a new section at the end of the log, which the request that
+adds the entry names. A log without topical sections holds its entries in the order they were
+written, a new entry at its end.
 
 - **Scope:** decisions
 - **Based on:** none
@@ -605,14 +610,33 @@ decision's invariants, which its *Verification* names while each of them names t
 - **Verification:** an agent compares the change with the decision:
   - complies: a business rule and a technical constraint of one product stand in the same log
     under one numbering; a product's existing architecture records stay a source, and a decision
-    recovered from them enters the one log;
+    recovered from them enters the one log; an agent writes the index of the decisions it selects
+    into a file of its own working directory, and the log stays the one account of what binds;
   - violates: a separate log for business decisions next to the technical one; a decision that
-    another narrows names that other in its own *Relations* as well.
+    another narrows names that other in its own *Relations* as well; the index of the log's
+    decisions is kept as a file of the repository beside the log.
+  For where an entry stands, an agent compares the change with the decision:
+  - complies: in a log divided into topical sections a new decision on how a reviewer grades a
+    finding takes the next free number and stands at the end of the section on review; a decision
+    that fits no section opens a new section, with its heading and sentence, at the end of the log,
+    and its request names that section; a log without sections takes a new entry at its end;
+  - violates: a new entry of a divided log stands at the end of the log under a section of another
+    topic; the division of a log renumbers its entries to follow their sections; a new section is
+    opened between two sections, or its request does not name it.
 - **Origin:** none
 
 *Rationale:* one log, because a collision is caught only between decisions in the set a change is
 checked against; the log itself says what binds, so a reader reaches it without assembling versions
-or generating a view; a link is written once, because two copies of it drift apart.
+or generating a view; a link is written once, because two copies of it drift apart. The index of a
+selection of decisions that an agent writes on demand (WAY-150) is no such view: it stands in no
+file of the repository, serves the one piece of work it was written for, and leaves the log the one
+account of what binds. Entries ordered by topic let an agent choose the decisions of its work's
+topics by a section's heading and sentence, which the order of writing, scattering one topic across
+the whole log, does not allow; the number stays the question's (WAY-19), so moving an entry into a
+section breaks no reference. A new entry joins the section of its topic so that the sections keep
+holding what they say, and an entry that fits none opens a section at the end, which the request
+names, so the human sees a new topic of the log at the merge. A log without sections keeps the order
+of writing, the one order it has.
 *Rejected:* a log of every version and review, with a view of what is in force generated from it —
 the view is one more thing to build and keep, and the history it leaves behind is what git keeps;
 marks written by hand at a link's other end — they go missing; separate logs for business and
@@ -668,9 +692,17 @@ the part map's rule for assigning files.
 
 *Rationale:* an agent can apply only decisions it sees. The part map already assigns files to
 parts, so using those parts as scope makes the governing decisions discoverable without copying
-paths into each entry. Topics cannot be derived from changed files.
-*Rejected:* file paths in each decision — duplicate the map; topics — cannot be derived from a
-change; no scope — relevant decisions get lost among the rest.
+paths into each entry. Scope alone selects widely, since a part of a process or a product is
+governed by many decisions: measured on the-way's own log by a search of its *Scope* lines, about
+half of its decisions name the part of the task cycle, so a change to that part selects about half
+the log. Topics cannot be derived from changed files, so in a log divided into topical sections an
+agent chooses the sections of its work's topics by their headings and sentences, while scope still
+finds, from the files a change touches, each decision outside those sections that governs a touched
+part, whose question the agent then runs through (WAY-150); topics narrow the reading and scope
+keeps a governing decision from being lost.
+*Rejected:* file paths in each decision — duplicate the map; topics in place of scope — they cannot
+be derived from a change, and a decision of another topic that governs a touched part would be lost
+without a trace; no scope — relevant decisions get lost among the rest.
 
 ### WAY-22 — Is a rule a decision or an invariant?
 
@@ -3806,83 +3838,124 @@ The-way skills read a product's foundation selectively: whoever selects names th
 touches from the files it changes through the part map's rules for assigning files, or, where the
 work names no file yet, from the responsibilities it changes; finds by a touched part's identifier
 the decisions whose *Scope* names it and the invariants whose *Part* names it or `every`, and adds
-the invariants a test the work alters cites, the decisions the task's *Decisions in play* or the
-work's source names, the touched parts' entries of the map and the entries these link to as far as
-the work needs; and reads each selected entry whole, reading more entries where relevance is
-uncertain and a whole file only where it is short, save that the reviewer of the whole change reads
-whole the decisions of its selection that concern the change's topic, skims the rest of the
-decisions of its selection by title and opens every one whose title points to a bearing on the
-change, and states in its report how many decisions it read whole and how many by title only.
+the invariants a test the work alters cites, the decisions whose sentence such a test holds by a
+line `decision:`, the decisions the task's *Decisions in play* or the work's source names, the
+touched parts' entries of the map and the entries these link to as far as the work needs. Whoever
+selects reads the index of the decisions it selects and opens whole only those the work changes,
+goes against or proposes another answer to — that one with its rejected options — those the task or the work's
+source names, those whose sentence a test the work alters holds by a line `decision:` and those
+whose binding sentences leave open what the work has to do, and it reads every other selected entry
+whole, reading more entries where relevance is uncertain and a whole file only where it is short;
+the reviewer of the whole change reads the index of its whole selection and states in its report
+how many decisions it read whole. The selection is neither recorded nor compared with every *Scope*
+of the log, and the search of the whole foundation (WAY-33) and the whole reading of templates,
+rules and examples keep their domain.
+
+The index of a selection of decisions is no file of the repository: a script of the-way writes it
+on demand into a file the agent names, and it gives for each selected decision its number, its
+question, its binding sentences and its *Scope*.
+
+In a decision log divided into topical sections, whoever selects picks from the list of sections,
+by each one's heading and sentence, the sections of the work's topics, whose decisions take the
+place of those found by *Scope* in the selection whose index it reads, and it runs through the
+questions alone of the decisions outside those sections whose *Scope* names a touched part and opens
+whole each whose question points to a bearing on the work. In a log without topical sections the
+decisions are selected by the parts the work touches, and their index takes the place of reading
+them whole.
+
 Outside the task cycle the agent doing the work selects its own reading, while in the task cycle
 the orchestrator selects for its own judgments and for each handoff, which names the foundation
 entries by identifier; the reviewer of the whole change selects for its own review, and an agent
 writing a foundation entry through an element's skill for the entry it writes; and every other agent
 of the cycle reads what its handoff names and reaches for what is missing selectively — a search for
 an identifier or a word and a read of the passage found, never of a whole file of the foundation —
-naming each such reach in its report. The selection is neither recorded nor compared with every
-*Scope* of the log, and the search of the whole foundation (WAY-33) and the whole reading of
-templates, rules and examples keep their domain.
+naming each such reach in its report.
 
 - **Scope:** elements-common, decisions, invariants, glossary, part-map, environment-facts,
   project-level, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-21 · derives from WAY-33 · derives from WAY-148
 - **Verification:** an agent compares the reading with the work and current foundation:
-  - complies: a change to a file of `gate` reads the decisions whose *Scope* names `gate`, found by
-    searching for `gate`, those the task names, the invariants naming `gate` or `every` and the
-    entries they link to; a project with no file yet names its parts from the responsibilities it
-    changes; the search of the whole foundation finds a conflict outside those parts and the
-    reading widens; in a task cycle the executor of a slice reads the entries its handoff names,
-    searches for a decision it finds missing by its identifier and names that reach in its report,
-    while the reviewer of the whole change selects its own reading, reads whole the decisions of
-    its selection that concern the change's topic, runs through the titles of the rest, opens the
-    one whose title points to a bearing on the change and reports "40 read whole, 111 by title
-    only";
+  - complies: a change to a file of `gate` in a log without sections has the index written of the
+    decisions whose *Scope* names `gate` and of those the task names, reads it, opens whole the
+    decisions the task names, the one the change rewords, the one whose sentence a test it alters
+    holds by a line `decision:` and the one whose sentence leaves open which exit code the change
+    gives, and reads whole the invariants naming `gate` or `every` and the entries they link to; a
+    project with no file yet names its parts from the responsibilities it changes; the search of
+    the whole foundation finds a conflict outside those parts and the reading widens; in a log with
+    topical sections an author picks the two sections of its work's topics from the list of
+    sections, reads the index of their decisions, runs through the questions of the decisions
+    outside them whose *Scope* names a touched part and opens whole the one whose question points
+    to a bearing on the work; in a task cycle the executor of a slice reads the entries its handoff
+    names, searches for a decision it finds missing by its identifier and names that reach in its
+    report, while the reviewer of the whole change selects its own reading, reads the index of its
+    whole selection, opens whole the decisions this method names and reports "151 in the index, 40
+    read whole";
   - violates: only decisions already named by the task are read; a search hit replaces its whole
     entry; a template is reduced to selected excerpts; the work records its selection and compares
     it with every *Scope* of the log; the whole decision log is read to find the decisions of a few
-    parts; an invariant a test the change alters cites is left out because its *Part* names another
-    part; an executor of a slice or a reviewer of a slice selects its own foundation reading, or
-    reaches beyond its handoff without naming the reach in its report; the reviewer of the whole
-    change leaves decisions of its selection neither read whole nor run through by title, skips a
-    decision whose title points to a bearing on the change, or leaves out of its report how many
-    it read whole and how many by title only; an agent other than the reviewer of the whole change
-    skims the decisions its handoff names by title.
+    parts; an invariant a test the change alters cites, or a decision whose sentence such a test
+    holds by a line `decision:`, is left out because its *Part* or *Scope* names another part; an
+    author rewords a decision knowing it only from its line of the index, its rejected options
+    unread; an index of the log's decisions is kept as a file of the repository; in a log with
+    topical sections the decisions outside the work's sections whose *Scope* names a touched part
+    are left unseen; an executor of a slice or a reviewer of a slice selects its own foundation
+    reading, or reaches beyond its handoff without naming the reach in its report; the reviewer of
+    the whole change leaves decisions of its selection out of the index it reads, or leaves out of
+    its report how many decisions it read whole; an agent that reads what its handoff names knows a
+    decision its handoff names only from its line of an index.
 - **Origin:** none
 
 *Rationale:* a growing foundation contains more material than each piece of work needs, while
 unconditional loading spends attention on unrelated rules. The parts a change's files belong to find
-the decisions that govern it (WAY-21), the task names those it settles, and links lead to the rest,
-so the governing material stays visible; what no link joins, the author's search of the whole
-foundation finds (WAY-33). In a task cycle the orchestrator reads the foundation of the task's parts
-to coordinate it anyway; selecting once for the handoffs spares each agent a selection of its own,
-which every agent of the cycle would otherwise pay for again. An agent writing a foundation entry
-searches the whole foundation for it anyway (WAY-33), so it keeps the selection its element's skill
-gives. A reach named in the report shows where the selection fell short, and the reviewer of the
-whole change, selecting for itself, finds a governing rule the orchestrator missed before the
-request. The selection of the reviewer of the whole change by *Scope* runs to more decisions than
-bear on a change, so the reviewer reads whole those that concern the change's topic and runs
-through the rest by title, as any reader of a long log does. Writing the practice down as a rule
-lets its report's count of decisions read whole and read by title only show the human and the
-orchestrator how much was read, where unsaid it passes for a full reading. The screening works
-inside the selection by *Scope*, not in its place, and the count records how much was read, never
-which decisions. The price is that a decision with an unremarkable title that bears on the
-change can pass unopened, as it can where no rule names the screening.
+the decisions that govern it (WAY-21), the task names those it settles, a test the work alters leads
+to the decisions whose sentences it holds as it leads to the invariants it cites, and links lead to
+the rest, so the governing material stays visible; what no link joins, the author's search of the
+whole foundation finds (WAY-33). The selection by *Scope* runs to more decisions than an agent can
+read whole, and of each entry only its binding sentences say what binds, while its fields, its
+reasoning and its rejected options serve whoever changes the decision, goes against it or needs to
+know what it leaves open. An index that gives the binding sentences of every selected decision lets
+an agent know all of them, which a run through titles, giving each question alone, does not, while a
+whole reading of all of them cannot be done; opening whole the decisions the work changes,
+contradicts, answers otherwise or finds open puts their reasoning and rejected options before the
+agent exactly where it may go against them, and a decision a test the work alters holds is one the
+work may break. The index is written on demand from the log, so it holds exactly the selection,
+cannot go stale, needs nothing to keep it in step or to merge between branches that add decisions,
+and leaves the log the one account of what binds (WAY-18). Topical sections let an agent take the
+decisions of its work's topics, where the parts of a product each name a large share of its log; the
+questions of the decisions outside those sections that govern a touched part keep the safeguard of
+*Scope* (WAY-21) for the cost of their headings. In a task cycle the orchestrator reads the
+foundation of the task's parts to coordinate it anyway; selecting once for the handoffs spares each
+agent a selection of its own, which every agent of the cycle would otherwise pay for again. An agent
+writing a foundation entry searches the whole foundation for it anyway (WAY-33), so it keeps the
+selection its element's skill gives. A reach named in the report shows where the selection fell
+short, and the reviewer of the whole change, selecting for itself and reading the index of all it
+selects, finds a governing rule the orchestrator missed before the request; its count of decisions
+read whole shows the human and the orchestrator how much of the index it followed into the entries.
+The price is the round of fix the reading can still need: a reviewer of the whole change may name
+decisions of its index as bearing on the change and leave them unopened, and only a round of fix in
+which a fresh reviewer reads them closes that gap.
 *Rejected:* unconditional whole-foundation loading — its context cost grows with unrelated work;
 selection only from known links or keywords — a governing decision can remain unseen; a fixed
-reading limit — a difficult case loses needed context; a separate maintained index — a second
-account can drift without resolving semantic relevance; a record of the selection compared with
-every *Scope* of the log — it costs every piece of work and records reading, not understanding;
-each agent of a task cycle selecting for itself — every agent pays for the same reading again;
-the orchestrator's selection with no reach left to the agent — a missing entry is guessed at
-instead of read; the reviewer of the whole change reading only the orchestrator's selection — a
-gap in the selection would reach the request unchecked; a separate task for the screening after a
-measure of how many selected decisions concern a change — until then the request would carry the
-line of the incomplete reading in nearly every cycle, and the screening only shows the gap; a
-narrower selection for the reviewer of the whole change with no measure, such as the decisions of
-the change's topic alone — a narrower selection may lose a decision that matters; no screening at
-all — the line of the incomplete reading stays in every request, and the sentence that the whole
-log is not read goes on contradicting the reviewer's practice.
+reading limit — a difficult case loses needed context; a separate maintained index, kept as a file
+of the repository and refreshed after each change of the log — a second account can drift without
+resolving semantic relevance, every change of a decision has to remember to refresh it, two branches
+that add decisions collide in it as well, and in a product a stale index would need a check to
+report it and the file would have to be created at installation; the rule of whole reading kept,
+with the reviewer of the whole change running through the rest of its selection by title — the
+whole reading is broken in every cycle, the reviewer knows most of the decisions by title alone,
+and the share grows with every task; the log split into two files, the binding sentences in one and
+the reasoning in the other under the same numbers — set aside, to be weighed if the index does not
+suffice, at the cost of changing every entry once, together with the check and the skills that read
+entries; in a log with topical sections, the sections of the work's topics alone — the cheapest, but a
+decision of another topic that governs a touched part is lost without a trace; the sections of the
+work's topics for every agent but the reviewer of the whole change, which reads the index of its
+whole selection by parts — the reviewer gains nothing from the division; a record of the selection
+compared with every *Scope* of the log — it costs every piece of work and records reading, not
+understanding; each agent of a task cycle selecting for itself — every agent pays for the same
+reading again; the orchestrator's selection with no reach left to the agent — a missing entry is
+guessed at instead of read; the reviewer of the whole change reading only the orchestrator's
+selection — a gap in the selection would reach the request unchecked.
 
 ### WAY-153 — What evidence supports a task state in a project plan?
 
@@ -6993,9 +7066,9 @@ with no weight, and the problem returns later.
 
 The section of a request's description for the human's decisions holds everything whose merge needs
 the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks
-not run, the incomplete reading of the review of the whole change where its reviewer did not run
-through the rest of its selection by title or itself named a decision concerning the change as
-unread, and the gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
+not run, the incomplete reading of the review of the whole change where its reviewer did not read
+the index of its whole selection or itself named a decision concerning the change as unread, and the
+gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
 unread, the unfixed findings the product's user or the human working with the process will feel, the
 decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
 actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
@@ -7033,11 +7106,12 @@ while each remaining finding stands with its place in the code in the lower part
     a request a remaining finding blocks says in that section, in plain words,
     what the human is to decide about it, and names the return step and the reconciliation it did not
     run under *Needed from you*, while the finding's place and reason stand in the lower part; a
-    request whose review of the whole change read 40 of 151 selected decisions whole and
-    ran through none of the other 111 by title puts that under *Fix or let through*, asking whether
-    to have what stayed unread read in the request, make a task of it or let it through, while a
-    request whose reviewer read 40 whole, ran through the other 111 by title and named no decision
-    of the change as unread has no such item; a request whose merged tree holds an invariant that
+    request whose reviewer of the whole change read 40 of the 151 decisions of its selection whole
+    and did not read the index of the other 111 puts that under *Fix or let through*, asking
+    whether to have what stayed unread read in the request, make a task of it or let it through,
+    and so does a request whose reviewer read the index of all 151 and named two decisions bearing
+    on the change as unread, while a request whose reviewer read the index of all 151, opened 40 of
+    them whole and named no decision of the change as unread has no such item; a request whose merged tree holds an invariant that
     reads `Rests on: TODO — the store of documents, once a task chooses it`, written by the change or
     standing from before, puts it under *Fix or let through* with the rule of that invariant and the
     missing store, and so does a request whose merged tree holds a decision that reads
@@ -7065,10 +7139,11 @@ holds every such matter makes its `none` a statement the human can merge on. A b
 keeps the skeleton is read the way every other request is read, and what the cycle needs is the
 question it asks, under *Needed from you*. Additions to a product's logging scope come here because WAY-274 counts on the
 human seeing them at the merge, and this section is where the merge shows them. A review of the
-whole change that read only part of what it selected, and did not run through the rest by title,
-passes as a full review unless the human is told, and the human is the one who can decide to merge
-on a partial reading; a reading by title is the practice WAY-150 gives, so it asks for no yes, and
-the section keeps its `none` for requests that can be merged. The cause of a correction stands here
+whole change that did not read the index of all it selected, or that names a decision bearing on
+the change as unread, passes as a full review unless the human is told, and the human is the one
+who can decide to merge on a partial reading; a decision known from the index and not opened whole
+is the reading WAY-150 gives, so it asks for no yes, and the section keeps its `none` for requests
+that can be merged. The cause of a correction stands here
 because the judgment whether the task required what the correction changed is the cycle's own, and
 the merge is where the human sees it. A descriptive `TODO` that stands in
 an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
@@ -8182,8 +8257,10 @@ and judges a version of the process by the cycles that ran on it, never one week
 
 The measures of how a cycle's agents use the context and the prompt cache of the model — the number
 of model calls, the size of each call's context, the tokens written to the cache and the tokens
-written to it again — are counted by a script of their own into a file of their own in the cycle's
-record, and are never columns of the stage report.
+written to it again, and, for each agent of the cycle, the bytes of the decision log and of the
+index of decisions that entered its context and how many times each entered it — are counted by a
+script of their own into a file of their own in the cycle's record, and are never columns of the
+stage report.
 
 - **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
@@ -8206,9 +8283,14 @@ record, and are never columns of the stage report.
   For where the measures of context and cache use are counted, an agent compares a change with the
   decision:
   - complies: a later change that adds one more measure of context or cache use adds it to the
-    script and the file of those measures, and the stage report keeps the columns it has;
+    script and the file of those measures, and the stage report keeps the columns it has; the
+    file of those measures gives for the reviewer of the whole change the bytes of the decision log
+    that entered its context and in how many reads, and the bytes and reads of the index of
+    decisions it wrote, beside its other figures;
   - violates: a change adds a column of context or cache use to the stage report; the script of
-    those measures writes its numbers into the stage report.
+    those measures writes its numbers into the stage report; the bytes of the decision log are
+    counted once for the whole cycle and not for each agent, or the reads of the index of
+    decisions are left out of them.
 - **Origin:** none
 
 *Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the
@@ -8224,8 +8306,11 @@ times: a change of how it runs the directories changes what the time of each one
 output is what those times are read from. A change of the form of the stage report starts a
 new series of measures, so a column added to the report for the measures of context and cache use
 would end the comparison of the cost of cycles across the change, while a file of its own changes no
-form of the report. The price: a second file in each cycle's record, and a second reading of the
-record for the audit.
+form of the report. The bytes of the decision log and of the index of decisions in each agent's
+context show what the rule of reading the foundation (WAY-150) costs each agent and whether a change
+of that rule lowered the cost, so they are counted with the other measures of context use, in every
+cycle, where the cycles on the two sides of such a change can be compared. The price: a second file
+in each cycle's record, and a second reading of the record for the audit.
 *Rejected:* the changes that start the series of the cost, with the script that counts the measures
 of context and cache use added to them — the comparisons would almost never occur, since nearly
 every change made to improve the process touches those instructions, and adding the script to that
@@ -8240,7 +8325,10 @@ gate mixed for weeks, so that whoever reads the audit must remember it until the
 the old. New columns of context and cache use in the stage report — a change of the form of the
 stage report starts a new series of measures; a sentence added to the first paragraph saying that
 adding columns starts no series — a file of its own avoids the dispute with no change to that
-paragraph.
+paragraph. For the bytes of the decision log and of the index of decisions, a measure made once by
+a separate agent outside the cycle, before a change of the rule of reading and again a few cycles
+after it — the second half needs a task of its own with a reminder, and nothing of it stays in the
+process.
 
 ### WAY-344 — What does a script of the-way do when a file it reads lacks a field it needs?
 
