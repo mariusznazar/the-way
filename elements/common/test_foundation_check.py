@@ -888,6 +888,22 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__environment_facts_dot_md=facts),
                          "*Source* does not take `TODO`")
 
+    def test_fact_source_with_a_command_of_several_lines_in_a_code_block(self):
+        # a reading's command of several lines stands in a code block indented under the line of
+        # *Source*; its lines that look like a heading or a field belong to the code
+        facts = FACTS + (
+            "\n## clock-offset\n\nThe system clock is set by the host.\n\n"
+            "- **Source:** reading: the command below on the host, ntpq 4.2.8 — "
+            "\"offset 0.001\"; run 2026-10-01\n\n"
+            "  ```sh\n"
+            "  # the offset of the clock\n"
+            "  ntpq -p \\\n"
+            "    | awk 'NR > 2 { print $9 }'\n"
+            "  ## a line that looks like a heading\n"
+            "  - **Source:** a line that looks like a field\n"
+            "  ```\n")
+        self.assertPasses(self.run_on(foundations__environment_facts_dot_md=facts))
+
     def test_part_lacks_its_trust_boundary(self):
         part_map = self.edit(PART_MAP, "- **Depends on:** core\n- **Trust boundary:** none\n",
                              "- **Depends on:** core\n")
