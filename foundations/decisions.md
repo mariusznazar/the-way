@@ -2055,7 +2055,12 @@ A decision's *Based on* quotes every source outside the product that the decisio
 address, the place in it, the passage word for word and the date it was read; once the environment
 facts element has entries, it names instead a fact entry, by its identifier alone, for every
 citation that, once it stopped being true, would call the decision into question — a finding about
-agents or models, the behaviour of a tool the process uses.
+agents or models, the behaviour of a tool the process uses. A measurement that the product's own
+people made — its author and its agents — and whose record a reader of this repository cannot open
+is no such citation: its result stands in the decision's *Rationale*, or in its *Rejected* where it
+weighs a way not chosen, with what was measured and under which conditions; that prose says that the
+measurement is the product's own and that its record is not open to a reader of this repository;
+and no environment fact entry is written for it.
 
 - **Scope:** decisions, environment-facts
 - **Based on:** none
@@ -2070,16 +2075,43 @@ agents or models, the behaviour of a tool the process uses.
   - complies: a paper's finding is quoted with the edition's address, the place and passage, and
     the date read;
   - violates: a finding is quoted with its authors and year alone.
+  For a measurement the product's people made, an agent compares the change with the decision:
+  - complies: a decision whose rationale gives the result of a count the author ran over its own
+    cycles states what was counted and over which cycles, says that the count is the product's own
+    and that its record is not open to a reader of this repository, and names no fact for it in
+    *Based on*;
+  - violates: the same figures stand in the rationale with no word that the count is the product's
+    own, so that a reader cannot tell it from a citation left without its fact; a fact entry is
+    written for the count, with a private note as its source; a measurement whose report stands at
+    an address any reader can open is described as the product's own and named by no fact.
 - **Origin:** none
 
 *Rationale:* only a citation whose change would call the decision into question needs an entry,
 from which the search of whoever changes the fact finds the decision (WAY-33); a precedent, a past
 event or a finding about people with no lapse date leads to nothing. The address, the passage and
-the date let a reader find what the decision rests on and see whether it still says so.
+the date let a reader find what the decision rests on and see whether it still says so. A
+measurement that the product's people made is their own work, no source outside the product, and a
+fact entry needs a source a reader can open (WAY-80) while no entry may point to a source a reader
+cannot open (WAY-27); the result therefore stays in the decision with its conditions, as WAY-05 lets
+a measurement stand, where a reader can weigh it. The sentence that the measurement is the product's
+own is what tells a reader that the figure is a measurement of the product and no citation whose
+fact is missing; without it each reviewer guesses which of the two is before them. A measurement
+whose report a reader can open at an address is a citation like any other, and follows the first
+sentence.
 *Rejected:* every citation as an entry — many entries whose change would call no decision into
 question, each a second copy of its quote; a fact named with its fingerprint, renewed when the fact
 changes — the author's search finds the decision without it (WAY-33); the partners of the part
-map's external context as linked facts — a new link with no known consumer.
+map's external context as linked facts — a new link with no known consumer; for a measurement the
+product's people made, a summary of it with its conditions kept as a file of this repository that a
+fact would name at a fixed commit — a new form of source beside those of WAY-80, a new kind of file
+with a rule on what it may not carry, and a summary to write and clean for each experiment, with the
+decisions that carry such figures rewritten and a fact written for each; the figure with a note
+that it comes from the author's private notes in place of a source — it points a reader to a source
+the reader cannot open, which WAY-27 rejects; the rule alone, with no sentence in the decision that the
+measurement is the product's own — a reviewer would still guess whether a figure with no source is a
+measurement of the product or a citation left without its fact; no rule — each decision that rests
+on such a measurement meets the collision of this decision with WAY-27 again, and the verdict
+depends on which of the two a reviewer reads as prevailing.
 
 ### WAY-93 — Where do glossary entries stand, and what identifies one?
 
@@ -3738,8 +3770,9 @@ slices — the pin moved before the route keeps the installer's output out of ev
 the change's size, such as the number of files, deciding the route at the start of the cycle between
 one author and a plan — on changes of one game product of 1 500 to 3 000 lines, with five cycles on
 each route, a whole cycle with a plan cost 0.0182 USD per changed line (median cycle 39 USD) and a
-cycle with one author 0.0157 USD (median 24 USD), because the plan adds the planner, the reviews of
-its slices and a return step taken by an agent of its own, so the judgment from the task document
+cycle with one author 0.0157 USD (median 24 USD; the measurement is this product's own, and its
+record is not open to a reader of this repository), because the plan adds the planner, the reviews
+of its slices and a return step taken by an agent of its own, so the judgment from the task document
 stays the choice.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
@@ -4924,8 +4957,9 @@ the check that would catch it.
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review; a review without the author's report — a reviewer of the
 orchestrator's class without the report caught 4 and 3 of the 14 reference errors, with the report 5
-and 6, and used more tokens, 112.47 million against 90.20 million in eight runs; the conditions of
-the measurement stand in WAY-229.
+and 6, and used more tokens, 112.47 million against 90.20 million in eight runs (the measurement is
+this product's own, and its record is not open to a reader of this repository; its conditions stand
+in WAY-229).
 
 ### WAY-165 — What must an answer to each matter of an agent's way to the running product settle?
 
@@ -6902,7 +6936,8 @@ could not run the product's tests, and worked on a reviewer's instruction newer 
 they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in 4 of the 8 runs,
 each time a change in which the original review had found a blocking flaw, repaired later, and a
 reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
-8. Classes in general terms survive the release of new models and fit any harness.
+8. The measurement is this product's own, and its record is not open to a reader of this repository.
+Classes in general terms survive the release of new models and fit any harness.
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
@@ -7912,13 +7947,15 @@ resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache a
 a control with five minutes wrote its whole 4,786 anew. Where the session was started again with its
 saved conversation resumed, the hour did not help: the agent wrote its whole context anew at 2.0
 times the price of input, where a write to a five-minute cache costs 1.25 times, in one try, twice;
-the account in *Rejected* does not cover a restart. The price: an hour that Claude Code ignores
+the account in *Rejected* does not cover a restart. The probes are this product's own, and their
+record is not open to a reader of this repository. The price: an hour that Claude Code ignores
 while a subscription spends usage credits leaves the author at five minutes, so its waits keep to
 four.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
-the few that wait: counted on the session records of past cycles of one game product and of the-way,
-an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a cycle of
+the few that wait: counted on the session records of past cycles of one game product and of the-way
+(the count is this product's own, and the session records are not open to a reader of this
+repository), an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a cycle of
 the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6% and,
 where the author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it raises
 the cost of a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game cycle
@@ -9836,7 +9873,8 @@ failing check would stop changes that have nothing to do with it. Weak points ta
 access to the repository sees the tag, and the reminder repeats in each request until a review is
 made, also while the human puts it off on purpose. At 30 merges the review falls in the-way every
 1–4 weeks and in the first product every 1.5–7 weeks, by the history of weeks 40–45 of 2026 (6–26
-merges a week in the-way, 4–21 in the product).
+merges a week in the-way, 4–21 in the product). The count is this product's own, and the history of
+the first product is not open to a reader of this repository.
 *Rejected:* a check in the gate — the gate stops or lets through, a stop would block unrelated
 changes, and a warning that stops nothing is not read there; a script the human runs, in a weekly
 review say — it depends on a memory or a ritual that another product does not have; the merge of
@@ -10105,7 +10143,8 @@ description, the first and every later edit; the messages of the commits are not
 history is read by people the author never chose, so what the record says of the author's disk,
 notes and private work is published with it. A search of every commit that had added a record in the
 repositories where cycles had run, on 2026-11-07, found that nearly all that leaked was absolute
-paths, directory names of worktrees and titles of notes in links. Cleaning keeps the record, so
+paths, directory names of worktrees and titles of notes in links; the search is this product's own,
+and its record is not open to a reader of this repository. Cleaning keeps the record, so
 three of its readers go on reading it as before: the human, who follows the link from the request;
 the plan's link to the task's document; and the nightly review of process remarks. The fourth, the
 reader of a project plan's state, which proves from the record that a task entered its cycle and was
@@ -10167,8 +10206,9 @@ item it lists is made to read the same in the report and in the remarks, not app
 - **Origin:** none
 
 *Rationale:* what a pattern sees is the form of a path or of a link, and the same search of
-2026-11-07 showed that nearly all that leaked had such a form, while a private name written as plain
-words has no mark a pattern could use. A script reads every file of the copy every time, where a
+2026-11-07 (the search of WAY-308: this product's own, with a record not open to a reader of this
+repository) showed that nearly all that leaked had such a form, while a private name written as
+plain words has no mark a pattern could use. A script reads every file of the copy every time, where a
 model reading a long record for what looks private misses an item without a trace, and it reads the
 description, whose block in another language is the part a reader checking by eye covers least. The
 check of WAY-294 runs first on the original because the original holds the words the reports gave,
@@ -10438,7 +10478,8 @@ the product, and a file committed to the product's repository stays in its histo
 removal of the file by a later commit frees no space and does not change an image embedded by a
 link to the earlier commit. In the history of one product the files of 384 screenshots held about
 29 MB of about 51 MB of the whole history, measured on 2026-11-08 by listing every object of its
-repository and counting their size. The rule is the-way's and the place is the product's, because
+repository and counting their size; the measurement is this product's own, and its record is not
+open to a reader of this repository. The rule is the-way's and the place is the product's, because
 the places that serve a product differ in what they cost and in who can open them, and a place named
 in the process would bind products it does not suit. A screenshot is looked at when the request is
 accepted and rarely after, so a place that may be cleared costs a few old requests their images and
@@ -10540,7 +10581,8 @@ they share, and an agent closes the browser it opened when its check ends.
 way that gives them one browser makes the second check fail or take over the first one's page; an
 author that leaves its browser open blocks the next check the same way. Between 20 and 31 October
 2026, before one of two products changed its way, 13 errors of a busy browser profile stood in 9
-conversation files of the sessions on those two products. Stated once for every way, the condition
+conversation files of the sessions on those two products; the count is this product's own, and the
+conversation files are not open to a reader of this repository. Stated once for every way, the condition
 reaches a product before it meets the conflict.
 *Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
 conflict itself, by its errors, and a product whose main way keeps one browser profile for a
@@ -10587,7 +10629,8 @@ but those that must write example paths, and the list of those files stands in t
 adding a file to it shows in the change; a real path pasted into a file on the list passes. A note
 link is text of a note, so it counts in a Markdown file; in code the same brackets are an array
 inside an array or a test of the shell, and a run of the check over every tracked file of one public
-product on 2026-11-09 listed 71 such texts in code among 88 findings. A link in a report of the copy of a
+product on 2026-11-09 listed 71 such texts in code among 88 findings (the run is this product's own,
+and its record is not open to a reader of this repository). A link in a report of the copy of a
 cycle's record, of any kind of file, is still a leak, so the copy and the description keep the
 check of WAY-309 in every file.
 *Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
@@ -10732,7 +10775,8 @@ after the colon, is not listed; a link stuck to a word, which Obsidian renders a
 listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
 by rewriting the string. A character class of the shell in double brackets is code too, though a
 command quoted in a Markdown file holds it: a run of the check on 2026-11-11 over the commands in
-the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. The
+the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. Both
+runs are this product's own, and their record is not open to a reader of this repository. The
 twelve names are listed one by one, not matched by a general shape, so a text with another name
 between the colons stays listed, since it may be a note. The price taken: a note whose title is one of these
 names between colons is not listed, and a name a shell adds later needs the list changed.
@@ -11700,7 +11744,8 @@ that passed and during which no other such run was going, and shows the other ru
 
 *Rationale:* the same run of a product's gate has lasted 15 to 16 minutes on a free machine and 23
 to 40 minutes beside several sessions, so a median over all runs says mostly how loaded the machine
-was. A run that failed says how soon it failed, not how long the gate takes, and one such run alone
+was; the durations are this product's own measurement, and their record is not open to a reader of
+this repository. A run that failed says how soon it failed, not how long the gate takes, and one such run alone
 on the machine would pull a median down and make a version look faster than it is. The count of
 other runs shows only the runs by the script: a load of another kind is not seen, and a version in
 which every gate had company or failed gets no comparison.
@@ -11758,7 +11803,8 @@ detailed section, and the share of the fix rounds is unknown for it.
 - **Origin:** none
 
 *Rationale:* when the count was run on 2026-11-12, 7 of 138 cycles had a cost, because the older form
-of the stage report, which most cycles have, was passed over. The table of tokens by model holds the
+of the stage report, which most cycles have, was passed over; the count is this product's own, and
+its record is not open to a reader of this repository. The table of tokens by model holds the
 tokens of each model, from which the cost at constant prices is counted, and it ties no round to the
 turns that served it, so the share of the fix rounds stays unknown (WAY-337). The price: the count
 keeps a second way of reading a stage report for as long as cycles of the older form are counted, and
@@ -11787,7 +11833,8 @@ the file at that line may find other text and has to look for the place, while a
 quotation finds it again after the lines have moved. The line stays in the source of an answer
 because the revision beside it says which text the line meant. In the register of problems of
 2026-11-12, 80 rows in 45 of 83 cycles were a stale reference; one occurrence cost nothing 35
-times, a few steps of an agent 44 times and a stage once, and no round and no time of the human.
+times, a few steps of an agent 44 times and a stage once, and no round and no time of the human; the register's count is this product's own, and
+its record is not open to a reader of this repository.
 The price: a heading or a quotation can vanish as a line can, and about 40 of those 80 rows stood in
 orders to agents and in plans written during a cycle, which this rule does not reach.
 *Rejected:* a script that checks, before a cycle starts, the files, lines and entries a task names —
@@ -12126,7 +12173,8 @@ of each changed file before the change and after it, and from the test of the pr
 
 *Rationale:* a diff shows the lines a change adds, not the size of the function or the file they reach,
 so a reviewer reading it sees each addition as small while the function grows; in one product's game
-a function reached 456 lines and another 781 unnoticed. A reviewer of the whole
+a function reached 456 lines and another 781 unnoticed (a measurement that is this product's own,
+whose record is not open to a reader of this repository). A reviewer of the whole
 change reads every file the change touches and so is the one place where the structure it leaves can
 be judged; the lines of each changed file before and after, and the functions and files over a
 threshold on both states, turn the question from an impression into a reading with numbers. The
@@ -12204,8 +12252,9 @@ finding that the content of an entry does not agree with the code stays Importan
 - **Origin:** none
 
 *Rationale:* the same remark on the form of an entry was graded blocking in 9 runs of an experiment
-with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the conditions of the
-measurement stand in WAY-229), so the verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
+with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the measurement is this product's own, and
+its record is not open to a reader of this repository; its conditions stand in WAY-229), so the
+verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
 round of fixes, and a fix that fails leaves the request blocked for form alone (WAY-162); graded
 always Minor, a departure that makes a reader take an entry wrongly, such as a binding rule written in
 the rationale and not in a binding sentence, would not block and would not be repaired in the reviews
@@ -12365,15 +12414,18 @@ the-way itself loads are generated from them and tracked.
 
 *Rationale:* a stage agent started as a general subagent carries the list of every skill of its
 session before it reads its first file, and few agents of a cycle use a skill: in the session
-records of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252.
-A probe on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a
+records of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252
+(the count is this product's own, and the session records are not open to a reader of this
+repository). A probe on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a
 subagent at 36,711 tokens with the skill tool and 21,759 without it: the list of skills (29,896
 characters) disappeared whole, the definitions of the tools shrank from 13 tools (31,547 characters)
 to 9 (22,639), and the instruction files (23,658 characters) stayed. A type with every tool of the
 session but the skill tool starts about two thousand tokens larger than the probe's agent, which had
 a narrow list of tools, so the start is lighter by about 37% where the probe's was by 41%; both are
 estimates from the table of tool definitions, not measurements. The gain of the lighter start was
-estimated, for the narrow list of tools, at about 4.5% of a cycle's cost. A definition with no body
+estimated, for the narrow list of tools, at about 4.5% of a cycle's cost. The probes and the
+estimates are this product's own, and their record is not open to a reader of this repository. A
+definition with no body
 gives its agent a system prompt of 1,722 characters in place of the 3,158 of a general subagent, so
 each type has a body that says what it is. The tools of connected servers, a browser's among them,
 stay, so an agent that has to look at an interface can, and the-way names no tool of a plugin that a
@@ -12418,7 +12470,8 @@ drops them drops the user's file, which holds the rules of git, of scripts and o
 product's file together, and the product's file alone cannot be kept; starting without them lowers
 the start by about eleven thousand tokens, to 10.5 thousand, a figure whose conditions — version,
 model, tools — are not recorded. A later decision may reverse this where the handoffs of the stages
-begin to name the product's instruction file themselves.
+begin to name the product's instruction file themselves. The figure is this product's own
+measurement, and its record is not open to a reader of this repository.
 *Rejected:* start without the instruction files — the start falls to 10.5 thousand tokens, but the
 agent loses at once the user's global instruction file (the rules of git, of scripts and of privacy)
 and the product's instruction file, and the product's file alone cannot be kept.
@@ -12466,8 +12519,9 @@ estimated tokens, and the size script of the task cycle reports such a slice as 
     any value other than 150 000 tokens.
 - **Origin:** none
 
-*Rationale:* the value comes from the measured cycles of one game product, 220 slices in all, and is
-described here because its source is not reachable from this repository. Slices whose planned
+*Rationale:* the value comes from the measured cycles of one game product, 220 slices in all. The
+measurement is this product's own, and its record is not open to a reader of this repository, so it
+is described here. Slices whose planned
 reading was 150 000 to 250 000 tokens ended with more than 100 model calls in 23 to 29% of cases;
 those under 150 000 tokens, in 3 to 4%. Slices above 150 000 tokens wrote a change with about 21 000
 input tokens per changed line, against 13 000 to 16 000 for slices reading 50 000 to 150 000 tokens.
