@@ -133,7 +133,8 @@ Write the plan in this form; the script reads the slice headings and the fields 
   of its output; its *Goal* names the command and carries the complete action: after changing an
   input, run the command, handle any obsolete output paths it reports for removal, and commit all
   of its output; it also says not to edit the output by hand. *Change* names the command's source
-  only when that slice changes it.
+  only when that slice changes it. Each such slice runs the command so that the files it generates
+  stand present for that slice's review and the committed output agrees with its sources.
   A change to the part map needed for a file the change adds belongs to the slice that adds that file.
   *Read* is the whole reading of the slice's agent besides those files, since its handoff carries
   what *Read* names — the passages
