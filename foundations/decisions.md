@@ -3865,18 +3865,18 @@ foundation hold — they reopen what was settled.
 
 ### WAY-139 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
 
-The-way holds no skill of a product. It holds the list of what a product's deployment skill covers: a
+The-way holds no skill of a product, but the list of what a product's deployment skill covers: a
 preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
 steps and what happens to the data; what the agent does and what the human does; how to read the
-logs; how long the record lives, between deployments too; and how a human learns of a failure; and,
-beside the list, a guide to writing such a skill, with the deployment skill of loop2 as its first
-example, which binds nothing and which the check of the list points to. When
-a task's outcome deploys the product or changes how or where it runs, the-way's skill `refine-task`
-checks, while it refines the task, that the product has a deployment skill covering every item of
-the list, and where it has none or an item is missing, the task gains an item of its To do for that
-work or the human splits that work into a task of its own, and that item and that task point to the
-guide, which an agent reads only when it writes or completes a deployment skill. For the items on how to read the logs, on
-the record's life and on a failure, the check quotes the answer a decision of the foundation or an
+logs; how long the record lives, between deployments too; and how a human learns of a failure.
+Beside the list it holds a guide to writing such a skill, with the deployment skill of loop2 as its
+first example, which binds nothing and which the check of the list points to. When a task's outcome
+deploys the product or changes how or where it runs, the-way's skill `refine-task` checks, while it
+refines the task, that the product has a deployment skill covering every item of the list, and where
+it has none or an item is missing, the task gains an item of its To do for that work or the human
+splits that work into a task of its own, and that item and that task point to the guide, which an
+agent reads only when it writes or completes a deployment skill; for the items on how to read the
+logs, on the record's life and on a failure, the check quotes the answer a decision of the foundation or an
 approved definition the task carries already gives, and the task gains the item that writes it into
 the skill, a decision silent on how an agent reads the logs or on how long the record lives
 answering nothing for the item on that; where nothing answers the item on how to read the logs, it

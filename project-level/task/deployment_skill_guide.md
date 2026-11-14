@@ -29,8 +29,8 @@ one real skill what an answer to each item of the list can look like.
 Each part below stands for one item of the list and has two halves.
 
 - **The questions the product answers.** What the item asks, in the words of a product that is not
-  loop2. An answer that settles each question, or says in the skill that the human left it
-  unsettled, covers the item.
+  loop2. The questions help to write an answer; they set no condition, and the list in WAY-139 and
+  the check in `resolve_gaps.md` alone decide whether a skill covers an item.
 - **How loop2 answered.** A short fragment of the skill, shortened where it says `…`. What belongs
   to loop2 alone, its server, its tunnel and Cloudflare settings, its commands, paths, names and
   deployment parameters, stands inside `[loop2: …]`. What stands outside the brackets is the shape
@@ -74,9 +74,9 @@ How loop2 answered:
 
 ## 2. A preview of deployments
 
-The list says "a preview of deployments". The skill of loop2 answers it in two places: how to see
-what a deployment did and what runs now, and how the human puts a change on the server to look at
-before it is merged.
+The list says "a preview of deployments" and does not define it. This guide reads it as both of
+two things, and the skill of loop2 answers each in its own place: how to see what a deployment did
+and what runs now, and how the human puts a change on the server to look at before it is merged.
 
 Questions:
 
@@ -105,7 +105,7 @@ How loop2 answered:
 And for a change before the merge, the skill describes the human's trial deployment of the branch:
 
 > The request stays a blocked draft until [loop2: the password measurement and the public journey]
-> have been done on its head commit. The human does everything here. … **Deployment.** Run
+> have been done on its head commit. The human does everything here (…). … **Deployment.** Run
 > [loop2: `loop2-deploy <request head sha>` with `SSH_ORIGINAL_COMMAND` unset]. The server log must
 > end with `deployed <sha>, previously <sha>`. Check both services' health, the internal probe and
 > [loop2: both limits] with the narrow commands in [loop2: `SKILL.md`].
@@ -135,22 +135,22 @@ How loop2 answered:
 > an accounts commit] and rotates it; a copy stays outside the server, with the human. … A missing
 > or invalid file stops the application before it listens: the deployment ends with [loop2: exit 8].
 
-The rotation is written as the human's steps, each with its check:
+In its setup reference, the rotation is written as the human's steps, each with its check:
 
 > **Rotating: a new key first, the old one kept.** 1. Set the file from the current one with a new
 > key prepended. The block stops, with the file unchanged, if the file is not in
-> the [loop2: one-line form this procedure writes]. 2. Replace the copy kept outside the server with
+> the [loop2: one-line form this procedure writes] (…). 2. Replace the copy kept outside the server with
 > the file's new content. 3. Read the running application commit from its label (not the checkout's
 > HEAD) and deploy exactly that commit with the installed script, … Deployment force-recreates the
-> application, which reads the file again; players stay signed in. 4. Check … that a player who was
-> signed in before is still signed in.
+> application, which reads the file again; [loop2: players stay signed in]. 4. Check … that a player
+> who was signed in before is still signed in.
 >
 > **Retiring an old key.** Remove a key no earlier than [loop2: 30 days after the last deployment
 > that could sign with it]: …, since [loop2: a session lasts 30 days from its last request and every
 > response is signed again with the first key]. …
 
-A list of rotations ends the file, one line for each secret, so that a reader finds the right
-sequence by the secret's name:
+The same reference keeps a list of rotations, one line for each secret, so that a reader finds the
+right sequence by the secret's name:
 
 > - **[loop2: Tunnel token]:** read the currently running application revision label …, [loop2:
 > refresh the token in Cloudflare, replace the server file] … Deploy that running application SHA
@@ -184,11 +184,12 @@ How loop2 answered:
 > schema version is newer than it knows, so an old commit may fail health with [loop2: exit 8] on a
 > newer database. …
 
-Where a rollback crosses a change of route, loop2 counts its steps in the sentence:
+Where a rollback crosses a change of route, its troubleshooting reference lists four Cloudflare
+changes and then counts the steps:
 
+> … [loop2: 3. Restore the Origin Rule matching only `game.example.com`, destination port 18080.] …
 > This is **[loop2: script installation, one deployment and four Cloudflare changes]**; public
-> traffic can be unavailable between those actions. … [loop2: 3. Restore the Origin Rule matching
-> only `game.example.com`, destination port 18080.]
+> traffic can be unavailable between those actions. …
 
 ## 5. What the agent does and what the human does
 
@@ -219,8 +220,15 @@ How loop2 answered:
 > the [loop2: account database or its volume] (it holds e-mail addresses and password hashes), …
 > arbitrary container execution, restarts, deployments, key changes or secret rotation. …
 >
-> Every server or Cloudflare change is the human's, … The agent prepares the commands. … Treat service
-> logs as potentially sensitive; report selected, redacted diagnosis, not raw logs.
+> Every server or Cloudflare change is the human's, [loop2: except deployment started by the existing
+> automation]. The agent prepares the commands. …
+
+The sentence names a third actor beside the agent's reads and the human's changes: the automation
+the product already has, here the deployment of a merged commit. A skill says what that automation
+does too; what a task changes outside the repository stays the human's (WAY-140). On what the agent
+may say of what it read, the skill's section on seeing deployments adds:
+
+> … Treat service logs as potentially sensitive; report selected, redacted diagnosis, not raw logs.
 
 The skill also marks what only the human does for the one command whose output would expose data:
 
@@ -249,15 +257,17 @@ How loop2 answered:
 > deployment, [loop2: `grep -F -m 50 -- '"failure":"' /var/log/loop2-app.log
 > /var/log/loop2-app.log.1`] (`-m` limits each file), then [loop2: `zgrep -F -m 50`] on the older
 > ones. …
->
+
+Its section on log stages and exit codes holds the table of the deploy log's ends:
+
 > | Exit | Stage | Meaning | Running services |
 > |---|---|---|---|
 > | 0 | — | [loop2: both healthy; internal HTTP passed] | [loop2: new commit] |
 > | 5 | resources | [loop2: less than 1024 MiB available memory, 4 GiB free Docker disk, or unreadable] | untouched |
 > | 8 | switch, probe | [loop2: either service fails health within 120 seconds or internal HTTP fails] | may be partly running or broken |
 
-The table is loop2's own, from its deploy script; the rows for the codes 2 to 4, 6 and 7 are left
-out here. What carries to another product is that the log names each stage and each end, and that
+The table is loop2's own, a list of the exit codes it gives; the rows for the codes 2 to 4, 6 and 7
+are left out here. What carries to another product is that the log names each stage and each end, and that
 the skill says what each means for the running product.
 
 ## 7. How long the record lives, between deployments too
@@ -270,23 +280,27 @@ Questions:
 - Does the record survive a deployment, a restart of the host and a rollback? What does it miss?
 - Does it hold personal data, and how are its lines reported?
 
-A complete answer is one of two:
+Two examples of an answer:
 
-- a stated lifetime for each place, with what bounds it and what it misses; or
-- the human's refusal to settle the item, recorded in the skill. A skill that records the refusal
-  covers the item, and the question does not return at a later deployment (WAY-139).
+- a lifetime stated for each place, with what bounds it and what it misses; or
+- the human's refusal to settle the item, recorded in the skill. WAY-139 says that a skill that
+  records the refusal covers the item, and that the question does not return at a later deployment.
 
 How loop2 answered (the first kind):
 
-> **How long each lives.** A running container's log: until the next deployment, and not above about
-> 100 MB. The dump: [loop2: `logrotate` rotates it weekly, or sooner when it passes 100 MiB, and
+> **How long each lives.** A running container's log: until the next deployment, and [loop2: not
+> above about 100 MB]. The dump: [loop2: `logrotate` rotates it weekly, or sooner when it passes 100 MiB, and
 > keeps four rotated files …, so a line lives about four weeks, shorter when the size forces a
 > rotation]. It survives deployments, a host restart and a rollback to an older commit, as long as
 > [loop2: the installed deploy script is the one that has the dump]. It misses a container removed
 > any other way than by that script, and the few seconds between the copy and the stop of the old
-> container. … The file holds the game's lines for those weeks, with [loop2: `accountId` values, and
-> the human's `account-block` lines]: it is the retention of that data …, and its lines are reported
-> selected and redacted like other service logs.
+> container.
+
+In its paragraph on how an agent reads the record, the skill adds what the file holds:
+
+> … The file holds the game's lines for those weeks, with [loop2: `accountId` values, and the human's
+> `account-block` lines]: it is the retention of that data [loop2: (D-252)], and its lines are
+> reported selected and redacted like other service logs.
 
 The refusal is not loop2's, which settled the item. An answer of that kind, in words written for this
 guide:
@@ -313,19 +327,20 @@ human chose it.
 How loop2 answered (an alert, with its limits):
 
 > **The three ways the owner learns the game failed.** 1. **The watcher** ([loop2: `loop2-watch`,
-> root, cron every five minutes]). It reads state and health of both containers and the fresh failure
+> root, cron every five minutes]). It reads state and health of [loop2: both containers] and the fresh failure
 > lines of the game container's log … and calls [loop2: `pusher`] with a fixed subject and one fixed
 > [loop2: Polish] sentence per kind, which name the kind and send the reader here. It never puts a
 > number, a commit, an account or any output into a message, because [loop2: `pusher` may travel
-> unencrypted]. … At most one message per kind in six hours and six in all in 24 hours; …
+> unencrypted]. … [loop2: At most one message per kind in six hours and six in all in 24 hours]; …
 > 2. **The scheduled check of the public address** ([loop2: `.github/workflows/check-address.yml`]).
-> Every five minutes, at minutes that are not the top of the hour, GitHub Actions opens the public
-> address, up to six attempts 20 seconds apart, and the run fails unless one answers 200. GitHub then
+> [loop2: Every five minutes, at minutes that are not the top of the hour,] GitHub Actions opens the
+> public address, [loop2: up to six attempts 20 seconds apart], and the run fails unless one
+> answers 200. GitHub then
 > notifies the owner of the failed run. It sees what the watcher cannot: a server that is off, a
 > fallen tunnel, a Cloudflare fault. 3. **[loop2: The browser's report.]** …
 >
 > **The four limits of the scheduled check.** Alone it fails in four ways. (1) When the server and
-> GitHub are both down, nothing is sent. (2) GitHub disables a scheduled workflow after 60 days with
+> GitHub are both down, nothing is sent. (2) GitHub disables a scheduled workflow after [loop2: 60 days] with
 > no activity in the repository, … (3) GitHub sends the failure notice … to the user who last changed
 > the cron line, so notifications set off, or set on another account, give a silence taken for "it
 > works". …
