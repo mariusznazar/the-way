@@ -249,6 +249,12 @@ In the configuration of a custom agent, Codex disables an individual skill with 
 
 - **Source:** https://learn.chatgpt.com/docs/agent-configuration/subagents (archived: http://web.archive.org/web/20261028074900/https://learn.chatgpt.com/docs/agent-configuration/subagents, 2026-10-28) § Custom agents — "Disable individual skills with skills.config or bundled skills with skills.bundled.enabled = false."; read 2026-11-13
 
+## python-junction-detection
+
+In Python 3.14, `Path.is_junction` returns true if the path points to a junction and false for any other type of file, and only Windows supports junctions.
+
+- **Source:** https://docs.python.org/3.14/library/pathlib.html (archived: http://web.archive.org/web/20261021035154/https://docs.python.org/3.14/library/pathlib.html, 2026-10-21) § Path.is_junction — "Return True if the path points to a junction, and False for any other type of file. Currently only Windows supports junctions."; read 2026-11-14
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
