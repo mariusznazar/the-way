@@ -59,6 +59,5 @@ invariant:
   no part yet; *Derives from* a projected decision reads
   `TODO — <the decision's question>, projected in <the definition's path>`. Code-dependent
   evidence can be completed when the task writes the entry, so the method reads `review` until then.
-- Step 4.3: the heading reads `#### <identifier>`. Projecting keeps a future invariant visible in
-  the definition without claiming that it already holds.
+- Step 4.3: the heading reads `#### <identifier>`.
 - After step 4.4 nothing is handed on: the test waits for the task that writes the invariant.

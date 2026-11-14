@@ -44,8 +44,7 @@ fact:
   invariant's *Rests on* names it (WAY-73, WAY-90).
 - In projected mode, read `projected.md` beside this skill for reading the source and
   checking the proposal.
-- Step 4.3: the heading reads `#### <identifier>`. Projecting keeps a future fact visible in the
-  definition without claiming that it already holds.
+- Step 4.3: the heading reads `#### <identifier>`.
 
 ## A withdrawal
 

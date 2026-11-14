@@ -47,5 +47,4 @@ term:
 
 In projected mode, read `projected.md` beside this skill for choosing the words and
 rewriting their uses.
-- Step 4.3: the heading reads `#### <term>`. Projecting keeps a future term visible in the
-  definition without claiming that it already holds.
+- Step 4.3: the heading reads `#### <term>`.

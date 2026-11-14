@@ -61,6 +61,4 @@ decision:
 In projected mode, read `projected.md` beside this skill for the plan test and
 what follows from the decision.
 - Step 3: the heading reads `#### (new) — <question>` for a new decision, or
-  `#### <PREFIX>-<NN> — <question>` for a change of a current one. Projecting keeps a future rule
-  visible in the definition without claiming that it already holds, so a new decision carries no
-  number yet.
+  `#### <PREFIX>-<NN> — <question>` for a change of a current one.
