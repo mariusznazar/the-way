@@ -103,9 +103,10 @@ lists nothing, the block in the language of the task document included (WAY-308,
 python -B task-cycle/private_paths_check.py <description file>
 ```
 
-Once the request is open, wait for the CI run on it and put its result into the description under
-*Checks*; a red result is a failure of the gate, which the change fixes before the request goes to
-Mariusz (`task-cycle/skill/SKILL.md`, step 12).
+Once the request is open, and after each correction, wait for the CI run on its last head and put
+its result into the description under *Checks*; a red result is a failure of the gate, which the
+change fixes before the request goes to Mariusz. A request left blocked for unfinished code is not
+waited for (`task-cycle/skill/SKILL.md`, step 12, WAY-160).
 
 Mariusz merges the request; the merge accepts the change and each entry he did not see at the task
 document, those its section for the human's decisions puts before him (WAY-114).

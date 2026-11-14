@@ -15,7 +15,9 @@ the product's checks. Run
 before it is committed" of `implement-task` gives and commit the copy and its removal as step 12
 gives them, then write the description by `task-cycle/skill/request_template.md` as
 step 13 gives, in its variant for a remaining blocking finding, linking the record by the SHA of the
-commit that adds it, and open the request from it as a draft marked `blocked`. The request does not
+commit that adds it, and open the request from it as a draft marked `blocked`. The cycle does not
+wait for CI on this request, whose code is unfinished (WAY-160): where CI runs on it, *Checks* says
+that the result of the run stands on the request's page and was not waited for. The request does not
 exist when the copy is committed, so *Request URL and status* in the copy reads, word for word and
 alone on its line, `blocked draft, opened on this commit`, the wording `project-level/plan_state.py`
 recognises to report the task as blocked. After the human's decision, the correction after review

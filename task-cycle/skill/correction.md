@@ -52,6 +52,16 @@ state after the correction, with the link to the record's new commit and with th
 correction in one sentence as the item of kind 17 in *You accept by merging* (WAY-287), check it
 as the template gives, and edit the request's description from it.
 
+Where CI runs on the request and the correction leaves its code finished, wait for the run on the
+head you pushed last, as step 12 of `implement-task` gives, once the record's pair of commits is
+pushed. Write its result into *Checks* in a further edit of the description, which the template's
+checks, the check of private paths included, pass before it is published (WAY-309), and into
+*Verification* of the original record. A red result is a failed gate (step 10): a fix and its
+review, the gate on the corrected tree, the record's pair of commits again and the wait again
+(WAY-160). A request the correction leaves blocked for a reserved choice or a remaining blocking
+finding is not waited for: its description says that the result of the run stands on the request's
+page and was not waited for.
+
 Before the record's copy is prepared, add the correction's line to the record's item *Corrections
 after the request opened*, as `task-cycle/record_template.md` gives it: the file of the remarks and
 each pair `<source> · <kind>` of the correction once. Take the source from what

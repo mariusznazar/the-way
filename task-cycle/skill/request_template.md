@@ -459,9 +459,10 @@ taken from, and the result of the run of the failing tests on the base where ste
 `task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); where CI runs
 on the request, its run on the last head, with the link to the run and each check by name and its
 conclusion, a run that did not report named as a check that did not run (step 12 of `SKILL.md`,
-WAY-160); the user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
-failure of a settled one included; the form check's last run; the check of private
-paths' last run on the description and its last run on the copy of the record, each with its
+WAY-160), and in a request left blocked for unfinished code, that the result of the run stands on
+the request's page and was not waited for; the user-interface states and the screenshot evidence, a
+screenshot unchecked for no settled way or the failure of a settled one included; the form check's
+last run; the check of private paths' last run on the description and its last run on the copy of the record, each with its
 command and exit code (WAY-309); the image check's last run on the copy of the record, with its
 command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
 and where it listed an item the cycle holds wrong, its command, exit code and listed line

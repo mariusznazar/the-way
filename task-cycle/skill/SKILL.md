@@ -433,7 +433,8 @@ contradicts a decision.
         then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
         twice, linking the record by the SHA of the commit that adds it, and open the request from
-        it as a draft marked `blocked`;
+        it as a draft marked `blocked`, with no wait for CI (the code is unfinished: *Checks* says
+        that the result of a run stands on the request's page and was not waited for, WAY-160);
      5. where the slice's *Risk* names a trust boundary or an operation that cannot be undone,
         dispatch a fresh reviewer with `review-change` on that range and the slice's number, with
         the executor's selection; for slice 1 the handoff names the plan's *Foundation entries* as
@@ -577,14 +578,18 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     record, by the SHA of the commit that adds it, never by branch name, into the description, and
     in the same edit fill in under *Checks* the runs of the three checks on the copy; check it again
     by the template's checks, which include the check of private paths, and edit the request with
-    it. Where CI runs on the request, wait for the run on the head you pushed last, as the host's
-    tool gives it (on GitHub, `gh pr checks <request> --watch`), and write its result — the link to
-    the run, each check by name and its conclusion — into *Checks* of the description and into
-    *Verification* of the record (WAY-160). A red result is a failed gate (step 10): its failures
-    are fixed, the fix reviewed as "The end of a code review" gives, the gate run again on the tree,
-    the record's pair of commits repeated with the reports of the fix, and the wait repeated on the
-    new head. A run that does not report is a check that did not run, named under *Checks*, never
-    read as passed. Mark the
+    it. Where CI runs on the request, which is open for review or waits only for human actions in
+    the cycle, wait for the run on the head you pushed last, as the host's tool gives it (on GitHub,
+    `gh pr checks <request> --watch`), and write its result — the link to the run, each check by name
+    and its conclusion — into *Checks* of the description, in an edit that the template's checks,
+    the check of private paths included, pass before it is published (WAY-309), and into
+    *Verification* of the original record (WAY-160). The committed copy of the record holds that row
+    only for the runs before its own head: the run on the head that removes the copy comes after it,
+    and no pair of commits is repeated to bring that row in. A red result is a failed gate (step 10):
+    its failures are fixed, the fix reviewed as "The end of a code review" gives, the gate run again
+    on the tree, the record's pair of commits repeated with the reports of the fix, and the wait
+    repeated on the new head. A run that does not report is a check that did not run, named under
+    *Checks*, never read as passed. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections; it stands until the task's branch is merged, and the script
