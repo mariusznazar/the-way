@@ -61,6 +61,7 @@ class Fixture:
         self.origin = self.root / "origin.git"
         self.main = self.root / "main"
         self.worktrees = self.root / "wt"
+        self.copy = self.worktrees / "merged" / ".runs" / "copy" / "remove_merged_worktrees.py"
         self.files = 0
         git(self.root, "init", "--bare", "-b", target, str(self.origin))
         git(self.root, "init", "-b", target, str(self.main))
@@ -106,12 +107,18 @@ class Fixture:
         self.merge(branch)
         return path
 
-    def run(self, *arguments: str, cwd: Path | None = None, script: Path = SCRIPT,
+    def run(self, *arguments: str, cwd: Path | None = None,
             repository: Path | None = None) -> subprocess.CompletedProcess:
-        command = [sys.executable, "-B", str(script), "--repository",
+        command = [sys.executable, "-B", str(SCRIPT), "--repository",
                    str(repository or self.main), *arguments]
         return subprocess.run(command, capture_output=True, text=True, encoding="utf-8",
                               env=ENVIRONMENT, cwd=cwd or self.root)
+
+    def run_copy(self, *arguments: str) -> subprocess.CompletedProcess:
+        """Runs the copy of the script that `self.copy` names, which lies in a directory of a task."""
+        command = [sys.executable, "-B", str(self.copy), "--repository", str(self.main), *arguments]
+        return subprocess.run(command, capture_output=True, text=True, encoding="utf-8",
+                              env=ENVIRONMENT, cwd=self.root)
 
     def relative(self, path: str) -> str:
         return Path(os.path.relpath(path, self.root)).as_posix()
@@ -392,10 +399,9 @@ class ApplyTest(unittest.TestCase):
     def test_the_directory_that_holds_the_script_is_not_removed(self) -> None:
         # Breaks if a directory is removed under the very script that runs.
         merged = self.fx.task("merged")
-        copy = merged / ".runs" / "copy" / SCRIPT.name
-        copy.parent.mkdir(parents=True)
-        shutil.copy(SCRIPT, copy)
-        result = self.fx.run("--apply", script=copy)
+        self.fx.copy.parent.mkdir(parents=True)
+        shutil.copy(SCRIPT, self.fx.copy)
+        result = self.fx.run_copy("--apply")
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue(merged.is_dir())
 
