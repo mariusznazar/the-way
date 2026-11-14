@@ -1,13 +1,11 @@
 # Cut the tasks
 
 - Cut the definition's In scope into tasks, each ending with something that can be checked in the
-  running product, never with a layer put in place (WAY-143). A task too large is put to the human
-  to split, and its size chooses nothing else (WAY-13). A task is too large when its goal joins two or more effects,
-  each of which can be checked alone in the running product and merged before the others. A task
-  that gathers clearly more open questions, projected entries or In scope items than the rest of the
-  plan is only a signal to look at it: no number decides it. The author never splits a task for its
-  size alone; the plan's critique judges size, and the human settles any split it asks for before
-  the plan is handed over (WAY-146).
+  running product, never with a layer put in place (WAY-143). A task of the plan is cut by that
+  rule and by the reasons for a split the refinement of a task gives — a part cannot start or
+  finish without something outside the task, such as another task's result; the parts change
+  different repositories, since the cycle writes only in the product's repository; or a step of
+  the refinement offers a separate task. A task's size alone is no reason to cut it (WAY-372).
 - Bring a technical element in with the first task that uses it. Write a preparatory task only for
   work that task cannot start without, and make that task depend on it (WAY-143).
 - Where the reading of the product's guidelines in step 1 found a styleguide, general coding file

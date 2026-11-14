@@ -25,9 +25,14 @@ says when. The rules of the task place come from the `## Backlog` section too, a
 `project-level/backlog_place.md` gives; a missing entry of them is asked about once, like a
 missing place.
 
-Check that this is one task. Keep one task by default: each split adds a full cycle. Identify a split only where a part cannot start or finish without something outside this refinement — access the agent lacks, another task's result — or where a later step of this skill offers one, and name that reason; a task's size alone (WAY-13) you name as a signal and leave the split to the human. For a project
-member, update its plan through the owning workflow before refining either new item; for another
-task, ask which item to refine first. Read product files to answer factual questions before asking
+Check that this is one task. Keep one task by default: each split adds a full cycle. Identify a
+split only where a part cannot start or finish without something outside this refinement — access
+the agent lacks, another task's result — or where the parts change different repositories, since
+the cycle writes only in the product's repository, or where a later step of this skill offers one,
+and name that reason (WAY-372). For a task's size alone say nothing of a split: no mention, no
+question, no recommendation; the human sees the whole document and may ask for a split. For a
+project member, update its plan through the owning workflow before refining either new item; for
+another task, ask which item to refine first. Read product files to answer factual questions before asking
 the human.
 
 Read the product's guidelines of the parts this task touches by `product-guidelines/reading.md`,
