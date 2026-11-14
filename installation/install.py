@@ -197,9 +197,15 @@ def product_guidance() -> str:
             "is written with `the-way-update-part-map`.\n\n"
             "Before a merge, run every test of this repository with its one command, which "
             f"runs `python -B {SUBMODULE}/elements/common/foundation_check.py` too, and report "
-            "what failed and what stayed unchecked. While the one command does not run "
-            "that check, run it on its own and report the check as left unchecked by the one "
-            "command. A check that did not run is never a pass.\n")
+            "what failed and what stayed unchecked. The one command runs "
+            f"`python -B {SUBMODULE}/instruction-files/check_instructions.py` too; an error that "
+            "script reports stops the tests, and a warning does not. While the one command does "
+            "not run one of these two checks, run it on its own and report the check as left "
+            "unchecked by the one command. A check that did not run is never a pass. CI runs the "
+            f"one command on every merge request, with `{SUBMODULE}` at the commit this "
+            "repository pins, and its result is a check this repository requires before a merge; "
+            f"`{SUBMODULE}/installation/README.md`, section \"Run the one command in CI\", says "
+            "what the CI file of this repository holds.\n")
 
 
 def agents_block() -> str:
