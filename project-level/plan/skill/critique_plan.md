@@ -11,10 +11,13 @@ verify and settle its observations as this step requires.
   selection and inventories never limit the critic's inspection; complete the whole plan's
   semantic judgment before reporting the critique complete. Ask it to judge, besides what that
   skill checks, what no script tells apart: whether each task that is not preparatory ends with
-  something checkable in the running product, whether each technical element enters with the first task that uses it, whether each
-  question stands where the definition puts it or the change log gives its move, and whether a
-  quoted answer settles its question. Never ask it what `plan_check.py` decides.
+  something checkable in the running product, whether each technical element enters with the first
+  task that uses it, whether each question stands where the definition puts it or the change log
+  gives its move, whether a quoted answer settles its question, and whether each task is too large
+  by the test in `cut_tasks.md` beside this skill. Never ask it what `plan_check.py` decides.
 - Verify each observation, give each a verdict, and correct the plan; a correction that changes a
-  human's answer, or which task writes an entry, goes back to the human. If an independent critic
-  cannot run, say so and wait; the author's own reading does not stand for it.
+  human's answer, or which task writes an entry, goes back to the human. A split the critique asks
+  for because a task is too large is not made by the author alone: it goes to the human as a
+  question before the plan is handed over, with the split and the choice to keep the task. If an
+  independent critic cannot run, say so and wait; the author's own reading does not stand for it.
 - Run `plan_check.py` again; it must report nothing.
