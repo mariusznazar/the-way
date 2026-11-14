@@ -61,7 +61,11 @@ When the task's outcome deploys the product or changes how or where it runs, che
 has a deployment skill covering every item of the list WAY-139 holds, in
 `<the-way>/foundations/decisions.md`. Where it has none or an item is missing, add an item to *To
 do* for that work and offer the human to split it into a task of its own, which step 1 then
-handles (WAY-139). A task with no such outcome takes no check.
+handles (WAY-139). The item, and the task split off for that work, name the guide
+`<the-way>/project-level/task/deployment_skill_guide.md` as what to read when writing the skill; the
+agent that writes or completes a deployment skill reads it then, and the refinement of any other
+task does not. The guide binds nothing: the list and this check do (WAY-139). A task with no such
+outcome takes no check.
 
 The list holds three items the check handles apart: how to read the logs, how long the record of the
 logs lives, between deployments too, and how a human learns of a failure of the running product
