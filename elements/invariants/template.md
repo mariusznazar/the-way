@@ -78,9 +78,9 @@ gives (WAY-64).
   (WAY-56).
 - A condition that decides whether a commit makes the sentence true stands in the sentence, unless
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
-  the product pins — holds it; then the entry links to that entry or decision (WAY-60;
-  `TODO — decision pending: which decision sets that an entry links to any entry or decision
-  holding its condition`). A condition held in a document the product neither writes nor pins,
+  the product pins — holds it; then the entry names that entry or decision by its identifier, in
+  *Derives from* or *Rests on* where one of them is the link the form gives, and otherwise in the
+  sentence (WAY-60). A condition held in a document the product neither writes nor pins,
   such as an outside standard, stands in the sentence, and the fact it rests on is named in
   *Rests on* (WAY-60, WAY-73).
 - A sentence names no branch — neither as a point to compare with nor as the place where it holds —
