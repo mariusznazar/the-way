@@ -20,7 +20,7 @@ The step "Start or resume" of the skill `settle-technology`, whose `SKILL.md` li
   item saying what the entry named leaves unsaid (WAY-121, WAY-165). A definition the gate has
   approved does not come back to this step for these matters or for the failure matter. These
   matters are never struck from the list: a matter that a human to whom it does not apply answered
-  like any choice is settled by that answer, and its item is read like any other (WAY-322).
+  like any choice is settled by that answer, and its item is read like any other.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
   decision written for that choice that answers everything the template asks of the choice, so that
   a silent one nested under the item does not count; where one stands, end the item
@@ -29,8 +29,8 @@ The step "Start or resume" of the skill `settle-technology`, whose `SKILL.md` li
   thus finds the rewritten decision.
   Then show the list and ask whether it still holds; the human may add or change an item, but may
   not strike a matter of the logs, the interface, the development data, the place of the
-  screenshots or how a human learns of a failure: such a matter is answered like any choice
-  (WAY-322). Where the human adds or changes an item,
+  screenshots or how a human learns of a failure: such a matter is answered like any choice.
+  Where the human adds or changes an item,
   follow the step "List the choices" (`list.md` beside this file) for it. Then resume the step
   "Settle the open choices" (`settle.md` beside this file) with the open items and the preferences written
   under them; a report of an open choice under `.runs/technology/` that reads `critique: passed`

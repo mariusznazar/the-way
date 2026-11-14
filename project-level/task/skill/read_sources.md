@@ -36,6 +36,8 @@ another task, ask which item to refine first. Read product files to answer factu
 the human.
 
 Read the product's guidelines of the parts this task touches by `product-guidelines/reading.md`,
-naming the parts from the task's required behaviour even before its files exist (WAY-214). Carry
+naming the parts from the task's required behaviour even before its files exist, so that
+refinement finds the missing ground before implementation by the reading the later cycle uses,
+which a lookup of its own would drift from. Carry
 its findings—guidelines missing, malformed or uncertain—to step 3. When clarification brings the
 task to a part this reading did not cover, read that part's guidelines.

@@ -21,7 +21,7 @@ choice (WAY-267).
 - **Everything else stays where it is.** A choice not under the rule stays in the cycle: the agent
   that meets it makes it and enters it in the cycle record's questions table. The tools the skills
   of guidelines choose stay on those skills' routes. A missing way to the running product alone
-  does not stop a cycle (WAY-219).
+  does not stop a cycle.
 
 ## Examples
 
@@ -32,7 +32,7 @@ choice (WAY-267).
 | a source of icons that adds no fee and that one task can change alone | stays with the task |
 | a source of icons that adds something to pay for | stops: reserved |
 | a linter, a test tool, a component library chosen by a guidelines skill | stays on that skill's route |
-| a library that writes a product's log lines, chosen by the coding-guidelines skill, that adds nothing to run or pay for | stays on that skill's route; a cycle that needs one chooses none alone (WAY-277) |
+| a library that writes a product's log lines, chosen by the coding-guidelines skill, that adds nothing to run or pay for | stays on that skill's route; a cycle that needs one chooses none alone |
 | a library that writes a product's log lines and adds something to run or pay for | stops: reserved |
 
 ## The boundary

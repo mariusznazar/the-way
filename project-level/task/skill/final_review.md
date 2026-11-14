@@ -7,7 +7,7 @@ worth moving, say so and continue.
 Check that every blocking question has an answer, with its ways not chosen where the human chose
 among ways shown (WAY-134), no item of the section *Technology* ends `— open`, the numbered work is
 executable, the questions brought into this task are accounted for, every place to change in a file
-is pointed at by a heading or a quotation, with a line number at most as a hint (WAY-353), the
+is pointed at by a heading or a quotation, with a line number at most as a hint, the
 decisions in play are present or `none` where the reading of the foundation found none, *Settlements
 to record* opens with its `Candidates:` line and holds no row awaiting the human, and *Human
 actions* reads `none` or has every human action placed and every human action before the cycle done
