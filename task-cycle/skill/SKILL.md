@@ -272,8 +272,8 @@ in part, decide before you act on its status: resume the agent to read it, carry
 handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
 nothing the agent judged. Going on at the status alone would let an unread decision pass through a
 stage that looks complete, and an error hidden in it would reach the request. A decision the
-reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the
-status is `done`, `done with concerns`, `questions`, `returned`,
+reviewer of the whole change knows from the index and did not open whole, as WAY-150 gives, is no
+gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
 `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
 `returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or

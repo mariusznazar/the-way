@@ -257,13 +257,14 @@ the order of their kinds.
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
 - **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
   **Unread material** of that review's report and of its fix review's, and from the record: where
-  the reviewer did not run through the rest of its selection by title, or itself named a decision
-  concerning the change as unread, and the gap was not closed on the way, by the reviewer or a fresh
-  one reading what stayed unread: in plain words how much of what it selected it read whole, such as
-  "The review of the whole change read 40 of 151 selected decisions whole". The answer "do it in
-  this request" has a fresh reviewer read what stayed unread. A reviewer that read whole the
-  decisions concerning the change, ran through the rest by title and named none unread gives no
-  item, since that reading is the practice (WAY-150).
+  the reviewer did not read the index of its whole selection, or itself named a decision concerning
+  the change as unread, and the gap was not closed on the way, by the reviewer or a fresh one
+  reading what stayed unread: in plain words how many of the decisions of its index it read whole,
+  such as "The review of the whole change read 40 of 151 selected decisions whole, and did not read
+  the index of the other 111". The answer "do it in this request" has a fresh reviewer read what
+  stayed unread. A reviewer that read the index of its whole selection, opened whole the decisions
+  concerning the change and named none unread gives no item, since that reading is the practice
+  (WAY-150).
 - **16.** *Something an entry stands on that the foundation does not hold yet* (WAY-71, WAY-287),
   from the invariants file and the decision log of the tree after the change: each descriptive
   `TODO` — `TODO — <the fact, with its source>` in an invariant's *Rests on*,
@@ -468,9 +469,10 @@ repository's root; each directory of an earlier task that the script of step 4 o
 standing, with its name, its branch and its reason, and no absolute path.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
-one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row
-tied to an entry already stated, with that entry (WAY-134); each invariant test the change alters
-(WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).
+one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each topical
+section of the decision log that the change opens, with its heading and its one sentence (WAY-18);
+each kept row tied to an entry already stated, with that entry (WAY-134); each invariant test the
+change alters (WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).
 Each invariant that the foundation check lists for a corrected sentence stands here too, as the top
 part's *You accept by merging* gives it, and each test that holds a sentence of a decision by a line
 `decision:`, where the change adds, drops or alters the test or its line (WAY-03, WAY-12). A
