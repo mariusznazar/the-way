@@ -1,0 +1,44 @@
+# Handoff - executor of slice 2
+
+## Delegation
+
+The person who requested this cycle delegated intermediate choices to the orchestrator. You have no human to ask: return `questions` or `blocked` to the orchestrator as your method gives. Never label an answer as the human's approval.
+
+## Worktree, branch and base
+
+- Worktree (work from its root): `the root of the task's worktree`, branch `task/co-trafia-do-dziennika-decyzji`. The base of this slice: `6440ca9149c961f3009d733207bd714afb7a5ace` (its range is `6440ca9149c961f3009d733207bd714afb7a5ace..HEAD`). You are the only agent writing in this worktree now.
+- Commits on this branch: messages in English, imperative, short, like the repository's existing ones; `git add <path> <path>` by path, never `git add -A`, `git add .` or `git commit -a`; for a message with quotes or backticks use `git commit -F <file>` with the file outside the tracked files (the record's `.runs/` directory is ignored). Never push. Leave the worktree clean.
+
+## Method
+
+Read whole `task-cycle/change/SKILL.md` of the worktree (`make-change`) and make the change as its variant: "a slice, or the retry of a slice"; read a file it names, one beside it included, only when the step or variant that names it comes. Read no skill by calling it. The gate (`python -B gate/run_tests.py` with no directory) is the orchestrator's alone: you run only the focused checks below, each with its command and exit code in your report. A focused check in the section's *Checks* that you cannot run, or that fails for a reason of the base, goes into your report as such.
+
+## The slice
+
+The section of the plan below is copied word for word from `.runs/task-cycles/co-trafia-do-dziennika-decyzji/plan.md`. Its *Read* gives the passages and entries to read; the line ranges of the foundation entries and the files (`foundations/decisions.md`, `foundations/glossary.md`, `foundations/invariants.md`, `foundations/part_map.md`) are those of the plan's base and are stale: use the current ones in the notes below, which hold where they differ. The record's files (`.runs/task-cycles/co-trafia-do-dziennika-decyzji/task.md`, `spec.md`, `plan.md`) are read by the line ranges the *Read* gives (they have not moved).
+
+> ### Slice 2 — The state the branch left, and the listed items
+>
+> - **Goal:** `elements/common/foundation_check.py` learns the base as D1 gives it, with git alone and with no new argument, switch or exit code: the branch `refs/remotes/origin/HEAD` names, else `main`, else `master`; the base is `git merge-base HEAD` that branch; the files of the foundation are read at the base and compared with the working tree. The report gains a second kind of line, `<path>:<line>: listed: <message>`, that stands after the errors and before the count line and is counted nowhere; no listed message contains the text `N error` or `N errors`. Where the base is unknown — or a base exists but lacks `foundations/decisions.md` or `foundations/invariants.md` — the report holds the one line D1 describes, naming the file where a file is missing, written only where the working tree's `foundations/decisions.md` holds at least one decision; a failure to read the base is never exit code 2. The base is read as a helper that Slices 3 and 4 use. `elements/common/rules.md` gets the one bullet D1 gives under `{fork-point}`. The docstring states the base and the listed lines. The tests of D9 for the base are written first: no commit; a base on `main`; a remote HEAD that points to a branch not called `main`, preferred over `main`, made with `git update-ref` and `git symbolic-ref` and no network; no base with a log that holds a decision (listed line, exit 0); no commit and an empty log (no such line); a base lacking each of the two files. The installation test of an empty foundation and every existing test pass unchanged.
+> - **Change:** `elements/common/foundation_check.py` · `elements/common/test_foundation_check.py` · `elements/common/rules.md`
+> - **Read:** `.runs/task-cycles/co-trafia-do-dziennika-decyzji/spec.md:27-38` Constraints · `.runs/task-cycles/co-trafia-do-dziennika-decyzji/spec.md:42-58` D1. How the script learns the state the branch left · `.runs/task-cycles/co-trafia-do-dziennika-decyzji/spec.md:151-153` D9 · `.runs/task-cycles/co-trafia-do-dziennika-decyzji/task.md:94-98` Questions carried to cycle · `foundations/decisions.md:1452-1480` WAY-60 · `foundations/decisions.md:1621-1642` WAY-65 · `foundations/decisions.md:1030-1054` WAY-38 · `foundations/decisions.md:11414-11525` WAY-344 · `foundations/decisions.md:10620-10655` WAY-321 · `foundations/invariants.md:116-134` script-imports and script-subprocesses · `foundations/invariants.md:328-336` cross-part-imports · `foundations/part_map.md:65-75` elements-common · `foundations/part_map.md:215-219` foundation-check-command · `installation/test_install.py:665-700` test_empty_foundations_have_valid_form · `elements/part-map/test_cross_part_imports.py`
+> - **Model:** same — many git cases and failure modes in the script a product runs as its gate
+> - **Risk:** none
+> - **Checks:** `python -B gate/run_tests.py elements/common` (the new tests fail before the code and pass after it) · `python -B gate/run_tests.py elements/part-map` · `python -B gate/run_tests.py installation` · `python -B elements/common/foundation_check.py` on this repository, exit code 0
+> - **Depends on:** Slice 1
+
+## Notes of the orchestrator
+
+- Current start lines in `foundations/decisions.md` (an entry runs to the next `### ` heading): WAY-60 line 1553; WAY-65 line 1722; WAY-38 line 1131; WAY-321 line 10786; WAY-344 line 11580; WAY-12 line 435. The other files keep the plan's ranges (the foundation step edited only `foundations/decisions.md`).
+- Slice 1 is made (commit `6440ca9`, range `d629ed8..6440ca9`): `elements/common/foundation_check.py` already reads the line `decision:` and holds a map of the decision numbers a line names and a helper that reads the binding sentences of an entry; read the code as it stands and use them, as Slice 3 will use yours. Its executor did not read WAY-61, WAY-65, WAY-321, WAY-344 and WAY-38; you read the entries your *Read* names, whole.
+- The foundation step wrote the entries before slice 1 (commit `d629ed8`); the entries your work rests on are WAY-65 and WAY-60 for `{fork-point}` and what counts as the commit a branch left (as they stand, unchanged), and WAY-38 and WAY-344 for a script that meets a missing thing (never read as empty, never exit code 2 for a failure to read the base).
+- The spec's D1 and Constraints are binding on how the base is found, what an unknown base writes and when, and what `rules.md` gets. Rulings of the orchestrator the spec carries: the line for an unknown base is written only where the working tree's `foundations/decisions.md` holds at least one decision; a base that exists but lacks `foundations/decisions.md` or `foundations/invariants.md` is unknown for that file; the switch `--skip-test-citations` is not changed.
+- Tests of the base use a temporary product and git as the product's tests do: look at how `elements/common/test_foundation_check.py` makes its temporary products and runs the script (subprocess and the invariants `script-subprocesses` and `script-imports` bind both the script and its tests), and make commits in a temporary repository with the author given by environment variables or `-c` options, never by the global git configuration; no network, no change to any repository but the temporary one. A test that makes a remote HEAD uses `git update-ref` and `git symbolic-ref` in the temporary repository, as the section says.
+- `installation/test_install.py::test_empty_foundations_have_valid_form` must pass as it stands (the installer writes an empty log: no decision, so no unknown-base line); run the `installation` directory as the *Checks* name it.
+- Red then green: write the tests first, run them, see each fail for the reason the slice gives (a test that passes before the code only by checking what the old script already did is named as such in your report), then write the code; record the failing and the passing runs in your report.
+- `elements/common/foundation_check.py` is a surface (`foundation-check-command`): path, argument and exit codes stay; no new argument, switch or exit code; the only change of the report is the new `listed:` kind of line before the count line.
+
+
+## Report
+
+Write your full report to `.runs/task-cycles/co-trafia-do-dziennika-decyzji/reports/slice-2-report.md` as `task-cycle/change/SKILL.md` gives: your status, the commits, each check with its command and exit code, the own-work check, your questions and concerns, and the sections **Unread material** and **Searches not found or unclear** (each `none` where there is nothing). Return your status, your commits, a one-line check result naming what failed or did not run, and the report path.
