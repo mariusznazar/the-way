@@ -9994,8 +9994,10 @@ again from the entry point that started the cycle; where it cannot fast-forward,
 so. A correction after review begins the same way in the-way itself — it fast-forwards the
 checkout, or, where the session works in the request's worktree, merges the remote target branch
 into it, and, where something came in, starts again from the entry point — and the merge of the
-target branch it makes takes the remote branch, in a product as well. The fast-forward is the one
-change the cycle makes to a checkout outside the task's worktree.
+target branch it makes takes the remote branch, in a product as well. The fast-forward, made only
+in the-way itself, and the removal of the working directories of finished tasks that every new
+cycle runs at its start (WAY-375) are the two changes the cycle makes to checkouts outside the
+task's worktree.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -10004,15 +10006,17 @@ change the cycle makes to a checkout outside the task's worktree.
   - complies: a cycle started in a checkout of the-way that stands behind the remote target
     branch, on that branch with a clean tree, fetches, fast-forwards, starts again from the
     entry point and creates the task branch from the updated branch; a cycle started in a checkout
-    with a local commit stops and says that it cannot fast-forward; a correction started in the
-    request's worktree merges the remote target branch into it before it reads the request's
-    record, and starts again from the entry point where the merge brought something in; a
-    correction that fetched and found nothing new goes on without starting again;
+    with a local commit stops and says that it cannot fast-forward; a new cycle runs the removal of
+    WAY-375 after its fast-forward, where it makes one, and before it creates the task branch; a
+    correction started in the request's worktree merges the remote target branch into it before it
+    reads the request's record, and starts again from the entry point where the merge brought
+    something in; a correction that fetched and found nothing new goes on without starting again,
+    and runs no removal of working directories;
   - violates: a cycle on the-way creates its task branch from a checkout that stands behind the
     remote and reads the skill from it; a cycle that cannot fast-forward goes on from the stale
     copy; a correction merges the local target branch, or runs in the request's worktree without
     the remote branch merged in; a correction that found nothing new starts again from the entry
-    point all the same, and so never ends.
+    point all the same, and so never ends; a correction removes working directories.
 - **Origin:** none
 
 *Rationale:* a cycle started from a copy that stands behind its remote reads the skill and the entry
@@ -10023,9 +10027,9 @@ working from it. The entry point is read again, not only the skill, since the fe
 have changed the entry point itself. A correction may run in the request's worktree as well as in a
 copy of the target branch, and a worktree on the task branch has no target branch to fast-forward,
 so there it merges the remote branch; merging the remote branch and not the local one holds in a
-product too, where a stale local branch would otherwise be merged. The price is one write to the
-checkout outside the task's worktree, and a stop where the checkout holds local commits or stands on
-another branch.
+product too, where a stale local branch would otherwise be merged. The price is two kinds of write
+outside the task's worktree, the fast-forward of the checkout and the removal of directories of
+finished tasks, and a stop where the checkout holds local commits or stands on another branch.
 *Rejected:* reading the skill and the files it names from the commit the task is based on — a
 session reads a skill from the directory it works in (WAY-127), since a change to a skill is
 checked with the skill of its own branch, every file read that way is one more command of git, and
@@ -12942,6 +12946,103 @@ read two ways — it shows that the check ran, but it turns into a ritual and a 
 maybe", which is inventing cases by the back door; every settled meaning as a candidate glossary
 term — the glossary would grow by words nobody confuses, against WAY-95, which it would have to
 change.
+
+### WAY-375 — Which working directories of earlier tasks does a cycle remove at its start, and which does it leave to the human?
+
+At the start of a new cycle the cycle runs a script of the-way that removes the working directory of
+an earlier task only where all of these hold at once: its tree is clean as git's own check for
+removing a checkout reads it (WAY-376), every commit of it is on the remote, its branch is merged,
+and it belongs to a cycle, standing on a branch whose name begins with `task/` or whose directory
+holds the record of a cycle, or being a detached copy of a base made for a check. A branch is merged
+where its tip is the second parent of a merge commit on the first-parent history of the remote
+target branch, which git alone shows, so that a branch merged by squash or rebase, a branch that
+stands at the target's tip with no commit of its own and a branch of a request closed unmerged are
+not merged. A directory of a cycle that the script does not remove stays, with its reason, for the
+human to decide, and a detached checkout nested in a directory that is removed goes with it,
+whatever its name, only where it is clean and on the remote, else the directory that holds it stays.
+
+The script touches only the checkouts that `git worktree list` names for the repository, never the
+main checkout, the directory it is run in or a detached directory outside the cycle's, and it
+removes directories only, never a branch, local or remote. Removing a checkout that git names, also
+one that stands outside the repository's own directory, is a change to the repository's state and no
+effect outside the repository in the sense of WAY-140, so the script that a cycle runs needs no act
+of a human; the first clearing of the directories that gathered before the script, which a task
+document places as a human action, is the human's act.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-140 · derives from WAY-153 · derives from WAY-298 ·
+  derives from WAY-373
+- **Verification:** tests: which directories the script marks for removal and which it keeps, what
+  makes a branch merged, that it touches only the checkouts git names and none of the directories
+  it never removes, and that it removes no branch. An agent compares a change with the part no test
+  holds:
+  - complies: a new cycle runs the script before it creates its task branch and goes on without a
+    word to the human where the script removed a directory that stands beside the repository's own;
+    each directory of a cycle that the script kept reaches the record and the request with its name,
+    branch and reason;
+  - violates: the cycle asks the human before it removes a directory git names that stands outside
+    the repository's own directory; the cycle removes a directory because its request was closed;
+    the cycle deletes a task's branch after it removed the directory.
+- **Origin:** none
+
+*Rationale:* the directory of a task that stays after its merge fills the disk, crowds the list of
+checkouts git keeps for the repository and leaves the human to find out by hand which of them is
+still needed for a correction; and an agent's working copies, which go with the task's directory
+(WAY-373), stay for as long as the directory does. Each condition keeps what is still needed:
+a tree that is not clean and a commit that is not on the remote are work that stands nowhere else,
+and a branch that is not merged is a task not yet delivered. The merge is read from the history of
+git alone, so that the cycle works with any host a product may use, and its price is that a branch
+merged by squash or rebase is not recognised and its directory stays for the human. The first-parent
+history is read because a merge of the target branch into a task branch makes a commit of the target
+the second parent of a merge that is not on the target branch, and a branch created at that commit by
+another cycle would otherwise count as merged; a branch with no commit of its own, which another
+cycle has just made, points at the target's tip and would pass the weaker test that the tip is an
+ancestor of the target. A directory that belongs to no cycle, and a base copy named for no task, is
+not for the script to judge. The directories are removed and the branches stay, since a branch keeps
+every commit and the directory can be made again from it with one command, while deleting a branch is
+a decision of its own that WAY-269 gives to the human. What the script removes stands in the state of
+the repository, which git lists and the cycle may change, and not in a server, a record in DNS, a key
+or an account, which WAY-140 keeps for a human; asking the human for each directory would leave
+the directories where they are. The price: a removal cannot be undone, so the script judges by every
+condition at once and keeps what it cannot place, and a directory that holds a checkout the script
+keeps stays with it.
+*Rejected:* the script alone, with no step in the cycle, run by the human at the merge — whoever
+does not run it does not clean, and the list of directories grows; a rule in the skill alone, with
+no script — each cycle judges "no longer needed" in its own way and nothing gives one dry run for
+clearing the directories that have gathered; the closing of a request without a merge as a reason to
+remove — it needs a question to the host, and the cycle works with hosts of more than one kind; every
+clean, detached copy of a base in the ignored working directory of a checkout — it may remove the
+copy of a cycle running at the same time; a script that leaves the copies of a base alone — the
+loose copies stay for hand clearing; the tip being an ancestor of the target branch — the branch
+another cycle has just made, with no commit, would pass as merged and the cycle that has just
+started would lose its directory; the age of the directory — a heuristic on time that errs on a
+longer task; only directories below the repository's own directory — the directories beside it stay
+for hand clearing.
+
+### WAY-376 — Does a file that git ignores keep a working directory of a task from being removed?
+
+A file that git ignores does not count against a clean tree, so the script of WAY-375 removes a
+directory that holds ignored files, and they end with it. For each directory the script marks for
+removal it lists the paths git ignores in it outside the cycle's `.runs/` directory, leaving out the
+caches a command makes again, so that the human sees before the removal what ends with it.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-375
+- **Verification:** tests: that an ignored file does not keep a directory from being marked for
+  removal, that the paths git ignores outside the cycle's `.runs/` directory are listed for a
+  directory marked and the caches are left out.
+- **Origin:** none
+
+*Rationale:* the files a repository ignores are those it does not keep — build output, installed
+packages, a user's local settings — so to count them as changes would keep almost every directory of
+a product whose dependencies and build output are ignored, and the human would clear those by hand
+all the same. The listing is the price paid for not counting them: a local setting that matters is
+lost with the directory, and the human sees it in the list before the removal is made. The caches
+are left out of the list because a command makes them again and the list would be mostly them.
+*Rejected:* ignored files counted as uncommitted — it would keep nearly every directory of a product
+whose dependencies and build output are ignored.
 
 ## Withdrawn identifiers
 

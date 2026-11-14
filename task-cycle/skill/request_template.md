@@ -420,7 +420,11 @@ the link to the table of stages in the committed record. For a blocked request, 
 Where an agent could not remove a working copy (`SKILL.md`, "Working copies"), one plain sentence
 that a copy of an agent's check stayed in the ignored working directory of the task, that nothing
 waits for it and that it is removed by hand or goes when the task's directory goes; the paths stand
-in *Checks*.
+in *Checks*. Where the script of step 4 of `SKILL.md` left directories of earlier tasks standing
+(the record's item *Directories of earlier tasks kept*), one plain sentence that directories of
+earlier tasks still stand because the script could not tell they were no longer needed, that
+nothing in this request waits for them and that the human may remove them by hand; their names,
+branches and reasons stand in *Checks*.
 
 **How to merge.** A merge that keeps the commits, since the link to the record survives only then;
 where the product's rules squash or rebase, that limitation named. For a blocked request, what to do
@@ -452,7 +456,8 @@ command and exit code (WAY-309); the image check's last run on the copy of the r
 command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
 and where it listed an item the cycle holds wrong, its command, exit code and listed line
 (WAY-295); each working copy an agent could not remove, with its agent and its path from the
-repository's root.
+repository's root; each directory of an earlier task that the script of step 4 of `SKILL.md` left
+standing, with its name, its branch and its reason, and no absolute path.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
 one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row
