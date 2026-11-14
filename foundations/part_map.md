@@ -117,7 +117,9 @@ review done.
 
 The part answers for the audit of whether the process gets better, cheaper and faster across
 cycles: the template of the register of problems, the dated price list of models, the command that
-counts the audit and the skill that leads its weekly session.
+counts the audit and the skill that leads its weekly session. It is a part of its own because it
+answers how the whole process fares over many cycles, which is not how one task is carried out, so
+what only work on the audit needs stays out of what every agent of the cycle reads.
 
 - **Files:** process-audit/**
 - **Depends on:** task-cycle · project-level
@@ -262,6 +264,6 @@ sentence and its exit codes.
 | invariants-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | environment-facts-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
 | glossary-guard-command | withdrawn: no format guard checks a product's foundation | foundation-check-command |
-| guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines (WAY-170) | none |
+| guidelines-form-check-command | withdrawn: no script of the-way checks the form of a product's guidelines | none |
 | wording-reaches-dependants | withdrawn: a critical flow has no entry in the map, and no reference carries a fingerprint | none |
 | skills-reach-the-way-sessions | withdrawn: a critical flow has no entry in the map; the invariant skill-entry-points and its test hold it | none |

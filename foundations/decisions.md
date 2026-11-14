@@ -52,8 +52,8 @@ was reworded is found, while a reference anywhere else names a decision by its n
   product-guidelines
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: fingerprint-definition. For a reference by identifier alone, an
-  agent compares the change with the decision:
+- **Verification:** invariants: fingerprint-definition · map-reference-target. For a reference by
+  identifier alone, an agent compares the change with the decision:
   - complies: a test names the invariant it checks as `invariant: map-reference-target`; a
     decision relates to another as `derives from WAY-01`; a test that holds a sentence of WAY-12
     names it as `decision: WAY-12 "A decision is held when its"`, the number first and the start
