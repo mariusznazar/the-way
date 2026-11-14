@@ -504,13 +504,14 @@ class NetworkShapesOffWindows(CheckTestCase):
     def platform(self, name):
         self.enterContext(mock.patch.object(check_instructions, "WINDOWS", False))
         self.enterContext(mock.patch.object(check_instructions, "PLATFORM", name))
-        self.guard()
+        self.guard(name)
 
-    def guard(self):
+    def guard(self, name):
         def shaped(path):
             text = str(path).replace("\\", "/")
+            # `/net/` and `/Network/` are mount points of network shares on macOS only
             return (text.startswith("//") and not text.startswith("///")) or \
-                text.startswith(("/net/", "/Network/"))
+                (name == "darwin" and text.startswith(("/net/", "/Network/")))
 
         def guarded(name, real):
             def checked(path, *args, **kwargs):
@@ -569,7 +570,7 @@ class NetworkShapesOffWindows(CheckTestCase):
         self.assert_network("/net/host/x.md")
         self.assert_network("/Network/Servers/x.md")
         self.platform("linux")
-        calls = self.stub_lookup()  # replaces the guard: on Linux this path is looked up
+        calls = self.stub_lookup()  # on Linux this path is looked up like any other
         self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
         self.assertTrue(any("host" in call and "x.md" in call for call in calls))
 
