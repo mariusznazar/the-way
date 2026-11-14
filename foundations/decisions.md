@@ -4028,15 +4028,18 @@ foundation hold — they reopen what was settled.
 
 ### WAY-139 — What does the-way hold for the skill that deploys a product, and which step checks that a product has one?
 
-The-way holds no skill of a product, only the list of what a product's deployment skill covers: a
+The-way holds no skill of a product, but the list of what a product's deployment skill covers: a
 preview of deployments; where the secrets lie and how they are rotated; rollback, with its number of
 steps and what happens to the data; what the agent does and what the human does; how to read the
-logs; how long the record lives, between deployments too; and how a human learns of a failure. When
-a task's outcome deploys the product or changes how or where it runs, the-way's skill `refine-task`
-checks, while it refines the task, that the product has a deployment skill covering every item of
-the list, and where it has none or an item is missing, the task gains an item of its To do for that
-work or the human splits that work into a task of its own. For the items on how to read the logs, on
-the record's life and on a failure, the check quotes the answer a decision of the foundation or an
+logs; how long the record lives, between deployments too; and how a human learns of a failure.
+Beside the list it holds a guide to writing such a skill, with the deployment skill of loop2 as its
+first example, which binds nothing and which the check of the list points to. When a task's outcome
+deploys the product or changes how or where it runs, the-way's skill `refine-task` checks, while it
+refines the task, that the product has a deployment skill covering every item of the list, and where
+it has none or an item is missing, the task gains an item of its To do for that work or the human
+splits that work into a task of its own, and that item and that task point to the guide, which an
+agent reads only when it writes or completes a deployment skill; for the items on how to read the
+logs, on the record's life and on a failure, the check quotes the answer a decision of the foundation or an
 approved definition the task carries already gives, and the task gains the item that writes it into
 the skill, a decision silent on how an agent reads the logs or on how long the record lives
 answering nothing for the item on that; where nothing answers the item on how to read the logs, it
@@ -4065,7 +4068,9 @@ that records the human's refusal covers the item, so the question does not retur
     definition answering how a human learns of a failure, asks the human once whether to run the
     step that settles technology at the task, and a refusal is recorded in the skill, which then
     covers the item at every later deployment; a task that changes the text of a page is refined
-    without the check;
+    without the check; the item that a check adds for a missing deployment skill points to the guide,
+    and the agent that writes the skill reads the guide, with its parts of loop2 marked as that
+    product's own, while the refinement of a task that deploys nothing does not read it;
   - violates: the-way carries a deployment skill for one kind of host; the check fills in how a
     human learns of a failure with no choice of the human's and no entry that answers it; the check
     quotes a logs decision silent on how an agent reads the logs as the answer to the item on
@@ -4073,7 +4078,10 @@ that records the human's refusal covers the item, so the question does not retur
     question returns at each later deployment after a refusal recorded in the skill; a task that changes where
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
-    points to it.
+    points to it; the guide stands as a skill that a product applies as it is, or as a condition
+    that a skill must meet to cover an item; the refinement of every task reads the guide; the guide
+    carries the public address of the product it shows, or the address of its sender's mailbox in
+    its maker's domain.
 - **Origin:** none
 
 *Rationale:* how a product is deployed and operated depends on where and how it runs, which differs
@@ -4093,6 +4101,15 @@ that answer, so that the two do not give an agent different instructions; where 
 it, the item stays an ordinary item of the list. The price is that the skill keeps the text of the
 decision, so a change of the decision is followed by a rewrite of the skill. The step's own look at the logs stays as it is
 (WAY-121): this list reaches a product whose definition is already approved, when a task deploys it.
+The list says what a skill covers, not what an answer to each item looks like, and the one skill
+that exists describes a particular server, so whoever takes it as a pattern separates the general
+from the particular alone; a guide that shows that skill part by part, with what belongs to the
+product marked as its own, does it once. Only the agent that writes or completes a deployment skill
+reads the guide, so the refinement of every other task reads nothing more, and since it binds
+nothing, the list and the check stay what decides whether an item is covered. The price is that the
+guide shows the product's skill as it stood at one commit and ages as that skill changes, and that
+it shows no real address, since the repository is public; fragments of one commit with a link to it
+need no change until someone chooses to show a newer one.
 *Rejected:* the skill saying how a human reads the logs and the decision how an agent reads them —
 two answers that are usually the same and can drift apart; the item on how to read the logs left as
 it was — the drift shows only when an agent meets two different instructions; a deployment skill
@@ -4103,7 +4120,16 @@ and the failure choice to the step at a task that chooses a place to run — the
 the step with no extra stop, but WAY-267 gains an exception, rules are needed on an agent opening a
 decision and on waiting for the place to run, and a product still needs the human's note; the
 question at every later deployment after a refusal — one question each time, and an exception to
-this decision.
+this decision; the text of the guide written into the step that checks the list — every
+refinement of every task reads a long text, also those that deploy nothing, and the binding rule
+mixes with an example; a directory of its own, a new part of the-way — it changes the decision on
+what the repository holds and the map of its parts, and gains the reader nothing, since only the
+check leads to the guide; no guide — the list and a reader's own reworking of the one skill that
+exists, which costs nothing today and is paid by the next product deployed; the whole skill of loop2
+copied with its comments — the public address of the game and the sender's mailbox address in its
+author's domain would enter a public repository, and the copy would age; a frame of questions and a
+link, with no fragments — the reader opens loop2 and separates the general from the particular
+alone, as today.
 
 ### WAY-140 — How does a task change something outside the product's repository?
 
