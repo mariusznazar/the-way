@@ -4,10 +4,9 @@ This file defines how an environment fact entry is written. Facts are about such
 platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. An entry is a
 sentence and its source: the address, the passage word for word and the date it was read, or, for a
 host the product's people run or a setting they set on another's service, the command or the call,
-the host or service and each tool with its version, its output word for word and the date it ran
-(WAY-80).
+the host or service and each tool with its version, its output word for word and the date it ran.
 Nothing runs to check a fact and no status stands beside it (WAY-82), and nothing its sentence says
-is an invariant (WAY-76). An invariant names the facts holding a condition of its sentence in
+is an invariant. An invariant names the facts holding a condition of its sentence in
 *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-90).
 
 The rules of form the elements share — the language of an entry, every field and the words `none`
@@ -18,7 +17,7 @@ holds what is particular to an environment fact (WAY-35).
 
 ## Where entries go
 
-- A product's fact entries stand in one file, `foundations/environment_facts.md` (WAY-64); after
+- A product's fact entries stand in one file, `foundations/environment_facts.md`; after
   its last entry the file carries its withdrawn identifiers, in the form, with the *Why* and the
   *Successors*, that `elements/common/rules.md` gives.
 - The identifier names what the fact is about, never its value or the edition it cites, so that a
@@ -37,7 +36,7 @@ holds what is particular to an environment fact (WAY-35).
 ```
 
 The form above gives the entry its one field: *Source* takes neither `none` nor `TODO`, since a fact
-without a source is not written (WAY-80). The rest of the rule on `none` and `TODO` stands in
+without a source is not written. The rest of the rule on `none` and `TODO` stands in
 `elements/common/rules.md` (WAY-71). After the last entry the file carries its withdrawn
 identifiers.
 
@@ -64,7 +63,7 @@ identifiers.
   under the runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact, its source the place where that state is shown, or,
-  where no page open to a reader shows it, a reading (WAY-84, WAY-80). A choice of such a setting
+  where no page open to a reader shows it, a reading (WAY-84). A choice of such a setting
   is a decision only where the product declares it, and that decision rests on the fact (WAY-84).
 - A fact may be about something outside that depends on the product — a product that pins it and
   reads one of its surfaces — only where a decision about that surface would be called into question
@@ -78,28 +77,31 @@ identifiers.
 - One entry states one fact, in one sentence: what one edition of one source says, with one reason
   to change. Pages of one document published together in one edition count as one source. That is
   the most an entry holds, not a reason to join: two facts from one edition whose sentences are
-  about different things stand as two entries (WAY-76).
-- The sentence states what is true of the world today, and nothing it says is an invariant (WAY-76).
+  about different things stand as two entries. What changes together stands together: a fact changes
+  when its source changes, and two sources in one entry would send a new edition of one to every
+  entry resting on the other.
+- The sentence states what is true of the world today, and nothing it says is an invariant.
 - The sentence says no more than its source says: where the source recommends, the sentence does
-  not require (WAY-80).
+  not require.
 - The sentence names an edition of its source only where the product stands on that edition. What
   the fact is true of is shown by the edition its source cites, or,
   for a source that publishes no editions, by the date it was read; the entry has no field that
-  names it again (WAY-77).
-- The sentence holds no word whose meaning moves with the date, such as "latest" or "newest"
-  (WAY-77).
+  names it again. The address of an edition already names what the fact is true of, and the date
+  read does so for a source without editions, so a field naming it again is a copy that drifts.
+- The sentence holds no word whose meaning moves with the date, such as "latest" or "newest".
+  "Latest" would make the sentence change with the date, not the world.
 - A range the product declares — the version of Python it runs, in a file a tool reads — is a
-  sentence about the product, so an invariant states it, never a fact (WAY-77).
+  sentence about the product, so an invariant states it, never a fact.
 - The binding part of the entry is its sentence; *Source* stands outside it, so a source re-read on
-  a new date that still says the same changes nothing that rests on the fact (WAY-78).
+  a new date that still says the same changes nothing that rests on the fact.
 
 ## Source
 
-- Every entry has a source; a fact without one is not written (WAY-80). An invariant whose
+- Every entry has a source; a fact without one is not written. An invariant whose
   *Rests on* names a missing fact takes `TODO — <the fact, with its source>` there, and a decision
   whose *Based on* names a missing source takes `TODO — <what is missing, with its source>`; a change
   that leaves one there puts it before the human (WAY-71).
-- A source takes one of three forms (WAY-80):
+- A source takes one of three forms:
   - an edition with its publisher's own address, the place in it, the passage the fact rests on word
     for word, and the date read. An address the publisher moves to newer text is no edition,
     whatever version its path names: cite the frozen address, and where there is none, the page is
@@ -120,31 +122,31 @@ identifiers.
   in a code block under that line, indented to the item, and the line reads `reading: the command
   below` where the form has the backticked command. Each tool the result depends on — the program
   that runs the command and each program it passes the result to — has its version given in the
-  line (WAY-80).
+  line.
 - The output a reading quotes holds no secret. The command reads only the fields the sentence rests
   on — an API call names them in its request or keeps them with a filter — so that a token or a
-  password never enters the output (WAY-80).
+  password never enters the output.
 - A further page of the same edition names its address and place. Another place of the same page
   follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
   and shares the page's address and date read. Several addresses stand in one entry only as pages
-  of one edition, or as a page and its archived copy (WAY-80, WAY-76).
+  of one edition, or as a page and its archived copy.
 - The passage is the page's text as a reader sees it, with markup dropped and whitespace collapsed,
   taken from one run of text — a paragraph, a list item or a table cell; a rule spread over several
-  runs is quoted as several passages of the same place, joined by ` · ` (WAY-80).
+  runs is quoted as several passages of the same place, joined by ` · `.
 - A citation that names no edition names the edition its dependant stands on, where the dependant's
   sentence names one, and otherwise the edition in force on the date the citation was read.
 - A fact resting on a whole section of rules — a pattern syntax, an algorithm — quotes the sentence
   of the source that sets those rules, and names the section by its place alone, where the edition
-  has an address of its own (WAY-80).
-- A model's memory, an agent's paraphrase, and a text quoting the source are no source (WAY-80).
+  has an address of its own.
+- A model's memory, an agent's paraphrase, and a text quoting the source are no source.
 - The passage is what a reader compares the source with to see whether it still says so; no digest
-  of the source is kept, so a change to the text next to the passage passes unseen (WAY-78).
+  of the source is kept, so a change to the text next to the passage passes unseen.
 - A fact about the visibility of a repository the product links to names that one repository,
   since each has its own owner and changes on its own (WAY-84); where an invariant rests on the
   visibility of the repositories linked, each new link adds such a fact, named in its *Rests on*
   (WAY-84, WAY-73).
 - A setting that people of the product set on a host they run or on another's service, and that no
-  page open without their access shows, has a reading for its source (WAY-80, WAY-84).
+  page open without their access shows, has a reading for its source (WAY-84).
 - Code at a fixed commit is cited at the address that names the commit, as an edition. The place is
   a symbol — a function, a class or a constant — in which the passage stands. The passage is one
   statement or one line of code word for word, with every run of whitespace collapsed to one space,
@@ -170,21 +172,23 @@ identifiers.
 
 A fact shown false does not leave the file: its identifier moves to the list that closes it, with
 what showed it false in *Why*, so that nobody writes it again. A fact whose last dependant goes is
-withdrawn in the same change, with that in *Why* (WAY-64, WAY-73).
+withdrawn in the same change, with that in *Why* (WAY-73).
 
 ## Catalogues and obligations
 
 - A voluntary catalogue of requirements — ASVS, WCAG where no law requires it — binds the product
   only through a decision adopting it, naming the catalogue, its edition, the level or list taken,
-  and the area of the product (WAY-86). A requirement of it that an invariant takes a condition
-  from is then a fact (WAY-86): its source is the edition, the requirement's identifier and its
-  text word for word, and the invariant names it in *Rests on* (WAY-73).
+  and the area of the product. A requirement of it that an invariant takes a condition from is then
+  a fact: its source is the edition, the requirement's identifier and its text word for word, and
+  the invariant names it in *Rests on* (WAY-73). A voluntary catalogue binds only because someone
+  chose it; without that choice an agent would bind the product to whatever it recognised.
 - A binding rule — a law, a contract, a licence — needs no adoption: what it requires is a fact,
-  and the product is held to it until a human settles, in a decision, that the rule does not apply
-  (WAY-86).
+  and the product is held to it until a human settles, in a decision, that the rule does not apply.
+  A law binds whether chosen or not, and holding the product to it until a human settles otherwise
+  makes silence raise checks rather than remove them.
 - A descriptive source — an RFC, a list of modules — needs nothing beyond the fact.
 - A likeness an agent notices between the product and a requirement nothing has adopted or applied
-  goes to a human as a question: "do we adopt this?" or "does this bind us?" (WAY-86).
+  goes to a human as a question: "do we adopt this?" or "does this bind us?".
 
 ## Fields and their readers
 
