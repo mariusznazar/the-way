@@ -298,6 +298,16 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 - **Part:** installation
 - **Violated:** no
 
+## installation-paths-through-links
+
+The installation command neither writes nor deletes anything through a symbolic link or a Windows junction that stands in a directory path of a product, `.the-way` included, and it refuses before it writes anything where such a link stands on the path of a file it is to write or is `.the-way`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235 · WAY-368
+- **Part:** installation
+- **Violated:** no
+
 ## project-plan-state-evidence
 
 For each task of a valid handed-over plan with an approved definition, the plan-state reader
