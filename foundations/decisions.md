@@ -911,7 +911,10 @@ A decision recovered from the code of an existing product says in *Origin*, in o
 it was recovered from the code and where in the code it shows, and its rationale and rejected
 options are quoted from a source, given by a human who knows them, or written as `unknown`. A
 rationale an agent proposes for a human's decision goes to the human as a question, never into the
-entry; the rationale of a decision an agent takes in a task is the agent's to write.
+entry; the rationale of a decision an agent takes in a task is the agent's to write. The
+description of the commit, or of the merged request, that brought the shape of the code is such a
+source: an agent looks there before it writes `unknown`, and quotes what it finds with the
+identifier of the commit.
 
 - **Scope:** decisions
 - **Based on:** llm-design-rationale-expert-overlap
@@ -921,11 +924,15 @@ entry; the rationale of a decision an agent takes in a task is the agent's to wr
     the code at src/core/save.py, save_game`;
   - violates: *Origin* lists what was searched and what was found.
   For the agent's role, an agent compares the change with the decision:
-  - complies: an agent finds the reason in a merged request and quotes it; an agent finds nothing
+  - complies: an agent finds the reason in the description of the merged request that brought the
+    shape of the code, and quotes it with the identifier of the commit; an agent finds nothing there
     and asks, and the entry gives the reason under the name of the human who knew it; the
-    *Rationale* of a recovered decision whose reason nobody knows reads `unknown`;
+    *Rationale* of a recovered decision whose reason nobody knows, the description of the commit and
+    of the merged request having been looked at, reads `unknown`;
   - violates: an agent writes a plausible reason inferred from the code into the entry; an agent
-    lists in *Rejected* the options it infers were weighed.
+    lists in *Rejected* the options it infers were weighed; an agent writes `unknown` without having
+    looked at the description of the commit or of the merged request that brought the shape of the
+    code.
 - **Origin:** none
 
 *Rationale:* a reason an agent writes looks exactly like a recorded one, and later readers take it
@@ -933,7 +940,10 @@ for the reason the decision was made; a human who knows it is a source, a guess 
 study compared generated arguments with expert rationale after giving models the problem and
 decision; it did not test recovery from code, and argument overlap is not a correctness rate. The
 place in the code shows a reader where the decision acts, and `unknown` shows nobody knows what the
-decision guards.
+decision guards. The description of the commit or of the merged request that brought the shape of
+the code is where a reason stands, if one was written down when the code was made; `unknown` says
+that nobody has a reason, so it is written once that place is looked at, and the identifier of the
+commit lets a reader open the same description.
 *Rejected:* an agent's rationale in the entry — read as the reason the decision was made; rejected
 options filled in as `none considered` — nobody knows what was considered; *Origin* recording what
 was searched and what was found — a list nothing reads once the decision is written, while the
@@ -2469,6 +2479,12 @@ A method or practice borrowed from outside a product binds its way of working on
 decision that names what is adopted, where it applies, and why. When an agent recognizes a likeness
 to a method or practice no decision has adopted, it asks a human before treating it as a rule.
 
+A decision that adopts a method or practice from outside names the practice and what it takes from
+it, in its binding sentences or its *Rationale*; names the source in *Based on*, or, for a source a
+reader of the repository cannot open, describes in *Rationale* what was seen there (WAY-27); and
+puts what it leaves out of the practice in *Rejected*. A list of what is taken from one source is no
+decision: each rule taken stands in the decision that carries it (WAY-19).
+
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
   project-level, product-guidelines, task-cycle
@@ -2476,16 +2492,31 @@ to a method or practice no decision has adopted, it asks a human before treating
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a decision adopts only the risk assessment step of an outside process for task
-    planning and gives its reason; an agent offers an unadopted technique as a proposal;
+    planning and gives its reason; an agent offers an unadopted technique as a proposal; the
+    decision on that step names the step and what it takes from the process in its *Rationale*,
+    quotes the article that describes the process in *Based on* with its address, the passage and
+    the date it was read, and puts the steps it does not take in *Rejected*; a decision that takes
+    one practice from a course whose lessons a reader cannot open describes in its *Rationale* what
+    the lesson showed; the rules taken from one outside source each stand in the decision that
+    carries them, with no decision of its own for the list of what is taken;
   - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
-    without a decision adopting it.
+    without a decision adopting it; a decision adopts an outside practice and says nowhere what it
+    takes from it; a decision answers the question "what do we take from this source" with a list
+    of the rules taken, each of which a decision of its own would carry.
 - **Origin:** none
 
 *Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
 explain and change. Naming the chosen piece, its scope and its reason lets later work distinguish
-it from a resemblance or a habit.
+it from a resemblance or a habit. A decision that says what it takes from a practice and what it
+leaves out keeps the likeness to the source from passing for the adoption of the whole, and a list
+of what is taken from one source answers no question someone could answer otherwise, so it is no
+decision (WAY-19).
 *Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
-treating recognition by an agent as adoption — recognition does not settle fit or scope.
+treating recognition by an agent as adoption — recognition does not settle fit or scope; the
+sentence on the practice stated only in the skill that looks for candidates for entries — the rule
+on borrowing and the rule that "what do we take from X" is no question of a decision would read as
+contradicting each other, the decisions that adopt a practice would have no rule of the foundation
+to follow in one form, and whoever writes a decision outside that search would not see the rule.
 
 ### WAY-101 — Who chooses the backlog tool used with the-way?
 
@@ -3148,8 +3179,7 @@ check of the running product, and a file in the product's repository stays in it
 that settles the place with the step learns of the gap before its first request with a changed
 screen, not at it. The step takes from the lesson "Towards Autonomous Product Development" the
 question of how an agent sees the running product — through its logs, its interface and its
-development data — and leaves out the lesson's hard limit that keeps an agent away from the
-production database and from root access; the place of the screenshots is no part of the lesson.
+development data; the place of the screenshots is no part of the lesson.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
@@ -3168,7 +3198,9 @@ the agent's judgment alone; the matters on the list the deployment skill of a pr
 (WAY-139) — only a task that deploys the product checks that list, so a product run on a local
 machine alone would leave an agent with no way to it; only the behaviour when no place for
 screenshots is settled (WAY-317), with the step unchanged — a product learns that it has no place
-only at its first request with a changed screen.
+only at its first request with a changed screen; the lesson's hard limit that keeps an agent away
+from the production database and from root access — left out of what the step takes from the
+lesson.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -3511,7 +3543,7 @@ instead.
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** context-file-effect · claude-code-path-rules ·
   codex-agents-md
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a change adds to the-way's root `AGENTS.md` a line pointing, with its condition, to a
     guide no session would find otherwise; the skill proposes to move a rule for one directory's
@@ -3551,7 +3583,7 @@ read by its path in backticks with the condition under which to read it.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** claude-code-imports
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** invariants: instruction-file-imports. For the condition beside a path, an agent
   compares the change with the decision:
   - complies: a pointer reads "Before you change the-way, read `agent-instructions/README.md`";
@@ -3580,7 +3612,7 @@ agents working without it show that it is not needed.
   suggests that the increase in line counts is not simply due to uneven edit sizes, but instead
   reflects a meaningful tendency to add new instructions rather than remove existing ones."; read
   2026-10-08
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a change adding a rule to the-way's root `AGENTS.md` names in its request the mistake
     it removes and the records where agents made it twice or more; a change adds to the guide that
@@ -3614,7 +3646,7 @@ alone.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** agent-run-variance
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a rule whose behaviour never happens without it is shown working by a few sessions
     with and without it; a rule meant to make a behaviour more frequent is judged over many sessions
@@ -3642,7 +3674,7 @@ proposal the files and the marked block the-way's installer writes in a product.
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** claude-code-agents-md · codex-agents-md · cursor-agents-md ·
   claude-code-imports
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** invariants: root-claude-md-import. For what `CLAUDE.md` holds and for respecting
   the installer's files, an agent compares the change with the decision:
   - complies: the-way's `CLAUDE.md` is the one line `@AGENTS.md`; the skill proposes, after the
@@ -3677,7 +3709,7 @@ carries what the mechanism cannot check.
 
 - **Scope:** instruction-files, agent-instructions
 - **Based on:** single-rule-compliance
-- **Relations:** derives from WAY-100
+- **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: the skill proposes a CI check for a rule it found broken in commits, and an
     instruction only for what the check cannot read; a change adds to the-way's guide a rule that
@@ -3954,7 +3986,7 @@ weighed against no consequence for the product.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-100 · narrows WAY-123
+- **Relations:** narrows WAY-123
 - **Verification:** an agent compares the work with the decision:
   - complies: two hosts that cost the same and take the same upkeep remain after the simplest and
     cheapest rule, and the one with a command-line tool and a deployment script is recommended; a
@@ -3994,7 +4026,9 @@ the decision of that choice in its *Rationale*, beside the lacks of the option c
 hypothesis, through the task document where the step ran at a task.
 
 - **Scope:** project-level, decisions
-- **Based on:** none
+- **Based on:** TODO — the source of the devil's advocate, the pre-mortem and the search for
+  unknown unknowns that the step takes: its address, the place in it, the passage word for word and
+  the date it was read; the entry names the three tests and no source
 - **Relations:** derives from WAY-100 · derives from WAY-122 · derives from
   WAY-123
 - **Verification:** an agent compares the work with the decision:
@@ -4053,8 +4087,7 @@ that records the human's refusal covers the item, so the question does not retur
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-100 · derives from WAY-267 · derives from WAY-270 · derives from
-  WAY-165
+- **Relations:** derives from WAY-267 · derives from WAY-270 · derives from WAY-165
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
@@ -4151,8 +4184,7 @@ deployment or a DNS record pointing to a new address.
 
 - **Scope:** project-level, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-100 · derives from WAY-107 · derives from
-  WAY-227
+- **Relations:** derives from WAY-107 · derives from WAY-227
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task that sends mail through an outside service names opening the account and
     creating its key as human actions before the cycle; a task that moves the product to a new
@@ -4219,7 +4251,9 @@ phases with what closes each where it has any, and a log of its changes, each wi
 written in the language of the definition under headings, states and markers kept in English.
 
 - **Scope:** project-level
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of a roadmap of vertical slices that the step
+  takes: its address, the place in it, the passage word for word and the date it was read; the
+  entry names the practice and no source
 - **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
   WAY-100
 - **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
@@ -4242,8 +4276,7 @@ and need short keys made up for them, while a row per entry under its own headin
 definition word for word and shows in one cell the single task that writes it. The columns and the
 states stand in the template, so that a change to them needs no change of this decision. The
 step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
-before any task is planned, and leaves out its milestones, its estimates and its interview on the
-order of work.
+before any task is planned.
 *Rejected:* the realizing and the writing tasks as two columns of the table of tasks — a cell grows
 to many long headings and needs keys made up for them; each task described again in a section of
 its own beside an index table and a table for a tracker — three copies of one task drift apart; the
@@ -4252,7 +4285,9 @@ definition through its gate (WAY-118); a stage of the project opened and closed 
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it (WAY-110); the columns named in this
-decision — each change of a column would take a change of the decision.
+decision — each change of a column would take a change of the decision; the milestones, the
+estimates and the interview on the order of work of the practice of a roadmap of vertical slices —
+left out of what the step takes from it.
 
 ### WAY-143 — What does a task of a project plan end with?
 
@@ -4262,7 +4297,9 @@ plan depends on it, the task it opens the way for. A technical element enters th
 first task that uses it, or with a preparatory task that task depends on.
 
 - **Scope:** project-level
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of vertical slices, and of its enabling work, that
+  the rule takes: its address, the place in it, the passage word for word and the date it was read;
+  the entry names the practice and no source
 - **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-check. For what a task ends with and where a technical
   element enters, an agent compares the plan with the decision:
@@ -4298,7 +4335,9 @@ holds no field naming the tasks a task can be worked on beside, and its order of
 follows the dependencies.
 
 - **Scope:** project-level, task-cycle
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
+  place in it, the passage word for word and the date it was read; the entry names the practice
+  and no source
 - **Relations:** derives from WAY-106 · derives from WAY-100
 - **Verification:** invariants: project-plan-form. For cycle starts and refinement waits, an agent
   compares the plan, or the work on it, with the decision:
@@ -4315,13 +4354,14 @@ follows the dependencies.
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
 nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
-order that follows from it, and leaves out its field of work that can run alongside. The task
+order that follows from it. The task
 order WAY-106 gives the plan is this order of cycle starts. Refinement
 can settle a dependent task before its prerequisites are delivered; only a question needing their
 result earns a wait.
-*Rejected:* a field naming the tasks a task can be worked on beside — a copy of the dependencies
-that grows past reading; the order tilted by a goal the human picks in an interview before the plan
-— the definition already states the goal and its risks, and the human corrects the finished plan.
+*Rejected:* a field naming the tasks a task can be worked on beside, which the practice of a roadmap
+has and the rule leaves out — a copy of the dependencies that grows past reading; the order tilted
+by a goal the human picks in an interview before the plan — the definition already states the goal
+and its risks, and the human corrects the finished plan.
 
 ### WAY-145 — Who sets where an open question of an approved project definition is resolved?
 
@@ -4380,7 +4420,9 @@ definition puts it or the log of changes gives its move, and whether a quoted an
 question. A check a script can make is never left to the critique.
 
 - **Scope:** project-level
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
+  place in it, the passage word for word and the date it was read; the entry names the practice
+  and no source
 - **Relations:** derives from WAY-100 · derives from WAY-120
 - **Verification:** invariants: project-plan-form · project-plan-check. For the critique, an agent
   compares the work with the decision:
@@ -4410,7 +4452,9 @@ task of the plan holds and which stays with the task while the plan changes. A t
 enters its cycle under that name, and the cycle names its record by it.
 
 - **Scope:** project-level, task-cycle
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
+  place in it, the passage word for word and the date it was read; the entry names the practice
+  and no source
 - **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-form. For the cycle, an agent compares the cycle with
   the decision:
@@ -5124,7 +5168,9 @@ whole change — reads that report, and the request lists what each such check s
 evidence.
 
 - **Scope:** task-cycle
-- **Based on:** none
+- **Based on:** TODO — the source of the practice of an agent harness for its workers that the rule
+  takes: the harness, its address, the place in it, the passage word for word and the date it was
+  read; the entry names the practice and no source
 - **Relations:** derives from WAY-136 · derives from WAY-148 · derives from
   WAY-100
 - **Verification:** an agent compares the author's or executor's report, the review and the request
@@ -5311,7 +5357,7 @@ whoever carries out its tasks, as its instruction files and skills do.
   § line 61 — "A single task often maps to **multiple rows** — "add a new module with search" needs
   both the Module Development and Search guides. Read **all** matching guides first"; read
   2026-10-18
-- **Relations:** derives from WAY-44 · derives from WAY-04
+- **Relations:** derives from WAY-44 · derives from WAY-04 · derives from WAY-100
 - **Verification:** an agent compares the change with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
@@ -5343,9 +5389,10 @@ name ties a styleguide to the files it governs, so that a renamed part shows. Co
 cut by the kind of code rather than by part, since a kind such as an endpoint can live in more than
 one part while its exemplar is one: the general file holds what binds the whole of the code once,
 and an agent reads, beside it, only the files of the kinds its work touches, which the general
-file's table names with when to read each, as Open Mercato's table leading from a task to the guides
-to read does. The kind's identifier comes from the decision designating its exemplar, so that a file
-of a kind stands only where a human has approved what it holds.
+file's table names with when to read each. The decision takes that table from Open Mercato's table
+leading from a task to the guides to read (WAY-100). The kind's identifier comes from the decision
+designating its exemplar, so that a file of a kind stands only where a human has approved what it
+holds.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them and carries a
 choice is already carried and checked by decisions and invariants, the rest only says how to write,
 and the list of elements would no longer be closed; an
@@ -5602,7 +5649,7 @@ never a product's screens or code directly.
 
 - **Scope:** product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-168 · derives from WAY-100
+- **Relations:** derives from WAY-168
 - **Verification:** an agent compares the work with the decision:
   - complies: a product's styleguide names, at each rule the template requires, the product's
     decision adopting it; a simple admin panel's styleguide drops the page showing its components in
@@ -6120,7 +6167,7 @@ kind give beside the path of each file of the kind they list its status, `exempl
   § line 46 — "`readable` | The file passed the reference-quality audit. Safe to read and adapt." ·
   § line 47 — "`qa-only` | The file exists and works, but fails at least one current project rule. …
   Do **not** copy it."; read 2026-10-18
-- **Relations:** derives from WAY-172 · derives from WAY-198
+- **Relations:** derives from WAY-172 · derives from WAY-198 · derives from WAY-100
 - **Verification:** for what takes approval, an agent compares the change with the decision:
   - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
     rules a script checks from it, go with no approval; a task that would make another file the
@@ -6135,8 +6182,9 @@ kind give beside the path of each file of the kind they list its status, `exempl
 decision, while an edit that keeps them uses a meaning a decision carries, which takes no approval
 (WAY-172). An edit that changes only what of the exemplar no script checks passes with no approval,
 and every later copy inherits it; that holds, because approving every change of the exemplar's
-behaviour would have the human judge code they do not judge. The status beside each path shows an
-agent reading the guidelines what to copy and what not to, as Open Mercato's statuses do.
+behaviour would have the human judge code they do not judge. The decision takes
+from Open Mercato's statuses the status beside each path, which shows an agent reading the
+guidelines what to copy and what not to (WAY-100).
 *Rejected:* approval of every change of the exemplar's behaviour — the human would judge code they
 cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
 would not see which files not to copy.
@@ -6255,7 +6303,7 @@ invariant runs it so, and where it cannot, the review of each change finds such 
   effective false positive." · § page 62 — "analysis results shown during code review are allowed to
   include up to 10% effective false positives" · § page 62 — "report issues affecting only
   correctness rather than style or best practices"; read 2026-10-18
-- **Relations:** derives from WAY-202
+- **Relations:** derives from WAY-202 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a rule on unused variables, every report of which led to removing dead code, stands
     among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
@@ -6272,8 +6320,9 @@ invariant runs it so, and where it cannot, the review of each change finds such 
 - **Origin:** none
 
 *Rationale:* a change of sound code that a blocking rule stops gets through only by a change of the
-decision adopting the set (WAY-207), put to a human who does not judge code; Google blocks a change
-only by a check that gives no report its developers would not act on. A report that is
+decision adopting the set (WAY-207), put to a human who does not judge code; the decision takes from
+Google's practice that a change is blocked only by a check that gives no report its developers
+would not act on (WAY-100). A report that is
 technically right but leads to no change worth making costs the change as much as a wrong one, while
 a wrong report that leads to a better change costs nothing, so a report counts by what it leads to.
 A rule that once flagged sound code leaves the agent free again in its area, as an example it reads;
@@ -6395,7 +6444,7 @@ whole tree of a product's dependencies.
   https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/.github/workflows/audit.yml
   § lines 23-24 — "The ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on
   advisories it introduces."; read 2026-10-18
-- **Relations:** derives from WAY-202 · derives from WAY-60
+- **Relations:** derives from WAY-202 · derives from WAY-60 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
     fails in a product whose decision sets high; a change to a page's text passes on the morning an
@@ -6409,7 +6458,8 @@ whole tree of a product's dependencies.
 
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
 a vulnerability published that morning, so the audit checks what the change brings, against the fork
-point, as Open Mercato's audit compares with a base. The severity from which a
+point; the decision takes that from Open Mercato's audit, which compares with a base (WAY-100). The
+severity from which a
 vulnerability counts and the database read are conditions of the product's invariant, so they stand
 in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
 severity among the ways. The tools stand at pinned versions, while the database is read as it stands
@@ -6603,7 +6653,7 @@ it, such as adding or changing a file of its kind.
   both the Module Development and Search guides. Read **all** matching guides first"; read
   2026-10-18
 - **Relations:** derives from WAY-128 · derives from WAY-129 · derives from
-  WAY-167
+  WAY-167 · derives from WAY-100
 - **Verification:** for the pointer of `AGENTS.md`, an agent compares the change with the
   decision:
   - complies: `AGENTS.md` reads "Before you change the product's code, read `guidelines/coding.md`"
@@ -6618,8 +6668,9 @@ it, such as adding or changing a file of its kind.
 cycle; a path with its condition costs one line and is read when the condition comes (WAY-129), and
 the pointer leads to work an agent would not otherwise find (WAY-128). A line for each file of a
 kind would grow `AGENTS.md`, which the tools load into every session, with each kind the product
-gains, while the general file's table, as Open Mercato's table leading from a task to the guides to
-read leads the agent in a second step to the files of the kinds its work touches. The
+gains, while the general file's table leads the agent in a second step to the files of the kinds its
+work touches; the decision takes that way of leading from a task to the files to read from Open
+Mercato's table leading from a task to the guides to read (WAY-100). The
 price: two steps instead of one, and a table that could drift from the files, which only the review
 of a change that adds or removes a kind's file catches (WAY-170). The pointer stands outside the
 installer's block, which holds no path a product chooses (WAY-107), and the gate runs the standing
@@ -7067,7 +7118,7 @@ guidelines.
   https://raw.githubusercontent.com/HypothesisWorks/hypothesis/5057a16cd98bf2882848a031d3d50f1d25ba8b73/hypothesis/docs/stateful.rst
   § Invariants — "Often there are invariants that you want to ensure are met after every step in a
   process."; read 2026-10-25
-- **Relations:** derives from WAY-173 · derives from WAY-231
+- **Relations:** derives from WAY-173 · derives from WAY-231 · derives from WAY-100
 - **Verification:** an agent compares the tests of a product with the decision:
   - complies: a test of a price writes out the basket it feeds in and the total it expects; a
     property test of saving and loading generates game states and expects each state loaded to equal
@@ -7081,8 +7132,9 @@ guidelines.
 *Rationale:* two sides of a test computed by one code move together, and the test stays green
 unseen; the rule stands in the testing guidelines, which an agent reads before it writes or changes
 a test (WAY-246). A property test checks a relation over many generated inputs, so its expected value
-is that relation, and developers apply such tests where a relation lies at hand — a pair of inverse
-functions, a reference implementation, a condition kept after every step. The relation holds only
+is that relation; the rule takes from the practice of property tests, as developers apply them, the
+relations that lie at hand — a pair of inverse functions, a reference implementation, a condition
+kept after every step (WAY-100). The relation holds only
 where the code under test does not compute it: a simpler version copied from the code makes the
 test a mirror of it, which only the reviewer catches. A counterexample written out stays checked on
 every run, whatever the generator draws next. The price: the rule is longer.
@@ -7127,7 +7179,7 @@ orchestrator's.
   the failed one (`cheap` → `standard`, `standard` → `capable`), with the failed executor's report
   and the concrete failure appended to its prompt." · § "Escalation before the stop" — "Escalation
   is bounded: one rescue per Step, never above `capable`"; read 2026-10-23
-- **Relations:** derives from WAY-136 · derives from WAY-148
+- **Relations:** derives from WAY-136 · derives from WAY-148 · derives from WAY-100
 - **Verification:** an agent compares the plan, the record of slices and the dispatches with the
   decision:
   - complies: the plan sets the default class for a slice that applies a pattern the spec settles
@@ -7148,8 +7200,7 @@ orchestrator's.
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
 change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
-the cost. Ordinary implementation within a settled task, spec and plan is within that reach too —
-unlike the source, which keeps typical implementation on the default tier — and
+the cost. Ordinary implementation within a settled task, spec and plan is within that reach too, and
 the one author's change is bound by the same settled task; the reviews of the whole change and of
 the return step, on the orchestrator's class, are what finds a cheaper model's error in code, in a
 foundation entry or in the return step. The planner, who cut the slice, knows best what it demands,
@@ -7165,7 +7216,9 @@ they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in
 each time a change in which the original review had found a blocking flaw, repaired later, and a
 reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
 8. The measurement is this product's own, and its record is not open to a reader of this repository.
-Classes in general terms survive the release of new models and fit any harness.
+Classes in general terms survive the release of new models and fit any harness. The decision takes
+from the skills of Open Mercato for planning and dispatching an executor a class of model for each
+step of the work and one retry a class higher before the stop (WAY-100).
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
@@ -7180,7 +7233,9 @@ one run of the orchestrator's class — both runs together caught 5 of the 14 re
 many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
 verdict, since a change with three blocking flaws got a PASS in both (the same measurement, this
 product's own, whose record is not open to a reader of this repository); model names in the process
-— they age with every release.
+— they age with every release; the source's rule that typical implementation stays on the default
+tier — here ordinary implementation within a settled task, spec and plan is on the cheaper class
+too.
 
 ### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
 
@@ -7322,7 +7377,7 @@ removed, a tolerance raised, a skip, a deletion.
   § 4. Tests, line 106 — "Were any assertions weakened to make the suite pass — equality loosened to
   "contains", exact counts removed, tolerances raised, assertions deleted, tests skipped or marked
   pending? (major)"; read 2026-10-25
-- **Relations:** derives from WAY-173
+- **Relations:** derives from WAY-173 · derives from WAY-100
 - **Verification:** an agent compares the change with the decision:
   - complies: a change raises the expected total of an order because the product's decision on its
     tax changed, and names that decision; a reviewer reads an assertion turned from equality into
@@ -7336,9 +7391,9 @@ removed, a tolerance raised, a skip, a deletion.
 value while neither the data nor the requirement moved says that the code moved, and the move is a
 defect until shown otherwise. An agent that a failing test stands in the way of changes the test,
 and a new value, a looser assertion, a skip and a deletion each turn the build green the same way,
-so one rule covers them all, and the list of weakenings, as Open Mercato's review checklist gives
-it, lets a reviewer recognize them. A test that was wrong may rightly change, so the rule asks for
-the cause and its evidence rather than forbidding the change.
+so one rule covers them all; the rule takes from Open Mercato's review checklist its list of
+weakenings (WAY-100), which lets a reviewer recognize them. A test that was wrong may rightly
+change, so the rule asks for the cause and its evidence rather than forbidding the change.
 *Rejected:* existing tests never changed — a wrong test could never be corrected; a cause asked only
 of a changed expected value — a skip or a looser assertion masks the same defect; a test replacing
 an old one required to be seen failing on the code before the fix — a ritual of its own for each
@@ -7465,7 +7520,7 @@ fact of the product, naming the version the product uses, with the date its sour
   judiciously for additional validation." · § Step 5: Design graders thoughtfully — "LLM-as-judge
   graders should be closely calibrated with human experts to gain confidence that there is little
   divergence between the human grading and model grading."; read 2026-10-25
-- **Relations:** derives from WAY-173 · derives from WAY-233
+- **Relations:** derives from WAY-173 · derives from WAY-233 · derives from WAY-100
 - **Verification:** an agent compares the tests of a product with the decision:
   - complies: a test an agent generated from a task's description takes its expected value from the
     decision that description names; an agent clicking through a new screen finds that a form takes
@@ -7483,9 +7538,10 @@ fact of the product, naming the version the product uses, with the date its sour
 from the code, an assertion on a detail — reach it the same way, so it needs no rule of its own. An
 agent that tests a running web application from scratch is far from reliable at finding its defects,
 so its run is no permanent test, while a case it finds, written as an ordinary test, gives the same
-verdict on the same code every time. A judge's verdict varies from run to run and costs more, so a
-deterministic check comes first and a judge only where none exists, as Anthropic recommends for the
-evaluation of agents; checked on examples a human judged and pinned to one model, its verdict can be
+verdict on the same code every time. A judge's verdict varies from run to run and costs more, so the
+rule takes from Anthropic's recommendation for the evaluation of agents the order of a
+deterministic check first and a judge only where none exists (WAY-100); checked on examples a
+human judged and pinned to one model, its verdict can be
 trusted as far as those examples reach. A tool that heals a test by changing what it asserts fits
 the test to a state that may be wrong, the masking WAY-233 names. AI tools change faster than the
 rest of what a product runs, so the version and the date read let a reader see what a test stands
@@ -7510,7 +7566,7 @@ section reads `none` where nothing is excluded. A trust boundary never stands in
   risk control, once a risk has been analyzed, several response options to risk are possible, e.g.,
   risk mitigation by testing, risk acceptance, risk transfer, or a contingency plan (Veenendaal
   2012)."; read 2026-10-25
-- **Relations:** derives from WAY-173
+- **Relations:** derives from WAY-173 · derives from WAY-100
 - **Verification:** an agent compares the guidelines of a product with the decision:
   - complies: a game's guidelines exclude the exact numbers of its balance, naming the decision
     whose binding sentences have its balance tests check assumptions only until the balance is
@@ -7526,10 +7582,10 @@ product names the risks it accepts. An item by category stays short and cannot b
 skip any single test. The reason and the condition stand in a decision, where approval and the
 search of the foundation reach them; the condition is part of what the decision allows, read
 whenever a change reaches the category, not a date of review (WAY-24). A trust boundary is where a
-missing check is the fault itself, so it is never excluded. The 10xDevs course on agentic
-development keeps such a section, what is deliberately not tested, in its plan of tests, each item
-with its reason and the change that calls for its re-evaluation; here it stands in a product's
-guidelines, since a task's refinement holds no plan of tests (WAY-238). The kinds of tests without
+missing check is the fault itself, so it is never excluded. The rule takes from the
+10xDevs course on agentic development its section of what is deliberately not tested, each item
+with its reason and the change that calls for its re-evaluation; the course keeps it in its plan of
+tests, and here it stands in a product's guidelines (WAY-100). The kinds of tests without
 value the template gives among its examples — a duplicate of a stronger test, a test that pins
 trivial constants, a loop over nearly identical inputs — come from how Limen trimmed its own tests
 (https://raw.githubusercontent.com/overment/limen/89ef3786a6c2f893b2d31cd9944ad76c483f7841/spec/features/done/2026-10/F776-trim-low-signal-tests/notes.md
@@ -7541,7 +7597,8 @@ checks its conditions.
 *Rejected:* exclusions held only as decisions of the log, with no section in the guidelines — an
 agent writing tests does not find them where it reads; items giving their reasons with no
 decision — an exclusion binds with no approval; a single test as an item — the section becomes a
-list of excuses.
+list of excuses; the plan of tests of the course as the place of the section — a task's refinement
+holds no plan of tests (WAY-238).
 
 ### WAY-238 — At which level does a test stand, and who chooses it?
 
