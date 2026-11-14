@@ -1405,6 +1405,96 @@ class FoundationCheckTest(unittest.TestCase):
         product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING))
         self.assertFails(product.check("--skip-test-citations"), self.NOT_HELD, "1 error")
 
+    # --- an invariant whose sentence changed while its test did not ---------------------------
+
+    # save-round-trip stands at line 3 of the invariants of the good product.
+    LISTED_INVARIANT = "foundations/invariants.md:3: listed: `save-round-trip`"
+    OLD_SENTENCE = "A saved game loads back unchanged."
+    REWORDED = "A saved game loads back unchanged, whole."
+
+    def reworded(self, invariants=None, base=None, **changes):
+        """The good product committed on `main` with the files `base`, then a branch `topic` that
+        left it, with the invariants given (the sentence of save-round-trip reworded by default)
+        and the files `changes` written, not committed."""
+        if invariants is None:
+            invariants = self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED)
+        product = self.committed("main", **(base or {}))
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/invariants.md", invariants)
+        for path, text in changes.items():
+            product.write(path.replace("__", "/").replace("_dot_", "."), text)
+        return product
+
+    def test_reworded_sentence_with_its_citing_file_unchanged_is_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        code, report = self.reworded().check()
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED_INVARIANT, report)
+        self.assertIn("0 errors", report)
+
+    def test_reworded_sentence_with_its_citing_file_changed_is_not_listed(self):
+        # decision: WAY-03 "A change whose check lists such an invariant"
+        touched = FILES["tests/test_saving.py"] + "# touched\n"
+        product = self.reworded(tests__test_saving_dot_py=touched)
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_citing_file_deleted_is_a_change_and_not_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        product = self.reworded()
+        git(product.root, "rm", "-q", "tests/test_saving.py")
+        code, report = product.check()
+        self.assertEqual(code, 1, report)
+        self.assertIn("`save-round-trip` reads `test` and no test cites it", report)
+        self.assertNotIn("listed:", report)
+
+    def test_reworded_sentence_in_spacing_only_is_not_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        invariants = self.edit(INVARIANTS, self.OLD_SENTENCE,
+                               "A saved   game loads\nback unchanged.")
+        self.assertEqual(self.lines(self.reworded(invariants).check()), ["0 errors"])
+
+    def test_reworded_sentence_whose_method_reads_review_is_not_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        invariants = self.edit(self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED),
+                               "- **Method:** test", "- **Method:** review")
+        self.assertEqual(self.lines(self.reworded(invariants).check()), ["0 errors"])
+
+    def test_invariant_added_with_its_citing_file_is_not_listed(self):
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
+        base = {"foundations__invariants_dot_md":
+                INVARIANTS[:INVARIANTS.index("## save-round-trip")]
+                + INVARIANTS[INVARIANTS.index("## clock-steady"):]}
+        self.assertEqual(self.lines(self.reworded(base=base).check()), ["0 errors"])
+
+    def test_reworded_invariant_with_no_citing_file_is_not_listed(self):
+        # decision: WAY-03 "The listing stops no change"
+        base = {"tests__test_saving_dot_py": self.other_citation()}
+        code, report = self.reworded(base=base).check()
+        self.assertEqual(code, 1, report)
+        self.assertIn("`save-round-trip` reads `test` and no test cites it", report)
+        self.assertNotIn("listed:", report)
+
+    def test_reworded_invariant_lacking_method_or_part_now_adds_no_listing(self):
+        # decision: WAY-03 "The listing stops no change"
+        reworded = self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED)
+        cases = {"method": self.edit(reworded, "- **Method:** test\n", ""),
+                 "part": self.edit(reworded, "- **Part:** core · shell\n", "")}
+        for field, invariants in cases.items():
+            with self.subTest(field=field):
+                code, report = self.reworded(invariants).check()
+                self.assertEqual(code, 1, report)
+                self.assertIn("the entry lacks *%s*" % field.capitalize(), report)
+                self.assertNotIn("listed:", report)
+
+    def test_reworded_invariant_lacking_method_or_part_at_base_adds_no_listing(self):
+        # decision: WAY-03 "The listing stops no change"
+        cases = {"method": self.edit(INVARIANTS, "- **Method:** test\n", ""),
+                 "part": self.edit(INVARIANTS, "- **Part:** core · shell\n", "")}
+        for field, text in cases.items():
+            with self.subTest(field=field):
+                base = {"foundations__invariants_dot_md": text}
+                self.assertEqual(self.lines(self.reworded(base=base).check()), ["0 errors"])
+
     # --- the-way's own foundation -------------------------------------------------------------
 
     def test_the_way_foundation_passes(self):

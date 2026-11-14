@@ -83,7 +83,14 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   holds, is an error at its heading line; any other that nothing holds is a line of the second kind
   below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
   the earlier form and one that lacks *Verification* are left to the report of fields above, with no
-  second report. The switch `--skip-test-citations` skips none of this.
+  second report. The switch `--skip-test-citations` skips none of this;
+- an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
+  base once every run of spaces and line breaks is made one space) is listed at its heading line,
+  when no file other than Markdown that cites it by `invariant:`, at the base or now, differs
+  between the base and the working tree: a changed, added or deleted file counts as changed. An
+  invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
+  and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
+  the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
 
 Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
 and before the count line. A listed line is no error: it is counted nowhere and changes no exit
@@ -351,6 +358,34 @@ def items(value):
     """The items of a list joined by ` · ` or `, `, over its lines."""
     return [item.strip().strip("`").strip() for item in re.split(r"[·,\n]", value)
             if item.strip()]
+
+
+def cited_names(lines):
+    """The identifiers that the lines `invariant: <identifier>` of a file cite, each once."""
+    names = set()
+    for line in lines:
+        match = CITATION.match(line)
+        if match and match.group(1) == "invariant" and len(match.group(2).split()) == 1:
+            named = NAMED.fullmatch(match.group(2).strip())
+            if named:
+                names.add(named.group(1))
+    return names
+
+
+def invariant_entries(lines):
+    """{identifier: (heading line, sentence, fields)} of each unversioned invariant of a file, its
+    sentence the binding text before its first field, normalised as `binding` gives. An entry of
+    the earlier form is left out, as the check of fields leaves it; the first of two is kept."""
+    found = {}
+    for number, heading, body in blocks(lines, "## "):
+        match = ENTRY.match(heading)
+        if not match or "/" in heading:
+            continue
+        entry_fields = fields(body)
+        if EARLIER & set(entry_fields):
+            continue
+        found.setdefault(match.group(1), (number, " ".join(binding(body)), entry_fields))
+    return found
 
 
 class Foundation:
@@ -698,6 +733,46 @@ class Foundation:
                 self.report.note(DECISIONS, self.headings[key],
                                  "`%s` is held by nothing: %s" % (label, nothing))
 
+    def list_invariants(self, tracked):
+        """List each invariant that reads `test` and whose sentence a change reworded, when no file
+        other than Markdown that cites it, at the base or now, differs between the base and the
+        working tree (WAY-03). An invariant the base lacks, or lacking *Method* or *Part* at either
+        state, is left out. The listing is no error."""
+        if not self.base or self.base_files.get(INVARIANTS) is None:
+            return
+        before = invariant_entries(self.base_files[INVARIANTS])
+        candidates = []
+        for name, (number, sentence, found) in invariant_entries(self.files[INVARIANTS]).items():
+            if name not in before:
+                continue
+            old_found = before[name][2]
+            if all(field in found and field in old_found for field in ("Method", "Part")) \
+                    and found["Method"][0] == "test" and sentence != before[name][1]:
+                candidates.append((name, number))
+        if not candidates:
+            return
+        code, diff = git(self.root, "diff", "--name-only", "--no-renames", "-z", self.base)
+        if code != 0:
+            return
+        changed = {path for path in diff.split("\0") if path}
+        citing = {}
+        code, listing = git(self.root, "ls-tree", "-r", "-z", "--name-only", self.base)
+        for path in (listing.split("\0") if code == 0 else []):
+            if path and not path.endswith(".md"):
+                for name in cited_names(at_commit(self.root, self.base, path) or []):
+                    citing.setdefault(name, set()).add(path)
+        for path in tracked:
+            if not path.endswith(".md"):
+                for name in cited_names(read(self.root, path)):
+                    citing.setdefault(name, set()).add(path)
+        for name, number in candidates:
+            paths = citing.get(name, set())
+            if paths and not paths & changed:
+                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is "
+                                 "changed by this change, while no file citing it changed (%s): "
+                                 "name it in the request, saying what the sentence now says"
+                                 % (name, ", ".join(sorted(paths))))
+
     def check_decision_line(self, path, number, value):
         """Report a `decision:` line that gives no decision number, names no decision of the log or
         a withdrawn one, or quotes no sentence of its entry's binding sentences."""
@@ -880,6 +955,7 @@ def run(root, skip_test_citations=False):
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
     foundation.check_held()
+    foundation.list_invariants(tracked)
     if not skip_test_citations:
         foundation.check_test_citations()
     if not foundation.check_files(tracked):

@@ -81,7 +81,11 @@ Where the product does not meet a rule today, its invariant reads `Violated: yes
 of the rule being weakened, and its test stands in the product's suite as an expected failure.
 `elements/common/foundation_check.py` checks that every identifier stands once, every reference
 names an existing entry, every entry has the fields its template gives, every invariant that reads
-`test` has a test citing it, and every file belongs to one part.
+`test` has a test citing it, every line `decision:` of a test quotes a sentence of its decision, and
+every file belongs to one part. It reports as an error each decision that a change adds or rewords
+and that nothing holds, and it lists, without failing, the other decisions that nothing holds and
+each invariant whose sentence a change rewords while no file citing it changes. Both compare the
+change with the commit the branch left the main branch from.
 
 ## What else is here
 
