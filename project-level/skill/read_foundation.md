@@ -4,7 +4,8 @@ Step 2 of the skill `define-project`, whose `SKILL.md` lies beside this file.
 
 - Select and read the product's current foundation by "Reading the foundation" in
   `elements/common/way_of_working.md`, starting from the idea's proposed responsibilities,
-  behaviour, flows and surfaces before a diff exists (WAY-111, WAY-150).
+  behaviour, flows and surfaces before a diff exists (WAY-150). The current foundation gives a project its starting constraints
+  before its design has files to point from.
 - Bring what you find into the conversation as material: a decision the project would change, an
   invariant it may break, a trust boundary it crosses, a surface it changes. For a decision, ask
   whether the project is meant to change it or to fit it (WAY-30); the question only frames the

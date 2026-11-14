@@ -26,17 +26,15 @@ The project level reads the product's foundation and writes nothing in it
 ## Delegated definition change and gate
 
 When `lead-project` dispatches a definition edit or step 7 through a refinement conversation
-path, read `delegated_mode.md` beside this skill first (WAY-156): it holds what that path changes
+path, read `delegated_mode.md` beside this skill first: it holds what that path changes
 in the workflow below, and the file of step 7 points back to it.
 
 ## Rules that hold across the steps
 
 - Speak the language the human opened in; the definition is written in it, as the template gives.
-- What the files can answer, read yourself instead of asking
-  (WAY-112).
+- What the files can answer, read yourself instead of asking.
 - Once the definition is written (step 3), write each answer into it, with its status line, before
-  the next question, so that a fresh agent reading only the file knows where the work stands
-  (WAY-112).
+  the next question, so that a fresh agent reading only the file knows where the work stands.
 - A change of the definition after the readiness gate goes through the readiness gate again
   (WAY-118).
 

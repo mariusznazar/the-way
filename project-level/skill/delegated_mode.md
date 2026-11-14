@@ -5,7 +5,7 @@ The variant of the skill `define-project`, whose `SKILL.md` lies beside this fil
 
 When `lead-project` dispatches a definition edit or step 7 through a refinement conversation
 path, read that file and `project-level/lead/conversation_template.md` first, verify its sources
-and process pin, and use this same workflow with file-mediated routing (WAY-156). Edit only the
+and process pin, and use this same workflow with file-mediated routing. Edit only the
 definition and your conversation turn; write no task body, shared plan or product foundation.
 Every question or presentation this workflow or a borrowed skill addresses to the human returns
 through the conversation, with complete material and the ways/costs/recommendation required by

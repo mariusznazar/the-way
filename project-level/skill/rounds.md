@@ -5,8 +5,7 @@ Step 4 of the skill `define-project`, whose `SKILL.md` lies beside this file.
 - Ask about the largest unknowns first: what is in and out of scope, what success looks like and
   what would show it false, the risks, the inputs and constraints.
 - Background, Success and Risks hold what the human answered: ask for them, as the template gives.
-- Two moves run through the rounds
-  (WAY-112):
+- Two moves run through the rounds:
   - where two sentences of the human contradict each other, quote both and ask which holds; both
     are quoted from the human's words or material, never invented as a risk;
   - "I do not know" to a question of assessment is a result, written as an open question with its
