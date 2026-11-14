@@ -273,10 +273,10 @@ with its files, the files that configure the whole repository, which its part ma
 `repository` part (WAY-44), the root agent instruction files, the project skill entry points under
 `.claude/skills/` and `.agents/skills/`, the copies of the cycle's agent type definitions under
 `.claude/agents/` and the CI configuration under `.github/workflows/`, which the map gives to
-`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches the main branch only once it holds what its part
-requires: an element its template and rules, examples or a pointer to entries of the-way that serve
-as its examples, and a skill that writes its entries; any other directory what the sentence of its
-part in the part map names. The entries in `foundations/` are checked by
+`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches
+the main branch only once it holds what its part requires: an element its template and rules,
+examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
+entries; any other directory what the sentence of its part in the part map names. The entries in `foundations/` are checked by
 `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -4091,12 +4091,11 @@ invariants a slice reaches find what it breaks there. The return step compares t
 the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
 tree it and its review leave covers the finished change, where a run before it would be made again
 on the tree it changes; the merge with the target branch is the one change to the tree that can
-follow. The price is that a failure of the gate comes after the return step. The CI run on the
-request is a run on a system other than the cycle's own, so a failure that shows only there would
-reach the human, and come back as a round of corrections, were the request handed over before it; it
-adds to the cycle's gate and replaces nothing, so a failure that shows only on the cycle's own
-system stays caught there. The price is that the human receives the request later, by the time CI
-takes.
+follow. The CI run on the request is a run on a system other than the cycle's own, so a failure that
+shows only there would reach the human, and come back as a round of corrections, were the request
+handed over before it; it adds to the cycle's gate and replaces nothing, so a failure that shows
+only on the cycle's own system stays caught there. The price is that a failure of the gate comes
+after the return step, and that the human receives the request later, by the time CI takes.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
