@@ -50,9 +50,8 @@ which word each field takes, how its entries are named — stands in that elemen
   identifiers of the three taken together, so that a reference resolves without naming its element;
   `none` is no identifier, since *Successors* uses that word.
 - An identifier stays the same when anything else about its entry changes — its files, its fields
-  or its wording. Splitting or merging part map entries, or environment fact entries, or invariant
-  entries held there, gives each entry that comes out of it a new identifier, and any other change
-  keeps it. A change of meaning is made in the entry itself, so only a split or a merge changes an
+  or its wording. Splitting or merging entries gives each entry that comes out of it a new
+  identifier. A change of meaning is made in the entry itself, so only a split or a merge changes an
   identifier.
 
 ## Withdrawn identifiers
