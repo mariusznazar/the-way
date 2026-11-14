@@ -300,10 +300,10 @@ For a product with no root `CLAUDE.md`, the installation command creates that fi
 
 ## installation-paths-through-links
 
-The installation command neither writes nor deletes anything through a symbolic link or a Windows junction that stands in a directory path of a product, `.the-way` included, and it refuses before it writes anything where such a link stands on the path of a file it is to write or is `.the-way`.
+The installation command, with its own code, neither writes nor deletes anything through a symbolic link or a Windows junction that stands in a path of a product, `.the-way` included, and it refuses before it writes anything where such a link stands on the path of a file it is to write or is `.the-way`.
 
 - **Method:** test
-- **Rests on:** none
+- **Rests on:** python-junction-detection
 - **Derives from:** WAY-48 · WAY-235 · WAY-368
 - **Part:** installation
 - **Violated:** no
