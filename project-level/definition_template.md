@@ -32,8 +32,9 @@ decisions that set the rules below are cited beside them.
   (WAY-101; WAY-107; WAY-320.)
 - The text of the definition, its title included, is in the language the human opened the
   conversation in. The headings, the status line, the markers below and the projected entries
-  are in English, whatever that language (WAY-72 for the entries;
-  WAY-108).
+  are in English, whatever that language. The person deciding the project reads its content in the
+  language of the conversation, and fixed structural words let later work resume and check the
+  document.
 
 ## The form
 
@@ -71,8 +72,7 @@ Status: definition — open: <the sections still open>
 
 The headings stand once each, in this order, and no other second-level heading stands in the
 definition; a third-level heading may stand inside a section. A YAML front matter may stand above
-the title where the place of the definition asks for one
-(WAY-108).
+the title where the place of the definition asks for one.
 
 ## The status line
 
@@ -82,14 +82,11 @@ the title where the place of the definition asks for one
 | `ready for gate` | `readiness_check.py --before-approval` reports nothing: no section above the gate record holds a `TODO` it counts as a gap |
 | `approved YYYY-MM-DD` | the gate record is written |
 
-WAY-108.
-
 ## Every section, and the words `none` and `TODO`
 
 Every section holds text, `none` or `TODO`: `none` states that nothing is there, `TODO` that
 something is known to be missing, as `elements/common/rules.md` gives them for an entry (WAY-71).
-A section is never left empty
-(WAY-108).
+A section is never left empty.
 
 | Section | What it holds |
 |---|---|
@@ -107,24 +104,21 @@ A section is never left empty
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with one sentence of its meaning, below the line that records the step finding them |
 | Gate record | who approved the gate and when, and the fingerprint |
 
-WAY-108.
-
 - **Background, Success and Risks** hold what the human answered. The agent asks for them; what it
-  finds in the material enters a question as its anchor, never the section
-  (WAY-109).
+  finds in the material enters a question as its anchor, never the section. A fluent draft would
+  make an agent's inference look like the human's decision.
 - **A frame of success** — each signal or criterion under "Success" — carries one sentence saying
   what would show it false, marked `**OBALENIE:**` in a Polish definition and `**FALSIFIED IF:**`
-  in an English one
-  (WAY-109).
+  in an English one. A condition that could disprove success gives later work a way to judge it.
 - **A deadline** appears under "Inputs and constraints" only when the human names one imposed from
   outside, in the human's own words, with how firmly it binds. The agent never asks for a
-  deadline, never derives one from the material, and never argues scope or cost from it
-  (WAY-110).
+  deadline, never derives one from the material, and never argues scope or cost from it. A date
+  imposed by the surroundings can constrain the work, while a date invented for planning makes the
+  constraint appear to come from the human.
 
 ## What is not yet known
 
-What is not yet known stands in one of three places
-(WAY-108):
+What is not yet known stands in one of three places:
 
 1. something missing from the definition itself — its goal, scope or success — is `TODO` in its
    section;
@@ -201,7 +195,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   (WAY-270).
 - Each item names one choice in the language of the definition, by what the product needs it
   for, and ends with one marker in English
-  (WAY-121; WAY-108 for the English form):
+  (WAY-121):
 
   | Marker | When |
   |---|---|
@@ -212,8 +206,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 - An item may hold nested items under it, such as the human's preference for the choice, or the
   entry that a choice standing open over a silent entry, or over a decision the step opened for a
   reason to change it, changes, as `Changes: <PREFIX>-<NN>` or
-  `Changes: <the question of a projected decision>`; they are no choices of the list
-  (WAY-112).
+  `Changes: <the question of a projected decision>`; they are no choices of the list.
 - A decision of the foundation that holds a choice is material for the step, not a limit: where the
   step sees a reason to change it, the item stands `— open` over it instead of `— held by`, the
   decision's present answer is one option of the comparison, and the human's choice among the
@@ -222,8 +215,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   whose choices the foundation already holds lists each of them `held by`
   (WAY-121).
 - A choice the section settles no longer stands under "Open questions"; a question that asks
-  several choices narrows to what it still asks
-  (WAY-108).
+  several choices narrows to what it still asks.
 - The options of each open choice come from research of that choice against the definition,
   never from a fixed list of stacks; the research of every choice that depends on no unsettled
   choice starts once the list is confirmed, each in a report of its own. An option the project's
@@ -272,11 +264,12 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
 ## Projected foundation changes
 
 The section holds what the definition settles about the product before the breakdown, as entries
-of the foundation, projected: decisions, invariants, glossary terms, environment facts, and the
-changes to the part map whose every field is known before the code
-(WAY-116). The skill `find-foundation-entries` finds them with the human and hands each to the
-skill of its element in projected mode, which writes it here. The section reads `TODO` until that
-step begins.
+of the foundation, projected: decisions, invariants, glossary terms, environment facts only where a
+projected decision or invariant rests on them, and the changes to the part map whose every field is
+known before the code. Restricting facts to what a projected rule rests on prevents a speculative
+inventory of the surrounding world. The skill `find-foundation-entries` finds them with the human
+and hands each to the skill of its element in projected mode, which writes it here. The section
+reads `TODO` until that step begins.
 
 While the step runs, the section holds its working table, so that a fresh agent resumes it from
 the file. The headings of the columns stay in English; the rows are in the language of the
@@ -322,11 +315,9 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 ```
 
 - The line `Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD` stands first;
-  with no row accepted, `none` follows it. Rejected rows are not kept
-  (WAY-115).
+  with no row accepted, `none` follows it. Rejected rows are not kept.
 - A decision `settle-technology` projects stands under `### Decisions` among the others and
-  leaves the line as it is: it is no row of the step that finds entries
-  (WAY-115).
+  leaves the line as it is: it is no row of the step that finds entries.
 - A subsection stands for each kind that has entries, in this order: `### Decisions`,
   `### Invariants`, `### Glossary`, `### Environment facts`, `### Part map`. Each entry is in the
   form of its element's template, its heading two levels lower:
@@ -355,8 +346,7 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
   checks the entry there. `TODO` anywhere else in the section is a gap
   (WAY-118).
 
-A section with no projected entry reads the line and `none`
-(WAY-117).
+A section with no projected entry reads the line and `none`.
 
 ## Gate record
 

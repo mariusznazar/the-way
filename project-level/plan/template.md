@@ -111,8 +111,8 @@ needing task n's result, is logged with its reason, and is proposed again once n
 A `done — goal delivered in task <n>` dependency supplies completion only when delivery through
 the named task is established. `dropped — approved by human` does not establish delivery of its
 goal: reconcile the plan before treating it as a satisfied dependency. No task gains
-`ready for cycle` while a changed definition awaits its gate and subsequent plan recheck
-(WAY-156). Plan states record progress, not permission for the project orchestrator to start cycles.
+`ready for cycle` while a changed definition awaits its gate and subsequent plan recheck. Plan
+states record progress, not permission for the project orchestrator to start cycles.
 
 ## Projected entries
 

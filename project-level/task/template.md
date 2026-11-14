@@ -99,9 +99,11 @@ sections always appear. `Status:` reads `refining`, `waiting for human`, or `rea
 project plan, or only uses an approved project definition as a source. A task that uses a
 definition without plan membership never acquires that plan's assignments or dependencies.
 `Defect introduced by:` stands in every task, and the agent that refines the task fills it from
-the history of the lines the task changes and from the human's report, never the cycle
-(WAY-356). The line reads `none` in a task that does not fix a defect found after a merge. A task
-fixes one when it removes a defect against what the task of an earlier merged change, or the
+the history of the lines the task changes and from the human's report, never the cycle. A defect
+found after a merge is recorded also as a problem of the class `defect-found-after-merge` in the
+register of problems, which counts it. The line reads `none` in a task that does not fix a defect
+found after a merge. A task fixes one when it removes a defect against what the task of an earlier
+merged change, or the
 foundation, required when that change was merged, or a regression, something that worked and
 that the earlier change's task did not tell it to change; a new need, a change of mind, a gap of
 the earlier task, a thing it did not foresee, and maintenance such as updating a dependency are
@@ -110,7 +112,8 @@ by its address, with one address for each change where the defects come from sev
 ` · `; a change that came without a request is named by the address of its commit; where the
 change cannot be established, the line reads `unknown — ` and the reason, in the document's
 language. A task document written before this line has no line, and a missing line means that the
-task was not assessed, never `none`.
+task was not assessed, never `none`. A task written before the line was never assessed, which
+`none` would say it was.
 `TODO` marks a missing answer; never use it to make an unfinished task look ready.
 `ready for approval` is a conversation turn result, never a value of `Status:`. Every task,
 including a manually refined one with no candidates, waits for the human to see and accept its
@@ -199,7 +202,7 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   after the task's merge, kept for its cycle to write into the foundation (WAY-134). The skill
   `find-foundation-entries` builds the candidates and the human cuts them; only accepted rows stay.
   A row that repeats a choice the human made between ways shown enters accepted, and the human cuts
-  only the rows the agent derived (WAY-115, WAY-134).
+  only the rows the agent derived (WAY-134).
   *Settlement* is one sentence in the human's words, in the document's language. *Goes to* names
   the place the settlement goes, as the questions of "Where it goes" in
   `elements/decisions/template.md` give it, and reads one of: `decision`, `invariant`,
@@ -236,6 +239,7 @@ knowledge.
 Where the document points at a place to change in a file, anywhere in it, it names the place by the
 heading it stands under or by a quotation of the text there, and gives a line number only as a hint
 beside that, such as "the paragraph that opens 'An item of'", about line 320; the cycle finds the
-place by the heading or the quotation (WAY-353). The *Source* under a question is no such pointer:
-it stays as the skeleton gives it, with the line and the revision, which say which text the line
-meant.
+place by the heading or the quotation. A line number names a place that moves when the file
+changes, while a heading or a quotation finds it again after the lines have moved. The *Source*
+under a question is no such pointer: it stays as the skeleton gives it, with the line and the
+revision, which say which text the line meant.
