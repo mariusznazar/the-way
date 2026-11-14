@@ -1076,8 +1076,8 @@ and a skill reads the rules and that way of working from there instead of restat
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: skill-rule-source. For what the skill holds, an agent compares the
-  change with the decision:
+- **Verification:** invariants: skill-rule-source · elements-no-pending-marker. For
+  what the skill holds, an agent compares the change with the decision:
   - complies: a fix to a field's form in the skill's output goes into the template, not the
     skill; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
@@ -1566,7 +1566,9 @@ nothing checks it; the reason quoted beside the mark — a why inside an invaria
 
 A condition deciding an invariant stands in its sentence, or where changing it takes a foundation
 change a human decides, or where a decision in the product's log or the pinned the-way places it.
-An invariant's sentence names no branch, measures any change it speaks of against `{fork-point}`
+An invariant whose condition stands outside its sentence names by identifier the entry or the
+decision that holds the condition, in a field where the template gives one and otherwise in its
+sentence. An invariant's sentence names no branch, measures any change it speaks of against `{fork-point}`
 (WAY-61), while a state it compares may be the one on `{merge-onto}`, and states what is to hold on
 the main branch alone as holding where `{merge-onto}` exists. A sentence bounding or equating a
 quantity measured while the product runs names its bound or tolerance, statistic and population.
@@ -1575,22 +1577,28 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Based on:** none
 - **Relations:** derives from WAY-22 · derives from WAY-56
 - **Verification:** an agent compares the change with the decision:
-  - complies: "every entry of the log has every field of the template";
-  - violates: "every request is answered within the limit set in `config.py`"; "every fingerprint
+  - complies: "every entry of the log has every field of the template"; an invariant whose
+    condition a decision of the pinned the-way holds names that decision's number in its sentence,
+    its template giving no field for it;
+  - violates: "every request is answered within the limit set in `config.py`"; an invariant whose
+    condition stands in a decision and which names that decision nowhere; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
     `template.md` also appends a decision version to the log"; a bound written "~2 seconds"; a
     sentence measuring a change against `{merge-onto}`.
 - **Origin:** none
 
 *Rationale:* a condition outside the sentence moves while the sentence stays, so it stands only
-where moving it takes a decision; a branch names another commit by the hour; a change is measured
-from the fork point, where the work on it began; a measured bound needs its statistic and
-population.
+where moving it takes a decision, and the invariant names that place so that whoever changes it finds
+the invariant; a branch names another commit by the hour; a change is measured from the fork point,
+where the work on it began; a measured bound needs its statistic and population.
 *Rejected:* every condition in the sentence — two answers where a measure meets a definition or a
 method; a closed list of places — it leaves out places a log uses; every place outside the
 foundation forbidden — WAY-38 and WAY-53 place conditions in the product; an invariant kept aside
 until its condition has a home — nothing counts it (WAY-51); a commit's parent as the base — a task
-spreads one change over several commits.
+spreads one change over several commits; the template's own text left as it stood, without the
+naming in the decision — the set of links WAY-17 gives stops being complete, and the case of a
+decision of the pinned the-way stays impossible to write; the obligation to name the place removed
+— invariants that go quietly stale when the decision holding their condition changes.
 
 ### WAY-61 — How is an invariant's method of checking written?
 
@@ -1982,10 +1990,14 @@ anchor.
 
 Every environment fact entry names its source: an edition with its publisher's own address, or a
 page without editions with its closest archived copy, giving the place, the passage word for word
-and the date read. A state of a host the product's people run, which no page shows and only those
-with access to the host can read, has for its source a reading: the command, the host it ran on and
-the tool with its version, its output word for word or the lines of it the sentence rests on, and
-the date run. The sentence says no more than its source,
+and the date read. A state of a host the product's people run, or of a setting they set on another's
+service, which no page open without their access shows and only those with that access can read,
+has for its source a reading: one invocation quoted word for word however many commands and lines
+it holds, a command of several lines standing in a code block under the source, naming the command
+or the call of the service's API, the host or the service it ran on and each tool its result
+depends on with its version, its output word for word or the lines of it the sentence rests on, and
+the date run. The output a reading quotes holds no secret, the command reading only the fields the
+sentence rests on. The sentence says no more than its source,
 and a model's memory, an agent's paraphrase or a text quoting the source is no source. A fact
 resting on a whole section of rules quotes the sentence of its source that sets those rules and
 names the section by its place alone, where the edition has an address of its own.
@@ -1997,26 +2009,42 @@ names the section by its place alone, where the edition has an address of its ow
   - complies: the git path patterns fact quotes the sentence handing matching to `.gitignore` rules
     and names that section by place; the mode of a script installed on the product's test server
     cites the `stat` command run there, the host, the tool and its version, its output
-    `755 root:root` and the date;
+    `755 root:root` and the date; the protection of a branch on a code host's service cites the
+    call of its API with the command-line tool that made it and that tool's version, the service,
+    the fields of the answer the sentence rests on and the date, and a command of several lines
+    stands whole in a code block under the source;
   - violates: the sentence says every line ends in `\n`; the source is the model's recollection of
     a page, a blog post quoting the RFC, or the output of a command the author ran about a tool or a
     format some page documents; a reading names the command and the date but not its output; a fact
-    on a pattern syntax quotes its rules one by one, or only the rules the product uses.
+    on a pattern syntax quotes its rules one by one, or only the rules the product uses; a reading
+    of a service quotes an answer that holds a token, or replaces it with a marker; a command of
+    several lines is quoted joined into one line.
 - **Origin:** none
 
 *Rationale:* an edition with its own address does not change under the citation, a passage word
 for word lets a reader compare it with what the source says now, and the date says when that held;
-a recollection or a quoting text carries a paraphrase's drift. A host the product's people run
-shows its state on no page, so the output of the command that reads it stands where the passage
-stands: one reading, quoted, which a reader with access compares with the host as another compares
-a passage with its page; no check reruns it, on a change or by a clock (WAY-82).
+a recollection or a quoting text carries a paraphrase's drift. A host the product's people run, or
+a setting they set on another's service, shows its state on no page open to a reader, so the output
+of the command or the call that reads it stands where the passage stands: one reading, quoted,
+which a reader with access compares with the host or the service as another compares a passage with
+its page; no check reruns it, on a change or by a clock (WAY-82). The output of a service's API can
+carry a token, so the command reads only the fields the sentence rests on and nothing is cut from
+the result afterwards; the invocation is quoted whole so that the text shown is what ran, and each
+tool the result depends on has its version beside it.
 *Rejected:* a source named by its work alone — a new edition changes what the citation says; a
 summary in place of the passage — the drift this decision exists to stop; an observation naming a
 command, its tool and the date it ran without its output — a reader has nothing to compare the host
-with; a reading of a host that a check reruns — a check of the fact, which no fact keeps (WAY-82);
-a reading where a page documents the same — the page is the source; a whole section of rules
-narrowed to those the product uses — a pattern outside them rests on no fact; such a section quoted
-rule by rule — a standing `TODO` in the source.
+with; a reading of a host or a service that a check reruns — a check of the fact, which no fact
+keeps (WAY-82); a reading where a page documents the same — the page is the source; a whole section
+of rules narrowed to those the product uses — a pattern outside them rests on no fact; such a
+section quoted rule by rule — a standing `TODO` in the source; a marker put over a secret in the
+quoted output, such as `<secret removed>` — the first exception to word for word, which someone must
+spot, so that a missed token reaches the repository, and the marker gives a false sense that the
+result was checked; the rule on secrets only in the template and the skill of the facts — the
+template would add to "word for word" something the decision does not say; a reading always one
+command on one line, each further command a fact of its own — a command of many lines has no form,
+and the reading of a tool's version becomes a fact nothing rests on; a whole reading in one
+fragment in backticks, the decision taking only the plural — the text shown is not what ran.
 
 ### WAY-82 — How does an environment fact keep up with what its source says?
 
@@ -2056,7 +2084,7 @@ sent to make (WAY-24).
 
 The current state of a setting that people of the product change outside its repository — who can
 open it, a host's access rule — is an environment fact, its source the place where that state is
-shown. A choice of such a setting is a decision only where the product declares it, and that
+shown, or, where no page open to a reader shows it, a reading (WAY-80). A choice of such a setting is a decision only where the product declares it, and that
 decision rests on the fact. A fact about the visibility of a repository the product links to names
 that one repository.
 
@@ -2064,20 +2092,29 @@ that one repository.
 - **Based on:** github-private-repository-response
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
-  - complies: a host's access rule is a fact whose source is the page showing it; no decision on
-    this repository's visibility is written, as the repository declares none;
+  - complies: a host's access rule is a fact whose source is the page showing it; the protection of
+    a branch, which no page open without the product's people's access shows, is a fact whose source
+    is a reading of it; no decision on this repository's visibility is written, as the repository
+    declares none;
   - violates: one fact lists every repository this one links to; a decision "the repository is
     private" is written where the product declares no visibility; an anonymous 404 is taken to
-    show that a repository is private.
+    show that a repository is private; the source of a setting that only a signed-in page shows is
+    the address of that page.
 - **Origin:** none
 
 *Rationale:* such a setting changes with a click and no commit, so it is a fact about the world, and
 each repository changes on its own. A decision needs someone who chose; otherwise no commit could
-check it.
+check it. Where no page open to a reader shows the setting, the one reading its setter quotes is
+what a reader with access compares with it (WAY-80).
 *Rejected:* a field naming who sets the setting — nothing reads it; a decision and a fact for every
-such setting — a decision where nobody chose; a method reading the setting where it lives, or a
-dated re-read by the person who sets it — a run and a record for every setting, as WAY-82 rejects
-for every fact.
+such setting — a decision where nobody chose; a reading of the setting that is repeated, on a change
+or by a clock, or a dated re-read by the person who sets it — a run and a record for every setting,
+as WAY-82 rejects for every fact, which the one reading quoted is not; for a setting that only a
+signed-in page shows, a page without an edition and without an archived copy, giving its address,
+what it showed and the date — nobody but its author can compare the source with the quotation, and
+a passage word for word from a panel clicked by hand is easy to invent; no fact written for such a
+setting until the product needs it — a standing `TODO` on the main branch of a product that has the
+setting, and a form agents invent meanwhile.
 
 ### WAY-85 — How is a finding of a study written as an environment fact?
 
