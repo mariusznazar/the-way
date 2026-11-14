@@ -417,6 +417,10 @@ The fifth part, for an item about a check the human can do by hand, stands after
 
 **Cost.** The time, the models and the tokens from `stages.md`, the number of review rounds, and
 the link to the table of stages in the committed record. For a blocked request, the cost so far.
+Where an agent could not remove a working copy (`SKILL.md`, "Working copies"), one plain sentence
+that a copy of an agent's check stayed in the ignored working directory of the task, that nothing
+waits for it and that it is removed by hand or goes when the task's directory goes; the paths stand
+in *Checks*.
 
 **How to merge.** A merge that keeps the commits, since the link to the record survives only then;
 where the product's rules squash or rebase, that limitation named. For a blocked request, what to do
@@ -447,7 +451,8 @@ paths' last run on the description and its last run on the copy of the record, e
 command and exit code (WAY-309); the image check's last run on the copy of the record, with its
 command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
 and where it listed an item the cycle holds wrong, its command, exit code and listed line
-(WAY-295).
+(WAY-295); each working copy an agent could not remove, with its agent and its path from the
+repository's root.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
 one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row

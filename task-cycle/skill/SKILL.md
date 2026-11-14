@@ -41,19 +41,19 @@ with the evidence and stop.
    gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
    record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
-   the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
+   `.runs/pin/` of the worktree, run the installer from that clone as `installation/README.md`
    gives, and commit the gitlink with everything the installer rewrote, and the removal
-   `installation/README.md` asks for, as the task branch's first commit; then delete the clone. No
-   author makes that commit and no slice holds it. Then read this skill again from the worktree's
-   `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
-   comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
-   so each handoff has the agent work from the worktree's root and names its stage's method by its
-   path in the worktree's `.the-way`. Run the product's gate on that commit as step 10 gives, through
-   `task-cycle/gate_times.py`, at once; a check that fails there and is not among the checks failing
-   on the base is work the task carries, made under the new pin: step 4's judgment counts those
-   checks, and steps 8 and 9 hand them on with the task and check their coverage as they check its
-   items. Every reset of the task branch to its base stops at that commit. The review of the whole
-   change checks that commit: it holds only the gitlink, at
+   `installation/README.md` asks for, as the task branch's first commit; then delete the clone, as
+   "Working copies" below gives. No author makes that commit and no slice holds it. Then read this
+   skill again from the worktree's `.the-way` and go on under the new pin: every later reading,
+   dispatch and script of the cycle comes from it. The skills of the-way read `.the-way` from the
+   directory their agent works in, so each handoff has the agent work from the worktree's root and
+   names its stage's method by its path in the worktree's `.the-way`. Run the product's gate on that
+   commit as step 10 gives, through `task-cycle/gate_times.py`, at once; a check that fails there
+   and is not among the checks failing on the base is work the task carries, made under the new pin:
+   step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and check
+   their coverage as they check its items. Every reset of the task branch to its base stops at that
+   commit. The review of the whole change checks that commit: it holds only the gitlink, at
    the commit the task names, and what the installer owns: the `the-way-*` entry points in
    `.claude/skills/` and `.agents/skills/`, the `the-way-*.md` definitions of agent types in
    `.claude/agents/`, in `AGENTS.md` the block between its markers, and the
@@ -73,20 +73,20 @@ with the evidence and stop.
    variant that names the file comes; you read this skill and no method you do not conduct. Without
    subagents this cycle cannot run in that harness.
 
-The cycle writes only in the task's worktree and changes nothing outside the product repository,
-except the fast-forward of the checkout in step 4, the account of the request named below and the
-registry of running gates that `task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a
-directory of empty files that holds no content of the cycle;
-reading outside it stays with the agent (WAY-140). A remark about the-way, the user's agent
-instructions or another repository goes into the record's process remarks, never into the request.
-For each stage report, copy every item under **Searches not found or unclear** that is not `none` word for word into
-those remarks, with the stage name and full report path; keep repeated items separate (WAY-260).
-The remarks stand in the one form `task-cycle/record_template.md` gives (WAY-296), and before every
-commit that adds the record, "The record before it is committed" below compares them with the
-reports (WAY-294) and cleans and checks the copy it commits (WAY-308, WAY-309, WAY-316).
-The account of its request is the cycle's own: in the task's entry in the backlog the product names
-(WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the request link and
-set the task's state.
+The cycle writes only in the task's worktree, the working copies of its agents included ("Working
+copies" below), and changes nothing outside the product repository, except the fast-forward of the
+checkout in step 4, the account of the request named below and the registry of running gates that
+`task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a directory of empty files that holds
+no content of the cycle; reading outside it stays with the agent (WAY-140). A remark about the-way,
+the user's agent instructions or another repository goes into the record's process remarks, never
+into the request. For each stage report, copy every item under **Searches not found or unclear**
+that is not `none` word for word into those remarks, with the stage name and full report path; keep
+repeated items separate (WAY-260). The remarks stand in the one form `task-cycle/record_template.md`
+gives (WAY-296), and before every commit that adds the record, "The record before it is committed"
+below compares them with the reports (WAY-294) and cleans and checks the copy it commits (WAY-308,
+WAY-309, WAY-316). The account of its request is the cycle's own: in the task's entry in the backlog
+the product names (WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the
+request link and set the task's state.
 
 ## Start and record
 
@@ -149,10 +149,11 @@ set the task's state.
    commit, or the merged branch holds no copy of a cycle record with the result of its final gate,
    run the checks on the base as follows. Run those checks on the base alone: finish them before
    anything changes a tracked file of the worktree, or run them in a separate checkout of the base
-   commit directly under the worktree's ignored `.runs/`, deleted when they end. The gate's run on
-   the base is one of the gate runs step 10 gives: it goes through `task-cycle/gate_times.py` from
-   that checkout, with `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the
-   worktree's record directory from a checkout directly under its `.runs/`. In a product that
+   commit in `.runs/base/` of the worktree, deleted when they end, as "Working copies" below gives.
+   The gate's run on the base is one of the gate runs step 10 gives: it goes through
+   `task-cycle/gate_times.py` from that checkout, with
+   `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the worktree's record
+   directory from a checkout directly under its `.runs/`. In a product that
    checkout gets its dependencies installed, as the product's own rules give, and its `.the-way`
    populated before the checks run; otherwise they fail for that reason and not on the base. Where
    the cycle took the list and did not run the gate on the base, and its final gate (step 10) fails
@@ -178,11 +179,13 @@ or the agent's role, the word `report` after it if at all (`author-report.md`, n
 `report`, `summary`, `findings` or `analysis`, answering that subagents should return findings as
 text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of
 its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths and commits of the
-frozen task and of the spec and plan where they exist, the answers of step 4, and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
-included, only when the step or variant that names the file comes (WAY-125); no handoff tells it to
-read at the start every file its method names. Where that `SKILL.md` opens with a table of
-variants, the handoff names the agent's variant in the words of its row: under `make-change`,
-"the whole change as the one author", for the one author;
+frozen task and of the spec and plan where they exist, the answers of step 4, the name of the
+agent's directory for working copies, and the report path, and copies word for word the first
+paragraph of "Working copies" below (WAY-148). The agent reads that `SKILL.md` whole, and a file it
+names, one beside it included, only when the step or variant that names the file comes (WAY-125);
+no handoff tells it to read at the start every file its method names. Where that `SKILL.md` opens
+with a table of variants, the handoff names the agent's variant in the words of its row: under
+`make-change`, "the whole change as the one author", for the one author;
 "a slice, or the retry of a slice", for a slice's executor and its retry;
 "the fix of a review's findings", for a fix;
 "a correction for the human's remarks", for a correction.
@@ -241,18 +244,18 @@ questions and concerns, each reach beyond its handoff, its **Unread material** �
 names, or for the reviewer of the whole change its own selection, that stayed unread or was read in
 part, or `none` — and **Searches not found or unclear** — each thing looked for and not found or
 unclear, or `none` — stand in the report (WAY-148, WAY-260, WAY-325, WAY-326). In every report read
-its checks, reaches, unread material and searches; read the rest of it where the status is other
-than `done`. A reach shows where your selection fell short: add what it found to the handoffs that
-follow. Where a report says that something its handoff names stayed unread or was read in part,
-decide before you act on its status: resume the agent to read it, carry the gap into the handoff of
-the next agent able to judge it, or record an autonomous choice saying why it bears on nothing the
-agent judged. A decision the reviewer of the whole change read by title as WAY-150 gives is no gap.
-Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`, `reserved`
-or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`, `returned` or
-`reserved`; under `review-change` it is the report's first line, `PASS <sha>`, `FAIL <sha>` or
-`questions`; under `write-spec` the designer returns `questions`, `done` or `reserved` and its
-reviewer `PASS` or `FAIL`. A check a report says it ran carries its
-command and exit code; a report missing either returns to its agent for repair before dependent
+its checks, reaches, unread material, searches and working copies; read the rest of it where the
+status is other than `done`. A reach shows where your selection fell short: add what it found to the
+handoffs that follow. Where a report says that something its handoff names stayed unread or was read
+in part, decide before you act on its status: resume the agent to read it, carry the gap into the
+handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
+nothing the agent judged. A decision the reviewer of the whole change read by title as WAY-150 gives
+is no gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
+`reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
+`returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
+`FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
+`reserved` and its reviewer `PASS` or `FAIL`. A check a report says it ran carries its command and
+exit code; a report missing either returns to its agent for repair before dependent
 work, and a claim that tests passed does not repair it (WAY-159). A report that lacks its **Unread
 material** (WAY-326) or its **Searches not found or unclear** (WAY-260), save one returning
 `questions`, or a `make-change` report of `done` or `done with concerns` without its own-work check
@@ -275,6 +278,33 @@ you and returns at its boundary, never starting the next stage or seeking human 
 go-ahead you give a stage is provisional, never the human's approval; by merging the request, the
 human accepts the foundation entries the cycle writes that were not accepted with the task document
 or at the readiness gate, which the request puts before the human (WAY-114).
+
+## Working copies
+
+An agent of the cycle that makes a working copy to check something — a worktree of a commit, a
+clone, a script, a screenshot, a prepared input of a test — makes it in a directory of its own
+directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never
+in the system's temporary directory, in the scratch directory of a session or in the main checkout
+of the repository. The screenshot that a screenshot tool, such as the Playwright server, saves by
+itself under its session's directory is moved into the agent's directory and the original removed.
+The files that a product's own tools and tests make by themselves are no working copy of the agent
+and stay outside this rule. Before the agent returns, each time it returns, it removes its copy — a
+worktree with `git worktree remove --force`, then `git worktree prune` — keeps in `reports/` beside
+its report what the report needs, and states in the report where each copy stood and that it was
+removed. Where a removal fails, the agent finishes all the same and names in the report the
+remainder, with its full path and the reason it stayed.
+
+The handoff gives the directory as `.runs/<name>/`, where `<name>` is the agent's stage or role and,
+where the cycle dispatches that stage more than once, a counter, such as `author`, `planner`,
+`executor-3`, `review-whole` and `review-whole-2`. No two agents of one cycle share a name, a
+resumed agent keeps its own, and `task-cycles` and `worktrees` are never a name. Your own copies
+stand the same way: the clone of step 2 in `.runs/pin/` and the checkout of the base of step 4 in
+`.runs/base/`, each removed when its use ends. The report of every agent holds the line on its
+working copies, and you read it when the agent returns, as you read its **Unread material**. A
+remainder that a report names, or that your own removal leaves, stops nothing: write it into the
+record's item *Working copies left*, and into the description under *Cost* and *Checks* as
+`task-cycle/skill/request_template.md` gives, so that the human sees it; it goes when the task's
+directory goes.
 
 ## Design and execution choice
 
@@ -536,7 +566,8 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     classification as evidence with the check, not as a separate record of the selected parts
     (WAY-261). Never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
-    review round and skipped stage. The final report names any write to the task's backlog entry.
+    review round and skipped stage, and every remainder of a working copy that a report names. The
+    final report names any write to the task's backlog entry.
     The request is the human's first decision point.
 
 ## The process remarks check

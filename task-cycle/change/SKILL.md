@@ -93,6 +93,9 @@ of this applies.
   task your dispatch gives — that your work most likely does not meet, write the check that would
   catch it, run it and report what it showed (WAY-164).
 - Before you finish a change that alters what a screen shows, read `ui_check.md`.
+- A working copy you make to check something — a worktree, a clone, a script, a prepared input —
+  stands in your directory for working copies that the dispatch names, and goes before you return,
+  as the dispatch's paragraph on working copies gives.
 - Run the focused checks of your change: the slice's *Checks*, the tests you wrote and the tests of
   the code you touched. The full suite is the cycle's run before the request; do not run it, also
   where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
@@ -143,6 +146,8 @@ Write the full report to the dispatch's report path:
 - the own-work check of section 3: the requirement, the check and what it showed; when a check
   failed and passed when run again, both runs as command and exit code (WAY-262);
 - each reach beyond the dispatch (section 1): what, where and why;
+- each working copy you made: where it stood and that you removed it, or the remainder with its
+  full path and the reason it stayed;
 - **Unread material:** each file, foundation entry or passage your dispatch names that you did not
   read whole or read in part, with what you read of it, or `none`;
 - **Searches not found or unclear:** each thing you looked for and did not find, or that was

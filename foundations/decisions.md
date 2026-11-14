@@ -12838,6 +12838,45 @@ larger task; the plan's cut left as it was — the rule stays, and so does the d
 the refinement and the plan's cut; a task of its own for the plan's cut — one more refinement and
 one more cycle.
 
+### WAY-373 — Where does an agent of a task cycle make a working copy to check something, and what happens to it?
+
+An agent of a task cycle that makes a working copy to check something — a worktree of a commit, a
+clone, a script, a screenshot, a prepared input of a test — makes it in a directory of its own under
+the ignored `.runs/` directory of the task's worktree, never in the system's temporary directory, in
+a session's scratch directory or in the main checkout of the repository. Before it returns, the
+agent removes its copy, keeps in the cycle's reports what its report needs and states in the report
+where the copy stood and that it was removed; where a removal fails, the agent finishes and names
+the remainder with its path in the report, and the cycle carries it to its record and to the
+description of the request, where the human sees it, and goes on. The same holds for the separate
+checkouts that the orchestrator makes, while the files that a product's own tools and tests make by
+themselves are no working copy of the agent and stand outside it.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-148
+- **Verification:** an agent compares a change with the decision:
+  - complies: a reviewer that needs the head commit with a file changed makes a worktree in its own
+    directory under the task worktree's ignored `.runs/`, removes it before it returns and says in
+    its report where it stood and that it was removed; a clone that a reviewer cannot remove is
+    named in its report with its path, the cycle's record and the request's description carry it,
+    and the cycle goes on;
+  - violates: an agent makes a worktree in the system's temporary directory; two agents of one
+    cycle write their scripts to one scratch directory; a report lists temporary files and does not
+    say whether they were removed; a cycle stops because an agent could not remove a clone.
+- **Origin:** none
+
+*Rationale:* agents of the cycle left copies outside the task's directory that they could not
+remove afterwards, and the human cleaned them by hand; agents of one cycle that shared the scratch
+directory of the session overwrote each other's scripts, so that a run of one agent could run a
+script of another. The ignored working directory of the task's worktree is inside the task's own
+directory, a directory for each agent keeps the scripts of two agents apart, and what stands there
+goes with the task's directory, so the human has nothing of the cycle to clean elsewhere. The price
+taken: an agent that cannot remove its copy leaves a remainder that stays until the task's directory
+is removed, and the human sees it in the request.
+*Rejected:* a copy that stands outside the task's directory until the agent returns — it goes
+against keeping the writes of an agent inside the task's directory; a failed removal that stops the
+cycle — the cycle would stop for a thing the human removes with one command.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

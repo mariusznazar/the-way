@@ -177,9 +177,10 @@ Write the plan in this form; the script reads the slice headings and the fields 
   function or file out without a change of behaviour, and the slice that adds depends on it. Read
   the threshold in the product's decision on the rule that the guidelines name, and the size of
   the function or the file from the code, or from the failure of the rule's test run on the base
-  in a separate worktree, which names each function and file over a threshold with its size
-  (WAY-361). The move's slice names, in its *Goal*, what moves and that behaviour does not change,
-  and its *Checks* are the tests that cover what moves. The move is a choice of how to make the
+  in a worktree in your directory for working copies that the dispatch names, which names each
+  function and file over a threshold with its size (WAY-361). The move's slice names, in its *Goal*,
+  what moves and that behaviour does not change, and its *Checks* are the tests that cover what
+  moves. The move is a choice of how to make the
   change, not an open design choice: write it under *Choices* and write no spec for it (WAY-135).
   Where the product's guidelines hold no rule of size, or the rule reads `none —`, this bullet
   asks nothing.
@@ -208,7 +209,8 @@ Keep the last report beside the plan as `plan-size.md`.
 
 Write the full report to the dispatch's report path, including the final size-report path,
 guidelines found missing or uncertain, the chosen order's relation to the styleguide example, each
-reach beyond the dispatch, **Unread material:** each file, foundation entry or passage your
+reach beyond the dispatch, each working copy you made, where it stood and that you removed it, or
+the remainder with its full path, **Unread material:** each file, foundation entry or passage your
 dispatch names that you did not read whole or read in part, with what you read of it, or `none`,
 **Searches not found or unclear:** each thing you looked for and did not find or that was unclear —
 in the instructions, handoff, task, foundation or product code — or `none`, and any questions still

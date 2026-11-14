@@ -196,6 +196,9 @@ invariant covers it.
   with the form check's last command and exit code and the number of its runs; in a copy committed
   before the description was written or rewritten, `written and checked after this commit`>
 - Writes to the task's backlog entry: <request link and state, or none>
+- Working copies left: <`none`, or for each remainder of a working copy that a report or the
+  orchestrator's own removal names: the agent, the path from the repository's root and the reason
+  it stayed>
 - Corrections after the request opened: <`none`, or the lines under this line>
   - correction <n>, remarks `reports/<file>.md`: <each pair `<source> · <kind>` of the correction
     once, joined by `, `>
