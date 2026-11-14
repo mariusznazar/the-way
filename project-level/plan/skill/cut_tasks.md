@@ -1,8 +1,8 @@
 # Cut the tasks
 
 - Cut the definition's In scope into tasks, each ending with something that can be checked in the
-  running product, never with a layer put in place (WAY-143). A task too large is split, and its
-  size chooses nothing else (WAY-13). A task is too large when its goal joins two or more effects,
+  running product, never with a layer put in place (WAY-143). A task too large is put to the human
+  to split, and its size chooses nothing else (WAY-13). A task is too large when its goal joins two or more effects,
   each of which can be checked alone in the running product and merged before the others. A task
   that gathers clearly more open questions, projected entries or In scope items than the rest of the
   plan is only a signal to look at it: no number decides it. The author never splits a task for its

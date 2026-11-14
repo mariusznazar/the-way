@@ -4223,9 +4223,9 @@ entries or In scope items than the rest of the plan is only a signal to look at 
 applies and judges them; checks of a plan's form across several copies of each task — a plan holding
 each task once has no copies to compare; an agent checking what a script decides — it costs more
 and sometimes misses; a numeric threshold for a task's size, set at one third of the open questions
-of the definition — a threshold from one case: the account task after its split still held more
-than a third of the questions, so the threshold would stop it too, and each false alarm forces a
-split, a whole cycle, or a mechanism of exceptions, where size is only a signal (WAY-13); a script
+of the definition — a threshold fitted to one case would stop a task that is right to stand, and each
+false alarm forces a split, a whole cycle, or a mechanism of exceptions, where size is only a signal
+(WAY-13); a script
 that prints each task's counts with no threshold — a new kind of output for the script, with tests
 of its own, for a small gain, since the critic reads the whole plan in any case; the plan's author
 splitting a task after the critique's remark, as it does for every other remark — the author may

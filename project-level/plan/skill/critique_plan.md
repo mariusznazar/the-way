@@ -14,7 +14,8 @@ verify and settle its observations as this step requires.
   something checkable in the running product, whether each technical element enters with the first
   task that uses it, whether each question stands where the definition puts it or the change log
   gives its move, whether a quoted answer settles its question, and whether each task is too large
-  by the test in `cut_tasks.md` beside this skill. Never ask it what `plan_check.py` decides.
+  by the test in `cut_tasks.md` beside this skill; the author hands the critic that test, its text,
+  with the request. Never ask it what `plan_check.py` decides.
 - Verify each observation, give each a verdict, and correct the plan; a correction that changes a
   human's answer, or which task writes an entry, goes back to the human. A split the critique asks
   for because a task is too large is not made by the author alone: it goes to the human as a
