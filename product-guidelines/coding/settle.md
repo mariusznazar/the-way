@@ -32,7 +32,11 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     proposed;
   - for the formatter, its tool and its configuration;
   - for the audit of dependencies, its tool, the advisory database it reads and the severity from
-    which a vulnerability counts, every severity among the ways (WAY-206);
+    which a vulnerability counts, every severity among the ways (WAY-206); and, put as a proposal
+    beside it, that the product turn on the alerts of the service its repository lies on (on
+    GitHub, the Dependabot alerts), which are the signal of a vulnerability found in a dependency
+    the product already holds, where the audit sees only what a change brings in. The human turns
+    them on in the settings of the repository; the skill turns nothing on;
   - for each kind the product holds files of, and each new kind, its exemplar, the status of each
     of its files and the rules a script checks of the exemplar (WAY-198, WAY-199);
   - the product's decision adopting the coding template, and each departure from it by a decision
@@ -122,10 +126,11 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   - for a product with no code, that the recommended rules block with no evidence from the
     product's code, and that the first report of one that leads to no change worth making takes it
     among the examples by a change of the decision, which the human approves (WAY-204);
-  - for the audit of dependencies, that a vulnerability found in a dependency the product already
-    holds gives no signal while no change brings in a version of it, and that a later run on the
-    same commit can fail where an earlier one passed, once an advisory is published for a version
-    that commit brings in (WAY-206);
+  - for the audit of dependencies, that the alerts of the repository's service are a setting
+    outside the repository, so nothing in it shows whether they are on, and a vulnerability found in
+    a dependency the product already holds gives no signal until a human turns them on; and that a
+    later run on the same commit can fail where an earlier one passed, once an advisory is
+    published for a version that commit brings in (WAY-206);
   - for the logging scope, that a list written by hand can drift from the code, and that an agent
     judges whether an item fits the principle (WAY-274);
   - for the ban on secrets and personal data, that the reviewer sees code and not what an error holds

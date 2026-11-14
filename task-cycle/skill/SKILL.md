@@ -577,7 +577,14 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     record, by the SHA of the commit that adds it, never by branch name, into the description, and
     in the same edit fill in under *Checks* the runs of the three checks on the copy; check it again
     by the template's checks, which include the check of private paths, and edit the request with
-    it. Mark the
+    it. Where CI runs on the request, wait for the run on the head you pushed last, as the host's
+    tool gives it (on GitHub, `gh pr checks <request> --watch`), and write its result — the link to
+    the run, each check by name and its conclusion — into *Checks* of the description and into
+    *Verification* of the record (WAY-160). A red result is a failed gate (step 10): its failures
+    are fixed, the fix reviewed as "The end of a code review" gives, the gate run again on the tree,
+    the record's pair of commits repeated with the reports of the fix, and the wait repeated on the
+    new head. A run that does not report is a check that did not run, named under *Checks*, never
+    read as passed. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections; it stands until the task's branch is merged, and the script

@@ -456,8 +456,10 @@ for a check that failed and passed when run again the number of cycle runs in wh
 passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
 of failing tests it took from the earlier cycle's final gate with the commit and the file it was
 taken from, and the result of the run of the failing tests on the base where step 4 of
-`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); the
-user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
+`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); where CI runs
+on the request, its run on the last head, with the link to the run and each check by name and its
+conclusion, a run that did not report named as a check that did not run (step 12 of `SKILL.md`,
+WAY-160); the user-interface states and the screenshot evidence, a screenshot unchecked for no settled way or the
 failure of a settled one included; the form check's last run; the check of private
 paths' last run on the description and its last run on the copy of the record, each with its
 command and exit code (WAY-309); the image check's last run on the copy of the record, with its
