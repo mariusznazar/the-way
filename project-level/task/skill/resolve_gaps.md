@@ -7,22 +7,25 @@ asking the next. If the answer is
 in the approved project definition or foundation, quote the exact wording with its location
 instead of asking the human; an inference is not an approved answer.
 
-Look also for a word that can be read two ways (WAY-374). Search the task document and the
-sentences of the sources its required result rests on — the foundation decisions it quotes and the
-sentences of the approved project definition — for a word that allows two different required
-behaviours and that none of the approved project definition, an entry of the foundation and an
-answer of the human in the document settles. A glossary entry settles it, and you ask nothing: the
-glossary of the-way settles the words of the process, the product's glossary the words of the
-product. A case counts only where a sentence standing in the document or in such a source allows
-both readings and the readings give different, observable results inside the task's scope; a
-reading no sentence allows and a scenario outside the scope count for nothing. For such a case show
-a short example from the task's scope — "under reading A this happens, under reading B that" — and
-ask which reading holds, as a question of decision, then put the answer under *Questions to settle*
-as above. Where the answer gives the word a meaning that a reader who knows the product's field
-would not give it, that meaning is a candidate glossary term for *Settlements to record*, which
-step 5 finds (WAY-95); this step edits no glossary. The check owes no finding and no number of
-cases; where it finds none, say nothing of it. Where the word stands in the approved project
-definition and the answer would change it, the paragraph below on that definition applies.
+Look also for a word that can be read two ways (WAY-374). Search the task document and the sentences
+of the sources its required result rests on — the foundation decisions it quotes and the sentences
+of the approved project definition — for a word that allows two different required behaviours and
+that none of the approved project definition, an entry of the foundation and an answer of the human
+in the document settles. A glossary entry settles it, and you ask nothing: the glossary of the-way
+settles the words of the process, the product's glossary the words of the product.
+
+A case counts only where a sentence standing in the document or in such a source allows both
+readings and the readings give different, observable results inside the task's scope; a reading no
+sentence allows and a scenario outside the scope count for nothing. For such a case show a short
+example from the task's scope — "under reading A this happens, under reading B that" — and ask which
+reading holds, as a question of decision according to "How a skill asks" (WAY-113), then put the
+answer under *Questions to settle* as above.
+
+Where the answer gives the word a meaning that a reader who knows the product's field would not give
+it, that meaning is a candidate glossary term for *Settlements to record*, which step 5 finds and
+WAY-95 judges there; this step edits no glossary. An ambiguity in the approved project definition
+whose resolution changes the definition goes the way the paragraph below on that definition gives
+(WAY-118). The check owes no finding and no number of cases; where it finds none, say nothing of it.
 
 If two answers conflict, show both and ask which holds. A current foundation decision describes what
 the product does today and is material for the refinement, not a limit on its options (WAY-313):

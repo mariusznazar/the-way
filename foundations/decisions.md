@@ -12884,16 +12884,17 @@ sentences of the sources its required result rests on — the foundation decisio
 and the sentences of the approved project definition — for a word that allows two different required
 behaviours and that none of the approved project definition, an entry of the foundation, a glossary
 entry included, and an answer of the human in the document settles. Where a sentence standing in the
-document or in such a source allows both readings and the readings give different, observable results
-inside the task's scope, the agent shows a short example from that scope and asks the human which
-reading holds, as a question of decision (WAY-113); the answer stands under the task's *Questions to
-settle*.
+document or in such a source allows both readings and the readings give different, observable
+results inside the task's scope, the agent shows a short example from that scope and asks the human
+which reading holds, as a question of decision (WAY-113); the answer stands under the task's
+*Questions to settle*.
 
-A reading no sentence allows and a case outside the task's scope raise no question, the check owes no
-finding and no number of cases, and where the agent finds none it says nothing of the check. A
-meaning the human settles that a reader who knows the product's field would not give the word goes to
-the task's *Settlements to record* as a candidate glossary term (WAY-95), and an ambiguity in the
-approved project definition goes back to the definition and its readiness gate (WAY-118).
+A reading no sentence allows and a case outside the task's scope raise no question, the check owes
+no finding and no number of cases, and where the agent finds none it says nothing of the check. A
+meaning the human settles that a reader who knows the product's field would not give the word goes
+to the task's *Settlements to record* as a candidate glossary term, which WAY-95 judges there, and
+an ambiguity in the approved project definition whose resolution changes the definition goes back to
+the definition and its readiness gate (WAY-118).
 
 - **Scope:** project-level
 - **Based on:** none
@@ -12923,7 +12924,7 @@ different result; it binds the refinement of a task by this decision and nowhere
 What the decision adds are its bounds. The sources are the task document and the sentences its
 required result rests on, so a word that stands only in a quoted decision or in the definition is
 reached and the rest of the foundation is not. A case counts only where a sentence standing in those
-files allows both readings, the standard WAY-99 sets for a word of the foundation, and where the
+files allows both readings, after the model of WAY-99 for a word of the foundation, and where the
 difference shows inside the task's scope, because an agent told to find cases finds plausible ones.
 The check owes no finding and no number of cases, and says nothing where it finds none, for the same
 reason. A word of the process is settled by the glossary of the-way and a word of the product by the
@@ -12933,13 +12934,14 @@ and so does a word that stands only in an entry of the foundation the document d
 refinement that finds no such word shows no sign that the check ran.
 *Rejected:* only the words of the task document — it leaves out a word that stands in a quoted
 decision or in a sentence of the definition and not in the task's own text, though the sentence
-decides what the task requires; the whole definition and the whole foundation — the check becomes a ritual and
-invites cases from outside the task, which the bound exists to prevent; the principle of no duty and
-no number alone, the rest left to the agent's judgment — the shortest, but an agent readily adds
-plausible cases at the edge, so it protects least; one sentence that it found no word read two ways —
-it shows that the check ran, but it turns into a ritual and a temptation to add "but maybe", which
-is inventing cases by the back door; every settled meaning as a candidate glossary term — the
-glossary would grow by words nobody confuses, against WAY-95, which it would have to change.
+decides what the task requires; the whole definition and the whole foundation — the check becomes a
+ritual and invites cases from outside the task, which the bound exists to prevent; the principle of
+no duty and no number alone, the rest left to the agent's judgment — the shortest, but an agent
+readily adds plausible cases at the edge, so it protects least; one sentence that it found no word
+read two ways — it shows that the check ran, but it turns into a ritual and a temptation to add "but
+maybe", which is inventing cases by the back door; every settled meaning as a candidate glossary
+term — the glossary would grow by words nobody confuses, against WAY-95, which it would have to
+change.
 
 ## Withdrawn identifiers
 

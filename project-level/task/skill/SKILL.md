@@ -40,10 +40,11 @@ Follow [`draft.md`](draft.md) when setting up or resuming the task document.
 ## 3. Resolve the gaps
 
 Follow [`resolve_gaps.md`](resolve_gaps.md) for questions, choices, the check for a word that can be
-read two ways, human actions and deployment coverage. When the task's outcome needs a language, a framework, a library, a store of data, a way
-of logging in or a place to run that no decision, approved definition or accepted answer settles,
-it points to `project-level/technology/reserved_choices.md`. Resolve findings from the shared
-guideline reading by kind in [`guideline_findings.md`](guideline_findings.md) (WAY-215, WAY-216).
+read two ways, human actions and deployment coverage. When the task's outcome needs a language, a
+framework, a library, a store of data, a way of logging in or a place to run that no decision,
+approved definition or accepted answer settles, it points to
+`project-level/technology/reserved_choices.md`. Resolve findings from the shared guideline reading
+by kind in [`guideline_findings.md`](guideline_findings.md) (WAY-215, WAY-216).
 
 ## 4. Carry the foundation decisions
 
