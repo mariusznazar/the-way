@@ -670,8 +670,7 @@ class Locations(AuditCountCase):
         self.assertEqual([], list(inner.iterdir()))
 
     def test_a_result_directory_inside_the_way_not_read_in_the_run(self):
-        # No repository holds the results, the-way's included, whether or not the run reads it
-        # (WAY-332).
+        # No repository holds the results, the-way's included, whether or not the run reads it.
         product = self.product()
         way = self.repository("the-way")
         way.branch("main", way.commit({"README.md": "the-way\n"}, "Start"))
@@ -1448,7 +1447,7 @@ def gate_file(table=GATE_TABLE, rows="") -> str:
 
 
 class MeasuresCase(AuditCountCase):
-    """The two files of a cycle's record the count reads (WAY-347, WAY-349): a copy holding
+    """The two files of a cycle's record the count reads: a copy holding
     neither is an earlier form, and a file lacking a field it needs is an error (WAY-344)."""
 
     def count(self, files, folder="a-task"):
@@ -1634,8 +1633,8 @@ class GateRunsMeasures(MeasuresCase):
         self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
 
     def test_a_flood_of_wrong_width_rows_after_a_valid_header_is_capped_too(self):
-        # Every row of the wrong number of cells is a run of its own, and the limit counts it
-        # (WAY-349): a crafted file of such rows costs bounded work and writes bounded rows.
+        # Every row of the wrong number of cells is a run of its own, and the limit counts it:
+        # a crafted file of such rows costs bounded work and writes bounded rows.
         rows = "| a | b |\n" * 600
         done, added = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
@@ -1712,7 +1711,7 @@ class GateRunsMeasures(MeasuresCase):
 
 
 class RegisterCount(AuditCountCase):
-    """The register of problems counted against the cycles (WAY-330, WAY-333 to WAY-336)."""
+    """The register of problems counted against the cycles (WAY-330)."""
 
     def use_register(self, **rows) -> None:
         self.register.write_text(register_text(**rows), encoding="utf-8")
@@ -2453,7 +2452,7 @@ def process_record(pin, discarded="none", plan="none on the one-author route", t
 
 
 class ProcessVersions(AuditCountCase):
-    """The process versions, their series and the three questions (WAY-339, WAY-341)."""
+    """The process versions, their series and the three questions (WAY-339)."""
 
     FIRST = 1759968000    # 2025-10-09, UTC midnight
     LATER = 1760054400    # 2025-10-10
@@ -2782,8 +2781,8 @@ TOTAL = "Total time of the run"
 
 class MeasureVersions(AuditCountCase):
     """The series of the mechanism measures and of the gate times, each by the change of its own
-    instrument alone, and the median of each measure of each version (WAY-339, WAY-348,
-    WAY-350). The helpers are those of ProcessVersions."""
+    instrument alone, and the median of each measure of each version (WAY-339, WAY-350).
+    The helpers are those of ProcessVersions."""
 
     FIRST = ProcessVersions.FIRST
     BASE_FILES = ProcessVersions.BASE_FILES
