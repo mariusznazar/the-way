@@ -105,7 +105,7 @@ Every element's skill names its element's template and `elements/common/` as the
 
 ## elements-no-pending-marker
 
-No file git tracks under `elements/` holds the text "decision pending".
+No file git tracks under `elements/` holds the text "decision pending", every run of spaces and line breaks counting as one space.
 
 - **Method:** test
 - **Rests on:** none

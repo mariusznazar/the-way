@@ -1076,8 +1076,8 @@ and a skill reads the rules and that way of working from there instead of restat
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: skill-rule-source · elements-no-pending-marker. For
-  what the skill holds, an agent compares the change with the decision:
+- **Verification:** invariants: skill-rule-source · elements-no-pending-marker.
+  For what the skill holds, an agent compares the change with the decision:
   - complies: a fix to a field's form in the skill's output goes into the template, not the
     skill; the skill orders its steps and says what to ask;
   - violates: the skill says a rationale has at most three sentences while the template does not;
@@ -1568,7 +1568,9 @@ A condition deciding an invariant stands in its sentence, or where changing it t
 change a human decides, or where a decision in the product's log or the pinned the-way places it.
 An invariant whose condition stands outside its sentence names by identifier the entry or the
 decision that holds the condition, in a field where the template gives one and otherwise in its
-sentence. An invariant's sentence names no branch, measures any change it speaks of against `{fork-point}`
+sentence.
+
+An invariant's sentence names no branch, measures any change it speaks of against `{fork-point}`
 (WAY-61), while a state it compares may be the one on `{merge-onto}`, and states what is to hold on
 the main branch alone as holding where `{merge-onto}` exists. A sentence bounding or equating a
 quantity measured while the product runs names its bound or tolerance, statistic and population.
@@ -1997,9 +1999,10 @@ it holds, a command of several lines standing in a code block under the source, 
 or the call of the service's API, the host or the service it ran on and each tool its result
 depends on with its version, its output word for word or the lines of it the sentence rests on, and
 the date run. The output a reading quotes holds no secret, the command reading only the fields the
-sentence rests on. The sentence says no more than its source,
-and a model's memory, an agent's paraphrase or a text quoting the source is no source. A fact
-resting on a whole section of rules quotes the sentence of its source that sets those rules and
+sentence rests on.
+
+The sentence says no more than its source, and a model's memory, an agent's paraphrase or a text
+quoting the source is no source. A fact resting on a whole section of rules quotes the sentence of its source that sets those rules and
 names the section by its place alone, where the edition has an address of its own.
 
 - **Scope:** environment-facts
@@ -2028,9 +2031,9 @@ a setting they set on another's service, shows its state on no page open to a re
 of the command or the call that reads it stands where the passage stands: one reading, quoted,
 which a reader with access compares with the host or the service as another compares a passage with
 its page; no check reruns it, on a change or by a clock (WAY-82). The output of a service's API can
-carry a token, so the command reads only the fields the sentence rests on and nothing is cut from
-the result afterwards; the invocation is quoted whole so that the text shown is what ran, and each
-tool the result depends on has its version beside it.
+carry a token, so the command reads only the fields the sentence rests on; the invocation is quoted
+whole so that the text shown is what ran, and each tool the result depends on has its version beside
+it.
 *Rejected:* a source named by its work alone — a new edition changes what the citation says; a
 summary in place of the passage — the drift this decision exists to stop; an observation naming a
 command, its tool and the date it ran without its output — a reader has nothing to compare the host
@@ -2084,9 +2087,9 @@ sent to make (WAY-24).
 
 The current state of a setting that people of the product change outside its repository — who can
 open it, a host's access rule — is an environment fact, its source the place where that state is
-shown, or, where no page open to a reader shows it, a reading (WAY-80). A choice of such a setting is a decision only where the product declares it, and that
-decision rests on the fact. A fact about the visibility of a repository the product links to names
-that one repository.
+shown, or, where no page open to a reader shows it, a reading (WAY-80). A choice of such a setting
+is a decision only where the product declares it, and that decision rests on the fact. A fact about
+the visibility of a repository the product links to names that one repository.
 
 - **Scope:** environment-facts, decisions
 - **Based on:** github-private-repository-response

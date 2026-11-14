@@ -889,8 +889,9 @@ class FoundationCheckTest(unittest.TestCase):
                          "*Source* does not take `TODO`")
 
     def test_fact_source_with_a_command_of_several_lines_in_a_code_block(self):
-        # a reading's command of several lines stands in a code block indented under the line of
-        # *Source*; its lines that look like a heading or a field belong to the code
+        # the form the template gives for a reading whose command has several lines, a code block
+        # indented under the line of *Source*, is read as a fact; the test fails if the script
+        # began to reject that form
         facts = FACTS + (
             "\n## clock-offset\n\nThe system clock is set by the host.\n\n"
             "- **Source:** reading: the command below on the host, ntpq 4.2.8 — "

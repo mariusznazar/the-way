@@ -64,9 +64,8 @@ identifiers.
   under the runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
 - The current state of a setting that people of the product change outside its repository — who
   can open it, a host's access rule — is a fact, its source the place where that state is shown, or,
-  where no page open to a reader shows it, a reading (WAY-84, WAY-80). A
-  choice of such a setting is a decision only where the product declares it, and that decision
-  rests on the fact (WAY-84).
+  where no page open to a reader shows it, a reading (WAY-84, WAY-80). A choice of such a setting
+  is a decision only where the product declares it, and that decision rests on the fact (WAY-84).
 - A fact may be about something outside that depends on the product — a product that pins it and
   reads one of its surfaces — only where a decision about that surface would be called into question
   were it no longer true. The partners themselves stay in the part map's external context (WAY-90).
@@ -124,8 +123,7 @@ identifiers.
   line (WAY-80).
 - The output a reading quotes holds no secret. The command reads only the fields the sentence rests
   on — an API call names them in its request or keeps them with a filter — so that a token or a
-  password never enters the output; nothing is cut from the output afterwards, and no marker stands
-  in its place (WAY-80).
+  password never enters the output (WAY-80).
 - A further page of the same edition names its address and place. Another place of the same page
   follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
   and shares the page's address and date read. Several addresses stand in one entry only as pages
@@ -151,7 +149,7 @@ identifiers.
   a symbol — a function, a class or a constant — in which the passage stands. The passage is one
   statement or one line of code word for word, with every run of whitespace collapsed to one space,
   and several passages are joined by ` · `; a passage that holds `"` stands in “…”, not in straight
-  quotation marks (WAY-80).
+  quotation marks.
 
 ## Changing a fact
 

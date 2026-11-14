@@ -14,7 +14,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MARKER = re.compile(r"decision\s+pending")
+MARKER = re.compile(r"decision[ \n]+pending")
 
 
 def tracked_files_under_elements() -> list[str]:
