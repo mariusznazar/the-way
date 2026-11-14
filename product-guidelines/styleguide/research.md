@@ -13,4 +13,4 @@ and ask it to refute every claim no source supports — a rule, or a difference 
 following one. Before the first critique of the session, read `elements/common/critique/SKILL.md`.
 Verify each observation and give your verdict, correct the report by the verdicts, then end it
 with the line `critique: passed`. Where no fresh agent can run, the research does not go on: stop
-and say so (WAY-186, WAY-120). What the research finds is proposed in step 4, never imposed.
+and say so (WAY-120). What the research finds is proposed in step 4, never imposed.

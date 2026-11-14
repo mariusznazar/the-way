@@ -1,22 +1,25 @@
 # Audit
 
-Where the user interface has screens (WAY-187):
+Where the user interface has screens:
 
 - Read the decisions of the product's log that settle the agent's way to the running product
   (WAY-165), where `refine-task` did not select them.
 - Audit in both directions: from the source of values to the screens that read it — a file of
   design tokens nothing reads is a finding — and from each value on a screen to the design token or
-  shared component meant to cover it.
+  shared component meant to cover it. Each direction finds what the other misses: a file of design
+  tokens nothing reads shows only from the source, and a value no token covers only from the
+  screen.
 - Check for every screen what someone sees without data, straight from a link and after a refresh,
   and ask the human about none of them: the next item says how it is checked.
 - Where the product's foundation settles the agent's way to the running product, open the screens
   that way, each with no data, straight from its link and after a refresh; otherwise audit from the
   code and mark as unchecked what cannot be seen without the running product, such as whether focus
-  shows and what a screen shows in those three cases.
+  shows and what a screen shows in those three cases. A product with no decided way to the running
+  product is audited from its code rather than left waiting for a task that settles it.
 - Give each finding its file and line and one sentence of its effect on the user. Each cause takes
   one category: a missing design token, a missing shared component, accidental architecture, or a
   meaning — one colour carrying several.
-- A palette read off the code is a proposal, never a rule, until the human settles it (WAY-185). An
+- A palette read off the code is a proposal, never a rule, until the human settles it. An
   existing choice the human keeps becomes a decision whose rationale is the human's words or
   `unknown`, never one the agent infers (WAY-29).
 - The audit ends as `product-guidelines/audit_end.md` gives.
