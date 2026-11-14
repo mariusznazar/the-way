@@ -1,0 +1,117 @@
+# Cycle record — the way: kiedy podział zadania ma sens, a kiedy tylko dokłada pracy
+
+- Task source: the task's note in the author's backlog, `Status: ready for cycle`, updated 2026-11-13 (settlements accepted 2026-11-13); frozen copy `task.md` beside this record
+- Task relation: independent
+- Product repository: https://github.com/mariusznazar/the-way (the-way itself)
+- Process pin: this checkout (the-way is the top-level repository)
+- Target branch and base: `foundations`, `0b77f5a2e1e37d04cd58888dd1d761f8e0329bd4`
+- Task branch: `task/split-only-for-gain` (worktree `.runs/worktrees/split-only-for-gain`)
+- Status: request open
+
+## Two questions at start
+
+- Trust boundary: no — the change edits instruction texts of `project-level/` (no trust-boundary file of the part map: `readiness_check.py`, `plan_check.py`, `plan_state.py` untouched) and decisions of `foundations/decisions.md`
+- Irreversible operation: no
+
+The cycle prepares an irreversible operation and never performs it; preparing the code for it does
+not authorize running it.
+
+## Spec and execution route
+
+- Open design choice at start: none — every row of *Settlements to record* and every item of *To do* settles its entry and its wording place; the one reading the cycle had to choose (item 7 against the sentence now in `cut_tasks.md`) is autonomous choice Q1 below, not a design choice
+- Reserved choice: none
+- Execution route and reason: one author without a plan — about six prose passages of two parts (`project-level` task and plan skills) plus the foundation entries of six settlement rows; no code, no new file; one agent holds it
+- Author: `the-way-author`, class `same` (Sonnet 5.5 family model closest to the orchestrator's), a class other than `cheaper` because: six decision entries under the decisions' schema, a whole-foundation search (WAY-33) in a log of 12 000 lines and a collision with a decision merged hours before (WAY-146) need judgment a cheaper class would risk missing
+- Plan: none on the one-author route
+- Discarded attempt: none
+- Slices returned too large: none
+- Agent waiting: Claude Code background agents report by completion notification; no limit applied
+- Whole-change review: reviewer other than the author, `review-change`; range `0b77f5a..4e09369`, report `reports/whole-change-review-report.md`, first line `FAIL 4e09369`; files: `foundations/decisions.md` 12827→12882, `cut_tasks.md` 26→30, `orchestrated_mode.md` 75→75, `read_sources.md` 36→41, `resolve_gaps.md` 87→87; coverage: items 1–6 met, item 7 met in the letter and not in the outcome (finding 1), rows 1–6 checked against the entries; source fidelity compared with the *Not chosen* of questions 1, 2, 3 and 5; it read whole 12 decisions of its selection of 131 plus WAY-13, the rest by title
+- Review rounds:
+  - findings `reports/whole-change-findings.md`: whole-change review of `0b77f5a..4e09369` FAIL, blocking finding 1 (the plan critique's size test against WAY-372, row 6 and question 5), Minor 2–5 within the task; fix `edf1699` (way (a), choice Q3; Minor 2, 3 and 5 fixed, 4 none in the files); review of the fix `4e09369..edf1699` by the same reviewer, `reports/fix-review-report.md`, `PASS edf1699`; no blocking finding remained
+- Weakest-point checks: author, first report: every wording of the old rule gone from every file — grep over the worktree, exit 1 with no match; fix report: no wording of the plan critique's size test remains — grep and a whole reading of WAY-146, `foundation_check.py` exit 0 (`reports/author-report.md`, `reports/fix-report.md`)
+
+## Slices
+
+| Slice | Base | Class, executor and model | Risk | Head | Mechanical check and retry | Review, fix and review of the fix |
+|---|---|---|---|---|---|---|
+
+One-author route: no slices.
+
+## Events
+
+| Time | Stage | Actor and model | Handoff, skill and inputs | Output or full report | Short result and next step |
+|---|---|---|---|---|---|
+| 2026-11-14 09:00 | start | orchestrator | task read; checkout fast-forwarded from `0e1cd3c` to `0b77f5a` (9 commits, `task-cycle/skill/SKILL.md` unchanged); worktree and branch created | this record | route chosen: one author; next: handoff and dispatch |
+| 2026-11-14 09:05 | one author | `the-way-author`, class `same` (model inherited from the orchestrator) | `reports/author-handoff.md`; `task-cycle/change/SKILL.md` "the whole change as the one author"; frozen task | `reports/author-report.md`; commit `4e09369` on base `0b77f5a`, 5 files, +81/-17 | `done with concerns`: WAY-372 added (rows 1, 2, 6, silence half of row 3), WAY-13 edited in place, rows 4 and 5 tied to WAY-139, four instruction files edited; collision with WAY-146 reported, not edited (Q1). Focused checks all exit 0 (foundation_check; agent-instructions 25, instruction-files 104, elements/common 201, project-level 275). Mechanical check: worktree clean, range non-empty, the changed files are the four named in the task plus `decisions.md`. Report has its Unread material, Searches and own-work check. Gap: 180 decisions of the scopes `project-level`/`task-cycle` and the invariants of those parts unread — carried into the whole-change review's handoff (the next agent able to judge it). Next: review of the whole change |
+| 2026-11-14 09:30 | whole-change review | `the-way-stage`, class `same` | `reports/whole-change-review-handoff.md`; `task-cycle/review/SKILL.md`; range `0b77f5a..4e09369` | pending | `FAIL 4e09369`: 1 blocking (the plan critique's "too large" test left against WAY-372, row 6 and question 5; reviewer's ways (a) remove, (b) fourth reason, (c) `narrows`), 4 Minor within the task (2 WAY-372 "only where" vs the human's request, 3 process fact in the *Rationale*, 4 name rows 4 and 5 as skill lines in the request, 5 duplicate sentence in WAY-13's *Rationale*), 0 out of scope. Reviewer read 12+1 decisions whole, 117 by title; its unread list names WAY-114, 113, 33, 19, 144, 147, 142, 214, 218 (none hits the searched words). Gap judged: bears on nothing the finding rests on; the fix's author reads WAY-114 and WAY-33 again. Next: one fix, findings file `reports/whole-change-findings.md` |
+| 2026-11-14 09:45 | fix of the review's findings | `the-way-author` resumed, class `same` | `reports/fix-handoff.md`; findings `reports/whole-change-findings.md`; range from `4e09369` | pending | `reports/fix-report.md`; commit `edf1699` on `4e09369`, 4 files, +25/-58 | `done`: finding 1 fixed by way (a) (WAY-146, `critique_plan.md`, `plan/template.md`, `cut_tasks.md`; the signal of open questions removed too, beyond the sentence the task names), Minor 2, 3, 5 fixed, 4 none (request wording), no `narrows`; WAY-146 marked `the cycle's`. Focused checks exit 0 (foundation_check; agent-instructions 25, instruction-files 104, elements/common 201, project-level 275). Mechanical check: clean worktree, non-empty range. Next: review of the fix |
+| 2026-11-14 10:10 | review of the fix | `the-way-stage` (the reviewer of the whole change, resumed), class `same` | `reports/fix-review-handoff.md`; findings `reports/whole-change-findings.md`; range `4e09369..edf1699` | `reports/fix-review-report.md`: `PASS edf1699`; 0 blocking; 3 Minor in the fix diff (a 126-column line at `critique_plan.md:19`; one short line in WAY-372's *Rationale*; WAY-146's *Verification* "complies" holds one example, as before the fix) — not fixed, they go to the request's list; the removal of the plan's signal of open questions accepted and graded no finding. Review reads: `foundation_check.py` exit 0; `gate/run_tests.py project-level` 275 OK after a first run killed at the reviewer's 110 s limit that showed an unread `F` (unverified; the gate of step 10 covers it) | Next: the return step |
+| 2026-11-14 10:30 | return step | `the-way-author` resumed, class `same` | `reports/return-handoff.md`; `task-cycle/skill/return_step.md` | pending | wait by completion notification |
+
+## Questions and autonomous choices
+
+| ID | Question and source | Answer or choice | Evidence | Alternative rejected | Cost if wrong | Used by |
+|---|---|---|---|---|---|---|
+| Q1 | Item 7 of the task names the sentence "A large task is split" in `project-level/plan/skill/cut_tasks.md`; after the task was accepted (2026-11-13), commits `0ed5ad7` and `4e3c4cf` (2026-11-14) changed that passage to "A task too large is put to the human to split, and its size chooses nothing else (WAY-13). A task is too large when its goal joins two or more effects, each of which can be checked alone in the running product and merged before the others." and added the plan critique's size judgment to WAY-146, `critique_plan.md` and `project-level/plan/template.md`. That judgment has the human choose a split because parts "can be merged before the others" — the reason the task's question 2 rejects. Source: task item 7, question 5, settlement row 6; `git log` of `cut_tasks.md` | The smallest reading that fulfils the task: in `cut_tasks.md` the sentence now standing ("A task too large is put to the human to split, and its size chooses nothing else (WAY-13).") is replaced by the rule of row 6 — a task is cut by WAY-143 and by the reasons of row 2, and its size alone is no reason to cut it. The author does not edit WAY-146, `critique_plan.md`, `plan/template.md` or the plan checks: whether the critique's test of effects "checkable alone and merged before the others" stays is not settled by this task. The collision is named in the request's *For you to decide* for the human | `git show 4e3c4cf`; WAY-146 text in `foundations/decisions.md`; task question 2 *Not chosen* | (a) change WAY-146, the critique skill and the plan template too — reverses a decision merged hours earlier beyond what this task's *Decisions in play* carries (WAY-114, WAY-30); (b) stop and ask now — the cycle pauses only where the outcome cannot be made, and it can | If the human wants the critique's size test removed, one more small change; if the human wants it kept, the one sentence in `cut_tasks.md` may need softening again | author handoff |
+| Q3 | Blocking finding 1 of the whole-change review (collision of the plan critique's "too large" test with WAY-372 and row 6) | Way (a): remove the critique's size judgment and the human's decision on such a split from WAY-146, `critique_plan.md`, `plan/template.md` and `cut_tasks.md`; no `narrows`. The task's own question 5 (answer "tak, w tym zadaniu"; *Not chosen* "poza zakresem — reguła zostaje i rozjazd ... też") and row 6 give the outcome (WAY-25); the test's "merged before the others" is the reason question 2 rejects | `reports/whole-change-review-report.md` finding 1; task `task.md` questions 2 and 5, row 6 | (b) a fourth reason in WAY-372 — reopens question 2; (c) `narrows WAY-146` — leaves the wording in four files; (d) stop and ask — the outcome is established by what the human accepted | WAY-146's critique test was merged on 2026-11-14 by the human's own earlier cycle: if the human wants it kept, the fix's WAY-146 part is reverted and (b) or (c) follows — put before the human in the request | fix handoff |
+| Q2 | `read_sources.md` now says "a task's size alone (WAY-13) you name as a signal and leave the split to the human", not the "three reasons" paragraph the task describes in its words; same paragraph, same place | Item 1 and 2 are applied to the paragraph as it stands | `read_sources.md:28` | none | none | author handoff |
+
+## Artifacts
+
+| Kind | Path or commit | Author or agent | Review result |
+|---|---|---|---|
+| Frozen task | `.runs/task-cycles/split-only-for-gain/task.md` | orchestrator | n/a |
+| Code commit | `4e09369` (WAY-372, WAY-13, four skill files) | one author | `FAIL` of the whole-change review, blocking finding 1 |
+| Code commit | `edf1699` (fix: WAY-146, `critique_plan.md`, `plan/template.md`, `cut_tasks.md`, WAY-372, WAY-13) | one author | `PASS edf1699` |
+| Reports | `reports/author-report.md`, `reports/whole-change-review-report.md`, `reports/fix-report.md`, `reports/fix-review-report.md`, `reports/return-report.md` | author, reviewer | n/a |
+| Gate log | `gate-run1.log`, `gate_times.md`, `diag-base-gate.log`, `diag-change-gate.log` | orchestrator | gate exit 1 on the flaky directory `gate` (see Verification) |
+
+## Verification
+
+| Command or manual check | Actor, commit and environment | Exit code and result | Failed or unchecked |
+|---|---|---|---|
+| list of the tests failing before the change | orchestrator, base `0b77f5a` (merge; tree `9503a3d6e146caa47a170f824e22e42d5f1da6f6` equals that of its second parent `22161bb`) | taken from `docs/task-cycles/service-reading-and-invariant-condition/cycle.md` of commit `a2a8d88`, *Verification*, its gate run 1 on `43ffa5a` (the code tree of the merged branch): exit 0, 1328 tests in 10 directories | none failing on the base; no gate run on the base; note from that record's earlier cycle: `gate/test_run_tests.py` `DirectoriesAtOnce.test_by_default_every_directory_runs_at_the_same_time` was flaky (WAY-243) |
+| `python -B task-cycle/gate_times.py --output .runs/task-cycles/split-only-for-gain/gate_times.md -- python -B gate/run_tests.py` (run 1) | orchestrator, `edf1699` (the final tree; the target branch had not moved), Windows | 1; 1330 tests in 10 directories, 881 s, no other registered gate at the time; failed: directory `gate`, test `test_run_tests.DirectoriesAtOnce.test_each_report_stands_whole_under_its_own_line_in_the_order_directories_end` ("did not meet the others" after 120 s); the other nine directories OK | the gate run is red; not rerun to make it pass (WAY-243) |
+| `python -B gate/run_tests.py gate` on the worktree at `edf1699` (diagnosis only, WAY-243) | orchestrator | 1, 36 tests, 147.2 s: failure in another test of the same class (`test_a_number_of_jobs_limits_the_directories_that_run_at_once`, "did not meet the others") | flaky class, a different test each time |
+| `python -B gate/run_tests.py gate` in a checkout of the base `0b77f5a` under `.runs/`, then alternately in checkouts of `edf1699` and of `0b77f5a` (diagnosis only) | orchestrator | base: 0 (27.8 s), then 0 (29.3 s), then 1 (146.7 s); `edf1699`: 0 (30.0 s) then 1 (147.4 s) | the failure appears on the base as often as on the change, each passes and fails in turn: a fault already there, not of the change; the checkouts were deleted afterwards |
+| `python -B elements/common/foundation_check.py` | orchestrator, `edf1699`, without `--skip-test-citations` | 0; `0 errors`, no `listed:` line | none |
+| `python -B task-cycle/review_reminder.py origin/foundations` | orchestrator | 0; `tag: foundation-review/2026-11-06`, `merges: 43`, `threshold: 30`, `reminder: yes` | none |
+| `python -B task-cycle/remarks_check.py .runs/task-cycles/split-only-for-gain` | orchestrator, on the original | exit 1 listing 14 items, then 0 after they were appended to the process remarks; 2 runs | none |
+| `python -B task-cycle/remarks_check.py docs/task-cycles/split-only-for-gain`; `python -B task-cycle/private_paths_check.py docs/task-cycles/split-only-for-gain`; `python -B task-cycle/image_files_check.py docs/task-cycles/split-only-for-gain` | orchestrator, on the cleaned copy | all three exit 0 in the last run of each (private paths: exit 1 once, listing 14 places in 10 files, before the one rewriting, then 0; 2 runs of it, 1 run of the others) | none |
+| `python -B task-cycle/request_check.py .runs/task-cycles/split-only-for-gain/request.md --task .runs/task-cycles/split-only-for-gain/task.md`; `python -B task-cycle/private_paths_check.py .runs/task-cycles/split-only-for-gain/request.md` | orchestrator, on the description | both exit 0, 1 run each before the record's link was added | none |
+| `python -B task-cycle/cycle_stages.py --output .runs/task-cycles/split-only-for-gain/stages.md 9c2f7bcd-1ba0-4faa-bb51-63dcff56c03c`; `python -B task-cycle/cycle_measures.py --output .runs/task-cycles/split-only-for-gain/mechanism_measures.md 9c2f7bcd-1ba0-4faa-bb51-63dcff56c03c` | orchestrator | both 0 | none |
+
+## Return step
+
+- Foundation compared with code: WAY-372, WAY-13, WAY-146, WAY-139, WAY-143, WAY-113 and the part map of `project-level`, `decisions` and `task-cycle` against the four skill files, `plan_check.py` and its tests, the invariants `project-plan-form` and `project-plan-check`; nothing no longer matched, no correction (`reports/return-report.md`); no commit, so no review of the return step
+- Decisions written or changed: WAY-372 (written); WAY-13 and WAY-146 (edited in place)
+- Invariants written or changed: none
+- Environment facts: none
+- Glossary terms: none
+- Part-map changes: none
+- Projected entries written whole or in part: none
+- Rows of *Settlements to record* written: 1, 2, 6 and the silence half of 3 → WAY-372; the other half of 3 → WAY-13; 4 and 5 → lines of `project-level/task/skill/resolve_gaps.md` (`:62-64`, `:85-87`), WAY-139 beside them; no row for WAY-146, which is the cycle's
+
+## Request handoff
+
+- Request URL and status: https://github.com/mariusznazar/the-way/pull/122, draft until the record's commit pair is pushed, then ready for review
+- Description: `request.md` beside this record; form check `python -B task-cycle/request_check.py .runs/task-cycles/split-only-for-gain/request.md --task .runs/task-cycles/split-only-for-gain/task.md` exit 0 and private-paths check exit 0 (1 run each); the checks on the copy of the record are filled in by the edit that adds the record's link
+- Writes to the task's backlog entry: none
+- Corrections after the request opened: none
+- Process remarks on the-way:
+  - one author, .runs/task-cycles/split-only-for-gain/reports/author-report.md: The orchestrator's handoff says the commits `0ed5ad7` and `4e3c4cf` changed `cut_tasks.md`; both are ancestors of the base, and the wording found matches the handoff word for word. Nothing missing.
+  - one author, .runs/task-cycles/split-only-for-gain/reports/author-report.md: Row 6's source (question 5 of the task) says the plan's cut loses "A large task is split". That sentence no longer stands in `cut_tasks.md`; what stood was "A task too large is put to the human to split, and its size chooses nothing else (WAY-13)", which I replaced as ordered. Unclear: the task's item 7 and its Question 5 assume the plan has no other split rule; WAY-146 and the critique's test contradict that (see the collision).
+  - one author, .runs/task-cycles/split-only-for-gain/reports/author-report.md: The task's item 4 says the sentence "offer the human to split it into a task of its own" stands "around line 63" and item 5's point "around line 85": both found at lines 63 and 85. The paragraph of `read_sources.md` is at line 28, as the task says.
+  - one author, .runs/task-cycles/split-only-for-gain/reports/author-report.md: `foundation_check.py` has no check on a decision's *Rejected* or on the wording "WAY-13" in another entry; so the stale reference in WAY-146's *Rejected* is not reported by it.
+  - fix of the review findings, .runs/task-cycles/split-only-for-gain/reports/fix-report.md: No script or test holds the removed "too large" wording of the plan critique; the invariants `project-plan-form` and `project-plan-check` were not opened, and `plan_check.py` contains no word of the removed judgment (grep over `project-level/*.py`).
+  - fix of the review findings, .runs/task-cycles/split-only-for-gain/reports/fix-report.md: Unclear: whether the request should treat WAY-146 as an entry "written whole from an accepted row" (accepted with the task document, WAY-114) or as `the cycle's` (put before the human at the merge). The accepted task names WAY-146 in none of its sections, so I marked it `the cycle's`; the orchestrator's choice Q3 supplies the passages that give the outcome (WAY-25).
+  - review of the fix, .runs/task-cycles/split-only-for-gain/reports/fix-review-report.md: A rule fixing a line width for the-way's instruction files: not found (as in the first review).
+  - review of the fix, .runs/task-cycles/split-only-for-gain/reports/fix-review-report.md: What the `F` of the killed first run of `project-level` tests was: not determined; the full re-run passed.
+  - review of the fix, .runs/task-cycles/split-only-for-gain/reports/fix-review-report.md: The author's report says the fix put the reason of different repositories on `derives from WAY-140`; I found it in the diff as such. Nothing missing.
+  - return step, .runs/task-cycles/split-only-for-gain/reports/return-report.md: None: every search of this step found what it looked for. One note: no test or script cites WAY-372 or the removed judgment of WAY-146 (grep over the repository), so nothing of code holds either entry beyond the instruction files compared above.
+  - whole-change review, .runs/task-cycles/split-only-for-gain/reports/whole-change-review-report.md: A rule fixing a line width of the-way's instruction files: not found (grep of `agent-instructions/README.md`, `instruction-files/*.md`, `product-guidelines/*.md` for "100 col", "columns", "line length", "wrap").
+  - whole-change review, .runs/task-cycles/split-only-for-gain/reports/whole-change-review-report.md: A decision or fact entry that holds "the cycle writes only in the product's repository" as a rule with its own number: not found; it stands in `task-cycle/skill/SKILL.md:76` and is partly in WAY-140 (finding 3).
+  - whole-change review, .runs/task-cycles/split-only-for-gain/reports/whole-change-review-report.md: The handoff said the author's reading of `read_sources.md`'s paragraph differs from the task's description; the file at the base matches the handoff (it already said "you name as a signal and leave the split to the human"). Clear.
+  - whole-change review, .runs/task-cycles/split-only-for-gain/reports/whole-change-review-report.md: The handoff's "handoff answer 4" and "handoff answer 1" (the author's handoff, with the orchestrator's orders to leave WAY-139 and WAY-146 untouched) are not among the files I was given; I judged the author's report as it states them.
+  - orchestrator, `gate/test_run_tests.py`: the class `DirectoriesAtOnce` fails now in one test, now in another ("did not meet the others" after a wait of 120 s) when the directories run at the same time under load, on the base as on the change; the cycle recorded this one failure of its gate as flaky (WAY-243) and did not rerun the gate to make it pass.

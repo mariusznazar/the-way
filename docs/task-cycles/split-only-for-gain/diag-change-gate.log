@@ -1,0 +1,43 @@
+.F..................................
+======================================================================
+FAIL: test_a_number_of_jobs_limits_the_directories_that_run_at_once (test_run_tests.DirectoriesAtOnce.test_a_number_of_jobs_limits_the_directories_that_run_at_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "gate\test_run_tests.py", line 368, in test_a_number_of_jobs_limits_the_directories_that_run_at_once
+    self.assertEqual(code, 0, output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : == b
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+== c
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+OK
+== a
+F
+======================================================================
+FAIL: test_it (test_one.Checks.test_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "a temporary directory\a\test_one.py", line 29, in test_it
+    self.assertTrue(all(line in logged() for line in ['start b']), 'did not meet the others')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : did not meet the others
+
+----------------------------------------------------------------------
+Ran 1 test in 120.013s
+
+FAILED (failures=1)
+3 tests in 3 directories; failed: a (exit code 1)
+
+
+----------------------------------------------------------------------
+Ran 36 tests in 147.199s
+
+FAILED (failures=1)
+exit 1

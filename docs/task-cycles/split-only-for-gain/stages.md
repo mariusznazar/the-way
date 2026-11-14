@@ -1,0 +1,50 @@
+# Stages of the cycle run
+
+- Claude Code session `9c2f7bcd-1ba0-4faa-bb51-63dcff56c03c`: 2 subagents — `9c2f7bcd-1ba0-4faa-bb51-63dcff56c03c.jsonl`
+
+Warnings: none.
+
+A stage is one turn of a subagent the orchestrator started, from its prompt to its answer, or a stretch of the orchestrator's own work between such turns. Durations are h:mm:ss; an orchestrator stretch counts only the time inside the orchestrator's turns, never the wait for the human. Tokens are input, which includes the part read from a cache, plus output, which includes reasoning.
+
+Waiting for tools is the time of the stage's tool calls, not of its subagents' calls; see the section on the stages below.
+
+| # | Stage | Duration | Subagent model | Orchestrator model | Subagent tokens | Orchestrator tokens | Total tokens | Cached input | Output |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | orchestrator | 0:04:00 | — | claude-sonnet-5-5 | 0 | 1,904,148 | 1,904,148 | 1,777,089 | 17,838 |
+| 2 | Author: split-only-for-gain change (the-way-author) — turn 1 | 0:18:48 | claude-sonnet-5-5 | claude-sonnet-5-5 | 3,695,635 | 130,361 | 3,825,996 | 3,658,683 | 36,603 |
+| 3 | orchestrator | 0:00:34 | — | claude-sonnet-5-5 | 0 | 415,894 | 415,894 | 400,479 | 4,100 |
+| 4 | Review whole change split-only-for-gain (the-way-stage) — turn 1 | 0:05:46 | claude-sonnet-5-5 | claude-sonnet-5-5 | 2,373,505 | 143,555 | 2,517,060 | 2,340,989 | 36,188 |
+| 5 | orchestrator | 0:01:10 | — | claude-sonnet-5-5 | 0 | 940,133 | 940,133 | 911,980 | 7,941 |
+| 6 | Author: split-only-for-gain change (the-way-author) — turn 2 | 0:06:47 | claude-sonnet-5-5 | claude-sonnet-5-5 | 2,789,849 | 164,161 | 2,954,010 | 2,901,964 | 15,847 |
+| 7 | orchestrator | 0:00:18 | — | claude-sonnet-5-5 | 0 | 338,414 | 338,414 | 329,269 | 2,168 |
+| 8 | Review whole change split-only-for-gain (the-way-stage) — turn 2 | 0:06:54 | claude-sonnet-5-5 | claude-sonnet-5-5 | 2,901,180 | 173,251 | 3,074,431 | 2,886,421 | 11,918 |
+| 9 | orchestrator | 0:00:17 | — | claude-sonnet-5-5 | 0 | 354,633 | 354,633 | 347,455 | 2,203 |
+| 10 | Author: split-only-for-gain change (the-way-author) — turn 3 | 0:00:44 | claude-sonnet-5-5 | claude-sonnet-5-5 | 1,089,881 | 180,622 | 1,270,503 | 1,255,533 | 4,107 |
+| 11 | orchestrator | 0:10:35 | — | claude-sonnet-5-5 | 0 | 3,396,699 | 3,396,699 | 3,359,796 | 7,697 |
+
+- Working time, orchestrator turns and subagent turns joined: 0:55:54
+- Waiting for tools: 0:37:00
+- Working time without waiting for tools: 0:18:54
+- Tokens in all: 20,991,921 — cached input 20,169,658, output 146,610
+
+| Model | Total tokens | Input | Cached input | Output |
+|---|---|---|---|---|
+| claude-sonnet-5-5 | 20,991,921 | 20,845,311 | 20,169,658 | 146,610 |
+
+## Stages: start, waiting for tools and tokens by model
+
+Times are UTC. Each stage's waiting for tools is the time of its tool calls, from each call to its result; `unknown` marks a stage with a call whose result was not read or whose type is not recognised. Input includes the part read from a cache. The model `—` marks a stage with no token usage, and `unknown` with zero counts one whose transcript holds no token usage at all, so that its usage was not read. *Files named* lists the files of the cycle's `reports/` that the message starting a subagent turn names — its prompt, or the message that resumes it — each once; it is empty where that message names none and for the orchestrator's rows, and `unknown` where the message cannot be read.
+
+| # | Stage | Start | Waiting for tools | Model | Input | Cached input | Output | Files named |
+|---|---|---|---|---|---|---|---|---|
+| 1 | orchestrator | 2026-11-14 07:57:34 | 0:01:45 | claude-sonnet-5-5 | 1,886,310 | 1,777,089 | 17,838 |  |
+| 2 | Author: split-only-for-gain change (the-way-author) — turn 1 | 2026-11-14 08:01:34 | 0:13:50 | claude-sonnet-5-5 | 3,789,393 | 3,658,683 | 36,603 | reports/author-handoff.md, reports/author-report.md |
+| 3 | orchestrator | 2026-11-14 08:20:23 | 0:00:05 | claude-sonnet-5-5 | 411,794 | 400,479 | 4,100 |  |
+| 4 | Review whole change split-only-for-gain (the-way-stage) — turn 1 | 2026-11-14 08:20:57 | 0:01:09 | claude-sonnet-5-5 | 2,480,872 | 2,340,989 | 36,188 | reports/whole-change-review-handoff.md, reports/whole-change-review-report.md |
+| 5 | orchestrator | 2026-11-14 08:26:43 | 0:00:07 | claude-sonnet-5-5 | 932,192 | 911,980 | 7,941 |  |
+| 6 | Author: split-only-for-gain change (the-way-author) — turn 2 | 2026-11-14 08:27:53 | 0:04:51 | claude-sonnet-5-5 | 2,938,163 | 2,901,964 | 15,847 | reports/fix-handoff.md, reports/whole-change-findings.md, reports/fix-report.md |
+| 7 | orchestrator | 2026-11-14 08:34:40 | 0:00:05 | claude-sonnet-5-5 | 336,246 | 329,269 | 2,168 |  |
+| 8 | Review whole change split-only-for-gain (the-way-stage) — turn 2 | 2026-11-14 08:34:58 | 0:05:21 | claude-sonnet-5-5 | 3,062,513 | 2,886,421 | 11,918 | reports/fix-review-handoff.md, reports/whole-change-findings.md, reports/fix-review-report.md |
+| 9 | orchestrator | 2026-11-14 08:41:52 | 0:00:05 | claude-sonnet-5-5 | 352,430 | 347,455 | 2,203 |  |
+| 10 | Author: split-only-for-gain change (the-way-author) — turn 3 | 2026-11-14 08:42:09 | 0:00:12 | claude-sonnet-5-5 | 1,266,396 | 1,255,533 | 4,107 | reports/return-handoff.md, reports/return-report.md |
+| 11 | orchestrator | 2026-11-14 08:42:53 | 0:09:29 | claude-sonnet-5-5 | 3,389,002 | 3,359,796 | 7,697 |  |
