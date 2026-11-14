@@ -301,8 +301,9 @@ the order of their kinds.
   `.the-way/elements/common/foundation_check.py`) on the finished change, without
   `--skip-test-citations`, since the gate's run is not kept for it, and reads its `listed:` lines.
   Each invariant listed there for a corrected sentence is named in plain words: what the sentence
-  now says, and that the test that checks it was left as it was. Each test whose line `decision:`
-  the change adds, drops or alters is named as a changed invariant test is (WAY-03).
+  now says, and that the test that checks it was left as it was. Each test that holds a sentence of
+  a decision by a line `decision:`, where the change adds, drops or alters the test or its line, is
+  named as a changed invariant test is (WAY-03).
 - **10.** *A listing of the remarks check held wrong*, where the cycle holds an item the check
   listed to be an error of the script (WAY-295): in plain words what the script listed and why the
   cycle holds it wrong. The script is not changed in the cycle, and the archive is written; the case
@@ -453,9 +454,10 @@ one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle
 tied to an entry already stated, with that entry (WAY-134); each invariant test the change alters
 (WAY-03), each surface it alters (WAY-49) and each *Violated* mark it sets or clears (WAY-51).
 Each invariant that the foundation check lists for a corrected sentence stands here too, as the top
-part's *You accept by merging* gives it, and each test whose line `decision:` the change adds,
-drops or alters (WAY-03, WAY-12). A guidelines rule with no decision that the cycle found itself
-stands here too, named as a rule whose *Decision* reads `none` (WAY-172).
+part's *You accept by merging* gives it, and each test that holds a sentence of a decision by a line
+`decision:`, where the change adds, drops or alters the test or its line (WAY-03, WAY-12). A
+guidelines rule with no decision that the cycle found itself stands here too, named as a rule whose
+*Decision* reads `none` (WAY-172).
 
 **Minor findings.** The Minor findings that no fix made — those of the review of the whole change
 that its fix left or did not take in, those of every later review, and those a reverted fix tried —

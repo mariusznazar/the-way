@@ -100,14 +100,15 @@ checks it was left as it was. The listing stops no change.
   listing stops no change. An agent compares a change with the part no test holds:
   - complies: an implementer whose code an invariant test stops fixes the code, or, where the test
     reads its sentence wrongly, fixes the test and names it in the request; a change that adds,
-    drops or alters the line `decision:` of a test names that test in its request; a change that
-    corrects the sentence of an invariant and leaves its test as it was names the invariant in its
-    request, saying what the sentence now says;
+    drops or alters a test that holds a sentence of a decision by a line `decision:`, or alters its
+    line, names that test in its request; a change that corrects the sentence of an invariant and
+    leaves its test as it was names the invariant in its request, saying what the sentence now says;
   - violates: a change alters an invariant test and its request does not name it; a test that read
     its sentence rightly is weakened so that the code passes, even where the request names it; a
     task goes back to an earlier step of its cycle only because an invariant test has to change; a
-    change drops the line `decision:` of a test and its request is silent; the check lists an
-    invariant for a corrected sentence and the request does not name it.
+    change weakens a test that holds a sentence of a decision by a line `decision:`, or drops its
+    line, and its request is silent; the check lists an invariant for a corrected sentence and the
+    request does not name it.
 - **Origin:** none
 
 *Rationale:* an agent that a test stands in the way of adjusts the test to the code: the build
