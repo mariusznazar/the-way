@@ -7642,7 +7642,7 @@ tool of its own.
 
 *Rationale:* the same fields for every level let an agent find what binds at any level in one place,
 and a small product writes a field once and points to it from the others. A field binds only where a
-decision of the product carries it (WAY-168), so the template's defaults for the build of a test,
+decision of the product carries it (WAY-173), so the template's defaults for the build of a test,
 its doubles, its data and its time are proposals a product adopts or departs from. One command runs
 every test (WAY-16), so the recipe gives that command and how far it narrows, and a command of the
 tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
