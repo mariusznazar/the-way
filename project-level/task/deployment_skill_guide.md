@@ -224,8 +224,9 @@ How loop2 answered:
 > automation]. The agent prepares the commands. …
 
 The sentence names a third actor beside the agent's reads and the human's changes: the automation
-the product already has, here the deployment of a merged commit. A skill says what that automation
-does too; what a task changes outside the repository stays the human's (WAY-140). On what the agent
+the product already has, here the deployment of a merged commit. A skill names that automation too,
+and the human's merge is what starts the automated deployment; what a task changes outside the
+repository stays the human's (WAY-140). On what the agent
 may say of what it read, the skill's section on seeing deployments adds:
 
 > … Treat service logs as potentially sensitive; report selected, redacted diagnosis, not raw logs.
@@ -340,7 +341,7 @@ How loop2 answered (an alert, with its limits):
 > fallen tunnel, a Cloudflare fault. 3. **[loop2: The browser's report.]** …
 >
 > **The four limits of the scheduled check.** Alone it fails in four ways. (1) When the server and
-> GitHub are both down, nothing is sent. (2) GitHub disables a scheduled workflow after [loop2: 60 days] with
+> GitHub are both down, nothing is sent. (2) GitHub disables a scheduled workflow after 60 days with
 > no activity in the repository, … (3) GitHub sends the failure notice … to the user who last changed
 > the cron line, so notifications set off, or set on another account, give a silence taken for "it
 > works". …
