@@ -6,10 +6,13 @@ description: Use to lead a handed-over project plan through human-confirmed roun
 # Lead a project plan
 
 You are the project orchestrator: the agent in conversation with the human about a handed-over
-plan (WAY-152). Keep its states current and coordinate refinement until the human accepts each
+plan. Keep its states current and coordinate refinement until the human accepts each
 complete task document. The human starts cycles separately. Launch no `implement-task`, perform
 no project closure and write no product foundation entries. After a merge, do not recheck ready
-dependent documents; the task cycle checks and adapts sources at its own start.
+dependent documents; the task cycle checks and adapts sources at its own start. The human needs
+one conversation that keeps the plan moving and its progress visible; keeping task execution and
+closure separate bounds it, and leaving the check of current sources to the point where
+implementation begins avoids repeating a check whose inputs can change again.
 
 This skill lives in `project-level/lead/skill/` of the-way. In the-way itself use the checkout or
 worktree the session works in, which `git rev-parse --show-toplevel` names; in a product use its
@@ -30,7 +33,7 @@ project skill with the `the-way-` prefix, never a personal copy.
 - Select and read the product's current foundation by "Reading the foundation" in that shared
   file (WAY-150), including the complete part map and whole selected entries. Every dispatched
   actor repeats that method for its work. Read a large definition/plan by
-  `project-level/plan/skill/reading_definition_and_plan.md` (WAY-151): complete inventories before selection,
+  `project-level/plan/skill/reading_definition_and_plan.md`: complete inventories before selection,
   whole relevant units and expansion; preserve every borrowed skill's mandatory whole reads.
 - Require a handed-over plan. Run `python -B <the-way>/project-level/readiness_check.py <definition>`
   and `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole files and read
