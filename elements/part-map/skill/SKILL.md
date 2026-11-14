@@ -55,12 +55,13 @@ follows from the entry.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for
-the part map (WAY-116):
+the part map:
 
 - Step 2: project only an entry whose every field is known before the code: a change to an
   existing part — its sentence, *Depends on*, a *Trust boundary* over files it already holds. A new
   part or a new surface is an open question of the definition, `— resolved in: breakdown`,
-  carrying what is known of it.
+  carrying what is known of it. Some map fields exist only once code and files do, so a part with
+  a field still unknown waits for the breakdown.
 - Step 4.3: the heading reads `#### <identifier> (changed)` above the whole entry as it will read.
 - "The first map of a product" below does not apply.
 

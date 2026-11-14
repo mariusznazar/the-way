@@ -52,11 +52,13 @@ follows from the entry.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for an
-invariant (WAY-117):
+invariant:
 
 - Step 3: *Method* reads `review`; the task that writes the invariant turns it to `test` with the
   test, where a cheap test can check the sentence; *Part* names parts the product's map holds, and `every` where the map holds
   no part yet; *Derives from* a projected decision reads
-  `TODO — <the decision's question>, projected in <the definition's path>`.
-- Step 4.3: the heading reads `#### <identifier>`.
+  `TODO — <the decision's question>, projected in <the definition's path>`. Code-dependent
+  evidence can be completed when the task writes the entry, so the method reads `review` until then.
+- Step 4.3: the heading reads `#### <identifier>`. Projecting keeps a future invariant visible in
+  the definition without claiming that it already holds.
 - After step 4.4 nothing is handed on: the test waits for the task that writes the invariant.

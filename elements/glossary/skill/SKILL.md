@@ -43,8 +43,9 @@ follows from the entry.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for a
-term (WAY-117):
+term:
 
 In projected mode, read `projected.md` beside this skill for choosing the words and
 rewriting their uses.
-- Step 4.3: the heading reads `#### <term>`.
+- Step 4.3: the heading reads `#### <term>`. Projecting keeps a future term visible in the
+  definition without claiming that it already holds.

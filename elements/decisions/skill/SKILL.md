@@ -53,7 +53,7 @@ the search of the foundation adds for this element.
 ## Projected mode
 
 In projected mode, read `elements/common/projected_mode.md`, with these differences for a
-decision (WAY-117):
+decision:
 
 - Step 1: ask for no prefix for a new decision; the task that writes it into the log asks for the
   prefix when the log has no entries. A projected change of an existing decision keeps its
@@ -61,4 +61,6 @@ decision (WAY-117):
 In projected mode, read `projected.md` beside this skill for the plan test and
 what follows from the decision.
 - Step 3: the heading reads `#### (new) — <question>` for a new decision, or
-  `#### <PREFIX>-<NN> — <question>` for a change of a current one.
+  `#### <PREFIX>-<NN> — <question>` for a change of a current one. Projecting keeps a future rule
+  visible in the definition without claiming that it already holds, so a new decision carries no
+  number yet.
