@@ -2,7 +2,7 @@
 
 This file defines how a product's part map is written. The map holds the parts of a product and
 what joins them: which part may depend on which, where a part takes in what the product does not
-control, and what the product promises to someone outside it (WAY-40). It holds rules and a
+control, and what the product promises to someone outside it. It holds rules and a
 description of the state that the return step compares with the code; a detail that changes with
 every change of the code lives in the code or in a test, never in the map (WAY-225, WAY-44).
 
@@ -14,12 +14,13 @@ to the part map (WAY-35).
 
 ## Where entries go
 
-- The whole map is one Markdown file, `foundations/part_map.md`, of the shape below (WAY-40).
-- It holds two kinds of entry — a **part** and a **surface** (WAY-40) — and three lists that are
+- The whole map is one Markdown file, `foundations/part_map.md`, of the shape below.
+- It holds two kinds of entry — a **part** and a **surface** — and three lists that are
   not entries: the external context (WAY-48), the files left out on purpose (WAY-44) and the
-  withdrawn identifiers (WAY-41).
+  withdrawn identifiers. Each kind answers what the other cannot: a part, what it is responsible for
+  and which files are its; a surface, what someone outside relies on.
 - An allowed dependency and a trust boundary are fields of the part they belong to, never entries
-  of their own (WAY-40, WAY-48). A critical flow has no entry (WAY-45).
+  of their own (WAY-48). A critical flow has no entry.
 - An entry is edited in place and carries no version; its history stays in git (WAY-07). A change
   of the code that changes what a part answers for, which files are its or what it may depend on,
   or what a surface promises, rewrites the entry in the same change (WAY-11).
@@ -29,7 +30,7 @@ to the part map (WAY-35).
 ## Identifiers
 
 The rules on when an entry's identifier stays, when a split or a merge replaces it, and how the
-one left behind is withdrawn and never reused stand in `elements/common/rules.md` (WAY-41).
+one left behind is withdrawn and never reused stand in `elements/common/rules.md`.
 
 ## Form of an entry
 
@@ -94,15 +95,18 @@ Every product whose parts import code from other parts holds one invariant of al
 with its test in the product's suite, that a file of a part imports only files of its own part, of
 the parts its *Depends on* names, of a part of test helpers where the importing file is a test (see
 "Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`"
-reading `Violated: yes` says it depends on today (WAY-299):
+reading `Violated: yes` says it depends on today:
 
 - the test reads this map and the imports of the product's own languages, and names the parts of
   test helpers by identifier; how it tells a test from other code is settled by the task that
   writes it;
 - the product writes the invariant and its test in the change that brings into the map a second
   part holding such code, and a product that already holds such parts writes them in a task of its
-  own (WAY-299);
+  own;
 - the-way's own is `cross-part-imports`, named in `elements/invariants/examples.md`.
+
+This is a duty rather than advice, since a step nothing enforces is the step an agent leaves out,
+and an import from outside the map then passes merge after merge unseen.
 
 A dependency the code holds that *Depends on* does not allow goes to the human. Where the human
 accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
@@ -111,7 +115,7 @@ meets it, as the invariants template's "Violated" gives it, while the invariant 
 dependencies above lets that import pass and keeps every other boundary; *Depends on* is never
 rewritten to fit what the code reaches for today (WAY-225, WAY-51). Each such invariant is a whole
 entry a human accepted, not a list of known violations, and the map holds no list of such
-dependencies (WAY-299, WAY-40).
+dependencies.
 
 ## Trust boundary
 
@@ -125,15 +129,18 @@ dependencies (WAY-299, WAY-40).
 ## Surfaces
 
 - A surface is what someone outside the product relies on — an API, a file format, a command — and
-  its entry states the promise in one sentence and names in *Relied on by* who relies on it
-  (WAY-49).
-- A change that alters a surface names the surface in its request (WAY-49).
+  its entry states the promise in one sentence and names in *Relied on by* who relies on it.
+- A change that alters a surface names the surface in its request, since a broken promise falls on
+  someone who took no part in the change, and the request names it for the agent reviewing the
+  change and the human merging it.
 
 ## Critical flows
 
 A critical flow has no entry in the map. What has to stay true along it is an invariant whose
 *Part* names the parts the flow runs through, and its test is a test of the product's suite like
-any other, run with the rest of the suite (WAY-45).
+any other, run with the rest of the suite. The product's tests run whole on every change, so a
+flow's test needs no list of parts to be chosen by, and the invariant's *Part* already names where a
+change can break the flow.
 
 ## Exchanges with the external context
 
@@ -161,7 +168,7 @@ The list is the only exception to "every tracked file has a part" (WAY-44).
 ## Withdrawn identifiers
 
 After the last entry the map carries its withdrawn identifiers, in the form, with the *Why* and the
-*Successors*, that `elements/common/rules.md` gives (WAY-41).
+*Successors*, that `elements/common/rules.md` gives.
 
 ## Fields and their readers
 
@@ -182,7 +189,10 @@ A field stays in this template only while someone or something reads it (WAY-05)
 ## The binding part
 
 The binding part of an entry is one sentence: a part's responsibility or a surface's promise.
-*Files*, *Depends on*, *Trust boundary* and *Relied on by* stay outside it (WAY-42).
+*Files*, *Depends on*, *Trust boundary* and *Relied on by* stay outside it. Whatever names an entry
+relies on what the entry answers for, and the other fields change more often without changing that,
+so making them binding would send the author to the entries naming it for changes that do not alter
+the promise.
 
 ## Examples
 

@@ -14,13 +14,13 @@ holds what is particular to an invariant (WAY-35).
 ## Where entries go
 
 - A product's invariant entries stand in one file, `foundations/invariants.md`, and after its last
-  entry the file holds its withdrawn identifiers (WAY-64).
+  entry the file holds its withdrawn identifiers.
 - The identifier names what the sentence constrains, never what it demands, so that a reworded
   sentence leaves it true; where another entry constrains the same thing, it adds the aspect this
   one protects, as `script-imports` and `script-subprocesses`.
 - An entry is edited in place and holds only its current wording; it carries no version, and its
   earlier wordings are read from git (WAY-07). An entry that takes in a clause of another keeps its
-  identifier, and the other is split (WAY-64).
+  identifier, and the other is split.
 
 ## Form of an entry
 
@@ -39,7 +39,7 @@ holds what is particular to an invariant (WAY-35).
 The form above gives each field the words it takes. The rest of the rule on `none` and `TODO`
 stands in `elements/common/rules.md` (WAY-71). After the last entry the file carries its withdrawn
 identifiers, in the form, with the *Why* and the *Successors*, that `elements/common/rules.md`
-gives (WAY-64).
+gives.
 
 ## Method and test
 
@@ -56,26 +56,29 @@ gives (WAY-64).
   input made up for it is the method of a sentence about the check it exercises, never of one about
   the data that check reads (WAY-61).
 - A test cites each invariant it checks, at the test, as a line `invariant: <identifier>` in the
-  comment form of its file's language (WAY-65). A test stands in a file of code (WAY-61, WAY-321); a
-  Markdown file holds no citing test.
+  comment form of its file's language. The citation stands at the test because that is where the
+  outcome is given (WAY-61). A test stands in a file of code (WAY-61, WAY-321); a Markdown file holds
+  no citing test.
 - An invariant's result is `pass` where every test citing it ran and passed, and `fail` where one of
   them failed; a run in which no test citing it ran gives it no result (WAY-63).
 - An invariant's test is seen failing once, with the command that later shows it passing: run before
   the code that satisfies it, or, where the code already has the behaviour, against that behaviour
   broken for a moment (WAY-08). It takes no agent of its own (WAY-69).
 - A test that gives different verdicts on one commit is fixed as any test of the product is; the
-  foundation records no quarantine for it (WAY-68).
+  foundation records no quarantine for it. A test that flips on one commit is a fault of the test,
+  and a green run again would hide the fault instead of answering it.
 - A change may alter an invariant test in any step of its task, and names in its request each
   invariant test it alters (WAY-03). A file is an invariant test of a change when it cites an
-  invariant on `{fork-point}` or on the commit being checked (WAY-65).
+  invariant on `{fork-point}` or on the commit being checked.
 
 ## The sentence
 
 - One entry states one invariant, in one sentence. The method and the links stand beside it, not
-  inside it (WAY-56). What one sentence may join is judged against the complying and violating pair
-  in WAY-56's *Verification* (WAY-56, WAY-12).
-- The sentence is the binding part; the method, the links, *Part* and *Violated* stand outside it
-  (WAY-56).
+  inside it. One invariant per entry lets the failure of its test, seen once, show that the test
+  catches that rule (WAY-08). What one sentence may join is judged against a pair: "every entry of
+  the log has every field of the template" complies as one entry, and "binding sentences number one
+  to three and contain no *should*" violates as one entry, since it joins two rules (WAY-12).
+- The sentence is the binding part; the method, the links, *Part* and *Violated* stand outside it.
 - A condition that decides whether a commit makes the sentence true stands in the sentence, unless
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
   the product pins — holds it; then the entry names that entry or decision by its identifier, in
@@ -102,7 +105,7 @@ gives (WAY-64).
   (WAY-60).
 - A sentence about what a check reports may also mean that the data it reads meets a rule; where
   it does, the data takes a sentence of its own, and the two stand as two entries, one about the
-  check and one about the data (WAY-56, WAY-61).
+  check and one about the data (WAY-61).
 
 ## Links
 
@@ -125,15 +128,16 @@ gives (WAY-64).
   each such source as a decision's *Based on* quotes a source that is no environment fact: its
   address, the place in it, the passage stating the rule, quoted word for word between quotation
   marks, and the date it was read, as `https://tracker.example.org/browse/GAME-12 § Acceptance
-  criteria — "a save of another version is rejected whole"; read 2026-10-21` (WAY-58).
+  criteria — "a save of another version is rejected whole"; read 2026-10-21`.
 - An entry a human chose from what the product already did before the task writing it began, and
   that neither a decision entry of the product's own log nor such a source carries, reads in
-  *Derives from* `recovered from code —` and the place in the code that shows the behaviour
-  (WAY-58).
+  *Derives from* `recovered from code —` and the place in the code that shows the behaviour.
+  Without that mark such an entry would read like a chosen rule and hide that its reason was never
+  settled, and the place in the code leads whoever weighs a change to the behaviour.
 - Neither a source nor the place in the code comes with a reason for the behaviour, nor one an
-  agent infers (WAY-58). A decision named anywhere but the product's own log — a numbered decision
+  agent infers. A decision named anywhere but the product's own log — a numbered decision
   in a concept document, a decision of the-way at the commit the product pins — is no decision
-  entry of it (WAY-58).
+  entry of it.
 
 ## Part
 
