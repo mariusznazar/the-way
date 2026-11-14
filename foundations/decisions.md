@@ -12950,13 +12950,16 @@ change.
 ### WAY-375 — Which working directories of earlier tasks does a cycle remove at its start, and which does it leave to the human?
 
 At the start of a new cycle the cycle runs a script of the-way that removes the working directory of
-an earlier task only where all of these hold at once: its tree is clean (WAY-376), every commit of
-it is on the remote, its branch is merged, and it belongs to a cycle, standing on a task's branch or
-being a detached copy of a base made for a check. A branch is merged where its tip is the second
-parent of a merge commit on the first-parent history of the remote target branch, which git alone
-shows, so that a branch merged by squash or rebase, a branch that stands at the target's tip with no
-commit of its own and a branch of a request closed unmerged are not merged. A directory of a cycle
-that the script does not remove stays, with its reason, for the human to decide.
+an earlier task only where all of these hold at once: its tree is clean as git's own check for
+removing a checkout reads it (WAY-376), every commit of it is on the remote, its branch is merged,
+and it belongs to a cycle, standing on a branch whose name begins with `task/` or whose directory
+holds the record of a cycle, or being a detached copy of a base made for a check. A branch is merged
+where its tip is the second parent of a merge commit on the first-parent history of the remote
+target branch, which git alone shows, so that a branch merged by squash or rebase, a branch that
+stands at the target's tip with no commit of its own and a branch of a request closed unmerged are
+not merged. A directory of a cycle that the script does not remove stays, with its reason, for the
+human to decide, and a detached checkout nested in a directory that is removed goes with it,
+whatever its name, only where it is clean and on the remote, else the directory that holds it stays.
 
 The script touches only the checkouts that `git worktree list` names for the repository, never the
 main checkout, the directory it is run in or a detached directory outside the cycle's, and it
