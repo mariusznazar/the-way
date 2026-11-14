@@ -38,8 +38,9 @@ the search of the foundation adds for this element.
 - *Verification*, where a test of a later slice of the same change will hold a sentence of this
   decision: carry a pair of examples for that part for now. The run of the foundation check made
   right after the entry is written reports a decision the change altered with nothing holding it,
-  and the switch of step 3 does not skip that report; the pair holds it until the test stands. The
-  return step removes the pair's part the test holds.
+  and the switch `--skip-test-citations` of that run, which step 4 of
+  `elements/common/way_of_working.md` gives, does not skip that report; the pair holds it until the
+  test stands. The return step removes the pair's part the test holds.
 
 ## 4. Ask, show, write
 
