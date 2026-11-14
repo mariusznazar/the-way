@@ -335,6 +335,10 @@ the order of their kinds.
   has two sources, the one sentence carries each pair once, such as "This correction answered your
   remark about a defect the task required, and it refreshed the branch from the target branch at
   your request, which the cycle judged nothing about."
+- **18.** *A working copy an agent could not remove* (`SKILL.md`, "Working copies"), from the
+  record's item *Working copies left*: in plain words that an agent's working copy stayed in the
+  ignored working directory of the task and why, that nothing waits for it, and that it is removed by hand or goes when the task's directory goes. One item
+  for all of them; the paths stand in *Checks*. A cycle with no such remainder has no such item.
 
 **What an item carries.**
 
@@ -447,7 +451,8 @@ paths' last run on the description and its last run on the copy of the record, e
 command and exit code (WAY-309); the image check's last run on the copy of the record, with its
 command and exit code (WAY-316); the remarks check's last run on the original and on the copy,
 and where it listed an item the cycle holds wrong, its command, exit code and listed line
-(WAY-295).
+(WAY-295); each working copy an agent could not remove, with its agent and its path from the
+repository's root.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
 one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row

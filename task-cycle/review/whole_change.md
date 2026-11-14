@@ -31,7 +31,8 @@ the report into the findings file of the fix that follows them (WAY-161).
 Judge, besides the task, what the change leaves in the structure of the code: the growth of a
 function or a file, code that has no user after the change, and a name that stopped being true
 (WAY-362). Take your numbers from two runs of your own, the first in the reviewed worktree, which it changes
-in nothing, and the second in separate worktrees:
+in nothing, and the second in worktrees of your directory for working copies that the dispatch
+names:
 
 - the lines of each changed file before the change and after it: from the root of the repository,
   `python -B task-cycle/change_file_sizes.py <base> <head>` on the dispatch's range, in a product
@@ -39,10 +40,10 @@ in nothing, and the second in separate worktrees:
   code 2 and an `Error:` line where it cannot read the range;
 - the functions and files over a threshold: the test of the invariant that the rule
   `### Size of a function and a file` in the product's `guidelines/coding.md` names, run as an
-  ordinary test of the product's suite in a separate worktree of the base and in one of the head
+  ordinary test of the product's suite in a worktree of the base and in one of the head
   (WAY-361). What the run on the head names and the run on the base does not is what the change
   pushed over a threshold. Where the rule's invariant is marked violated, its test stands marked as
-  an expected failure (WAY-51); take the mark off in your separate worktrees, so that the test's
+  an expected failure (WAY-51); take the mark off in those worktrees, so that the test's
   message shows. Where that heading holds `none —`, or the product's guidelines hold no such rule,
   there is no such test, the first numbers and the diff are your material, and a finding of
   structure is Minor (WAY-363).

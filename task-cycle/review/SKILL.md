@@ -92,10 +92,11 @@ scope are yours.
   evidence (WAY-219); a screenshot file among the commits of the range is a finding (WAY-316). A
   screenshot you take to show the human lies in the place the foundation settles for screenshots,
   outside the product's repository, and your report names its address; where the foundation settles
-  none, keep none (WAY-316, WAY-317).
+  none, keep none (WAY-316, WAY-317). The file the screenshot tool writes by itself is a working
+  copy, as the dispatch's paragraph on working copies gives.
 - Run the checks that tell this change apart from a broken one: focused tests, a scratch run. Run
-  them in a separate worktree of the head commit when they need files changed; never change the
-  reviewed worktree, its index or branch. The full suite is the cycle's own run before
+  them in a worktree of the head commit, in your directory for working copies that the dispatch
+  names, when they need files changed; never change the reviewed worktree, its index or branch. The full suite is the cycle's own run before
   the request; do not repeat it. A check you could not run is unverified, and says why.
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
@@ -157,6 +158,8 @@ Write the full report to the dispatch's report path. Its first line is `PASS <he
 - each check you ran, as its command and exit code or, for a manual check, its method and what it
   showed; each check you could not run, with the reason;
 - each reach beyond the dispatch (section 1): what, where and why.
+- each working copy you made: where it stood and that you removed it, or the remainder with its
+  full path.
 - **Unread material:** what of the dispatch — in the review of the whole change, of your own
   selection — you did not read whole, with what you read of it, or `none`. In the review of the
   whole change the section opens with the counts of section 1, how many decisions of your selection

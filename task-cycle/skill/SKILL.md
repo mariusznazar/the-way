@@ -41,9 +41,10 @@ with the evidence and stop.
    gitlink, and follow the product's git and test rules. Where the task moves the pin to a commit
    it names, move it now, before anything else of the cycle (WAY-34): create the task branch and
    record its base and the checks failing on it as step 4 gives, clone the-way at that commit into
-   the worktree's ignored `.runs/`, run the installer from that clone as `installation/README.md`
+   `.runs/pin/` of the worktree, run the installer from that clone as `installation/README.md`
    gives, and commit the gitlink with everything the installer rewrote, and the removal
-   `installation/README.md` asks for, as the task branch's first commit; then delete the clone. No
+   `installation/README.md` asks for, as the task branch's first commit; then delete the clone, as
+   "Working copies" below gives. No
    author makes that commit and no slice holds it. Then read this skill again from the worktree's
    `.the-way` and go on under the new pin: every later reading, dispatch and script of the cycle
    comes from it. The skills of the-way read `.the-way` from the directory their agent works in,
@@ -73,7 +74,8 @@ with the evidence and stop.
    variant that names the file comes; you read this skill and no method you do not conduct. Without
    subagents this cycle cannot run in that harness.
 
-The cycle writes only in the task's worktree and changes nothing outside the product repository,
+The cycle writes only in the task's worktree, the working copies of its agents included ("Working
+copies" below), and changes nothing outside the product repository,
 except the fast-forward of the checkout in step 4, the account of the request named below and the
 registry of running gates that `task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a
 directory of empty files that holds no content of the cycle;
@@ -149,7 +151,8 @@ set the task's state.
    commit, or the merged branch holds no copy of a cycle record with the result of its final gate,
    run the checks on the base as follows. Run those checks on the base alone: finish them before
    anything changes a tracked file of the worktree, or run them in a separate checkout of the base
-   commit directly under the worktree's ignored `.runs/`, deleted when they end. The gate's run on
+   commit in `.runs/base/` of the worktree, deleted when they end, as "Working copies" below gives.
+   The gate's run on
    the base is one of the gate runs step 10 gives: it goes through `task-cycle/gate_times.py` from
    that checkout, with `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the
    worktree's record directory from a checkout directly under its `.runs/`. In a product that
@@ -178,7 +181,9 @@ or the agent's role, the word `report` after it if at all (`author-report.md`, n
 `report`, `summary`, `findings` or `analysis`, answering that subagents should return findings as
 text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of
 its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths and commits of the
-frozen task and of the spec and plan where they exist, the answers of step 4, and the report path. The agent reads that `SKILL.md` whole, and a file it names, one beside it
+frozen task and of the spec and plan where they exist, the answers of step 4, the name of the
+agent's directory for working copies, and the report path, and copies word for word the first
+paragraph of "Working copies" below (WAY-148). The agent reads that `SKILL.md` whole, and a file it names, one beside it
 included, only when the step or variant that names the file comes (WAY-125); no handoff tells it to
 read at the start every file its method names. Where that `SKILL.md` opens with a table of
 variants, the handoff names the agent's variant in the words of its row: under `make-change`,
@@ -275,6 +280,30 @@ you and returns at its boundary, never starting the next stage or seeking human 
 go-ahead you give a stage is provisional, never the human's approval; by merging the request, the
 human accepts the foundation entries the cycle writes that were not accepted with the task document
 or at the readiness gate, which the request puts before the human (WAY-114).
+
+## Working copies
+
+An agent of the cycle that makes a working copy to check something — a worktree of a commit, a
+clone, a script, a screenshot, a prepared input of a test — makes it in a directory of its own
+directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never
+in the system's temporary directory, in the scratch directory of a session or in the main checkout
+of the repository. A file that a tool writes by itself outside that directory, such as the
+screenshot the Playwright server saves under its session's directory, is moved into the agent's
+directory and the original removed. Before the agent returns, each time it returns, it removes its
+copy — a worktree with `git worktree remove --force`, then `git worktree prune` — keeps in `reports/`
+beside its report what the report needs, and states in the report where each copy stood and that it
+was removed. Where a removal fails, the agent finishes all the same and names in the report the
+remainder, with its full path and the reason it stayed.
+
+The handoff gives the directory as `.runs/<name>/`, where `<name>` is the agent's stage or role and,
+where the cycle dispatches that stage more than once, a counter, such as `author`, `planner`,
+`executor-3`, `review-whole` and `review-whole-2`. No two agents of one cycle share a name, a resumed
+agent keeps its own, and `task-cycles` and `worktrees` are never a name. Your own copies stand the
+same way: the clone of step 2 in `.runs/pin/` and the checkout of the base of step 4 in
+`.runs/base/`, each removed when its use ends. A remainder that a report names, or that your own
+removal leaves, stops nothing: write it into the record's item *Working copies left*, and into the
+description as kind 18 of `task-cycle/skill/request_template.md`, so that the human sees it; it
+goes when the task's directory goes.
 
 ## Design and execution choice
 
@@ -536,7 +565,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     classification as evidence with the check, not as a separate record of the selected parts
     (WAY-261). Never present partial work as complete.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
-    review round and skipped stage. The final report names any write to the task's backlog entry.
+    review round and skipped stage, and every remainder of a working copy that a report names. The final report names any write to the task's backlog entry.
     The request is the human's first decision point.
 
 ## The process remarks check
