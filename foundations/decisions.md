@@ -9023,14 +9023,14 @@ whose dependencies and build output are ignored.
 | WAY-110 | its rule, the answer to "When does a deadline enter a project definition?", stands in `project-level/definition_template.md` | none |
 | WAY-111 | its rule, the answer to "What does the project level read in the current foundation?", stands in `project-level/skill/read_foundation.md` | none |
 | WAY-112 | its rule, the answer to "How does an agent develop and resume a project definition?", stands in `project-level/skill/idea.md` | none |
-| WAY-115 | its rule, the answer to "How are foundation entries found in a project's source?", stands in `elements/common/skill/build_table.md` | none |
+| WAY-115 | its rule, the answer to "How are foundation entries found in a project's source?", stands in `elements/common/skill/build_table.md`, `elements/common/skill/definition_variant.md` and `elements/common/skill/task_variant.md` | none |
 | WAY-116 | its rule, the answer to "Which foundation entries may a project definition project?", stands in `project-level/definition_template.md` | none |
 | WAY-117 | its rule, the answer to "How does a foundation entry stand in a project definition before it is written?", stands in `elements/common/projected_mode.md` | none |
 | WAY-119 | withdrawn: no decision carries *Review when* | none |
 | WAY-149 | withdrawn: it said only that a return-step test takes no deliberate break; every invariant test is seen failing once (WAY-08) | WAY-08 |
 | WAY-151 | its rule, the answer to "How much of large project definitions and existing plans does plan-project read?", stands in `project-level/plan/skill/reading_definition_and_plan.md` | none |
 | WAY-152 | its rule, the answer to "What does leading a project plan leave to others?", stands in `project-level/lead/skill/SKILL.md` | none |
-| WAY-156 | its rule, the answer to "How does project leading route a plan or definition change?", stands in `project-level/lead/skill/route_changes.md` | none |
+| WAY-156 | its rule, the answer to "How does project leading route a plan or definition change?", stands in `project-level/lead/skill/route_changes.md` and `project-level/lead/skill/definition_change.md` | none |
 | WAY-157 | withdrawn: how the orchestrator waits for an agent is a step of the task-cycle skill and binds no other work | none |
 | WAY-158 | its rule, the answer to "Who reads the full diff of a task-cycle change or slice?", stands in `task-cycle/skill/SKILL.md` | none |
 | WAY-159 | its rule, the answer to "When does the task-cycle orchestrator rely on focused-check evidence?", stands in `task-cycle/skill/SKILL.md` | none |
@@ -9047,7 +9047,7 @@ whose dependencies and build output are ignored.
 | WAY-181 | withdrawn: the order of a plan is an example the styleguide carries, and WAY-213 says who reads it and how | WAY-213 |
 | WAY-182 | its rule, the answer to "Where does a value of design tokens say it comes from, and who picks the source?", stands in `product-guidelines/styleguide/template.md` | none |
 | WAY-183 | its rule, the answer to "Which user interfaces of a product get a styleguide?", stands in `product-guidelines/styleguide/recognize.md` | none |
-| WAY-184 | its rule, the answer to "When does a product's styleguide come into being?", stands in `product-guidelines/styleguide/starting_rules.md` | none |
+| WAY-184 | its rule, the answer to "When does a product's styleguide come into being?", stands in `product-guidelines/styleguide/SKILL.md` and `product-guidelines/styleguide/starting_rules.md` | none |
 | WAY-185 | its rule, the answer to "What does the styleguide skill look at first?", stands in `product-guidelines/styleguide/recognize.md` | none |
 | WAY-186 | its rule, the answer to "Where do a styleguide's starting rules come from?", stands in `product-guidelines/styleguide/starting_rules.md` | none |
 | WAY-187 | its rule, the answer to "How does the styleguide skill audit a product that has screens?", stands in `product-guidelines/styleguide/audit.md` | none |
