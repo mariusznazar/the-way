@@ -254,6 +254,7 @@ class DecisionIndexTest(unittest.TestCase):
         result = self.index("--sections")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Sections: 0.", read_text(self.out))
+        os.remove(self.out)
         result = self.index("--section", "Saving")
         self.assert_error(result, "Saving")
 
