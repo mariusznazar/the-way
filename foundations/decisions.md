@@ -12877,6 +12877,70 @@ is removed, and the human sees it in the request.
 against keeping the writes of an agent inside the task's directory; a failed removal that stops the
 cycle — the cycle would stop for a thing the human removes with one command.
 
+### WAY-374 — Does the refinement of a task ask about a word its sources leave readable in two ways?
+
+At its step that resolves the gaps, the refinement of a task looks in the task document and in the
+sentences of the sources its required result rests on — the foundation decisions the document quotes
+and the sentences of the approved project definition — for a word that allows two different required
+behaviours and that none of the approved project definition, an entry of the foundation, a glossary
+entry included, and an answer of the human in the document settles. Where a sentence standing in the
+document or in such a source allows both readings and the readings give different, observable results
+inside the task's scope, the agent shows a short example from that scope and asks the human which
+reading holds, as a question of decision (WAY-113); the answer stands under the task's *Questions to
+settle*.
+
+A reading no sentence allows and a case outside the task's scope raise no question, the check owes no
+finding and no number of cases, and where the agent finds none it says nothing of the check. A
+meaning the human settles that a reader who knows the product's field would not give the word goes to
+the task's *Settlements to record* as a candidate glossary term (WAY-95), and an ambiguity in the
+approved project definition goes back to the definition and its readiness gate (WAY-118).
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the work with the decision:
+  - complies: a task document of a game says that the view shows the score, and the sentence of the
+    approved definition it quotes uses "view" once for the drawing of the board and once for every
+    screen of the browser, where the two give a different result in the task's scope; the agent
+    shows the two results and asks which reading holds, and the answer goes under *Questions to
+    settle*; a word whose reading an entry of the glossary settles raises no question; a task in
+    which the agent finds no such word says nothing of the check;
+  - violates: the agent takes one reading of the word and writes it into the task's *To do*; it asks
+    about a reading that no sentence of the document or of its sources allows, or about a case
+    outside the task's scope; it writes that it found no word read two ways; it sends every meaning
+    the human settled to *Settlements to record* as a glossary term; the check is read as a duty to
+    show some number of cases.
+- **Origin:** none
+
+*Rationale:* a word that the sentences of a task or of its sources allow two ways, with a different
+result for each, reaches the code when no step asks about it: the agent that makes the change takes
+one reading, and the difference shows only at the review of the request or after it, when it costs a
+return to what was settled. The refinement is where the human who can say which reading holds reads
+the whole document, so asking there costs one question. The-way takes this practice from lesson m2l2
+of the 10xDEVS course, where an agent that plans a change first probes the terms the request leaves
+undefined — "top N", "latest", "active" — with the smallest case in which two readings give a
+different result; it binds the refinement of a task by this decision and nowhere else (WAY-100).
+What the decision adds are its bounds. The sources are the task document and the sentences its
+required result rests on, so a word that stands only in a quoted decision or in the definition is
+reached and the rest of the foundation is not. A case counts only where a sentence standing in those
+files allows both readings, the standard WAY-99 sets for a word of the foundation, and where the
+difference shows inside the task's scope, because an agent told to find cases finds plausible ones.
+The check owes no finding and no number of cases, and says nothing where it finds none, for the same
+reason. A word of the process is settled by the glossary of the-way and a word of the product by the
+product's glossary, and only a meaning a reader of the field would not give takes an entry (WAY-95).
+The price: a word whose second reading no sentence of the document or of its sources allows passes,
+and so does a word that stands only in an entry of the foundation the document does not quote; a
+refinement that finds no such word shows no sign that the check ran.
+*Rejected:* only the words of the task document — it leaves out a word that stands in a quoted
+decision or in a sentence of the definition and not in the task's own text, though the sentence
+decides what the task requires; the whole definition and the whole foundation — the check becomes a ritual and
+invites cases from outside the task, which the bound exists to prevent; the principle of no duty and
+no number alone, the rest left to the agent's judgment — the shortest, but an agent readily adds
+plausible cases at the edge, so it protects least; one sentence that it found no word read two ways —
+it shows that the check ran, but it turns into a ritual and a temptation to add "but maybe", which
+is inventing cases by the back door; every settled meaning as a candidate glossary term — the
+glossary would grow by words nobody confuses, against WAY-95, which it would have to change.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
