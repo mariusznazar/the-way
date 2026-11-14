@@ -10,14 +10,18 @@
   without it.
 - The last column names a concrete thing a task would do or choose — "the data model of a team and
   its chest", "whether a button may run an action at once". A row with nothing concrete there is
-  shown as rejected, with its reason, and is not proposed.
+  shown as rejected, with its reason, and is not proposed. The concrete guess filters noise before
+  it becomes a rule.
 - A candidate from the material is a proposal: it enters only on the human's word, and the
   conversation may change it.
 - A candidate that repeats a choice the human made between ways shown — the answer to a question
   of decision that gave the ways open, their costs and a recommendation — is built `accepted`, not
   `waiting`, and marked in its state as the human's choice, so that the shown table lets the human
   strike it. The human accepts or rejects only the rows you derived from the material or from the
-  human's loose words (WAY-115, WAY-134); this holds only until the task's cycle starts (WAY-315).
+  human's loose words (WAY-134); this holds only until the task's cycle starts (WAY-315).
 - Write the table where, and with the row states, those lines give.
+- The working table stays until the step ends, each accepted row is recorded in it as it is worked
+  through, and the step then replaces the table with its `Candidates:` line recording how many rows
+  were shown and accepted.
 - No search of the whole foundation runs here; those lines say who makes it. A candidate that
   collides with an entry read in step 1 is shown beside it.

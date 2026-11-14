@@ -1,10 +1,10 @@
 # Projected mode
 
 A project definition projects entries of the foundation before the project is broken into tasks.
+Projecting keeps a future rule visible in the definition without claiming that it already holds.
 The skill `find-foundation-entries`, or `define-project` at the readiness gate, hands an entry to
 the skill of its element in projected mode, naming the definition. The steps of `way_of_working.md` run with these
-differences, and each element's skill adds its own
-(WAY-117):
+differences, and each element's skill adds its own:
 
 - Step 1: select and read the product's foundation where it exists by "Reading the foundation" in `way_of_working.md`;
   ask about no file to start and write no part map first — nothing is written into `foundations/`.

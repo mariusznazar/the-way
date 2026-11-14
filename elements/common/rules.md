@@ -8,7 +8,9 @@ which word each field takes, how its entries are named — stands in that elemen
 ## Language
 
 - An entry of every element is written in English, whatever language the product shows the people
-  who use it and whatever language its team speaks (WAY-72).
+  who use it and whatever language its team speaks. Every template's field and every word the rules
+  of form keep out is English, so an entry in another language would pass those rules unchecked, and
+  one language also makes the entries of the-way examples for every product.
 
 ## Every field, and the words `none` and `TODO`
 
@@ -42,24 +44,27 @@ which word each field takes, how its entries are named — stands in that elemen
 
 - Every entry of `foundations/invariants.md`, of the part map and of
   `foundations/environment_facts.md` carries an identifier of one or more words in lower case joined
-  by hyphens, such as `relation-model` (WAY-41, WAY-64).
+  by hyphens, such as `relation-model`. A reference rests on the identifier, and words are used
+  because a number says nothing where it is read.
 - The three files share one space of identifiers: no identifier is held by two entries or withdrawn
   identifiers of the three taken together, so that a reference resolves without naming its element;
-  `none` is no identifier, since *Successors* uses that word (WAY-64).
+  `none` is no identifier, since *Successors* uses that word.
 - An identifier stays the same when anything else about its entry changes — its files, its fields
-  or its wording. Splitting or merging entries gives each entry that comes out of it a new
-  identifier (WAY-41, WAY-64).
+  or its wording. Splitting or merging part map entries, or environment fact entries, or invariant
+  entries held there, gives each entry that comes out of it a new identifier, and any other change
+  keeps it. A change of meaning is made in the entry itself, so only a split or a merge changes an
+  identifier.
 
 ## Withdrawn identifiers
 
 - An identifier the invariants file or the environment facts file held on the commit the task
   branch left the main branch from stays in it, as an entry or as a withdrawn identifier; one that
-  never reached the main branch may go (WAY-64). An identifier of the part map left behind
+  never reached the main branch may go. An identifier of the part map left behind
   by a split or a merge, or of an entry removed with nothing in its place, stays in the map as a
-  withdrawn identifier and is never reused (WAY-41).
-- A withdrawn identifier stays withdrawn: it never names an entry again (WAY-41, WAY-64).
+  withdrawn identifier and is never reused.
+- A withdrawn identifier stays withdrawn: it never names an entry again.
 - Each of the three files carries its withdrawn identifiers in one list after its last entry, in
-  this form; a file with none leaves the list out (WAY-41, WAY-64):
+  this form; a file with none leaves the list out:
 
   ```markdown
   ## Withdrawn identifiers
@@ -67,11 +72,9 @@ which word each field takes, how its entries are named — stands in that elemen
   | Identifier | Why | Successors |
   ```
 
-- *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so
-  (WAY-41, WAY-64).
+- *Why* says why the identifier was withdrawn, and where entries were split or merged, it says so.
 - *Successors* lists the identifiers that took its place, joined by ` · `, each an entry or a
-  withdrawn identifier of the same file, or reads `none` where nothing took its place (WAY-41,
-  WAY-64).
+  withdrawn identifier of the same file, or reads `none` where nothing took its place.
 
 ## `{fork-point}`
 
