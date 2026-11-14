@@ -58,7 +58,7 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `.claude/skills/the-way-*/SKILL.md` | Project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, `maintain-styleguide`, `maintain-coding-guidelines`, and `maintain-testing-guidelines`. Each checks that the gitlink and the `.the-way` checkout show the same commit, reads its source skill from `.the-way` and each file the skill names there when the step that names it comes, then sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. It names no commit. The installer owns it and rewrites it when the pin moves; do not edit it by hand. |
 | `.agents/skills/the-way-*/SKILL.md` | The same entry points for Codex, byte for byte. |
 | `.claude/agents/the-way-stage.md`, `.claude/agents/the-way-author.md` | The definitions of the two agent types Claude Code dispatches the stages of a task cycle with: `the-way-stage` for every stage, and `the-way-author` for the one author, whose prompt cache lives an hour. Each gives its agent every tool of the session except the skill tool and a body of its own, so the agent starts without the list of skills and reads the method of its stage from a file. They are copies of `task-cycle/agent-types/` at the pinned commit, byte for byte, and name no commit. The installer owns them and rewrites them when the pin moves; do not edit them by hand. Codex has no such files. |
-| `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, the-way's methods in a task cycle even where a plugin offers its own, running the-way's scripts as `.the-way/<path>`, the empty part map's report and the skill that writes the first map, and running the product's tests with its one command before a merge, `elements/common/foundation_check.py` among them, or that check on its own while the command does not run it. It names no commit. The installer owns the block and rewrites it in place when the pin moves; do not edit it by hand, and keep the product's own instructions outside the markers. |
+| `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, the-way's methods in a task cycle even where a plugin offers its own, running the-way's scripts as `.the-way/<path>`, the empty part map's report and the skill that writes the first map, and running the product's tests with its one command before a merge, `elements/common/foundation_check.py` and `instruction-files/check_instructions.py` among them, or either check on its own while the command does not run it, and that CI runs the command on every merge request, with a pointer to the description in "Run the one command in CI" below. It names no commit. The installer owns the block and rewrites it in place when the pin moves; do not edit it by hand, and keep the product's own instructions outside the markers. |
 | `CLAUDE.md` | Created at the product root with the sole line `@AGENTS.md` when absent, so Claude Code receives the shared guidance and the product's other instructions in `AGENTS.md`. An existing file is preserved byte for byte. |
 | `.gitignore` | The line `.runs/`, under which the-way's skills keep their working files: a task cycle's record, the reports of research and the conversation of a project's refinement. |
 
@@ -78,9 +78,12 @@ the two submodule paths; review and stage the other files in the product's norma
 The installer does not change the product's tests. The product adds
 `python -B .the-way/elements/common/foundation_check.py`, run from its root, to the one command
 that runs all its tests (WAY-16), without the switch `--skip-test-citations`, so that the command
-reports an invariant that reads `test` and which no test cites (WAY-321). Until it does, the
-guidance in `AGENTS.md` tells the agent to run the check on its own and to report that the one
-command leaves it unchecked.
+reports an invariant that reads `test` and which no test cites (WAY-321). It adds
+`python -B .the-way/instruction-files/check_instructions.py`, run from its root, the same way: the
+script exits 1 when it reports an error, which stops the tests, and 0 when it reports only
+warnings, which stop nothing. Until the command runs one of the two checks, the guidance in
+`AGENTS.md` tells the agent to run that check on its own and to report that the one command
+leaves it unchecked.
 
 A product whose repository is public adds a second check, that no file git tracks holds an absolute
 path on the author's disk or, in a Markdown file, a link to a private note (WAY-324). The
@@ -130,6 +133,41 @@ command and does not import its functions: the command keeps its path, its argum
 the backticked texts of the sentence and its exit codes (the surface `tracked-private-paths-command`
 of the-way's part map), and its functions are not promised. A product that does not write the
 invariant and the test has no such check, and nothing in the product says so.
+
+## Run the one command in CI
+
+The installer writes no CI file. It does not know the product's host, language or environment, and a
+file it wrote would be overwritten at each move of the pin, or the installer would have to stop
+managing it once the product edited it. The product writes its own CI file by this description, so
+that its one command of tests (WAY-16) runs on every merge request and a red result shows before
+the merge. `.github/workflows/tests.yml` in the-way is the-way's own file for GitHub; it checks out
+the-way itself, not a product with a submodule, and is no file to copy.
+
+The CI file of a product:
+
+1. Runs on every merge request into the product's main branch, on the code of the request and with
+   no secret of the product, so that a request from outside cannot read one (on GitHub, the event
+   `pull_request`, never `pull_request_target`).
+2. Runs the product's one command of tests, the one its `AGENTS.md` names, and no other checking
+   command beside it.
+3. Has `.the-way` at the commit the product's gitlink records, never at the latest the-way (WAY-34):
+   it checks the product out with its submodules (on GitHub, `submodules: true`) and never moves the
+   submodule to a branch of the-way. Where the URL in `.gitmodules` needs a credential, the job
+   holds one that can only read.
+4. Has the Python that `.the-way/.python-version` declares, on which the-way's scripts run (WAY-89).
+5. Fetches the whole history of the request's branch and of the main branch, and makes
+   `refs/remotes/origin/HEAD` name the main branch. `foundation_check.py` compares the foundation
+   with the commit the branch left the main branch from, which `git merge-base HEAD <main branch>`
+   gives, taking the main branch from `origin/HEAD`. With a shallow history, or with no
+   `origin/HEAD`, it has nothing to compare with, skips the comparison and lists that it did, and
+   the run passes without it. On GitHub: `fetch-depth: 0` on the checkout, then
+   `git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/<main branch>`.
+
+The result is a required check. Once the job has run, set it in the branch rules of the main branch
+as required before a merge, with the repository's owner allowed to bypass (on GitHub, a job that has
+never run cannot be chosen, so this follows the first run). A check that only shows lets a red
+request be merged by oversight; the bypass lets the owner merge while the CI itself is broken.
+Give the job a name that stays: the rule names it.
 
 ## Moving the pin
 
@@ -229,7 +267,7 @@ python -B gate/run_tests.py installation
 
 The tests use temporary Git repositories to check the preview, refusal, exact gitlink, repeated
 run, preservation of existing files, a conflicting wrapper in either skill directory, entry points
-and guidance without a commit, guidance naming only scripts the pinned commit holds, a moved
+and guidance without a commit, guidance naming only scripts and README sections the pinned commit holds, a moved
 pin — the gitlink alone where nothing else reads differently, and otherwise the block rewritten in
 place, every entry point rewritten, one created for an added skill and one deleted for a removed
 skill, with the product's own skill kept —, a preview of a move that changes nothing, a move
