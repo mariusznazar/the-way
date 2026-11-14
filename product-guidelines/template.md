@@ -10,7 +10,9 @@ look of the product stands alone with its reason in one sentence and its *Decisi
 (WAY-168). No script checks the form of guidelines: the review of a change that writes or changes
 them compares them with this template and, where the-way gives one, the template of their
 discipline, and `elements/common/foundation_check.py` reports a decision number, a rule's invariant
-or a part of *Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
+or a part of *Applies to* that the foundation does not hold, or holds as withdrawn. The form of a file of guidelines misleads no agent that reads it, while
+what a rule says can and only a reading judges that, but a reference that names no entry does
+mislead and a check of references finds it in every file at once.
 
 A rule below that a decision of the-way sets cites that decision. Nothing of this template is copied
 into a product: a product's guidelines follow it at the commit the product pins (WAY-34).
@@ -36,7 +38,7 @@ into a product: a product's guidelines follow it at the commit the product pins 
 ## Required form
 
 Every file of guidelines holds the form of the fenced block below. A discipline's template adds
-sections and required rules to it at the places it names (WAY-171).
+sections and required rules to it at the places it names.
 
 ```markdown
 # <Discipline> guidelines — <what they cover>
@@ -67,16 +69,16 @@ sections and required rules to it at the places it names (WAY-171).
 - *Discipline* names the discipline the file covers. Where the-way holds a template of that
   discipline, `product-guidelines/<discipline>/template.md`, that template adds to this form;
   otherwise this form alone applies, so a product may keep guidelines of a discipline the-way gives
-  no template of (WAY-171).
+  no template of.
 - *Applies to* names parts of the product's map, joined by ` · `; `foundation_check.py` reports a
-  part the map does not hold (WAY-170, WAY-171).
-- `## When to read` says when an agent reads the file: before which work, on which part (WAY-171).
+  part the map does not hold.
+- `## When to read` says when an agent reads the file: before which work, on which part.
 - **A binding rule** stands under `## Rules`, under a `### ` heading of its own, with the fields
-  *Decision*, *Invariant*, *Good* and *Bad* in that order, followed by how to apply it (WAY-171).
+  *Decision*, *Invariant*, *Good* and *Bad* in that order, followed by how to apply it.
   *Decision* names, by identifier, at least one decision of the product's log that carries the
   rule's choice, or reads `none` where the rule only says how to write code, tests or the look of
   the product; *Good* may describe in one line a use that follows the rule and *Bad* one that
-  breaks it, and each reads `none` where the rule gives no such use (WAY-168, WAY-171).
+  breaks it, and each reads `none` where the rule gives no such use (WAY-168).
 - **An invariant only where a cheap test checks the rule.** *Invariant* names the invariant whose
   test in the product's suite checks the rule on a convention of the product's code — a value
   written in place of a design token, an endpoint that skips the validation of its input — and
@@ -87,17 +89,19 @@ sections and required rules to it at the places it names (WAY-171).
 - **A rule lists no state and repeats no decision or value.** It does not list the state of the
   product's code or of the product, such as the endpoints the code has today, and it repeats neither
   a decision of the product's log nor a value taken from a configuration file, such as the version of
-  a tool; it says what the author of the code is to do. The list of `### Logging scope`, which WAY-274
+  a tool; it says what the author of the code is to do. A sentence that lists what the code or the
+  product is today goes stale when the code changes, and a sentence that repeats a decision or a
+  value of a configuration file is a second copy that drifts from the first. The list of `### Logging scope`, which WAY-274
   gives as the product's promise and no inventory of its code, is no such state (WAY-312, WAY-274).
 - **What holds no rule is an example**: it stands under `## Examples`, under a `### ` heading of its
   own, and carries no *Decision* field. A rule with *Decision* `none` binds, so it is a rule, not an
   example (WAY-168).
 - **`## Where in code`** lists, as paths in backticks relative to the root of the repository, the
   files and directories of the product the guidelines point to, each a path git tracks, and copies
-  no value from them (WAY-171).
+  no value from them.
 - **A required section or required rule the product drops** holds, as its only text, the marker
-  `none —` followed by the product's decision that departs from the template: `none — <PREFIX-NN>`
-  (WAY-171). Text the departing decision keeps as an example may then stand under `## Examples`
+  `none —` followed by the product's decision that departs from the template: `none — <PREFIX-NN>`.
+  Text the departing decision keeps as an example may then stand under `## Examples`
   (WAY-168).
 
 ## Rules of writing
@@ -106,10 +110,12 @@ sections and required rules to it at the places it names (WAY-171).
   by its identifier alone, with no fingerprint and no version, and name an entry the foundation
   holds and has not withdrawn (WAY-02); `elements/common/foundation_check.py` reports a decision
   number anywhere in the file, and an invariant of a rule's *Invariant*, that names no entry or a
-  withdrawn one (WAY-170).
+  withdrawn one.
 - **A changed entry brings its rules along.** A change that changes the binding part of a decision
   or an invariant the guidelines name brings every rule naming it in line in the same change; its
-  author finds those rules by the entry's identifier (WAY-169).
+  author finds those rules by the entry's identifier. Guidelines that say something other than
+  their decision are worse than weak ones, since agents go on following the old rule, and the
+  author of the change that moved the entry knows what moved.
 - **A rule with no decision is accepted as a row of the task's table.** A new or changed rule with
   *Decision* `none` is accepted by the human as a row of the task's table of settlements, with
   *Goes to* `guidelines: <discipline>`, before the code that uses it. A rule the cycle finds itself is named
@@ -120,7 +126,7 @@ sections and required rules to it at the places it names (WAY-171).
   closed lists, the headings of required rules and the marker `none —` stay in English, because
   the-way's templates and skills name them and the check of references reads fields by their names;
   the rest of the text is in the language the product writes its guidelines in, which the-way does
-  not set (WAY-171). Its price: a product may write one file of guidelines in one language and
+  not set. Its price: a product may write one file of guidelines in one language and
   another in another.
 
 ## Note: a file of guidelines read as an instruction file

@@ -5,11 +5,11 @@ items below. For a new kind in a product that has coding guidelines, check of th
 only those the kind touches, as "A new kind" in step 3 of `SKILL.md` gives.
 
 - Check that the task document holds what `task_document.md` beside this skill names, that each
-  standing check has its adopting or departing decision among the choices settled (WAY-202), that
+  standing check has its adopting or departing decision among the choices settled, that
   a task of the first guidelines, of an extension or of a refresh that met the check of
   `recognize.md`, where `guidelines/coding.md` did not yet hold the rules on failures and logs, has
-  the product's decision on them among the choices settled, adopted or departed from with its reason
-  (WAY-279), and that no choice stands settled without the human's words. A task that found those
+  the product's decision on them among the choices settled, adopted or departed from with its reason,
+  and that no choice stands settled without the human's words. A task that found those
   rules in place, a heading holding `none —` among them, checks nothing of them. The same holds
   for the product's decision on the rule of size, which a task of the first guidelines, of an
   extension or of a refresh that met the check of `recognize.md` has among the choices settled,

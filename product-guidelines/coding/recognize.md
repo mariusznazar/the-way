@@ -1,7 +1,8 @@
 # Recognize
 
 - Name the parts of the product's map that hold code, the scripts of its build included, however
-  small (WAY-208). Before the first code, name the parts the product's plan gives that code; where
+  small. An agent left free does something different in every task, and a small part of code drifts
+  as surely as a large one. Before the first code, name the parts the product's plan gives that code; where
   the map holds no part for it yet, its identifier is a question of the task, and *To do* gains
   adding that part, with the files the task creates, through `update-part-map`.
 - Read the product's root `AGENTS.md` whole, of which `refine-task` read only the section
@@ -12,10 +13,13 @@
 - Find in the product's files what it has for that code — a linter, a formatter, an audit of
   dependencies, each with its configuration and version; what writes its log lines; kinds of code it
   already holds files of other than tests (WAY-231), such as endpoints, migrations or modules; or
-  nothing — and whether it has coding guidelines. Say plainly when it has nothing (WAY-210).
+  nothing — and whether it has coding guidelines. Say plainly when it has nothing.
 - That gives the mode, and modes combine:
   - no code: the starting set of step 2, so that the general file with its standing checks comes
-    into being before the first task that writes the product's code (WAY-209);
+    into being before the first task that writes the product's code, and the file of a kind of code
+    comes into being with the task that creates the first file of that kind, since the first code
+    written with no standing check is the code every later change copies and checks brought to it
+    afterwards find code to clean;
   - code and no coding guidelines: step 2, and the trial run and the audit of step 3;
   - a task that creates the first file of a kind of code: "A new kind" in step 3; where the product
     has coding guidelines and none of its standing checks reads the language of that kind's files,
@@ -33,7 +37,9 @@
   every product; a heading holding `none —` is no absence. Where they are missing, propose the
   rules as `settle.md` beside this skill words them. The human's yes makes the task an extension,
   so steps 2 and 3 run as for one; the human's no is a departure with its reason, which the same
-  task writes as the coding template gives (WAY-278, WAY-279).
+  task writes as the coding template gives. Adding these rules covers something new, so it is an
+  extension, and a refresh, which stays within what the guidelines cover, can only notice the
+  absence and put it to the human.
 - At a refresh, look in the same file for the heading `### Size of a function and a file`, which
   stands in the coding template and stays in English; a heading holding `none —` is no absence.
   Where it is missing, propose the rule as `settle.md` words it, and the human's yes or no goes as
