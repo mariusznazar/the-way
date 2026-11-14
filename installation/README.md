@@ -184,8 +184,8 @@ directory. A Windows junction, which Git does not carry to a clone and which loo
 counts as a symlink wherever the installer checks for one: a junction on the path of a file it
 writes (`.claude`, `.claude/skills`, the folder of an entry point, `.agents/skills`, `foundations`
 and the rest) stops the run before anything is written, a junction at `.the-way` stops it, and a
-junction at the folder of a skill or agent type the commit lacks is not followed, so nothing is
-deleted through it.
+junction at the folder of a skill the commit lacks, or at the path of an agent type's file, is not
+followed, so nothing is deleted through it.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line

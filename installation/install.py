@@ -376,7 +376,7 @@ def stale_entry_points(target: Path) -> list[Path]:
     stale = []
     for directory in SKILL_DIRECTORIES:
         skills = target / directory / "skills"
-        if is_link(skills) or not skills.is_dir():
+        if is_link(target / directory) or is_link(skills) or not skills.is_dir():
             continue
         for entry in sorted(skills.iterdir()):
             name = entry.name.removeprefix("the-way-")

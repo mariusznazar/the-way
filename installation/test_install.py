@@ -733,6 +733,43 @@ class InstallTest(unittest.TestCase):
                     self.assertEqual((outside / "SKILL.md").read_text(encoding="utf-8"), own)
                     self.assertTrue((self.product / directory / "skills/the-way-gone").is_junction())
 
+    def test_the_scan_for_stale_files_does_not_enter_a_junction_at_their_directory(self) -> None:
+        # invariant: installation-paths-through-links
+        # `plan` refuses these junctions before it scans, so the scans are called directly: they
+        # are the protection of the deletion if `plan` is ever reordered.
+        entry = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
+                                      self.commit).replace("the-way-record-decision",
+                                                           "the-way-gone")
+        definition = ("---\nname: the-way-gone\ndescription: An earlier type. "
+                      f"{install.OWN_AGENT_MARK}\n---\n")
+        agents, skills = install.stale_agent_definitions, install.stale_entry_points
+        # (the junction, or None for real directories; the file's path below the junction or the
+        # product; its text; the scan)
+        cases = (
+            (None, ".claude/agents/the-way-gone.md", definition, agents),
+            (None, ".agents/skills/the-way-gone/SKILL.md", entry, skills),
+            (".claude/agents", "the-way-gone.md", definition, agents),
+            (".claude", "agents/the-way-gone.md", definition, agents),
+            (".agents/skills", "the-way-gone/SKILL.md", entry, skills),
+            (".agents", "skills/the-way-gone/SKILL.md", entry, skills),
+        )
+        for number, (junction, relative, content, scan) in enumerate(cases):
+            with self.subTest(junction=junction, scan=scan.__name__):
+                self.another_product(f"product-scan-{number}")
+                if junction is None:
+                    held = self.product / relative
+                else:
+                    outside = Path(self.temporary.name) / f"outside-scan-{number}"
+                    outside.mkdir()
+                    self.junction(junction, outside)
+                    held = outside / relative
+                held.parent.mkdir(parents=True, exist_ok=True)
+                held.write_text(content, encoding="utf-8", newline="\n")
+                # The same file below real directories is found, so an empty result below a
+                # junction is the junction's doing and not a file the scan cannot see.
+                self.assertEqual(scan(self.product), [held] if junction is None else [])
+                self.assertEqual(held.read_text(encoding="utf-8"), content)
+
     def test_rejects_a_junction_at_the_submodule_directory(self) -> None:
         # invariant: installation-paths-through-links
         applied = self.install("--apply", input_text="y\n")
