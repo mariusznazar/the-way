@@ -81,7 +81,8 @@ breakdown of an approved definition into a project plan and the check of that pl
 refinement of a task before its implementation cycle, whether the task belongs to a project,
 uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
 refinement and evidence-backed upkeep of task states, and for how the line of a task in the product's
-backlog is made, given its dependencies and moved to ready.
+backlog is made, given its dependencies and moved to ready, and for the tests of its readiness
+check, its plan check and its reader of task-cycle evidence for plan states.
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
@@ -127,8 +128,8 @@ what only work on the audit needs stays out of what every agent of the cycle rea
 
 ## gate
 
-The part answers for the command that runs every test of the-way, and for the tests of critical
-flows.
+The part answers for the command that runs every test of the-way, with its tests, and for the tests
+of critical flows.
 
 - **Files:** gate/**
 - **Depends on:** none
@@ -166,7 +167,8 @@ agents' tools and of CI that direct them.
 
 The part answers for the principles by which instruction files for coding agents are written,
 judged and kept, for the account of how Claude Code, Codex and Cursor load them, and for the skill
-that applies those principles with the script that checks instruction files mechanically.
+that applies those principles with the script that checks instruction files mechanically and its
+tests.
 
 - **Files:** instruction-files/**
 - **Depends on:** decisions · environment-facts · installation
@@ -174,7 +176,8 @@ that applies those principles with the script that checks instruction files mech
 
 ## installation
 
-The part answers for preparing a product repository to use one pinned commit of the-way.
+The part answers for preparing a product repository to use one pinned commit of the-way: the
+installer, its tests and a README explaining how a product uses the pinned version.
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
