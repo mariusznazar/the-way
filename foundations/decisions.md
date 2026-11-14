@@ -396,9 +396,10 @@ whatever no longer matches. In the same change it writes the sources outside the
 change rests on and the foundation does not yet hold, as environment facts, a word the change uses
 in a meaning for which WAY-95 gives it an entry, as a glossary term, and the accepted settlements
 (WAY-134), each in the place the questions of the decisions template give it and as an entry of the
-decision log only where it passes all of them, and projected entries (WAY-126) the task carries
-that are not yet written. It writes an invariant only for a rule the task, a decision or a human
-sets, never for code behaviour merely because no invariant covers it.
+decision log only where it passes all of them and where someone who does not know the decision would
+do otherwise and a test that stops them would not tell them why, and projected entries (WAY-126) the
+task carries that are not yet written. It writes an invariant only for a rule the task, a decision
+or a human sets, never for code behaviour merely because no invariant covers it.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, task-cycle
 - **Based on:** none
@@ -425,7 +426,8 @@ settlement that binds after the merge is written where its reader looks for it a
 change meets it, which for many settlements is a skill, guidelines or the product's data or code
 and not a second copy of it in the log; the step that finds what no longer matches applies the same
 questions as the step that writes the entries first, so the two do not place one settlement in two
-places.
+places. An entry that nobody would act against, or whose test already tells why, only repeats what
+the code says.
 *Rejected:* the foundation changed only at the foundation step — what implementation teaches stays
 in the code; a search of the diff and the task's log for every behaviour no invariant covers, each
 turned into an invariant where a later change could break a requirement — it costs a large share of
@@ -577,15 +579,20 @@ command of their own — of two commands an agent runs one.
 
 ### WAY-17 — Which links between foundation entries are mandatory?
 
-Every link of the chain fact → decision → invariant → test is written in the entry that depends
-on the other, and none is optional: a decision and an invariant name the environment facts they
-rest on, an invariant derived from a decision names that decision, and a check names its
-invariant.
+Every link of the chain fact → decision → invariant → test is written in the entry that depends on
+the other, and none is optional: a decision and an invariant name the environment facts they rest
+on, an invariant derived from a decision names that decision, and a check names its invariant, or,
+where it holds a decision's sentence by a line `decision:`, that decision, with no invariant
+between.
 
 - **Scope:** decisions, invariants, environment-facts
 - **Based on:** none
 - **Relations:** derives from WAY-02
-- **Verification:** none
+- **Verification:** an agent compares the change with the decision:
+  - complies: a test that holds a sentence of a decision carries a line `decision:` naming that
+    decision, and no invariant is written between them; a test that checks an invariant carries a
+    line `invariant:` naming it;
+  - violates: a test that checks an invariant or holds a decision's sentence names neither.
 - **Origin:** none
 
 *Rationale:* the chain is the path a change travels, so a missing link breaks it without a sign,
@@ -2833,15 +2840,14 @@ shown only the entries no row carries.
 ### WAY-115 — How are foundation entries found in a project's source?
 
 The agent reads the project's sources in full and selects and reads the product's foundation under
-WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind,
-its source and the concrete
-choice or action the next reader would otherwise have to guess; a row without such a consequence
-is shown as rejected. The human accepts or rejects the rows the agent derived before they are
-handed to the skills of their kinds, while a row that repeats a choice the human made between ways
-shown enters the table accepted, marked as the human's choice, and stays unless the human strikes
-it; each accepted row is recorded as it is worked through. The definition keeps the
-working table until the step ends, then replaces it with a `Candidates:` line recording how many
-rows were shown and accepted.
+WAY-150, then shows the human a complete candidate table with each proposed settlement, its kind or
+its place, its source and the concrete choice or action the next reader would otherwise have to
+guess; a row without such a consequence is shown as rejected. The human accepts or rejects the rows
+the agent derived before they are handed to the skills of their kinds, while a row that repeats a
+choice the human made between ways shown enters the table accepted, marked as the human's choice,
+and stays unless the human strikes it; each accepted row is recorded as it is worked through. The
+definition keeps the working table until the step ends, then replaces it with a `Candidates:` line
+recording how many rows were shown and accepted.
 
 - **Scope:** elements-common, project-level
 - **Based on:** none
@@ -3626,14 +3632,13 @@ refinement reads for the parts the task touches, or a projected entry the task c
 states is no candidate. The task's cycle writes each kept row whole in the place its column gives,
 in the same change as the code, in its foundation step, or in its return step where the foundation
 step missed it, one that no code makes true included, keeping its meaning and choosing its wording,
-and gives a decision written from a row as its rejected options
-only the ways not chosen that the row's source keeps, `none considered` where the human said so, or
-`unknown`; where that meaning cannot hold, or the entry needs any other value neither the row nor
-the cycle's work gives, the cycle asks the human through a blocked draft request rather than write
-another entry, and otherwise the entry's meaning is the one the human accepted with the row in the
-task document (WAY-114); a kept row whose settlement the cycle's search of the whole foundation
-(WAY-33) finds already stated becomes no second entry, the cycle tying the row to that entry and
-naming both in the request.
+and gives a decision written from a row as its rejected options only the ways not chosen that the
+row's source keeps, `none considered` where the human said so, or `unknown`; where that meaning
+cannot hold, or the entry needs any other value neither the row nor the cycle's work gives, the
+cycle asks the human through a blocked draft request rather than write another entry, and otherwise
+the entry's meaning is the one the human accepted with the row in the task document (WAY-114); a
+kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
+becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
@@ -3642,78 +3647,78 @@ naming both in the request.
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
-    code and lists it in the lower part of the request's description; a task whose refinement found nothing carries the counting
-    line with none below it; in an orchestrated round the project orchestrator shows the candidate
-    table and required challenge questions while the refiner records the human's answers; the
-    cycle's search finds a decision of an untouched part that already states a kept row, and the
-    request names the row with that decision instead of a new one; a decision row whose question
-    keeps two ways the human did not choose gives its decision those two as rejected options, and
-    one whose source keeps none, or keeps only ways that answer another part of the question,
-    gives `unknown` with no question to the human; the row that repeats the choice the human made
-    between two ways shown stands in the table accepted and marked, while the rows the agent
-    derived from the material wait for the human; a rule of how an agent works that only one skill
-    holds stands in the table as a row that goes to that skill, the human accepts it with the other
-    rows, and the cycle writes the line in the skill in the same change as the code;
+    code and lists it in the lower part of the request's description; a task whose refinement found
+    nothing carries the counting line with none below it; in an orchestrated round the project
+    orchestrator shows the candidate table and required challenge questions while the refiner
+    records the human's answers; the cycle's search finds a decision of an untouched part that
+    already states a kept row, and the request names the row with that decision instead of a new
+    one; a decision row whose question keeps two ways the human did not choose gives its decision
+    those two as rejected options, and one whose source keeps none, or keeps only ways that answer
+    another part of the question, gives `unknown` with no question to the human; the row that
+    repeats the choice the human made between two ways shown stands in the table accepted and
+    marked, while the rows the agent derived from the material wait for the human; a rule of how an
+    agent works that only one skill holds stands in the table as a row that goes to that skill, the
+    human accepts it with the other rows, and the cycle writes the line in the skill in the same
+    change as the code;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; a settlement that goes to a skill, to guidelines or to the
     product's code is left out of the table because it is no entry, or is written into the log as a
-    decision; the refinement writes whole entries into the task document; a
-    kept row repeats a rule a current decision the refinement read states; the cycle writes a
-    second entry for a rule its search found already stated; an orchestrated refiner asks the human
-    directly about candidates or substitutes its own acceptance; a task document keeps the human's
-    choice among ways shown without the ways not chosen; the cycle fills a decision's rejected
-    options with ways it derives from what the cycle would otherwise guess, or blocks the request
-    to ask the human for them; a row that repeats the human's choice between ways shown waits for
-    the human's acceptance like a row the agent derived.
+    decision; the refinement writes whole entries into the task document; a kept row repeats a rule
+    a current decision the refinement read states; the cycle writes a second entry for a rule its
+    search found already stated; an orchestrated refiner asks the human directly about candidates or
+    substitutes its own acceptance; a task document keeps the human's choice among ways shown
+    without the ways not chosen; the cycle fills a decision's rejected options with ways it derives
+    from what the cycle would otherwise guess, or blocks the request to ask the human for them; a
+    row that repeats the human's choice between ways shown waits for the human's acceptance like a
+    row the agent derived.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
-one a project settles, yet with no place in the task document it reaches the cycle as an answer to
-a question, where it reads as one more choice the cycle may make otherwise; the same holds for one
+one a project settles, yet with no place in the task document it reaches the cycle as an answer to a
+question, where it reads as one more choice the cycle may make otherwise; the same holds for one
 that goes to a skill, to guidelines or to the product's data or code, which the human also sees and
 accepts in the table, since a settlement the cycle placed on its own would bind with a place and a
-wording nobody approved. A row in the human's
-words carries the meaning into the cycle without a second point of acceptance: the wording stays
-the agent's, as for every entry a cycle writes, the human judged the meaning when accepting the row,
-and the merge does not ask again, while the review of the whole change reads the entry against the
-row. A row that repeats a choice the human made between ways shown carries that choice already, so
-it enters accepted and the human cuts only the rows the agent derived; asked again, the human
-would answer what the choice settled, and the price is that the row is the agent's summary of a
-choice the human did not read at the choice, so a wrong summary is caught only by reading the table
-when the document is accepted. A
-table read from the whole document finds a settlement said in passing, and its column of what the
-cycle would guess drops one no reader would miss. Refinement compares the candidates with the
-entries it reads for the task's parts; what no link joins, the one search of the whole foundation
-finds once the cycle has settled the entry (WAY-33), and a rule already stated keeps one entry. A
-meaning that cannot hold goes back to the human before the request because the human settled it,
-and finding the change only at the merge would leave code already written for another meaning. In
-an orchestrated round a single human-facing agent keeps these choices together without making the
-refiner a second channel to the human. The ways the human saw and did not choose outlive the
-conversation that showed them only in the task document. A rejected option the writer of an entry
-derives reads as one the human weighed, and an agent that proposes it later has to say what has
-changed for a way nobody turned down, so a way kept from the refinement is written and a missing
-one is `unknown`, which tells the reader nobody knows what was weighed.
-*Rejected:* whole entries written while the task is refined, as a project definition projects
-them — a task has no gate to approve their wording, and refining a task would weigh as much as
-defining a project; noting a settlement only when the human states one — a settlement said in
-passing in the request is missed, and the agent alone decides what binds; letting the cycle change
-or drop a settlement and show the difference in the request — the human's settlement could be
-reversed and seen only once the code is written; decisions and invariants alone — a word whose
-meaning the human settled would be defined by the cycle; a search of the whole foundation when a
-task's candidates are named — it repeats the cycle's search on wording not yet settled; the ways
-not chosen of every choice kept in the source of its row — they would have to be carried from the
-question to the building of the table, a cell of the table takes no line break, and an
-orchestrated refiner transfers answers into the task's questions, not into its table; the rule of
-rejected options in the templates alone — this decision would still have the cycle ask the human
-where the template has it write `unknown`, and an agent comparing a change with this decision would
-take `unknown` for a breach; the rule as part of WAY-29 — its question is a decision recovered from
-code, a new rule beside an existing one is a new question (WAY-19), and with this decision still
-having the cycle ask, the two would need a precedence; a decision of its own — one more entry,
-while this one has to be corrected anyway; every row accepted separately, as before — a second
-consent to the same choice; rows that repeat a choice kept out of the table, the cycle writing the
-decision straight from the answer under the question — the sieve of choices that bind no longer
-after the merge goes (the column of what the cycle would otherwise guess), the cycle itself judges
-which choice to enter, and this decision needs a stronger rebuild.
+wording nobody approved. A row in the human's words carries the meaning into the cycle without a
+second point of acceptance: the wording stays the agent's, as for every entry a cycle writes, the
+human judged the meaning when accepting the row, and the merge does not ask again, while the review
+of the whole change reads the entry against the row. A row that repeats a choice the human made
+between ways shown carries that choice already, so it enters accepted and the human cuts only the
+rows the agent derived; asked again, the human would answer what the choice settled, and the price
+is that the row is the agent's summary of a choice the human did not read at the choice, so a wrong
+summary is caught only by reading the table when the document is accepted. A table read from the
+whole document finds a settlement said in passing, and its column of what the cycle would guess
+drops one no reader would miss. Refinement compares the candidates with the entries it reads for the
+task's parts; what no link joins, the one search of the whole foundation finds once the cycle has
+settled the entry (WAY-33), and a rule already stated keeps one entry. A meaning that cannot hold
+goes back to the human before the request because the human settled it, and finding the change only
+at the merge would leave code already written for another meaning. In an orchestrated round a single
+human-facing agent keeps these choices together without making the refiner a second channel to the
+human. The ways the human saw and did not choose outlive the conversation that showed them only in
+the task document. A rejected option the writer of an entry derives reads as one the human weighed,
+and an agent that proposes it later has to say what has changed for a way nobody turned down, so a
+way kept from the refinement is written and a missing one is `unknown`, which tells the reader
+nobody knows what was weighed.
+*Rejected:* whole entries written while the task is refined, as a project definition projects them —
+a task has no gate to approve their wording, and refining a task would weigh as much as defining a
+project; noting a settlement only when the human states one — a settlement said in passing in the
+request is missed, and the agent alone decides what binds; letting the cycle change or drop a
+settlement and show the difference in the request — the human's settlement could be reversed and
+seen only once the code is written; decisions and invariants alone — a word whose meaning the human
+settled would be defined by the cycle; a search of the whole foundation when a task's candidates are
+named — it repeats the cycle's search on wording not yet settled; the ways not chosen of every
+choice kept in the source of its row — they would have to be carried from the question to the
+building of the table, a cell of the table takes no line break, and an orchestrated refiner
+transfers answers into the task's questions, not into its table; the rule of rejected options in the
+templates alone — this decision would still have the cycle ask the human where the template has it
+write `unknown`, and an agent comparing a change with this decision would take `unknown` for a
+breach; the rule as part of WAY-29 — its question is a decision recovered from code, and the rule
+can change apart from it, so it is a question of its own (WAY-19), and with this decision still
+having the cycle ask, the two would need a precedence; a decision of its own — one more entry, while
+this one has to be corrected anyway; every row accepted separately, as before — a second consent to
+the same choice; rows that repeat a choice kept out of the table, the cycle writing the decision
+straight from the answer under the question — the sieve of choices that bind no longer after the
+merge goes (the column of what the cycle would otherwise guess), the cycle itself judges which
+choice to enter, and this decision needs a stronger rebuild.
 
 ### WAY-135 — When does a task's cycle write a spec?
 
@@ -5218,18 +5223,18 @@ whoever carries out its tasks, as its instruction files and skills do.
 shared by the whole product and outlast every task that uses them. They stand outside the foundation
 because the choices that bind in them are carried by the foundation's entries, which the guidelines
 apply, and the rules of their own that they hold only say how to write code, tests or the look of
-the product, so the five elements stay as WAY-04 closes them. They direct whoever carries out tasks, like instruction
-files and skills, so they belong to that part, whose files change every later task (WAY-44), and an
-instruction file leads to them as to knowledge needed now and then (WAY-128). One directory with
-fixed names lets a check find them in every product; a product whose screens and admin panel are
-drawn by two parts keeps a styleguide for each, and the part's identifier in the name ties a
-styleguide to the files it governs, so that a renamed part shows. Coding guidelines are cut by the
-kind of code rather than by part, since a kind such as an endpoint can live in more than one part
-while its exemplar is one: the general file holds what binds the whole of the code once, and an
-agent reads, beside it, only the files of the kinds its work touches, which the general file's
-table names with when to read each, as Open Mercato's table leading from a task to the guides to
-read does. The kind's identifier comes from the decision designating
-its exemplar, so that a file of a kind stands only where a human has approved what it holds.
+the product, so the five elements stay as WAY-04 closes them. They direct whoever carries out tasks,
+like instruction files and skills, so they belong to that part, whose files change every later task
+(WAY-44), and an instruction file leads to them as to knowledge needed now and then (WAY-128). One
+directory with fixed names lets a check find them in every product; a product whose screens and
+admin panel are drawn by two parts keeps a styleguide for each, and the part's identifier in the
+name ties a styleguide to the files it governs, so that a renamed part shows. Coding guidelines are
+cut by the kind of code rather than by part, since a kind such as an endpoint can live in more than
+one part while its exemplar is one: the general file holds what binds the whole of the code once,
+and an agent reads, beside it, only the files of the kinds its work touches, which the general
+file's table names with when to read each, as Open Mercato's table leading from a task to the guides
+to read does. The kind's identifier comes from the decision designating its exemplar, so that a file
+of a kind stands only where a human has approved what it holds.
 *Rejected:* guidelines as a sixth element of the foundation — what binds in them and carries a
 choice is already carried and checked by decisions and invariants, the rest only says how to write,
 and the list of elements would no longer be closed; an
