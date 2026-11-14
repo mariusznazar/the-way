@@ -12975,10 +12975,10 @@ effect outside the repository in the sense of WAY-140, so it needs no human acti
   makes a branch merged, that it touches only the checkouts git names and none of the directories
   it never removes, and that it removes no branch. An agent compares a change with the part no test
   holds:
-  - complies: a new cycle runs the script before it creates its task branch, and the directory of a
-    merged, clean task that stands beside the repository's own directory is removed without a word
-    to the human; each directory of a cycle that the script kept reaches the record and the request
-    with its name, branch and reason;
+  - complies: a new cycle runs the script before it creates its task branch and goes on without a
+    word to the human where the script removed a directory that stands beside the repository's own;
+    each directory of a cycle that the script kept reaches the record and the request with its name,
+    branch and reason;
   - violates: the cycle asks the human before it removes a directory git names that stands outside
     the repository's own directory; the cycle removes a directory because its request was closed;
     the cycle deletes a task's branch after it removed the directory.
