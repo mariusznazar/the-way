@@ -3734,7 +3734,13 @@ needs a worktree of its own and a ruling on their dependencies and shared state 
 cost the change meets without gaining a check; a review of every slice — its cost grows with the
 number of slices, most of which carry settled matters into code, while the review of the whole
 change still reads every slice; a status by which the planner returns work it cannot divide into
-slices — the pin moved before the route keeps the installer's output out of every plan.
+slices — the pin moved before the route keeps the installer's output out of every plan; a measure of
+the change's size, such as the number of files, deciding the route at the start of the cycle between
+one author and a plan — on changes of one game product of 1 500 to 3 000 lines, with five cycles on
+each route, a whole cycle with a plan cost 0.0182 USD per changed line (median cycle 39 USD) and a
+cycle with one author 0.0157 USD (median 24 USD), because the plan adds the planner, the reviews of
+its slices and a return step taken by an agent of its own, so the judgment from the task document
+stays the choice.
 
 ### WAY-137 — What decides between places to run that the simplest and cheapest option leaves tied?
 
@@ -12444,6 +12450,35 @@ already names the method by its file, so the stage reads the same text.
 *Rejected:* types for Codex too, defined in the directory Codex reads project agents from — the list
 of skills they turn off grows with every skill and the process would have to keep it, and no probe
 showed a gain.
+
+### WAY-371 — What reading limit does a slice of a plan have?
+
+A slice of a task's plan is too large for one agent when its agent has to read more than 150 000
+estimated tokens, and the size script of the task cycle reports such a slice as too large.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-136
+- **Verification:** an agent compares a change with the decision:
+  - complies: a slice that the script measures at 150 000 estimated tokens to read is reported fits,
+    and one at 150 001 is reported too large;
+  - violates: the script reports a slice of 150 001 estimated tokens as fits; the limit is set to
+    any value other than 150 000 tokens.
+- **Origin:** none
+
+*Rationale:* the value comes from the measured cycles of one game product, 220 slices in all, and is
+described here because its source is not reachable from this repository. Slices whose planned
+reading was 150 000 to 250 000 tokens ended with more than 100 model calls in 23 to 29% of cases;
+those under 150 000 tokens, in 3 to 4%. Slices above 150 000 tokens wrote a change with about 21 000
+input tokens per changed line, against 13 000 to 16 000 for slices reading 50 000 to 150 000 tokens.
+At 150 000 the limit reaches 20 of the 220 slices (9%); those 20 took 25% of the input tokens of all
+executors of the product, and 5 of its 10 long runs of executors are among them. The limit is a
+measurement of one product, so the data of later cycles may move it by a change of this decision.
+*Rejected:* 175 000 tokens — 10 of the 220 slices would need division (5%), with 3 of the 10 long runs
+of executors among them, and those 10 would take 12% of the input tokens of all executors; 125 000
+tokens — 34 slices would need division (15%), with the same 5 of the 10 long runs of executors as at
+150 000, and those 34 would take 34% of the input tokens of all executors, which is 14 slices more
+than at 150 000 with no added long run.
 
 ## Withdrawn identifiers
 
