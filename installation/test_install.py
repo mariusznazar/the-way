@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -661,6 +663,98 @@ class InstallTest(unittest.TestCase):
         self.assertTrue(claude.is_symlink())
         self.assertEqual(outside.read_bytes(), b"@AGENTS.md\n")
         self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+
+    def junction(self, relative: str, target: Path) -> None:
+        """A Windows junction at `relative` in the product that leads to `target`. The standard
+        library has no public call that makes one, and a script may start only git and the Python
+        interpreter, so this takes the call of the standard library's own `_winapi` that CPython's
+        tests use. Where a junction cannot be made, the test is skipped."""
+        if sys.platform != "win32":
+            self.skipTest("Junctions exist only on Windows")
+        link = self.product / relative
+        link.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            import _winapi
+            _winapi.CreateJunction(str(target), str(link))
+        except (ImportError, AttributeError, OSError) as error:
+            self.skipTest(f"Junctions unavailable: {error}")
+        self.assertTrue(link.is_junction() and not link.is_symlink(), link)
+
+    def another_product(self, name: str) -> None:
+        """A new empty Git repository to install in, which `self.product` names from here on."""
+        self.product = Path(self.temporary.name) / name
+        self.product.mkdir()
+        self.assertEqual(command("git", "init", "-q", str(self.product), cwd=SOURCE).returncode, 0)
+
+    @staticmethod
+    def tree_of(root: Path) -> dict[str, bytes | None]:
+        """Every path below `root` outside `.git` with the bytes of each file, so that a created
+        directory counts and a path below a junction is listed through it."""
+        return {path.relative_to(root).as_posix(): path.read_bytes() if path.is_file() else None
+                for path in sorted(root.rglob("*")) if ".git" not in path.relative_to(root).parts}
+
+    def test_rejects_a_junction_on_the_path_of_a_file_it_writes_without_touching_the_target(
+            self) -> None:
+        # invariant: installation-paths-through-links
+        outside = Path(self.temporary.name) / "outside"
+        outside.mkdir()
+        (outside / "kept.md").write_bytes(b"outside\n")
+        for relative in (".claude", ".claude/agents", ".claude/skills",
+                         ".claude/skills/the-way-make-change", ".agents", ".agents/skills",
+                         "foundations"):
+            for args in ((), ("--apply",)):
+                with self.subTest(junction=relative, args=args):
+                    self.another_product(f"product-{relative.replace('/', '-')}{len(args)}")
+                    self.junction(relative, outside)
+                    before = self.tree_of(self.product), self.tree_of(outside)
+                    result = self.install(*args, input_text="y\n")
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn("Parent path is not a regular directory", result.stderr)
+                    self.assertNotIn("Installed.", result.stdout)
+                    self.assertEqual(before, (self.tree_of(self.product), self.tree_of(outside)))
+                    self.assertEqual(sorted(path.name for path in outside.iterdir()), ["kept.md"])
+                    self.assertFalse((self.product / ".gitmodules").exists())
+
+    def test_deletes_nothing_through_a_junction_at_the_folder_of_a_stale_entry_point(self) -> None:
+        # invariant: installation-paths-through-links
+        own = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
+                                    self.commit).replace("the-way-record-decision", "the-way-gone")
+        for directory in (".claude", ".agents"):
+            with self.subTest(directory=directory):
+                self.another_product(f"product-stale{directory[1:]}")
+                outside = Path(self.temporary.name) / f"outside-stale{directory[1:]}"
+                outside.mkdir()
+                (outside / "SKILL.md").write_text(own, encoding="utf-8", newline="\n")
+                self.junction(f"{directory}/skills/the-way-gone", outside)
+                for args in ((), ("--apply",)):
+                    result = self.install(*args, input_text="y\n")
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertNotIn("DELETE", result.stdout)
+                    self.assertEqual((outside / "SKILL.md").read_text(encoding="utf-8"), own)
+                    self.assertTrue((self.product / directory / "skills/the-way-gone").is_junction())
+
+    def test_rejects_a_junction_at_the_submodule_directory(self) -> None:
+        # invariant: installation-paths-through-links
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
+
+        def writable(function, path, error) -> None:
+            os.chmod(path, stat.S_IWRITE)
+            function(path)
+
+        # The junction leads to a checkout of the pinned commit, which the installer would accept
+        # as the submodule if it went through the junction.
+        shutil.rmtree(self.product / ".the-way", onexc=writable)
+        self.junction(".the-way", self.source)
+        self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
+                                 cwd=self.product).stdout.strip(), self.commit)
+        before = self.tree_of(self.source)
+        for args in ((), ("--apply",)):
+            with self.subTest(args=args):
+                result = self.install(*args, input_text="y\n")
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+                self.assertIn("Existing .the-way is not a submodule directory", result.stderr)
+                self.assertEqual(before, self.tree_of(self.source))
 
     def test_empty_foundations_have_valid_form(self) -> None:
         applied = self.install("--apply", input_text="y\n")

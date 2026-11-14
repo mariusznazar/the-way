@@ -180,7 +180,12 @@ An existing foundation file is preserved byte for byte. A file at an entry point
 rewritten when it is the installer's own entry point and stops the run otherwise; a file at a
 definition's path in `.claude/agents/` is treated the same way, and so is a directory, a symlink or
 a file that is not UTF-8 text there, or a `.claude` or `.claude/agents` that is a symlink or not a
-directory.
+directory. A Windows junction, which Git does not carry to a clone and which looks like a directory,
+counts as a symlink wherever the installer checks for one: a junction on the path of a file it
+writes (`.claude`, `.claude/skills`, the folder of an entry point, `.agents/skills`, `foundations`
+and the rest) stops the run before anything is written, a junction at `.the-way` stops it, and a
+junction at the folder of a skill or agent type the commit lacks is not followed, so nothing is
+deleted through it.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line
@@ -242,7 +247,9 @@ directory or a non-UTF-8 file at their path in either skill directory, the agent
 other files of `.claude/agents/` kept, the definition of a type the commit lacks deleted and no other,
 a moved pin rewriting one and deleting another, and the refusal, before anything is written, of a
 file that is not the installer's, a directory, a symlink, a non-UTF-8 file and a `.claude` or
-`.claude/agents` that is a symlink or a file), and initialization in a
+`.claude/agents` that is a symlink or a file), the refusal of a Windows junction on the path of a
+file it writes, at `.the-way`, and the deletion it does not make through a junction at the folder of
+a stale entry point (these run only on Windows, which makes the junctions), and initialization in a
 fresh checkout.
 A symlinked `AGENTS.md` or `.gitignore` is refused by the same check as a directory but is not
 tested, since creating a symlink needs extra rights on Windows. They

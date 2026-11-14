@@ -218,6 +218,7 @@ class AgentTypesInstallationTest(unittest.TestCase):
                 self.assertEqual(before, self.product_tree())
 
     def test_a_symlink_in_the_way_stops_the_run_and_its_target_is_not_touched(self) -> None:
+        # invariant: installation-paths-through-links
         outside = Path(self.temporary.name) / "outside"
         outside.mkdir()
         (outside / "agent.md").write_bytes(b"outside\n")
@@ -253,6 +254,7 @@ class AgentTypesInstallationTest(unittest.TestCase):
             self.skipTest(f"Symlinks unavailable: {error}")
 
     def test_a_symlink_named_like_an_own_definition_of_a_gone_type_is_not_deleted(self) -> None:
+        # invariant: installation-paths-through-links
         outside = Path(self.temporary.name) / "outside.md"
         outside.write_text(EARLIER.replace("the-way-stage", "the-way-gone"), encoding="utf-8")
         self.link(".claude/agents/the-way-gone.md", outside)

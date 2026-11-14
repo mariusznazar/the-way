@@ -302,10 +302,16 @@ def existing_pin(target: Path) -> str | None:
     return fields[1]
 
 
+def is_link(path: Path) -> bool:
+    """Whether a directory is a symbolic link or a Windows junction, either of which leads
+    somewhere else. A junction is no symbolic link, and `is_dir()` is true for it."""
+    return path.is_symlink() or path.is_junction()
+
+
 def check_parents(target: Path, path: Path) -> None:
     parent = path.parent
     while parent != target:
-        if os.path.lexists(parent) and (parent.is_symlink() or not parent.is_dir()):
+        if os.path.lexists(parent) and (is_link(parent) or not parent.is_dir()):
             raise RuntimeError(f"Parent path is not a regular directory: {parent}")
         parent = parent.parent
 
@@ -357,7 +363,7 @@ def stale_agent_definitions(target: Path) -> list[Path]:
     """The installer's definitions of agent types this commit of the-way no longer has. A file the
     installer did not write stays, whatever its name."""
     agents = target / AGENT_DIRECTORY
-    if (target / ".claude").is_symlink() or agents.is_symlink() or not agents.is_dir():
+    if is_link(target / ".claude") or is_link(agents) or not agents.is_dir():
         return []
     return [entry for entry in sorted(agents.iterdir())
             if entry.name.startswith("the-way-") and entry.suffix == ".md" and
@@ -370,12 +376,12 @@ def stale_entry_points(target: Path) -> list[Path]:
     stale = []
     for directory in SKILL_DIRECTORIES:
         skills = target / directory / "skills"
-        if skills.is_symlink() or not skills.is_dir():
+        if is_link(skills) or not skills.is_dir():
             continue
         for entry in sorted(skills.iterdir()):
             name = entry.name.removeprefix("the-way-")
             if entry.name.startswith("the-way-") and name not in SKILLS and \
-                    not entry.is_symlink() and owned_entry_point(entry / "SKILL.md"):
+                    not is_link(entry) and owned_entry_point(entry / "SKILL.md"):
                 stale.append(entry / "SKILL.md")
     return stale
 
@@ -418,7 +424,7 @@ def plan(target: Path, commit: str, url: str) -> tuple[
                          f"submodule.{SUBMODULE}.url", cwd=target, check=False)
         if configured.returncode or configured.stdout.strip() != url:
             raise RuntimeError(f"Existing {SUBMODULE} has a different URL in .gitmodules")
-        if submodule_path.is_symlink() or (submodule_path.exists() and not submodule_path.is_dir()):
+        if is_link(submodule_path) or (submodule_path.exists() and not submodule_path.is_dir()):
             raise RuntimeError(f"Existing {SUBMODULE} is not a submodule directory")
         if submodule_path.is_dir() and not os.path.lexists(submodule_path / ".git") and \
                 any(submodule_path.iterdir()):
