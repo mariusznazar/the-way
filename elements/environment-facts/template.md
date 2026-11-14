@@ -3,8 +3,9 @@
 This file defines how an environment fact entry is written. Facts are about such things as a
 platform, a format, a licence, a law, the behaviour of a tool or a finding of a study. An entry is a
 sentence and its source: the address, the passage word for word and the date it was read, or, for a
-host the product's people run, the command, the host and tool it ran on, its output word for word
-and the date it ran (WAY-80).
+host the product's people run or a setting they set on another's service, the command or the call,
+the host or service and each tool with its version, its output word for word and the date it ran
+(WAY-80).
 Nothing runs to check a fact and no status stands beside it (WAY-82), and nothing its sentence says
 is an invariant (WAY-76). An invariant names the facts holding a condition of its sentence in
 *Rests on* (WAY-73), and a decision names the facts it rests on in *Based on* (WAY-90).
@@ -32,7 +33,7 @@ holds what is particular to an environment fact (WAY-35).
 
 <one sentence: the fact>
 
-- **Source:** <address of the edition> § <place> — "<passage, word for word>"; read <YYYY-MM-DD> · … | <address of the page> (archived: <address of the archived copy>, <YYYY-MM-DD>) § <place> — "<passage, word for word>"; read <YYYY-MM-DD> | reading: `<command>` on <host>, <tool and its version> — "<output, word for word>"; run <YYYY-MM-DD>
+- **Source:** <address of the edition> § <place> — "<passage, word for word>"; read <YYYY-MM-DD> · … | <address of the page> (archived: <address of the archived copy>, <YYYY-MM-DD>) § <place> — "<passage, word for word>"; read <YYYY-MM-DD> | reading: `<command>` on <host or service>, <each tool the result depends on, and its version> — "<output, word for word>"; run <YYYY-MM-DD>
 ```
 
 The form above gives the entry its one field: *Source* takes neither `none` nor `TODO`, since a fact
@@ -62,9 +63,9 @@ identifiers.
   makes its sentence true (WAY-73). A fact about what runs an invariant's test — how a tool behaves
   under the runner's configuration, which interpreter runs a script — is no such fact (WAY-73).
 - The current state of a setting that people of the product change outside its repository — who
-  can open it, a host's access rule — is a fact, its source the place where that state is shown. A
-  choice of such a setting is a decision only where the product declares it, and that decision
-  rests on the fact (WAY-84).
+  can open it, a host's access rule — is a fact, its source the place where that state is shown, or,
+  where no page open to a reader shows it, a reading (WAY-84, WAY-80). A choice of such a setting
+  is a decision only where the product declares it, and that decision rests on the fact (WAY-84).
 - A fact may be about something outside that depends on the product — a product that pins it and
   reads one of its surfaces — only where a decision about that surface would be called into question
   were it no longer true. The partners themselves stay in the part map's external context (WAY-90).
@@ -106,12 +107,23 @@ identifiers.
   - a page without editions, with the closest archived copy that already exists and its date — never
     one made for the entry, since that writes to someone else's service — and the place, the passage
     and the date read;
-  - a reading, only for a state of a host the product's people run that no page shows and only
-    those with access to the host can read — a file on a server, a key's forced command, the swap a
-    host reports: the command run, the host it ran on and the tool with its version, its output word
-    for word, or the lines of it the sentence rests on, joined by ` · `, and the date run. The
-    output stands where the passage stands; no check reruns the command, on a change or by a clock
+  - a reading, only for a state of a host the product's people run, or of a setting they set on
+    another's service, that no page open without their access shows and only those with that access
+    can read — a file on a server, a key's forced command, the swap a host reports, the protection
+    of a branch on a code host's service: the command run, or the call of the service's API, the
+    host or the service it ran on and each tool its result depends on with its version, its output
+    word for word, or the lines of it the sentence rests on, joined by ` · `, and the date run. The
+    output stands where the passage stands; no check reruns the reading, on a change or by a clock
     (WAY-82).
+- A reading is one invocation quoted word for word, however many commands and lines it holds. A
+  command of one line stands in backticks in the line of *Source*; a command of several lines stands
+  in a code block under that line, indented to the item, and the line reads `reading: the command
+  below` where the form has the backticked command. Each tool the result depends on — the program
+  that runs the command and each program it passes the result to — has its version given in the
+  line (WAY-80).
+- The output a reading quotes holds no secret. The command reads only the fields the sentence rests
+  on — an API call names them in its request or keeps them with a filter — so that a token or a
+  password never enters the output (WAY-80).
 - A further page of the same edition names its address and place. Another place of the same page
   follows that page's last passage as `§ <place> — "<passage, word for word>"`, joined by ` · `,
   and shares the page's address and date read. Several addresses stand in one entry only as pages
@@ -131,11 +143,13 @@ identifiers.
   since each has its own owner and changes on its own (WAY-84); where an invariant rests on the
   visibility of the repositories linked, each new link adds such a fact, named in its *Rests on*
   (WAY-84, WAY-73).
-- A setting on a host the product's people run that only its setter can read has a reading for its
-  source (WAY-80). The source of a setting read with its setter's credentials on a service they do
-  not run is
-  `TODO — decision pending: which form of Source a setting read only with its setter's credentials
-  takes, since WAY-80 gives none`.
+- A setting that people of the product set on a host they run or on another's service, and that no
+  page open without their access shows, has a reading for its source (WAY-80, WAY-84).
+- Code at a fixed commit is cited at the address that names the commit, as an edition. The place is
+  a symbol — a function, a class or a constant — in which the passage stands. The passage is one
+  statement or one line of code word for word, with every run of whitespace collapsed to one space,
+  and several passages are joined by ` · `; a passage that holds `"` stands in “…”, not in straight
+  quotation marks.
 
 ## Changing a fact
 

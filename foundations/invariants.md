@@ -103,6 +103,16 @@ Every element's skill names its element's template and `elements/common/` as the
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Violated:** no
 
+## elements-no-pending-marker
+
+No file git tracks under `elements/` holds the text "decision pending", every run of spaces and line breaks counting as one space.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-35
+- **Part:** decisions · part-map · invariants · glossary · environment-facts · elements-common
+- **Violated:** no
+
 ## script-language
 
 Every script git tracks is a Python file.
