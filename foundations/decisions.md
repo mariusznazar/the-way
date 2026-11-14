@@ -2097,7 +2097,9 @@ a measurement stand, where a reader can weigh it. The sentence that the measurem
 own is what tells a reader that the figure is a measurement of the product and no citation whose
 fact is missing; without it each reviewer guesses which of the two is before them. A measurement
 whose report a reader can open at an address is a citation like any other, and follows the first
-sentence.
+sentence. The price: a measurement of the product's own agents leaves no fact for the search of
+WAY-33 to find, so when the model it measured is replaced nothing flags the decision that rests on
+it; a finding of others about agents or models still gets its fact, as WAY-17 asks.
 *Rejected:* every citation as an entry — many entries whose change would call no decision into
 question, each a second copy of its quote; a fact named with its fingerprint, renewed when the fact
 changes — the author's search finds the decision without it (WAY-33); the partners of the part
@@ -2105,9 +2107,9 @@ map's external context as linked facts — a new link with no known consumer; fo
 product's people made, a summary of it with its conditions kept as a file of this repository that a
 fact would name at a fixed commit — a new form of source beside those of WAY-80, a new kind of file
 with a rule on what it may not carry, and a summary to write and clean for each experiment, with the
-decisions that carry such figures rewritten and a fact written for each; the figure with a note
-that it comes from the author's private notes in place of a source — it points a reader to a source
-the reader cannot open, which WAY-27 rejects; the rule alone, with no sentence in the decision that the
+decisions that carry such figures rewritten and a fact written for each; the figure with a note that
+it comes from the author's private notes in place of a source — it points a reader to a source the
+reader cannot open, which WAY-27 rejects; the rule alone, with no sentence in the decision that the
 measurement is the product's own — a reviewer would still guess whether a figure with no source is a
 measurement of the product or a citation left without its fact; no rule — each decision that rests
 on such a measurement meets the collision of this decision with WAY-27 again, and the verdict
@@ -6950,8 +6952,9 @@ class — the same failure repeats at the same cost; a cheaper class for the spe
 review — their errors reach every later step; two runs of a reviewer of a cheaper class in place of
 one run of the orchestrator's class — both runs together caught 5 of the 14 reference errors, as
 many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
-verdict, since a change with three blocking flaws got a PASS in both; model names in the process —
-they age with every release.
+verdict, since a change with three blocking flaws got a PASS in both (the same measurement, this
+product's own, whose record is not open to a reader of this repository); model names in the process
+— they age with every release.
 
 ### WAY-230 — How does a project plan order two tasks that realize the same projected entry?
 
@@ -7955,11 +7958,11 @@ four.
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
 the few that wait: counted on the session records of past cycles of one game product and of the-way
 (the count is this product's own, and the session records are not open to a reader of this
-repository), an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a cycle of
-the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6% and,
-where the author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it raises
-the cost of a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game cycle
-and by 1.0% in a cycle of the-way itself.
+repository), an hour for every subagent raises the cost of a game cycle by 4.7% and lowers that of a
+cycle of the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6%
+and, where the author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it
+raises the cost of a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game
+cycle and by 1.0% in a cycle of the-way itself.
 
 ### WAY-256 — Where does a fragment of a skill stand?
 
@@ -8017,6 +8020,7 @@ words. A step that every use of the skill comes to is in play in every use where
 file of its own spares no use anything and adds a pointer and an opening sentence to what each use
 reads; estimated before any rebuild from the word counts of the files of one skill, that shape
 reads five to fifteen percent more words in a typical session than keeping its steps in `SKILL.md`.
+The estimate is this product's own, and its record is not open to a reader of this repository.
 A step therefore stays in `SKILL.md` until records of sessions a person can open show that part of
 the uses pass it by, while a variant, which the text of the skill shows, goes to a file beside it as
 before. With no record the step stays, since a skill given a file for each step before any record
@@ -8056,7 +8060,8 @@ every fragment one step or variant needs moved out, one instruction included —
 instruction for a pointer and adds a file; a file beside the skill for every step, one that every
 use of the skill comes to included — in such a skill it adds a pointer and an opening sentence to
 each use and spares none, an estimate of five to fifteen percent more words read in a typical
-session, made before any rebuild from the word counts of that skill's files;
+session, made before any rebuild from the word counts of that skill's files (the estimate is this
+product's own, and its record is not open to a reader of this repository);
 an exception named for one skill alone — the smallest change, but the next skill of the same profile
 raises the question again, and an exception named after a skill, not after its files, leaves the
 question to each skill; no change to the decision, the exception kept only in the document of the
@@ -10208,15 +10213,15 @@ item it lists is made to read the same in the report and in the remarks, not app
 *Rationale:* what a pattern sees is the form of a path or of a link, and the same search of
 2026-11-07 (the search of WAY-308: this product's own, with a record not open to a reader of this
 repository) showed that nearly all that leaked had such a form, while a private name written as
-plain words has no mark a pattern could use. A script reads every file of the copy every time, where a
-model reading a long record for what looks private misses an item without a trace, and it reads the
-description, whose block in another language is the part a reader checking by eye covers least. The
-check of WAY-294 runs first on the original because the original holds the words the reports gave,
-so each item reaches the remarks once before any word changes; the cleaning is one rewriting so that
-a report's item and its entry in the remarks keep reading alike. The price taken: a private name in
-plain words passes, and a list of such names can be added by a task of its own when one appears; the
-pattern lists some text that is neither a path nor a link, such as a code sample, which the
-orchestrator writes so that the pattern passes it; one more check in every cycle.
+plain words has no mark a pattern could use. A script reads every file of the copy every time, where
+a model reading a long record for what looks private misses an item without a trace, and it reads
+the description, whose block in another language is the part a reader checking by eye covers least.
+The check of WAY-294 runs first on the original because the original holds the words the reports
+gave, so each item reaches the remarks once before any word changes; the cleaning is one rewriting
+so that a report's item and its entry in the remarks keep reading alike. The price taken: a private
+name in plain words passes, and a list of such names can be added by a task of its own when one
+appears; the pattern lists some text that is neither a path nor a link, such as a code sample, which
+the orchestrator writes so that the pattern passes it; one more check in every cycle.
 *Rejected:* patterns and a list of private words in a file in the home directory — accepted first,
 then given up after the search of the history: almost nothing was left to put on the list, and it
 costs a file to remember, a step of the human before a cycle and code that today catches almost
@@ -10582,8 +10587,8 @@ way that gives them one browser makes the second check fail or take over the fir
 author that leaves its browser open blocks the next check the same way. Between 20 and 31 October
 2026, before one of two products changed its way, 13 errors of a busy browser profile stood in 9
 conversation files of the sessions on those two products; the count is this product's own, and the
-conversation files are not open to a reader of this repository. Stated once for every way, the condition
-reaches a product before it meets the conflict.
+conversation files are not open to a reader of this repository. Stated once for every way, the
+condition reaches a product before it meets the conflict.
 *Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
 conflict itself, by its errors, and a product whose main way keeps one browser profile for a
 directory returns to the busy profile.
@@ -10775,11 +10780,11 @@ after the colon, is not listed; a link stuck to a word, which Obsidian renders a
 listed; and a text stuck to an escape sequence still gives a false hit, which the product removes
 by rewriting the string. A character class of the shell in double brackets is code too, though a
 command quoted in a Markdown file holds it: a run of the check on 2026-11-11 over the commands in
-the Markdown files of one product listed twelve such texts, all of them one of the twelve classes. Both
-runs are this product's own, and their record is not open to a reader of this repository. The
+the Markdown files of one product listed twelve such texts, all of them one of the twelve classes.
+Both runs are this product's own, and their record is not open to a reader of this repository. The
 twelve names are listed one by one, not matched by a general shape, so a text with another name
-between the colons stays listed, since it may be a note. The price taken: a note whose title is one of these
-names between colons is not listed, and a name a shell adds later needs the list changed.
+between the colons stays listed, since it may be a note. The price taken: a note whose title is one
+of these names between colons is not listed, and a name a shell adds later needs the list changed.
 *Rejected:* the product lists the Markdown file holding the quoted specification among the skipped
 files — every real path later written in that file of its foundation passes; no change to the rule
 for a link — the check of that product fails while the quoted fact stands in its foundation, and
@@ -11745,10 +11750,10 @@ that passed and during which no other such run was going, and shows the other ru
 *Rationale:* the same run of a product's gate has lasted 15 to 16 minutes on a free machine and 23
 to 40 minutes beside several sessions, so a median over all runs says mostly how loaded the machine
 was; the durations are this product's own measurement, and their record is not open to a reader of
-this repository. A run that failed says how soon it failed, not how long the gate takes, and one such run alone
-on the machine would pull a median down and make a version look faster than it is. The count of
-other runs shows only the runs by the script: a load of another kind is not seen, and a version in
-which every gate had company or failed gets no comparison.
+this repository. A run that failed says how soon it failed, not how long the gate takes, and one
+such run alone on the machine would pull a median down and make a version look faster than it is.
+The count of other runs shows only the runs by the script: a load of another kind is not seen, and a
+version in which every gate had company or failed gets no comparison.
 *Rejected:* the runs that failed taken into the median — a run that stops early has a short time
 and makes the version look faster; the shortest run of each version — a version with more cycles has
 more chances of a fast run and looks better, and one lucky run sets the result; the median of all
@@ -11833,8 +11838,8 @@ the file at that line may find other text and has to look for the place, while a
 quotation finds it again after the lines have moved. The line stays in the source of an answer
 because the revision beside it says which text the line meant. In the register of problems of
 2026-11-12, 80 rows in 45 of 83 cycles were a stale reference; one occurrence cost nothing 35
-times, a few steps of an agent 44 times and a stage once, and no round and no time of the human; the register's count is this product's own, and
-its record is not open to a reader of this repository.
+times, a few steps of an agent 44 times and a stage once, and no round and no time of the human; the
+register's count is this product's own, and its record is not open to a reader of this repository.
 The price: a heading or a quotation can vanish as a line can, and about 40 of those 80 rows stood in
 orders to agents and in plans written during a cycle, which this rule does not reach.
 *Rejected:* a script that checks, before a cycle starts, the files, lines and entries a task names —
@@ -12252,18 +12257,18 @@ finding that the content of an entry does not agree with the code stays Importan
 - **Origin:** none
 
 *Rationale:* the same remark on the form of an entry was graded blocking in 9 runs of an experiment
-with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the measurement is this product's own, and
-its record is not open to a reader of this repository; its conditions stand in WAY-229), so the
-verdict depended on the run. Graded always Important, every departure from the form is a FAIL and a
-round of fixes, and a fix that fails leaves the request blocked for form alone (WAY-162); graded
-always Minor, a departure that makes a reader take an entry wrongly, such as a binding rule written in
-the rationale and not in a binding sentence, would not block and would not be repaired in the reviews
-after the review of the whole change. A Minor finding within the task is still fixed before the request
-opens (WAY-161), so the departure is repaired, and the grade changes three things: the verdict, a pass
-where a fail stood; the result of a failed fix, which reverts and leaves the request unblocked; and the
-lot of the finding in later reviews, where a Minor finding goes to the request's list and is not fixed.
-A mismatch of content with the code stays Important, since a request carrying it carries a rule the
-code does not keep (WAY-263).
+with reviewers and Minor in 8, and 6 of its 32 runs rejected the change for its form alone (the
+measurement is this product's own, and its record is not open to a reader of this repository; its
+conditions stand in WAY-229), so the verdict depended on the run. Graded always Important, every
+departure from the form is a FAIL and a round of fixes, and a fix that fails leaves the request
+blocked for form alone (WAY-162); graded always Minor, a departure that makes a reader take an entry
+wrongly, such as a binding rule written in the rationale and not in a binding sentence, would not
+block and would not be repaired in the reviews after the review of the whole change. A Minor finding
+within the task is still fixed before the request opens (WAY-161), so the departure is repaired, and
+the grade changes three things: the verdict, a pass where a fail stood; the result of a failed fix,
+which reverts and leaves the request unblocked; and the lot of the finding in later reviews, where a
+Minor finding goes to the request's list and is not fixed. A mismatch of content with the code stays
+Important, since a request carrying it carries a rule the code does not keep (WAY-263).
 *Rejected:* a departure from the form always Minor — a departure by which a reader reads an entry
 wrongly, such as a binding rule in the rationale and not in the binding sentence, would not block and
 in reviews after the review of the whole change is not repaired; a departure from the form always
@@ -12416,32 +12421,32 @@ the-way itself loads are generated from them and tracked.
 session before it reads its first file, and few agents of a cycle use a skill: in the session
 records of the cycles of one game product 72 of 625 subagents did, and in those of the-way 4 of 252
 (the count is this product's own, and the session records are not open to a reader of this
-repository). A probe on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the start of a
-subagent at 36,711 tokens with the skill tool and 21,759 without it: the list of skills (29,896
-characters) disappeared whole, the definitions of the tools shrank from 13 tools (31,547 characters)
-to 9 (22,639), and the instruction files (23,658 characters) stayed. A type with every tool of the
-session but the skill tool starts about two thousand tokens larger than the probe's agent, which had
-a narrow list of tools, so the start is lighter by about 37% where the probe's was by 41%; both are
-estimates from the table of tool definitions, not measurements. The gain of the lighter start was
-estimated, for the narrow list of tools, at about 4.5% of a cycle's cost. The probes and the
-estimates are this product's own, and their record is not open to a reader of this repository. A
-definition with no body
-gives its agent a system prompt of 1,722 characters in place of the 3,158 of a general subagent, so
-each type has a body that says what it is. The tools of connected servers, a browser's among them,
-stay, so an agent that has to look at an interface can, and the-way names no tool of a plugin that a
-product may not have. An agent without the skill tool reads a method as a file, which is how its
-handoff already gives it (WAY-125, WAY-148); and the personal skill of the same name that the list
-showed beside a skill of the-way, which an agent could take for it, is no longer shown. Two types
-and not one, since only the one author is resumed, after each review and for the return step, and a
-cache of five minutes is written again after each such break: in a probe of the cache, a subagent
-with the hour, resumed after 6.9 minutes in a live session, read 10,470 tokens from the cache and
-wrote 123, where a control with five minutes wrote its whole 4,786 anew (WAY-255 holds the account
-of the hour). The definitions come from the pinned commit like the entry points of the skills
-(WAY-34), and a session on the-way itself has tracked copies as it has those entry points (WAY-127),
-so that its cycles use the types as well. The price: an agent of these types cannot call a skill, a
-personal skill for work with a browser included; Claude Code loads the types of a directory that
-existed when the session started, so a session started before the installer or a checkout created
-that directory has no such types, and its cycle dispatches as before (WAY-370).
+repository). A probe on a copy of that product, on Claude Code 2.1.322 and Sonnet 5.5, measured the
+start of a subagent at 36,711 tokens with the skill tool and 21,759 without it: the list of skills
+(29,896 characters) disappeared whole, the definitions of the tools shrank from 13 tools (31,547
+characters) to 9 (22,639), and the instruction files (23,658 characters) stayed. A type with every
+tool of the session but the skill tool starts about two thousand tokens larger than the probe's
+agent, which had a narrow list of tools, so the start is lighter by about 37% where the probe's was
+by 41%; both are estimates from the table of tool definitions, not measurements. The gain of the
+lighter start was estimated, for the narrow list of tools, at about 4.5% of a cycle's cost. The
+probes and the estimates are this product's own, and their record is not open to a reader of this
+repository. A definition with no body gives its agent a system prompt of 1,722 characters in place
+of the 3,158 of a general subagent, so each type has a body that says what it is. The tools of
+connected servers, a browser's among them, stay, so an agent that has to look at an interface can,
+and the-way names no tool of a plugin that a product may not have. An agent without the skill tool
+reads a method as a file, which is how its handoff already gives it (WAY-125, WAY-148); and the
+personal skill of the same name that the list showed beside a skill of the-way, which an agent could
+take for it, is no longer shown. Two types and not one, since only the one author is resumed, after
+each review and for the return step, and a cache of five minutes is written again after each such
+break: in a probe of the cache, a subagent with the hour, resumed after 6.9 minutes in a live
+session, read 10,470 tokens from the cache and wrote 123, where a control with five minutes wrote
+its whole 4,786 anew (WAY-255 holds the account of the hour). The definitions come from the pinned
+commit like the entry points of the skills (WAY-34), and a session on the-way itself has tracked
+copies as it has those entry points (WAY-127), so that its cycles use the types as well. The price:
+an agent of these types cannot call a skill, a personal skill for work with a browser included;
+Claude Code loads the types of a directory that existed when the session started, so a session
+started before the installer or a checkout created that directory has no such types, and its cycle
+dispatches as before (WAY-370).
 *Rejected:* three types, with a narrow list of tools and a third type with the browser tools named —
 the-way would write into its file the names of the tools of one user's plugin, and in a product
 without it the type would have nothing to check an interface with; the orchestrator would decide at

@@ -52,7 +52,7 @@ particular to a decision (WAY-35).
   stands in *Rationale*, or in *Rejected* where it weighs a way not chosen, with what was measured and
   under which conditions, and that prose says that the measurement is the product's own and that its
   record is not open to a reader of the repository. A measurement whose report a reader can open at
-  an address is quoted like any other source (WAY-90).
+  an address is a citation, and a fact where the point above asks for one (WAY-90).
 - What is not yet known, or the decider's own motive, is no source outside the product.
 - Where the decision's source is silent on what it rests on, *Based on* reads
   `TODO — <what is missing, with its source>`, never a bare `TODO` and never `none`; the main branch
