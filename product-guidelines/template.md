@@ -2,13 +2,15 @@
 
 This file defines the form every file of a product's guidelines takes, whatever its discipline. A
 product's guidelines are written by hand and stand outside its foundation (WAY-167). They hold no
-rule of their own: each binding rule names by identifier the decision of the product's log that
-carries its choice, names the invariant whose test checks it where a cheap test can, and says what
-to do and how; its reasons and rejected options stand in that decision alone (WAY-168). No script
-checks the form of guidelines: the review of a change that writes or changes them compares them
-with this template and, where the-way gives one, the template of their discipline, and
-`elements/common/foundation_check.py` reports a decision number, a rule's invariant or a part of
-*Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
+rule of their own: each binding rule says what to do and how, and names the invariant whose test
+checks it where a cheap test can. A rule that executes a choice of the product with a real cost
+names, by identifier, the decision of the product's log that carries the choice, and its reasons and
+rejected options stand in that decision alone. A rule that only says how to write code, tests or the
+look of the product stands alone with its reason in one sentence and its *Decision* reads `none`
+(WAY-168). No script checks the form of guidelines: the review of a change that writes or changes
+them compares them with this template and, where the-way gives one, the template of their
+discipline, and `elements/common/foundation_check.py` reports a decision number, a rule's invariant
+or a part of *Applies to* that the foundation does not hold, or holds as withdrawn (WAY-170).
 
 A rule below that a decision of the-way sets cites that decision. Nothing of this template is copied
 into a product: a product's guidelines follow it at the commit the product pins (WAY-34).
@@ -48,7 +50,7 @@ sections and required rules to it at the places it names (WAY-171).
 
 ### <rule name>
 
-- **Decision:** <PREFIX-NN> · …
+- **Decision:** <PREFIX-NN> · … | none
 - **Invariant:** <identifier> · … | none
 - **Good:** <one line describing a use that follows the rule> | none
 - **Bad:** <one line describing a use that breaks it> | none
@@ -72,22 +74,24 @@ sections and required rules to it at the places it names (WAY-171).
 - **A binding rule** stands under `## Rules`, under a `### ` heading of its own, with the fields
   *Decision*, *Invariant*, *Good* and *Bad* in that order, followed by how to apply it (WAY-171).
   *Decision* names, by identifier, at least one decision of the product's log that carries the
-  rule's choice; *Good* may describe in one line a use that follows the rule and *Bad* one that
+  rule's choice, or reads `none` where the rule only says how to write code, tests or the look of
+  the product; *Good* may describe in one line a use that follows the rule and *Bad* one that
   breaks it, and each reads `none` where the rule gives no such use (WAY-168, WAY-171).
 - **An invariant only where a cheap test checks the rule.** *Invariant* names the invariant whose
   test in the product's suite checks the rule on a convention of the product's code — a value
   written in place of a design token, an endpoint that skips the validation of its input — and
   reads `none` for a rule no such test can check; the review of each change the rule reaches then
   compares the change with it (WAY-168).
-- **A rule carries no rationale and no rejected options**: those stand in the decision it names
-  (WAY-168).
+- **A rule carries no rationale and no rejected options**: those stand in the decision it names. A
+  rule with *Decision* `none` carries its reason in one sentence instead (WAY-168).
 - **A rule lists no state and repeats no decision or value.** It does not list the state of the
   product's code or of the product, such as the endpoints the code has today, and it repeats neither
   a decision of the product's log nor a value taken from a configuration file, such as the version of
   a tool; it says what the author of the code is to do. The list of `### Logging scope`, which WAY-274
   gives as the product's promise and no inventory of its code, is no such state (WAY-312, WAY-274).
-- **What names no decision is an example**, not a rule: it stands under `## Examples`, under a
-  `### ` heading of its own, and carries no *Decision* field (WAY-168).
+- **What holds no rule is an example**: it stands under `## Examples`, under a `### ` heading of its
+  own, and carries no *Decision* field. A rule with *Decision* `none` binds, so it is a rule, not an
+  example (WAY-168).
 - **`## Where in code`** lists, as paths in backticks relative to the root of the repository, the
   files and directories of the product the guidelines point to, each a path git tracks, and copies
   no value from them (WAY-171).
@@ -106,6 +110,12 @@ sections and required rules to it at the places it names (WAY-171).
 - **A changed entry brings its rules along.** A change that changes the binding part of a decision
   or an invariant the guidelines name brings every rule naming it in line in the same change; its
   author finds those rules by the entry's identifier (WAY-169).
+- **A rule with no decision is accepted as a row of the task's table.** A new or changed rule with
+  *Decision* `none` is accepted by the human as a row of the task's table of settlements, with
+  *Goes to* `guidelines: <discipline>`, before the code that uses it. A rule the cycle finds itself is named
+  in the request's description among what the human did not see in the task, and the human accepts
+  it at the merge where the cycle found it (WAY-172). A rule of a template of the-way binds a product
+  only through a decision of the product's log that adopts it (WAY-173).
 - **Language.** The headings of the required form, the header lines, the field names, the values of
   closed lists, the headings of required rules and the marker `none —` stay in English, because
   the-way's templates and skills name them and the check of references reads fields by their names;

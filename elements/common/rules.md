@@ -78,6 +78,8 @@ which word each field takes, how its entries are named — stands in that elemen
 - `{fork-point}` is the commit the task branch left the main branch from — the last commit of the
   main branch the branch contains, which `git merge-base HEAD <main branch>` gives; a test or a
   review that reads it finds it so, and reads `none` where that commit does not exist (WAY-60).
+- Where a script reads that commit and nobody names the main branch, it takes the branch
+  `refs/remotes/origin/HEAD` names, else `main`, else `master`, the first that exists (WAY-60).
 - `{merge-onto}` is the tip of the main branch that a merge goes onto, which
   `git rev-parse <main branch>` gives; a test or a review that reads it finds it so, and reads
   `none` where the main branch does not exist (WAY-60).

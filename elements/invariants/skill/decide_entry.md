@@ -7,9 +7,10 @@
   sentence with the place in the code that shows it, and let the human choose; only what the
   human chooses becomes an entry (WAY-28).
 - Apply the test in the decision template's section "Decision or invariant": a rule that records
-  a choice goes through `record-decision` first, and the invariant is written as derived from it.
-  A reason found behind recovered behaviour is not recovered as a decision in this change (WAY-28);
-  one the human gives is written as a decision (WAY-22, WAY-29).
+  a choice goes through `record-decision` first, and the invariant is written as derived from it,
+  unless a test holds that sentence of the decision by a line `decision:`, which takes no derived
+  invariant (WAY-22). A reason found behind recovered behaviour is not recovered as a decision in
+  this change (WAY-28); one the human gives is written as a decision (WAY-22, WAY-29).
 - When the rule holds more than one sentence can state, propose one entry per sentence; the
   template says what one sentence may join.
 - Search the file, including its withdrawn identifiers, for an entry this rule would change:

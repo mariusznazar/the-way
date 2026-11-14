@@ -10,9 +10,12 @@ another change.
 
 ## The form of the foundation
 
-`elements/common/foundation_check.py` checks the identifiers, references, fields and the part of
-each file of the foundation of the-way, and `elements/common/migrate_foundation.py` brings a
-foundation of the earlier form to the current one.
+`elements/common/foundation_check.py` checks the identifiers, references, fields, the lines
+`decision:` of the tests and the part of each file of the foundation of the-way; it reports the
+decisions that nothing holds and lists the invariants that read `test` whose sentence a change
+rewords while no file citing them changes, both against the commit the branch left the main branch
+from. The script `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
+the current one.
 
 ## Start a change
 
