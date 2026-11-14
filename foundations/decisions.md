@@ -2002,8 +2002,9 @@ the date run. The output a reading quotes holds no secret, the command reading o
 sentence rests on.
 
 The sentence says no more than its source, and a model's memory, an agent's paraphrase or a text
-quoting the source is no source. A fact resting on a whole section of rules quotes the sentence of its source that sets those rules and
-names the section by its place alone, where the edition has an address of its own.
+quoting the source is no source. A fact resting on a whole section of rules quotes the sentence of
+its source that sets those rules and names the section by its place alone, where the edition has an
+address of its own.
 
 - **Scope:** environment-facts
 - **Based on:** none
@@ -2096,9 +2097,9 @@ the visibility of a repository the product links to names that one repository.
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a host's access rule is a fact whose source is the page showing it; the protection of
-    a branch, which no page open without the product's people's access shows, is a fact whose source
-    is a reading of it; no decision on this repository's visibility is written, as the repository
-    declares none;
+    a branch, which no page open without the access of the product's people shows, is a fact whose
+    source is a reading of it; no decision on this repository's visibility is written, as the
+    repository declares none;
   - violates: one fact lists every repository this one links to; a decision "the repository is
     private" is written where the product declares no visibility; an anonymous 404 is taken to
     show that a repository is private; the source of a setting that only a signed-in page shows is
