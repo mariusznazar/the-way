@@ -4750,6 +4750,42 @@ guidelines what to copy and what not to (WAY-100).
 cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
 would not see which files not to copy.
 
+### WAY-202 — Which standing checks must a product's coding guidelines settle, and from when do they bind?
+
+The template of the coding discipline requires three standing checks of a product's code — a
+linter, a formatter and an audit of dependencies — and the rule of a product's coding guidelines on
+each names the invariants of that check the template gives. A product departs from any of them only
+by a decision of its log that gives the reason. They bind a product from the task that writes its
+coding guidelines, which is complete only once it holds, for each of the three standing checks, a
+decision of the product's log adopting it or departing from it with the reason.
+
+- **Scope:** product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-168
+- **Verification:** for the decisions the task ends with, an agent compares the work with the
+  decision:
+  - complies: a product with none of the three gets, in the task that writes its coding guidelines,
+    decisions adopting a linter, a formatter and an audit of dependencies, or departing from one of
+    them with its reason, and its coding guidelines name each at the rule the template requires;
+    the rule of the linter names the invariant whose test runs the rules that block over the parts
+    named;
+  - violates: the skill only proposes the standing checks a product lacks, and the task ends with no
+    decision on the audit of dependencies; a product's coding guidelines leave out the formatter
+    with no decision; the three stand in the template and in no decision of the-way; the rule of the
+    formatter names no invariant though a test can run the formatter.
+- **Origin:** none
+
+*Rationale:* a product whose code no standing check reads changes its style and takes in a known
+vulnerability with no signal, and a skill that only proposes the checks leaves it so for as long as
+nobody takes the proposal up. Named in a binding sentence, the three give the refinement of the task
+something to check (WAY-139), and a departure with its reason is the product's own approved choice
+(WAY-173). A standing check is a run of a tool, which a test makes for little on every change, so
+its rule carries an invariant (WAY-168). The price: until a product runs a task that writes its
+coding guidelines, nothing of these binds it, as with the styleguide.
+*Rejected:* the skill only proposing the standing checks a product lacks — a product that has none
+of them would still have no signal; the three named in the template alone — nothing would bind the
+refinement to check them.
+
 ### WAY-203 — Which rules of a linter's set block a change of a product's code?
 
 A rule of a linter's set stands among the rules that block a change in the product's decision
@@ -4773,7 +4809,7 @@ invariant runs it so, and where it cannot, the review of each change finds such 
   effective false positive." · § page 62 — "analysis results shown during code review are allowed to
   include up to 10% effective false positives" · § page 62 — "report issues affecting only
   correctness rather than style or best practices"; read 2026-10-18
-- **Relations:** derives from WAY-100
+- **Relations:** derives from WAY-202 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a rule on unused variables, every report of which led to removing dead code, stands
     among the rules that block in the decision adopting the set and blocks a change; a rule on the order of imports that flagged two files whose order a generator writes
@@ -4914,7 +4950,7 @@ whole tree of a product's dependencies.
   https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/.github/workflows/audit.yml
   § lines 23-24 — "The ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on
   advisories it introduces."; read 2026-10-18
-- **Relations:** derives from WAY-60 · derives from WAY-100
+- **Relations:** derives from WAY-202 · derives from WAY-60 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
     fails in a product whose decision sets high; a change to a page's text passes on the morning an
@@ -5108,7 +5144,7 @@ that kind alone, takes no trial run of a linter's set and is no audit of a produ
 
 - **Scope:** project-level, product-guidelines
 - **Based on:** none
-- **Relations:** narrows WAY-251
+- **Relations:** narrows WAY-251 · narrows WAY-202
 - **Verification:** an agent compares the task and existing code with the decision:
   - complies: the task adding the first migration also designates its exemplar and writes its
     kind guidelines and index row, and in a product whose formatter reads only the application's
@@ -5131,7 +5167,7 @@ one becomes a model without being judged against what the product already holds.
 limit on research every task that creates a kind's first file could pull research of all the
 standing checks, and an agent on the comparison goes on improvising and may make a full audit; a
 task that is an extension for another reason keeps its research. In a product that has
-coding guidelines each standing check already stands decided, so a kind settles only
+coding guidelines each standing check already stands decided (WAY-202), so a kind settles only
 where a check reads its code. A kind in a language no standing check reads has no tool whose
 decision could extend to it, and choosing a tool is a technology choice that needs the research of
 an extension, so that kind makes the task one. Its weak points: whether a check reads a kind's
@@ -8421,7 +8457,7 @@ rule's invariant is marked violated until that code is cleaned (WAY-51).
 
 *Rationale:* a product with no rule of size has no threshold, so a change stopped for standing over
 a threshold and a plan that makes room first do nothing there, and a rule a skill only proposes stays
-unadopted for as long as nobody takes the proposal up; required, the rule is left out only
+unadopted for as long as nobody takes the proposal up (WAY-202); required, the rule is left out only
 by a decision that gives the reason (WAY-173). The rule stands outside the linter's set because that
 set blocks only through rules every report of which leads to a change worth making (WAY-203), and a
 long function that is best left whole is a case the product knows and records as an exception, which
@@ -8439,7 +8475,7 @@ stand under a threshold.
 *Rejected:* the rule proposed as a further rule a product may take up, with no decision on departing
 from it — a product with no rule has no threshold, so blocking a change over a threshold and the
 change in a task's plan do nothing there, and a skill that only proposes the checks leaves it so for
-as long as nobody takes the proposal up; no rule in the template, only the question about
+as long as nobody takes the proposal up (WAY-202); no rule in the template, only the question about
 the structure of code in the review — nothing blocks, and the assessment of structure depends on the
 reviewer, with the same chance in the grade as today for a remark on the form of an entry.
 
@@ -9063,7 +9099,6 @@ whose dependencies and build output are ignored.
 | WAY-197 | withdrawn: the uses of a rule are optional lines of the rule (WAY-168), and the test of its invariant is seen failing once like every other (WAY-08) | WAY-168 · WAY-08 |
 | WAY-200 | its rule, the answer to "Who designates a product's exemplar for a kind of code, and when?", stands in `product-guidelines/coding/kinds.md` and `product-guidelines/coding/SKILL.md` | none |
 | WAY-201 | its rule, the answer to "How does the coding-guidelines skill's audit of a product with code end?", stands in `product-guidelines/coding/kinds.md` | none |
-| WAY-202 | its rule, the answer to "Which standing checks must a product's coding guidelines settle, and from when do they bind?", stands in `product-guidelines/coding/template.md` | none |
 | WAY-207 | its rule, the answer to "Where is a fault of one file of a product's code fixed?", stands in `product-guidelines/coding/template.md` | none |
 | WAY-208 | its rule, the answer to "Which parts of a product get coding guidelines?", stands in `product-guidelines/coding/recognize.md` | none |
 | WAY-209 | its rule, the answer to "When do a product's coding guidelines come into being?", stands in `product-guidelines/coding/recognize.md` | none |

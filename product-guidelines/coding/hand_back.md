@@ -5,7 +5,7 @@ items below. For a new kind in a product that has coding guidelines, check of th
 only those the kind touches, as "A new kind" in step 3 of `SKILL.md` gives.
 
 - Check that the task document holds what `task_document.md` beside this skill names, that each
-  standing check has its adopting or departing decision among the choices settled, that
+  standing check has its adopting or departing decision among the choices settled (WAY-202), that
   a task of the first guidelines, of an extension or of a refresh that met the check of
   `recognize.md`, where `guidelines/coding.md` did not yet hold the rules on failures and logs, has
   the product's decision on them among the choices settled, adopted or departed from with its

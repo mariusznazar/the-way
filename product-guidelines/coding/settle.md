@@ -19,7 +19,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
   task is not ready until the human has settled it (WAY-268).
 - **What it settles.**
   - for each standing check, the product's decision adopting it or departing from it with its
-    reason; the task is not ready without one for each;
+    reason; the task is not ready without one for each (WAY-202);
   - for each standing check, the version of its tool, at which the task's cycle installs and pins
     it (the coding template's section "The tools of the standing checks"), beside the edition of
     the linter's set;
@@ -92,7 +92,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
       reviewer's finding about the structure of the product's code is always Minor (WAY-363).
 - **Invariants.** A binding rule gets an invariant where a cheap test checks it on a convention of
   the product's code, the rule of each standing check always; a rule no such test checks gets none,
-  and the review of each change it reaches compares the change with it (WAY-168). Propose,
+  and the review of each change it reaches compares the change with it (WAY-168, WAY-202). Propose,
   each with a test of the product's suite (WAY-61):
   - for the rule of each standing check, the invariants the coding template's section "What each
     section carries" names for it, with the parts it gives them;

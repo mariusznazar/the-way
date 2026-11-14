@@ -62,20 +62,17 @@ of the coding discipline in their places.
   check, and the rule of size its own, as the section "What each section carries" gives; any other
   rule names an invariant where a cheap test checks it on a
   convention of the product's code, and otherwise reads `none`, the review of each change the rule
-  reaches comparing the change with it (WAY-168, WAY-360).
+  reaches comparing the change with it (WAY-168, WAY-202, WAY-360).
 - The three standing checks, `### Linter`, `### Formatter` and `### Dependency audit`, stand in the
   order above, and each that the product goes without reads `none — <PREFIX-NN>`, naming the
-  product's decision that departs from it with its reason. The task that writes a product's coding
-  guidelines is complete only once the product's log holds, for each of the three standing checks, a
-  decision adopting it or departing from it with the reason. A product whose code no standing check
-  reads changes its style and takes in a known vulnerability with no signal.
+  product's decision that departs from it with its reason (WAY-202).
 - The six required rules on failures and logs, from `### Recording a failure` to `### Logging scope`,
   follow the standing checks in the order above, and the rule of size below and then the product's
   further rules follow those; a product that already has further rules takes the six in between
   when it adds them. A file of a kind holds none of the six.
 - The required rule `### Size of a function and a file` follows the six, and the product's further
   rules follow it; a product that already has further rules takes it in between when it adds it. It
-  is none of the three standing checks and no rule of the linter's set. A file of a kind
+  is none of the three standing checks (WAY-202) and no rule of the linter's set. A file of a kind
   holds no such rule, and a product that goes without it reads `none — <PREFIX-NN>`, naming the
   product's decision that departs from it with its reason; a reviewer's finding about the structure
   of such a product's code is then always Minor (WAY-360, WAY-173, WAY-363).
@@ -143,8 +140,8 @@ those decisions and invariants in its own foundation; the coding guidelines name
   No row stands for a kind that has no exemplar yet (WAY-167).
 - **Linter** — rule. *Decision*: the product's decision adopting the linter and its set of rules,
   naming the set, its edition, the parts it reads and the rules of the set that stand among the
-  examples for the reports they give that lead to no change of code worth making (WAY-203,
-  WAY-204). *Invariant*: that no file of the parts named breaks a rule of the set that
+  examples for the reports they give that lead to no change of code worth making (WAY-202,
+  WAY-203, WAY-204). *Invariant*: that no file of the parts named breaks a rule of the set that
   blocks, resting on the environment fact of the set's edition (WAY-203, WAY-73). A comment in the
   code that turns off a rule that blocks has no effect: where the tool can be told so by a flag or
   its configuration, the invariant's test runs it so, and where it cannot, the review of each
@@ -160,12 +157,12 @@ those decisions and invariants in its own foundation; the coding guidelines name
   Where the product's code already breaks the rules that block, the invariant is marked violated
   until the code is cleaned (WAY-205, WAY-51).
 - **Formatter** — rule. *Decision*: the product's decision adopting the formatter and its
-  configuration. *Invariant*: that every file of the parts named stands as the formatter
+  configuration (WAY-202). *Invariant*: that every file of the parts named stands as the formatter
   leaves it. A product whose code does not stand so when the formatter enters is reformatted whole,
   once, by the task that brings the formatter (WAY-205).
 - **Dependency audit** — rule. *Decision*: the product's decision adopting the audit, naming its
   tool, the advisory database it reads and the severity from which a vulnerability counts; the skill
-  puts that severity to the human with every severity among the ways (WAY-206, WAY-60).
+  puts that severity to the human with every severity among the ways (WAY-202, WAY-206, WAY-60).
   *Invariant*: that the change against `{fork-point}` brings in no version of a dependency with a
   known vulnerability of at least that severity, as that database gives it when the check runs
   (WAY-206).
@@ -175,7 +172,7 @@ those decisions and invariants in its own foundation; the coding guidelines name
   lockfile it reads. A change of a configuration file or of the lockfile alone thus reaches it
   (WAY-62).
 - **A standing check the product goes without** reads `none — <PREFIX-NN>`, naming the product's
-  decision that departs from it with its reason.
+  decision that departs from it with its reason (WAY-202).
 - **The rules on failures and logs** — the six rules below. They are no standing checks: no tool
   comes with them, and each is a rule of the whole of the code. They say how code writes to
   the product's logs and what the product promises to log; where the logs go, how long they live and
