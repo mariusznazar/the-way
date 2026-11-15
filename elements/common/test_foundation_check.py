@@ -716,6 +716,53 @@ class FoundationCheckTest(unittest.TestCase):
                     self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
                                      "*%s* does not take `%s`" % (field, value), "1 error")
 
+    # --- a TODO after a comma or a line break, not after ` · ` -----------------------------------
+
+    def test_rests_on_a_bare_todo_after_a_comma_or_a_line_break_names_no_fact(self):
+        for value, line in (("clock-tick, TODO", 8), ("clock-tick, `TODO`", 8),
+                            ("clock-tick, TODO —", 8), ("clock-tick\n  TODO", 9),
+                            ("clock-tick,\n  TODO", 9)):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_rests_on(value),
+                                 "foundations/invariants.md:%d: *Rests on* reads `TODO` and names "
+                                 "no fact: write `TODO — <the fact, with its source>`" % line,
+                                 "1 error")
+
+    def test_derives_from_a_bare_todo_after_a_comma_names_no_decision(self):
+        self.assertFails(self.mixed_derives_from("ABC-01, TODO"),
+                         "foundations/invariants.md:9: *Derives from* reads `TODO` and names no "
+                         "decision: write `TODO — <the decision, and where it is expected>`",
+                         "1 error")
+
+    def test_based_on_a_bare_todo_after_a_comma_names_nothing_missing(self):
+        self.assertFails(self.mixed_based_on("ABC-01, TODO"),
+                         "foundations/decisions.md:21: *Based on* reads `TODO` and says nothing "
+                         "of what is missing: write `TODO — <what is missing, with its source>`",
+                         "1 error")
+
+    def test_a_described_todo_after_a_comma_or_a_line_break_is_no_joined_list(self):
+        for value in ("clock-tick, TODO — a second fact", "clock-tick,\n  TODO — a second fact",
+                      "clock-tick\n  TODO — a second fact"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_rests_on(value),
+                                 "*Rests on* joins its items by ` · `: write ` · ` before `TODO`, "
+                                 "not a comma or a line break", "1 error")
+
+    def test_a_described_todo_after_a_comma_is_no_joined_list_in_the_other_fields(self):
+        self.assertFails(self.mixed_derives_from("ABC-01, TODO — the decision on saves"),
+                         "*Derives from* joins its items by ` · `", "1 error")
+        self.assertFails(self.mixed_based_on("ABC-01, TODO — the source of the save format"),
+                         "*Based on* joins its items by ` · `", "1 error")
+
+    def test_a_comma_or_a_todo_inside_quotation_marks_joins_and_begins_nothing(self):
+        self.assertPasses(self.mixed_derives_from(
+            "https://example.org/clock — \"one, TODO tick\"; read 2026-10-01 · "
+            "TODO — the decision on ticks, once the clock task is made"))
+
+    def test_a_described_todo_first_or_after_a_dot_joined_item_stays_as_before(self):
+        self.assertPasses(self.mixed_rests_on("TODO — a second fact, from the vendor"))
+        self.assertPasses(self.mixed_rests_on("clock-tick · TODO — a second fact, from the vendor"))
+
     # --- a missing thing as the last item of a value that names known ones ----------------------
 
     def mixed_rests_on(self, value):
@@ -1450,7 +1497,7 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertIn("0 errors", report)
 
     def test_reworded_sentence_with_its_citing_file_changed_is_not_listed(self):
-        # decision: WAY-03 "A change whose check lists such an invariant"
+        # decision: WAY-03 "The check of the foundation lists an invariant whose method"
         touched = FILES["tests/test_saving.py"] + "# touched\n"
         product = self.reworded(tests__test_saving_dot_py=touched)
         self.assertEqual(self.lines(product.check()), ["0 errors"])

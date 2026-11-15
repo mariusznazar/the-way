@@ -45,7 +45,9 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   source>`, split into no items or references, since it names no entry; the items before it are
   read as before, so a known entry followed by it stays checked. A `TODO` item with no description
   of what is missing, whether alone or after known entries, as in `clock-tick · TODO`, is an error
-  (WAY-71). A `TODO` inside quotation marks begins no item, the dash after `TODO` is not required,
+  (WAY-71). A `TODO` after a comma or a line break instead of ` · ` begins such an item too: a bare
+  one is an error as above, and one with a description is an error saying the items are joined by
+  ` · `. A `TODO` inside quotation marks begins no item, the dash after `TODO` is not required,
   and a value with no `TODO` item is read as before;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
@@ -297,14 +299,15 @@ def based_on(found):
 
 def todo_item(value):
     """The index in a field's value where its first item that begins with the word `TODO` starts,
-    or None. The items are joined by ` · `; a ` · ` inside quotation marks joins nothing, and a
+    or None. The items are joined by ` · `, but a comma or a line break also ends a piece, so a
+    `TODO` after either begins one too; a separator inside quotation marks joins nothing, and a
     `TODO` inside them begins no item."""
     masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
     start = 0
-    for piece in masked.split("·"):
-        text = value[start:start + len(piece)]
-        if TODO_VALUE.match(text.lstrip()):
-            return start + len(text) - len(text.lstrip())
+    for piece in re.split(r"[·,\n]", masked):
+        begin = start + len(piece) - len(piece.lstrip())
+        if TODO_VALUE.match(value, begin):
+            return begin
         start += len(piece) + 1
     return None
 
@@ -559,16 +562,23 @@ class Foundation:
         """`found` with the field's value cut before its missing thing: the first item that begins
         with the word `TODO`, which with all that follows is one description of a missing fact,
         decision or source, never a list or a reference. A `TODO` with no description is reported.
+        A `TODO` that follows a comma or a line break instead of ` · ` is reported too: a bare one
+        as a bare one, one with a description as a list not joined by ` · `.
         A value with no such item is returned as it is, to be read as its field is read."""
         value, lines = found.get(name, ("", [0]))
         start = todo_item(value)
         if start is None:
             return found
         todo = TODO_VALUE.match(value, start)
+        where = lines[value.count("\n", 0, start)]
+        before = value[:start].rstrip(" \t\n")
         if not value[todo.end():].strip(" \t\n`—–-"):
             what, form = MISSING[name]
-            self.report.error(path, lines[value.count("\n", 0, start)],
+            self.report.error(path, where,
                               "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form))
+        elif before and not before.endswith("·"):
+            self.report.error(path, where, "*%s* joins its items by ` · `: write ` · ` before "
+                                           "`TODO`, not a comma or a line break" % name)
         return {**found, name: (value[:start], lines)}
 
     def check_foundation_references(self):
