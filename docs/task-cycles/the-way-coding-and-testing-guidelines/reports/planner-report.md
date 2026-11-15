@@ -1,0 +1,74 @@
+# Planner report — the way: coding and testing guidelines of the-way itself
+
+Status: `done with concerns`
+
+- Plan: `.runs/task-cycles/the-way-coding-and-testing-guidelines/plan.md` — 40 foundation entries (E1–E40), 23 slices, 6 of them with a trust-boundary risk (2, 4, 5, 6, 8, 11), none with an operation that cannot be undone
+- Size report: `.runs/task-cycles/the-way-coding-and-testing-guidelines/plan-size.md` — the last run of `python -B task-cycle/slice_size.py`, exit 0, every slice `fits` (the largest: slice 8 at 116 448 estimated tokens, which reads the whole of a 4195-line test file)
+- Check result: `slice_size.py` exit 0 on the final plan, none failed, none unchecked; no slice was made, no code or entry written, no run of the gate
+
+## Open design choice and reserved choice
+
+None. Every choice the plan makes is one of how to make what the task settles and is listed under *Choices* of the plan.
+
+## Questions for the orchestrator (the plan stands on the proposed answer of each)
+
+1. **An eleventh part holds Python at the base.** The task counts ten parts with code at `21ecb62`; since then `product-guidelines/test_skill_references.py` (515 lines, a test that finds pointers to a file, a step or a heading that is not there) was added, so the part `product-guidelines` holds code and a test file. Answers 2, 8, 15 and 21 and rows 3, 6, 14, 15 and 24 say ten. The coding template says *Applies to* names every part that holds code, and the testing template every part that holds test files.
+   - Proposed answer: eleven. The linter and the size test read `product-guidelines` too, `Applies to` of both files names it, and the table of parts of `guidelines/testing.md` gets a row for it. The one sentence of that row ("where its complexity lies") is no settlement of the task: it needs the human's word (WAY-172). My reading, as a proposal only: computation, since the test parses the text of skills and checks references against files, with no outside service.
+   - If the answer is ten: remove `product-guidelines` from the directories of slices 16 and 17, from slices 21 and 22, and from the *Part* of E22 and E23; a Python file in that part then stays unread by both checks.
+   - Evidence: `git ls-files '*.py'` at the base lists one file under `product-guidelines/`; the foundation step of the plan's entries meets the same count in rows 3, 6, 14 and 15, where the row's meaning cannot hold as written.
+2. **Item 14 and cause 3 are half corrected at the base.** The Claude Code half of `task-cycle/cycle_stages.py` already reads `message.usage` through `required` and `required_count` and ends with exit 2 (`MissingFieldError`), with tests (a task merged after `21ecb62`); the description at the head of the script says that the reading of a Codex rollout "checks no field". Slice 4 therefore covers the Codex half only. The words of WAY-344 about "the whole reading of each file whose way of reading the change reworks" could oblige every field of the Codex rollout; the slice makes the three token counts and `usage` required and has its report list each other field the changed function reads without an error. Proposed answer: keep it so. Cost if the other reading is meant: one more slice for the other fields of the rollout.
+3. **The rule of the command runner and `gate/run_tests.py`.** The rule is that a script wrapping one command ends with that command's exit code unchanged. `gate/run_tests.py` wraps no one command (it runs every directory and aggregates; its codes are the invariant `gate-exit-code`), and is listed in Context as a file of the kind. Slice 14 tests the rule on `task-cycle/gate_times.py` alone. Proposed answer: keep it, and let the *Part* of E26 name `task-cycle`.
+4. **What `## Rules` holds in the guidelines of the kinds `check` and `measuring-report`.** Answer 13 gives them "no rule a test checks", and WAY-198 puts the rest of an exemplar under *Examples*. The template says nothing about a kind with no rule. Slices 18 and 19 write `## Rules` as `none — <the decision of E8>`. Proposed answer: keep it; the alternative is a rule with *Invariant* `none` from the audit of the kinds, which the task does not settle.
+5. **The places of the linter at the base are not the 37 of the task.** The ruff 0.17.1 run at the base with the 18 examples removed gives 43 reports, of which the slices clean 18 (14 RUF059 in `process-audit/test_audit_count.py` where the task counted 13, one UP022, two FURB162, one RUF007, with the other places the task takes unchanged). Four reports are new since the task's commit: F541 in `process-audit/test_audit_count.py`, TRY004 in `task-cycle/cycle_stages.py`, PYI034 in `task-cycle/test_cycle_measures.py`, PIE810 in `product-guidelines/test_skill_references.py`. They stay under the invariant marked violated; two of them are in files the plan's slices edit. Proposed answer: keep it (answer 5 takes named places, WAY-205 lets the rest wait); the cost is a reviewer asking why F541 stayed in a file of slice 8.
+
+## Concerns
+
+- The agent of the foundation entries has 38 entries to write (15 new decisions, 3 changed decisions and 1 withdrawn, 12 new invariants and 1 changed, 3 glossary terms, 2 environment facts) and 2 part-map lines it does not write. The skill gives one agent for them. If the orchestrator judges that too much for one agent, the table splits cleanly at E1–E21 (decisions, glossary, facts, changed entries) and E22–E38 (invariants), with no dependence between the two halves but E22–E27's *Derives from*, which names decisions of the first half.
+- The refusal citation of slice 11 (`instruction-files/test_check_instructions.py`) rests on a test that skips where links cannot be made; slice 11 says so and reports the failing run as unchecked on a machine that cannot make links. The invariant E33 therefore may have no result on Mariusz's machine, as the task says.
+- Slices 4 and 8 add to a file over the 1000-line threshold and to functions the rule of size will name; WAY-365 asks no preliminary move because the guidelines of the-way hold no rule of size at the base and answer 11 says so (the first row of *Choices* of the plan).
+- The statuses in the tables of the guidelines of kinds follow the allocation in the task's Context. At the base `agent-instructions/agent_type_copies.py` is `copy` (corrected before the base), `task-cycle/cycle_stages.py` becomes `copy` after slice 4 (the Claude Code place corrected before the base, the Codex place by slice 4), `skill_entry_points.py` becomes the exemplar after slice 10, `cycle_measures.py` after slice 5. The two scripts added after the audit, `elements/common/compare_log_entries.py` and `elements/common/decision_index.py`, take no row (the template says a file added after the audit takes none until a refresh); slices 18 to 20 are told so.
+- Slice 1 needs the network for the sums of the wheels of ruff 0.17.1 and for an installation check; it returns `blocked` where it has none.
+- The linter test (slice 16) takes ruff from the main checkout, so it passes or fails the same in this worktree as the task's answer 25 gives; a slice runs it from this worktree.
+
+## Guidelines found missing or uncertain
+
+- The-way has no guidelines of its own at the base (the task writes them), so no guideline file was read, and no rule of size could be applied to the order of slices.
+- The template of the coding discipline holds no instruction for a kind of code with no rule a test checks (question 4).
+- The testing template's *Applies to* and the table of parts give no instruction for a part answer 15 does not list (question 1).
+
+## The order of the plan and the styleguide example
+
+The task changes no user interface, so the styleguide's order-of-work example does not apply. The order follows the handoff: entries first; the configuration of the linter; the fixes of existing code and the refusal citations; the tests of the rules of kinds; the two tests of the standing checks after the fixes they need; the six guidelines of kinds after the exemplars they name are corrected; the general files; the two pointers in `AGENTS.md` last.
+
+## Reaches beyond the dispatch
+
+- `<main checkout>\.runs\coding\blocking_files.txt`, `sizes.md`, `kinds_audit.md` and `<main checkout>\.runs\testing\tests_audit.md` (the "Trust boundaries" section and the first sixty lines): named by the task's Context, outside the worktree and ignored by git; read to find the allocation, the statuses and the refusal tests. The slices do not name them, since a slice agent cannot be handed a path outside the repository; the task's own Context carries the allocation.
+- `<a directory outside the repository>`, `requirements-quality.in`, `requirements-quality.txt`, `README.md` (the section of the quality tools) and `tests/quality/test_quality_invariants.py` (the ruff test): named by the task as the pattern of the configuration; read for the form of the files only. The slices describe the form in words, since the paths lie outside the repository.
+- `<main checkout>/.runs/quality-venv/Scripts/ruff.exe` (ruff 0.17.1): ran `ruff check --isolated --target-version py314 --no-cache --ignore-noqa --extend-exclude .runs` with the 18 examples ignored over the worktree, to learn the places of the linter at the base. It wrote no file in the worktree.
+- `git diff --stat 21ecb62..HEAD` and the code of `task-cycle/cycle_stages.py`, `agent-instructions/skill_entry_points.py`, `agent-instructions/agent_type_copies.py`, `gate/run_tests.py` (head), `task-cycle/gate_times.py`, the tests the task's causes name: read to find each place again at the base.
+- `elements/common/foundation_check.py` (the head, which describes the check): found the switch `--skip-test-citations` and the report of a path pattern that matches no tracked file, which decide where the part-map lines are written.
+- `foundations/decisions.md` entries opened whole: WAY-05, WAY-08, WAY-09, WAY-38, WAY-51, WAY-69, WAY-73, WAY-328, WAY-363, and WAY-344 from its first sentences by the orchestrator's index and its *Rationale* and *Rejected* by line; other decisions through the orchestrator's index of binding parts and the task's quotations.
+
+## Working copies
+
+One: `.runs/planner/entries.md` (a file of the text of eleven decisions, made to read them in this worktree). It stood in `.runs/planner/` of this worktree and was removed before I returned; nothing remains. No worktree, clone or environment was made.
+
+## Unread material
+
+- `foundations/decisions.md`: of the decisions the handoff names, I read whole WAY-05, WAY-08, WAY-09, WAY-38, WAY-51, WAY-69, WAY-73, WAY-328, WAY-363 and the *Rationale* and *Rejected* of WAY-344. I read only the binding sentences (through the orchestrator's index and the task's quotations) of WAY-14, WAY-16, WAY-48, WAY-55, WAY-63, WAY-89, WAY-160, WAY-167, WAY-168, WAY-172, WAY-173, WAY-198, WAY-199, WAY-202 to WAY-206, WAY-212, WAY-215, WAY-216, WAY-228, WAY-231 to WAY-243, WAY-247, WAY-252 to WAY-254, WAY-312, WAY-360, WAY-361, WAY-365 and WAY-372, and not their *Rationale* or *Rejected*; of the rest of the index's 133 headings, only the headings.
+- `foundations/part_map.md`, `foundations/glossary.md`, `foundations/invariants.md`, `foundations/environment_facts.md`: read whole.
+- `product-guidelines/coding/template.md`, `product-guidelines/testing/template.md`, `product-guidelines/template.md`, `product-guidelines/reading.md`: read whole. `product-guidelines/coding/SKILL.md`, `product-guidelines/testing/SKILL.md` and the files they name: not read (the writers of the guidelines read the templates; the skills lead a refinement).
+- The skills of the elements (`elements/decisions/`, `elements/invariants/`, `elements/glossary/`, `elements/environment-facts/`) and `elements/common/rules.md`, `elements/common/way_of_working.md`: not read; the plan names entries and does not word them. `elements/part-map/skill/SKILL.md`: the first forty lines.
+- `task-cycle/skill/foundation_step.md` and `task-cycle/plan/SKILL.md`: read whole. `task-cycle/plan/too_large.md`: not read (no slice was too large). `task-cycle/skill/SKILL.md`: lines 380 to 470 only.
+- The frozen task: read whole, in two pages.
+- Code and tests: read in the places named in this report and in the plan's *Read* ranges (none whole except the small files); `process-audit/test_audit_count.py`, `task-cycle/test_cycle_stages.py`, `task-cycle/test_cycle_measures.py`, `installation/test_install.py`, `instruction-files/test_check_instructions.py` and `elements/common/test_foundation_check.py` only at the lines I looked up.
+- `<main checkout>\.runs\coding\ruff_verdicts.md`, `ruff_statistics.txt`, `ruff_check_0.17.1.json`, `ruff_format_check.txt`, `sizes_count.py`, and `tests_audit.md` outside the sections named above: not read.
+
+## Searches not found or unclear
+
+- The Claude Code half of cause 3 (item 14): the task says both functions read a missing token count as zero; at the base the Claude Code reading is already corrected. Unclear whether the task meant to keep a part of it; the plan keeps the Codex half only (question 2).
+- The count of parts with Python (question 1) and the number of places of the linter (question 5) differ from the task's, because 136 commits stand between `21ecb62` and the base.
+- Item 15, cause 4: the task says tests "give scripts the time from a fixed value (like `--today`)". `task-cycle/gate_times.py` and `gate/run_tests.py` have no such option, and I found no instruction for adding one; slices 6 and 7 change tests only, replacing the script's clock in process and waiting for events, and `blocked` is their way out. Unclear whether the task meant a new option on a script.
+- Item 7: the task says to "write" the tests of four rules; for generators, repository changers and command runners tests that check the rule already exist, and slices 12 to 14 cite and strengthen them where they check less (a test is written where none does). A test of the rule of the repository changer for `elements/common/migrate_foundation.py` and for `installation/install.py` was found by name only (`test_a_run_without_apply_writes_nothing_but_its_report`, `test_declined_apply_writes_nothing`), not read.
+- The six boundary refusal tests: found by name at the base for all six (`test_a_file_that_is_not_utf_8_exits_two`, `test_crafted_names_neither_break_a_row_nor_enter_the_column`, `test_a_line_nested_too_deeply_ends_with_exit_2_naming_the_file_and_line`, `test_entries_with_a_time_that_cannot_be_are_deleted_and_count_for_nothing`, `test_a_symbolic_link_leaving_the_record_is_not_followed`, `test_a_file_link_out_of_the_repository_is_neither_read_nor_listed`); I took them to be the tests the task's line numbers name, from the names and the task's description of each, and did not read their bodies.
+- No search found a reference to WAY-328 outside the three places the task names (`foundations/decisions.md` at WAY-344 twice and WAY-363 once).

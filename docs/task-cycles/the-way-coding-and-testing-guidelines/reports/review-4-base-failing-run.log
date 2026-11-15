@@ -1,0 +1,308 @@
+FFEFEFFFEFEFFFEFEFFF.F.FFF
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value='7')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 140, in add
+    self.input += other.input
+TypeError: unsupported operand type(s) for +=: 'int' and 'str'
+
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value=[1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 140, in add
+    self.input += other.input
+TypeError: unsupported operand type(s) for +=: 'int' and 'list'
+
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value='7')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 141, in add
+    self.cached += other.cached
+TypeError: unsupported operand type(s) for +=: 'int' and 'str'
+
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value=[1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 141, in add
+    self.cached += other.cached
+TypeError: unsupported operand type(s) for +=: 'int' and 'list'
+
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value='7')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 142, in add
+    self.output += other.output
+TypeError: unsupported operand type(s) for +=: 'int' and 'str'
+
+======================================================================
+ERROR: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value=[1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1329, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    code, stderr, output = self.run_main("orchf")
+                           ~~~~~~~~~~~~~^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1265, in run_main
+    code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                              str(self.root / "claude"), "--output", str(output)])
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 1111, in main
+    text = report(sessions, build_rows(sessions), warnings)
+                            ~~~~~~~~~~^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 877, in build_rows
+    row.orchestrator.add(record.usage)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\cycle_stages.py", line 142, in add
+    self.output += other.output
+TypeError: unsupported operand type(s) for +=: 'int' and 'list'
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value=1.5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='input_tokens', value=1000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value=1.5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='cached_input_tokens', value=1000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value=-1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value=1.5)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it) (field='output_tokens', value=1000000000000000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1330, in test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_missing_field_in_a_subagents_rollout_names_that_rollout (__main__.CodexFieldsTest.test_a_missing_field_in_a_subagents_rollout_names_that_rollout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1344, in test_a_missing_field_in_a_subagents_rollout_names_that_rollout
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : Warning: Codex session `orchf`: the orchestrator's transcript holds no turn
+Warning: Codex session `orchf`: the orchestrator's transcript holds no token usage
+Warning: Codex session `orchf`, /root/work: 1 response(s) name no model
+Warning: Codex session `orchf`, /root/work: 1 turn(s) without `task_complete`, each ending at its last entry
+
+
+======================================================================
+FAIL: test_a_null_usage_or_count_is_a_missing_field (__main__.CodexFieldsTest.test_a_null_usage_or_count_is_a_missing_field)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1317, in test_a_null_usage_or_count_is_a_missing_field
+    self.assert_refused(null_usage, "payload.usage")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1288, in assert_refused
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_record_of_tokens_without_its_usage_ends_with_exit_code_2_naming_it (__main__.CodexFieldsTest.test_a_record_of_tokens_without_its_usage_ends_with_exit_code_2_naming_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1298, in test_a_record_of_tokens_without_its_usage_ends_with_exit_code_2_naming_it
+    self.assert_refused(line, "payload.usage")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1288, in assert_refused
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_usage_without_its_cached_input_tokens_ends_with_exit_code_2_naming_them (__main__.CodexFieldsTest.test_a_usage_without_its_cached_input_tokens_ends_with_exit_code_2_naming_them)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1307, in test_a_usage_without_its_cached_input_tokens_ends_with_exit_code_2_naming_them
+    self.assert_refused(self.record(cached_input_tokens=ABSENT),
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "payload.usage.cached_input_tokens")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1288, in assert_refused
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_usage_without_its_input_tokens_ends_with_exit_code_2_naming_them (__main__.CodexFieldsTest.test_a_usage_without_its_input_tokens_ends_with_exit_code_2_naming_them)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1302, in test_a_usage_without_its_input_tokens_ends_with_exit_code_2_naming_them
+    self.assert_refused(self.record(input_tokens=ABSENT), "payload.usage.input_tokens")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1288, in assert_refused
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+======================================================================
+FAIL: test_a_usage_without_its_output_tokens_ends_with_exit_code_2_naming_them (__main__.CodexFieldsTest.test_a_usage_without_its_output_tokens_ends_with_exit_code_2_naming_them)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1312, in test_a_usage_without_its_output_tokens_ends_with_exit_code_2_naming_them
+    self.assert_refused(self.record(output_tokens=ABSENT), "payload.usage.output_tokens")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ".runs\review-4\wt\task-cycle\test_cycle_stages.py", line 1288, in assert_refused
+    self.assertEqual(2, code, stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : 
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.121s
+
+FAILED (failures=18, errors=6)
