@@ -82,9 +82,10 @@ differ.
 
 Nothing in this repository points to a source outside it that its readers cannot reach: every entry
 carries its whole reasoning, and what is seen only in such a source is described in the entry
-instead of being pointed to. The one exception is the place of its tasks and the rules of that
-place, named in the `## Backlog` section of its root `AGENTS.md` and nowhere else, each by an entry
-of the locations file of WAY-320 and never by a path.
+instead of being pointed to. The one exception is the places where the work of the-way lies — the
+place of its tasks and the rules of that place, the register of problems and the results of the
+audit — which are no source of reasoning, and a file that needs one names it by an entry of the
+locations file of WAY-320, never by a path.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, agent-instructions, instruction-files, product-guidelines, task-cycle
@@ -95,23 +96,29 @@ of the locations file of WAY-320 and never by a path.
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
     `AGENTS.md` names, in `## Backlog`, the entries of the locations file where the place of its
-    tasks and the rules of that place are kept;
+    tasks and the rules of that place are kept, and the instructions of the audit name the entry
+    that holds the register of problems;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
-    without saying what was seen; the `## Backlog` section holds the path of the place of the
-    tasks.
+    without saying what was seen; a file holds the path of the place of the tasks or of the
+    register of problems; a decision rests its reasoning on a task document or on a result of the
+    audit.
 - **Origin:** none
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
-to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
-an agent there, to the rules by which the lines of that place are written as well; named in that one
-section, it stays a place to find work and never becomes a
-source an entry points to. Named by an entry of the locations file, it adds no path to a public
-repository, which would tell every reader how one user's disk is laid out.
+to name. A place where work lies — a backlog, the register of problems, the results of the audit —
+is where work is kept and found, not reasoning an entry rests on, and WAY-107 sends an agent to the
+backlog, to the rules by which the lines of that place are written as well; named only by an entry
+of the locations file, such a place stays a place to find work and never becomes a source an entry
+points to. A general sentence takes in each place the work comes to lie in, where a list would need
+a change of this decision for each one. Named by an entry of the locations file, a place adds no
+path to a public repository, which would tell every reader how one user's disk is laid out.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them; the path of the place of the tasks left in `## Backlog`, with the check for paths excepting
 that section — the repository would go on saying how the user's disk is laid out, the very thing the
-check is there to stop.
+check is there to stop; a closed list of the places with the one file that may name each — every new
+place needs a change of this decision, and a change forgotten leaves the same gap between the
+decision and the files.
 
 ### WAY-28 — How does the process enter a product that already exists?
 
@@ -7467,6 +7474,9 @@ which write example paths in order to find or to test them; a file that points t
 its entry in the locations file. The copy of a task cycle's record and the description of a request
 are checked for a note link in every file, as WAY-309 gives.
 
+A place that a script of the-way keeps for itself under `~/.the-way/`, such as the register of the
+runs of the gate, `~/.the-way/gate_runs`, needs no entry of the locations file.
+
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle,
   process-audit
 - **Based on:** none
@@ -7476,7 +7486,8 @@ are checked for a note link in every file, as WAY-309 gives.
   - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
     product's name in `~/.the-way/locations.json`, and one that needs the rules of that place reads
     the entry `task-rules` under the same name; a file the repository tracks says "the entry
-    `tasks` under `the-way`" where it means a place on the user's disk;
+    `tasks` under `the-way`" where it means a place on the user's disk; the script of the gate keeps
+    its register of runs under `~/.the-way/` with no entry for it in the locations file;
   - violates: a skill reads the location from an environment variable; a tracked file the
     invariant does not name holds the path of a directory on the user's disk, or a Markdown file it
     does not name holds a link to a private note; the locations file is put in a repository, or
@@ -7489,22 +7500,28 @@ publishes how one user's disk is laid out and what that user's private notes are
 history keeps it after the file is corrected. `~` reads the same for every user and says nothing
 about any of them, so one file in a fixed place lets any file say which place it means by a name,
 and each user lays the disk out as they like. With no environment variable, every tool started in
-the user's home finds the file whether or not a variable was set for it. The price taken: each user
-creates the file once on each machine, and an agent that finds no file asks the human; a session
-that runs in the cloud has no such file and asks too. The check for paths reads every tracked file
-but those that must write example paths, and the list of those files stands in the invariant, so
-adding a file to it shows in the change; a real path pasted into a file on the list passes. A note
-link is text of a note, so it counts in a Markdown file; in code the same brackets are an array
-inside an array or a test of the shell, and a run of the check over every tracked file of one public
-product on 2026-11-09 listed 71 such texts in code among 88 findings (the run is this product's own,
-and its record is not open to a reader of this repository). A link in a report of the copy of a
-cycle's record, of any kind of file, is still a leak, so the copy and the description keep the
-check of WAY-309 in every file.
-*Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
-of the tasks file left in the root `AGENTS.md` — a path in the repository is the problem ("there
-should be no such paths in the repository, and that they are there is the problem"); the place
-described in words in `## Backlog`, with the path in the user's global instructions — "global
-instructions are probably not the place for such things"; the file found
+the user's home finds the file whether or not a variable was set for it. A place that a script keeps
+for itself is the-way's own file, as the locations file is, and gives the user no path to choose: a
+script that cannot ask the human needs a default path where no entry is, and one file for each run
+needs no lock where gates run at the same time. The price taken: each user creates the file once on
+each machine, and an agent that finds no file asks the human; a session that runs in the cloud has
+no such file and asks too. The check for paths reads every tracked file but those that must write
+example paths, and the list of those files stands in the invariant, so adding a file to it shows in
+the change; a real path pasted into a file on the list passes. A note link is text of a note, so it
+counts in a Markdown file; in code the same brackets are an array inside an array or a test of the
+shell, and a run of the check over every tracked file of one public product on 2026-11-09 listed 71
+such texts in code among 88 findings (the run is this product's own, and its record is not open to a
+reader of this repository). A link in a report of the copy of a cycle's record, of any kind of file,
+is still a leak, so the copy and the description keep the check of WAY-309 in every file.
+*Rejected:* the register of the gate's runs as an entry of the locations file — it changes the
+script of the gate, its tests and WAY-350, and a script that cannot ask the human needs a default
+path where no entry is all the same; one file with the data of every run in place of a directory of
+files — gates that run at the same time would write to one file and need a lock on writing, which
+one file for each run avoids; the check for paths alone, with an exception for the `## Backlog`
+section and the path of the tasks file left in the root `AGENTS.md` — a path in the repository is
+the problem ("there should be no such paths in the repository, and that they are there is the
+problem"); the place described in words in `## Backlog`, with the path in the user's global
+instructions — "global instructions are probably not the place for such things"; the file found
 through an environment variable, as the private layer of another project does — the file in a fixed
 place plus a variable to set on every machine and in every tool, and an agent in a tool that does
 not see the variable does not find the backlog; a local file in the repository that git ignores,
@@ -7517,15 +7534,14 @@ tasks lie elsewhere would silently take the rules of another place; for the file
 paths by their nature, a check that skips only the lines marked as examples — every example line to
 mark and the code of the marks, and a real path in a marked line passes too; no exceptions, with the
 examples rewritten so that the pattern does not find them — every example to rewrite, the tests and
-the description of the script harder to read,
-and every later author of a test has to remember it; a check that skips all test files and both
-scripts — a path in any test of the-way passes; a note link counted in a Markdown file only, also
-in the copy of the record and in the description — a link in a report of the copy kept as a text
-or a log file passes, and an agent quoting a task document carries its links into a report, and it
-changes WAY-309; a note link counted in every file but the files of code recognised by their
-extension — a list of extensions to extend with each new language of a product, and a script with
-no extension still gives false hits; no change to the rule for a link — false hits for every array
-inside an array in code and a long list of files to except.
+the description of the script harder to read, and every later author of a test has to remember it; a
+check that skips all test files and both scripts — a path in any test of the-way passes; a note link
+counted in a Markdown file only, also in the copy of the record and in the description — a link in a
+report of the copy kept as a text or a log file passes, and an agent quoting a task document carries
+its links into a report, and it changes WAY-309; a note link counted in every file but the files of
+code recognised by their extension — a list of extensions to extend with each new language of a
+product, and a script with no extension still gives false hits; no change to the rule for a link —
+false hits for every array inside an array in code and a long list of files to except.
 
 ### WAY-324 — How does a product check the files it tracks for private paths and notes?
 
@@ -9435,8 +9451,8 @@ level's exemplar test, the command and the time limit — each field that binds 
 decision that carries it, a field naming none standing as an example, and a field that repeats
 another level's reading "as in <level>". The field of the command names the gate and how it narrows
 to the level, a file or a test, where the gate can, and otherwise reads `none`; the field of the
-time limit points to the configuration file that holds it; and no recipe lists commands of the test
-tool of its own.
+time limit points to the configuration file that holds it, and reads `none` where no configuration
+file holds one; and no recipe lists commands of the test tool of its own.
 
 - **Scope:** product-guidelines
 - **Based on:**
@@ -9453,7 +9469,8 @@ tool of its own.
     doubles of integration tests names the product's decision to run them against a real database;
     the recipe of end-to-end tests reads "as in unit tests" for its data;
   - violates: a recipe lists a command of the test tool for its level beside the gate; the field of
-    the time limit reads "5 s"; a field of doubles binds a change while it names no decision.
+    the time limit reads "5 s", or stays empty where no configuration file holds a limit; a field of
+    doubles binds a change while it names no decision.
 - **Origin:** none
 
 *Rationale:* the same fields for every level let an agent find what binds at any level in one place,
@@ -9463,7 +9480,8 @@ its doubles, its data and its time are proposals a product adopts or departs fro
 every test (WAY-16), so the recipe gives that command and how far it narrows, and a command of the
 tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
 only by a change of its code. A time limit copied into the guidelines goes stale beside the
-configuration that holds it. The default order of doubles — the real thing where it is fast,
+configuration that holds it, and where none holds a limit the field reads `none`, as the field of
+the command does, so that no product words its own way of saying so. The default order of doubles — the real thing where it is fast,
 deterministic and simple, then a working simpler version, then a stub or a mock — follows the
 preference for real implementations, with a check of a call kept for an effect outside the product.
 *Rejected:* commands of the test tool for each level, as an exception to WAY-16 — a list of checks
