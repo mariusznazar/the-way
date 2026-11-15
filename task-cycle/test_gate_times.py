@@ -7,17 +7,24 @@ The expected rows and counts are worked out by hand from the output written here
 from __future__ import annotations
 
 import ast
+import io
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import time
+import textwrap
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "gate_times.py"
+
+sys.path.insert(0, str(HERE))
+
+import gate_times
 
 HEADING = "# Gate runs of the cycle"
 TABLE_HEADER = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
@@ -27,10 +34,9 @@ TOTAL = re.compile(r"^\d+\.\d{3}$")
 ENDED = re.compile(r"^(\d+)_(\d+)_([A-Za-z0-9]+)\.run$")
 HOUR = 3600 * 1000
 DAY = 24 * HOUR
-
-
-def now_ms() -> int:
-    return time.time_ns() // 1_000_000
+# The instant the script's clock gives in the tests of the registry: 2025-10-09 08:53:20.123 UTC.
+NOW = 1_760_000_000_123
+NOW_STAMP = "2025-10-09 08:53:20.123"
 
 
 def printed(text: bytes, code: int = 0) -> list[str]:
@@ -65,6 +71,21 @@ class GateTimesTest(unittest.TestCase):
         if end_options:
             args.append("--")
         return subprocess.run([*args, *command], capture_output=True, cwd=self.root, env=self.env)
+
+    def run_gate_at(self, now: int, command: list[str]) -> subprocess.CompletedProcess:
+        """Runs the script's `main` in this process with its clock fixed at `now` milliseconds, so
+        that the run starts and ends at that instant; the registry and the output are the ones of the
+        test. The home directory is the test's own, as for a run of the script in a process."""
+        stdout = io.TextIOWrapper(io.BytesIO(), encoding="utf-8")
+        stderr = io.StringIO()
+        arguments = ["--output", str(self.output), "--registry", str(self.registry), "--", *command]
+        with (mock.patch.object(gate_times, "now_ms", return_value=now),
+              mock.patch.dict(os.environ, self.env),
+              redirect_stdout(stdout), redirect_stderr(stderr)):
+            code = gate_times.main(arguments)
+        stdout.flush()
+        return subprocess.CompletedProcess(arguments, code, stdout.buffer.getvalue(),
+                                           stderr.getvalue().encode("utf-8"))
 
     def rows(self) -> list[list[str]]:
         """The rows of the table in the output file, each as its cells."""
@@ -131,47 +152,64 @@ class RunnerOutputTest(GateTimesTest):
     reports come whole, in the order the directories end, are read as the blocks of the script's
     form."""
 
+    @staticmethod
+    def waiting_for(path: Path) -> str:
+        """The source of a loop that goes on once `path` exists and fails after two minutes."""
+        return (f"for _ in range(6000):\n    if os.path.exists({str(path)!r}):\n        break\n"
+                "    time.sleep(0.02)\nelse:\n    raise RuntimeError('a file never came')\n")
+
     def test_directories_that_end_out_of_the_order_of_their_names_each_get_their_own_time(self) -> None:
         repo = self.root / "repo"
-        marker = repo / "b_has_run"
+        a_started = repo / "a_has_started"
+        b_reported = repo / "b_is_reported"
         (repo / "a").mkdir(parents=True)
         (repo / "b").mkdir()
-        # a sorts first and ends last: its test waits for b's, then stays running a second more.
+        # a sorts first and ends last: its test waits for the file this test makes once the report of
+        # b has come out, so that a ends after b with no pause.
         (repo / "a" / "test_a.py").write_text(
             "import os, time, unittest\n\n\nclass A(unittest.TestCase):\n"
             "    def test_a(self):\n"
-            f"        for _ in range(6000):\n            if os.path.exists({str(marker)!r}):\n"
-            "                break\n            time.sleep(0.02)\n"
-            f"        self.assertTrue(os.path.exists({str(marker)!r}))\n"
-            "        time.sleep(1)\n", encoding="utf-8")
+            f"        open({str(a_started)!r}, 'w').close()\n"
+            + textwrap.indent(self.waiting_for(b_reported), "        "), encoding="utf-8")
+        # b waits for a to have started before the module is imported, so that b's own time begins
+        # after a's, and a's time, which ends after b's report, holds b's.
         (repo / "b" / "test_b.py").write_text(
-            "import unittest\n\n\nclass B(unittest.TestCase):\n"
-            "    def test_b_one(self):\n"
-            f"        open({str(marker)!r}, 'w').close()\n\n"
+            "import os, time, unittest\n\n"
+            + self.waiting_for(a_started)
+            + "\n\nclass B(unittest.TestCase):\n"
+            "    def test_b_one(self):\n        pass\n\n"
             "    def test_b_two(self):\n        pass\n", encoding="utf-8")
         for command in (["init", "-q"], ["add", "--", "a/test_a.py", "b/test_b.py"]):
             subprocess.run(["git", *command], cwd=repo, check=True, capture_output=True)
         runner = HERE.parent / "gate" / "run_tests.py"
         gate = [sys.executable, "-B", str(runner), "--slowest", "1"]
-        result = subprocess.run(
-            [sys.executable, "-B", str(SCRIPT), "--output", str(self.output), "--registry",
-             str(self.registry), "--"] + gate, capture_output=True, cwd=repo, env=self.env)
-        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        with subprocess.Popen(
+                [sys.executable, "-B", str(SCRIPT), "--output", str(self.output), "--registry",
+                 str(self.registry), "--"] + gate, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                cwd=repo, env=self.env) as process:
+            lines = []
+            for line in process.stdout:
+                lines.append(line)
+                if line.rstrip(b"\r\n") == b"== b":
+                    b_reported.touch()
+            stderr = process.stderr.read()
+        stdout = b"".join(lines)
+        self.assertEqual(0, process.returncode, stdout + stderr)
         # The times as the runner printed them, read here from each report with no help of the script.
-        printed = {}
+        reported = {}
         directory = None
-        for line in result.stdout.decode("utf-8").splitlines():
+        for line in stdout.decode("utf-8").splitlines():
             if line.startswith("== "):
                 directory = line[3:]
             else:
                 matched = re.fullmatch(r"Ran \d+ tests? in ([0-9.]+)s", line)
-                if matched and directory not in printed:
-                    printed[directory] = matched.group(1)
-        self.assertEqual({"a", "b"}, set(printed))
+                if matched and directory not in reported:
+                    reported[directory] = matched.group(1)
+        self.assertEqual({"a", "b"}, set(reported))
         rows = self.rows()
-        self.assertEqual(["b", printed["b"]], rows[0][4:])
-        self.assertEqual(["a", printed["a"]], rows[1][4:])
-        self.assertGreater(float(printed["a"]), 0.9)
+        self.assertEqual(["b", reported["b"]], rows[0][4:])
+        self.assertEqual(["a", reported["a"]], rows[1][4:])
+        self.assertGreater(float(reported["a"]), float(reported["b"]))
 
 
 class CapTest(GateTimesTest):
@@ -261,56 +299,61 @@ class RegistryTest(GateTimesTest):
 
     def test_other_runs_counted_from_the_registry(self) -> None:
         self.registry.mkdir(parents=True)
-        t0 = now_ms()
         made = {
-            "stale": f"{t0 - 7 * HOUR}_running_stale.run",   # running, over six hours old: deleted
-            "old": f"{t0 - 3 * DAY}_{t0 - 2 * DAY}_old.run",  # ended over a day ago: deleted
-            "before": f"{t0 - 120000}_{t0 - 100000}_before.run",  # ended before this run: not counted
-            "running": f"{t0 - 60000}_running_runa.run",     # still running: counted
-            "other": f"{t0 - 60000}_running.run",            # another form: counted for nothing
-            "notes": "notes.txt",                             # another form: counted for nothing
+            "stale": f"{NOW - 7 * HOUR}_running_stale.run",   # running, over six hours old: deleted
+            "old": f"{NOW - 3 * DAY}_{NOW - 2 * DAY}_old.run",  # ended over a day ago: deleted
+            "before": f"{NOW - 120000}_{NOW - 100000}_before.run",  # ended before this run: not counted
+            "touching": f"{NOW - 60000}_{NOW}_touching.run",  # ended as this run started: not counted
+            "running": f"{NOW - 60000}_running_runa.run",     # still running: counted
+            "other": f"{NOW - 60000}_running.run",            # another form: counted for nothing
+            "notes": "notes.txt",                              # another form: counted for nothing
         }
         for name in made.values():
             (self.registry / name).touch()
-        # The command makes the entry of a run that ended inside this run: started a minute before
-        # it, ended after this run started, which it did before the command began.
-        result = self.run_gate([sys.executable, "-c",
-                                "import os, sys, time; time.sleep(0.1); "
-                                "now = time.time_ns() // 1000000; "
-                                "open(os.path.join(sys.argv[1], '{}_{}_inside.run'.format("
-                                "now - 60000, now)), 'w').close(); "
-                                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
-                                str(self.registry)])
+        # The command makes the entry of a run that ended after this run started: started a minute
+        # before it, ended 5 seconds after the instant the clock gives, which is the run's start. The
+        # entry appears while the command runs, so that a count taken before the command would miss it.
+        inside = f"{NOW - 60000}_{NOW + 5000}_inside.run"
+        result = self.run_gate_at(NOW, [sys.executable, "-c",
+                                        "import os, sys; "
+                                        "open(os.path.join(sys.argv[1], sys.argv[2]), 'w').close(); "
+                                        "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
+                                        str(self.registry), inside])
         self.assertEqual(0, result.returncode, result.stderr)
-        self.assertEqual("2", self.rows()[0][3])
+        rows = self.rows()
+        self.assertEqual(NOW_STAMP, rows[0][0])
+        self.assertEqual("2", rows[0][3])
         listing = set(os.listdir(self.registry))
         self.assertNotIn(made["stale"], listing)
         self.assertNotIn(made["old"], listing)
-        for kept in ("before", "running", "other", "notes"):
+        for kept in ("before", "touching", "running", "other", "notes"):
             self.assertIn(made[kept], listing)
-        # The run's own entry is renamed to its end: an empty file in the ended form.
-        own = listing - set(made.values()) - {next(n for n in listing if n.endswith("_inside.run"))}
+        # The run's own entry is renamed to its end: an empty file in the ended form, started and
+        # ended at the instant the clock gave.
+        self.assertIn(inside, listing)
+        own = listing - set(made.values()) - {inside}
         self.assertEqual(1, len(own))
         name = own.pop()
         self.assertIsNotNone(ENDED.match(name), name)
+        self.assertTrue(name.startswith(f"{NOW}_{NOW}_"), name)
         self.assertEqual(0, os.path.getsize(self.registry / name))
 
+    # invariant: gate-times-refuses-impossible-entry
     def test_entries_with_a_time_that_cannot_be_are_deleted_and_count_for_nothing(self) -> None:
         # Malformed: an end more than a minute after the present, an end before the start, a start
         # more than a minute after the present (ended or running). Each is deleted at the start of
         # a run; a valid run still going is counted, and a run that ends 30 seconds ahead is not
         # malformed and stays.
         self.registry.mkdir(parents=True)
-        t0 = now_ms()
-        malformed = [f"{t0 - 1000}_{t0 + 3 * DAY}_farend.run",
-                     f"{t0 + DAY}_{t0 + DAY + 1000}_farstart.run",
-                     f"{t0 - 1000}_{t0 - 5000}_reversed.run",
-                     f"{t0 + DAY}_running_farrunning.run",
-                     f"{t0 - 1000}_{t0 + 2 * HOUR}_farend2.run"]
-        kept = [f"{t0 - 60000}_running_valid.run", f"{t0 - 1000}_{t0 + 30000}_nearend.run"]
+        malformed = [f"{NOW - 1000}_{NOW + 3 * DAY}_farend.run",
+                     f"{NOW + DAY}_{NOW + DAY + 1000}_farstart.run",
+                     f"{NOW - 1000}_{NOW - 5000}_reversed.run",
+                     f"{NOW + DAY}_running_farrunning.run",
+                     f"{NOW - 1000}_{NOW + 2 * HOUR}_farend2.run"]
+        kept = [f"{NOW - 60000}_running_valid.run", f"{NOW - 1000}_{NOW + 30000}_nearend.run"]
         for name in malformed + kept:
             (self.registry / name).touch()
-        result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n"))
+        result = self.run_gate_at(NOW, printed(b"== a\nRan 1 test in 0.1s\n"))
         self.assertEqual(0, result.returncode, result.stderr)
         listing = set(os.listdir(self.registry))
         for name in malformed:
@@ -324,10 +367,9 @@ class RegistryTest(GateTimesTest):
     def test_a_malformed_entry_that_cannot_be_deleted_still_counts_for_nothing(self) -> None:
         # A directory in the place of a file cannot be unlinked: a warning, and no count.
         self.registry.mkdir(parents=True)
-        t0 = now_ms()
-        stuck = self.registry / f"{t0 - 1000}_{t0 + 3 * DAY}_stuck.run"
+        stuck = self.registry / f"{NOW - 1000}_{NOW + 3 * DAY}_stuck.run"
         stuck.mkdir()
-        result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n"))
+        result = self.run_gate_at(NOW, printed(b"== a\nRan 1 test in 0.1s\n"))
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual("0", self.rows()[0][3])
 
