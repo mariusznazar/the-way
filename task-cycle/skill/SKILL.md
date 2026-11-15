@@ -593,10 +593,12 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     the check of private paths included, pass before it is published (WAY-309), and into
     *Verification* of the original record (WAY-160). The committed copy of the record holds that row
     only for the runs before its own head: the run on the head that removes the copy comes after it,
-    and no pair of commits is repeated to bring that row in. A red result is a failed gate (step 10):
-    its failures are fixed, the fix reviewed as "The end of a code review" gives, the gate run again
-    on the tree, the record's pair of commits repeated with the reports of the fix, and the wait
-    repeated on the new head. A run that does not report is a check that did not run, named under
+    and no pair of commits is repeated to bring that row in. A red result is a failed gate, handled
+    as step 10 gives: its failures are fixed, the fix reviewed as "The end of a code review" gives,
+    the gate run again on the tree, the record's pair of commits repeated with the reports of the
+    fix, and the wait repeated on the new head, save a check outside the task's scope that passes
+    when run again, which step 10 leaves to WAY-261: the cycle goes on, and the description names
+    that check and the task that fixes it, or proposes that task. A run that does not report is a check that did not run, named under
     *Checks*, never read as passed. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.

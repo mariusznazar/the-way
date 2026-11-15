@@ -424,3 +424,13 @@ Every file of a product's guidelines that `product-guidelines/template.md` names
 - **Derives from:** WAY-167
 - **Part:** elements-common · product-guidelines
 - **Violated:** no
+
+## installation-instruction-files-dependency
+
+The part `installation` does not depend on `instruction-files`.
+
+- **Method:** review
+- **Rests on:** none
+- **Derives from:** WAY-225 · WAY-51
+- **Part:** installation
+- **Violated:** yes

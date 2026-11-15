@@ -56,8 +56,9 @@ Where CI runs on the request and the correction leaves its code finished, wait f
 head you pushed last, as step 12 of `implement-task` gives, once the record's pair of commits is
 pushed. Write its result into *Checks* in a further edit of the description, which the template's
 checks, the check of private paths included, pass before it is published (WAY-309), and into
-*Verification* of the original record. A red result is a failed gate (step 10): a fix and its
-review, the gate on the corrected tree, the record's pair of commits again and the wait again
+*Verification* of the original record. A red result is a failed gate, handled as step 10 gives: a
+fix and its review, the gate on the corrected tree, the record's pair of commits again and the wait
+again, save a check outside the task's scope that passes when run again, which WAY-261 governs
 (WAY-160). A request the correction leaves blocked for a reserved choice or a remaining blocking
 finding is not waited for: its description says that the result of the run stands on the request's
 page and was not waited for.

@@ -2679,8 +2679,10 @@ check that did not run is unchecked, never passed. The gate's run is the orchest
 author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
 it. Where CI runs on a request whose code is finished — one open for review, or one that waits only
 for human actions in the cycle — the orchestrator waits for the result of the run on each head it
-pushes to it, a correction's included, treats a red result as a failed gate — a fix and its review —
-and puts the result into the request's description; a request the cycle leaves blocked for unfinished
+pushes to it, a correction's included, treats a red result as a failed gate, handled as the cycle's
+gate gives — a fix and its review, save a check outside the task's scope that passes when run
+again, which WAY-261 governs — and puts the result into the request's description; a request the
+cycle leaves blocked for unfinished
 code is out of that wait, its description saying that the result of the run stands on the request's
 page and was not waited for.
 
@@ -2691,8 +2693,9 @@ page and was not waited for.
   - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
     and again where the merge with the target branch changed it, and the request gives the command
     and its exit code; the orchestrator, with CI running on the request, waits for the run on the
-    commit it pushed last, finds it red, has the failure fixed and the fix reviewed, waits for the
-    run on the fixed commit and writes that result into the description; after the human's remarks it
+    commit it pushed last, finds it red, has the failure fixed and the fix reviewed (a check outside
+    the task's scope that passes when run again goes as WAY-261 gives), waits for the run on the
+    fixed commit and writes that result into the description; after the human's remarks it
     waits again for the run on the corrected head; a request blocked for a remaining blocking finding
     says in its description that the result of the run was not waited for;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
