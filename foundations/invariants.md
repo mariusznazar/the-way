@@ -165,7 +165,7 @@ Every part map identifier a field of a foundation entry names is an entry of the
 
 ## test-method-citation
 
-Every invariant whose method is `test` is cited by a comment line `invariant: <its identifier>` in a file git tracks other than a Markdown file.
+Every invariant whose method is `test` is cited by a comment line `invariant: <its identifier>` in a file git tracks whose name does not end in `.md`.
 
 - **Method:** test
 - **Rests on:** none
@@ -417,7 +417,7 @@ Every name that `foundation-review/SKILL.md` gives the tag that marks a review d
 
 ## guidelines-file-place
 
-Every file of a product's guidelines that `product-guidelines/template.md` names in its section on where guidelines go, and the directory it names for them, match the place where `elements/common/foundation_check.py` reads files of guidelines: a Markdown file directly in `guidelines/`.
+Every file of a product's guidelines that `product-guidelines/template.md` names in its section on where guidelines go, and the directory it names for them, match the place where `elements/common/foundation_check.py` reads files of guidelines: a file whose name ends in `.md` directly in `guidelines/`.
 
 - **Method:** test
 - **Rests on:** none

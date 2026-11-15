@@ -230,7 +230,7 @@ A field stays in the template only while someone or something reads it (WAY-05).
   derive from the decision, each by its identifier, and only where such invariants exist; each of
   them names the decision in *Derives from* (WAY-12, WAY-17).
 - A test that holds a sentence of the decision carries beside it a line `decision:`: a comment in a
-  tracked file other than Markdown, in the comment forms of the line `invariant:`, that holds
+  tracked file whose name does not end in `.md`, in the comment forms of the line `invariant:`, that holds
   `decision:`, one decision number as its heading writes it, and one quotation in straight double
   quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The quotation
   holds no `"`, begins at the start of a sentence of the entry's binding sentences — the start of
