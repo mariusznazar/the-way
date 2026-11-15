@@ -161,7 +161,8 @@ The part answers for the instructions agents read when they work on this reposit
 project skill entry points that make the-way's skills visible to sessions on it and the script that
 generates them, for the copies of the cycle's agent type definitions that make those types available
 to sessions on it and the script that generates them, and for the hooks and the configuration of
-agents' tools and of CI that direct them.
+agents' tools and of CI that direct them, and for the guidelines of the-way's own code that those
+instructions point to.
 
 - **Files:** /AGENTS.md
   /CLAUDE.md

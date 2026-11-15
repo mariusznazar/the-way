@@ -1586,11 +1586,25 @@ class FoundationCheckTest(unittest.TestCase):
     # --- the-way's own foundation -------------------------------------------------------------
 
     # The findings of the check that the two invariants name: a part-map reference that names no
-    # part (map-reference-target), and a test invariant that no test cites (test-method-citation).
-    # The check's other findings depend on the branch a clone calls its main one, or on the
-    # foundation beyond these two, so they are left out (WAY-08; causes 5 and 23).
+    # part or a part that is withdrawn (map-reference-target), and a test invariant that no test
+    # cites (test-method-citation). A withdrawn part is a finding by the message "`<name>` is
+    # withdrawn; name its successor" where <name> is a row of the part map's *Withdrawn
+    # identifiers*: the check gives the same message for a decision number, an invariant or a
+    # fact, which these two invariants do not cover. The check's other findings depend on the
+    # branch a clone calls its main one, or on the foundation beyond these two, so they are left
+    # out (WAY-08; causes 5 and 23).
     OWN_FINDINGS = ("names no part", "is no identifier of a part",
                     "reads `test` and no test cites it")
+
+    @staticmethod
+    def withdrawn_part_findings():
+        """The message of the check for each part the part map of the-way lists as withdrawn."""
+        with open(os.path.join(THE_WAY, "foundations", "part_map.md"), encoding="utf-8") as handle:
+            text = handle.read()
+        section = text.split("\n## Withdrawn identifiers\n", 1)[1].split("\n## ", 1)[0]
+        rows = [line for line in section.splitlines() if line.startswith("|")][2:]
+        names = [row.strip("| ").split("|")[0].strip(" `") for row in rows]
+        return tuple("`%s` is withdrawn; name its successor" % name for name in names)
 
     def test_the_way_foundation_passes(self):
         # invariant: map-reference-target
@@ -1599,9 +1613,9 @@ class FoundationCheckTest(unittest.TestCase):
                                 text=True, encoding="utf-8")
         report = result.stdout + result.stderr
         self.assertNotEqual(result.returncode, 2, report)
+        own = self.OWN_FINDINGS + self.withdrawn_part_findings()
         findings = [line for line in result.stdout.splitlines()
-                    if ": listed: " not in line
-                    and any(text in line for text in self.OWN_FINDINGS)]
+                    if ": listed: " not in line and any(text in line for text in own)]
         self.assertEqual(findings, [], report)
 
 

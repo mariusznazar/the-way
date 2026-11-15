@@ -65,6 +65,14 @@ class Linter(unittest.TestCase):
             done = run_ruff(str(clean), cwd=Path(directory))
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
 
+    def test_every_python_file_git_tracks_lies_in_a_part_the_check_reads(self) -> None:
+        done = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, check=True,
+                              capture_output=True, text=True, encoding="utf-8")
+        outside = [name for name in done.stdout.split("\0")
+                   if name.endswith(".py") and name.split("/")[0] not in PARTS]
+        self.assertEqual(outside, [], "a tracked Python file lies in no directory of PARTS: add "
+                         "its directory to PARTS and to the Scope of WAY-379")
+
     @unittest.expectedFailure
     def test_no_file_of_a_part_breaks_a_blocking_rule(self) -> None:
         # invariant: ruff-blocking-rules

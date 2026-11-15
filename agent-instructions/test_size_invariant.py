@@ -73,6 +73,16 @@ class Counting(unittest.TestCase):
         self.assertEqual(file_lines("x = 1\n\n# note\n"), 3)
 
 
+class Coverage(unittest.TestCase):
+    def test_every_python_file_git_tracks_lies_in_a_part_the_check_reads(self) -> None:
+        done = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, check=True,
+                              capture_output=True, text=True, encoding="utf-8")
+        outside = [name for name in done.stdout.split("\0")
+                   if name.endswith(".py") and name.split("/")[0] not in PARTS]
+        self.assertEqual(outside, [], "a tracked Python file lies in no directory of PARTS: add "
+                         "its directory to PARTS and to the Scope of WAY-379")
+
+
 class Size(unittest.TestCase):
     @unittest.expectedFailure
     # invariant: function-and-file-size

@@ -101,6 +101,10 @@ branch from.
 - `relation-model/` — computes a short fingerprint of a text, with which a project plan notices that
   the project definition it was written from has changed.
 - `gate/` — the one command that runs every test of the-way.
+- `guidelines/` — the coding and testing guidelines of the-way's own code: the rules, each with the
+  decision or the invariant that holds it, and, for each kind of file, the exemplar to copy.
+- `ruff.toml`, `requirements-quality.in` and `requirements-quality.txt` — the settings of the linter
+  of the-way's Python code and the version it is installed at; see "Installing the linter" below.
 - `installation/` — prepares a product repository to use one pinned commit of the-way; see
   `installation/README.md`.
 - `project-level/` — defines a project, settles its technology, breaks it into a plan of tasks,
@@ -170,7 +174,9 @@ python -B gate/run_tests.py
 
 It ends with a line counting the tests and naming each directory that failed, and its exit code is 0
 only when every test passes. `python -B gate/run_tests.py <directory>` runs the tests of one
-directory. The foundation of the-way is checked by one of these tests, and on its own by:
+directory. Two invariants of the foundation of the-way, `map-reference-target` and
+`test-method-citation`, are checked by one of these tests; the whole check of the foundation runs on
+its own by:
 
 ```bash
 python -B elements/common/foundation_check.py

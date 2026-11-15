@@ -17,9 +17,10 @@ SOURCE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SOURCE / "installation"))
 import install  # noqa: E402
 
-# The skills the installer carries, each with its skill file in the-way, as the map of
-# installation/install.py:25-46 (SKILLS) gives them and installation/README.md:58 lists them. They
-# are written out here, not taken from the installer the test checks (WAY-394, WAY-232).
+# The skills the installer carries, each with its skill file in the-way, as the row
+# `.claude/skills/the-way-*/SKILL.md` of the section "Files in the product" of
+# installation/README.md lists them. They are written out here, not taken from the installer the
+# test checks (WAY-394, WAY-232).
 NAMES = (
     ("elements/decisions/skill/SKILL.md", "record-decision"),
     ("elements/invariants/skill/SKILL.md", "record-invariant"),
@@ -43,9 +44,9 @@ NAMES = (
     ("product-guidelines/coding/SKILL.md", "maintain-coding-guidelines"),
     ("product-guidelines/testing/SKILL.md", "maintain-testing-guidelines"),
 )
-# The block the installer keeps in AGENTS.md: the text of installation/install.py:169-214
-# (product_guidance) between the markers of its lines 52-53, which installation/README.md:61
-# describes. Written out here, so that a change to the installer's block fails the test.
+# The block the installer keeps in AGENTS.md between its two markers, as the row `AGENTS.md` of the
+# section "Files in the product" of installation/README.md describes it. Written out here, so that
+# a change to the installer's block fails the test.
 BLOCK = (
     "<!-- the-way:begin -->\n"
     "# Pinned the-way process\n\n"
@@ -87,16 +88,19 @@ BLOCK = (
     "merge, and you say so when you report. `.the-way/installation/README.md`, section \"Run the "
     "one command in CI\", says what the CI file of this repository holds.\n"
     "<!-- the-way:end -->\n")
-# The names of the skills in the sentence about the other skills, as sibling_names() of
-# installation/install.py:118-120 joins them, in the order of its SKILLS map.
+# The names of the skills in the sentence of an entry point about the other skills, joined as the
+# sentence reads: the skills of the five foundation files in the order of their rows, then the
+# others in the order of the row `.claude/skills/the-way-*/SKILL.md`, both in the section "Files in
+# the product" of installation/README.md.
 SIBLINGS = (
     "`record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, "
     "`record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, "
     "`lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, "
     "`write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, "
     "`maintain-styleguide`, `maintain-coding-guidelines` or `maintain-testing-guidelines`")
-# The entry point of a skill, as skill_wrapper() of installation/install.py:123-155 writes it: the
-# name, path and description are filled in per skill, the description from the skill's own file.
+# The entry point of a skill, as the row `.claude/skills/the-way-*/SKILL.md` of the section "Files in
+# the product" of installation/README.md describes it: the name, path and description are filled in
+# per skill, the description from the skill's own file.
 ENTRY_POINT = (
     "---\n"
     "name: the-way-{name}\n"
