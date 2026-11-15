@@ -149,6 +149,9 @@ The part answers for the files that configure the repository itself rather than 
 - **Files:** /.gitattributes
   /.gitignore
   /.python-version
+  /requirements-quality.in
+  /requirements-quality.txt
+  /ruff.toml
 - **Depends on:** none
 - **Trust boundary:** none
 
