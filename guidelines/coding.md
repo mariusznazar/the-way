@@ -97,11 +97,13 @@ from going over, so it compares the changed files with the thresholds.
 - **Good:** a script that opens with a description of how it is run, `python -B …`, and of what each of its exit codes means, and ends with `sys.exit(main())` of a function `main` that returns the exit code
 - **Bad:** a script with no description of its run or its exit codes, or one that starts at its top level or from several places and loses the exit code
 
-Each script opens with a description of how it is run (`python -B …`) and of what its exit codes
-mean, and has one fixed place of start that returns the exit code. The reason: the one who runs a
-script, a human or an agent, finds there how to run it and what an exit code tells, and the exit code
-reaches the caller only through one place that returns it. The review of each change that adds or
-changes a script compares it with this rule.
+Each script that is started from the command line opens with a description of how it is run
+(`python -B …`) and of what its exit codes mean, and has one fixed place of start that returns the
+exit code. A file of the kind `shared-module`, which is only imported, has no place of start, and
+this rule does not reach it. The reason: the one who runs a script, a human or an agent, finds there
+how to run it and what an exit code tells, and the exit code reaches the caller only through one
+place that returns it. The review of each change that adds or changes a script compares it with this
+rule.
 
 ### A field missing from a file a script reads
 
