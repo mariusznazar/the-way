@@ -1368,6 +1368,81 @@ class CodexFieldsTest(unittest.TestCase):
         self.assertEqual((0, ""), (code, stderr))
         self.assertTrue(output.exists())
 
+    def assert_ends_at(self, lines: list[dict], number: int, text: str) -> None:
+        """The run of a rollout `orchf` made of `lines` ends with exit code 2, the message `text`
+        at line `number` of it, and no report."""
+        path = rollout(self.home, "orchf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:{number}: {text}\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_record_of_tokens_without_its_thread_ends_with_exit_code_2_naming_it(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # Without `thread_id` the record could not be told from another thread's, and its tokens
+        # would go uncounted with no word.
+        line = self.record()
+        del line["payload"]["thread_id"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field payload.thread_id")
+
+    def test_a_record_of_tokens_of_the_agent_without_its_turn_ends_with_exit_code_2_naming_it(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        line = self.record()
+        del line["payload"]["turn_id"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field payload.turn_id")
+
+    def test_a_first_line_without_the_id_of_its_session_ends_with_exit_code_2_naming_it(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        lines = self.lines_with(self.record())
+        del lines[0]["payload"]["id"]
+        self.assert_ends_at(lines, 1, "no field payload.id")
+
+    def test_a_subagents_first_line_without_the_id_of_its_session_ends_with_exit_code_2(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The subagents are found by reading the first line of each rollout under the home.
+        rollout(self.home, "orchf", self.lines_with(self.record()))
+        lines = [meta("subf", "10:00:10", "orchf", "/root/work"), started("10:00:10", "w1"),
+                 context("10:00:10", "w1", "model-w")]
+        del lines[0]["payload"]["id"]
+        path = rollout(self.home, "subf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:1: no field payload.id\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_an_id_or_a_turn_that_is_no_text_ends_with_exit_code_2_naming_it(self) -> None:
+        for value in (5, ["orchf"], {"id": "orchf"}, "", True):
+            with self.subTest(value=value):
+                lines = self.lines_with(self.record())
+                lines[0]["payload"]["id"] = value
+                self.assert_ends_at(lines, 1, "field payload.id is not a text")
+                line = self.record()
+                line["payload"]["turn_id"] = value
+                self.assert_ends_at(self.lines_with(line), 4, "field payload.turn_id is not a text")
+                line = self.record()
+                line["payload"]["thread_id"] = value
+                self.assert_ends_at(self.lines_with(line), 4,
+                                    "field payload.thread_id is not a text")
+
+    def test_a_line_without_its_timestamp_ends_with_exit_code_2_naming_it(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The line is the record of tokens itself: skipped, its tokens would go uncounted.
+        line = self.record()
+        del line["timestamp"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field timestamp")
+
+    def test_a_timestamp_that_is_no_time_ends_with_exit_code_2_naming_it(self) -> None:
+        for value in ("yesterday", "", "2026-10-06T10:00:30z", 5, None, ["2026-10-06T10:00:30Z"],
+                      True, "2026-13-45", "9999-12-31T23:59:59-05:00"):
+            with self.subTest(value=value):
+                lines = self.lines_with(self.record())
+                lines[2]["timestamp"] = value
+                self.assert_ends_at(lines, 3, "no field timestamp" if value is None
+                                    else "field timestamp is not a time")
+
 
 def section_rows(text: str) -> list[list[str]]:
     """The cells of each row of the detailed section's table, its header row included, as the

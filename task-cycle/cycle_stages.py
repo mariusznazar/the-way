@@ -96,21 +96,25 @@ message that names the transcript, the line and the field. Read with a fallback,
 `message.id` (the line's `uuid` stands for it), `message.stop_reason`, and of a content block its
 `id`, `name`, `tool_use_id` and `text`.
 
-A Codex rollout is untrusted input too, and of each `token_usage_record` of the agent's own thread,
-the one whose `thread_id` is the rollout's own id, the reading needs `payload.usage` with
-`input_tokens`, `cached_input_tokens` and `output_tokens`, each a non-negative whole number of at
-most 15 digits, as for a response of Claude Code; a `null` is a missing field. A record that lacks
-one, or holds a count that is no whole number, ends the run with a message that names the rollout,
-the line and the field. A record of another thread, which a forked rollout repeats from its parent's
-history, is no record of the agent and is not read. The reading of the other lines of a rollout
-checks no field, nor does the reading of `agent-<id>.meta.json`. The text of a transcript reaches
-the report only through `cell`; a count in it is a whole number read here.
+A Codex rollout is untrusted input too, and each field the reading needs has to be there. Of the
+first line, its `session_meta`, it needs `payload.id`, the session's id, as a text that is not
+empty; of every line whose `payload` is an object, its `timestamp`, as a time; of every
+`token_usage_record`, `payload.thread_id` as a text that is not empty, and of one whose
+`thread_id` is the rollout's own id, the agent's own, also `payload.turn_id` as such a text and
+`payload.usage` with `input_tokens`, `cached_input_tokens` and `output_tokens`, each a non-negative
+whole number of at most 15 digits, as for a response of Claude Code. A `null` is a missing field. A
+field that is missing, or a count that is no whole number, ends the run with a message that names
+the rollout, the line and the field. A record of another thread, which a forked rollout repeats
+from its parent's history, is no record of the agent and is not read further. The reading of the
+other fields of a rollout checks nothing, nor does the reading of `agent-<id>.meta.json`: a line
+whose `payload` is no object is skipped, and the other fields of a line are read with a fallback.
+The text of a transcript reaches the report only through `cell`; a count in it is a whole number
+read here.
 
 Exit code: 0 on success, warnings included; 2 with `Error: <message>` on stderr and nothing written
-for a field of a Claude Code transcript that is missing or no whole number or no time, and for a
-field of a record of tokens of a Codex rollout that is missing or no whole number; 1 with
-`Error: <message>` on stderr for the rest, such as a session that cannot be found or read and a line
-that is not JSON.
+for a field of a Claude Code transcript or of a Codex rollout that is missing or no whole number
+or no time or no text; 1 with `Error: <message>` on stderr for the rest, such as a session that
+cannot be found or read and a line that is not JSON.
 
 Standard library only.
 """
@@ -324,10 +328,17 @@ def add_call_notes(agent: Agent) -> None:
 
 
 def codex_meta(path: Path) -> dict | None:
-    entry = first_line(path)
+    """The `payload` of the first line of a rollout where that is its `session_meta`, which has to
+    give the `id` of the session as a text; None for a rollout that starts otherwise."""
+    for number, entry in numbered_lines(path):
+        break
+    else:
+        raise CycleStagesError(f"{path} is empty")
     if entry.get("type") != "session_meta":
         return None
-    return entry.get("payload") or {}
+    meta = entry.get("payload") or {}
+    required_text(meta, "id", "payload.id", f"{path}:{number}")
+    return meta
 
 
 def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str | None]:
@@ -380,6 +391,15 @@ def codex_usage(payload: dict, where: str) -> Usage:
     )
 
 
+def codex_tokens(payload: dict, own: str, where: str) -> tuple[str, Usage] | None:
+    """The turn and the tokens of a record of tokens that belongs to the thread `own`, or None for
+    a record of another thread. The record's `thread_id` is needed to tell the two apart, and
+    the `turn_id` of the agent's own."""
+    if required_text(payload, "thread_id", "payload.thread_id", where) != own:
+        return None
+    return required_text(payload, "turn_id", "payload.turn_id", where), codex_usage(payload, where)
+
+
 def read_codex_agent(path: Path, parent: str | None) -> Agent:
     meta = codex_meta(path)
     if meta is None:
@@ -406,10 +426,13 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     left_out = 0
     for number, entry in numbered_lines(path):
         payload = entry.get("payload")
-        if not isinstance(payload, dict) or "timestamp" not in entry:
+        if not isinstance(payload, dict):
             continue
-        at = parse_time(entry["timestamp"])
+        where = f"{path}:{number}"
+        at = required_time(entry, where)
         kind = entry.get("type")
+        # Before the `turn_id` of any line is used as a key, the one of a record of tokens is read.
+        record = codex_tokens(payload, own, where) if kind == "token_usage_record" else None
         turn = payload.get("turn_id")
         if turn:
             first_seen.setdefault(turn, at)
@@ -461,9 +484,9 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
                     finished_calls.setdefault(ident, at)
             elif item.endswith("_call"):
                 unrecognised.append(Call(at, None, item, known=False))
-        elif kind == "token_usage_record" and payload.get("thread_id") == own:
-            own_turns.add(turn)
-            raw.append((at, turn, codex_usage(payload, f"{path}:{number}")))
+        elif record:
+            own_turns.add(record[0])
+            raw.append((at, record[0], record[1]))
     # A forked subagent's rollout repeats its parent's history; only turns that the subagent's
     # own thread worked in are its turns.
     agent = Agent(own, name, parent)
@@ -556,6 +579,14 @@ def required_count(holder: object, key: str, name: str, where: str) -> int:
     if (isinstance(value, bool) or not isinstance(value, int) or value < 0
             or value >= 10 ** TOKEN_DIGITS):
         raise MissingFieldError(f"{where}: field {name} is not a whole number")
+    return value
+
+
+def required_text(holder: object, key: str, name: str, where: str) -> str:
+    """The value of a needed field that has to be a text, not empty."""
+    value = required(holder, key, name, where)
+    if not isinstance(value, str) or not value:
+        raise MissingFieldError(f"{where}: field {name} is not a text")
     return value
 
 
