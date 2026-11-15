@@ -129,6 +129,10 @@ class Errors(unittest.TestCase):
                        "description: Stage agent. " + MARK + "\nname: the-way-stage"),
          "Error: task-cycle/agent-types/the-way-stage.md: the file must open with `---`, a "
          "`name:` line and a `description:` line, each on one line\n"),
+        ("name in another form", "the-way-stage.md", STAGE.replace("name: the-way-stage",
+                                                                    "Name: the-way-stage"),
+         "Error: task-cycle/agent-types/the-way-stage.md: the file must open with `---`, a "
+         "`name:` line and a `description:` line, each on one line\n"),
         ("unclosed frontmatter", "the-way-stage.md",
          "---\nname: the-way-stage\ndescription: Stage agent. " + MARK + "\nBody.\n",
          "Error: task-cycle/agent-types/the-way-stage.md: the frontmatter is not closed by a "
@@ -168,6 +172,30 @@ class Errors(unittest.TestCase):
                 before = repository.files()
                 self.assertEqual(repository.run("--write"), (1, "", message))
                 self.assertEqual(repository.files(), before)
+
+
+class MissingField(unittest.TestCase):
+    def test_a_definition_without_name_stops_with_exit_2_naming_the_field(self) -> None:
+        repository = Repository(self)
+        repository.write("task-cycle/agent-types/the-way-stage.md",
+                         STAGE.replace("name: the-way-stage\n", ""))
+        repository.write("task-cycle/agent-types/the-way-author.md", AUTHOR)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: task-cycle/agent-types/the-way-stage.md: the frontmatter has no line "
+                   "`name:`\n"))
+        self.assertEqual(repository.files(), before)
+
+    def test_a_definition_without_description_stops_with_exit_2_naming_the_field(self) -> None:
+        repository = Repository(self)
+        repository.write("task-cycle/agent-types/the-way-stage.md",
+                         STAGE.replace("description: Stage agent. " + MARK + "\n", ""))
+        repository.write("task-cycle/agent-types/the-way-author.md", AUTHOR)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: task-cycle/agent-types/the-way-stage.md: the frontmatter has no line "
+                   "`description:`\n"))
+        self.assertEqual(repository.files(), before)
 
 
 class TrackedCopies(unittest.TestCase):
