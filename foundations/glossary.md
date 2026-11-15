@@ -34,6 +34,12 @@ Debt is a breach of a rule a product's foundation holds, or such breaches taken 
 
 - **Not:** none
 
+## dependency of a part
+
+A dependency of a part is any reach of that part to another part of the product: a skill of it that calls a skill or a file of the other, a script of it that reads a file of the other, the form that file is written in, a path or a git tag of the other, or code of it that imports the other.
+
+- **Not:** none
+
 ## element
 
 An element is a division of a product's foundation that holds entries of its own kinds.

@@ -272,8 +272,8 @@ in part, decide before you act on its status: resume the agent to read it, carry
 handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
 nothing the agent judged. Going on at the status alone would let an unread decision pass through a
 stage that looks complete, and an error hidden in it would reach the request. A decision the
-reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the
-status is `done`, `done with concerns`, `questions`, `returned`,
+reviewer of the whole change knows from the index and did not open whole, as WAY-150 gives, is no
+gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
 `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
 `returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
@@ -312,13 +312,15 @@ clone, a script, a screenshot, a prepared input of a test — makes it in a dire
 directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never
 in the system's temporary directory, in the scratch directory of a session or in the main checkout
 of the repository. The screenshot that a screenshot tool, such as the Playwright server, saves by
-itself under its session's directory is moved into the agent's directory and the original removed.
-The files that a product's own tools and tests make by themselves are no working copy of the agent
-and stay outside this rule. Before the agent returns, each time it returns, it removes its copy — a
-worktree with `git worktree remove --force`, then `git worktree prune` — keeps in `reports/` beside
-its report what the report needs, and states in the report where each copy stood and that it was
-removed. Where a removal fails, the agent finishes all the same and names in the report the
-remainder, with its full path and the reason it stayed.
+itself under its session's directory is moved into the agent's directory and the original removed,
+except a screenshot that is shown to the human: that one goes where `task-cycle/change/ui_check.md`
+says, to the place the product's foundation settles for screenshots, and into the agent's directory
+only where no such place is settled. The files that a product's own tools and tests make by
+themselves are no working copy of the agent and stay outside this rule. Before the agent returns,
+each time it returns, it removes its copy — a worktree with `git worktree remove --force`, then
+`git worktree prune` — keeps in `reports/` beside its report what the report needs, and states in
+the report where each copy stood and that it was removed. Where a removal fails, the agent finishes
+all the same and names in the report the remainder, with its full path and the reason it stayed.
 
 The handoff gives the directory as `.runs/<name>/`, where `<name>` is the agent's stage or role and,
 where the cycle dispatches that stage more than once, a counter, such as `author`, `planner`,
@@ -485,7 +487,11 @@ contradicts a decision.
     evidence. A check that fails in a cycle run and passes when run
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
     WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
-    Apply this rule even when the product has no *Flaky tests* section in its guidelines.
+    Apply this rule even when the product has no *Flaky tests* section in its guidelines. The red
+    result of the first run of the gate on the final tree stays the result of the gate, also where
+    the check that failed is a flaky test outside the task's scope that passes when run again: the
+    cycle does not stop for it, and the request names that test and the task that will fix it, or
+    proposes that task where none exists (WAY-261).
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
@@ -560,7 +566,9 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Beside it, run
     `task-cycle/cycle_measures.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/mechanism_measures.md`, naming the same sessions in the same way: it
-    counts the context and the prompt cache of the cycle's agents. Where
+    counts the context and the prompt cache of the cycle's agents and, for each agent, the bytes of
+    the decision log and of the index of decisions that entered its context and how many times each
+    entered it, which show what the reading of the foundation costs (WAY-339). Where
     `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends with exit code 2 and an
     `Error:` line, record the command, the exit code and the `Error:` line under *Verification* of
     the record and, in the request's *Checks*, as a check that did not run; fix the call where the
@@ -595,11 +603,24 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     Keep the worktree for corrections; it stands until the task's branch is merged, and the script
     of step 4 removes it at the start of a later cycle.
 13. Before you write the description, count the merges since the last review of the foundation: in
-    the worktree's root (in a product, the path starts with `.the-way/`), after a fetch, run
-    `python -B task-cycle/review_reminder.py origin/<target branch>`. When its last line reads
-    `reminder: yes`, the description's *How to merge* carries the reminder as
-    `task-cycle/skill/request_template.md` gives; it blocks nothing, and every request the cycle
-    writes or rewrites gets it while the count stands (WAY-300). Record the output under
+    the worktree's root (in a product, the path starts with `.the-way/`), after a fetch that brings
+    the tags, run `python -B task-cycle/review_reminder.py origin/<target branch>`; where the script
+    ends with exit code 2, record its message under *Verification*, write no reminder, since the
+    count is unknown, and put the count among the checks not run in the section for the human's
+    decisions (WAY-287). When its last line reads `reminder: yes`, read the product's backlog as
+    `project-level/backlog_place.md` gives and look in it for an open line of the review of this
+    repository: a line whose name holds the name of the skill `review-foundation` and the name of
+    the repository, what open means being the rules of the task place (WAY-107). The name of the
+    repository the request merges into is the last segment of the address of its remote `origin`,
+    without `.git`, or, where it has no such remote, the name of the directory its main checkout
+    stands in; it is the same in every cycle and in every worktree, whatever the `## Backlog`
+    section names. The description's *How to merge* then carries the reminder as
+    `task-cycle/skill/request_template.md` gives it, in the form that result asks for: to add the
+    task of the review where no such line stands or the backlog cannot be read, to point to the line
+    where it stands. The cycle adds and changes no line of the backlog (WAY-140); the reminder
+    blocks nothing, and every request the cycle writes or rewrites gets it while the count stands
+    (WAY-300). Where the last line reads `reminder: no`, the
+    description says nothing about a review of the foundation. Record the output under
     *Verification*.
     Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
     `task-cycle/skill/request_template.md` of the pinned the-way, which holds its sections, where each

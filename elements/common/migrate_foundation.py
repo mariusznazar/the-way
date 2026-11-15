@@ -64,6 +64,10 @@ import tokenize
 from collections import Counter
 
 sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# The place of the files of a product's guidelines is read from the check of the foundation, the one
+# source of it, so that the two scripts never read different places.
+from foundation_check import GUIDELINES  # noqa: E402
 
 DECISIONS = "foundations/decisions.md"
 INVARIANTS = "foundations/invariants.md"
@@ -76,7 +80,6 @@ KNOWN_VIOLATIONS = "foundations/known_violations.md"
 FOUNDATION = (DECISIONS, INVARIANTS, FACTS, GLOSSARY, PART_MAP)
 REMOVED = {VIOLATED: "Violated invariants", VERDICTS: "Human verdicts",
            KNOWN_VIOLATIONS: "Known violations"}
-GUIDELINES = re.compile(r"^guidelines/[^/]+\.md$")
 DEFAULT_REPORT = ".runs/foundation_migration.md"
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"

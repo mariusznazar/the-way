@@ -108,6 +108,13 @@ its result into the description under *Checks*; a red result is a failure of the
 change fixes before the request goes to Mariusz. A request left blocked for unfinished code is not
 waited for (`task-cycle/skill/SKILL.md`, step 12, WAY-160).
 
+Where the description puts an item of *Fix or let through* before Mariusz and he answers to fix it
+in this request, the answer starts one fix by the author and one review of that fix by an agent
+that did not make it, the same loop as for the blocking remarks of a review (see "Check the
+change"). What stays unfixed after that goes back to him only with the question whether to make a
+task of it, which he lets through by merging; the description is edited for the state after the
+fix, and checked as above.
+
 Mariusz merges the request; the merge accepts the change and each entry he did not see at the task
 document, those its section for the human's decisions puts before him (WAY-114).
 Creating `main` is a separate release decision that Mariusz makes; it is not part of integrating a

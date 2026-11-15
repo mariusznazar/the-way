@@ -30,10 +30,64 @@ A call of a Codex agent is one token usage record of the agent's own thread. Its
 input tokens, which already hold the part read from the cache. Codex's record gives no cache write,
 so the cache figures of a Codex agent are unknown, never zero.
 
+The decision log and its index in an agent's context. For each agent the table of agents gives, in
+its last four columns, how many bytes of the product's decision log and of the index of decisions
+(written by `elements/common/decision_index.py`) entered its context, and how many times each
+entered it. A read is a tool call paired with its result:
+
+- Claude Code: a block `tool_use` of an assistant line, paired by its `id` with the block
+  `tool_result` of a later user line that names it in `tool_use_id`. Lines of another type, such as
+  a replay of a request, are not read. Each `tool_use` id counts once: a repeated id is the same
+  call, and a second result for it, a result whose id no `tool_use` of the agent names and a result
+  that stands before its call are not counted and are no error.
+- Codex: a record `response_item` whose payload is a `function_call` (its `arguments`, a JSON text)
+  or a `custom_tool_call` (its `input`, a text), paired by `call_id` with the payload
+  `function_call_output` or `custom_tool_call_output` of a later record, the same rules holding. The
+  form was read from rollouts under the Codex home.
+
+It is a read of the log where a text value of the call's input, at any depth (a file path, a search
+path, a shell command), names a path that ends with `foundations/decisions.md`, each backslash taken
+as a slash. The path is whole: no character of a name, `.` or `-` stands before it, and neither a
+character of a name or `-`, nor a `.` with a character of a name after it, follows it
+(`foundations/decisions.md.bak` and `myfoundations/decisions.md` are other files). It is a read of
+the index where the text of the result holds a line that begins with `# decision_index.py:`, the
+start of both title lines of the index (the index of decisions and the list of sections), which the
+number that a Read tool puts before a line may precede. The bytes are the UTF-8 bytes of the
+result's text as the transcript holds it: a result that is a text, or the `text` blocks of a result
+that is a list, joined with nothing between them (Codex: the blocks of type `input_text`); nothing
+else is counted, and a lone surrogate in the text counts as the three bytes it takes.
+
+What stays approximate:
+
+- A search or a command over a directory that holds the log without naming it is not counted.
+- A command that names the log counts its whole output, other files' lines included; a call of any
+  tool that names the log in its input counts the text its result holds, whether the call read the
+  log or not (an edit of it, an agent told to read it).
+- A result that the tool cut, or kept in a file, counts what the transcript holds; a result that
+  reports an error counts the text of the error.
+- A copy of the log under another path is not counted; the-way's own log in a product's `.the-way/`
+  is counted, since its path ends with `foundations/decisions.md`. Passages of the log in a handoff,
+  and a part of the index read without its title line, are not counted.
+- A text that quotes a title line of the index at the start of a line counts as a read of the index.
+- A forked Codex rollout that repeated its parent's tool records would count them again; the
+  rollouts read had no call id in common with their parent's.
+
+The transcript is untrusted input. Each field the reading needs has to be there, or the run ends with
+exit code 2 and a message that names the file, the line and the field: of a tool call its `id`,
+`name` and `input` (Codex: `call_id`, `name` and `arguments` or `input`), of a result its
+`tool_use_id` and `content` (Codex: `call_id` and `output`); of every assistant or user line its
+`message` and `message.content` (Codex: of every `response_item` its `payload`); of a text block of a
+result its `text`. A `null` is a missing field. A line or a block that is no tool call or result, a
+content that is no string or list, a block that is no object and a result that is no text are not
+counted and are no error. The `type` that tells one kind of block or record from another is not
+checked: one that lacks it is a kind the reading does not know. Nothing of a transcript reaches the
+file but through `cell`: the figures of the log and the index are whole numbers made here.
+
 The file is Markdown, written to PATH or printed. Exit code: 0 when it is written; 2 with
 `Error: <message>` on stderr and nothing written otherwise, for a session that cannot be found or
-read, a line that is not JSON, a needed field that is missing or no whole number, and a rollout of a
-subagent named as a session.
+read, a line that is not JSON or too large to read into memory, a needed field that is missing or no
+whole number, and a rollout of a subagent named as a session. Arguments of a Codex function call
+too large to parse are searched as their text alone.
 
 Standard library only.
 """
@@ -43,10 +97,12 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import unicodedata
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -63,6 +119,13 @@ SYNTHETIC_MODEL = "<synthetic>"
 REWRITE_FLOOR = 2000
 REWRITE_SHRINK_LIMIT = (7, 10)  # a context that falls to 7/10 of the previous one or less is a collapse
 LARGE_CONTEXT = 200000
+BACKSLASH = chr(92)
+LOG_PATH = re.compile(r"(?<![\w.-])foundations/decisions\.md(?![\w-]|\.\w)")
+INDEX_TITLE = re.compile(r"^(?:[ \t]*\d+[\t\u2192])?# decision_index\.py:", re.MULTILINE)
+CLAUDE_TEXT_BLOCKS = frozenset({"text"})
+CODEX_TEXT_BLOCKS = frozenset({"input_text"})
+CODEX_CALLS = {"function_call": "arguments", "custom_tool_call": "input"}
+CODEX_OUTPUTS = frozenset({"function_call_output", "custom_tool_call_output"})
 
 
 @dataclass(frozen=True)
@@ -79,11 +142,22 @@ class Call:
 
 
 @dataclass
+class Reads:
+    """The bytes of the decision log and of the index of decisions that entered an agent's context,
+    and how many times each entered it."""
+    log_bytes: int = 0
+    log_reads: int = 0
+    index_bytes: int = 0
+    index_reads: int = 0
+
+
+@dataclass
 class Agent:
     name: str
     orchestrator: bool
     calls: list[Call]
     tool: str = CLAUDE
+    reads: Reads = dataclass_field(default_factory=Reads)
 
     @property
     def cache_known(self) -> bool:
@@ -124,22 +198,36 @@ def read_time(entry: dict, where: str) -> datetime:
     return at if at.tzinfo else at.replace(tzinfo=timezone.utc)
 
 
+def line_object(line: str, where: str) -> dict | None:
+    """The object of one line of a JSON Lines file; None for a blank line. A line that is not JSON,
+    or not an object, ends the reading with `where` named."""
+    if not line.strip():
+        return None
+    try:
+        entry = json.loads(line)
+    except (ValueError, RecursionError) as error:
+        raise MeasuresError(f"{where}: not JSON: {error}") from error
+    if not isinstance(entry, dict):
+        raise MeasuresError(f"{where}: not a JSON object")
+    return entry
+
+
 def json_lines(path: Path) -> Iterator[tuple[int, dict]]:
     """Each non-blank line of a JSON Lines file, as its number and its object. A line that is not
-    JSON, or not an object, ends the reading with the file and the line named."""
+    JSON, not an object or too large to read into memory ends the reading with the file and the
+    line named."""
+    reading = 1  # the number of the line being read or parsed
     try:
         with path.open(encoding="utf-8") as handle:
             for number, line in enumerate(handle, 1):
-                if not line.strip():
-                    continue
-                where = f"{path}:{number}"
-                try:
-                    entry = json.loads(line)
-                except (ValueError, RecursionError) as error:
-                    raise MeasuresError(f"{where}: not JSON: {error}") from error
-                if not isinstance(entry, dict):
-                    raise MeasuresError(f"{where}: not a JSON object")
-                yield number, entry
+                reading = number
+                entry = line_object(line, f"{path}:{number}")
+                reading = number + 1
+                if entry is not None:
+                    yield number, entry
+    except MemoryError as error:
+        raise MeasuresError(f"{path}:{reading}: the line is too large to read into memory") \
+            from error
     except (OSError, UnicodeDecodeError) as error:
         raise MeasuresError(f"cannot read {path}: {error}") from error
 
@@ -172,22 +260,122 @@ def read_response(entry: dict, where: str, index: int) -> tuple[str, int, Call]:
     return ident, output, call
 
 
-def read_calls(path: Path) -> list[Call]:
-    """The calls of the Claude Code agent whose transcript this is, in the order of their time."""
+def text_values(value: object) -> Iterator[str]:
+    """Every string among the values of a JSON value at any depth, found without recursion, so that
+    a value nested as deeply as a line can be read ends no run."""
+    stack = [value]
+    while stack:
+        item = stack.pop()
+        if isinstance(item, str):
+            yield item
+        elif isinstance(item, dict):
+            stack.extend(item.values())
+        elif isinstance(item, list):
+            stack.extend(item)
+
+
+def names_log(texts: Iterable[str]) -> bool:
+    """Whether a text names the decision log: a path that ends with `foundations/decisions.md`, with
+    each backslash taken as a slash."""
+    return any(LOG_PATH.search(text.replace(BACKSLASH, "/")) for text in texts)
+
+
+def result_text(content: object, kinds: frozenset[str], label: str, where: str) -> str | None:
+    """The text of a result: a string as it is, a list as the `text` of its blocks of the given kinds
+    joined with nothing between them; None for any other content. A block of those kinds that lacks
+    its `text` ends the reading, naming `label[index].text`."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for index, block in enumerate(content):
+            if (isinstance(block, dict) and isinstance(block.get("type"), str)
+                    and block["type"] in kinds):
+                text = member(block, "text", f"{label}[{index}].text", where)
+                if isinstance(text, str):
+                    parts.append(text)
+        return "".join(parts)
+    return None
+
+
+class ReadCounter:
+    """Pairs the tool calls of one agent with their results and counts the reads of the log and of
+    the index. Each call id counts once."""
+
+    def __init__(self) -> None:
+        self.reads = Reads()
+        self.pending: dict[str, bool] = {}  # call id -> whether the call named the log
+        self.settled: set[str] = set()
+
+    def call(self, ident: str, named_log: bool) -> None:
+        if ident not in self.settled:
+            self.pending[ident] = self.pending.get(ident, False) or named_log
+
+    def result(self, ident: str, text: str | None) -> None:
+        named_log = self.pending.pop(ident, None)
+        if named_log is None:
+            return
+        self.settled.add(ident)
+        if text is None:
+            return
+        # A lone surrogate, which JSON allows in a string, counts as the three bytes it takes.
+        size = len(text.encode("utf-8", errors="surrogatepass"))
+        if named_log:
+            self.reads.log_bytes += size
+            self.reads.log_reads += 1
+        if INDEX_TITLE.search(text):
+            self.reads.index_bytes += size
+            self.reads.index_reads += 1
+
+
+def read_claude_blocks(entry: dict, where: str, counter: ReadCounter) -> None:
+    """The tool calls of an assistant line and the results of a user line. Each field they need is
+    read: a missing one ends the reading, the `message` and the `message.content` of the line
+    included. A content that is no list, and anything that is no tool block, is not counted."""
+    kind = entry.get("type")
+    if kind not in ("assistant", "user"):
+        return
+    message = member(entry, "message", "message", where)
+    content = member(message, "content", "message.content", where)
+    if not isinstance(content, list):
+        return
+    for index, block in enumerate(content):
+        if not isinstance(block, dict):
+            continue
+        label = f"message.content[{index}]"
+        if kind == "assistant" and block.get("type") == "tool_use":
+            ident = identifier(block, "id", f"{label}.id", where)
+            identifier(block, "name", f"{label}.name", where)
+            tool_input = member(block, "input", f"{label}.input", where)
+            counter.call(ident, names_log(text_values(tool_input)))
+        elif kind == "user" and block.get("type") == "tool_result":
+            ident = identifier(block, "tool_use_id", f"{label}.tool_use_id", where)
+            result = member(block, "content", f"{label}.content", where)
+            counter.result(ident, result_text(result, CLAUDE_TEXT_BLOCKS, f"{label}.content",
+                                              where))
+
+
+def read_claude_agent(path: Path) -> tuple[list[Call], Reads]:
+    """The calls of the Claude Code agent whose transcript this is, in the order of their time, and
+    what it read of the decision log and of the index."""
     chosen: dict[str, tuple[int, Call]] = {}
+    counter = ReadCounter()
     for number, entry in json_lines(path):
+        where = f"{path}:{number}"
         if entry.get("type") != "assistant":
+            read_claude_blocks(entry, where, counter)
             continue
         message = entry.get("message")
         if isinstance(message, dict) and message.get("model") == SYNTHETIC_MODEL:
             continue
-        ident, output, call = read_response(entry, f"{path}:{number}", number)
+        ident, output, call = read_response(entry, where, number)
+        read_claude_blocks(entry, where, counter)
         kept = chosen.get(ident)
         if kept is None or output >= kept[0]:
             chosen[ident] = (output, call)
     calls = [call for _, call in chosen.values()]
     calls.sort(key=lambda call: (call.at, call.index))
-    return calls
+    return calls, counter.reads
 
 
 def cell(text: str) -> str:
@@ -205,7 +393,7 @@ def read_subagent_name(transcript: Path, agent_id: str) -> str:
     if meta_path.is_file():
         try:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, ValueError, RecursionError) as error:
+        except (OSError, UnicodeDecodeError, ValueError, RecursionError, MemoryError) as error:
             raise MeasuresError(f"cannot read {meta_path}: {error}") from error
     if not isinstance(meta, dict):
         meta = {}
@@ -217,13 +405,15 @@ def read_subagent_name(transcript: Path, agent_id: str) -> str:
 def read_claude_session(path: Path) -> list[Agent]:
     """The orchestrator of a Claude Code session and each subagent of its folder, each as an agent."""
     session_id = path.stem
-    agents = [Agent(f"orchestrator {session_id}", True, read_calls(path))]
+    calls, reads = read_claude_agent(path)
+    agents = [Agent(f"orchestrator {session_id}", True, calls, reads=reads)]
     folder = path.with_suffix("") / "subagents"
     if folder.is_dir():
         for transcript in sorted(folder.glob("agent-*.jsonl")):
             agent_id = transcript.stem.removeprefix("agent-")
-            agents.append(Agent(read_subagent_name(transcript, agent_id), False,
-                                read_calls(transcript)))
+            calls, reads = read_claude_agent(transcript)
+            agents.append(Agent(read_subagent_name(transcript, agent_id), False, calls,
+                                reads=reads))
     return agents
 
 
@@ -262,15 +452,46 @@ def rollout_meta(path: Path) -> RolloutMeta | None:
     return RolloutMeta(ident, parent, name)
 
 
-def read_codex_calls(path: Path, ident: str) -> list[Call]:
+def read_codex_record(entry: dict, where: str, counter: ReadCounter) -> None:
+    """A tool call or the output of one, from a record `response_item`. Each field it needs is read:
+    a missing one ends the reading, the `payload` of the record included. A payload that is no object
+    or of another kind is not counted."""
+    payload = member(entry, "payload", "payload", where)
+    kind = payload.get("type") if isinstance(payload, dict) else None
+    if not isinstance(kind, str):
+        return
+    if kind in CODEX_CALLS:
+        key = CODEX_CALLS[kind]
+        ident = identifier(payload, "call_id", "payload.call_id", where)
+        identifier(payload, "name", "payload.name", where)
+        arguments = member(payload, key, f"payload.{key}", where)
+        texts = list(text_values(arguments))
+        if kind == "function_call" and isinstance(arguments, str):
+            try:
+                texts.extend(text_values(json.loads(arguments)))
+            except (ValueError, RecursionError, MemoryError):
+                pass  # not JSON, or too large to parse: the text itself was searched
+        counter.call(ident, names_log(texts))
+    elif kind in CODEX_OUTPUTS:
+        ident = identifier(payload, "call_id", "payload.call_id", where)
+        output = member(payload, "output", "payload.output", where)
+        counter.result(ident, result_text(output, CODEX_TEXT_BLOCKS, "payload.output", where))
+
+
+def read_codex_calls(path: Path, ident: str) -> tuple[list[Call], Reads]:
     """The calls of the agent whose thread is `ident`: the token usage records of that thread, in
-    the order of their time. A forked subagent's rollout repeats its parent's records, which are no
-    calls of its own."""
+    the order of their time, and what its tool calls read of the decision log and of the index. A
+    forked subagent's rollout repeats its parent's token usage records, which are no calls of its
+    own."""
     calls = []
+    counter = ReadCounter()
     for number, entry in json_lines(path):
+        where = f"{path}:{number}"
+        if entry.get("type") == "response_item":
+            read_codex_record(entry, where, counter)
+            continue
         if entry.get("type") != "token_usage_record":
             continue
-        where = f"{path}:{number}"
         payload = member(entry, "payload", "payload", where)
         if identifier(payload, "thread_id", "payload.thread_id", where) != ident:
             continue
@@ -279,7 +500,7 @@ def read_codex_calls(path: Path, ident: str) -> list[Call]:
         calls.append(Call(at=read_time(entry, where), index=number, context=input_tokens,
                           read=0, write=0, write_5m=0, write_1h=0))
     calls.sort(key=lambda call: (call.at, call.index))
-    return calls
+    return calls, counter.reads
 
 
 def codex_subagents(home: Path, root: str,
@@ -322,11 +543,12 @@ def read_codex_session(path: Path, meta: RolloutMeta, codex_home: Path) -> list[
     """The orchestrator of a Codex session and each subagent under it, each as an agent."""
     if meta.parent is not None:
         raise MeasuresError(f"{path} is a subagent's rollout, not an orchestrator's")
-    calls = read_codex_calls(path, meta.ident)
-    agents = [Agent(f"orchestrator {meta.ident}", True, calls, CODEX)]
+    calls, reads = read_codex_calls(path, meta.ident)
+    agents = [Agent(f"orchestrator {meta.ident}", True, calls, CODEX, reads)]
     since = min((call.at for call in calls), default=None)
     for sub_path, sub in codex_subagents(codex_home, meta.ident, since):
-        agents.append(Agent(sub.name, False, read_codex_calls(sub_path, sub.ident), CODEX))
+        sub_calls, sub_reads = read_codex_calls(sub_path, sub.ident)
+        agents.append(Agent(sub.name, False, sub_calls, CODEX, sub_reads))
     return agents
 
 
@@ -410,6 +632,10 @@ def agent_row(agent: Agent) -> str:
         cache_sum([agent], "write_1h"),
         written_again,
         calls_again,
+        str(agent.reads.log_bytes),
+        str(agent.reads.log_reads),
+        str(agent.reads.index_bytes),
+        str(agent.reads.index_reads),
     ]
     return "| " + " | ".join(values) + " |"
 
@@ -453,8 +679,9 @@ def report(agents: list[Agent]) -> str:
         "## Agents",
         "",
         "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
-        "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Cache written, 1 hour | Cache written again | Calls with a cache write again "
+        "| Decision log bytes | Decision log reads | Decision index bytes | Decision index reads |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
         *rows,
     ]
     return "\n".join(lines) + "\n"

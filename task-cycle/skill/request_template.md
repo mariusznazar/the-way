@@ -108,7 +108,7 @@ only where no group has an item does the section read `none` alone, with no grou
 
 ## How to merge
 
-<the merge that keeps the commits, and why; the reminder of a review of the foundation where the count asks for it>
+<the merge that keeps the commits, and why; the reminder of a review of the foundation, in the form the backlog asks for, where the count asks for it>
 
 <details>
 <summary><"In your language", in the task document's language></summary>
@@ -257,13 +257,14 @@ the order of their kinds.
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
 - **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
   **Unread material** of that review's report and of its fix review's, and from the record: where
-  the reviewer did not run through the rest of its selection by title, or itself named a decision
-  concerning the change as unread, and the gap was not closed on the way, by the reviewer or a fresh
-  one reading what stayed unread: in plain words how much of what it selected it read whole, such as
-  "The review of the whole change read 40 of 151 selected decisions whole". The answer "do it in
-  this request" has a fresh reviewer read what stayed unread. A reviewer that read whole the
-  decisions concerning the change, ran through the rest by title and named none unread gives no
-  item, since that reading is the practice (WAY-150).
+  the reviewer did not read the index of its whole selection, or itself named a decision concerning
+  the change as unread, and the gap was not closed on the way, by the reviewer or a fresh one
+  reading what stayed unread: in plain words how many of the decisions of its index it read whole,
+  such as "The review of the whole change read 40 of 151 selected decisions whole, and did not read
+  the index of the other 111". The answer "do it in this request" has a fresh reviewer read what
+  stayed unread. A reviewer that read the index of its whole selection, opened whole the decisions
+  concerning the change and named none unread gives no item, since that reading is the practice
+  (WAY-150).
 - **16.** *Something an entry stands on that the foundation does not hold yet* (WAY-71, WAY-287),
   from the invariants file and the decision log of the tree after the change: each descriptive
   `TODO` — `TODO — <the fact, with its source>` in an invariant's *Rests on*,
@@ -340,8 +341,9 @@ the order of their kinds.
   "This correction only refreshed the branch from the target branch at your request; nothing else
   changed, and the cycle made no judgment of whether the task required anything." Where a correction
   has two sources, the one sentence carries each pair once, such as "This correction answered your
-  remark about a defect the task required, and it refreshed the branch from the target branch at
-  your request, which the cycle judged nothing about."
+  remark, and the cycle judged that the task required what the remark asked to change; it also
+  refreshed the branch from the target branch at your request, which the cycle judged nothing
+  about."
 
 **What an item carries.**
 
@@ -439,12 +441,22 @@ where the product's rules squash or rebase, that limitation named. For a blocked
 instead of merging.
 
 Where the count of `SKILL.md` step 13 reads `reminder: yes`, *How to merge* ends with the reminder
-(WAY-300): in plain words, that the foundation has waited for a review through the number of merges
-the script gives since the tag of the last review, or since the start of the history where the
-script gives no tag; that the review is the skill `the-way-review-foundation`, started in a session
-in this repository; and that nothing in this request waits for it. The reminder is no item of *For
-you to decide*, as it asks for no yes to the merge, and it repeats in the block like the rest of
-*How to merge*. Where the count reads `reminder: no`, nothing is written.
+(WAY-300), in plain words, in the form that the cycle's reading of the backlog asks for. Both forms
+say that the foundation has waited for a review through the number of merges the script gives since
+the tag of the last review, or since the start of the history where the script gives no tag; that
+the review is the skill `the-way-review-foundation`, started in a session in this repository; and
+that nothing in this request waits for it.
+
+- Where no open line of the review of this repository stands in the backlog, or the cycle could not
+  read the backlog, the reminder asks the human to add the task of the review to it, and says what
+  the task's name holds — the name of the skill `review-foundation` and the name of the repository,
+  taken as `SKILL.md` step 13 gives it, as in "Review of the foundation of <repository>
+  (`review-foundation`)" — and, where the backlog could not be read, that it could not be read.
+- Where the line stands, the reminder points to it by its name and neither asks for it nor urges.
+
+The reminder is no item of *For you to decide*, as it asks for no yes to the merge, and it repeats
+in the block like the rest of *How to merge*. Where the count reads `reminder: no`, nothing is
+written about a review of the foundation.
 
 ## The lower part
 
@@ -471,9 +483,10 @@ repository's root; each directory of an earlier task that the script of step 4 o
 standing, with its name, its branch and its reason, and no absolute path.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
-one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each kept row
-tied to an entry already stated, with that entry (WAY-134); each invariant test the change alters
-(WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).
+one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each topical
+section of the decision log that the change opens, with its heading and its one sentence (WAY-18);
+each kept row tied to an entry already stated, with that entry (WAY-134); each invariant test the
+change alters (WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).
 Each invariant that the foundation check lists for a corrected sentence stands here too, as the top
 part's *You accept by merging* gives it, and each test that holds a sentence of a decision by a line
 `decision:`, where the change adds, drops or alters the test or its line (WAY-03, WAY-12). A
@@ -490,7 +503,8 @@ the code (WAY-162).
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
 each the same way, for the human to choose which become new tasks and to create them (WAY-161);
 beside them, each check whose file belongs to a part outside the task's parts that failed in a cycle
-run and passed again, with its file path, its rerun's result and its counts (WAY-261).
+run and passed again, with its file path, its rerun's result and its counts, and the task that
+fixes it, or the proposal of one where none exists (WAY-261).
 
 **The task's own sections.** Each section the task document keeps of its own, under its own heading,
 here; what in it waits on a yes also stands in *For you to decide*.
@@ -522,7 +536,7 @@ reads `none` under its heading.
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |
 | A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question with its options and a recommendation where one exists | as an ordinary request |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | in *Needed from you*, that fact or permission; never partial work presented as complete | **Route**: the ways tried |
-| A correction (`correction.md`) | the state after the correction, with "corrected for your remarks" in the why | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9 or 14, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
+| A correction (`correction.md`) | the state after the correction, with what started it in the why, named from the sources of the pairs that item 17 gives: "corrected for your remarks" only where a remark started it, "corrected for your answer to an item" where an answer did, "refreshed from the target branch at your request" where only that did, and with two sources each in its words | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9, 14 or 16, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | in *You accept by merging*, item 15: the reported error in plain words and why the cycle holds it wrong | *Checks*: the form check's command, exit code and reported line |
 | A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | in *You accept by merging*, the listing as item 10 | *Checks*: the remarks check's command, exit code and listed line |

@@ -74,18 +74,42 @@ gives.
    the parts the entries it writes or changes name (WAY-44). Where the work names no file yet — an
    idea, a project's scope — name the parts whose responsibility it changes, and a new part as a
    prospective one. Where a part is uncertain, read each candidate.
-2. Find the decisions whose *Scope* names a touched part (WAY-21) by a search of the decision log:
-   take each `- **Scope:**` line with the indented lines that continue it, and keep the entries
-   where the part's identifier stands as a whole item. *Scope* names parts by identifier alone, as
-   `elements/common/foundation_check.py` holds it to. Add those the task's *Decisions in play* or
-   the work's source names. Read each decision found whole, as the range of lines from its heading to
-   the next heading (`###` in the decision log, `##` in the other foundation files), with its
-   rationale and *Rejected*, except as the reviewer of the whole change reads them below: a search
-   hit or a binding sentence locates an entry, never replaces it. The log beyond the decisions found
-   is not read. The reviewer of the whole change, selecting for its own review in a task cycle,
-   reads whole the decisions found that concern the change's topic, skims the rest by title, opens
-   every one whose title points to a bearing on the change, and states in its report how many
-   decisions it read whole and how many by title only (WAY-150); no other agent skims.
+2. Select the decisions, have the script write the index of the selection and read it
+   (WAY-150, WAY-21). The script is `elements/common/decision_index.py` of the-way, run as
+   `python -B <the-way>/elements/common/decision_index.py --output PATH [switches] [ROOT]`; its
+   docstring gives its switches and what it writes. `PATH` is a file in your own working
+   directory that no commit takes in — in a task cycle, in the directory your handoff names for
+   working copies. The index gives each selected decision its number, its question, its binding
+   sentences and its *Scope*; the script's search by parts, `--part ID`, takes the place of a search
+   of the `- **Scope:**` lines by hand, and *Scope* names parts by identifier alone, as
+   `elements/common/foundation_check.py` holds it to.
+   - A log divided into topical sections — one with a `## ` heading other than its list of
+     withdrawn numbers: run the script with `--sections` and choose from the list it writes, by each
+     section's heading and sentence, the sections of the work's topics. Run it again with
+     `--section HEADING` for each of them and `--part ID` for each touched part: it lists in full the
+     decisions of those sections and, by heading alone, the decisions outside them whose *Scope*
+     names a touched part (WAY-150). Run through those headings, which hold the questions alone, and
+     open whole each whose question points to a bearing on the work.
+   - A log without topical sections: select by the parts the work touches, `--part ID` for each, and
+     the index stands in for reading the decisions found whole.
+   - Add with `--decision NUMBER` the decisions the task's *Decisions in play* or the work's source
+     names, and each decision whose sentence a test the work alters holds by a line `decision:`
+     (WAY-02, WAY-150), as step 3 adds the invariants such a test cites.
+   - Read the index. Of its decisions, open whole only those the work changes, goes against or
+     proposes another answer to, those the task or the work's source names, those whose sentence a
+     test the work alters holds by a line `decision:` and those whose binding sentences leave open
+     what the work has to do; of a decision the work goes against or proposes another answer to, the
+     *Rejected* is read as well. An entry read whole is the range of lines from its heading to the
+     next heading of any level, with its rationale and *Rejected*, since a section heading can
+     follow an entry in the decision log, and `##` ends an entry in the other foundation files. An
+     index line or a search hit locates a decision and states what binds; it never replaces the
+     entry for a decision the work changes, goes against or answers otherwise. The log beyond the
+     index, the entries opened and the decisions step 3 reaches by a link is not read.
+   - The reviewer of the whole change, selecting for its own review in a task cycle, writes and
+     reads the index of its whole selection, and states in its report how many decisions it read
+     whole (WAY-150). It reads no decision of its selection by title: the run through the
+     questions of the decisions outside the work's sections, above, is the one run through headings
+     the method keeps.
 3. Read the touched parts' entries of the part map; the invariants the work reaches (WAY-62) —
    those whose *Part* names a touched part or `every`, found by the same search of *Part*, and
    those a test the work alters cites by its line `invariant: <identifier>`; and the entries these

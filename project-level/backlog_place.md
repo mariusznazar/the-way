@@ -15,8 +15,9 @@ task place (WAY-107). The place stands in the `## Backlog` section of the produc
 The rules by which a task's line is written — the status of a new line, its move to ready, the form
 of its dependencies — belong to the task place, not to the product or to the-way. A line for
 `Task rules` names them as an entry of the locations file, "the entry `task-rules` under `the-way`",
-whose value is the path of a file of those rules; `project-level/task_line.md` says how a line is
-written by them (WAY-107).
+whose value is the path of a file of those rules; `project-level/task_line.md` says when and by
+which agent a line is written by them, and gives the derivation of a task's identifier from its
+plan, the one part of a line the-way gives, but not how a line is written (WAY-107).
 
 ## Resolve an entry of the locations file
 

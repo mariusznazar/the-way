@@ -6,13 +6,15 @@ Usage, from the root of the repository:
     python -B task-cycle/review_reminder.py BRANCH [--repository DIRECTORY]
 
 In a product, the path starts with `.the-way/`. BRANCH is the branch the request merges into, as
-the cycle sees it after a fetch (`origin/<branch>`). The script finds the nearest tag of the form
-`foundation-review/*` that BRANCH contains, as `git describe --tags --abbrev=0 --match
-'foundation-review/*' BRANCH` gives it, and counts the merges on the first-parent history of
-BRANCH since that tag, as `git rev-list --merges --first-parent --count <tag>..BRANCH` gives it;
-with no such tag it counts from the start of history. A merge of BRANCH into a task branch is no
-merge of BRANCH, and the first-parent history leaves it out. A product whose merges are squashed or
-rebased has no merge commits, and the count reads 0.
+the cycle sees it after a fetch that brings the tags (`origin/<branch>`). The script finds the
+nearest tag of the form `foundation-review/*` that BRANCH contains, as `git describe --tags
+--abbrev=0 --match 'foundation-review/*' BRANCH` gives it, and counts the merges on the first-parent
+history of BRANCH since that tag, as `git rev-list --merges --first-parent --count <tag>..BRANCH`
+gives it; with no such tag it counts from the start of history. No tag is told from an error of git
+by the list of the tags BRANCH contains (`git tag --list --merged BRANCH 'foundation-review/*'`),
+never by the words of a message of git, which its locale may translate. A merge of BRANCH into a
+task branch is no merge of BRANCH, and the first-parent history leaves it out. A product whose
+merges are squashed or rebased has no merge commits, and the count reads 0.
 
 Standard output, four lines:
 
@@ -25,8 +27,8 @@ The reminder blocks nothing; whoever writes the request's description reads the 
 threshold is one number for every product.
 
 Exit code: 0 on success; 2 with `Error: <message>` on stderr when BRANCH names no commit or starts
-with a hyphen, or when git cannot run in the repository. The script reads the repository and
-writes nothing.
+with a hyphen, or when git cannot run in the repository or fails to list or describe the tags. The
+script reads the repository and writes nothing.
 
 Standard library only; the only program started is git.
 """
@@ -38,7 +40,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-THRESHOLD = 30
+# One number for every product. At 60 merges a review falls every 2 to 10 weeks when the-way merges
+# 6 to 26 requests a week and every 3 to 15 weeks when a product merges 4 to 21, and about every 10
+# days at the pace of 49 merges in 8 days; at 30 it fell about once a week, and each review reads
+# the whole foundation anew. The price taken: a mismatch of the foundation with the code lives
+# longer, and one review has more remarks to read.
+THRESHOLD = 60
 TAG_PATTERN = "foundation-review/*"
 
 
@@ -60,9 +67,21 @@ def git(directory: Path, *arguments: str) -> subprocess.CompletedProcess:
 
 
 def last_review_tag(directory: Path, branch: str) -> str | None:
-    """The nearest review tag BRANCH contains; none when no review tag is reachable from it."""
+    """The nearest review tag BRANCH contains; none when no review tag is reachable from it.
+
+    No tag is told from an error of git by the list of the tags BRANCH contains, never by the
+    message of a failed `git describe`, which git words in the language of its locale: a list that
+    git gives with success and empty is no tag, a list it cannot give is an error, and a
+    `git describe` that fails where the list names a tag is an error too."""
+    listed = git(directory, "tag", "--list", "--merged", branch, TAG_PATTERN)
+    if listed.returncode != 0:
+        raise ReminderError(f"git tag failed: {listed.stderr.strip()}")
+    if not listed.stdout.strip():
+        return None
     found = git(directory, "describe", "--tags", "--abbrev=0", "--match", TAG_PATTERN, branch)
-    return found.stdout.strip() if found.returncode == 0 else None
+    if found.returncode != 0:
+        raise ReminderError(f"git describe failed: {found.stderr.strip()}")
+    return found.stdout.strip()
 
 
 def merges_since(directory: Path, branch: str, tag: str | None) -> int:

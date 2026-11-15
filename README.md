@@ -129,7 +129,8 @@ branch from.
   `product-guidelines/testing/`).
 - `foundation-review/` — the skill that reviews a repository's foundation against the repository
   with a human: the whole foundation, the unfixed remarks of merged requests, a list of proposals,
-  and a tag that marks the review. A request's description reminds the human of it after 30 merges.
+  and a tag that marks the review. A request's description reminds the human of it once the merges
+  since the last review reach the threshold of the task cycle's reminder script.
 - `process-audit/` — the weekly audit of the process: the template of the register of problems that
   the user's own tool fills, the price list of the models, the command that counts the cycles and
   their problems from the user's repositories and register, and the skill that leads the weekly

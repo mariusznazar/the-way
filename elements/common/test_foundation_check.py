@@ -1519,6 +1519,23 @@ class FoundationCheckTest(unittest.TestCase):
                 base = {"foundations__invariants_dot_md": text}
                 self.assertEqual(self.lines(self.reworded(base=base).check()), ["0 errors"])
 
+    # --- a log divided into topical sections --------------------------------------------------
+
+    def sectioned(self, text):
+        """The decision log divided into two topical sections, each with its heading and sentence."""
+        text = text.replace("### ABC-01 —", "## Saving\n\nHow a game is saved and loaded.\n\n"
+                                            "### ABC-01 —", 1)
+        return text.replace("### ABC-02 —", "## Clock\n\nWhere the clock runs.\n\n### ABC-02 —", 1)
+
+    def test_log_divided_into_sections_passes_as_the_undivided_one_does(self):
+        self.assertPasses(self.run_on(foundations__decisions_dot_md=self.sectioned(DECISIONS)))
+
+    def test_error_in_an_entry_of_the_second_section_is_reported_at_its_own_line(self):
+        head, _, tail = self.sectioned(DECISIONS).rpartition("- **Origin:** none\n")
+        # ABC-02 stands at line 24 of the divided log, after the two sections' headings
+        self.assertFails(self.run_on(foundations__decisions_dot_md=head + tail),
+                         "foundations/decisions.md:24: the entry lacks *Origin*", "1 error")
+
     # --- the-way's own foundation -------------------------------------------------------------
 
     def test_the_way_foundation_passes(self):

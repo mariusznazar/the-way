@@ -23,8 +23,9 @@ skill named below is the project skill of that name with the `the-way-` prefix. 
 under review is the one the session works in — the-way itself, or a product that pins it — and the
 review runs from that repository's root.
 
-A request's description asks for this review once the main branch holds 30 merges since the last
-review tag (WAY-300); the human may start it at any time.
+A request's description asks for this review once the main branch holds as many merges since the
+last review tag as the threshold of the task cycle's reminder script gives (WAY-300); the human may
+start it at any time.
 
 ## 1. Fix the range
 
@@ -49,8 +50,9 @@ review tag (WAY-300); the human may start it at any time.
 
 Read all of the foundation of the repository, each file whole: `foundations/decisions.md`,
 `invariants.md`, `glossary.md`, `part_map.md` and `environment_facts.md`. Read `weak_points.md`
-beside this skill for what to look for in each entry, for the checks to run and for the decisions
-that describe a transitional state (WAY-24, WAY-82).
+beside this skill for what to look for in each entry, for the checks to run, for the decisions
+that describe a transitional state (WAY-24, WAY-82) and for the entries of the log that are no
+decisions.
 
 ## 3. Check the unfixed remarks of the requests
 
@@ -60,7 +62,8 @@ judged, and which are not raised again.
 ## 4. List the proposals
 
 Read `proposals.md` beside this skill: the proposals about the foundation, the decisions that
-describe a transitional state, the groups of remarks, and the data file that holds the lists.
+describe a transitional state, the groups of entries that are no decisions, the groups of remarks,
+and the data file that holds the lists.
 
 ## 5. Have the set critiqued
 
@@ -76,12 +79,14 @@ critiqued.
 
 Read `with_the_human.md` beside this skill for the order and the form: the proposals about the
 foundation one by one, the decisions that describe a transitional state one by one, the groups of
-remarks as groups, and the tasks that follow from the human's decisions.
+entries that are no decisions and the groups of remarks as groups, and the tasks that follow from
+the human's decisions.
 
 ## 7. Mark the review done
 
 The review is done when the human has decided on every proposal, has answered for every decision
-that describes a transitional state and has decided on every group. Then mark it:
+that describes a transitional state and has decided on every group, of entries and of remarks.
+Then mark it:
 
 - Name the tag `foundation-review/YYYY-MM-DD` with today's date; where a tag of that date exists
   already, add `-2`, then `-3`. Put it on the checked commit of step 1, annotated, with
@@ -93,6 +98,9 @@ that describes a transitional state and has decided on every group. Then mark it
 - Show the human the name, the commit and the message, and push the tag with
   `git push origin <name>` on the human's yes: everyone with access to the repository sees a pushed
   tag, and only a human removes it.
+- Where an open line of this review stands in the backlog, tell the human to mark it done as the
+  rules of the task place give it (WAY-107): an open line makes the next reminder point to it
+  instead of asking for a new one.
 
 Where the human ends the session before every decision is made, put no tag: the data file keeps
 the decisions made, and the next run resumes from it (step 1). The next reminder counts from the

@@ -19,8 +19,8 @@ to the part map (WAY-35).
   not entries: the external context (WAY-48), the files left out on purpose (WAY-44) and the
   withdrawn identifiers. Each kind answers what the other cannot: a part, what it is responsible for
   and which files are its; a surface, what someone outside relies on.
-- An allowed dependency and a trust boundary are fields of the part they belong to, never entries
-  of their own (WAY-48). A critical flow has no entry.
+- An allowed dependency of a part and a trust boundary are fields of the part they belong to, never
+  entries of their own (WAY-48). A critical flow has no entry.
 - An entry is edited in place and carries no version; its history stays in git (WAY-07). A change
   of the code that changes what a part answers for, which files are its or what it may depend on,
   or what a surface promises, rewrites the entry in the same change (WAY-11).
@@ -39,7 +39,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ```markdown
 ## <identifier>
 
-<one sentence: what this part is responsible for>
+<what this part is responsible for, briefly, in as few sentences as that needs>
 
 - **Files:** <git path patterns, one per line, each a directory or one kind of file> | none
 - **Depends on:** <identifier> · <identifier> | none
@@ -52,7 +52,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ```markdown
 ## <identifier>
 
-<one sentence: what the product promises to keep>
+<what the product promises to keep, briefly, in as few sentences as that needs>
 
 - **Relied on by:** <who outside the product relies on it>
 ```
@@ -88,10 +88,12 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ## Allowed dependencies
 
 *Depends on* names the parts this part may depend on, not those its code reaches for today: the map
-holds the rule, and the code shows the state (WAY-225). The return step of a change compares the two
-for the parts the change touches (WAY-11).
+holds the rule, and the code shows the state (WAY-225). What counts as a dependency of a part is
+what the glossary gives that term, any reach and not only an import, so *Depends on* covers every
+such reach. The return step of a change compares the two for the parts the change touches
+(WAY-11).
 
-Every product whose parts import code from other parts holds one invariant of allowed dependencies,
+Every product whose parts import code from other parts holds one invariant of allowed imports,
 with its test in the product's suite, that a file of a part imports only files of its own part, of
 the parts its *Depends on* names, of a part of test helpers where the importing file is a test (see
 "Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`"
@@ -108,14 +110,14 @@ reading `Violated: yes` says it depends on today:
 This is a duty rather than advice, since a step nothing enforces is the step an agent leaves out,
 and an import from outside the map then passes merge after merge unseen.
 
-A dependency the code holds that *Depends on* does not allow goes to the human. Where the human
-accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
-`<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the code
-meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
-dependencies above lets that import pass and keeps every other boundary; *Depends on* is never
-rewritten to fit what the code reaches for today (WAY-225, WAY-51). Each such invariant is a whole
-entry a human accepted, not a list of known violations, and the map holds no list of such
-dependencies.
+A dependency of a part that the code holds and *Depends on* does not allow goes to the human. Where
+the human accepts it as it stands, it is written as an invariant — "the part `<part>` does not
+depend on `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the
+code meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
+imports above lets that import pass, where the dependency is an import, and keeps every other
+boundary; *Depends on* is never rewritten to fit what the code reaches for today (WAY-225, WAY-51).
+Each such invariant is a whole entry a human accepted, not a list of known violations, and the map
+holds no list of such dependencies of a part.
 
 ## Trust boundary
 
@@ -129,7 +131,8 @@ dependencies.
 ## Surfaces
 
 - A surface is what someone outside the product relies on — an API, a file format, a command — and
-  its entry states the promise in one sentence and names in *Relied on by* who relies on it.
+  its entry states the promise briefly, in as few sentences as it needs, and names in *Relied on by*
+  who relies on it.
 - A change that alters a surface names the surface in its request, since a broken promise falls on
   someone who took no part in the change, and the request names it for the agent reviewing the
   change and the human merging it.
@@ -178,8 +181,8 @@ A field stays in this template only while someone or something reads it (WAY-05)
 |---|---|
 | identifier (heading) | `elements/common/foundation_check.py`, which finds every *Scope*, *Part* and *Depends on* naming it; whoever follows such a reference |
 | sentence | the agent making a change to the part's files or to what the surface promises; the search of the foundation, when the sentence changes |
-| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part; the test of the invariant of allowed dependencies, which finds the part of each file |
-| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py`; the test of the invariant of allowed dependencies, which compares it with the imports |
+| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part; the test of the invariant of allowed imports, which finds the part of each file |
+| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py`; the test of the invariant of allowed imports, which compares it with the imports |
 | Trust boundary | the agent making a change that touches its files, and the agent reviewing it, who check crafted input |
 | Relied on by | the agent making a change to the surface, and the human merging its request, who see whom the change reaches |
 | external context | whoever records a trust boundary at the part that handles an exchange (WAY-48) |
@@ -188,11 +191,11 @@ A field stays in this template only while someone or something reads it (WAY-05)
 
 ## The binding part
 
-The binding part of an entry is one sentence: a part's responsibility or a surface's promise.
-*Files*, *Depends on*, *Trust boundary* and *Relied on by* stay outside it. Whatever names an entry
-relies on what the entry answers for, and the other fields change more often without changing that,
-so making them binding would send the author to the entries naming it for changes that do not alter
-the promise.
+The binding part of an entry is a part's responsibility or a surface's promise, each described
+briefly, in as few sentences as it needs. *Files*, *Depends on*, *Trust boundary* and *Relied on by*
+stay outside it. Whatever names an entry relies on what the entry answers for, and the other fields
+change more often without changing that, so making them binding would send the author to the
+entries naming it for changes that do not alter the promise.
 
 ## Examples
 

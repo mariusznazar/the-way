@@ -374,3 +374,53 @@ Where {merge-onto} exists, no commit of a change against {fork-point} adds a fil
 - **Derives from:** WAY-316
 - **Part:** every
 - **Violated:** no
+
+## blocked-request-wording
+
+The wording that `project-level/plan_state.py` takes for the field *Request URL and status* of a record committed before its request exists stands, word for word and in backticks, in `task-cycle/skill/reserved_return.md` and in `task-cycle/skill/blocked_finding.md`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-153
+- **Part:** project-level · task-cycle
+- **Violated:** no
+
+## blocked-request-label
+
+`task-cycle/record_template.md` has a line that begins with the label that `project-level/plan_state.py` takes for the field *Request URL and status* of a record committed before its request exists.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-153
+- **Part:** project-level · task-cycle
+- **Violated:** no
+
+## audit-series-script-paths
+
+Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-339
+- **Part:** process-audit · task-cycle · gate
+- **Violated:** no
+
+## review-tag-pattern
+
+Every name that `foundation-review/SKILL.md` gives the tag that marks a review done — the name with the date, and with `-2` or `-3` added where a tag of that date exists — is found by the pattern from which `task-cycle/review_reminder.py` finds the last review.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-300
+- **Part:** task-cycle · foundation-review
+- **Violated:** no
+
+## guidelines-file-place
+
+Every file of a product's guidelines that `product-guidelines/template.md` names in its section on where guidelines go, and the directory it names for them, match the place where `elements/common/foundation_check.py` reads files of guidelines: a Markdown file directly in `guidelines/`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-167
+- **Part:** elements-common · product-guidelines
+- **Violated:** no
