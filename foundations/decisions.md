@@ -2486,8 +2486,8 @@ rule loosening for a whole part to let its tests through; imports from tests lef
 simplest check of the boundaries, but a test of one part reaching into the code of another goes
 unseen; a field or a mark in the entry of a part of test helpers — it changes the form of the map in
 every product while nothing needs it, and would serve only a script of the process reading the map;
-the sentence left without the clause on the files at the root — the map goes on with no effect, but
-a reader of this decision who reads it strictly sees a map that goes against it.
+the sentence left without the clause on the files at the root — the gap has no effect on the map or
+its check, but a reader of this decision who reads it strictly sees a map that goes against it.
 
 ### WAY-48 — How is a trust boundary recorded?
 
@@ -6020,13 +6020,13 @@ The orchestrator's class is the class of the session that leads the cycle and ma
 so a review that follows it lets a flaw through in about half the runs of that measurement; the
 reviews of the whole change and of the return step therefore follow no class of the session and run
 on the strongest class available. That costs more, the price taken: fewer fixes after review are
-counted to repay part of it, and the audit of the process shows what the version after the change
-costs. What is available is the human's choice when a session starts, never a sentence of this log:
-a cycle started with every model allowed takes the strongest it has, the review included, and a
-session that leaves a model out takes the strongest of the rest, so the log names no model and no
-setting. Classes in general terms survive the release of new models and fit any harness. The
-decision takes from the skills of Open Mercato for planning and dispatching an executor a class of
-model for each step of the work and one retry a class higher before the stop (WAY-100).
+counted to repay part of it, and the audit of the process shows what it costs (WAY-337, WAY-339).
+What is available is the human's choice when a session starts, never a sentence of this log: a cycle
+started with every model allowed takes the strongest it has, the review included, and a session that
+leaves a model out takes the strongest of the rest, so the log names no model and no setting.
+Classes in general terms survive the release of new models and fit any harness. The decision takes
+from the skills of Open Mercato for planning and dispatching an executor a class of model for each
+step of the work and one retry a class higher before the stop (WAY-100).
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
@@ -6050,11 +6050,11 @@ rationale counts on then depends on the model of the session that leads the cycl
 in general terms with no criterion that tells the classes apart without a name — an agent reads a
 general word as it pleases; the strongest class of the family the cycle runs on — a model of that
 family that the human keeps out of cycles would take the reviews and the slices that need design; a
-review one class above the session that leads the cycle, never above the strongest model — with the
-session on the cheapest class the review would run on the middle class, which let a flaw through in
-4 of the 8 runs of the measurement, and a bound on the strongest model has to stand somewhere all
-the same; a restriction of models on the human's whole account — the model leaves every session of
-the human, and each work on it would need a change of that restriction.
+review one class above the session that leads the cycle, never above a model the human names — with
+the session on the cheapest class the review would run on the middle class, which let a flaw through
+in 4 of the 8 runs of the measurement, and a line that keeps a model out of the cycle's work has to
+be drawn somewhere all the same; a restriction of models on the human's whole account — the model
+leaves every session of the human, and each work on it would need a change of that restriction.
 
 ## The work of a cycle's agents
 
@@ -7650,11 +7650,12 @@ cycles itself would repeat it every week, and could repeat it differently. A tem
 user of the-way keep the same register in their own way, as WAY-103 asks of a process meant for
 more than its author. The price taken: a user who has no tool that fills the register has nothing
 for the audit to count, since the template of the register does not fill it itself.
-*Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost
-— the same remarks would be judged by two agents, who may judge differently, and the tie of a
-problem to its fix would have to be rebuilt each time; the-way taking over the review of the
-remarks of cycles — the largest change, and the remarks would turn into issues once a week instead
-of every night.
+*Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost —
+the same remarks would be judged by two agents, who may judge differently, and the tie of a problem
+to its fix would have to be rebuilt each time; the-way taking over the review of the remarks of
+cycles — the largest change, and the remarks would turn into issues once a week instead of every
+night; the price left in its conditional form, true for every new user — a reader takes the audit
+for a tool that has nothing to count today.
 
 ### WAY-337 — How is the cost of a cycle measured?
 

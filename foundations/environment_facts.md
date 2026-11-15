@@ -223,7 +223,7 @@ Claude Code's cached prompt prefixes expire after a period of inactivity, and ea
 
 The API offers Claude Code a five-minute prompt cache lifetime and a one-hour one, which keeps the cache warm through longer breaks and charges a higher rate for cache writes.
 
-- **Source:** https://code.claude.com/docs/en/prompt-caching § Cache lifetime — "The API offers two: a five-minute TTL, and a one-hour TTL that keeps the cache warm through longer breaks but charges a higher rate for cache writes."; read 2026-11-15
+- **Source:** https://code.claude.com/docs/en/prompt-caching (archived: https://web.archive.org/web/20261114163725/https://code.claude.com/docs/en/prompt-caching, 2026-11-14) § Cache lifetime — "The API offers two: a five-minute TTL, and a one-hour TTL that keeps the cache warm through longer breaks but charges a higher rate for cache writes."; read 2026-11-15
 
 ## claude-code-subagent-cache-default
 
