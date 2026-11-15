@@ -383,15 +383,33 @@ except KeyboardInterrupt:
         self.assertEqual(code, 0, output)
         self.assertIn("Ran 1 test", output)
 
+    def runner_noting(self, line, note):
+        """Runs the runner from the root; when it has printed the line `line` it appends `note` to
+        the log, so that a test that waits for the note waits for what the runner printed. Returns
+        its exit code and all it printed."""
+        process = subprocess.Popen([sys.executable, "-B", RUNNER], cwd=self.root,
+                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                                   encoding="utf-8", errors="replace")
+        printed = []
+        for text in process.stdout:
+            printed.append(text)
+            if text.rstrip("\n") == line:
+                with open(self.log(), "a", encoding="utf-8") as handle:
+                    handle.write(note + "\n")
+        process.stdout.close()
+        return process.wait(), "".join(printed)
+
     def test_each_report_stands_whole_under_its_own_line_in_the_order_directories_end(self):
-        # a waits until the line `end b` stands in the log, so b's report comes first although a
-        # sorts first; each test prints lines before and after the wait, which a run that let the
-        # two reports run into each other would mix. The wait has the helper's limit of 120 seconds.
+        # a waits until the test has seen the runner print the line `== b`, which it prints when b's
+        # run has ended: so b's report comes first although a sorts first, and a ends only after
+        # that, whatever the load. Each test prints lines before and after the wait, which a run that
+        # let the two reports run into each other would mix. The wait has the helper's limit of 120
+        # seconds.
         log = self.log()
-        self.write("a/test_one.py", timed_module(log, "a", ["end b"], lines=4))
+        self.write("a/test_one.py", timed_module(log, "a", ["released"], lines=4))
         self.write("b/test_one.py", timed_module(log, "b", lines=4))
         self.track("a/test_one.py", "b/test_one.py")
-        code, output = self.runner()
+        code, output = self.runner_noting("== b", "released")
         self.assertEqual(code, 0, output)
         found, last = blocks(output)
         self.assertEqual([name for name, _ in found], ["b", "a"], output)
