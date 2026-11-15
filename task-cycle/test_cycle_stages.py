@@ -10,7 +10,9 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr
+from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -220,6 +222,31 @@ class CodexTest(unittest.TestCase):
         path = cycle_stages.resolve("design", self.home, Path(self.folder.name) / "claude")
         with self.assertRaisesRegex(cycle_stages.CycleStagesError, "subagent"):
             cycle_stages.read_session(path, self.home)
+
+    def test_an_orchestrator_with_no_turn_finds_its_subagents_where_the_epoch_is_refused(
+            self) -> None:
+        # Windows refuses fromtimestamp(0) in some time zones. The fixture makes it raise on every
+        # machine, so the test does not depend on the time zone it runs in.
+        idle = rollout(self.home, "idle", [meta("idle", "10:30:00")])
+        rollout(self.home, "idle-sub", [
+            meta("idle-sub", "10:31:00", "idle", "/root/idle-sub"),
+            started("10:31:00", "i1"),
+            context("10:31:00", "i1", "model-i"),
+            tokens("10:32:00", "idle-sub", "i1", 10, 0, 1),
+            complete("10:33:00", "i1"),
+        ])
+
+        class WindowsEpoch(datetime):
+            @classmethod
+            def fromtimestamp(cls, timestamp, tz=None):
+                if timestamp == 0:
+                    raise OSError(22, "Invalid argument")
+                return super().fromtimestamp(timestamp, tz)
+
+        with mock.patch.object(cycle_stages, "datetime", WindowsEpoch):
+            session = cycle_stages.read_codex_session(idle, self.home)
+        self.assertEqual(["idle-sub"], [agent.key for agent in session.subagents])
+        self.assertEqual(1, len(session.subagents[0].turns))
 
 
 # Claude Code

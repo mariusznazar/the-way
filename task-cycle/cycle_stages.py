@@ -441,12 +441,15 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     return agent
 
 
-def codex_subagent_paths(home: Path, root: str, since: datetime) -> list[tuple[Path, str]]:
-    """Every rollout under `home/sessions` descending from `root`, with its parent's id."""
+def codex_subagent_paths(home: Path, root: str,
+                         since: datetime | None) -> list[tuple[Path, str]]:
+    """Every rollout under `home/sessions` descending from `root`, with its parent's id. Where
+    `since`, the time of the orchestrator's first turn, is None, no rollout is left out by its
+    time."""
     parents: dict[str, tuple[Path, str]] = {}
-    floor = since.timestamp() - 1
+    floor = None if since is None else since.timestamp() - 1
     for path in (home / "sessions").rglob("rollout-*.jsonl"):
-        if path.stat().st_mtime < floor:
+        if floor is not None and path.stat().st_mtime < floor:
             continue
         meta = codex_meta(path)
         if meta and meta.get("parent_thread_id"):
@@ -465,7 +468,7 @@ def codex_subagent_paths(home: Path, root: str, since: datetime) -> list[tuple[P
 def read_codex_session(path: Path, codex_home: Path) -> Session:
     orchestrator = read_codex_agent(path, None)
     orchestrator.name = "orchestrator"
-    since = min((start for start, _ in orchestrator.turns), default=datetime.fromtimestamp(0))
+    since = min((start for start, _ in orchestrator.turns), default=None)
     subagents = [read_codex_agent(p, parent) for p, parent in
                  codex_subagent_paths(codex_home, orchestrator.key, since)]
     return Session("Codex", orchestrator.key, path, orchestrator, subagents)
