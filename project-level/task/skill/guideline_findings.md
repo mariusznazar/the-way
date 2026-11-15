@@ -48,6 +48,12 @@ that this test becomes the level's exemplar, naming the level and no path, throu
 `maintain-testing-guidelines` (WAY-251, WAY-242). The task goes to the cycle only with that
 extension in its *To do*.
 
+Where the human separates the work after the audit of the coding guidelines or of the testing
+guidelines stopped for the other's, so that the other audit will not run in this task, the skill of
+the stopped audit returns and closes the list of causes as the audit that runs last does, as "An
+audit that stopped, with no audit to follow" in `product-guidelines/audit_end.md` gives, and then
+hands back to step 4 of `refine-task`.
+
 ## A deferred cause of an audit
 
 A `grave` cause of an audit's list that the human defers, with a yes to a task for it in the

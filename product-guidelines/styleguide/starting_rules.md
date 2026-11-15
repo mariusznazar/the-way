@@ -1,7 +1,8 @@
 # Starting rules
 
-A first screen built with no rules is the screen every later one copies, so the styleguide of a user
-interface comes into being before that user interface's first screen.
+A first screen built with no rules is the screen every later one copies, so this skill proposes that
+the styleguide of a user interface come into being before that user interface's first screen; the
+proposal binds a product only through a decision of the product's log (WAY-173).
 
 For the first styleguide, with or without screens, and at every refresh or extension:
 
