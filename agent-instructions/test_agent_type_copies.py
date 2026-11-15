@@ -72,14 +72,18 @@ class Writing(unittest.TestCase):
         self.assertEqual(repository.run("--write"), (0, "agent type copies are current\n", ""))
 
     def test_without_write_it_lists_the_plan_and_writes_nothing(self) -> None:
+        # invariant: generator-writes-only-with-write
         repository = Repository(self)
         repository.write("task-cycle/agent-types/the-way-stage.md", STAGE)
         repository.write("task-cycle/agent-types/the-way-author.md", AUTHOR)
         repository.write(".claude/agents/the-way-stage.md", "stale\n")
+        repository.write(".claude/agents/the-way-renamed.md", "old\n")
         before = repository.files()
         self.assertEqual(repository.run(), (
             0, "would create .claude/agents/the-way-author.md\n"
-               "would change .claude/agents/the-way-stage.md\n", ""))
+               "would change .claude/agents/the-way-stage.md\n"
+               "orphan .claude/agents/the-way-renamed.md: no definition produces it; remove it "
+               "with git rm -- .claude/agents/the-way-renamed.md\n", ""))
         self.assertEqual(repository.files(), before)
 
     def test_a_changed_definition_rewrites_its_copy(self) -> None:

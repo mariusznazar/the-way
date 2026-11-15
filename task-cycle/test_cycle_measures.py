@@ -831,6 +831,7 @@ class EdgeReadingTest(MeasuresTest):
         self.assertRegex(errors, r":\d+: ")
         self.assertFalse(output.exists())
 
+    # invariant: cycle-measures-refuses-nested-line
     def test_a_line_nested_too_deeply_ends_with_exit_2_naming_the_file_and_line(self) -> None:
         transcript = self.session([prompt("09:00:00", "run")])
         with transcript.open("a", encoding="utf-8") as handle:

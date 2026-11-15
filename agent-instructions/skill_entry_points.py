@@ -19,7 +19,9 @@ Without --write the generator prints what it would create or change and writes n
 remove with `git rm -r`; it deletes nothing. A malformed frontmatter, a name two skills hold, or a
 failed git call stops the run before anything is written.
 
-Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise.
+Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise, a `name:` or a
+`description:` with no value included; 2 with `Error: <message>` on stderr when the frontmatter of
+a skill has no line `name:` or no line `description:`, the message naming the file and that field.
 
 Standard library only; the only program started is git.
 """
@@ -45,6 +47,10 @@ FIELD = re.compile(r"(name|description):(.*)")
 
 class GeneratorError(Exception):
     """A skill or the repository keeps the entry points from being produced."""
+
+
+class MissingFieldError(GeneratorError):
+    """A skill whose frontmatter has no line for a field the generator needs."""
 
 
 @dataclass(frozen=True)
@@ -94,6 +100,12 @@ def frontmatter(path: str, text: str) -> dict[str, str]:
     end = next((index for index in range(1, len(lines)) if lines[index].strip() == "---"), None)
     if end is None:
         raise GeneratorError(f"{path}: no frontmatter between the first two '---' lines")
+    # A field counts as present only where a line holds it as FIELD reads it, lowercase at the
+    # line's start, so a line such as `Name:` leaves the field missing.
+    held = {found.group(1) for found in map(FIELD.fullmatch, lines[1:end]) if found}
+    for field in ("name", "description"):
+        if field not in held:
+            raise MissingFieldError(f"{path}: the frontmatter has no line `{field}:`")
     fields: dict[str, str] = {}
     for line in lines[1:end]:
         found = FIELD.fullmatch(line)
@@ -238,6 +250,9 @@ def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
         if not changes and not left:
             print("entry points are current")
         return 0
+    except MissingFieldError as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 2
     except (GeneratorError, OSError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1

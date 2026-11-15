@@ -147,12 +147,8 @@ class FrontmatterErrors(unittest.TestCase):
          "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
         ("byte order mark", "﻿---\nname: alpha\ndescription: Use for alpha.\n---\n",
          "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
-        ("no name", "---\ndescription: Use for alpha.\n---\n",
-         "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n"),
         ("empty name", "---\nname:\ndescription: Use for alpha.\n---\n",
          "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n"),
-        ("no description", "---\nname: alpha\n---\n",
-         "Error: a/SKILL.md: frontmatter has no 'description:' with a value\n"),
         ("folded description", "---\nname: alpha\ndescription: >\n  Use for alpha.\n---\n",
          "Error: a/SKILL.md: description is not on one line\n"),
         ("name off the form", "---\nname: Record_Decision\ndescription: Use for it.\n---\n",
@@ -199,6 +195,41 @@ class FrontmatterErrors(unittest.TestCase):
         self.assertEqual(repository.files(), before)
 
 
+class MissingField(unittest.TestCase):
+    def test_a_skill_without_name_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\ndescription: Use for alpha.\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(repository.files(), before)
+
+    def test_a_skill_with_the_name_in_another_form_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\nName: alpha\ndescription: Use for alpha.\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(repository.files(), before)
+
+    def test_a_skill_without_description_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\nname: alpha\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `description:`\n"))
+        self.assertEqual(repository.files(), before)
+
+
 class Writing(unittest.TestCase):
     def test_write_creates_both_copies_and_a_rerun_finds_them_current(self) -> None:
         repository = Repository(self)
@@ -225,13 +256,17 @@ class Writing(unittest.TestCase):
         self.assertEqual(repository.run("--write"), (0, "entry points are current\n", ""))
 
     def test_without_write_it_lists_the_plan_and_writes_nothing(self) -> None:
+        # invariant: generator-writes-only-with-write
         repository = Repository(self)
         repository.write("elements/decisions/skill/SKILL.md", DECISION)
         repository.write(".claude/skills/the-way-record-decision/SKILL.md", "stale\n")
+        repository.write(".agents/skills/the-way-renamed/SKILL.md", "old\n")
         before = repository.files()
         self.assertEqual(repository.run(), (
             0, "would change .claude/skills/the-way-record-decision/SKILL.md\n"
-               "would create .agents/skills/the-way-record-decision/SKILL.md\n", ""))
+               "would create .agents/skills/the-way-record-decision/SKILL.md\n"
+               "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
+               "git rm -r -- .agents/skills/the-way-renamed\n", ""))
         self.assertEqual(repository.files(), before)
 
     def test_an_orphan_directory_is_listed_and_kept(self) -> None:

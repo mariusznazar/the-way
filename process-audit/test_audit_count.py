@@ -12,9 +12,12 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "audit_count.py"
 
+# Git reads neither the user's global configuration nor the system's, as in
+# project-level/test_plan_state_invariant.py.
+NO_USER_GIT_CONFIG = {"GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
 GIT_ENV = dict(os.environ, GIT_AUTHOR_NAME="Tester", GIT_AUTHOR_EMAIL="tester@example.com",
                GIT_COMMITTER_NAME="Tester", GIT_COMMITTER_EMAIL="tester@example.com",
-               GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0")
+               GIT_TERMINAL_PROMPT="0", **NO_USER_GIT_CONFIG)
 
 PIN = "0123456789abcdef0123456789abcdef01234567"
 BASE = "89abcdef0123456789abcdef0123456789abcdef"
@@ -186,14 +189,27 @@ class AuditCountCase(unittest.TestCase):
             data.setdefault(key, {})["repository"] = str(repository.root)
         return data
 
-    def run_count(self, *arguments, locations=True, timeout=120, env=None):
+    def run_count(self, *arguments, locations=True, timeout=None, env=None):
+        """The command run as a process. `timeout` is no limit unless a test passes one, since
+        only a test that asks whether the count stalls has the limit as its oracle."""
         command = [sys.executable, "-B", str(SCRIPT)]
+        return self.run_command(command, arguments, locations, timeout, env)
+
+    def run_count_of_the_copy(self, *arguments):
+        """The command as the copy of it that the test of the checkout `checkout` builds, run as a
+        process."""
+        command = [sys.executable, "-B", str(self.home / "repos" / "checkout" / "process-audit"
+                                             / "audit_count.py")]
+        return self.run_command(command, arguments, True, None, None)
+
+    def run_command(self, command, arguments, locations, timeout, env):
         if locations:
             command += ["--locations", str(self.locations)]
         try:
             return subprocess.run(command + list(arguments), capture_output=True,
                                   stdin=subprocess.DEVNULL, timeout=timeout,
-                                  env=dict(os.environ, PYTHONIOENCODING="utf-8", **(env or {})))
+                                  env=dict(os.environ, PYTHONIOENCODING="utf-8",
+                                           **NO_USER_GIT_CONFIG, **(env or {})))
         except subprocess.TimeoutExpired:
             self.fail(f"the command did not finish within {timeout} s")
 
@@ -564,7 +580,7 @@ class Times(AuditCountCase):
         # write: the times and the cost are read as written.
         changed = {MEASURES_SCRIPT: "two\n", GATE_SCRIPT: "two\n", GATE_RUNNER: "two\n",
                    "README.md": "two\n"}
-        added, cycle, cost = self.own_values(changed)
+        _, cycle, cost = self.own_values(changed)
         self.assertEqual(["0:20:00", "0:05:00"], [cycle[self.WORKING], cycle["Waiting for tools"]])
         self.assertEqual(self.STAGE_VALUES, [cost[3], cost[4], cost[5]])
         self.assertEqual([], [name for name in self.STAGE_NAMES
@@ -628,6 +644,7 @@ class CraftedInput(AuditCountCase):
         self.assertLess(len(pairs[0][3]), 400, pairs[0][3])
         self.assertIn(f"{added}: row 1 of `Problems`", pairs[0][3])
 
+    # invariant: audit-count-refuses-record-links
     def test_a_symbolic_link_leaving_the_record_is_not_followed(self):
         outside = self.home / "outside.md"
         outside.write_text("- Waiting for tools: 0:01:00\n", encoding="utf-8")
@@ -840,7 +857,8 @@ class Locations(AuditCountCase):
         # The entry `repository` under `the-way` is no missing field (WAY-344): the count takes
         # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
         own = subprocess.run(["git", "-C", str(HERE.parent), "rev-parse", "--verify", "HEAD"],
-                             capture_output=True, check=True).stdout.decode("utf-8").strip()
+                             capture_output=True, env=GIT_ENV,
+                             check=True).stdout.decode("utf-8").strip()
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record(
             pin_line=f"- Process pin: `{own}`")})
@@ -1114,7 +1132,7 @@ class Cost(AuditCountCase):
                   + stage_row(5, "Other (general-purpose)", "model-a", 1000, 0, 100,
                               "reports/other_handoff.md"))
         rounds = f"- Review rounds:\n  - findings `{WHOLE}`: one\n  - findings `{SLICE}`: two\n"
-        row, why = self.share_of(stages, fix_record(rounds=rounds))
+        row, _ = self.share_of(stages, fix_record(rounds=rounds))
         self.assertEqual(["0.015000", "2", "60.0%"], row[3:6])
 
     def test_rounds_written_in_prose_leave_the_share_unknown_not_zero(self):
@@ -1198,6 +1216,7 @@ class Cost(AuditCountCase):
                 rounds = f"- Review rounds:\n  - findings `{path}`: crafted\n"
                 row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
                 self.assertEqual(["unknown", "unknown"], row[4:6])
+                self.assertTrue(any("names no findings file" in reason for reason in why), why)
 
     def test_a_stage_with_no_token_usage_leaves_the_cost_unknown(self):
         # cycle_stages.py writes the model mark `—` with zero counts for a stage it found no usage
@@ -1211,7 +1230,7 @@ class Cost(AuditCountCase):
         # A stretch of the orchestrator's own work with time and no response: the subagent
         # stages are priced, so the cycle's cost is known.
         stages = one_fix_round() + stage_row(5, "orchestrator", "—", 0, 0, 0, "")
-        row, why = self.share_of(stages)
+        row, _ = self.share_of(stages)
         self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
         self.assertEqual([], self.unknown_why("Cost"))
 
@@ -2015,7 +2034,7 @@ class MechanismMeasures(MeasuresCase):
         changed = dict(MEASURE_VALUES)
         changed["Calls in all"] = "1|2\x1b[2J" + "9" * 300
         changed["Mean context per call"] = "x" * 5000
-        done, added = self.count({MEASURES: measures_file(list(changed.items()))})
+        done, _ = self.count({MEASURES: measures_file(list(changed.items()))})
         self.assertEqual(0, done.returncode, done.stderr)
         text = self.latest()
         self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
@@ -2153,18 +2172,18 @@ class GateRunsMeasures(MeasuresCase):
         # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
                  "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
-        done, added = self.count({GATE: gate_file(table=table)})
+        done, _ = self.count({GATE: gate_file(table=table)})
         self.assert_missing(done, GATE, "column Exit code of the table")
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
         # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
-        done, added = self.count({GATE: gate_file(table="")})
+        done, _ = self.count({GATE: gate_file(table="")})
         self.assert_missing(done, GATE, "table of the runs")
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_table_with_no_run_gives_no_rows_and_no_error(self):
-        done, added = self.count({GATE: gate_file()})
+        done, _ = self.count({GATE: gate_file()})
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([], self.rows("Gate runs"))
 
@@ -2193,7 +2212,7 @@ class GateRunsMeasures(MeasuresCase):
 
     def test_bars_and_control_characters_in_a_directory_stay_in_one_cell(self):
         rows = gate_row(STARTED, 0, "1.000", 0, "gate\\|x\x1b[2J\x07y", "1.0")
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         text = self.latest()
         self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
@@ -2203,7 +2222,7 @@ class GateRunsMeasures(MeasuresCase):
 
     def test_a_long_directory_name_is_cut(self):
         rows = gate_row(STARTED, 0, "1.000", 0, "d" * 500, "1.0")
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertNotIn("d" * 201, self.latest())
         self.assertIn("d" * 200, self.latest())
@@ -2211,7 +2230,7 @@ class GateRunsMeasures(MeasuresCase):
     def test_runs_beyond_the_limit_are_not_read_and_say_so(self):
         rows = "".join(gate_row(f"2026-11-11 10:00:00.{index:03}", 0, "1.000", 0, "gate/a", "1.0")
                        for index in range(600))
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual(500, len(self.rows("Gate runs")))
         self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
@@ -2220,7 +2239,7 @@ class GateRunsMeasures(MeasuresCase):
         # Every row of the wrong number of cells is a run of its own, and the limit counts it:
         # a crafted file of such rows costs bounded work and writes bounded rows.
         rows = "| a | b |\n" * 600
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual(500, len(self.rows("Gate runs")))
         self.assertTrue(any("more than 500 runs" in row[3] for row in self.unknown_rows()))
@@ -2256,7 +2275,7 @@ class GateRunsMeasures(MeasuresCase):
 
     def test_text_after_the_table_with_no_row_in_it_says_nothing(self):
         rows = gate_row(STARTED, 0, "5.000", 0, "gate/a", "5.0") + "\nA closing note.\n"
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual(1, len(self.rows("Gate runs")))
         self.assertEqual([], self.unknown_rows())
@@ -2286,7 +2305,7 @@ class GateRunsMeasures(MeasuresCase):
     def test_directories_beyond_the_limit_of_one_run_are_not_listed_and_say_so(self):
         rows = "".join(gate_row(STARTED, 0, "1.000", 0, f"gate/d{index:02}", "1.0")
                        for index in range(60))
-        done, added = self.count({GATE: gate_file(rows=rows)})
+        done, _ = self.count({GATE: gate_file(rows=rows)})
         self.assertEqual(0, done.returncode, done.stderr)
         [row] = self.rows("Gate runs")
         self.assertEqual(50, len(row[6].split(" · ")))
@@ -3115,7 +3134,8 @@ class Run(AuditCountCase):
         # stdin stays open and empty: a command that read it would wait until the timeout.
         with subprocess.Popen([sys.executable, "-B", str(SCRIPT), "--locations",
                                str(self.locations)], stdin=subprocess.PIPE,
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              env=dict(os.environ, **NO_USER_GIT_CONFIG)) as process:
             try:
                 process.wait(timeout=60)
             except subprocess.TimeoutExpired:
@@ -3127,12 +3147,12 @@ class Run(AuditCountCase):
         product = self.repository()
         product.cycle("a-task", {"cycle.md": record()})
         self.write_locations(self.places(product=product))
-        self.assertEqual(0, self.run_count().returncode)
+        # The day is given, so that no midnight between the two runs gives them two names.
+        self.assertEqual(0, self.run_count("--today", "2026-11-11").returncode)
         first = (self.results / "count-latest.md").read_bytes()
-        self.assertEqual(0, self.run_count().returncode)
+        self.assertEqual(0, self.run_count("--today", "2026-11-11").returncode)
         names = sorted(path.name for path in self.results.iterdir())
-        self.assertEqual(2, len(names), names)
-        self.assertRegex(names[0], r"^count-\d{4}-\d{2}-\d{2}\.md$")
+        self.assertEqual(["count-2026-11-11.md", "count-latest.md"], names)
         self.assertEqual(first, (self.results / names[0]).read_bytes())
         self.assertEqual(first, (self.results / "count-latest.md").read_bytes())
         self.assertNotIn(b"\r", first)
@@ -3182,12 +3202,20 @@ class Run(AuditCountCase):
 
     def test_the_way_without_a_repository_entry_is_this_checkout(self):
         # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
+        # The script lies in a checkout built here: a copy of it with the files it reads beside it,
+        # and a history that holds one cycle, so that the cycles it counts say whose history it read.
+        checkout = self.repository("checkout")
+        files = {}
+        for name in ("process-audit/audit_count.py", "process-audit/price_list.md",
+                     "task-cycle/remarks_check.py"):
+            files[name] = (HERE.parent / name).read_bytes()
+            (checkout.root / name).parent.mkdir(parents=True, exist_ok=True)
+            (checkout.root / name).write_bytes(files[name])
+        checkout.cycle("a-task", {"cycle.md": record()}, base_files=files)
         self.write_locations(self.places())
-        done = self.run_count("--repository", "the-way")
+        done = self.run_count_of_the_copy("--repository", "the-way")
         self.assertEqual(0, done.returncode, done.stderr)
-        [row] = self.rows("Repositories")
-        self.assertEqual("the-way", row[0])
-        self.assertTrue(row[2].startswith("yes"), row)
+        self.assertEqual([["the-way", "1", "yes"]], self.rows("Repositories"))
 
 
 def process_record(pin, discarded="none", plan="none on the one-author route", too_large="none",
@@ -3511,7 +3539,8 @@ class ProcessVersions(AuditCountCase):
         for path in (*audit_count.COST_SCRIPTS, *audit_count.COUNT_PATHS):
             with self.subTest(path):
                 done = subprocess.run(["git", "-C", str(HERE.parent), "ls-files", "-z", "--",
-                                       ":(literal)" + path], capture_output=True, check=True)
+                                       ":(literal)" + path], capture_output=True, env=GIT_ENV,
+                                      check=True)
                 self.assertTrue(done.stdout, f"git tracks no file at {path}")
         self.assertEqual(("task-cycle/cycle_stages.py",), audit_count.COST_SCRIPTS)
         self.assertEqual(("task-cycle/change", "task-cycle/plan", "task-cycle/review",

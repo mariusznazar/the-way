@@ -28,3 +28,8 @@ definition.
 - Task rules: the entry `task-rules` under `the-way` in the same locations file. It names the
   author's rules for a task's line: its status when new, its move to ready, its dependencies. A
   missing entry or file is handled as for the tasks.
+
+## Guidelines
+
+- Before you change the-way's code, read `guidelines/coding.md`.
+- Before you write or change a test, read `guidelines/testing.md`.

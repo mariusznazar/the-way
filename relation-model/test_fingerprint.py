@@ -14,7 +14,9 @@ import contextlib
 import io
 import os
 import runpy
+import subprocess
 import sys
+import tempfile
 import unittest
 import unittest.mock
 
@@ -28,6 +30,9 @@ WORDING_FINGERPRINT = "798975ff"
 # Polish, with an em dash and a letter outside ASCII; its UTF-8 digest begins with 88df410e.
 NON_ASCII = "Zapisana gra przetrwa ponowne wczytanie — zawsze, także po awarii."
 NON_ASCII_FINGERPRINT = "88df410e"
+# The longest an import may take in the process the test starts; an import that waits for its
+# input runs out of this time.
+IMPORT_TIMEOUT = 30
 
 
 class Fingerprint(unittest.TestCase):
@@ -107,6 +112,31 @@ class Fingerprint(unittest.TestCase):
         with unittest.mock.patch.object(sys, "stdin", stdin), contextlib.redirect_stdout(printed):
             runpy.run_path(os.path.join(HERE, "fingerprint.py"), run_name="__main__")
         self.assertEqual(printed.getvalue().strip(), NON_ASCII_FINGERPRINT)
+
+    def test_importing_the_module_runs_nothing(self):
+        """A new process of the interpreter imports the module with its input open and empty
+        (the input is a pipe the test keeps open until the import ends): the import ends with
+        exit code 0, writes nothing to either output and reads nothing from its input. An import
+        that reads the input waits for it, so the process is killed at the timeout and the test
+        fails."""
+        # invariant: shared-module-import-runs-nothing
+        code = "import sys; here = sys.argv[1]; sys.path.insert(0, here); import fingerprint"
+        with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
+            process = subprocess.Popen([sys.executable, "-I", "-B", "-c", code, HERE],
+                                       stdin=subprocess.PIPE, stdout=output, stderr=errors)
+            try:
+                exit_code = process.wait(timeout=IMPORT_TIMEOUT)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+                self.fail("importing the module waits for its input")
+            finally:
+                process.stdin.close()
+            output.seek(0)
+            errors.seek(0)
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(output.read(), b"")
+            self.assertEqual(errors.read(), b"")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,4 @@
+# The tools of quality of the-way (WAY-381): the linter, pinned to one version and installed
+# from wheels only. requirements-quality.txt is what gets installed; it holds the sums.
+--only-binary=:all:
+ruff==0.17.1

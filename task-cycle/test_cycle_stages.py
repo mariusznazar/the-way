@@ -738,6 +738,7 @@ class ClaudeFilesNamedTest(unittest.TestCase):
         self.assertIn("| orchestrator | 2026-10-06 09:00:00 | 0:00:00 | opus | 101 | 100 | 1 |  |",
                       text)
 
+    # invariant: cycle-stages-refuses-crafted-names
     def test_crafted_names_neither_break_a_row_nor_enter_the_column(self) -> None:
         crafted = ("reports/ok\x1b[31m.md reports/bar|x.md reports/" + "a" * 200_000 + ".md "
                    "reports/../secret.md reports/..md reports/.hidden.md reports/a..b.md "
@@ -1242,6 +1243,222 @@ class ClaudeFieldsTest(unittest.TestCase):
         text = output.read_text(encoding="utf-8")
         self.assertIn("1 response(s) name no model", stderr)
         self.assertIn("| opus?/x | 12 |", text)
+
+
+class CodexFieldsTest(unittest.TestCase):
+    """The reading of a Codex rollout under WAY-344: a record of tokens that lacks its `usage`, or
+    whose `usage` lacks a count of input, cached input or output, ends the script with exit code 2
+    and a message naming the rollout, the line and the field, as for a Claude Code transcript."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name).resolve()
+        self.home = self.root / "codex"
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def run_main(self, name: str) -> tuple[int, str, Path]:
+        output = self.root / "out" / f"{name}.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main([name, "--codex-home", str(self.home), "--claude-home",
+                                      str(self.root / "claude"), "--output", str(output)])
+        return code, stderr.getvalue(), output
+
+    def record(self, thread: str = "orchf", **changes: object) -> dict:
+        """A record of tokens whose `usage` takes `changes`; a value ABSENT takes the key out."""
+        line = tokens("10:00:30", thread, "o1", 100, 40, 10)
+        usage = line["payload"]["usage"]
+        for key, value in changes.items():
+            if value is ABSENT:
+                del usage[key]
+            else:
+                usage[key] = value
+        return line
+
+    def lines_with(self, record: dict) -> list[dict]:
+        """The lines of a rollout whose fourth line is `record`."""
+        return [meta("orchf", "10:00:00"), started("10:00:00", "o1"),
+                context("10:00:00", "o1", "model-o"), record, complete("10:01:00", "o1")]
+
+    def assert_refused(self, record: dict, field: str) -> None:
+        path = rollout(self.home, "orchf", self.lines_with(record))
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:4: no field {field}\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_record_of_tokens_without_its_usage_ends_with_exit_code_2_naming_it(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The test of the reading that WAY-344 asks for: the rollout holds a record of tokens with
+        # no `usage`, and the script names that field instead of counting zero tokens.
+        line = self.record()
+        del line["payload"]["usage"]
+        self.assert_refused(line, "payload.usage")
+
+    def test_a_usage_without_its_input_tokens_ends_with_exit_code_2_naming_them(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        self.assert_refused(self.record(input_tokens=ABSENT), "payload.usage.input_tokens")
+
+    def test_a_usage_without_its_cached_input_tokens_ends_with_exit_code_2_naming_them(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        self.assert_refused(self.record(cached_input_tokens=ABSENT),
+                            "payload.usage.cached_input_tokens")
+
+    def test_a_usage_without_its_output_tokens_ends_with_exit_code_2_naming_them(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        self.assert_refused(self.record(output_tokens=ABSENT), "payload.usage.output_tokens")
+
+    def test_a_null_usage_or_count_is_a_missing_field(self) -> None:
+        null_usage = self.record()
+        null_usage["payload"]["usage"] = None
+        self.assert_refused(null_usage, "payload.usage")
+        self.assert_refused(self.record(output_tokens=None), "payload.usage.output_tokens")
+        list_usage = self.record()
+        list_usage["payload"]["usage"] = [1, 2]
+        self.assert_refused(list_usage, "payload.usage.input_tokens")
+
+    def test_a_count_that_is_no_whole_number_ends_with_exit_code_2_naming_it(self) -> None:
+        for field in ("input_tokens", "cached_input_tokens", "output_tokens"):
+            for value in (-1, 1.5, "7", True, [1], 10 ** 15):
+                with self.subTest(field=field, value=value):
+                    path = rollout(self.home, "orchf", self.lines_with(
+                        self.record(**{field: value})))
+                    code, stderr, output = self.run_main("orchf")
+                    self.assertEqual(2, code, stderr)
+                    self.assertEqual(f"Error: {path}:4: field payload.usage.{field} is not a whole "
+                                     "number\n", stderr)
+                    self.assertFalse(output.exists())
+
+    def test_the_largest_count_of_fifteen_digits_is_read(self) -> None:
+        # The bound is 10 ** 15 (TOKEN_DIGITS): the count just below it is a count of tokens.
+        rollout(self.home, "orchf", self.lines_with(self.record(input_tokens=999999999999999)))
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(0, code, stderr)
+        self.assertTrue(output.exists())
+
+    def test_a_line_that_is_json_but_no_object_ends_with_exit_code_2_naming_the_line(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        lines = self.lines_with(self.record())
+        lines.insert(3, [1])
+        path = rollout(self.home, "orchf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:4: the line is not a JSON object\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_missing_field_in_a_subagents_rollout_names_that_rollout(self) -> None:
+        rollout(self.home, "orchf", [
+            meta("orchf", "10:00:00"), started("10:00:00", "o1"),
+            context("10:00:00", "o1", "model-o"), complete("10:01:00", "o1")])
+        path = rollout(self.home, "subf", [
+            meta("subf", "10:00:10", "orchf", "/root/work"), started("10:00:10", "w1"),
+            context("10:00:10", "w1", "model-w"),
+            self.record("subf", cached_input_tokens=ABSENT), complete("10:00:40", "w1")])
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:4: no field payload.usage.cached_input_tokens\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_record_of_another_thread_in_a_forked_rollout_is_no_record_of_this_agent(
+            self) -> None:
+        # A forked subagent's rollout repeats its parent's history; the parent's own rollout is
+        # where those records are read.
+        rollout(self.home, "orchf", [
+            meta("orchf", "10:00:00"), started("10:00:00", "o1"),
+            context("10:00:00", "o1", "model-o"),
+            tokens("10:00:20", "orchf", "o1", 100, 40, 10), complete("10:01:00", "o1")])
+        rollout(self.home, "subf", [
+            meta("subf", "10:00:10", "orchf", "/root/work"),
+            self.record("orchf", input_tokens=ABSENT),
+            started("10:00:10", "w1"), context("10:00:10", "w1", "model-w"),
+            tokens("10:00:20", "subf", "w1", 500, 200, 20), complete("10:00:40", "w1")])
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual((0, ""), (code, stderr))
+        self.assertIn("| model-w | 500 | 200 | 20 |", output.read_text(encoding="utf-8"))
+
+    def test_a_record_that_gives_every_count_reads_as_before(self) -> None:
+        rollout(self.home, "orchf", self.lines_with(self.record(input_tokens=0, output_tokens=0)))
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual((0, ""), (code, stderr))
+        self.assertTrue(output.exists())
+
+    def assert_ends_at(self, lines: list[dict], number: int, text: str) -> None:
+        """The run of a rollout `orchf` made of `lines` ends with exit code 2, the message `text`
+        at line `number` of it, and no report."""
+        path = rollout(self.home, "orchf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:{number}: {text}\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_record_of_tokens_without_its_thread_ends_with_exit_code_2_naming_it(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # Without `thread_id` the record could not be told from another thread's, and its tokens
+        # would go uncounted with no word.
+        line = self.record()
+        del line["payload"]["thread_id"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field payload.thread_id")
+
+    def test_a_record_of_tokens_of_the_agent_without_its_turn_ends_with_exit_code_2_naming_it(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        line = self.record()
+        del line["payload"]["turn_id"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field payload.turn_id")
+
+    def test_a_first_line_without_the_id_of_its_session_ends_with_exit_code_2_naming_it(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        lines = self.lines_with(self.record())
+        del lines[0]["payload"]["id"]
+        self.assert_ends_at(lines, 1, "no field payload.id")
+
+    def test_a_subagents_first_line_without_the_id_of_its_session_ends_with_exit_code_2(
+            self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The subagents are found by reading the first line of each rollout under the home.
+        rollout(self.home, "orchf", self.lines_with(self.record()))
+        lines = [meta("subf", "10:00:10", "orchf", "/root/work"), started("10:00:10", "w1"),
+                 context("10:00:10", "w1", "model-w")]
+        del lines[0]["payload"]["id"]
+        path = rollout(self.home, "subf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:1: no field payload.id\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_an_id_or_a_turn_that_is_no_text_ends_with_exit_code_2_naming_it(self) -> None:
+        for value in (5, ["orchf"], {"id": "orchf"}, "", True):
+            with self.subTest(value=value):
+                lines = self.lines_with(self.record())
+                lines[0]["payload"]["id"] = value
+                self.assert_ends_at(lines, 1, "field payload.id is not a text")
+                line = self.record()
+                line["payload"]["turn_id"] = value
+                self.assert_ends_at(self.lines_with(line), 4, "field payload.turn_id is not a text")
+                line = self.record()
+                line["payload"]["thread_id"] = value
+                self.assert_ends_at(self.lines_with(line), 4,
+                                    "field payload.thread_id is not a text")
+
+    def test_a_line_without_its_timestamp_ends_with_exit_code_2_naming_it(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The line is the record of tokens itself: skipped, its tokens would go uncounted.
+        line = self.record()
+        del line["timestamp"]
+        self.assert_ends_at(self.lines_with(line), 4, "no field timestamp")
+
+    def test_a_timestamp_that_is_no_time_ends_with_exit_code_2_naming_it(self) -> None:
+        for value in ("yesterday", "", "2026-10-06T10:00:30z", 5, None, ["2026-10-06T10:00:30Z"],
+                      True, "2026-13-45", "9999-12-31T23:59:59-05:00"):
+            with self.subTest(value=value):
+                lines = self.lines_with(self.record())
+                lines[2]["timestamp"] = value
+                self.assert_ends_at(lines, 3, "no field timestamp" if value is None
+                                    else "field timestamp is not a time")
 
 
 def section_rows(text: str) -> list[list[str]]:

@@ -51,6 +51,27 @@ def write(path: Path, text: str = "x\n") -> None:
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
+def state(root: Path) -> dict[str, bytes | None]:
+    """Every directory below `root` (None) and every file of it with its bytes, by path from
+    `root`, git's own directories left out; a tracked file, a working directory and a file git
+    ignores all show here."""
+    found: dict[str, bytes | None] = {}
+    for directory, folders, files in os.walk(root):
+        folders[:] = [name for name in folders if name != ".git"]
+        for name in folders:
+            found[Path(directory, name).relative_to(root).as_posix()] = None
+        for name in files:
+            path = Path(directory, name)
+            found[path.relative_to(root).as_posix()] = path.read_bytes()
+    return found
+
+
+def changed(before: dict[str, bytes | None], after: dict[str, bytes | None]) -> list[str]:
+    """The paths that appeared, vanished or changed between two states of `state`."""
+    return sorted(path for path in before.keys() | after.keys()
+                  if path not in before or path not in after or before[path] != after[path])
+
+
 class Fixture:
     """A remote, a main checkout on the target branch and the working directories of tasks."""
 
@@ -343,12 +364,16 @@ class ApplyTest(unittest.TestCase):
         self.addCleanup(self.fx.close)
 
     def test_a_dry_run_removes_nothing_and_apply_removes_only_what_is_marked(self) -> None:
+        # invariant: repository-changer-acts-only-when-told
         merged = self.fx.task("merged")
         unmerged = self.fx.add("unmerged", "task/unmerged")
         self.fx.commit(unmerged)
         self.fx.push("task/unmerged")
+        before, registered = state(self.fx.root), self.fx.registered()
         dry = self.fx.run()
         self.assertEqual(0, dry.returncode, dry.stderr)
+        self.assertEqual([], changed(before, state(self.fx.root)), dry.stdout)
+        self.assertEqual(registered, self.fx.registered())
         self.assertTrue(merged.is_dir())
         applied = self.fx.run("--apply")
         self.assertEqual(0, applied.returncode, applied.stderr)

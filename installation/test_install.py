@@ -17,13 +17,113 @@ SOURCE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SOURCE / "installation"))
 import install  # noqa: E402
 
-NAMES = tuple((path, name) for name, path in install.SKILLS.items())
-BLOCK = install.agents_block()
+# The skills the installer carries, each with its skill file in the-way, as the row
+# `.claude/skills/the-way-*/SKILL.md` of the section "Files in the product" of
+# installation/README.md lists them. They are written out here, not taken from the installer the
+# test checks (WAY-394, WAY-232).
+NAMES = (
+    ("elements/decisions/skill/SKILL.md", "record-decision"),
+    ("elements/invariants/skill/SKILL.md", "record-invariant"),
+    ("elements/glossary/skill/SKILL.md", "record-glossary-term"),
+    ("elements/part-map/skill/SKILL.md", "update-part-map"),
+    ("elements/environment-facts/skill/SKILL.md", "record-environment-fact"),
+    ("elements/common/skill/SKILL.md", "find-foundation-entries"),
+    ("project-level/skill/SKILL.md", "define-project"),
+    ("project-level/plan/skill/SKILL.md", "plan-project"),
+    ("project-level/lead/skill/SKILL.md", "lead-project"),
+    ("project-level/technology/SKILL.md", "settle-technology"),
+    ("project-level/task/skill/SKILL.md", "refine-task"),
+    ("task-cycle/skill/SKILL.md", "implement-task"),
+    ("task-cycle/plan/SKILL.md", "plan-task"),
+    ("task-cycle/spec/SKILL.md", "write-spec"),
+    ("task-cycle/change/SKILL.md", "make-change"),
+    ("task-cycle/review/SKILL.md", "review-change"),
+    ("elements/common/critique/SKILL.md", "critique"),
+    ("foundation-review/SKILL.md", "review-foundation"),
+    ("product-guidelines/styleguide/SKILL.md", "maintain-styleguide"),
+    ("product-guidelines/coding/SKILL.md", "maintain-coding-guidelines"),
+    ("product-guidelines/testing/SKILL.md", "maintain-testing-guidelines"),
+)
+# The block the installer keeps in AGENTS.md between its two markers, as the row `AGENTS.md` of the
+# section "Files in the product" of installation/README.md describes it. Written out here, so that
+# a change to the installer's block fails the test.
+BLOCK = (
+    "<!-- the-way:begin -->\n"
+    "# Pinned the-way process\n\n"
+    "This repository uses the-way, the process for its foundation, at the commit the gitlink of "
+    "the Git submodule `.the-way` records. After a fresh clone run "
+    "`git submodule update --init -- .the-way`; it needs read access to the Git URL in "
+    "`.gitmodules`. Before use, `git -C .the-way rev-parse HEAD` must show the commit "
+    "`git ls-files --stage -- .the-way` records. If initialization fails or the commits differ, "
+    "stop; never use another copy or version of the-way.\n\n"
+    "Write foundation entries only through the project skills `the-way-record-decision`, "
+    "`the-way-record-invariant`, `the-way-record-glossary-term`, `the-way-update-part-map`, "
+    "`the-way-record-environment-fact`. Use the project skills `the-way-find-foundation-entries`, "
+    "`the-way-define-project`, `the-way-plan-project`, `the-way-lead-project`, "
+    "`the-way-settle-technology`, `the-way-refine-task`, `the-way-implement-task`, "
+    "`the-way-plan-task`, `the-way-write-spec`, `the-way-make-change`, `the-way-review-change`, "
+    "`the-way-critique`, `the-way-review-foundation`, `the-way-maintain-styleguide`, "
+    "`the-way-maintain-coding-guidelines`, `the-way-maintain-testing-guidelines` for their named "
+    "work. Where a skill or a file it reads names one without the `the-way-` prefix, use the "
+    "prefixed project skill, never a personal skill of that name. In a task cycle the methods of "
+    "the-way apply — `the-way-write-spec`, `the-way-plan-task`, `the-way-make-change` and "
+    "`the-way-review-change` — even where an installed plugin offers methods of its own.\n\n"
+    "Run the-way's scripts from this repository's root as `.the-way/<path>`. There "
+    "`python -B .the-way/elements/common/foundation_check.py` checks this repository's "
+    "foundation, its guidelines and the part each file git tracks belongs to. The skills of the-way "
+    "keep their working files under `.runs/`, which `.gitignore` must keep ignored.\n\n"
+    "Until the part map has its first parts, `foundation_check.py` reports every file git tracks "
+    "as claimed by no part; that is expected, and it is not a pass. The first map is written with "
+    "`the-way-update-part-map`.\n\n"
+    "Before a merge, run every test of this repository with its one command, which runs "
+    "`python -B .the-way/elements/common/foundation_check.py` too, and report what failed and what "
+    "stayed unchecked. The one command runs "
+    "`python -B .the-way/instruction-files/check_instructions.py` too; an error that script "
+    "reports stops the tests, and a warning does not. While the one command does not run one of "
+    "these two checks, run it on its own and report the check as left unchecked by the one "
+    "command. A check that did not run is never a pass. Where this repository has a CI file, CI "
+    "runs the one command on every merge request, with `.the-way` at the commit this repository "
+    "pins, and its result is a check this repository requires before a merge, which the "
+    "repository's owner may bypass. While it has none, nothing but you runs the tests before a "
+    "merge, and you say so when you report. `.the-way/installation/README.md`, section \"Run the "
+    "one command in CI\", says what the CI file of this repository holds.\n"
+    "<!-- the-way:end -->\n")
+# The names of the skills in the sentence of an entry point about the other skills, joined as the
+# sentence reads: the skills of the five foundation files in the order of their rows, then the
+# others in the order of the row `.claude/skills/the-way-*/SKILL.md`, both in the section "Files in
+# the product" of installation/README.md.
+SIBLINGS = (
+    "`record-decision`, `record-invariant`, `record-glossary-term`, `update-part-map`, "
+    "`record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, "
+    "`lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, "
+    "`write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, "
+    "`maintain-styleguide`, `maintain-coding-guidelines` or `maintain-testing-guidelines`")
+# The entry point of a skill, as the row `.claude/skills/the-way-*/SKILL.md` of the section "Files in
+# the product" of installation/README.md describes it: the name, path and description are filled in
+# per skill, the description from the skill's own file.
+ENTRY_POINT = (
+    "---\n"
+    "name: the-way-{name}\n"
+    "description: {description} Use this product's pinned the-way commit.\n"
+    "---\n\n"
+    "# the-way-{name}\n\n"
+    "The process for this repository is pinned as the Git submodule `.the-way`, at the commit its "
+    "gitlink records.\n\n"
+    "If `.the-way/{path}` is absent, run `git submodule update --init -- .the-way` from the product "
+    "root. Check `git ls-files --stage -- .the-way` and `git -C .the-way rev-parse HEAD`: both must "
+    "show the same commit. If initialization fails or the commits differ, stop.\n\n"
+    "Read `.the-way/{path}` in full and follow it, and read a file it names inside `.the-way` when "
+    "the step or variant that names it comes, not all of them at the start. Where it says where "
+    "the-way lies, the product's case applies: here the process root is `.the-way`. Do not "
+    "substitute a global skill.\n\n"
+    "Where this skill or a file it reads names another the-way skill — {siblings} — use "
+    "this product's project skill of the same name with the `the-way-` prefix, never an "
+    "unprefixed one.\n")
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+                          capture_output=True, check=False)
 
 
 def make_writable(function, path, error) -> None:
@@ -31,6 +131,26 @@ def make_writable(function, path, error) -> None:
     on Windows."""
     os.chmod(path, stat.S_IWRITE)
     function(path)
+
+
+def tree(root: Path) -> dict[str, bytes | None]:
+    """Every directory below `root` (None) and every file of it with its bytes, by path from
+    `root`, git's own directory left out."""
+    found: dict[str, bytes | None] = {}
+    for directory, folders, files in os.walk(root):
+        folders[:] = [name for name in folders if name != ".git"]
+        for name in folders:
+            found[Path(directory, name).relative_to(root).as_posix()] = None
+        for name in files:
+            path = Path(directory, name)
+            found[path.relative_to(root).as_posix()] = path.read_bytes()
+    return found
+
+
+def changed(before: dict[str, bytes | None], after: dict[str, bytes | None]) -> list[str]:
+    """The paths that appeared, vanished or changed between two states of `tree`."""
+    return sorted(path for path in before.keys() | after.keys()
+                  if path not in before or path not in after or before[path] != after[path])
 
 
 class InstallTest(unittest.TestCase):
@@ -58,6 +178,15 @@ class InstallTest(unittest.TestCase):
     def install(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
         return command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
                        str(self.source), *args, cwd=self.product, input_text=input_text)
+
+    def entry_point(self, path: str, name: str) -> str:
+        """The entry point of one skill as the installer writes it: ENTRY_POINT with the
+        description that the skill's own file gives at the commit the installer pins."""
+        shown = command("git", "show", f"{self.commit}:{path}", cwd=self.source).stdout
+        description = re.search(r"^description: (.+)$", shown, re.M)
+        self.assertIsNotNone(description, path)
+        return ENTRY_POINT.format(name=name, path=path, description=description.group(1),
+                                  siblings=SIBLINGS)
 
     def test_preview_apply_rerun_and_preserve_foundation(self) -> None:
         foundations = self.product / "foundations"
@@ -91,6 +220,7 @@ class InstallTest(unittest.TestCase):
             self.assertTrue(claude.is_file(), claude)
             self.assertEqual(codex.read_bytes(), claude.read_bytes())
             text = claude.read_text(encoding="utf-8")
+            self.assertEqual(text, self.entry_point(path, name))
             self.assertIn(f"name: the-way-{name}", text)
             # The gitlink records the commit; an entry point that named it would change with
             # every move of the pin.
@@ -129,10 +259,7 @@ class InstallTest(unittest.TestCase):
         for path, name in NAMES:
             with self.subTest(name):
                 text = install.skill_wrapper(path, name, self.commit)
-                self.assertIn("Where it says where the-way lies, the product's case applies: "
-                              "here the process root is `.the-way`.", text)
-                self.assertNotIn("global install", text)
-                self.assertIn("Do not substitute a global skill.", text)
+                self.assertEqual(text, self.entry_point(path, name))
 
     def test_guidance_names_no_commit_and_covers_the_product_rules(self) -> None:
         guidance = install.product_guidance()
@@ -465,8 +592,7 @@ class InstallTest(unittest.TestCase):
 
     def test_rewrites_an_entry_point_of_its_own(self) -> None:
         # An entry point that points to .the-way is the installer's, whatever commit wrote it.
-        earlier = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
-                                        self.commit).replace(
+        earlier = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
             "at the commit its gitlink records.", "at an earlier commit.")
         for directory in (".claude", ".agents"):
             wrapper = self.product / directory / "skills/the-way-record-decision/SKILL.md"
@@ -478,14 +604,13 @@ class InstallTest(unittest.TestCase):
         for directory in (".claude", ".agents"):
             wrapper = self.product / directory / "skills/the-way-record-decision/SKILL.md"
             self.assertEqual(wrapper.read_text(encoding="utf-8"),
-                             install.skill_wrapper("elements/decisions/skill/SKILL.md",
-                                                   "record-decision", self.commit))
+                             self.entry_point("elements/decisions/skill/SKILL.md",
+                                              "record-decision"))
 
     def test_a_file_without_every_mark_of_an_entry_point_is_the_products(self) -> None:
         # Only a file with the entry point's name, description and sentence is the installer's.
-        own = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
-                                    self.commit).replace("at the commit its gitlink records.",
-                                                         "at an earlier commit.")
+        own = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
+            "at the commit its gitlink records.", "at an earlier commit.")
         wrapper = self.product / ".claude/skills/the-way-record-decision/SKILL.md"
         wrapper.parent.mkdir(parents=True)
         for content in (own.replace("name: the-way-record-decision", "name: the-way-other"),
@@ -605,6 +730,26 @@ class InstallTest(unittest.TestCase):
         self.assertFalse((self.product / "foundations").exists())
         self.assertFalse((self.product / "AGENTS.md").exists())
         self.assertFalse((self.product / ".gitignore").exists())
+
+    def test_without_apply_or_declined_no_tracked_file_or_working_directory_changes(self) -> None:
+        # invariant: repository-changer-acts-only-when-told
+        (self.product / "README.md").write_text("Product\n", encoding="utf-8")
+        (self.product / "AGENTS.md").write_text("# Product rules\n", encoding="utf-8")
+        added = command("git", "add", "--", "README.md", "AGENTS.md", cwd=self.product)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        committed = command("git", "commit", "-q", "-m", "Product", cwd=self.product)
+        self.assertEqual(committed.returncode, 0, committed.stderr)
+        staged = command("git", "ls-files", "--stage", cwd=self.product).stdout
+        before = tree(self.product)
+        preview = self.install()
+        self.assertEqual(preview.returncode, 0, preview.stderr)
+        self.assertIn("Preview only", preview.stdout)
+        self.assertEqual([], changed(before, tree(self.product)))
+        declined = self.install("--apply", input_text="n\n")
+        self.assertEqual(declined.returncode, 0, declined.stderr)
+        self.assertIn("Cancelled; no changes", declined.stdout)
+        self.assertEqual([], changed(before, tree(self.product)))
+        self.assertEqual(staged, command("git", "ls-files", "--stage", cwd=self.product).stdout)
 
     def test_existing_claude_import_detection_and_cancel_preserve_bytes(self) -> None:
         # invariant: installation-claude-guidance
@@ -747,8 +892,8 @@ class InstallTest(unittest.TestCase):
 
     def test_deletes_nothing_through_a_junction_at_the_folder_of_a_stale_entry_point(self) -> None:
         # invariant: installation-paths-through-links
-        own = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
-                                    self.commit).replace("the-way-record-decision", "the-way-gone")
+        own = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
+            "the-way-record-decision", "the-way-gone")
         for directory in (".claude", ".agents"):
             with self.subTest(directory=directory):
                 self.empty_product()
@@ -767,9 +912,8 @@ class InstallTest(unittest.TestCase):
         # invariant: installation-paths-through-links
         # `plan` refuses these junctions before it scans, so the scans are called directly: they
         # are the protection of the deletion if `plan` is ever reordered.
-        entry = install.skill_wrapper("elements/decisions/skill/SKILL.md", "record-decision",
-                                      self.commit).replace("the-way-record-decision",
-                                                           "the-way-gone")
+        entry = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
+            "the-way-record-decision", "the-way-gone")
         definition = ("---\nname: the-way-gone\ndescription: An earlier type. "
                       f"{install.OWN_AGENT_MARK}\n---\n")
         agents, skills = install.stale_agent_definitions, install.stale_entry_points

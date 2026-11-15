@@ -94,14 +94,27 @@ message that names the transcript, the line and the field. Read with a fallback,
 `isMeta`,
 `message.model` (absent, `null` or no text it counts under the model `unknown`, with the warning),
 `message.id` (the line's `uuid` stands for it), `message.stop_reason`, and of a content block its
-`id`, `name`, `tool_use_id` and `text`. The reading of a Codex rollout and of `agent-<id>.meta.json`
-checks no field. The text of a transcript reaches the report only through `cell`; a count in it is a
-whole number read here.
+`id`, `name`, `tool_use_id` and `text`.
+
+A Codex rollout is untrusted input too, and each field the reading needs has to be there. Of the
+first line, its `session_meta`, it needs `payload.id`, the session's id, as a text that is not
+empty; of every line whose `payload` is an object, its `timestamp`, as a time; of every
+`token_usage_record`, `payload.thread_id` as a text that is not empty, and of one whose
+`thread_id` is the rollout's own id, the agent's own, also `payload.turn_id` as such a text and
+`payload.usage` with `input_tokens`, `cached_input_tokens` and `output_tokens`, each a non-negative
+whole number of at most 15 digits, as for a response of Claude Code. A `null` is a missing field. A
+field that is missing, or a count that is no whole number, ends the run with a message that names
+the rollout, the line and the field. A record of another thread, which a forked rollout repeats
+from its parent's history, is no record of the agent and is not read further. The reading of the
+other fields of a rollout checks nothing, nor does the reading of `agent-<id>.meta.json`: a line
+whose `payload` is no object is skipped, and the other fields of a line are read with a fallback.
+The text of a transcript reaches the report only through `cell`; a count in it is a whole number
+read here.
 
 Exit code: 0 on success, warnings included; 2 with `Error: <message>` on stderr and nothing written
-for a field of a Claude Code transcript that is missing or no whole number or no time; 1 with
-`Error: <message>` on stderr for the rest, such as a session that cannot be found or read and a line
-that is not JSON.
+for a field of a Claude Code transcript or of a Codex rollout that is missing or no whole number
+or no time or no text; 1 with `Error: <message>` on stderr for the rest, such as a session that
+cannot be found or read and a line that is not JSON.
 
 Standard library only.
 """
@@ -123,7 +136,7 @@ class CycleStagesError(Exception):
 
 
 class MissingFieldError(CycleStagesError):
-    """A Claude Code transcript that lacks a field the reading needs, or holds one of the wrong
+    """A transcript or rollout that lacks a field the reading needs, or holds one of the wrong
     kind."""
 
 
@@ -256,7 +269,7 @@ def add_named_note(agent: Agent, over: int) -> None:
 
 
 def parse_time(text: str) -> datetime:
-    return datetime.fromisoformat(text.replace("Z", "+00:00"))
+    return datetime.fromisoformat(text)
 
 
 def numbered_lines(path: Path):
@@ -311,14 +324,67 @@ def add_call_notes(agent: Agent) -> None:
                            f"({', '.join(sorted(set(unrecognised)))}): their waits are unknown")
 
 
+# Fields a reading needs
+
+
+def required(holder: object, key: str, name: str, where: str) -> object:
+    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
+    `where` and the field's `name`."""
+    value = holder.get(key) if isinstance(holder, dict) else None
+    if value is None:
+        raise MissingFieldError(f"{where}: no field {name}")
+    return value
+
+
+# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
+# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
+# would end the report with a stack trace where the sums of it are written out.
+TOKEN_DIGITS = 15
+
+
+def required_count(holder: object, key: str, name: str, where: str) -> int:
+    value = required(holder, key, name, where)
+    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
+            or value >= 10 ** TOKEN_DIGITS):
+        raise MissingFieldError(f"{where}: field {name} is not a whole number")
+    return value
+
+
+def required_text(holder: object, key: str, name: str, where: str) -> str:
+    """The value of a needed field that has to be a text, not empty."""
+    value = required(holder, key, name, where)
+    if not isinstance(value, str) or not value:
+        raise MissingFieldError(f"{where}: field {name} is not a text")
+    return value
+
+
+def required_time(entry: dict, where: str) -> datetime:
+    """The time of a line, in UTC; a naive time is taken as UTC."""
+    value = required(entry, "timestamp", "timestamp", where)
+    try:
+        if not isinstance(value, str):
+            raise ValueError(value)
+        at = parse_time(value)
+        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+    except (ValueError, OverflowError) as error:
+        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
+
+
 # Codex
 
 
 def codex_meta(path: Path) -> dict | None:
-    entry = first_line(path)
+    """The `payload` of the first line of a rollout where that is its `session_meta`, which has to
+    give the `id` of the session as a text; None for a rollout that starts otherwise."""
+    for number, entry in numbered_lines(path):
+        break
+    else:
+        raise CycleStagesError(f"{path} is empty")
     if entry.get("type") != "session_meta":
         return None
-    return entry.get("payload") or {}
+    meta = entry.get("payload") or {}
+    required_text(meta, "id", "payload.id", f"{path}:{number}")
+    return meta
 
 
 def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str | None]:
@@ -359,6 +425,27 @@ def is_injected(text: str) -> bool:
     return text.lstrip().startswith(CODEX_INJECTED)
 
 
+def codex_usage(payload: dict, where: str) -> Usage:
+    """The tokens of a record of tokens of a Codex rollout, which `where` names by its file and
+    line. The record's `usage` and each of its three counts are needed; one that is missing, or a
+    count that is no whole number, ends the reading."""
+    usage = required(payload, "usage", "payload.usage", where)
+    return Usage(
+        required_count(usage, "input_tokens", "payload.usage.input_tokens", where),
+        required_count(usage, "cached_input_tokens", "payload.usage.cached_input_tokens", where),
+        required_count(usage, "output_tokens", "payload.usage.output_tokens", where),
+    )
+
+
+def codex_tokens(payload: dict, own: str, where: str) -> tuple[str, Usage] | None:
+    """The turn and the tokens of a record of tokens that belongs to the thread `own`, or None for
+    a record of another thread. The record's `thread_id` is needed to tell the two apart, and
+    the `turn_id` of the agent's own."""
+    if required_text(payload, "thread_id", "payload.thread_id", where) != own:
+        return None
+    return required_text(payload, "turn_id", "payload.turn_id", where), codex_usage(payload, where)
+
+
 def read_codex_agent(path: Path, parent: str | None) -> Agent:
     meta = codex_meta(path)
     if meta is None:
@@ -375,7 +462,7 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     last_seen: dict[str, datetime] = {}
     models: dict[str, str] = {}
     own_turns: set[str] = set()
-    raw: list[tuple[datetime, str, dict]] = []
+    raw: list[tuple[datetime, str, Usage]] = []
     started_calls: dict[str, tuple[datetime, str]] = {}
     finished_calls: dict[str, datetime] = {}
     # The calls started since the last entry that shows the agent went on: an output, a message,
@@ -383,12 +470,17 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     tail: set[str] = set()
     unrecognised: list[Call] = []
     left_out = 0
-    for entry in read_lines(path):
+    for number, entry in numbered_lines(path):
+        if not isinstance(entry, dict):
+            raise MissingFieldError(f"{path}:{number}: the line is not a JSON object")
         payload = entry.get("payload")
-        if not isinstance(payload, dict) or "timestamp" not in entry:
+        if not isinstance(payload, dict):
             continue
-        at = parse_time(entry["timestamp"])
+        where = f"{path}:{number}"
+        at = required_time(entry, where)
         kind = entry.get("type")
+        # Before the `turn_id` of any line is used as a key, the one of a record of tokens is read.
+        record = codex_tokens(payload, own, where) if kind == "token_usage_record" else None
         turn = payload.get("turn_id")
         if turn:
             first_seen.setdefault(turn, at)
@@ -440,9 +532,9 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
                     finished_calls.setdefault(ident, at)
             elif item.endswith("_call"):
                 unrecognised.append(Call(at, None, item, known=False))
-        elif kind == "token_usage_record" and payload.get("thread_id") == own:
-            own_turns.add(turn)
-            raw.append((at, turn, payload.get("usage") or {}))
+        elif record:
+            own_turns.add(record[0])
+            raw.append((at, record[0], record[1]))
     # A forked subagent's rollout repeats its parent's history; only turns that the subagent's
     # own thread worked in are its turns.
     agent = Agent(own, name, parent)
@@ -475,11 +567,7 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
                            "left out of the waits")
     add_call_notes(agent)
     for at, turn, usage in raw:
-        agent.records.append(Record(at, Usage(
-            usage.get("input_tokens", 0),
-            usage.get("cached_input_tokens", 0),
-            usage.get("output_tokens", 0),
-        ), models.get(turn)))
+        agent.records.append(Record(at, usage, models.get(turn)))
     return agent
 
 
@@ -517,41 +605,6 @@ def read_codex_session(path: Path, codex_home: Path) -> Session:
 
 
 # Claude Code
-
-
-def required(holder: object, key: str, name: str, where: str) -> object:
-    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
-    `where` and the field's `name`."""
-    value = holder.get(key) if isinstance(holder, dict) else None
-    if value is None:
-        raise MissingFieldError(f"{where}: no field {name}")
-    return value
-
-
-# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
-# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
-# would end the report with a stack trace where the sums of it are written out.
-TOKEN_DIGITS = 15
-
-
-def required_count(holder: object, key: str, name: str, where: str) -> int:
-    value = required(holder, key, name, where)
-    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
-            or value >= 10 ** TOKEN_DIGITS):
-        raise MissingFieldError(f"{where}: field {name} is not a whole number")
-    return value
-
-
-def required_time(entry: dict, where: str) -> datetime:
-    """The time of a line, in UTC; a naive time is taken as UTC."""
-    value = required(entry, "timestamp", "timestamp", where)
-    try:
-        if not isinstance(value, str):
-            raise ValueError(value)
-        at = parse_time(value)
-        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
-    except (ValueError, OverflowError) as error:
-        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
 
 
 def text_of(value: object) -> str:
