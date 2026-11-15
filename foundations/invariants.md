@@ -375,9 +375,19 @@ Where {merge-onto} exists, no commit of a change against {fork-point} adds a fil
 - **Part:** every
 - **Violated:** no
 
-## blocked-request-line
+## blocked-request-wording
 
-The wording that `project-level/plan_state.py` takes for the field *Request URL and status* of a record committed before its request exists stands, word for word and in backticks, in `task-cycle/skill/reserved_return.md` and in `task-cycle/skill/blocked_finding.md`, and `task-cycle/record_template.md` has a line that begins with the label the reader takes for that field.
+The wording that `project-level/plan_state.py` takes for the field *Request URL and status* of a record committed before its request exists stands, word for word and in backticks, in `task-cycle/skill/reserved_return.md` and in `task-cycle/skill/blocked_finding.md`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-153
+- **Part:** project-level · task-cycle
+- **Violated:** no
+
+## blocked-request-label
+
+`task-cycle/record_template.md` has a line that begins with the label that `project-level/plan_state.py` takes for the field *Request URL and status* of a record committed before its request exists.
 
 - **Method:** test
 - **Rests on:** none

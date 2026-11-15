@@ -4792,8 +4792,8 @@ to the human without automatically correcting the plan.
 - **Relations:** derives from WAY-38 · derives from WAY-142 · derives from
   WAY-147
 - **Verification:** invariants: project-plan-state-evidence · project-plan-state-subprocesses ·
-  blocked-request-line. For applying proposals and resolving PR outcomes, an agent compares the
-  evidence and leading session with the decision:
+  blocked-request-wording · blocked-request-label. For applying proposals and resolving PR outcomes,
+  an agent compares the evidence and leading session with the decision:
   - complies: the project orchestrator applies supported transitions with a reason and evidence
     in the plan's log, resolves an unchecked PR outcome through the product's chosen PR tool,
     and shows a closed-unmerged PR to the human without automatic correction;

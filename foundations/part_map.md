@@ -1,7 +1,7 @@
 # Part map
 
 What this repository is made of, and what joins it: which part may depend on which, and what it
-promises to the products pinned to its commits. The map says which dependencies are allowed; the
+promises to the products pinned to its commits. The map says which dependencies of a part are allowed; the
 return step of a change compares them with the code.
 
 ## decisions
@@ -86,9 +86,10 @@ settlements as a source, or stands on its own, the leading of a handed-over plan
 and the evidence-backed upkeep of task states, and the tests of its readiness check, its plan check
 and its reader of task-cycle evidence for plan states. It also answers for the guide that an agent
 writing or completing a product's deployment skill reads,
-`project-level/task/deployment_skill_guide.md`, and for when the line of a task in the product's
-backlog is written, given its dependencies and moved to ready, but not for how a line is made,
-which the rules of the task place say (WAY-107).
+`project-level/task/deployment_skill_guide.md`, for when the line of a task in the product's
+backlog is written, given its dependencies and moved to ready, and for the derivation of the
+identifier of a task of a plan, but not for the rest of how a line is made, which the rules of the
+task place say (WAY-107).
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·

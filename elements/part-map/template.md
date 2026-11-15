@@ -19,8 +19,8 @@ to the part map (WAY-35).
   not entries: the external context (WAY-48), the files left out on purpose (WAY-44) and the
   withdrawn identifiers. Each kind answers what the other cannot: a part, what it is responsible for
   and which files are its; a surface, what someone outside relies on.
-- An allowed dependency and a trust boundary are fields of the part they belong to, never entries
-  of their own (WAY-48). A critical flow has no entry.
+- An allowed dependency of a part and a trust boundary are fields of the part they belong to, never
+  entries of their own (WAY-48). A critical flow has no entry.
 - An entry is edited in place and carries no version; its history stays in git (WAY-07). A change
   of the code that changes what a part answers for, which files are its or what it may depend on,
   or what a surface promises, rewrites the entry in the same change (WAY-11).
@@ -88,10 +88,10 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ## Allowed dependencies
 
 *Depends on* names the parts this part may depend on, not those its code reaches for today: the map
-holds the rule, and the code shows the state (WAY-225). A dependency of a part is any reach of it to
-another part, not only an import, so *Depends on* names also a part whose skill the part calls or
-whose file, form of a file or tag of git its script reads. The return step of a change compares the
-two for the parts the change touches (WAY-11).
+holds the rule, and the code shows the state (WAY-225). What counts as a dependency of a part is
+what the glossary gives that term, any reach and not only an import, so *Depends on* covers every
+such reach. The return step of a change compares the two for the parts the change touches
+(WAY-11).
 
 Every product whose parts import code from other parts holds one invariant of allowed imports,
 with its test in the product's suite, that a file of a part imports only files of its own part, of
@@ -110,14 +110,14 @@ reading `Violated: yes` says it depends on today:
 This is a duty rather than advice, since a step nothing enforces is the step an agent leaves out,
 and an import from outside the map then passes merge after merge unseen.
 
-A dependency the code holds that *Depends on* does not allow goes to the human. Where the human
-accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
-`<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the code
-meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
+A dependency of a part that the code holds and *Depends on* does not allow goes to the human. Where
+the human accepts it as it stands, it is written as an invariant — "the part `<part>` does not
+depend on `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the
+code meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
 imports above lets that import pass, where the dependency is an import, and keeps every other
 boundary; *Depends on* is never rewritten to fit what the code reaches for today (WAY-225, WAY-51).
 Each such invariant is a whole entry a human accepted, not a list of known violations, and the map
-holds no list of such dependencies.
+holds no list of such dependencies of a part.
 
 ## Trust boundary
 

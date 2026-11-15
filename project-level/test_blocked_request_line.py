@@ -1,6 +1,7 @@
-"""Tests of the invariant blocked-request-line: the wording that the plan-state reader takes for the
-field `Request URL and status` of a record committed before its request exists is the wording that
-the files of `task-cycle` which tell the cycle what to write there give.
+"""Tests of the invariants blocked-request-wording and blocked-request-label: the wording that the
+plan-state reader takes for the field `Request URL and status` of a record committed before its
+request exists is the wording that the files of `task-cycle` which tell the cycle what to write
+there give, under the label its record template gives the field.
 
 The reader, `project-level/plan_state.py`, is imported: it is a file of this part. The writing side
 is read as text, the way a skill of `task-cycle` is read by an agent: a literal text that the file
@@ -41,7 +42,7 @@ def reads_as_blocked():
 class BlockedRequestLine(unittest.TestCase):
 
     def test_each_writer_gives_the_wording_the_reader_takes(self):
-        # invariant: blocked-request-line
+        # invariant: blocked-request-wording
         # Break caught: rewording what a skill of `task-cycle` tells the cycle to write, or what
         # the reader takes for it, in one place only; the reader then never reports the task as
         # blocked and the blocked task drops out of the plan's evidence unseen.
@@ -51,7 +52,7 @@ class BlockedRequestLine(unittest.TestCase):
                 self.assertIn("`" + wording + "`", text_of(path))
 
     def test_the_record_template_gives_the_label_the_reader_takes(self):
-        # invariant: blocked-request-line
+        # invariant: blocked-request-label
         # Break caught: renaming the field in the record's template while the reader keeps
         # looking for the old label.
         label, _ = reads_as_blocked()
