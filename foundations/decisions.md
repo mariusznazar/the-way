@@ -6930,9 +6930,14 @@ section of its description for the human's decisions says that no screenshot is 
 the cycle does not stop. A screenshot left unchecked for want of a settled way to the running
 product is reported as that check gives and needs no second item.
 
+A screenshot that is shown to the human lies in the place the product's foundation settles for
+screenshots and not in the agent's directory of working copies, and for it this decision prevails
+over WAY-373, which keeps its reach over every other screenshot and every copy made to check
+something.
+
 - **Scope:** task-cycle, project-level
 - **Based on:** none
-- **Relations:** derives from WAY-308 · derives from WAY-287
+- **Relations:** derives from WAY-308 · derives from WAY-287 · narrows WAY-373
 - **Verification:** invariants: record-copy-image-check · record-copy-image-files. An agent
   compares a change, its record and its request with the decision:
   - complies: the author of a change to a screen, in a product whose foundation settles a place for
@@ -6969,8 +6974,11 @@ open to a reader of this repository. The rule is the-way's and the place is the 
 the places that serve a product differ in what they cost and in who can open them, and a place named
 in the process would bind products it does not suit. A screenshot is looked at when the request is
 accepted and rarely after, so a place that may be cleared costs a few old requests their images and
-spares the product a store that only grows. The price taken: an old request shows a broken image
-once its place is cleared; a product with no place settled shows no screenshot, and the human
+spares the product a store that only grows. The rule on working copies keeps a screenshot made to
+check something in the directory of the agent, which goes with the task's directory; a screenshot
+shown to the human has to outlast that directory until the request is accepted, so this decision
+prevails over that rule for it and for nothing else. The price taken: an old request shows a broken
+image once its place is cleared; a product with no place settled shows no screenshot, and the human
 accepts without seeing the screen or settles the place first. A request that shows no screenshot and
 says nothing leaves the human to guess whether the screen was looked at; naming the lack in the
 section for the human's decisions lets the human weigh it and make a task of settling the place.
