@@ -101,10 +101,10 @@ resolve in `~/.the-way/locations.json` the entries the counting needs:
   the-way's own cycles and the history the process versions are read from.
 
 Where the file, a key, an entry or the path an entry holds is missing, ask the human where the place
-is, in one question of decision, as "How a skill asks" in `elements/common/way_of_working.md` gives
-it (WAY-113). The ways are usually to name the place, to create it, or, for the register, to copy
-the template to a place the human names. Offer to add the entry to the file, create the file or the
-key where they are missing, and write only on the human's yes.
+is, in one question of decision, as "How a skill asks" gives it (WAY-113). The ways are usually to
+name the place, to create it, or, for the register, to copy the template to a place the human names.
+Offer to add the entry to the file, create the file or the key where they are missing, and write
+only on the human's yes.
 
 ## 2. Get the latest count
 
@@ -157,16 +157,15 @@ decided on a step or set aside; say so beside a matter that comes again.
 
 Take the matters one at a time, in this order, and wait for the human's word on each before the
 next. Show each as the rows of the count quoted word for word with the header row of their table,
-then what follows from them and what does not, then the question that the rows shown answer.
-Before the question, name from the rows what they show as broken or out of date and a step can
-change — a repository on an old version of the process, a count that did not succeed, an issue
-with no task — and put each such thing as a question of decision, as "How a skill asks" in
-`elements/common/way_of_working.md` gives it (WAY-113). The recommendation rests on what the rows
-show as broken, never on how often the issue came back, how long it has waited or the level of the
-cost of an occurrence; the rules of working on those two stand as they are. Where the rows show
-nothing to change, say so in one sentence; the question that the rows answer is then a question of
-assessment, open and with no recommendation. A matter ends in one of three outcomes: the human
-weighs it further, decides on a step, or sets it aside.
+then what follows from them and what does not, then the question that the rows shown answer. Before
+the question, name from the rows what they show as broken or out of date and a step can change — a
+repository on an old version of the process, a count that did not succeed, an issue with no task —
+and put each such thing as a question of decision, as "How a skill asks" gives it (WAY-113). The
+recommendation rests on what the rows show as broken, never on how often the issue came back, how
+long it has waited or the level of the cost of an occurrence; the rules of working on those two
+stand as they are. Where the rows show nothing to change, say so in one sentence; the question that
+the rows answer is then a question of assessment, open and with no recommendation. A matter ends in
+one of three outcomes: the human weighs it further, decides on a step, or sets it aside.
 
 1. **What the count could not read.** The *Repositories* table: any repository read `no`, a shallow
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
