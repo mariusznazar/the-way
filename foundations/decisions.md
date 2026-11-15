@@ -1086,12 +1086,12 @@ record appended on the date — the dates pass with nobody looking; a decision t
 — the date gets extended; the review set as a task of the backlog, run by a cycle that ends in a
 request of corrections — the judgments of whether an assumption stands arrive whole as ready
 changes with no talk, and refusing one is another round; a task of the review made ready for a cycle
-and copied into the backlog — three steps where one command does; a script — it does not judge whether the assumption
-of a decision stands; the cycle adding the line of the review to the backlog itself — it would need
-a change to WAY-140, against the reason of WAY-161, and a product with its backlog in an outside
-tracker would give the cycle the right to write outside the repository; a sentence that asks for no
-line and says nothing of the backlog, the human's own setup adding the line — another user of the-way
-is left with a sentence that can be scrolled past.
+and copied into the backlog — three steps where one command does; a script — it does not judge
+whether the assumption of a decision stands; the cycle adding the line of the review to the backlog
+itself — it would need a change to WAY-140, against the reason of WAY-161, and a product with its
+backlog in an outside tracker would give the cycle the right to write outside the repository; a
+sentence that asks for no line and says nothing of the backlog, the human's own setup adding the
+line — another user of the-way is left with a sentence that can be scrolled past.
 
 ### WAY-25 — What settles a collision between two decisions?
 
@@ -6846,10 +6846,10 @@ repository, and it would need a change to WAY-140 against the reason of WAY-161;
 as a draft from the threshold on — every unrelated change would wait for a click that becomes a
 reflex at more than ten merges a week; the line in the backlog and the held draft together — the sum
 of both costs; a sentence that asks for no line and says nothing of the backlog, the human's own
-setup adding the line — another user of the-way keeps a sentence that can be scrolled past; an identifier the-way computes for the
-review's line, in the field of identifier — a task that belongs to no plan has no identifier from
-the-way, it works only in a task place with identifiers, and each later review needs a new one,
-since the old stays on a done line; no reading of the backlog, the sentence always asking for the
+setup adding the line — another user of the-way keeps a sentence that can be scrolled past; an
+identifier the-way computes for the review's line, in the field of identifier — a task that belongs
+to no plan has no identifier from the-way, it works only in a task place with identifiers, and each
+later review needs a new one, since the old stays on a done line; no reading of the backlog, the sentence always asking for the
 task "if there is none" — the reminder never goes quiet while the review is planned; the number in
 the sentence of this decision, repeated in the code — the entry keeps a single number and each
 change of the threshold becomes a change of a decision, against the gain of the rhythm and the
