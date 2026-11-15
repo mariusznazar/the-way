@@ -653,6 +653,27 @@ class Locations(AuditCountCase):
         self.assert_refused(self.run_count("--repository", "notes"),
                             "no entry `repository` under `notes`")
 
+    def test_the_way_with_no_repository_entry_is_the_checkout_the_script_lies_in(self):
+        # The entry `repository` under `the-way` is no missing field (WAY-344): the count takes
+        # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
+        own = subprocess.run(["git", "-C", str(HERE.parent), "rev-parse", "--verify", "HEAD"],
+                             capture_output=True, check=True).stdout.decode("utf-8").strip()
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record(
+            pin_line=f"- Process pin: `{own}`")})
+        self.register.write_text(register_text(
+            issues=[issue_row("fixed-one", "fixed", own)],
+            problems=[problem_row("product", added, "fixed-one")]), encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        self.assertNotIn("repository", self.places(product=product)["the-way"])
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(b"", done.stderr)
+        self.assertEqual(own, self.cycles()[0]["Process pin"])
+        self.assertEqual([], [row for row in self.rows("Unknown values")
+                              if row[2] == "Process pin"])
+        self.assertEqual("1", self.rows("Fixed issues")[0][2])
+
     def test_no_repository_to_read(self):
         self.write_locations(self.places())
         self.assert_refused(self.run_count(), "--repository")
@@ -2333,14 +2354,24 @@ class RegisterCount(AuditCountCase):
         missing = "".join(line for line in lines if not line.startswith("| stage |"))
         doubled = "".join(line + ("| steps | once more |\n" if line.startswith("| steps |") else "")
                           for line in lines)
+        both = "".join(line + ("| steps | once more |\n" if line.startswith("| steps |") else "")
+                       for line in lines if not line.startswith("| stage |"))
         self.write_locations(self.places(product=product))
-        for label, text in (("a level missing", missing), ("a level written twice", doubled)):
+        cases = (
+            ("a level missing", missing,
+             "must name each level once: it lacks `stage`"),
+            ("a level written twice", doubled,
+             "must name each level once: it writes `steps` in two rows"),
+            ("a level missing and another written twice", both,
+             "must name each level once: it lacks `stage` and writes `steps` in two rows"),
+        )
+        for label, text, words in cases:
             with self.subTest(label):
                 self.register.write_text(text, encoding="utf-8")
                 done = self.run_count("--today", "2026-11-11")
                 self.assertEqual(1, done.returncode, done.stderr)
                 self.assertIn("Error: the register of problems: the table `Costs of an occurrence` "
-                              "must name the five levels, each once", done.stderr.decode("utf-8"))
+                              + words, done.stderr.decode("utf-8"))
                 self.assertIn(["the-way", "none", "table `Costs of an occurrence`"],
                               [row[:3] for row in self.rows("Unknown values")])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
@@ -2359,6 +2390,40 @@ class RegisterCount(AuditCountCase):
             done = self.run_count("--today", "2026-11-11")
             self.assertEqual(0, done.returncode, done.stderr)
             self.assertEqual(b"", done.stderr)
+
+    def test_a_table_of_weights_that_lacks_a_level_names_the_level(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        lines = TEMPLATE.splitlines(keepends=True)
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| Minor |")))
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| Important |")))
+        missing = "".join(line for line in lines if not line.startswith("| Minor |"))
+        doubled = "".join(line + ("| Important | once more |\n"
+                                  if line.startswith("| Important |") else "")
+                          for line in lines)
+        both = "".join(line + ("| Important | once more |\n"
+                               if line.startswith("| Important |") else "")
+                       for line in lines if not line.startswith("| Minor |"))
+        self.write_locations(self.places(product=product))
+        cases = (
+            ("a level missing", missing,
+             "must name each level once: it lacks `Minor`"),
+            ("a level written twice", doubled,
+             "must name each level once: it writes `Important` in two rows"),
+            ("a level missing and another written twice", both,
+             "must name each level once: it lacks `Minor` and writes `Important` in two rows"),
+        )
+        for label, text, words in cases:
+            with self.subTest(label):
+                self.register.write_text(text, encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(1, done.returncode, done.stderr)
+                self.assertIn("Error: the register of problems: the table `Weights` " + words,
+                              done.stderr.decode("utf-8"))
+                self.assertIn(["the-way", "none", "table `Weights`"],
+                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
+                                 self.rows("Problems by cycle"))
 
 
 class Run(AuditCountCase):

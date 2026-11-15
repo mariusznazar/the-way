@@ -202,8 +202,9 @@ header row but not in the template's order, or another stands beside them, or a 
 twice, no field is missing: the table is refused. A row that does not read, an unknown class,
 weight or cost of an occurrence, an issue in no row of *Issues*, a doubled name, a *Fix* that is no
 commit or a date that is no date refuses that row or table with a reason. A table of *Weights* or of
-*Costs of an occurrence* that does not name its levels, four or five, each once is refused, and an
-`Error:` of the register on stderr gives exit 1. A refused row of *Problems* still belongs to the
+*Costs of an occurrence* that does not name each of its levels once is refused: its `Error:` line of
+the register on stderr names the level it lacks or writes twice, and the command gives exit 1. A
+refused row of *Problems* still belongs to the
 cycle and the issue it names: each count of that cycle or issue reads `at least n`, as the row is
 not in it. What else depends on a refused row or table is `unknown`. A problem whose cycle no named
 repository holds is `unknown`, not dropped, and so is a
@@ -1883,6 +1884,35 @@ def named_rows(register: Register, title: str, rows: list[list[str]], width: int
     return valid
 
 
+def level_faults(rows: list[list[str]], levels: list[str]) -> str | None:
+    """What a table of levels lacks, in words the `Error:` line can name: each level that none of
+    its rows of the right width names, and each written in two rows; None where each is named
+    once. A row of the wrong width is refused on its own and counts for no level."""
+    width = 2
+    names = [cells[0] for cells in rows if len(cells) == width]
+    missing = [level for level in levels if level not in names]
+    doubled = [level for level in levels if names.count(level) > 1]
+    parts = []
+    if missing:
+        parts.append("lacks " + ", ".join(f"`{level}`" for level in missing))
+    if doubled:
+        parts.append("writes " + ", ".join(f"`{level}`" for level in doubled) + " in two rows")
+    return " and ".join(parts) or None
+
+
+def check_levels(register: Register, title: str, rows: list[list[str]], levels: list[str],
+                 check) -> None:
+    """Refuse the rows of a table of levels that `check` refuses, and where the table does not name
+    each of its levels once, add an `Error:` of the register that names the level it lacks or
+    writes twice (WAY-344). The result is still written: what depends on the table is unknown."""
+    named_rows(register, title, rows, 2, check)
+    fault = level_faults(rows, levels)
+    if fault is not None:
+        why = f"the table `{title}` must name each level once: it {fault}"
+        register.errors.append(why)
+        register.refuse(f"table `{title}`", why)
+
+
 def register_table(lines: list[str], fenced: list[bool], title: str, columns: list[str],
                    missing: list[str]) -> tuple[list[list[str]] | None, str | None]:
     """The rows of the table under the heading `## <title>`, or None with the reason. The table
@@ -1972,17 +2002,9 @@ def read_register(path: Path) -> Register:
             register.class_dates += [text for text in (cells[2], cells[3]) if valid_date(text)]
         register.class_dates.sort()
     if tables["Weights"] is not None:
-        weights = named_rows(register, "Weights", tables["Weights"], 2, check_weight)
-        if sorted(name for name, _, _ in weights) != sorted(LEVELS):
-            why = "the table `Weights` must name the four levels, each once"
-            register.errors.append(why)
-            register.refuse("table `Weights`", why)
+        check_levels(register, "Weights", tables["Weights"], LEVELS, check_weight)
     if tables[COSTS_TITLE] is not None:
-        costs = named_rows(register, COSTS_TITLE, tables[COSTS_TITLE], 2, check_cost_level)
-        if sorted(name for name, _, _ in costs) != sorted(COST_LEVELS):
-            why = f"the table `{COSTS_TITLE}` must name the five levels, each once"
-            register.errors.append(why)
-            register.refuse(f"table `{COSTS_TITLE}`", why)
+        check_levels(register, COSTS_TITLE, tables[COSTS_TITLE], COST_LEVELS, check_cost_level)
     if tables["Issues"] is not None:
         register.issues = [(name, cells[2], cells[3].lower()) for name, _, cells in
                            named_rows(register, "Issues", tables["Issues"], 4, check_issue)]
