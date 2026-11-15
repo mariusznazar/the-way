@@ -12,6 +12,7 @@ copied here.
 - `fingerprint-definition` — a fact of an outside standard behind a value the sentence names
 - `return-step-record` — a sentence that holds only where `{merge-onto}` exists, with no cheap test,
   which review keeps
-- `cross-part-imports` — a sentence holding the code of every part to the dependencies the part
-  map allows, with the two exceptions every such invariant takes, kept by a test that reads the
-  map, the imports of the product's language and the runs of one file as a script by another
+- `cross-part-imports` — a sentence holding the imports of every part's code to the dependencies
+  the part map allows, with the two exceptions every such invariant takes, kept by a test that
+  reads the map, the imports of the product's language and the runs of one file as a script by
+  another

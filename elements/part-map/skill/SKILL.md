@@ -1,6 +1,6 @@
 ---
 name: update-part-map
-description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility, files, allowed dependencies or trust boundary change, a part split or merged, a new surface or a changed one, a file no part claims, the first map written for a product, or a change a project definition projects.
+description: Use when a product's part map, foundations/part_map.md, has to gain or change an entry — a part whose responsibility, files, allowed dependencies of a part or trust boundary change, a part split or merged, a new surface or a changed one, a file no part claims, the first map written for a product, or a change a project definition projects.
 ---
 
 # Update the part map
@@ -37,9 +37,9 @@ the search of the foundation adds for this element.
   together with the files it claims and the files it takes from another part.
 - *Depends on*: write what the part may depend on, not what the code reaches for today, and never
   rewrite it to fit the code (WAY-225). Where the two differ, the difference goes to the human in
-  step 4; a dependency the human accepts as it stands is written through `record-invariant` as an
-  invariant that the one part does not depend on the other, marked violated, as the template's
-  "Allowed dependencies" says.
+  step 4; a dependency of a part the human accepts as it stands is written through
+  `record-invariant` as an invariant that the one part does not depend on the other, marked
+  violated, as the template's "Allowed dependencies" says.
 - *Trust boundary*: only files that take in what the template's "Trust boundary" names — data from
   the network, keys, the deployment, files from outside the product.
 - *Relied on by*: who relies on a surface comes from the sources of step 2; where none says it, it

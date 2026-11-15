@@ -299,14 +299,19 @@ standing there as an entry of the locations file of WAY-320, never as a path, an
 repository or the address of a public tracker as it is. A project definition stands in the named
 project place; when the place is unnamed, or the file or the entry it names is missing, the agent
 asks the human and offers to record the answer where it fits: the entry in the file for a place on
-the user's disk, the section otherwise. How a task's line is handled — the status of a new line, its
-move to ready, the form of its dependencies and of its identifier, how a line is found and kept one
-to a task, which fields an agent may change, the agreement of the lines at both ends of a
-dependency, a clash of identifiers — is taken from the rules of the task place itself, never from
-text written at the product or in the-way's skills; the section names, beside the place of the
-tasks, the entry `task-rules` of the locations file under the product's name, whose value is the
-path of those rules, and where that entry or the file it names is missing, the agent asks the human
-once and offers to add the entry, as for a missing place.
+the user's disk, the section otherwise.
+
+How a task's line is handled — the status of a new line, its move to ready, the form of its
+dependencies, the characters of its identifier and its being unambiguous in the whole place, how a
+line is found and kept one to a task, which fields an agent may change, the agreement of the lines
+at both ends of a dependency, a clash of identifiers — is taken from the rules of the task place
+itself, never from text written at the product or in the-way's skills; the section names, beside
+the place of the tasks, the entry `task-rules` of the locations file under the product's name,
+whose value is the path of those rules, and where that entry or the file it names is missing, the
+agent asks the human once and offers to add the entry, as for a missing place. The one part of a
+line that the-way gives is the derivation of a task's identifier from its plan and its name in the
+plan, so that a dependency can name a task before that task's line exists; where the rules of the
+task place do not accept the derived identifier, the agent asks the human and writes no line.
 
 - **Scope:** project-level, installation, foundation-review, product-guidelines
 - **Based on:** none
@@ -320,12 +325,18 @@ once and offers to add the entry, as for a missing place.
     to add it to the file; an agent that makes a task's new line takes its status from those rules,
     and the same agent in a refinement made by hand and in one led through a plan takes the move to
     ready, the form of the dependencies and how a line already there is handled from them as well;
+    an agent that writes the identifier of a task of a plan before that task's line exists derives
+    it from the plan and the task's name, takes the characters it may hold and its being
+    unambiguous from those rules, and, where they do not accept the derived identifier, asks the
+    human and writes no line;
   - violates: the project skill assumes one backlog service for every product, or puts the product's
     paths inside the installer's marked block; the section holds the path of a place on the user's
     disk; an agent that finds the entry missing writes the path into the section; a skill of the-way
-    writes a status of a task's line, the symbol of a dependency, or a rule of how a line is found
-    or changed, into its own text, or an agent takes the status of a new line from text the product
-    keeps in its section or from the default of the tool that holds the tasks.
+    writes a status of a task's line, the symbol of a dependency, the characters an identifier may
+    hold, or a rule of how a line is found or changed, into its own text, or an agent takes the
+    status of a new line from text the product keeps in its section or from the default of the tool
+    that holds the tasks; an agent writes a line whose identifier the rules of the task place do
+    not accept, or one it changed to fit them, instead of asking the human.
 - **Origin:** none
 
 *Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
@@ -337,7 +348,13 @@ backlog can be named in two ways, and the agent that records a missing place jud
 rules by which a line of a task is handled belong to the place of the tasks, not to the product that
 names it, so they are read from there and not copied beside the product, and the place can change
 them without a change of the-way; the price is that the path to them stands in the user's file once
-for each product, the same path repeated.
+for each product, the same path repeated. The identifier of a task of a plan is the one part of a
+line that the-way gives, since the refinement of one task writes it as a dependency before the line
+of the task it waits on exists, so it must follow from the plan and the task's name alone; the
+characters it may hold and its being unambiguous in the whole place stay the place's, with the rest
+of a line. The price taken: the derived identifier can be one the place does not accept, as where
+the place forbids hyphens, and the agent then asks the human and writes no line, since an
+identifier it changed to fit would leave two lines naming one task differently.
 *Rejected:* a fixed backlog location for all products — it would require moving an existing backlog;
 asking for the location in every project conversation — the answer would be lost between sessions;
 the file for every place, the section only naming the entry — every user of every product creates
@@ -352,7 +369,9 @@ and the check of the notes against the lines reports a mismatch; a status of a l
 the-way's skills — a skill of the-way would assume one tool for the backlog, against WAY-101; the
 agent finding the rules through the user's global instructions — it does not work in a session that
 does not load them, such as one in the cloud, and stands against the user's sentence that global
-instructions are not the place for such things.
+instructions are not the place for such things; a decision of its own for the derivation of the
+identifier, narrowing this one — a rule that one skill of the-way holds with one sentence of its
+reason is no entry of the log (WAY-293).
 
 ## The foundation and its entries
 
@@ -1717,9 +1736,9 @@ only as surely as the reviewer reads it.
 *Rejected:* a main branch holding only what the code meets — no existing product could enter; the
 rule weakened until the code fits it — the foundation describes the accident (WAY-225); a derived
 list of violated invariants beside the invariants file — a second file to keep in step with the
-entries, which a reader of the invariant does not see; a derived list of the dependencies the code
-holds against the part map — the same second file, and a dependency the map does not allow is an
-invariant like any other (WAY-225); a rule left out or marked "not checked yet" until met — the gap
+entries, which a reader of the invariant does not see; a derived list of the dependencies of a part
+that the code holds against the part map — the same second file, and a dependency of a part that the
+map does not allow is an invariant like any other (WAY-225); a rule left out or marked "not checked yet" until met — the gap
 stops being countable; debt paid by an end date — repaid by weakening the rule; beside the marked
 invariant, a second one holding from its first day that no file holds more breaks than on
 `{fork-point}` and a file not there holds none — an entry kept only for the time of the cleaning,
@@ -2468,21 +2487,22 @@ derived file compared as a subset of its version on the commit the branch left t
 What can be derived from what the product executes — code, configuration, infrastructure as code,
 runtime traces — is derived, never written by hand, and what is derived describes the state. Rules
 are written by hand: what is allowed and what the product promises, which the code cannot show, and
-a dependency the code holds that the part map does not allow is recorded as an invariant the
-product does not meet (WAY-51), never by rewriting the allowed dependencies to fit the code.
+a dependency of a part that the code holds and the part map does not allow is recorded as an
+invariant the product does not meet (WAY-51), never by rewriting the allowed dependencies of a part
+to fit the code.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: derived-file-content. For what is derived and what is written by
   hand, an agent compares the change with the decision:
-  - complies: the map's allowed dependencies are written by hand, and the return step compares
-    them with the dependencies the code holds; a dependency of the code that a human accepts
-    although the map does not allow it stands as the invariant "the part `ui` does not depend on
-    `storage`", marked violated;
+  - complies: the map's allowed dependencies of a part are written by hand, and the return step
+    compares them with the dependencies of a part that the code holds; a dependency of a part that
+    the code holds and a human accepts although the map does not allow it stands as the invariant
+    "the part `ui` does not depend on `storage`", marked violated;
   - violates: a hand-written architecture document appears next to the part map; a hand-written
-    list of the product's endpoints kept next to the code; the allowed dependencies in the part
-    map copied from the current import graph.
+    list of the product's endpoints kept next to the code; the allowed dependencies of a part in the
+    part map copied from the current import graph.
 - **Origin:** none
 
 *Rationale:* a hand-written copy of the state goes stale, and code shows only what exists: a view
@@ -4772,9 +4792,9 @@ to the human without automatically correcting the plan.
 - **Based on:** none
 - **Relations:** derives from WAY-38 · derives from WAY-142 · derives from
   WAY-147
-- **Verification:** invariants: project-plan-state-evidence · project-plan-state-subprocesses. For
-  applying proposals and resolving PR outcomes, an agent compares the evidence and leading session
-  with the decision:
+- **Verification:** invariants: project-plan-state-evidence · project-plan-state-subprocesses ·
+  blocked-request-wording · blocked-request-label. For applying proposals and resolving PR outcomes,
+  an agent compares the evidence and leading session with the decision:
   - complies: the project orchestrator applies supported transitions with a reason and evidence
     in the plan's log, resolves an unchecked PR outcome through the product's chosen PR tool,
     and shows a closed-unmerged PR to the human without automatic correction;
@@ -6804,11 +6824,11 @@ does not urge. The cycle adds and changes no line of the backlog (WAY-140).
 - **Scope:** task-cycle, foundation-review
 - **Based on:** none
 - **Relations:** derives from WAY-24 · derives from WAY-107 · derives from WAY-140
-- **Verification:** tests: the count of merges to the main branch since the nearest review tag, from
-  the start of the history where none stands, with the merges of the main branch into task branches
-  left out; that the reminder line of the script turns to yes at the threshold and not one merge
-  before it, and that the script gives one threshold. An agent compares the cycle and its request
-  with the part no test holds:
+- **Verification:** invariants: review-tag-pattern. tests: the count of merges to the main branch
+  since the nearest review tag, from the start of the history where none stands, with the merges of
+  the main branch into task branches left out; that the reminder line of the script turns to yes at
+  the threshold and not one merge before it, and that the script gives one threshold. An agent
+  compares the cycle and its request with the part no test holds:
   - complies: a cycle that ends at the threshold with no open line of the review in the backlog
     ends *How to merge* with a reminder that asks the human to add the task, names what its name
     holds, the number of merges, the tag and the skill, and the request merges like any other; the
@@ -7337,7 +7357,8 @@ stage report.
 - **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares a change with the decision:
+- **Verification:** invariants: audit-series-script-paths. For the rest, an agent compares a change with the
+  decision:
   - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
     not set against the median of the other; the cycles of one version of the process are compared
     with the cycles of another version inside a series; a change of the reviewer's instructions
@@ -7466,7 +7487,8 @@ whoever carries out its tasks, as its instruction files and skills do.
   both the Module Development and Search guides. Read **all** matching guides first"; read
   2026-10-18
 - **Relations:** derives from WAY-44 · derives from WAY-04 · derives from WAY-100
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** invariants: guidelines-file-place. For the rest, an agent compares the change
+  with the decision:
   - complies: a product with screens in a browser and an admin panel added to its backend keeps
     `guidelines/styleguide-web.md` and `guidelines/styleguide-admin.md`, named after the parts
     `web` and `admin` of its map, beside `guidelines/testing.md`, and the pattern `guidelines/**`
