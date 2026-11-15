@@ -18,7 +18,7 @@
   environment fact, with its source in the form the environment-facts template gives (section
   Source). A threshold written into an invariant with no adopted catalogue is a number from WCAG
   without its source, and no reader can tell which edition it follows.
-- **Which criterion, which ratio.** Put to the human, as a question with a recommendation shown by
+- **Which criterion, which ratio.** Put to the human, as a question of decision shown by
   what the user sees — "small text on any background stays readable for someone who sees less
   well" — the criterion of the adopted edition each invariant takes its condition from, and the one
   ratio the contrast test holds every pair of a background and its text to, read from that

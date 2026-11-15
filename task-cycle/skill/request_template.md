@@ -220,9 +220,10 @@ the order of their kinds.
   reconciliation, the slices not made, the review of the whole change. They stand here, since they
   cannot be run until the human decides, and kind 4 does not list them again.
 - **2.** *Questions*: only those the foundation step allows, which
-  `task-cycle/skill/foundation_step.md` says, and a reserved choice, each with its options and a
-  recommendation where one exists, from the report of the agent that returned `blocked` or
-  `reserved`.
+  `task-cycle/skill/foundation_step.md` says, and a reserved choice, each put as "What an item
+  carries" gives for an item in which the human chooses, from the report of the agent that returned
+  `blocked` or `reserved`; the recommendation, with its weak point, stands where that report holds
+  one.
 - **3.** *Human actions*: each action the task document places in the cycle, as the document names
   it, and each effect outside the repository the cycle found that the document does not name, for
   the human to place (WAY-140); from the task's *Human actions*, the Events and the reports. The
@@ -356,8 +357,10 @@ the order of their kinds.
      an entry, and a name that cannot be avoided followed, at its first mention, by one sentence on
      what it is;
   2. each way open, one by one: what happens once it is chosen, what it costs — time, a round of
-     correction with its review, the risk that stays — and where it can show up later;
-  3. the recommendation, with its reason in one sentence;
+     correction with its review, the risk that stays, and what undoing it later costs, in one word
+     where it costs nothing — and where it can show up later;
+  3. the recommendation, with its reason in one sentence and its weak point in one sentence, as
+     "How a skill asks" gives it for a question of decision;
   4. the question, with the answers to choose from.
 - An item of kind 4 for a check the agent did not run that the human can do by hand has a fifth part
   after the question: three to six numbered steps for the human — where to go, what to do and what
@@ -394,10 +397,13 @@ none
 1. Some parts of the new restore instruction were never tried: the way back after a failed check,
    a second attempt after a failed one, and the use of the old encryption key. If one of them is
    wrong, whoever restores the server finds out on the day of a real failure, not before. Trying
-   them now costs another session on the test server and a round of review; merging now costs
-   nothing today, and the instruction marks each untried part in its own text. I recommend letting
-   it through, since the common path was tried from the first step to the last. Try them in this
-   request, make a task of a separate trial, or let it through?
+   them now costs another session on the test server and a round of review; undoing it, nothing.
+   Making a task of a separate trial costs a later session; undoing it, nothing. Merging now costs
+   nothing today, and the instruction marks each untried part in its own text; undoing it, nothing.
+   I recommend letting it through, since the common path was tried from the first step to the last.
+   Its weak point: the untried parts are the ones read under pressure on the day of a failure, so a
+   mistake in one costs most when it shows. Try them in this request, make a task of a separate
+   trial, or let it through?
 
 ### You accept by merging
 
@@ -414,9 +420,11 @@ The fifth part, for an item about a check the human can do by hand, stands after
 1. The new page for editing a profile was never opened in a running copy of the product, since the
    agent could not start the product here. If saving fails, whoever edits a profile loses the change
    on the first day. Running the check in this request costs a session with a product that starts
-   and a round of review; making a task of it leaves the page unchecked until someone opens it;
-   letting it through accepts that risk. I recommend running it in this request, since the page is
-   the one thing the change added. Run it in this request, make a task of it, or let it through?
+   and a round of review; undoing it, nothing. Making a task of it leaves the page unchecked until
+   someone opens it; undoing it, nothing. Letting it through accepts that risk; undoing it, nothing.
+   I recommend running it in this request, since the page is the one thing the change added. Its
+   weak point: the agent could not start the product here, so the session may fail the same way and
+   cost a round for nothing. Run it in this request, make a task of it, or let it through?
    The steps of the check by hand, whose result you write down as a remark:
    1. Start the product and open the profile page from the menu.
    2. Change the display name and press Save.
@@ -534,7 +542,7 @@ reads `none` under its heading.
 | A slice failed twice (step 9.4) | `**State: blocked** — a slice failed with two agents` | in *Needed from you*, what failed, in plain words, and what the cycle needs to go on; the stages not run — the review of the whole change, the return step, the reconciliation | **Route**: both failures with the classes tried, each slice made that no review judged |
 | A reserved choice (`reserved_return.md`, WAY-269) | `**State: blocked** — the cycle met a technology choice only you make` | in *Needed from you*, the choice, by what the product needs it for; the ways seen, marked as not researched, with no recommendation; what happens next: close the request, and refinement takes the choice as its note | *Technical changes* `none`; *Foundation entries* `none`; *Checks*: the checks failing on the base, from its run or from the list step 4 took, and each stage not run with why, the gate among them; **Route**: where it showed (stage, task item), the limb of the rule, what was searched, the discarded attempt and its report; *How to merge*: do not merge, close |
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |
-| A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question with its options and a recommendation where one exists | as an ordinary request |
+| A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question as kind 2 gives it | as an ordinary request |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | in *Needed from you*, that fact or permission; never partial work presented as complete | **Route**: the ways tried |
 | A correction (`correction.md`) | the state after the correction, with what started it in the why, named from the sources of the pairs that item 17 gives: "corrected for your remarks" only where a remark started it, "corrected for your answer to an item" where an answer did, "refreshed from the target branch at your request" where only that did, and with two sources each in its words | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9, 14 or 16, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |

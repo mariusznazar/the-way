@@ -59,7 +59,7 @@ carries takes no approval.
 - **How to show.** Show each choice by its effect on the product in plain words — "a change that
   adds a library with a known security hole does not get in", "every new endpoint checks its input
   as the exemplar does" — never by the name of a linter's rule or a value of a tool's
-  configuration, with the ways open, their cost and a recommendation. Put every choice to the
+  configuration, as a question of decision "How a skill asks" gives. Put every choice to the
   human, a choice the skill recommends included, and after a choice that enters a binding part ask
   the one question "How a skill asks" gives. Ask for decisions, never for single rules: a set of
   rules is adopted whole, its split shown as "this many rules will block a change; these few

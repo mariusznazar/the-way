@@ -89,7 +89,7 @@ Answer: TODO
 Answer kind: pending | document quotation | code fact | human
 Source: <exact document location and revision; code file:line and revision; or human and date>
 Answer review: pending | supplied | struck by human | resolved
-Human question: <if unresolved: full question, options, costs of each and recommendation;
+Human question: <if unresolved: the full question of decision as "How a skill asks" gives it;
   for assessment an open question; otherwise none>
 
 ### Human material

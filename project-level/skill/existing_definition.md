@@ -11,9 +11,10 @@ definition.
   fingerprint no longer matches means the definition changed after the readiness gate, and it goes
   through step 7 (`readiness_gate.md` beside this file) again.
 - A definition with no `## Technology` section was written before the step that settles the
-  technology. Say so, and ask whether the project is reopened, with the cost of each way:
-  reopening settles the technology at step 6 and takes the definition through the readiness gate
-  again (WAY-118); leaving it leaves the choices to the breakdown, and the check keeps reporting the
-  missing section. On reopening, add `## Technology` reading `TODO` before "Projected foundation
-  changes", set the status line to `definition — open: Technology`, and go on at step 6
-  (`technology.md` beside this file) (WAY-121).
+  technology. Say so, and ask whether the project is reopened, as a question of decision "How a
+  skill asks" gives, the ways being: reopening settles the technology at step 6 and takes the
+  definition through the readiness gate again (WAY-118); leaving it leaves the choices to the
+  breakdown, and the check keeps reporting the missing section. On reopening, add `## Technology`
+  reading `TODO` before "Projected foundation changes", set the status line to
+  `definition — open: Technology`, and go on at step 6 (`technology.md` beside this file)
+  (WAY-121).

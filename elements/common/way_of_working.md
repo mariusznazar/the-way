@@ -25,7 +25,11 @@ Every skill of the-way that asks the human asks this way
 - A question stands as plain text in the conversation, never in a tool that opens a separate panel
   for a question or its options.
 - A question of decision — a choice that settles something in a file — gives the ways open, what
-  each costs, and a recommendation.
+  each costs, the cost of undoing it later included and written as one word where it is nil, and a
+  recommendation with its weak point: the strongest argument against the way recommended, anchored
+  in the material where the material gives one. Where that way is a shortcut and another would be
+  right were cost no matter, the weak point names the other way and says why it is not
+  recommended.
 - Once the human has chosen, and the choice enters the binding part of an entry, ask one question
   against the answer given: its anchor quoted from a sentence of the human or of the material the
   work starts from, asking whether the choice still holds against it. A choice that ends with the
@@ -39,6 +43,11 @@ Every skill of the-way that asks the human asks this way
   projected entries of a definition. In a task's cycle and where an entry is written outside such a
   refinement, the question stands as the bullet above gives it; the looser rule holds only before
   the cycle starts (WAY-113, WAY-315).
+- In the whole refinement of a project definition, its rounds and its step of projected foundation
+  changes, a question may also follow an answer where it takes the move of implication — "you wrote
+  X; from X follows Y — does Y hold?" — anchored in a sentence of the human, or asks the reason of a
+  decision that is costly to reverse, where neither the human's words nor the material give it. The
+  refinement of a task keeps the bullet above (WAY-113).
 - A question of assessment — what something is worth, what may go wrong, what is done today — is
   open, with no ways offered.
 
@@ -163,9 +172,9 @@ looks for in its element. The search is not repeated before the merge and leaves
 
 ## 4. Ask, show, write
 
-1. Ask in one round about everything still open, as »How a skill asks« gives it (WAY-113): a value
-   the source does not give, with where to look for it and never the value itself; a choice, with
-   the ways open, what each costs and a recommendation; a question of assessment, open.
+1. Ask in one round about everything still open: a value the source does not give, with where to
+   look for it and never the value itself; a choice, as »How a skill asks« gives a question of
+   decision (WAY-113); a question of assessment, open, as that section gives it.
 2. Show the whole entry with what the skill adds beside it, and one sentence of its meaning in the
    human's language. Write it on your recommendation; ask before writing only where you have no
    recommendation or the entry would change the meaning of an approved decision beyond what the

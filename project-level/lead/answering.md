@@ -32,9 +32,9 @@ record what is needed and return, without making up the result.
   relevant quotation, not a paraphrase; label code facts separately. Leave any unsettled part
   explicitly pending. Conflicting sources go to the project orchestrator with both complete
   passages and locations; do not silently choose which overrides the other.
-- If no authorized source answers, prepare the complete question to the human, available ways,
-  what each costs and your recommendation. Assessment questions stay open under "How a skill
-  asks" in the shared workflow. Never invent a decision in order to unblock the round.
+- If no authorized source answers, prepare the complete question to the human as a question of
+  decision, as "How a skill asks" in the shared workflow gives it. Assessment questions stay open
+  under it. Never invent a decision in order to unblock the round.
 
 ## Once per human choice
 
@@ -60,8 +60,8 @@ choices for the project orchestrator, which obtains human answers and the indepe
 Do not accept candidates, place Human actions or approve a document yourself.
 
 A quotation struck by the human is no longer a settled answer: mark it struck, preserve its
-source for context, and return the question to the human with its affected tasks and ways/costs/
-recommendation. Do not re-answer it with the same quotation. The project orchestrator records
+source for context, and return the question to the human, as "How a skill asks" gives it, with its
+affected tasks. Do not re-answer it with the same quotation. The project orchestrator records
 human answers separately before fresh refiners run; only those refiners transfer resolved answers
 with provenance and the ways the human did not choose into task documents (WAY-134). On
 resumption check those recorded answers and source revisions, never infer agreement from an

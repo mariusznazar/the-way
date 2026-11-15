@@ -9,10 +9,11 @@ Leads the weekly audit of the process with a human, in one session of its own, a
 weekly review. A session of its own keeps the audit from sharing the time and the subject of the
 weekly review, and a count made on the night before leaves its result ready when the session begins.
 It reads the latest result of the counting command, `audit_count.py` beside this file, puts before
-the human the matters to weigh, and writes down what the human decided to weigh and what the human
-set aside. It changes nothing in any repository; in the register of problems it changes nothing but
-the list of classes, which it widens on the human's yes (step 3). A matter the human takes into work
-becomes a task through the human's own backlog, not through this session.
+the human the matters to weigh, and writes down what the human decided to weigh, what the human
+decided to change and what the human set aside. It changes nothing in any repository; in the
+register of problems it changes nothing but the list of classes, which it widens on the human's yes
+(step 3). A matter the human takes into work becomes a task through the human's own backlog, not
+through this session.
 
 This skill lives in `process-audit/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the session's
@@ -100,10 +101,10 @@ resolve in `~/.the-way/locations.json` the entries the counting needs:
   the-way's own cycles and the history the process versions are read from.
 
 Where the file, a key, an entry or the path an entry holds is missing, ask the human where the place
-is, in one question: the ways open, what each costs, and a recommendation (WAY-113). The ways are
-usually to name the place, to create it, or, for the register, to copy the template to a place the
-human names. Offer to add the entry to the file, create the file or the key where they are missing,
-and write only on the human's yes.
+is, in one question of decision, as "How a skill asks" in `elements/common/way_of_working.md` gives
+it (WAY-113). The ways are usually to name the place, to create it, or, for the register, to copy
+the template to a place the human names. Offer to add the entry to the file, create the file or the
+key where they are missing, and write only on the human's yes.
 
 ## 2. Get the latest count
 
@@ -156,9 +157,16 @@ set aside; say so beside a matter that comes again.
 
 Take the matters one at a time, in this order, and wait for the human's word on each before the
 next. Show each as the rows of the count quoted word for word with the header row of their table,
-then what follows from them and what does not, then one question that the rows shown answer. These
-are questions of assessment, so they stay open and carry no recommendation. A matter ends in one of
-two outcomes: the human weighs it further, or sets it aside.
+then what follows from them and what does not, then the question that the rows shown answer.
+Before the question, name from the rows what they show as broken or out of date and a step can
+change — a repository on an old version of the process, a count that did not succeed, an issue
+with no task — and put each such thing as a question of decision, as "How a skill asks" in
+`elements/common/way_of_working.md` gives it (WAY-113). The recommendation rests on what the rows
+show as broken, never on how often the issue came back, how long it has waited or the level of the
+cost of an occurrence; the rules of working on those two stand as they are. Where the rows show
+nothing to change, say so in one sentence; the question that the rows answer is then a question of
+assessment, open and with no recommendation. A matter ends in one of three outcomes: the human
+weighs it further, decides on a step, or sets it aside.
 
 1. **What the count could not read.** The *Repositories* table: any repository read `no`, a shallow
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
@@ -214,8 +222,9 @@ two outcomes: the human weighs it further, or sets it aside.
    The series of *Measure versions* follow in the same matter, the mechanism measures and the gate
    times each apart, one series at a time, each with the line that says why it begins where it
    does. For each series, quote the rows of its table with the table's header row; then what follows
-   from them and what does not; then one open question for the human that the rows answer, with no
-   recommendation. The gate times of runs not compared (those with another gate beside them or an
+   from them and what does not; then one open question for the human that the rows answer, with a
+   recommendation only where the rows show something broken that a step can change, as above. The
+   gate times of runs not compared (those with another gate beside them or an
    unknown count, those that failed and those whose exit code is unknown) are shown apart as the
    count shows them, and are never compared (WAY-350). A version in which no cycle gives a value or
    no run a time has one row with `—` for the measure; name such versions together, with the reason
@@ -249,6 +258,9 @@ holds. Show the human its text first, and write it on the human's yes. It holds:
 - the count it rests on, by its file name, and the repositories it read;
 - *Weighed*: each matter the human weighs further — the issue's name, or the series and the version's
   commit — with the rows quoted as they were shown and the human's words about it;
+- *Decided*: each matter at which the human decided on a step — the question of decision as it was
+  put, the way the human chose and the human's words about it; the step is the human's to take,
+  through the backlog, as a matter taken into work is;
 - *Set aside*: each matter the human set aside, with the human's reason as said;
 - *Not reached*: the matters not yet put before the human, where the session ended early;
 - *Classes added*: each class the session added to the register, with its name, meaning and date;

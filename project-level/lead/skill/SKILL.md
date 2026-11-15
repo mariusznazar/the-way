@@ -143,7 +143,7 @@ project skill with the `the-way-` prefix, never a personal copy.
    a choice that changes a decision, or follows a loose remark, is an exception (WAY-113, WAY-314).
 6. Record the human's exact answers, question/row IDs and acceptance/rejection in the conversations
    before fresh refiner turns. A struck quotation is marked struck and its question returns to
-   the human, once for all affected tasks, with ways/costs/recommendation; it cannot be reused as
+   the human, once for all affected tasks, as "How a skill asks" gives it; it cannot be reused as
    a settled answer. Only fresh refiners transfer resolved answers with their original provenance
    and the ways the human did not choose into Questions to settle and change task bodies. Verify
    this transfer, including canonical answers in every affected task, before advancing or removing

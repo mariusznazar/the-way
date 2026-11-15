@@ -51,7 +51,7 @@ carries takes no approval.
   skill writes there is written for a reader who was not in it.
 - **How to show.** Show each choice by what someone using the product sees — "the button that saves
   stands out; the one that deletes is red, and its text white" — never by the names or values of
-  design tokens, with the ways open, their cost and a recommendation. Put every choice to the human,
+  design tokens, as a question of decision "How a skill asks" gives. Put every choice to the human,
   a choice the skill recommends included, and after a choice that enters a binding part ask the one
   question "How a skill asks" gives. Before first using a term of the field — contrast, focus, a
   state of a control — say in plain words what it means (WAY-174, WAY-113).
