@@ -5412,6 +5412,114 @@ maybe", which is inventing cases by the back door; every settled meaning as a ca
 term — the glossary would grow by words nobody confuses, against WAY-95, which it would have to
 change.
 
+### WAY-377 — Does the refinement of a task list the decisions its document leaves to the executor before the human sees the document, and who lists them?
+
+Before the refinement of a task shows its complete document to the human, it has the decisions the
+document leaves to the executor listed where the document's *Decisions in play* is not `none` or the
+task changes a skill or an instruction file, and for no other task. Two fresh agents of one class of
+model, cheaper than the refining agent's and named in general terms, never by the name of a model,
+make the list: the first, given the complete document and the full text of the entries *Decisions in
+play* names, lists each decision an executor would have to take on its own that they leave
+unanswered or answer in part, and marks each answer as written, visible only in a file the document
+names as a model, or guessed; the second, with read access to the repository the task changes,
+settles each guess against the repository and the document. A decision counts only where it follows
+from a sentence that stands in the document or in a named entry and where different answers give a
+different, observable result inside the task's scope, and the list owes no decision and no number
+(WAY-374).
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-100
+- **Verification:** an agent compares the work with the decision:
+  - complies: a task whose *Decisions in play* names an entry of the log is refined, and before its
+    document is shown the refining agent starts one fresh agent on a cheaper class, giving it the
+    document and the full text of the entry and nothing of the refinement's conversation; it gets a
+    list in which each decision is marked written, visible only in a model file, or guessed, and
+    starts a second fresh agent on the same class that settles each guess against the repository; a
+    task that renames a file and whose *Decisions in play* reads `none` gets no list and no mention
+    of the step; a task with `none` there that edits a skill gets the list; a list with no decision
+    is accepted as it is;
+  - violates: the step runs for a task that renames a file with `none` in *Decisions in play*; the
+    first agent is given the conversation of the refinement; an agent runs on a class named by the
+    name of a model, or the two run on different classes; the list holds a case outside the task's
+    scope, or is padded to a number of decisions; the guesses go to the human with no second agent
+    having settled them.
+- **Origin:** none
+
+*Rationale:* an executor that meets a matter the document leaves open settles it on its own, and the
+human learns of it at the review of the request or not at all; in the product's own tally of the
+problems that cost the human's time in the work of the process, more than half were an obscurity of
+a task that the agent settled, and the record of that tally is not open to a reader of this
+repository. A fresh agent that reads only the document and the entries it names can list such
+decisions before the cycle, and the mark of where each answer is known separates what the document
+states from what the agent had to guess. A trial on two accepted task documents of this repository,
+the product's own measurement whose record is not open to a reader of this repository, gave 14
+decisions on each, 9 and 12 of them guesses; a critic with read access to the repository found 5 of
+the 9 guesses of the first document already settled there; one run of both agents cost about 200 to
+250 thousand tokens and 3 to 5 minutes. The cost fixes the condition: a task with no decision in
+play that changes no skill and no instruction file is a small one, where the cost exceeds the gain.
+The class is the cheaper one for both agents because in the trial the critic on it found an entry
+that went against WAY-90 and a gap in the template of a request's description, and quotations it
+gave, checked at random, agreed with the repository. The bound is that of WAY-374 and for the same
+reason: an agent told to find decisions finds plausible ones outside the task. The price: a task
+outside the condition keeps the gaps its executor settles, and a gap the two agents do not see stays
+for the executor. The-way takes this practice from the course AI Tech Leaders, in whose notes of the
+author it stands as the idea of listing the decisions a task document leaves to the executor with a
+mark of where each answer is known, to be tried on two tasks; the notes are not open to a reader of
+this repository. It takes the list and the mark, and leaves out the count of how many guesses the
+human would settle otherwise and the minutes of reading the list, which the notes keep for the
+trial; the second agent, the bound, the condition and the class are the-way's own (WAY-100).
+*Rejected:* the step at every refinement of a task — one run cost about 200 to 250 thousand tokens
+and 3 to 5 minutes in the trial, and for a small task such as a rename or a small fix the cost
+exceeds the gain; the step only at the human's request — it depends on the human remembering it, and
+the gaps are still closed by the executor during the work; a stronger class of model — several times
+dearer with no proof that it is needed, since in the trial the critic on the cheaper class found the
+gaps named above and its quotations agreed with the repository.
+
+### WAY-378 — What does the human see after the decisions a task document leaves to the executor are listed and criticised?
+
+The refining agent shows the human only the matters that the second agent of WAY-377 leaves truly
+open and the gaps of the document itself, at most about four, the most consequential first, each in
+plain language as WAY-113 asks a decision, with the ways, the cost of each and a recommendation; the
+full list and the critique stay in a file in the ignored `.runs/` directory of the product, whose
+path the agent gives the human. Before it shows a matter, and before it keeps a guess from the human
+on the critique's verdict that the repository or the task document already settles it or that it is
+most likely right, it checks the quotations behind that verdict and gives the matter one explicit
+verdict (WAY-120), and where no matter is open it says nothing of the step.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-377
+- **Verification:** an agent compares the work with the decision:
+  - complies: the list of a task has 11 guesses, of which the critic finds 6 already settled in the
+    repository or the task document and 3 most likely right; the refining agent opens the file the
+    critic quotes from, sees that the quotation of one of the 6 does not say what the critic claims,
+    and counts that guess open; it shows the human 3 matters, each with the ways, their cost and a
+    recommendation, the most consequential first, and the path of the file; a task whose list holds
+    no open matter gets no mention of the step;
+  - violates: the human is shown the whole list of guesses; a matter is shown, or a guess kept from
+    the human, on the critic's verdict with no check of the quotation behind it; more than about
+    four matters are shown at once, or a matter with no recommendation; the path of the file is not
+    given; the agent writes to the human that the step ran and found nothing open.
+- **Origin:** none
+
+*Rationale:* the raw list of guesses is too long and too thin to assess: in the product's own trial,
+whose record is not open to a reader of this repository, the human looked through one in 5 minutes
+and could not judge it, and only the critique of an agent with read access to the repository,
+written in plain language, gave matters to settle: the human settled 7 of them, and 5 of the 7 added
+a sentence to the task document. A critic can call a matter settled while the first agent was right
+or the reverse, so the refining agent opens the file the critique quotes before it shows a matter and
+before it keeps a guess from the human, and the full list and the critique stay in a file, where the
+human who wants to check one finds it. Plain language and a limit on the number keep the human's
+reading to what only the human can settle. The price: the refining agent opens one file for each
+guess the critic keeps from the human, which the list bounds, a guess whose quotation holds but does
+not settle the matter stays out of the human's sight, and a human who wants the whole list opens the
+file.
+*Rejected:* the full list of guesses shown to the human — the raw list took the human 5 minutes and
+could not be assessed, and a critic could call a matter right while the agent was wrong, which is why
+the full list stays in the file and the refining agent checks the critique's quotations, those of the
+guesses kept from the human included.
+
 ## The course of a task cycle
 
 The weight of a task's process, the methods of the cycle, when it writes a spec or a plan, on which
