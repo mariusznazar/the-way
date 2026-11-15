@@ -1,0 +1,374 @@
+F......FFFFFF....FFF...........FFFFF.FFFF............F....FFFF.......FF..............F.FF....FF...
+======================================================================
+FAIL: test_a_codex_row_with_no_writes_is_priced_at_the_old_price_whatever_its_write_cells (test_audit_count.Cost.test_a_codex_row_with_no_writes_is_priced_at_the_old_price_whatever_its_write_cells)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1347, in test_a_codex_row_with_no_writes_is_priced_at_the_old_price_whatever_its_write_cells
+    self.assertEqual("0.011000", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.011000' != 'unknown'
+- 0.011000
++ unknown
+
+
+======================================================================
+FAIL: test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either (test_audit_count.Cost.test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either) [5 minutes]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1379, in test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either
+    self.assertTrue(any(f"no price of a cache write of {label} for model `model-x`"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        in reason for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either (test_audit_count.Cost.test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either) [1 hour]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1379, in test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either
+    self.assertTrue(any(f"no price of a cache write of {label} for model `model-x`"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        in reason for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_model_with_no_price_for_a_lifetime_is_priced_where_its_row_holds_none_of_it (test_audit_count.Cost.test_a_model_with_no_price_for_a_lifetime_is_priced_where_its_row_holds_none_of_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1369, in test_a_model_with_no_price_for_a_lifetime_is_priced_where_its_row_holds_none_of_it
+    self.assertEqual("0.003400", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.003400' != 'unknown'
+- 0.003400
++ unknown
+
+
+======================================================================
+FAIL: test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it (test_audit_count.Cost.test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it) [the writes of 1 hour]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1362, in test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it
+    self.assertTrue(any("no price of a cache write of 1 hour for model `model-y`"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        in reason for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it (test_audit_count.Cost.test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it) [only the writes of 1 hour]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1362, in test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it
+    self.assertTrue(any("no price of a cache write of 1 hour for model `model-y`"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        in reason for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it (test_audit_count.Cost.test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it) [a write of one token of 1 hour]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1362, in test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it
+    self.assertTrue(any("no price of a cache write of 1 hour for model `model-y`"
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        in reason for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_row_whose_cached_input_and_writes_exceed_its_input_leaves_the_cost_unknown (test_audit_count.Cost.test_a_row_whose_cached_input_and_writes_exceed_its_input_leaves_the_cost_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1396, in test_a_row_whose_cached_input_and_writes_exceed_its_input_leaves_the_cost_unknown
+    self.assertTrue(any("above its input" in reason and "orchestrator" in reason
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        for reason in why), why)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_a_row_whose_cached_input_and_writes_make_exactly_its_input_is_priced (test_audit_count.Cost.test_a_row_whose_cached_input_and_writes_make_exactly_its_input_is_priced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1409, in test_a_row_whose_cached_input_and_writes_make_exactly_its_input_is_priced
+    self.assertEqual("0.002400", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.002400' != 'unknown'
+- 0.002400
++ unknown
+
+
+======================================================================
+FAIL: test_a_row_with_no_writes_in_the_newest_form_is_priced_as_before (test_audit_count.Cost.test_a_row_with_no_writes_in_the_newest_form_is_priced_as_before)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1339, in test_a_row_with_no_writes_in_the_newest_form_is_priced_as_before
+    self.assertEqual("0.008000", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.008000' != 'unknown'
+- 0.008000
++ unknown
+
+
+======================================================================
+FAIL: test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback (test_audit_count.Cost.test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback) [words]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1421, in test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback
+    self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback (test_audit_count.Cost.test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback) [sixteen digits]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1421, in test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback
+    self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback (test_audit_count.Cost.test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback) [negative]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1421, in test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback
+    self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback (test_audit_count.Cost.test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback) [empty]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1421, in test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback
+    self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback (test_audit_count.Cost.test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback) [a float]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1421, in test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback
+    self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_a_wrong_price_list_refuses_the_run_with_nothing_written (test_audit_count.Cost.test_a_wrong_price_list_refuses_the_run_with_nothing_written) [a write price that is no number]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1220, in test_a_wrong_price_list_refuses_the_run_with_nothing_written
+    self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'Wrote count-2026-11-15.md and count-latest.md: 1 cycles in 1 of 1 repositories.\r\n'
+
+======================================================================
+FAIL: test_a_wrong_price_list_refuses_the_run_with_nothing_written (test_audit_count.Cost.test_a_wrong_price_list_refuses_the_run_with_nothing_written) [a doubled list date]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1222, in test_a_wrong_price_list_refuses_the_run_with_nothing_written
+    self.assertEqual([], list(self.results.iterdir()))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [WindowsPath('a file in the user's profile directory chars]md')]
+
+Second list contains 2 additional elements.
+First extra element 0:
+WindowsPath('a file in the system's temporary directory')
+
+- []
++ [WindowsPath('a file in the system's temporary directory'),
++  WindowsPath('a file in the system's temporary directory')]
+
+======================================================================
+FAIL: test_a_wrong_price_list_refuses_the_run_with_nothing_written (test_audit_count.Cost.test_a_wrong_price_list_refuses_the_run_with_nothing_written) [a list date that is no date]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1222, in test_a_wrong_price_list_refuses_the_run_with_nothing_written
+    self.assertEqual([], list(self.results.iterdir()))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [WindowsPath('a file in the user's profile directory chars]md')]
+
+Second list contains 2 additional elements.
+First extra element 0:
+WindowsPath('a file in the system's temporary directory')
+
+- []
++ [WindowsPath('a file in the system's temporary directory'),
++  WindowsPath('a file in the system's temporary directory')]
+
+======================================================================
+FAIL: test_a_wrong_price_list_refuses_the_run_with_nothing_written (test_audit_count.Cost.test_a_wrong_price_list_refuses_the_run_with_nothing_written) [a list larger than the cap]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1222, in test_a_wrong_price_list_refuses_the_run_with_nothing_written
+    self.assertEqual([], list(self.results.iterdir()))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != [WindowsPath('a file in the user's profile directory chars]md')]
+
+Second list contains 2 additional elements.
+First extra element 0:
+WindowsPath('a file in the system's temporary directory')
+
+- []
++ [WindowsPath('a file in the system's temporary directory'),
++  WindowsPath('a file in the system's temporary directory')]
+
+======================================================================
+FAIL: test_the_cache_writes_of_each_lifetime_are_priced_each_at_its_own_price (test_audit_count.Cost.test_the_cache_writes_of_each_lifetime_are_priced_each_at_its_own_price)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1322, in test_the_cache_writes_of_each_lifetime_are_priced_each_at_its_own_price
+    self.assertEqual("0.025000", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.025000' != 'unknown'
+- 0.025000
++ unknown
+
+
+======================================================================
+FAIL: test_the_share_of_a_fix_round_counts_the_writes_of_its_turns (test_audit_count.Cost.test_the_share_of_a_fix_round_counts_the_writes_of_its_turns)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1435, in test_the_share_of_a_fix_round_counts_the_writes_of_its_turns
+    self.assertEqual(["0.009000", "1", "66.7%"], row[3:6])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['0.009000', '1', '66.7%'] != ['unknown', 'unknown', 'unknown']
+
+First differing element 0:
+'0.009000'
+'unknown'
+
+- ['0.009000', '1', '66.7%']
++ ['unknown', 'unknown', 'unknown']
+
+======================================================================
+FAIL: test_the_stage_report_cycle_stages_writes_gives_the_share (test_audit_count.Cost.test_the_stage_report_cycle_stages_writes_gives_the_share)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 930, in test_the_stage_report_cycle_stages_writes_gives_the_share
+    self.assertEqual(["0.014250", "1", "15.8%"], row[3:6])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['0.014250', '1', '15.8%'] != ['unknown', 'unknown', 'unknown']
+
+First differing element 0:
+'0.014250'
+'unknown'
+
+- ['0.014250', '1', '15.8%']
++ ['unknown', 'unknown', 'unknown']
+
+======================================================================
+FAIL: test_the_writes_alone_above_the_input_leave_the_cost_unknown (test_audit_count.Cost.test_the_writes_alone_above_the_input_leave_the_cost_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1403, in test_the_writes_alone_above_the_input_leave_the_cost_unknown
+    self.assertTrue(any("above its input" in reason for reason in why), why)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : ['the table of the section in `stages.md` is not of the form the stage report gives']
+
+======================================================================
+FAIL: test_the_writes_are_priced_at_the_prices_of_their_own_model (test_audit_count.Cost.test_the_writes_are_priced_at_the_prices_of_their_own_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1332, in test_the_writes_are_priced_at_the_prices_of_their_own_model
+    self.assertEqual("0.009600", cost)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+AssertionError: '0.009600' != 'unknown'
+- 0.009600
++ unknown
+
+
+======================================================================
+FAIL: test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column (test_audit_count.Locations.test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column) [1 hour]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 611, in test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column
+    self.assert_refused(done, "--prices", column)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 566, in assert_refused
+    self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'Wrote count-2026-11-15.md and count-latest.md: 1 cycles in 1 of 1 repositories.\r\n'
+
+======================================================================
+FAIL: test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column (test_audit_count.Locations.test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column) [5 minutes]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 611, in test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column
+    self.assert_refused(done, "--prices", column)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 566, in assert_refused
+    self.assertEqual(2, done.returncode, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'Wrote count-2026-11-15.md and count-latest.md: 1 cycles in 1 of 1 repositories.\r\n'
+
+======================================================================
+FAIL: test_a_table_with_both_write_columns_is_priced_at_the_prices_of_both_lifetimes (test_audit_count.StagesForms.test_a_table_with_both_write_columns_is_priced_at_the_prices_of_both_lifetimes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1617, in test_a_table_with_both_write_columns_is_priced_at_the_prices_of_both_lifetimes
+    self.assertEqual("0.003600", self.rows("Cost")[0][3])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '0.003600' != 'unknown'
+- 0.003600
++ unknown
+
+
+======================================================================
+FAIL: test_a_table_with_one_write_column_and_not_the_other_misses_the_other (test_audit_count.StagesForms.test_a_table_with_one_write_column_and_not_the_other_misses_the_other) [the 5 minutes alone]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1584, in test_a_table_with_one_write_column_and_not_the_other_misses_the_other
+    self.assert_missing(done, [f"column {absent} of the table of the section {SECTION}"])
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 1475, in assert_missing
+    self.assertEqual(1, done.returncode, done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+======================================================================
+FAIL: test_a_table_with_one_write_column_and_not_the_other_misses_the_other (test_audit_count.StagesForms.test_a_table_with_one_write_column_and_not_the_other_misses_the_other) [the 1 hour alone]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1584, in test_a_table_with_one_write_column_and_not_the_other_misses_the_other
+    self.assert_missing(done, [f"column {absent} of the table of the section {SECTION}"])
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 1475, in assert_missing
+    self.assertEqual(1, done.returncode, done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+======================================================================
+FAIL: test_one_write_column_is_missing_whatever_else_stands_in_the_header (test_audit_count.StagesForms.test_one_write_column_is_missing_whatever_else_stands_in_the_header) [with no files named]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1593, in test_one_write_column_is_missing_whatever_else_stands_in_the_header
+    self.assert_missing(done, [f"column {absent} of the table of the section {SECTION}"])
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 1475, in assert_missing
+    self.assertEqual(1, done.returncode, done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+======================================================================
+FAIL: test_one_write_column_is_missing_whatever_else_stands_in_the_header (test_audit_count.StagesForms.test_one_write_column_is_missing_whatever_else_stands_in_the_header) [before the files named]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "process-audit/test_audit_count.py", line 1593, in test_one_write_column_is_missing_whatever_else_stands_in_the_header
+    self.assert_missing(done, [f"column {absent} of the table of the section {SECTION}"])
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "process-audit/test_audit_count.py", line 1475, in assert_missing
+    self.assertEqual(1, done.returncode, done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+----------------------------------------------------------------------
+Ran 85 tests in 93.117s
+
+FAILED (failures=31)
+exit 1
