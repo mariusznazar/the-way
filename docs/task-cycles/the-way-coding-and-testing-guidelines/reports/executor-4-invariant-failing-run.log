@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_crafted_names_neither_break_a_row_nor_enter_the_column (__main__.ClaudeFilesNamedTest.test_crafted_names_neither_break_a_row_nor_enter_the_column)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "task-cycle\test_cycle_stages.py", line 755, in test_crafted_names_neither_break_a_row_nor_enter_the_column
+    self.assertEqual(row.named, ["reports/" + "b" * 117 + ".md", "reports/fine-name_1.md",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 "reports/win.md"])
+                                 ^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['reports/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[200212 chars].md'] != ['reports/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb[120 chars].md']
+
+First differing element 0:
+'reports/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[199958 chars]a.md'
+'reports/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb[75 chars]b.md'
+
+First list contains 5 additional elements.
+First extra element 3:
+'reports/a..b.md'
+
+Diff is 200437 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=1)

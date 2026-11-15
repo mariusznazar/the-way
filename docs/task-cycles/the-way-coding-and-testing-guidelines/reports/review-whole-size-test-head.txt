@@ -1,0 +1,30 @@
+..............x...F................
+======================================================================
+FAIL: test_no_function_or_file_of_a_script_is_over_its_threshold (test_size_invariant.Size.test_no_function_or_file_of_a_script_is_over_its_threshold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs\review-whole-2\head\agent-instructions\test_size_invariant.py", line 91, in test_no_function_or_file_of_a_script_is_over_its_threshold
+    self.fail(f"{len(too_long)} functions over {FUNCTION_LIMIT} lines and {len(too_big)} "
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              f"files over {FILE_LIMIT} lines:\n" + "\n".join(too_long + too_big))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 11 functions over 80 lines and 3 files over 1000 lines:
+  installation/install.py:564 run: 120 lines
+  process-audit/audit_count.py:1666 read_gate: 108 lines
+  process-audit/audit_count.py:2101 read_register: 82 lines
+  process-audit/audit_count.py:2293 analyse: 154 lines
+  process-audit/audit_count.py:3067 render: 157 lines
+  project-level/plan_state.py:248 provenance: 100 lines
+  project-level/plan_state.py:350 task_report: 102 lines
+  task-cycle/cycle_stages.py:403 read_codex_agent: 121 lines
+  task-cycle/cycle_stages.py:644 read_claude_agent: 99 lines
+  task-cycle/cycle_stages.py:1022 report: 100 lines
+  task-cycle/request_check.py:422 check: 116 lines
+  elements/common/foundation_check.py: 1003 lines
+  process-audit/audit_count.py: 3310 lines
+  task-cycle/cycle_stages.py: 1178 lines
+
+----------------------------------------------------------------------
+Ran 35 tests in 9.184s
+
+FAILED (failures=1, expected failures=1)

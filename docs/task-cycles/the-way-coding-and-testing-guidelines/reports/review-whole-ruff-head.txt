@@ -1,0 +1,27 @@
+agent-instructions\test_instruction_files.py:161:18: FURB188 [*] Prefer `str.removesuffix()` over conditionally replacing with slice.
+elements\common\foundation_check.py:599:30: PERF102 When using only the values of a dict use the `values()` method
+elements\common\foundation_check.py:608:30: PERF102 When using only the values of a dict use the `values()` method
+elements\common\migrate_foundation.py:398:17: RUF059 Unpacked variable `last_version` is never used
+elements\common\migrate_foundation.py:679:17: RUF059 Unpacked variable `rows` is never used
+elements\common\test_migrate_foundation.py:680:9: RUF059 Unpacked variable `code` is never used
+gate\test_skills_reach_the_way_sessions.py:62:21: PIE810 Call `startswith` once with a `tuple`
+installation\install.py:83:14: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\install.py:467:27: PERF102 When using only the keys of a dict use the `keys()` method
+installation\test_agent_types_installation.py:24:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\test_coding_guidelines_installation.py:20:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\test_installed_guidance.py:15:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\test_lead_installation.py:19:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\test_styleguide_installation.py:25:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+installation\test_testing_guidelines_installation.py:20:12: UP022 Prefer `capture_output` over sending `stdout` and `stderr` to `PIPE`
+instruction-files\check_instructions.py:296:5: FURB188 [*] Prefer `str.removeprefix()` over conditionally replacing with slice.
+process-audit\audit_count.py:1259:19: RUF059 Unpacked variable `why` is never used
+process-audit\audit_count.py:2293:25: UP037 [*] Remove quotes from type annotation
+process-audit\audit_count.py:2506:19: UP037 [*] Remove quotes from type annotation
+process-audit\audit_count.py:2580:36: UP037 [*] Remove quotes from type annotation
+process-audit\test_audit_count.py:2388:38: F541 [*] f-string without any placeholders
+product-guidelines\test_skill_references.py:209:8: PIE810 Call `startswith` once with a `tuple`
+task-cycle\cycle_stages.py:598:13: TRY004 Prefer `TypeError` exception for invalid type
+task-cycle\test_cycle_measures.py:867:17: PYI034 `__enter__` methods in classes like `Handle` usually return `self` at runtime
+task-cycle\test_remarks_check.py:365:13: PLR1704 Redefining argument with the local name `name`
+Found 25 errors.
+[*] 6 fixable with `--fix` (17 unsafe fixes available with `--fix --unsafe-fixes`).
