@@ -207,6 +207,17 @@ class MissingField(unittest.TestCase):
             2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
         self.assertEqual(repository.files(), before)
 
+    def test_a_skill_with_the_name_in_another_form_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\nName: alpha\ndescription: Use for alpha.\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(repository.files(), before)
+
     def test_a_skill_without_description_stops_with_exit_2_naming_the_field(self) -> None:
         # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         # decision: WAY-344 "Each reading of a file that the rule covers has one test"
