@@ -272,8 +272,8 @@ in part, decide before you act on its status: resume the agent to read it, carry
 handoff of the next agent able to judge it, or record an autonomous choice saying why it bears on
 nothing the agent judged. Going on at the status alone would let an unread decision pass through a
 stage that looks complete, and an error hidden in it would reach the request. A decision the
-reviewer of the whole change read by title as WAY-150 gives is no gap. Under `make-change` the
-status is `done`, `done with concerns`, `questions`, `returned`,
+reviewer of the whole change knows from the index and did not open whole, as WAY-150 gives, is no
+gap. Under `make-change` the status is `done`, `done with concerns`, `questions`, `returned`,
 `reserved` or `blocked`; under `plan-task` it is `done`, `done with concerns`, `questions`,
 `returned` or `reserved`; under `review-change` it is the report's first line, `PASS <sha>`,
 `FAIL <sha>` or `questions`; under `write-spec` the designer returns `questions`, `done` or
@@ -559,7 +559,9 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Beside it, run
     `task-cycle/cycle_measures.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/mechanism_measures.md`, naming the same sessions in the same way: it
-    counts the context and the prompt cache of the cycle's agents. Where
+    counts the context and the prompt cache of the cycle's agents and, for each agent, the bytes of
+    the decision log and of the index of decisions that entered its context and how many times each
+    entered it, which show what the reading of the foundation costs (WAY-339). Where
     `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends with exit code 2 and an
     `Error:` line, record the command, the exit code and the `Error:` line under *Verification* of
     the record and, in the request's *Checks*, as a check that did not run; fix the call where the

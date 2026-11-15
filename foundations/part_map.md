@@ -67,8 +67,10 @@ The part answers for a product's environment facts.
 The part answers for rules of form and the way of working shared by foundation-entry skills, the
 script that checks a whole foundation's identifiers, references and assignment of files to parts,
 the references of a product's guidelines included, the script that migrates a foundation from the
-earlier form of the-way, the skill that finds entries in a source, and the critique skill, which
-reads a proposal critically before the human sees it.
+earlier form of the-way, the script that writes the index of the decisions a reading selects from a
+product's decision log, the script that compares the entries of two copies of a decision log, the
+skill that finds entries in a source, and the critique skill, which reads a proposal critically
+before the human sees it.
 
 - **Files:** elements/common/**
 - **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts
