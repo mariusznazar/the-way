@@ -6,6 +6,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -890,6 +891,255 @@ class CodexFilesNamedTest(unittest.TestCase):
                       "| 5 | unknown |", text)
         self.assertIn("| /root/fixer — turn 2 | 2026-10-06 10:10:00 | 0:00:00 | model-f | 400 | 0 "
                       "| 40 | reports/review_findings.md |", text)
+
+
+ABSENT = object()  # a field a test takes out of a line
+COUNTS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
+          "output_tokens")
+
+
+class ClaudeFieldsTest(unittest.TestCase):
+    """The reading of a Claude Code transcript under WAY-344: a needed field that is missing ends
+    the script with exit code 2 and a message naming the transcript, the line and the field; the
+    fields that stay lenient read as they always did."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        self.transcript = self.home / "projects" / "C--repo" / "fields.jsonl"
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def run_main(self, name: str = "fields") -> tuple[int, str, Path]:
+        output = self.root / "out" / f"{name}.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main([name, "--claude-home", str(self.home), "--codex-home",
+                                      str(self.root / "codex"), "--output", str(output)])
+        return code, stderr.getvalue(), output
+
+    def failing(self, line: dict) -> tuple[int, str, Path]:
+        """The run of a transcript whose third line is `line`, after a prompt and a good answer."""
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+            line,
+        ])
+        return self.run_main()
+
+    def assert_missing(self, line: dict, field: str) -> None:
+        code, stderr, output = self.failing(line)
+        self.assertEqual(2, code, stderr)
+        self.assertTrue(stderr.startswith("Error: "), stderr)
+        # The transcript, the line (the third of the file) and the field.
+        self.assertIn(f"{self.transcript.resolve()}:3: ", stderr)
+        self.assertIn(field, stderr)
+        self.assertFalse(output.exists())
+
+    def assert_message_names_no_other_field(self, line: dict, field: str) -> None:
+        # A field that is a prefix of another (`message` of `message.usage`) would pass by the
+        # longer name: the message holds the field as the end of its sentence.
+        _, stderr, _ = self.failing(line)
+        self.assertRegex(stderr.strip(), rf"(no field {re.escape(field)}|field {re.escape(field)} "
+                                         r"is not a (whole number|time))$")
+
+    def with_usage(self, **changes: object) -> dict:
+        line = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        usage = line["message"]["usage"]
+        for key, value in changes.items():
+            if value is ABSENT:
+                del usage[key]
+            else:
+                usage[key] = value
+        return line
+
+    def test_a_needed_field_that_is_missing_ends_the_script_with_exit_code_2_naming_it(
+            self) -> None:
+        # The test of the reading that WAY-344 asks for: the transcript lacks one count of a
+        # response, and the script names it instead of reading the absent count as zero.
+        code, stderr, output = self.failing(self.with_usage(cache_creation_input_tokens=ABSENT))
+        self.assertEqual(2, code)
+        self.assertEqual(f"Error: {self.transcript.resolve()}:3: no field "
+                         "message.usage.cache_creation_input_tokens\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_every_needed_field_of_a_line_is_checked(self) -> None:
+        without_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        del without_message["message"]
+        null_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        null_message["message"] = None
+        text_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        text_message["message"] = "not an object"
+        no_content = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        del no_content["message"]["content"]
+        null_content = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        null_content["message"]["content"] = None
+        user_without_message = prompt("09:00:20", "go")
+        del user_without_message["message"]
+        user_without_content = prompt("09:00:20", "go")
+        del user_without_content["message"]["content"]
+        user_null_content = prompt("09:00:20", "go")
+        user_null_content["message"]["content"] = None
+        no_usage = self.with_usage()
+        del no_usage["message"]["usage"]
+        null_usage = self.with_usage()
+        null_usage["message"]["usage"] = None
+        list_usage = self.with_usage()
+        list_usage["message"]["usage"] = [1, 2]
+        for label, line, field in (
+                ("an answer with no message", without_message, "message"),
+                ("an answer with a null message", null_message, "message"),
+                ("an answer whose message is a text", text_message, "message.content"),
+                ("an answer with no content", no_content, "message.content"),
+                ("an answer with a null content", null_content, "message.content"),
+                ("a prompt with no message", user_without_message, "message"),
+                ("a prompt with no content", user_without_content, "message.content"),
+                ("a prompt with a null content", user_null_content, "message.content"),
+                ("an answer with no usage", no_usage, "message.usage"),
+                ("an answer with a null usage", null_usage, "message.usage"),
+                ("an answer whose usage is a list", list_usage, "message.usage.input_tokens")):
+            with self.subTest(label):
+                self.assert_missing(line, field)
+                self.assert_message_names_no_other_field(line, field)
+
+    def test_every_count_of_the_usage_is_checked_to_be_a_whole_number(self) -> None:
+        for count in COUNTS:
+            for label, value, kind in (
+                    ("absent", ABSENT, "no field"), ("null", None, "no field"),
+                    ("a negative number", -1, "is not a whole number"),
+                    ("a text", "5", "is not a whole number"),
+                    ("a fraction", 1.5, "is not a whole number"),
+                    ("a boolean", True, "is not a whole number"),
+                    ("a list", [5], "is not a whole number")):
+                with self.subTest(count=count, value=label):
+                    line = self.with_usage(**{count: value})
+                    field = f"message.usage.{count}"
+                    self.assert_missing(line, field)
+                    _, stderr, _ = self.failing(line)
+                    self.assertTrue(stderr.strip().endswith(
+                        f"no field {field}" if kind == "no field"
+                        else f"field {field} is not a whole number"), stderr)
+
+    def test_a_timestamp_that_is_no_time_ends_the_script_with_exit_code_2_naming_it(self) -> None:
+        for value in ("yesterday", "", 5, None, ["2026-10-06T09:00:00Z"], True, "2026-13-45",
+                      "0001-01-01T00:00:00+05:00", "9999-12-31T23:59:59-05:00"):
+            for kind, line in (("an answer", self.with_usage()),
+                               ("a prompt", prompt("09:00:20", "go"))):
+                with self.subTest(kind=kind, value=value):
+                    line["timestamp"] = value
+                    self.assert_missing(line, "timestamp")
+                    self.assert_message_names_no_other_field(line, "timestamp")
+
+    def test_a_line_of_another_kind_is_no_line_the_reading_checks(self) -> None:
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            {"type": "summary", "timestamp": "no time", "leafUuid": "x"},
+            {"type": "attachment", "timestamp": at("09:00:05"), "message": None},
+            {"timestamp": at("09:00:06")},
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+        code, stderr, _ = self.run_main()
+        self.assertEqual((0, ""), (code, stderr))
+
+    def test_a_missing_field_in_a_subagents_transcript_names_that_transcript(self) -> None:
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+        agent = self.transcript.with_suffix("") / "subagents" / "agent-a1.jsonl"
+        bad = self.with_usage(output_tokens=ABSENT)
+        write_lines(agent, [prompt("09:01:00", "implement"), bad])
+        code, stderr, _ = self.run_main()
+        self.assertEqual(2, code)
+        self.assertEqual(f"Error: {agent.resolve()}:2: no field message.usage.output_tokens\n",
+                         stderr)
+
+    def test_the_fields_that_stay_lenient_read_as_they_always_did(self) -> None:
+        # Each line below lacks something the reading does not need, and the run ends with exit
+        # code 0: a line with no timestamp (before its type is looked at), a response that names no
+        # model, early lines of a response whose stop_reason is null, a response that has a uuid
+        # and no id, a tool call with no id or name, a result with no tool_use_id, a text that is
+        # no string, and a user line with no isMeta.
+        usage = {"input_tokens": 10, "cache_creation_input_tokens": 0,
+                 "cache_read_input_tokens": 100, "output_tokens": 2}
+        write_lines(self.transcript, [
+            {"type": "user"},
+            {"type": "assistant", "message": None},
+            prompt("09:00:00", "run the cycle"),
+            {"type": "assistant", "timestamp": at("09:00:10"), "uuid": "u1", "message": {
+                "content": [{"type": "text", "text": 5}], "usage": usage}},
+            {"type": "assistant", "timestamp": at("09:00:11"), "uuid": "u2", "message": {
+                "id": "m2", "model": "opus", "stop_reason": None, "content": [{"type": "tool_use"}],
+                "usage": dict(usage, input_tokens=1, output_tokens=1)}},
+            {"type": "assistant", "timestamp": at("09:00:12"), "uuid": "u3", "message": {
+                "id": "m2", "model": "opus", "content": [{"type": "text"}],
+                "usage": dict(usage, input_tokens=1, output_tokens=7)}},
+            {"type": "user", "timestamp": at("09:00:13"), "message": {
+                "content": [{"type": "tool_result", "content": "ok"}]}},
+            {"type": "assistant", "timestamp": at("09:00:14"), "message": {
+                "id": "m3", "model": None, "stop_reason": "end_turn", "content": [],
+                "usage": dict(usage, input_tokens=1, output_tokens=3)}},
+        ])
+        code, stderr, output = self.run_main()
+        self.assertEqual(0, code, stderr)
+        text = output.read_text(encoding="utf-8")
+        # u1: 110 in, 2 out; m2 once, from its later line: 101 in, 7 out; m3: 101 in, 3 out.
+        self.assertIn("- Tokens in all: 324", text)
+        self.assertIn("| unknown | 216 |", text)
+        self.assertIn("| opus | 108 |", text)
+        self.assertIn("2 response(s) name no model", stderr)
+        self.assertIn("1 call(s) of a type the reader does not recognise (tool_use): their "
+                      "waits are unknown", stderr)
+
+    def test_a_line_that_is_no_object_is_skipped_as_a_line_with_no_timestamp(self) -> None:
+        self.transcript.parent.mkdir(parents=True)
+        lines = [json.dumps(prompt("09:00:00", "run the cycle")), "[1, 2]", "5", '"text"', "null",
+                 json.dumps(answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"))]
+        self.transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        code, stderr, _ = self.run_main()
+        self.assertEqual((0, ""), (code, stderr))
+
+    def test_a_transcript_that_cannot_be_read_ends_with_exit_code_1_and_no_trace(self) -> None:
+        good = json.dumps(prompt("09:00:00", "run the cycle")) + "\n"
+        self.transcript.parent.mkdir(parents=True)
+        for label, data in (
+                ("a line that is no JSON", (good + "{not json\n").encode()),
+                ("a line nested too deep", (good + "[" * 200_000 + "\n").encode()),
+                ("bytes that are no UTF-8", good.encode() + b"\xff\xfe\n"),
+                ("a number of too many digits", (good + '{"timestamp": ' + "9" * 5000
+                                                 + "}\n").encode())):
+            with self.subTest(label):
+                self.transcript.write_bytes(data)
+                code, stderr, output = self.run_main()
+                self.assertEqual(1, code, stderr)
+                self.assertTrue(stderr.startswith("Error: "), stderr)
+                self.assertEqual(1, len(stderr.strip().splitlines()), stderr)
+                self.assertFalse(output.exists())
+
+    def test_a_crafted_value_neither_crashes_the_script_nor_breaks_the_report(self) -> None:
+        usage = {"input_tokens": 1, "cache_creation_input_tokens": 0,
+                 "cache_read_input_tokens": 10, "output_tokens": 1}
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            # A list for an identifier or a model, a naive time, a lone surrogate in a model.
+            {"type": "assistant", "timestamp": "2026-10-06T09:00:10", "uuid": "u1", "message": {
+                "id": ["m"], "model": ["opus"], "content": [
+                    {"type": "tool_use", "id": ["call"], "name": "Bash"},
+                    {"type": "tool_use", "id": "ok", "name": ["Bash"]}], "usage": usage}},
+            {"type": "user", "timestamp": at("09:00:20"), "message": {"content": [
+                {"type": "tool_result", "tool_use_id": ["call"]},
+                {"type": "tool_result", "tool_use_id": "ok"}]}},
+            {"type": "assistant", "timestamp": at("09:00:30"), "uuid": "u2", "message": {
+                "id": "m2", "model": "opus\ud800|x", "stop_reason": "end_turn",
+                "content": [{"type": "text"}], "usage": usage}},
+        ])
+        code, stderr, output = self.run_main()
+        self.assertEqual(0, code, stderr)
+        text = output.read_text(encoding="utf-8")
+        self.assertIn("1 response(s) name no model", stderr)
+        self.assertIn("| opus?/x | 12 |", text)
 
 
 class CommandTest(unittest.TestCase):
