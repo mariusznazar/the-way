@@ -540,6 +540,7 @@ class Times(AuditCountCase):
         return added, self.cycles()[0], cost
 
     def test_a_changed_stage_script_gives_the_times_the_cost_and_the_share_unknown(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         # The cycle changes `task-cycle/cycle_stages.py` between the version it ran on and its copy:
         # the figures that script wrote are unknown with the reason, and the number of fix rounds,
         # which the record gives, and the two other files stand as before.
@@ -835,6 +836,7 @@ class Locations(AuditCountCase):
                             "no entry `repository` under `notes`")
 
     def test_the_way_with_no_repository_entry_is_the_checkout_the_script_lies_in(self):
+        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
         # The entry `repository` under `the-way` is no missing field (WAY-344): the count takes
         # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
         own = subprocess.run(["git", "-C", str(HERE.parent), "rev-parse", "--verify", "HEAD"],
@@ -1228,6 +1230,7 @@ class Cost(AuditCountCase):
         self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
 
     def test_stages_md_without_the_section_is_priced_from_the_table_of_tokens_by_model(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and model-b 4 / 0.5 / 20:
         # model-a is (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000; model-b is (500 - 100) * 4
         # + 100 * 0.5 + 50 * 20 = 2650. The total is 10650.
@@ -1631,6 +1634,7 @@ class StagesForms(AuditCountCase):
             self.assertTrue(any(field in reason for reason in reasons), (field, reasons))
 
     def test_a_column_of_the_newer_table_that_the_file_lacks_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for column in NEWER_COLUMNS:
             with self.subTest(column):
                 columns = [name for name in NEWER_COLUMNS if name != column]
@@ -1649,10 +1653,12 @@ class StagesForms(AuditCountCase):
                                    f"column Output of the table of the section {SECTION}"])
 
     def test_a_heading_with_no_table_at_all_misses_the_table(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(self.newer(table=False))
         self.assert_missing(done, [f"table of the section {SECTION}"])
 
     def test_a_column_of_the_older_table_that_the_file_lacks_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for column in ("Input", "Cached input", "Output"):
             with self.subTest(column):
                 names = ["Model", "Total tokens", "Input", "Cached input", "Output"]
@@ -1662,6 +1668,7 @@ class StagesForms(AuditCountCase):
                 self.assert_missing(done, [f"column {column} of the table with the first cell Model"])
 
     def test_a_file_with_neither_the_section_nor_the_table_misses_both(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for label, stages in (("only times", "# Stages\n\n" + TIME_LINES),
                               ("a table of another kind", "# Stages\n\n" + TIME_LINES
                                + "\n| Name | Tokens |\n|---|---|\n| model-a | 100 |\n"),
@@ -1672,6 +1679,7 @@ class StagesForms(AuditCountCase):
                                            "table with the first cell Model"])
 
     def test_a_time_line_without_the_other_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         cases = (
             ("the wait", "- Working time without waiting for tools: 0:20:00\n",
              "line Waiting for tools", "0:20:00"),
@@ -1687,6 +1695,7 @@ class StagesForms(AuditCountCase):
                 self.assertEqual(sorted([known, "unknown"]), sorted(both))
 
     def test_neither_time_line_is_the_earlier_form_and_no_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(older_stages(older_row("model-a", 1000, 0, 100),
                                        times="- Working time, orchestrator turns and subagent "
                                              "turns joined: 0:30:28\n"))
@@ -1697,12 +1706,14 @@ class StagesForms(AuditCountCase):
                                                   cycle["Waiting for tools"]])
 
     def test_the_column_files_named_is_never_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(self.newer())
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("0.003000", self.rows("Cost")[0][3])
 
     def test_a_table_with_neither_write_column_is_the_earlier_form_and_misses_nothing(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
         # With and without the column *Files named*: the cost is the one the rows gave before the
         # write columns stood in the form, the run ends with exit code 0, and no `Error:` line and
         # no value unknown is added for the columns that were never there.
@@ -1720,6 +1731,7 @@ class StagesForms(AuditCountCase):
                                       if "Cache write" in unknown[3]])
 
     def test_a_table_with_one_write_column_and_not_the_other_misses_the_other(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
         # The cost is unknown with the reason, the result is written, the run ends with exit code 1
         # and one `Error:` line names `stages.md` and the column that is missing.
         named = NEWER_COLUMNS + ["Files named"]
@@ -1733,6 +1745,7 @@ class StagesForms(AuditCountCase):
                 self.assert_missing(done, [field])
 
     def test_one_write_column_is_missing_whatever_else_stands_in_the_header(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
         first, second = WRITE_COLUMNS
         for label, columns, absent in (
                 ("with no files named", NEWER_COLUMNS + [first], second),
@@ -1967,6 +1980,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_measures_file_without_a_label_gives_every_value_unknown_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
         done, added = self.count({MEASURES: measures_file(values)})
         self.assert_missing(done, MEASURES, "Calls of subagents")
@@ -2012,6 +2026,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertNotIn("x" * 50, text)
 
     def test_a_changed_measures_script_gives_its_measures_unknown_and_the_rest_as_before(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         added = self.own_run({MEASURES_SCRIPT: "version two\n"})
         self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
                          self.rows("Mechanism measures"))
@@ -2033,6 +2048,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Mechanism measures"))
 
     def test_a_field_missing_from_the_file_of_a_changed_tool_is_not_read_and_ends_no_run(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         # The values of that file are unknown for the change of the tool, so no field of it is read
         # as missing and the run ends with exit code 0.
         values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
@@ -2056,6 +2072,7 @@ class MechanismMeasures(MeasuresCase):
 
 class GateRunsMeasures(MeasuresCase):
     def test_a_changed_tool_of_the_gate_gives_its_runs_unknown_and_the_rest_as_before(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         # Either tool of the gate: the script that records the times, and the test runner whose
         # output gives the time of each directory.
         for path in (GATE_SCRIPT, GATE_RUNNER):
@@ -2078,6 +2095,7 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Gate runs"))
 
     def test_changing_every_tool_gives_all_three_groups_unknown_with_their_own_reasons(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         added = self.own_run({path: "version two\n" for path in TOOLS})
         self.assertEqual([], self.rows("Gate runs"))
         self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
@@ -2132,6 +2150,7 @@ class GateRunsMeasures(MeasuresCase):
         self.assert_measures_stand(self.cycles()[0]["Record"])
 
     def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
                  "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
         done, added = self.count({GATE: gate_file(table=table)})
@@ -2139,6 +2158,7 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done, added = self.count({GATE: gate_file(table="")})
         self.assert_missing(done, GATE, "table of the runs")
         self.assertEqual([], self.rows("Gate runs"))
@@ -3007,6 +3027,7 @@ class RegisterCount(AuditCountCase):
             [row for row in self.pair_rows() if row[0] == "row of `Problems`"])
 
     def test_a_table_of_costs_that_lacks_a_level_is_treated_as_the_table_of_weights_is(self):
+        # decision: WAY-344 "The command that counts the audit, where a table of weights"
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
         lines = TEMPLATE.splitlines(keepends=True)
@@ -3052,6 +3073,7 @@ class RegisterCount(AuditCountCase):
             self.assertEqual(b"", done.stderr)
 
     def test_a_table_of_weights_that_lacks_a_level_names_the_level(self):
+        # decision: WAY-344 "The command that counts the audit, where a table of weights"
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
         lines = TEMPLATE.splitlines(keepends=True)
@@ -3159,6 +3181,7 @@ class Run(AuditCountCase):
                          [(c["Repository"], c["Record"], c["Folder"]) for c in self.cycles()])
 
     def test_the_way_without_a_repository_entry_is_this_checkout(self):
+        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
         self.write_locations(self.places())
         done = self.run_count("--repository", "the-way")
         self.assertEqual(0, done.returncode, done.stderr)
@@ -3231,6 +3254,7 @@ class ProcessVersions(AuditCountCase):
         return self.section("Count of remarks", number)
 
     def test_the_cost_is_compared_inside_a_series_of_the_cost_across_a_new_class(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # v1 and v2 share a series of both kinds; a class added on the day of v3 starts a series of
         # the count of remarks and none of the cost. Medians: v1 is (2 + 4) / 2 = 3 dollars, v2 is
         # 1 dollar, v3 is 0.5 dollar. v2 falls against v1, and so does v3 against v2 (0.5 < 1):
@@ -3263,6 +3287,7 @@ class ProcessVersions(AuditCountCase):
                       "the two versions.", self.latest())
 
     def test_no_row_of_a_series_of_one_kind_holds_a_figure_of_the_other(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         # A table of the cost holds the median and Q3 and none of Q1 and Q2; a table of the count
         # of remarks holds Q1 and Q2 and none of the cost.
         way = self.the_way()
@@ -3285,6 +3310,7 @@ class ProcessVersions(AuditCountCase):
             self.assertNotIn(name, cost)
 
     def test_a_change_under_the_change_starts_a_series_of_the_count_and_none_of_the_cost(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # task-cycle/change is one of the files the form of a stage report is taken from; v2's
         # cost (0.5) falls against v1's (2) in a series of the cost that the change does not end.
         way = self.the_way()
@@ -3304,6 +3330,7 @@ class ProcessVersions(AuditCountCase):
                          self.count_series(2))
 
     def test_a_change_under_the_review_starts_a_series_of_the_count_and_none_of_the_cost(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # The reviewer's instructions: a change of `task-cycle/review` ends the count of remarks
         # and none of the cost, whose median of v2 (0.5) is compared with v1's (2).
         way = self.the_way()
@@ -3322,6 +3349,7 @@ class ProcessVersions(AuditCountCase):
                       "versions.", self.latest())
 
     def test_a_change_of_the_reviewers_type_of_agent_starts_a_series_of_the_count_alone(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # `the-way-stage.md` is the instruction the reviewer receives: a change of it ends the
         # count of remarks and none of the cost. A change of `the-way-author.md`, beside it in
         # the same folder, ends neither.
@@ -3346,6 +3374,7 @@ class ProcessVersions(AuditCountCase):
                       "between the two versions.", self.latest())
 
     def test_a_change_of_the_stage_script_starts_a_series_of_both_kinds(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         way = self.the_way()
         v1 = self.version_at(way, self.FIRST)
         v2 = self.version_at(way, self.LATER, parent=v1,
@@ -3365,6 +3394,7 @@ class ProcessVersions(AuditCountCase):
                                                 "two versions."))
 
     def test_a_cycle_that_changed_the_stage_script_stays_in_its_version_with_no_known_cost(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         # The cycle stays in the version it ran on and in its series: its row counts it, its
         # answers are those of the record, and only its cost is out of the median. Unchanged, the
         # same cycle costs 1,000,000 * 2 / 1,000,000 = 2 dollars.
@@ -3442,6 +3472,7 @@ class ProcessVersions(AuditCountCase):
                                                      ancestry))
 
     def test_a_date_of_the_list_of_classes_starts_a_series_of_the_count_alone(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         sys.path.insert(0, str(HERE))
         import audit_count
         earlier, later, ancestry = self.two_versions("way-classes", None)
@@ -3488,6 +3519,7 @@ class ProcessVersions(AuditCountCase):
                          audit_count.COUNT_PATHS)
 
     def test_the_older_and_the_newer_form_of_the_stage_report_are_never_in_one_comparison(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # The form changes with `cycle_stages.py`, a file whose change starts a series of both
         # kinds; a change of the scripts that measure the mechanism or the gate does not. v1 to v3
         # are of the older form, v4 of the newer; the costs are 2, 1, 0.5 and 0.25 dollars. The
@@ -3766,6 +3798,7 @@ class MeasureVersions(AuditCountCase):
         return [row for row in self.section("Gate times", number) if row[1] == measure]
 
     def test_a_change_of_an_instrument_starts_only_the_series_of_its_own_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the script of the measures, v3 the script of the gate times, v4 the reviewer's
         # instructions and `cycle_stages.py`. The cost splits at v4 alone; the mechanism measures
         # at v2 alone; the gate times at v3 alone, and no median is set across a split.
@@ -3806,6 +3839,7 @@ class MeasureVersions(AuditCountCase):
         self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
 
     def test_a_changed_tool_of_a_measure_gives_no_value_to_the_median_of_its_version(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
         # One own cycle with both files, in the version it ran on. Where it changed the script of
         # the measures, its version gives no value of them and its gate times stand; where it
         # changed the test runner, the gate times are the ones without a value and the mechanism
@@ -3831,6 +3865,7 @@ class MeasureVersions(AuditCountCase):
                                  self.gate(1, TOTAL if runs else "—"))
 
     def test_a_change_of_the_test_runner_starts_a_new_series_of_gate_times_only(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the test runner of the gate, v3 the script of the measures. The gate times
         # split at v2 alone, the mechanism measures at v3 alone, and the reason of the split
         # names the file that changed. Medians: the gate series of v2 and v3 has 90 and 80, so v3
@@ -3888,6 +3923,7 @@ class MeasureVersions(AuditCountCase):
         self.assertEqual([[earlier, later]], [block.versions for block in measures])
 
     def test_the_reviewer_the_stage_script_and_the_list_of_classes_split_no_series_of_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the reviewer's instructions, v3 `cycle_stages.py`, and a class is added on the
         # day of v4: each splits the series of the count of remarks, `cycle_stages.py` alone the
         # series of the cost, and none splits the measures, whose medians fall from version to
@@ -3926,6 +3962,7 @@ class MeasureVersions(AuditCountCase):
         self.assertNotIn("### Gate times, series 2", self.latest())
 
     def test_a_new_price_list_splits_no_series_of_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # One price list prices a whole run, so no real run splits at it: the series of the
         # measures are asked of the two versions directly, and ask git about their scripts alone.
         sys.path.insert(0, str(HERE))
@@ -4144,6 +4181,7 @@ class MeasureVersions(AuditCountCase):
 
 class PriceBoundary(unittest.TestCase):
     def test_a_new_price_list_starts_a_new_series_of_the_cost_and_of_the_count_of_remarks(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         sys.path.insert(0, str(HERE))
         import audit_count
         earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])

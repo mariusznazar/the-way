@@ -2761,70 +2761,55 @@ change changed is not read for that cycle (WAY-339), so none of its fields is mi
 no line `Error:`. Each reading of a file that the rule covers has one test that gives the file
 without one of the fields it needs and asserts the failure that names that field, the review of the
 change answering for the other fields; the *Scope* names every part of the-way's part map, and a
-change that adds a part to the part map adds it to this *Scope*. The same command, where a table of
-weights or a table of the costs of an occurrence in the register of problems lacks one of its
-levels, writes its result, gives the values that depend on the table as unknown and ends with exit
-code 1 and a line `Error:` that names the missing level; where a stage report has neither of the two
-columns of the cache writes in its detailed section, it reads the report as an earlier form too,
-with no line `Error:`, giving the cost with the writes standing inside *Input* and priced as input,
-an approximation, and no value unknown for the missing columns, while a stage report that has one of
-the two columns and not the other has a missing field, with the line `Error:`; and where the
-locations file has no entry `repository` under `the-way`, no field is missing and the command takes
-the checkout in which its script lies.
+change that adds a part to the part map adds it to this *Scope*. The command that counts the audit,
+where a table of weights or a table of the costs of an occurrence in the register of problems lacks
+one of its levels, writes its result, gives the values that depend on the table as unknown and ends
+with exit code 1 and a line `Error:` that names the missing level. Where a stage report has neither
+of the two columns of the cache writes in its detailed section, that command reads the report as an
+earlier form too, with no line `Error:`, giving the cost with the writes standing inside *Input* and
+priced as input, an approximation, and no value unknown for the missing columns, while a stage
+report that has one of the two columns and not the other has a missing field, with the line
+`Error:`. Where the locations file has no entry `repository` under `the-way`, no field is missing
+and that command takes the checkout in which its script lies.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
   agent-instructions, instruction-files, installation, product-guidelines, process-audit
 - **Based on:** none
 - **Relations:** derives from WAY-38
-- **Verification:** an agent compares a change with the decision:
+- **Verification:** tests: that a field missing from a Claude Code transcript, which the script of
+  the stages reads, or from the definition of an agent type, which the generator of the copies
+  reads, ends the script with exit code 2 and a message that names the field, and that each such
+  reading has a test that gives the file without a field; that the command that counts the audit, at
+  a field missing in the file of the measures, the file of the gate times, a stage report or the
+  register of problems, gives the values that need it as unknown, writes its result and ends with
+  exit code 1 and a line `Error:` that names the file and the field; that it reads a stage report of
+  an earlier form, one with no heading of its detailed section, with neither time line, with no
+  column *Files named* or with neither column of the cache writes, with no line `Error:` and gives
+  the values that need what that form never had as unknown, and the cost of a form with no columns
+  of the cache writes with the writes priced as input; that it reads a report that has one time line
+  or one of the two cache write columns and not the other as a missing field; that a table of
+  weights or of the costs of an occurrence which lacks a level gives the result, unknown values and
+  the line `Error:` that names the level; that a locations file with no entry `repository` under
+  `the-way` gives the checkout in which the script lies and no line `Error:`; and that the file of a
+  tool the cycle's own change changed is not read. An agent compares a change with the part no test
+  holds:
   - complies: a new script reads a JSON file in which the key `due` of the issues has become
     `due_date`, and ends with exit code 2 and a message naming the file and `issues.due`, and its
     test gives the file without that key and asserts that the message names it; a change that
     reworks how a script reads the section headings of a report brings every field of that report
     under the check, adds one test that gives the report without one heading, and leaves the
     script's reading of other files as it was; a script whose purpose is to check the form of a file
-    lists an absent section it checks as a problem with exit code 1; the command that counts the
-    audit meets a file of the measures of an old cycle's record, read from git history, with a key
-    renamed, gives the values that need that key as unknown, writes its result, and ends with exit
-    code 1 and a line `Error:` that names the file and the key, and its test gives the file without
-    that key and asserts that line; the command that counts the audit meets a stage report of the
-    form before the detailed section, one with neither of its two time lines, or one whose detailed
-    section has no column *Files named*, gives the values that need what that form never had as
-    unknown and ends with no line `Error:` for it, and its tests pin that; the command that counts
-    the audit meets a stage report whose detailed section has neither column of the cache writes,
-    gives its cost with the writes priced as input and ends with no line `Error:` and no value
-    unknown because of the missing columns, and meets one with a single one of the two columns,
-    gives its cost as unknown with the reason, writes its result and ends with exit code 1 and a
-    line `Error:` that names the stage report and the column missing, and its tests pin both; the
-    command that counts the audit meets a register whose table of the costs of an occurrence has no
-    level `stage`, writes its result with the values that depend on the table unknown and ends with
-    exit code 1 and a line `Error:` that names the level, its test gives the table without that
-    level and asserts that line, and the same holds for the table of weights; the command that
-    counts the audit meets a locations file with no entry `repository` under `the-way`, counts the
-    checkout in which its script lies and ends with no line `Error:`, and its test pins that; a
-    change that adds a part to the part map adds its identifier to the *Scope* of this decision in
-    the same change;
+    lists an absent section it checks as a problem with exit code 1; a change that adds a part to
+    the part map adds its identifier to the *Scope* of this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
     field as an item with exit code 1; a script whose purpose is to check the form of a file stops
-    with exit code 2 at an absent section whose presence it checks; the command that counts the
-    audit, at a field missing in a file of an old cycle's record from git history, ends with exit
-    code 2 and writes no result, or gives the missing value as zero or empty; the command that
-    counts the audit ends with a line `Error:` for a field that the earlier form of a stage report
-    never had, so that every count of cycles of that form ends with exit code 1; the command that
-    counts the audit reads a stage report that holds one of its two time lines and not the other as
-    the earlier form, with no line `Error:`; the command that counts the audit reads a stage report
-    that holds one of the two columns of the cache writes and not the other as the earlier form, or
-    ends with a line `Error:` for a report that has neither; the command that counts the audit ends
-    with exit code 2 and no result at a level missing from a table of weights or of the costs of an
-    occurrence, names only the table in its line `Error:`, or reads the missing level as zero; the
-    command that counts the audit ends with exit code 2 for a locations file with no entry
-    `repository` under `the-way`, or reads any other missing entry of that file as having a value
-    of its own; a change that reworks the reading of a file checks the
-    field it added and leaves the other fields of that file unchecked; a new script's reading of a
-    file, or a changed script's reworked reading of a file, has no test that gives the file without
-    a field; a change that adds a part to the part map leaves this *Scope* as it was.
+    with exit code 2 at an absent section whose presence it checks; a change that reworks the
+    reading of a file checks the field it added and leaves the other fields of that file unchecked;
+    a new script's reading of a file, or a changed script's reworked reading of a file, has no test
+    that gives the file without a field; a change that adds a part to the part map leaves this
+    *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
@@ -7464,53 +7449,33 @@ takes its figures from the file of the other.
 - **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: audit-series-script-paths. For the rest, an agent compares a change with the
-  decision:
-  - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
-    not set against the median of the other; the cycles of one version of the process are compared
-    with the cycles of another version inside a series; a change of the reviewer's instructions
-    starts a new series of the count of remarks and none of the cost, of the measures of context
-    and cache use or of the gate times, whose cycles on the two sides of it are compared; a change
-    of the script that measures the cost, such as the one that brings the columns of the tokens
-    written to the cache by lifetime, starts a new series of the cost and of the count of remarks
-    and none of the measures of context and cache use; a change of the script that counts the
-    measures of context and cache use starts a new series of those measures and none of the cost or
-    of the count of remarks; a change of the test runner of the process starts a new series of the
-    gate times and none of the cost, of the count of remarks or of the measures of context and cache
-    use; a cycle whose own change changes the script that records the gate times gives its gate
-    times as unknown, with the reason that the cycle changed the tool that wrote them, and its cost
-    and its count of remarks as they stand under the version it ran on; a cycle whose own change
-    changes the script that measures the cost gives its cost and the share of its cost in fix rounds
-    as unknown, with the reason that the cycle changed the tool that wrote them, and its other
-    measures as they stand under the version it ran on;
-  - violates: the number of remarks of one week is set against that of the week before, across a
-    change of the form of a stage report, of the list of classes or of the instructions of the
-    reviewer; the cost of one week is set against that of the week before, across a new price list
-    or a change of the script that measures the cost; a change of the reviewer's instructions
-    divides the series of the cost; a change of the reviewer's or the author's instructions
-    divides the series of the gate times; a change of the script that records the gate times leaves
-    their series whole; a change of the test runner of the process leaves the series of the gate
-    times whole; the addition of the script that counts the measures of context and cache use starts
-    a new series of the cost; a cycle whose own change changes the script that records the gate
-    times gets its gate times counted as measured, in a series of its own or in the series of the
-    version it ran on; a cycle whose own change changes the script that measures the cost gets its
-    cost counted as measured, in a series of its own or in the series of the version it ran on.
-  For where the measures of context and cache use are counted, an agent compares a change with the
-  decision:
-  - complies: a later change that adds one more measure of context or cache use adds it to the
-    script and the file of those measures, and the stage report keeps the columns it has; the
-    file of those measures gives for the reviewer of the whole change the bytes of the decision log
-    that entered its context and in how many reads, and the bytes and reads of the index of
-    decisions it wrote, beside its other figures; the stage report of the cycle's stages holds, for
-    each stage and model, the tokens written to the cache at each lifetime, which the script that
-    measures the cost counts for the cost, while the script of the measures of context and cache use
-    counts the same tokens for its file from the transcripts and not from that report;
-  - violates: a change adds to the stage report a column of a measure of context or cache use other
-    than the tokens written to the cache by lifetime that the cost is priced from; the script of
-    those measures writes its numbers into the stage report; the script that measures the cost takes
-    the tokens written to the cache from the file of the measures, or the script of the measures
-    takes them from the stage report; the bytes of the decision log are counted once for the whole
-    cycle and not for each agent, or the reads of the index of decisions are left out of them.
+- **Verification:** invariants: audit-series-script-paths. tests: that the audit compares the cost
+  and the count of remarks each only inside a series of its own kind, and that a series of the cost
+  ends only at a new price list or a change of the script that measures the cost, and a series of
+  the count of remarks also at a date of the list of classes and a change of the files that give the
+  form of a stage report or of the type of agent the reviewer receives its instructions as; that
+  none of these splits the series of the measures of context and cache use or of the gate times,
+  and that a change of the script that counts the first, of the script that records the second or of
+  the test runner of the process splits only the series of its own measures; that a cycle whose own
+  change changes a tool that measures gives the measures of that tool, the times, the cost and the
+  share of the cost in fix rounds for the script that measures the cost, as unknown with the reason
+  that the cycle changed the tool, and its other measures as they stand under the version it ran on;
+  that the stage report holds, for each stage and model, the tokens written to the cache at each
+  lifetime, and that the script that measures the cost and the script of the other measures count
+  the same tokens from the transcripts. For the rest, an agent compares a change with the decision:
+  - complies: the cycles of one version of the process are compared with the cycles of another
+    version inside a series; a later change that adds one more measure of context or cache use adds
+    it to the script and the file of those measures, and the stage report keeps the columns it has;
+    the file of those measures gives for the reviewer of the whole change the bytes of the decision
+    log that entered its context and in how many reads, and the bytes and reads of the index of
+    decisions it wrote, beside its other figures;
+  - violates: the cost or the number of remarks of one week is set against that of the week before;
+    a change adds to the stage report a column of a measure of context or cache use other than the
+    tokens written to the cache by lifetime that the cost is priced from; the script of those
+    measures writes its numbers into the stage report; the script that measures the cost takes the
+    tokens written to the cache from the file of the measures, or the script of the measures takes
+    them from the stage report; the bytes of the decision log are counted once for the whole cycle
+    and not for each agent, or the reads of the index of decisions are left out of them.
 - **Origin:** none
 
 *Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the

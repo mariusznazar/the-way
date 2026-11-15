@@ -964,6 +964,8 @@ class ClaudeFieldsTest(unittest.TestCase):
 
     def test_a_needed_field_that_is_missing_ends_the_script_with_exit_code_2_naming_it(
             self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
         # The test of the reading that WAY-344 asks for: the transcript lacks one count of a
         # response, and the script names it instead of reading the absent count as zero.
         code, stderr, output = self.failing(self.with_usage(cache_creation_input_tokens=ABSENT))
@@ -1299,9 +1301,11 @@ class CacheWriteColumnsTest(unittest.TestCase):
         return text
 
     def test_the_detailed_table_ends_with_the_two_columns_of_the_cache_writes(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
         self.assertEqual(CACHE_WRITE_HEADER, section_rows(self.report())[0])
 
     def test_each_model_of_a_stage_holds_its_two_lifetimes_apart(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
         rows = section_rows(self.report())
         self.assertEqual(CACHE_WRITE_HEADER, rows[0])
         build = [row for row in rows if row[1] == "Build (general-purpose)"]
@@ -1313,6 +1317,7 @@ class CacheWriteColumnsTest(unittest.TestCase):
         self.assertEqual([["haiku", "0", "0"]], [[row[4], row[9], row[10]] for row in haiku])
 
     def test_the_orchestrators_row_holds_its_own_lifetimes(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
         rows = section_rows(self.report())
         self.assertEqual(CACHE_WRITE_HEADER, rows[0])
         opus = [row for row in rows if row[4] == "opus"]
@@ -1360,6 +1365,7 @@ class CodexCacheWriteColumnsTest(unittest.TestCase):
         self.folder.cleanup()
 
     def test_both_cache_write_columns_of_every_codex_row_read_zero(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
         output = Path(self.folder.name) / "out" / "orchk.md"
         stderr = io.StringIO()
         with redirect_stderr(stderr):
@@ -1406,6 +1412,7 @@ class CacheWritesAcrossScriptsTest(unittest.TestCase):
         self.folder.cleanup()
 
     def test_both_scripts_total_the_same_tokens_written_at_each_lifetime(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
         codex = str(self.root / "codex")
         stages = self.root / "out" / "stages.md"
         measures = self.root / "out" / "measures.md"

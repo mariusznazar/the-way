@@ -176,6 +176,8 @@ class Errors(unittest.TestCase):
 
 class MissingField(unittest.TestCase):
     def test_a_definition_without_name_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
         repository = Repository(self)
         repository.write("task-cycle/agent-types/the-way-stage.md",
                          STAGE.replace("name: the-way-stage\n", ""))
@@ -187,6 +189,8 @@ class MissingField(unittest.TestCase):
         self.assertEqual(repository.files(), before)
 
     def test_a_definition_without_description_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
         repository = Repository(self)
         repository.write("task-cycle/agent-types/the-way-stage.md",
                          STAGE.replace("description: Stage agent. " + MARK + "\n", ""))

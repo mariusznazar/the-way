@@ -196,7 +196,8 @@ installer, its tests and a README explaining how a product uses the pinned versi
 
 The part answers for the form every product's guidelines share, for the template of each discipline
 of guidelines with the skill that leads the work on them, for the shared reading that selects
-guidelines for a change and recognizes what is missing.
+guidelines for a change and recognizes what is missing, and for the test that finds a pointer to a
+file, a step or a heading that is not there in the skills of this part and of project-level.
 
 - **Files:** product-guidelines/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
