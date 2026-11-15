@@ -97,6 +97,7 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import os
 import re
@@ -194,7 +195,7 @@ def read_time(entry: dict, where: str) -> datetime:
     if not isinstance(value, str):
         raise MeasuresError(f"{where}: field timestamp is not a time")
     try:
-        at = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        at = datetime.fromisoformat(value)
     except ValueError as error:
         raise MeasuresError(f"{where}: field timestamp is not a time") from error
     return at if at.tzinfo else at.replace(tzinfo=timezone.utc)
@@ -574,7 +575,7 @@ def rewrites(calls: list[Call]) -> list[int]:
     expired, so counted as a rewrite it would make a change that adds collapses look like a
     worsening."""
     counted = []
-    for before, after in zip(calls, calls[1:]):
+    for before, after in itertools.pairwise(calls):
         held = before.read + before.write
         amount = min(max(0, held - after.read), after.write)
         shrink_numerator, shrink_denominator = REWRITE_SHRINK_LIMIT
