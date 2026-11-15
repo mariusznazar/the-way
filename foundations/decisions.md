@@ -2781,19 +2781,18 @@ and that command takes the checkout in which its script lies.
   the stages reads, or from the definition of an agent type, which the generator of the copies
   reads, ends the script with exit code 2 and a message that names the field, and that each such
   reading has a test that gives the file without a field; that the command that counts the audit, at
-  a field missing in the file of the measures, the file of the gate times, a stage report or the
-  register of problems, gives the values that need it as unknown, writes its result and ends with
-  exit code 1 and a line `Error:` that names the file and the field; that it reads a stage report of
-  an earlier form, one with no heading of its detailed section, with neither time line, with no
-  column *Files named* or with neither column of the cache writes, with no line `Error:` and gives
-  the values that need what that form never had as unknown, and the cost of a form with no columns
-  of the cache writes with the writes priced as input; that it reads a report that has one time line
-  or one of the two cache write columns and not the other as a missing field; that a table of
-  weights or of the costs of an occurrence which lacks a level gives the result, unknown values and
-  the line `Error:` that names the level; that a locations file with no entry `repository` under
-  `the-way` gives the checkout in which the script lies and no line `Error:`; and that the file of a
-  tool the cycle's own change changed is not read. An agent compares a change with the part no test
-  holds:
+  a field missing in the file of the measures, the file of the gate times or a stage report, gives
+  the values that need it as unknown, writes its result and ends with exit code 1 and a line
+  `Error:` that names the file and the field; that it reads a stage report of an earlier form, one
+  with no heading of its detailed section, with neither time line, with no column *Files named* or
+  with neither column of the cache writes, with no line `Error:` and gives the values that need what
+  that form never had as unknown, and the cost of a form with no columns of the cache writes with
+  the writes priced as input; that it reads a report that has one time line or one of the two cache
+  write columns and not the other as a missing field; that a table of weights or of the costs of an
+  occurrence which lacks a level gives the result, unknown values and the line `Error:` that names
+  the level; that a locations file with no entry `repository` under `the-way` gives the checkout in
+  which the script lies and no line `Error:`; and that the file of a tool the cycle's own change
+  changed is not read. An agent compares a change with the part no test holds:
   - complies: a new script reads a JSON file in which the key `due` of the issues has become
     `due_date`, and ends with exit code 2 and a message naming the file and `issues.due`, and its
     test gives the file without that key and asserts that the message names it; a change that
