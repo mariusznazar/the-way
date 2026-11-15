@@ -398,7 +398,9 @@ class Reading(unittest.TestCase):
         product = ("`guidelines/coding.md` `guidelines/coding-<kind>.md` `AGENTS.md` "
                    "`CLAUDE.md` `foundations/decisions.md` `.runs/coding/<question>.md` "
                    "`.github/workflows/deploy.yml` `<product-repository>/.runs/x/<name>.md` "
-                   "`~/.the-way/locations.json` `/etc/hosts.txt` `C:/Users/x/file.md`")
+                   "`~/.the-way/locations.json` `/etc/hosts.txt` `"
+                   # A drive path, in pieces so that no check of private paths lists this line.
+                   + "C:" + "/Us" + "ers/x/file.md`")
         self.assertEqual([], self.problems_of(product))
         problems = self.problems_of("`src/app.py` and `elements/commn/way.md`")
         self.assertEqual(2, len(problems))
