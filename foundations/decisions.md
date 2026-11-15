@@ -9745,11 +9745,9 @@ the blocking rules and the examples, is a change of this decision.
   a change with the decision:
   - complies: a report of `F841` in one file is fixed in that file and the configuration of Ruff stays
     as it is; a rule on which a later report leads to no change worth making moves among the examples
-    by a change of this decision that the human approves; the test of the invariant runs Ruff with the
-    flag that ignores comments turning rules off;
-  - violates: a comment that turns a blocking rule off stays in a file; a task turns a blocking rule
-    off in the configuration of Ruff on meeting a report, with no change of this decision; a rule of
-    the examples blocks a change.
+    by a change of this decision that the human approves;
+  - violates: a task turns a blocking rule off in the configuration of Ruff on meeting a report, with
+    no change of this decision; a rule of the examples blocks a change.
 - **Origin:** none
 
 *Rationale:* a rule blocks a change only where every report it gives leads to a change of code worth
@@ -9978,8 +9976,7 @@ and a script of the kind changes no file of the repository it runs in without `-
   compares the change with the decision:
   - complies: `guidelines/coding-generator.md` lists the file as `exemplar` beside this decision, and
     the file ends with exit code 2 where a field it reads is missing, as WAY-344 gives;
-  - violates: another file takes the status `exemplar` with no change of this decision; a generator
-    writes a file in a run with no `--write`.
+  - violates: another file takes the status `exemplar` with no change of this decision.
 - **Origin:** none
 
 *Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
@@ -10003,8 +10000,7 @@ confirmation is declined.
   compares the change with the decision:
   - complies: `guidelines/coding-repository-changer.md` lists the file as `exemplar` beside this
     decision;
-  - violates: another file takes the status `exemplar` with no change of this decision; a script of
-    the kind removes or rewrites something in a run without `--apply`.
+  - violates: another file takes the status `exemplar` with no change of this decision.
 - **Origin:** none
 
 *Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
@@ -10024,8 +10020,7 @@ script of the kind that wraps one command ends with that command's exit code unc
 - **Verification:** invariants: command-runner-passes-exit-code. For the designation, an agent
   compares the change with the decision:
   - complies: `guidelines/coding-command-runner.md` lists the file as `exemplar` beside this decision;
-  - violates: another file takes the status `exemplar` with no change of this decision; a script that
-    wraps one command ends with the exit code 1 for every failure of the command.
+  - violates: another file takes the status `exemplar` with no change of this decision.
 - **Origin:** none
 
 *Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
@@ -10045,8 +10040,7 @@ importing a file of the kind runs nothing.
 - **Verification:** invariants: shared-module-import-runs-nothing. For the designation, an agent
   compares the change with the decision:
   - complies: `guidelines/coding-shared-module.md` lists the file as `exemplar` beside this decision;
-  - violates: another file takes the status `exemplar` with no change of this decision; a module that
-    other scripts import reads its input or writes output when it is imported.
+  - violates: another file takes the status `exemplar` with no change of this decision.
 - **Origin:** none
 
 *Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
@@ -10148,9 +10142,10 @@ example. *Purpose* says what the level is for and when not to use it; *Files* ha
 allows a double only of the clock and of what a test cannot do on a git repository it builds in a
 temporary directory, git and the file system being real and standing in a temporary directory, and at
 the level of a repository test the checkout being real; *Data* has the values of a test written out in
-it, each with its source in a comment; *Time and randomness* has the time given from outside the
-script, as the option `--today` gives it, and no fixed pause; *Command* is `python -B
-gate/run_tests.py <directory>`, which the gate narrows to a directory and no further. The field
+it, each with its source in a comment; *Time and randomness* has the test give the script its time, by
+replacing the clock function of the script in the process of the test or by giving a fixed time to
+a script that takes one, and no fixed pause; *Command* is `python -B gate/run_tests.py
+<directory>`, which the gate narrows to a directory and no further. The field
 *Time limit* reads `none — WAY-395`, since the-way has no file that holds a limit and each limit
 stands at the call that needs it.
 
@@ -10160,8 +10155,9 @@ stands at the call that needs it.
 - **Relations:** derives from WAY-392 · derives from WAY-241
 - **Verification:** an agent compares the guidelines and the tests with the decision:
   - complies: the recipe of the level git test names this decision at *Doubles*, builds the
-    repository in a temporary directory and replaces nothing but the clock; a test gets its time from
-    `--today` and not from the real clock; *Time limit* reads `none — WAY-395`;
+    repository in a temporary directory and replaces nothing but the clock; a test replaces the clock
+    function of the script, or gives a fixed time to a script that takes one, and does not read the
+    real clock; *Time limit* reads `none — WAY-395`;
   - violates: a test replaces git with a double where a repository in a temporary directory is
     cheap; a test waits a fixed time for another process; a recipe lists a command of the test tool
     beside the gate; a recipe holds a value of a time limit.

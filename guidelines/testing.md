@@ -178,7 +178,7 @@ the gate pass; disabling or deleting such a test is a change of `### Changing an
 - **Shape:** a test is named by a sentence about the behaviour it checks, goes in three phases — set up, act, assert — checks one behaviour and holds no logic
 - **Doubles:** a double only of the clock and of what a test cannot do on a git repository it builds in a temporary directory; git and the file system are real and stand in a temporary directory (WAY-395)
 - **Data:** the values a test depends on are written out in it, each with its source in a comment (WAY-395)
-- **Time and randomness:** the time reaches the script from outside, as the option `--today` gives it, and no test waits a fixed time for another process (WAY-395)
+- **Time and randomness:** the test gives the script its time, by replacing the clock function of the script in the process of the test or by giving a fixed time to a script that takes one, and no test waits a fixed time for another process (WAY-395)
 - **Exemplar:** `relation-model/test_fingerprint.py`, the test `Fingerprint.test_a_tab_is_kept` (WAY-395 · WAY-396)
 - **Command:** `python -B gate/run_tests.py <directory>`; the gate narrows to a directory and no further (WAY-395)
 - **Time limit:** none — WAY-395
