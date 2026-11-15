@@ -1844,8 +1844,9 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Verification:** an agent compares the change with the decision:
   - complies: "every entry of the log has every field of the template"; an invariant whose
     condition a decision of the pinned the-way holds names that decision's number in its sentence,
-    its template giving no field for it, and, where a link to that decision is due, names it also in
-    *Derives from*;
+    its template giving no field for it; an invariant of the-way whose sentence reads "as WAY-309
+    names them", the condition standing in that decision of its own log, has WAY-309 also in its
+    *Derives from*, the link WAY-17 requires;
   - violates: "every request is answered within the limit set in `config.py`"; an invariant whose
     condition stands in a decision and which names that decision nowhere; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
@@ -5946,9 +5947,9 @@ set for them, named in general terms and never by the name of a model: by defaul
 than the orchestrator's, for code that carries settled matters into the product, ordinary
 implementation that takes decisions of its own included; the orchestrator's class, for a change
 across many parts; or the strongest class available, which is the strongest of the models that the
-session's settings allow, which the orchestrator takes from the list of allowed models (the setting
-`availableModels`) and never from the name of the strongest model of the family, for one that needs
-design — each class other than the default with one sentence of its reason. The planner sets each
+session's settings allow, which the orchestrator takes from the list of allowed models (in Claude
+Code the setting `availableModels`; where the session has no such list, every model it offers) and
+never from the name of the strongest model of the family, for one that needs design — each class other than the default with one sentence of its reason. The planner sets each
 slice's class in the plan; the orchestrator sets the
 one author's when it selects that route (WAY-136), by the same measure, and records it with its
 reason. The one author writes its foundation entries, takes its return step and fixes its findings
@@ -6028,9 +6029,9 @@ counted to repay part of it, and the audit of the process shows what it costs (W
 What is available is the human's choice when a session starts, never a sentence of this log: a cycle
 started with every model allowed takes the strongest it has, the review included, and a session that
 leaves a model out takes the strongest of the rest, read from the list the settings give. A request
-for a model outside that list gets the session's own model, so a review asked for on the strongest
-model of the family runs on a cheaper one where the session keeps that model out; the log names no
-model.
+for a model outside that list got another model, in the one session observed the session's own, so a
+review asked for on the strongest model of the family ran on a cheaper one where the session kept
+that model out; the log names no model.
 Classes in general terms survive the release of new models and fit any harness. The decision takes
 from the skills of Open Mercato for planning and dispatching an executor a class of model for each
 step of the work and one retry a class higher before the stop (WAY-100).
@@ -6057,7 +6058,7 @@ rationale counts on then depends on the model of the session that leads the cycl
 in general terms with no criterion that tells the classes apart without a name — an agent reads a
 general word as it pleases; the strongest class of the family the cycle runs on — a model of that
 family that the human keeps out of cycles would take the reviews and the slices that need design, and
-a request for it gets the session's own model; a
+a request for it got another model; a
 review one class above the session that leads the cycle, never above a model the human names — with
 the session on the cheapest class the review would run on the middle class, which let a flaw through
 in 4 of the 8 runs of the measurement, and a line that keeps a model out of the cycle's work has to

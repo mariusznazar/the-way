@@ -450,7 +450,8 @@ contradicts a decision.
 
    Then the review of the whole change: a fresh reviewer that made none of it, on the strongest
    class available — the strongest of the models the session's settings allow, from the list
-   `availableModels`, never the name of the strongest model of the family (WAY-229), with
+   `availableModels` in Claude Code or, with no such list, every model the session offers, never the
+   name of the strongest model of the family (WAY-229), with
    `review-change`, on the range from the task's base to the head, with the frozen task, any spec
    and plan, each slice's range and whether it had a review of its
    own, the report of each executor whose slice had none with any mismatch its mechanical check
@@ -499,8 +500,9 @@ contradicts a decision.
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
     return step commits anything, a fresh reviewer on the strongest class available — the strongest of
-    the models the session's settings allow, from the list `availableModels`, never the name of the
-    strongest model of the family (WAY-229) — reviews its range with `review-change`, against the
+    the models the session's settings allow, from the list `availableModels` in Claude Code or, with
+    no such list, every model the session offers, never the name of the strongest model of the family
+    (WAY-229) — reviews its range with `review-change`, against the
     task and the entries the return step writes or corrects. Record the result under *Return
     step*.
 
