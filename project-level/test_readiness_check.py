@@ -22,6 +22,14 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readiness_check  # noqa: E402
 
+# The headings of the form in project-level/definition_template.md, in their order: the sections a
+# definition holds above its gate record, then the gate record. Written out here, not taken from
+# readiness_check.SECTIONS, so that a section the code drops does not vanish from the test data too;
+# the test of the template checks that these are the headings of the form.
+FORM = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints", "Deliverables",
+        "Success", "Risks", "Open questions", "Touched parts and decisions", "Technology",
+        "Projected foundation changes", "Gate record")
+
 DECISION = """#### (new) — What does the archive exclude for good?
 
 The archive has no public write API.
@@ -89,7 +97,7 @@ def wording_fingerprint(text):
 def definition(status="Status: approved 2026-10-03", bodies=None, gate=None, order=None,
                fingerprint=None):
     bodies = dict(BODIES, **(bodies or {}))
-    order = order or list(readiness_check.SECTIONS[:-1])
+    order = order or list(FORM[:-1])
     content = body_text(bodies, order)
     if gate is None:
         gate = ("- Approved by: Mariusz, 2026-10-03\n"
@@ -111,6 +119,12 @@ class Template(unittest.TestCase):
         text = self.template()
         form = text.split("\n## The form\n", 1)[1].split("```markdown\n", 1)[1].split("\n```", 1)[0]
         self.assertEqual(readiness_check.check_structure(*readiness_check.split(form)), [])
+
+    def test_the_sections_written_in_this_file_are_the_headings_of_the_form(self):
+        text = self.template()
+        form = text.split("\n## The form\n", 1)[1].split("```markdown\n", 1)[1].split("\n```", 1)[0]
+        headings = [line[3:] for line in form.splitlines() if line.startswith("## ")]
+        self.assertEqual(headings, list(FORM))
 
     def test_the_projected_section_the_template_gives_passes_its_checks(self):
         text = self.template()
@@ -156,13 +170,13 @@ class Structure(unittest.TestCase):
 
     def test_a_missing_section_is_reported(self):
         # invariant: project-definition-form
-        order = [n for n in readiness_check.SECTIONS[:-1] if n != "Risks"]
+        order = [n for n in FORM[:-1] if n != "Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "the section `## Risks` is missing"), found)
 
     def test_a_section_standing_twice_is_reported(self):
         # invariant: project-definition-form
-        order = list(readiness_check.SECTIONS[:-1]) + ["Risks"]
+        order = list(FORM[:-1]) + ["Risks"]
         found = conditions(definition(order=order))
         self.assertIn(("structure", "`## Risks` stands a second time"), found)
 
@@ -174,7 +188,7 @@ class Structure(unittest.TestCase):
 
     def test_sections_out_of_order_are_reported(self):
         # invariant: project-definition-form
-        order = list(readiness_check.SECTIONS[:-1])
+        order = list(FORM[:-1])
         order[0], order[1] = order[1], order[0]
         found = conditions(definition(order=order))
         self.assertEqual([c for c, _ in found], ["structure"])
@@ -372,7 +386,7 @@ class Technology(unittest.TestCase):
 
     def test_a_definition_without_the_technology_section_is_reported(self):
         # invariant: project-technology-record
-        order = [n for n in readiness_check.SECTIONS[:-1] if n != "Technology"]
+        order = [n for n in FORM[:-1] if n != "Technology"]
         self.assertIn(("structure", "the section `## Technology` is missing"),
                       conditions(definition(order=order)))
 
@@ -512,7 +526,7 @@ class GateRecord(unittest.TestCase):
         self.assertIn(("e", "the line is not `- Approved by: …` in its form"), found)
 
     def test_a_gate_record_naming_the_foundation_commit_searched_is_reported(self):
-        content = body_text(BODIES, readiness_check.SECTIONS[:-1])
+        content = body_text(BODIES, FORM[:-1])
         gate = ("- Approved by: Mariusz, 2026-10-03\n"
                 "- Foundation searched at: 595f839\n"
                 "- Definition fingerprint: %s" % wording_fingerprint(content))
@@ -564,11 +578,12 @@ class Command(unittest.TestCase):
 
     def test_fingerprint_prints_the_definition_fingerprint(self):
         text = definition(gate="")
-        content = body_text(BODIES, readiness_check.SECTIONS[:-1])
+        content = body_text(BODIES, FORM[:-1])
         code, out, _ = self.run_main(text, "--fingerprint")
         self.assertEqual((code, out), (0, wording_fingerprint(content) + "\n"))
 
     def test_a_file_that_is_not_utf_8_exits_two(self):
+        # invariant: readiness-check-refuses-non-utf-8
         code, _, err = self.run_main(definition(), encoding="cp1250")
         self.assertEqual(code, 2)
         self.assertIn("is not UTF-8 text", err)
