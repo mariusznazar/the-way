@@ -1,0 +1,19 @@
+# Handoff: the return step after correction 1
+
+You are the author of correction 1, resumed for the return step, on your class. The orchestrator gives the go-ahead provisionally; it is never the human's approval.
+
+## Where and what
+
+- Worktree `the worktree of the task`, branch `task/ci-on-merge-requests`, head `7d00a48` (your commit), on top of the merge `3eacbc1`. Your directory for working copies is `.runs/return-step-correction-1/`. Your report: `.runs/task-cycles/ci-on-merge-requests/reports/return-step-correction-1-report.md`.
+- Method: `task-cycle/skill/return_step.md` (read whole), with `task-cycle/skill/foundation_step.md` beside it (read whole), each by its path in the worktree; the `SKILL.md` of an element, as `foundation_step.md` gives, when you write an entry of that element. Method of the change: `task-cycle/change/SKILL.md` for any commit the step makes.
+- Scope: the correction only (`3eacbc1..7d00a48`). The return step of the first cycle (`b344595`) stands. Compare with the code the entries this correction wrote or changed: the new fact `foundations-branch-ruleset` and WAY-16 (its *Based on*), the part map of the parts touched, and any entry the search of the foundation finds for the correction. The reviewer of the correction, which passed, found three Minor findings within the task and fixes none of them (a Minor finding of a correction review goes to the request's list, `task-cycle/skill/SKILL.md`, "The end of a code review"); do not fix M1, M2 or M3. They are in `.runs/task-cycles/ci-on-merge-requests/reports/review-correction-1-report.md`; read that report only to avoid contradicting it.
+- Write nothing new unless the step requires it. Where nothing needs a commit, say so and commit nothing. No entry is deferred or proposed for later.
+- Never run the full gate (the orchestrator's; it waits for a signal of the day's advisor). The focused check: `python -B elements/common/foundation_check.py` without `--skip-test-citations`, and `python -B gate/run_tests.py <directory>` for single directories if you change something.
+
+## What your report holds
+
+Status, commits, the place each settlement went to as the record's *Return step* gives it (foundation compared with code, decisions, invariants, environment facts, glossary terms, part-map changes, projected entries, rows of *Settlements to record*; each `none` where none), checks with command and exit code, **Unread material**, **Searches not found or unclear**, and the working copies with their removal. No secrets or personal data.
+
+## Working copies (word for word from the cycle's skill)
+
+An agent of the cycle that makes a working copy to check something — a worktree of a commit, a clone, a script, a screenshot, a prepared input of a test — makes it in a directory of its own directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never in the system's temporary directory, in the scratch directory of a session or in the main checkout of the repository. The screenshot that a screenshot tool, such as the Playwright server, saves by itself under its session's directory is moved into the agent's directory and the original removed, except a screenshot that is shown to the human: that one goes where `task-cycle/change/ui_check.md` says, to the place the product's foundation settles for screenshots, and into the agent's directory only where no such place is settled. The files that a product's own tools and tests make by themselves are no working copy of the agent and stay outside this rule. Before the agent returns, each time it returns, it removes its copy — a worktree with `git worktree remove --force`, then `git worktree prune` — keeps in `reports/` beside its report what the report needs, and states in the report where each copy stood and that it was removed. Where a removal fails, the agent finishes all the same and names in the report the remainder, with its full path and the reason it stayed.

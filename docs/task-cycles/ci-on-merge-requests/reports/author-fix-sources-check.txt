@@ -1,0 +1,12 @@
+a_arch.txt [False, False, False, False]
+alerts_about.txt [True, True, True, True]
+r_arch.txt [True, True]
+rules_avail.txt [True, True]
+c_arch.txt [True, True, True]
+rules_create.txt [True, True, True]
+
+# What the lines are: for each text of a page (live page read 2026-11-14, or its archived copy), whether each
+# quoted passage of the three new environment facts stands in it word for word (whitespace collapsed).
+# alerts_about / rules_avail / rules_create = the live pages; a_arch / r_arch / c_arch = the archived copies.
+# a_arch (archive of 2026-01-07, the latest capture the CDX index lists) holds an older text of the page:
+# none of its four passages stands there; the live page holds all four.
