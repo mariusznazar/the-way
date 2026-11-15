@@ -1056,32 +1056,42 @@ changes; lists of decision-makers and of those consulted — nothing reads them.
 
 ### WAY-24 — How is a decision that rests on a prediction reviewed?
 
-A decision names no date or condition for its review, the log holds no record of a review, and
-the review of the foundation against the product is a run of the skill `review-foundation`, which a
-human starts in a session with an agent when the reminder of a request asks for it (WAY-300), and
-no task of the product's backlog.
+A decision names no date or condition for its review and the log holds no record of a review. The
+review of the foundation against the product is a run of the skill `review-foundation`, which a
+human starts in a session with an agent when the reminder of a request asks for it (WAY-300) or at
+any other time. A task of the product's backlog may stand for that run, and a human adds it, never a
+cycle.
 
 - **Scope:** decisions, foundation-review
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the change with the decision:
   - complies: a decision's entry holds no field for its review; a request that says the
-    foundation waits for a review names the skill, and the human starts it in a session;
-  - violates: an entry carries a check-by date; a record of a review is appended to the log; the
-    review is set as a task of the product's backlog with a date.
+    foundation waits for a review names the skill, and the human starts it in a session; the human
+    adds a line for the review to the product's backlog, and the session that runs the skill is the
+    review;
+  - violates: an entry carries a check-by date; a record of a review is appended to the log; a
+    cycle adds the line of the review to the product's backlog; the review is run by a cycle that
+    ends in a request of the changes it judged.
 - **Origin:** none
 
 *Rationale:* a date in an entry asks for a look nobody is sent to make, and passes unseen; a review
 of the whole foundation, run as a skill in a session with the human, looks at all of it at once and
-brings each result to the human as a proposal to decide on, where a task of the backlog waits for
-someone to found and date it.
+brings each result to the human as a proposal to decide on, where a cycle of a task would bring them
+as ready changes. A line of the review in the backlog is a mark the human's own session answers to,
+and the human adds it because the backlog lies outside the repository, where only a human makes an
+effect (WAY-140).
 *Rejected:* *Review when* in each entry, with an observable state and a check-by date, and a review
 record appended on the date — the dates pass with nobody looking; a decision that expires on a date
 — the date gets extended; the review set as a task of the backlog, run by a cycle that ends in a
 request of corrections — the judgments of whether an assumption stands arrive whole as ready
 changes with no talk, and refusing one is another round; a ready task of the review copied into the
 backlog — three steps where one command does; a script — it does not judge whether the assumption
-of a decision stands.
+of a decision stands; the cycle adding the line of the review to the backlog itself — it would need
+a change to WAY-140, against the reason of WAY-161, and a product with its backlog in an outside
+tracker would give the cycle the right to write outside the repository; only the setup of one user,
+with the wording of this decision as it was — another user of the-way is left with a sentence that
+can be scrolled past.
 
 ### WAY-25 — What settles a collision between two decisions?
 
@@ -6778,42 +6788,71 @@ source of the decision keeps no reason beside it.
 ### WAY-300 — When does a request tell the human that the foundation waits for a review?
 
 At the end of every task cycle the orchestrator counts the merges to the main branch since the last
-review tag, and from 30 merges on the description of each request the cycle writes says,
-in its part for the human who merges, that the foundation waits for a review, with the number of
-merges, the tag of the last review and the skill that starts the review. The reminder blocks
-nothing, the number 30 is one for every product, and a repository with no review tag counts from
-the start of its history.
+review tag, and from the threshold of the reminder script on, the description of each request the
+cycle writes says, in its part for the human who merges, that the foundation waits for a review.
+The reminder blocks nothing, the threshold is one number for every product, which no product sets
+for itself, and a repository with no review tag counts from the start of its history.
+
+From the threshold on, the orchestrator reads the product's backlog for an open line of the review
+of this repository — a line whose name holds the name of the skill `review-foundation` and the name
+of the repository, open as the rules of the task place say (WAY-107). Where no such line stands, or
+the backlog cannot be read, the sentence asks the human to add the task of the review and gives what
+its name holds, the number of merges, the tag of the last review and the skill that starts the
+review; where the line stands, the sentence points to it and does not urge. The cycle adds and
+changes no line of the backlog (WAY-140).
 
 - **Scope:** task-cycle, foundation-review
 - **Based on:** none
-- **Relations:** derives from WAY-24
+- **Relations:** derives from WAY-24 · derives from WAY-107 · derives from WAY-140
 - **Verification:** an agent compares the cycle and its request with the decision:
-  - complies: a cycle that ends with 31 merges since the last review tag opens its request with a
-    reminder that names 31, the tag and the skill, and the request merges like any other; a cycle
-    in a repository with no review tag and 12 merges writes no reminder; the count leaves out the
-    merges of the main branch into task branches;
+  - complies: a cycle that ends at the threshold with no open line of the review in the backlog
+    ends *How to merge* with a reminder that asks the human to add the task, names what its name
+    holds, the number of merges, the tag and the skill, and the request merges like any other; the
+    same cycle with an open line whose name holds `review-foundation` and the repository's name
+    ends *How to merge* with a sentence that points to that line and does not ask; where the
+    backlog cannot be read, the sentence says so and asks as it does for a missing line; a cycle in
+    a repository with no review tag and a count below the threshold writes nothing about a review;
+    the count leaves out the merges of the main branch into task branches;
   - violates: the reminder stops the merge or fails a check of the gate; a product sets a number of
     its own; the count starts at the merge of the review's own change; the reminder is written
-    only in the first request after the number is reached.
+    only in the first request after the number is reached; the sentence urges while an open line
+    of the review stands; the cycle adds or changes a line of the backlog.
 - **Origin:** none
 
 *Rationale:* the end of the cycle is the point every product passes, and the request is where the
 human already reads before a merge, so the reminder asks the human for no habit of their own and
 needs no memory or ritual that a product may lack. A reminder that stops nothing is read, where a
-failing check would stop changes that have nothing to do with it. Weak points taken: everyone with
-access to the repository sees the tag, and the reminder repeats in each request until a review is
-made, also while the human puts it off on purpose. At 30 merges the review falls in the-way every
-1–4 weeks and in the first product every 1.5–7 weeks, by the history of weeks 40–45 of 2026 (6–26
-merges a week in the-way, 4–21 in the product). The count is this product's own, and the history of
-the first product is not open to a reader of this repository.
+failing check would stop changes that have nothing to do with it. A reminder that repeats its ask
+while the human has the review planned is scrolled past, so the cycle reads the backlog and stops
+asking where the line stands; the human adds the line because each product keeps its backlog where
+it chooses and the cycle only reads it (WAY-140, WAY-161), and a name that holds the skill and the
+repository is a mark that can be written in any backlog with no identifier for the-way to issue.
+Weak points taken: everyone with access to the repository sees the tag; the sentence asks until a
+human adds the line; a backlog the cycle cannot read leaves it asking for a line that may stand
+there; and a line that holds the mark but is no review of the foundation silences it. The number is
+one for every product so that no product has a rhythm of review of its own, and it stands in the
+code that counts, with its reason beside it, since a single number carries no choice that a later
+reader could take otherwise (WAY-22).
 *Rejected:* a check in the gate — the gate stops or lets through, a stop would block unrelated
 changes, and a warning that stops nothing is not read there; a script the human runs, in a weekly
 review say — it depends on a memory or a ritual that another product does not have; the merge of
 the review's own change as the marker instead of a tag — a review that changes nothing leaves none,
 and the count goes back to the start of the history; 10 merges, as an outside harness runs its
 quality review — a review session of the human every week in the-way, running into the daily scan,
-where there the ten concern a cheap review of quality and no session of a human; 50 merges — a
-review every 2–8 weeks in the-way.
+where there the ten concern a cheap review of quality and no session of a human; the cycle adding
+the line of the review to the backlog itself — the backlog is the human's and lies outside the
+repository, and it would need a change to WAY-140 against the reason of WAY-161; holding the request
+as a draft from the threshold on — every unrelated change would wait for a click that becomes a
+reflex at more than ten merges a week; the line in the backlog and the held draft together — the sum
+of both costs; the setup of one user alone, with the wording of this decision as it was — another
+user of the-way keeps a sentence that can be scrolled past; an identifier the-way computes for the
+review's line, in the field of identifier — a task that belongs to no plan has no identifier from
+the-way, it works only in a task place with identifiers, and each later review needs a new one,
+since the old stays on a done line; no reading of the backlog, the sentence always asking for the
+task "if there is none" — the reminder never goes quiet while the review is planned; the number in
+the sentence of this decision, repeated in the code — the entry keeps a single number and each
+change of the threshold becomes a change of a decision, against the gain of the rhythm and the
+rejected numbers standing in one place of the log.
 
 ### WAY-316 — Where do the screenshots that a change shows the human lie, and how do they reach the request?
 
