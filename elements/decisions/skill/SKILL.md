@@ -34,7 +34,8 @@ the search of the foundation adds for this element.
   and those step 4.4 writes; name the tests that hold its sentences in the clause `tests:`, once
   their lines `decision:` stand (the template's "Verification"); add a pair of examples only for the
   part of the sentences that no invariant and no test holds, where the human gives one or accepts
-  one you propose.
+  one you propose — in a task's cycle the human accepts it at the merge, the entry marked as
+  `task-cycle/skill/foundation_step.md` gives (WAY-114).
 - *Verification*, where a test of a later slice of the same change will hold a sentence of this
   decision: carry a pair of examples for that part for now. The run of the foundation check made
   right after the entry is written reports a decision the change altered with nothing holding it,

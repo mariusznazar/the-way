@@ -90,7 +90,9 @@ no such outcome takes no check.
 
 The list holds three items the check handles apart: how to read the logs, how long the record of the
 logs lives, between deployments too, and how a human learns of a failure of the running product
-(WAY-139):
+(WAY-139). Each item of the *To do* that writes into the skill the answer to one of the three, or the
+record of the human's refusal, names the guide as the item of the paragraph above does, since the guide
+has a part for each of the three:
 
 - A skill that records the human's refusal to settle an item covers it.
 - Where a decision of the foundation or an approved definition the task carries answers the item,

@@ -449,8 +449,10 @@ contradicts a decision.
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
    Then the review of the whole change: a fresh reviewer that made none of it, on the strongest
-   class available (WAY-229), with `review-change`, on the range from the task's base to the head,
-   with the frozen task, any spec and plan, each slice's range and whether it had a review of its
+   class available — the strongest of the models the session's settings allow, from the list
+   `availableModels`, never the name of the strongest model of the family (WAY-229), with
+   `review-change`, on the range from the task's base to the head, with the frozen task, any spec
+   and plan, each slice's range and whether it had a review of its
    own, the report of each executor whose slice had none with any mismatch its mechanical check
    passed on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had
    no review of its own, and the Minor and out-of-scope findings of the slice reviews (WAY-164);
@@ -496,9 +498,11 @@ contradicts a decision.
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
-    return step commits anything, a fresh reviewer on the strongest class available (WAY-229)
-    reviews its range with `review-change`, against the task and the entries the return step writes
-    or corrects. Record the result under *Return step*.
+    return step commits anything, a fresh reviewer on the strongest class available — the strongest of
+    the models the session's settings allow, from the list `availableModels`, never the name of the
+    strongest model of the family (WAY-229) — reviews its range with `review-change`, against the
+    task and the entries the return step writes or corrects. Record the result under *Return
+    step*.
 
 ## The end of a code review
 
