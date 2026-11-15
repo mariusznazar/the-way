@@ -32,6 +32,8 @@ CLASSES_HEADER = "| Class | Meaning | Added | Withdrawn |\n|---|---|---|---|\n"
 ISSUES_HEADER = "| Issue | What | Fate | Fix |\n|---|---|---|---|\n"
 PROBLEMS_HEADER = ("| Repository | Record | Stages | What | Class | Weight | Cost of an occurrence "
                    "| Issue |\n|---|---|---|---|---|---|---|---|\n")
+# The header of the table of the register's values in *Unknown values* (audit_count.py).
+REGISTER_HEADER = "| Field of the register | Values | Why | First examples |"
 
 
 def register_text(classes=(), issues=(), problems=()) -> str:
@@ -203,12 +205,27 @@ class AuditCountCase(unittest.TestCase):
         return path.read_bytes().decode("utf-8")
 
     def rows(self, heading: str) -> list[list[str]]:
-        """The rows of the table under `## <heading>` of the latest result, as cells."""
+        """The rows of the table under `## <heading>` of the latest result, as cells. Of *Unknown
+        values* it is the first table only: the cycles' values and the versions' and measures'; the
+        values of the register are in `pair_rows`."""
         text = self.latest()
         self.assertIn(f"\n## {heading}\n", text, f"the result has no section `## {heading}`")
         section = text.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
         lines = [line for line in section.splitlines() if line.startswith("|")]
+        if heading == "Unknown values" and REGISTER_HEADER in lines:
+            lines = lines[:lines.index(REGISTER_HEADER)]
         return [split_row(line) for line in lines[2:]]
+
+    def pair_rows(self) -> list[list[str]]:
+        """The rows of *Unknown values* for the values of the register: one row for each field and
+        reason, as field, number of values, reason and the first examples; none where the result
+        has no such table."""
+        text = self.latest()
+        section = text.split("\n## Unknown values\n", 1)[1].split("\n## ", 1)[0]
+        lines = [line for line in section.splitlines() if line.startswith("|")]
+        if REGISTER_HEADER not in lines:
+            return []
+        return [split_row(line) for line in lines[lines.index(REGISTER_HEADER) + 2:]]
 
     def section(self, kind, number) -> list[list[str]]:
         """The rows of the table under `### <kind>, series <number>` of the latest result."""
@@ -576,6 +593,28 @@ class CraftedInput(AuditCountCase):
         self.assertIn("\\x1b", cycles[0]["Folder"])
         self.assertEqual("unknown", cycles[0]["Process pin"])
         self.assertEqual("1", cycles[0]["Remarks"])
+
+    def test_crafted_text_of_a_register_value_reaches_its_pair_as_one_cut_line_with_no_bar(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        # A repository the register names with an escaped bar, a control character and more text
+        # than the cut: its value is unknown, and its example is one cut line with no bar in it.
+        crafted = "g\\|" + "h" * 300 + "\x07"
+        self.register.write_text(register_text(problems=[problem_row(crafted, added)]),
+                                 encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        pairs = self.pair_rows()
+        self.assertEqual(1, len(pairs), pairs)
+        self.assertEqual(["row of `Problems`", "1"], pairs[0][:2])
+        # The bar is written as `\x7c`, and the text is cut to 200 characters before the example.
+        self.assertIn("\\x7c", pairs[0][3])
+        self.assertNotIn("h" * 201, pairs[0][3])
+        self.assertLess(len(pairs[0][3]), 400, pairs[0][3])
+        self.assertIn(f"{added}: row 1 of `Problems`", pairs[0][3])
 
     def test_a_symbolic_link_leaving_the_record_is_not_followed(self):
         outside = self.home / "outside.md"
@@ -2268,8 +2307,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
         self.assertEqual([], self.rows("Fixed issues"))
-        self.assertEqual([], [row for row in self.rows("Unknown values")
-                              if row[2].startswith("row ")])
+        self.assertEqual([], self.pair_rows())
 
     def test_a_problem_whose_repository_is_not_read_stays_unknown(self):
         product = self.repository()
@@ -2278,8 +2316,10 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertIn(["ghost", added, "row 1 of `Problems`"],
-                      [row[:3] for row in self.rows("Unknown values")])
+        self.assertEqual([["row of `Problems`", "1",
+                           "no named repository holds the cycle of its record; name its key with "
+                           "--repository", f"ghost {added}: row 1 of `Problems`"]],
+                         self.pair_rows())
         self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
@@ -2303,13 +2343,23 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         text = self.latest()
         self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
-        unknown = self.rows("Unknown values")
-        self.assertEqual([f"row {number} of `Classes`" for number in range(1, 5)],
-                         [row[2] for row in unknown if row[2].endswith("`Classes`")])
-        self.assertIn("row 2 of `Issues`", [row[2] for row in unknown])
-        self.assertEqual([f"row {number} of `Problems`" for number in range(2, 8)],
-                         [row[2] for row in unknown if row[2].endswith("`Problems`")])
-        self.assertTrue(all(len(cell) < 1000 for row in unknown for cell in row), unknown)
+        pairs = self.pair_rows()
+        self.assertEqual([["row of `Classes`", "3",
+                           "the class name is not lower-case letters, digits and hyphens, or it is "
+                           "`none`", f"the-way none: row 1 of `Classes`; "
+                           "the-way none: row 3 of `Classes`; the-way none: row 4 of `Classes`"],
+                          ["row of `Classes`", "1",
+                           "the column Added is neither `start` nor a date written YYYY-MM-DD",
+                           "the-way none: row 2 of `Classes`"]],
+                         [row for row in pairs if row[0] == "row of `Classes`"])
+        self.assertIn("row of `Issues`", [row[0] for row in pairs])
+        issue_reason = "the issue is in no valid row of Issues"
+        self.assertEqual(["row of `Problems`", "2", issue_reason,
+                          f"product {added}: row 5 of `Problems`; product {added}: row 6 of "
+                          "`Problems`"],
+                         [row for row in pairs if row[2] == issue_reason][0])
+        self.assertIn("row of `Problems`", [row[0] for row in pairs])
+        self.assertTrue(all(len(cell) < 1000 for row in pairs for cell in row), pairs)
         # Four of the seven rows name this cycle and are refused (class, weight, issue, issue); the
         # valid one is counted; the count with refused rows of the cycle reads `at least`.
         self.assertEqual([["product", added, "process-remark", "at least 0", "at least 1",
@@ -2324,14 +2374,13 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual(["row 1 of `Classes`", "row 8 of `Classes`"],
-                         [row[2] for row in self.rows("Unknown values")
-                          if row[2].endswith("`Classes`")])
+        self.assertEqual([["row of `Classes`", "2", "the name is written in two rows",
+                           "the-way none: row 1 of `Classes`; the-way none: row 8 of `Classes`"]],
+                         [row for row in self.pair_rows() if row[0] == "row of `Classes`"])
         self.assertEqual([["product", added, "none", "at least 0", "at least 0", "at least 0",
                            "at least 0", "1"]], self.rows("Problems by cycle"))
-        self.assertIn(["product", added, "row 1 of `Problems`",
-                       "the class is not in the list of classes"],
-                      [row[:4] for row in self.rows("Unknown values")])
+        self.assertIn(["row of `Problems`", "1", "the class is not in the list of classes",
+                       f"product {added}: row 1 of `Problems`"], self.pair_rows())
 
     def test_a_refused_row_of_a_cycle_and_an_issue_is_counted_not_hidden(self):
         # Scratch A of the review of slice 5: one open issue, one problem of it in one cycle with a
@@ -2349,7 +2398,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["open-one", "at least 0", "at least 0", "at least 0", "unknown", "1"]],
                          self.rows("Open issues"))
         self.assertIn("the weight is not one of the four levels",
-                      [row[3] for row in self.rows("Unknown values")])
+                      [row[2] for row in self.pair_rows()])
 
     def test_a_long_run_of_blanks_in_a_class_name_does_not_stall_the_count(self):
         product = self.repository()
@@ -2433,8 +2482,7 @@ class RegisterCount(AuditCountCase):
                                          encoding="utf-8")
                 done = self.run_count("--today", "2026-11-11")
                 self.assertEqual(1, done.returncode, done.stderr)
-                self.assertIn(["the-way", "none", "table `Problems`"],
-                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertIn("table `Problems`", [row[0] for row in self.pair_rows()])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                                  self.rows("Problems by cycle"))
 
@@ -2578,8 +2626,8 @@ class RegisterCount(AuditCountCase):
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "1", "0", "2", "0", "0"]], self.rows("Fixed issues"))
-        reasons = [row[3] for row in self.rows("Unknown values")
-                   if row[:3] == ["product", lacking, "Process pin"]]
+        reasons = [row[2] for row in self.pair_rows()
+                   if row[0] == "Process pin" and f"product {lacking}: Process pin" in row[3]]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
 
@@ -2614,7 +2662,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["product", both, "none", "at least 0", "at least 0", "at least 0",
                            "at least 0", "0"]] * 2, self.rows("Problems by cycle"))
-        reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "row 1 of `Problems`"]
+        reasons = [row[2] for row in self.pair_rows() if "row 1 of `Problems`" in row[3]]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("more than one cycle", reasons[0])
         self.assertEqual([["open-one", "at least 0", "1", "1", "unknown", "0"]],
@@ -2642,17 +2690,27 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([[first, again]], [[c["Record"], c["Later copies"]] for c in self.cycles()])
         self.assertEqual([["slow-one", "0", "1", "0", "10", "0"]], self.rows("Open issues"))
 
-    def test_a_register_far_larger_than_a_real_one_lists_its_unknown_rows_in_part(self):
+    def test_a_register_far_larger_than_a_real_one_gives_one_line_for_each_pair(self):
+        # 830 problems whose cycle no repository holds, about the lines the result gave for a
+        # register of that size, and two refused for a weight the scale lacks: two pairs, one line
+        # each, with the count of its values and the first three of them as examples.
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
-        self.use_register(problems=[problem_row("ghost", added) for _ in range(1500)])
+        self.use_register(problems=[problem_row("ghost", added) for _ in range(830)]
+                          + [problem_row("product", added, weight="Blocker") for _ in range(2)])
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        unknown = self.rows("Unknown values")
-        listed = [row for row in unknown if row[2].endswith("of `Problems`")]
-        self.assertLess(len(listed), 1500)
-        self.assertIn(f"{1500 - len(listed)} more", " ".join(row[3] for row in unknown))
+        pairs = self.pair_rows()
+        self.assertEqual(2, len(pairs), pairs)
+        self.assertEqual(["row of `Problems`", "2", "the weight is not one of the four levels",
+                          f"product {added}: row 831 of `Problems`; "
+                          f"product {added}: row 832 of `Problems`"], pairs[0])
+        self.assertEqual(["row of `Problems`", "830",
+                          "no named repository holds the cycle of its record; name its key with "
+                          "--repository",
+                          "; ".join(f"ghost {added}: row {number} of `Problems`"
+                                    for number in (1, 2, 3))], pairs[1])
 
     def test_problems_whose_cycle_is_not_read_count_apart_for_fixed_and_dropped_issues(self):
         way, fix, _, _ = self.the_way_with_a_fix()
@@ -2710,8 +2768,9 @@ class RegisterCount(AuditCountCase):
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "0", "0", "1", "0", "0"]], self.rows("Fixed issues"))
-        self.assertIn("ambiguous", " ".join(row[3] for row in self.rows("Unknown values")
-                                            if row[:3] == ["product", cycle, "Process pin"]))
+        self.assertIn("ambiguous", " ".join(row[2] for row in self.pair_rows()
+                                            if row[0] == "Process pin"
+                                            and f"product {cycle}: Process pin" in row[3]))
 
     def test_a_shallow_clone_of_the_way_lacking_the_fix_says_so(self):
         way, fix, with_fix, _ = self.the_way_with_a_fix()
@@ -2730,8 +2789,8 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
-        self.assertIn("shallow clone", " ".join(row[3] for row in self.rows("Unknown values")
-                                                if row[2] == "the fix of issue `fixed-one`"))
+        self.assertIn("shallow clone", " ".join(row[2] for row in self.pair_rows()
+                                                if row[0] == "the fix of issue `fixed-one`"))
 
     def test_a_doubled_heading_or_header_row_of_the_register_is_refused(self):
         product = self.repository()
@@ -2746,8 +2805,9 @@ class RegisterCount(AuditCountCase):
                                     problem_row("product", added)])
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertIn(["row 1 of `Problems`", "the Record is no commit of 40 hexadecimal characters"],
-                      [row[2:] for row in self.rows("Unknown values")])
+        self.assertIn(["row of `Problems`", "1",
+                       "the Record is no commit of 40 hexadecimal characters"],
+                      [row[:3] for row in self.pair_rows()])
         self.assertEqual([["product", added, "process-remark", "0", "1", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
@@ -2766,8 +2826,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", missing, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
-        reasons = [row[3] for row in self.rows("Unknown values")
-                   if row[2] == "the fix of issue `fixed-one`"]
+        reasons = [row[2] for row in self.pair_rows() if row[0] == "the fix of issue `fixed-one`"]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
 
@@ -2828,14 +2887,16 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["open-one", "open", "at least 0", "at least 1", "at least 0",
                            "at least 0", "at least 0", "5"]],
                          self.rows("Cost of an occurrence by issue"))
-        reasons = {row[2]: row[3] for row in self.rows("Unknown values")
-                   if row[2].endswith("of `Problems`")}
-        self.assertEqual({f"row {number} of `Problems`" for number in range(2, 9)}, set(reasons))
-        for number in (2, 3, 4, 5, 6):
-            self.assertEqual("the cost of an occurrence is not one of the five levels",
-                             reasons[f"row {number} of `Problems`"])
-        self.assertEqual("the row has 9 cells, not 8", reasons["row 7 of `Problems`"])
-        self.assertEqual("the row has 7 cells, not 8", reasons["row 8 of `Problems`"])
+        # Rows 2 to 6 share one reason, and rows 7 and 8 have one each; rows 2 to 4 are examples.
+        self.assertEqual([
+            ["row of `Problems`", "5", "the cost of an occurrence is not one of the five levels",
+             f"product {added}: row 2 of `Problems`; product {added}: row 3 of `Problems`; "
+             f"product {added}: row 4 of `Problems`"],
+            ["row of `Problems`", "1", "the row has 9 cells, not 8",
+             f"product {added}: row 7 of `Problems`"],
+            ["row of `Problems`", "1", "the row has 7 cells, not 8",
+             f"product {added}: row 8 of `Problems`"]],
+            [row for row in self.pair_rows() if row[0] == "row of `Problems`"])
 
     def test_a_table_of_costs_that_lacks_a_level_is_treated_as_the_table_of_weights_is(self):
         product = self.repository()
@@ -2864,8 +2925,8 @@ class RegisterCount(AuditCountCase):
                 self.assertEqual(1, done.returncode, done.stderr)
                 self.assertIn("Error: the register of problems: the table `Costs of an occurrence` "
                               + words, done.stderr.decode("utf-8"))
-                self.assertIn(["the-way", "none", "table `Costs of an occurrence`"],
-                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertIn("table `Costs of an occurrence`",
+                              [row[0] for row in self.pair_rows()])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                                  self.rows("Problems by cycle"))
         with self.subTest("a level the scale lacks, beside the five"):
@@ -2875,8 +2936,7 @@ class RegisterCount(AuditCountCase):
                 encoding="utf-8")
             done = self.run_count("--today", "2026-11-11")
             self.assertEqual(0, done.returncode, done.stderr)
-            self.assertIn(["the-way", "none", "row 5 of `Costs of an occurrence`"],
-                          [row[:3] for row in self.rows("Unknown values")])
+            self.assertIn("row of `Costs of an occurrence`", [row[0] for row in self.pair_rows()])
         with self.subTest("the template as it stands"):
             self.register.write_text(TEMPLATE, encoding="utf-8")
             done = self.run_count("--today", "2026-11-11")
@@ -2912,8 +2972,7 @@ class RegisterCount(AuditCountCase):
                 self.assertEqual(1, done.returncode, done.stderr)
                 self.assertIn("Error: the register of problems: the table `Weights` " + words,
                               done.stderr.decode("utf-8"))
-                self.assertIn(["the-way", "none", "table `Weights`"],
-                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertIn("table `Weights`", [row[0] for row in self.pair_rows()])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                                  self.rows("Problems by cycle"))
 

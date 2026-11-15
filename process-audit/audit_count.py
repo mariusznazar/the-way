@@ -256,8 +256,9 @@ not in it. What else depends on a refused row or table is `unknown`. A problem w
 repository holds is `unknown`, not dropped, and so is a
 problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
 read `at least n`. A problem is counted once, by its row; a cycle copied again after a
-correction is one cycle, and its problems are counted once. *Unknown values* lists at most 500
-values the register leaves unknown, and says how many more there are.
+correction is one cycle, and its problems are counted once. *Unknown values* gives the values the
+register leaves unknown one line for each field and reason, with how many values the pair has and
+its first examples; the full list stays in the register.
 
 For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
@@ -282,7 +283,8 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 `audit_results`, never inside a repository it reads or the checkout of the-way, read or not:
 a section *Repositories*, a table of each
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
-*Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
+*Unknown values*, a table of each value given as `unknown` and why, and a table of the values of the
+register, one line for each field and reason. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
 number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
 of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
@@ -436,8 +438,12 @@ CONTRACTED_NOT = ("n't", "n’t")
 # path, which is the user's (WAY-320).
 LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
-# *Unknown values* lists at most this many values the register leaves unknown.
-MAX_LISTED = 500
+# *Unknown values* gives the values the register leaves unknown one line for each field and reason:
+# the number of values of the pair and its first EXAMPLES values, each as its repository, record and
+# value, and the field is the value with the number of its row taken out (WAY-330).
+EXAMPLES = 3
+ROW_NUMBER = re.compile(r"^row [0-9]+ of ")
+REGISTER_UNKNOWN_HEADER = ["Field of the register", "Values", "Why", "First examples"]
 # The two files of a cycle's record that the count reads (WAY-339), each written by its
 # script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
 # task-cycle/gate_times.py. A copy that holds neither is of an earlier cycle or of one whose script
@@ -2422,14 +2428,24 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         else:
             dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
                                  counted(not_read, refused), str(refused)])
-    listed = list(dict.fromkeys(unknown))
-    if len(listed) > MAX_LISTED:
-        # A register far larger than a real one would make the result as large as itself.
-        more = len(listed) - MAX_LISTED
-        listed = listed[:MAX_LISTED] + [(THE_WAY, NONE, "values of the register not listed",
-                                         f"{more} more values the register leaves unknown are not "
-                                         "listed here; the register holds them")]
-    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows, listed)
+    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows,
+                    list(dict.fromkeys(unknown)))
+
+
+def register_unknown_rows(unknown: list[tuple[str, str, str, str]]) -> list[list[str]]:
+    """The register's unknown values as one row for each pair of a field and a reason, in the order
+    each pair first occurs: the field is the value with the number of its row taken out, the count
+    is the values of the pair, and the examples are the first EXAMPLES of them."""
+    counts: Counter = Counter()
+    examples: dict[tuple[str, str], list[str]] = {}
+    for repository, record, value, why in unknown:
+        key = (ROW_NUMBER.sub("row of ", value, count=1), why)
+        counts[key] += 1
+        shown = examples.setdefault(key, [])
+        if len(shown) < EXAMPLES:
+            shown.append(f"{repository} {record}: {value}")
+    return [[field_text, str(counts[(field_text, why)]), why,
+             "; ".join(examples[(field_text, why)])] for field_text, why in counts]
 
 
 # The process versions (WAY-339)
@@ -3165,14 +3181,21 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "## Unknown values",
         "",
+        "The values the count did not establish. The first table has one row for each value of a "
+        "cycle and each value of the versions and of the measures. The second has the values of "
+        "the register, one row for each field of the register and reason, with how many values the "
+        "pair has and its first examples, each as repository, record and value; the full list stays "
+        "in the register.",
+        "",
         "| Repository | Record | Value | Why |",
         "|---|---|---|---|",
     ]
     for cycle in cycles:
         for value, why in cycle.unknown:
             lines.append(f"| {cell(cycle.repository)} | {cycle.record} | {value} | {cell(why)} |")
-    for repository, record, value, why in analysis.unknown:
+    for repository, record, value, why in dict.fromkeys(versions.unknown + measured.unknown):
         lines.append(f"| {cell(repository)} | {cell(record)} | {cell(value)} | {cell(why)} |")
+    lines += [""] + table(REGISTER_UNKNOWN_HEADER, register_unknown_rows(analysis.unknown))
     return "\n".join(lines) + "\n"
 
 
@@ -3231,8 +3254,6 @@ def main(argv: list[str] | None = None) -> int:
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
         measured = measure_versions(versions, ancestry)
-        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown
-                                              + measured.unknown))
         text = render(reads, prices, analysis, versions, measured)
         dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)
