@@ -34,11 +34,15 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
-per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is
-neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or
-the price list names its option, `--locations` or `--prices`, never the path it was given
-(WAY-320).
+per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input*,
+*Output*, *Cache write (5 minutes)* and *Cache write (1 hour)*, per million tokens; a table that
+lacks one of them refuses the list, with its `Error:` naming the column. A `—` in *Input*, *Cached
+input* or *Output* is a model with no price at all. A `—` in a write column is no price for that
+lifetime: a model so marked is priced while the row of `stages.md` holds no writes of that
+lifetime, and the cost of a row that holds some is `unknown`, never priced at the price of another
+column. A cell that is neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about
+the locations file or the price list names its option, `--locations` or `--prices`, never the path
+it was given (WAY-320).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -58,19 +62,27 @@ ones noted, and its values are read from the last copy, the most complete. For e
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
 - the cost at constant prices (WAY-337), from the copy's `stages.md` in either of its two
   forms. The newer form is known by its heading: each row of the section *Stages: start, waiting
-  for tools and tokens by model* is priced at the list's prices, its input less its cached input at
-  the *Input* price, its cached input at the *Cached input* price and its output at the *Output*
-  price. The older form has no such section: it is known by its table of tokens by model, the one
-  table whose header row begins with *Model* and has the columns *Model*, *Total tokens*, *Input*,
-  *Cached input* and *Output*, found exactly once, and each of its rows is priced in the same way.
+  for tools and tokens by model* is priced at the list's prices, its input that is neither read
+  from a cache nor written to one at the *Input* price, its cached input at the *Cached input*
+  price, its cache writes of 5 minutes and of 1 hour each at its own write price, and its output at
+  the *Output* price (the form with the two columns of the writes, *Cache write (5 minutes)* and
+  *Cache write (1 hour)*; a form without them has no writes to price, and its row is priced by the
+  other three). The older form has no such section: it is known by its table of tokens by model,
+  the one table whose header row begins with *Model* and has the columns *Model*, *Total tokens*,
+  *Input*, *Cached input* and *Output*, found exactly once, and each of its rows is priced in the
+  same way.
   The older form is the form most cycles have, so a count that passed it over would leave most
   cycles with no cost.
-  Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in), so they are priced
-  as input: an approximation. A model the list gives no price for, a row that does not read, a
-  cached input above its input, a subagent stage with no token usage (the model `—`), a stage or a
-  row whose usage the stage report could not read (the model `unknown`), a section where no stage
-  has any, a table of the older form with no row, or such a table written twice, gives the cost
-  `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
+  The cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in). In the form
+  with the two columns of the writes they are priced each at its own price; in the earlier forms of
+  the section and in the older table, which have no such columns, they are priced as input: an
+  approximation. A Codex row has `0` in both columns and is priced as a row with no writes. A model
+  the list gives no price for, a model whose write price for a lifetime is `—` where the row holds
+  writes of that lifetime, a row that does not read, a cached input above its input or cached
+  input and writes together above it, a subagent stage with no token usage (the model `—`), a
+  stage or a row whose usage the stage report could not read (the model `unknown`), a section where
+  no stage has any, a table of the older form with no row, or such a table written twice, gives the
+  cost `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
   response of a model, costs nothing;
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
@@ -177,7 +189,9 @@ field, a line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `
 copy lacks the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
 `Model`, `Input`, `Cached input` and `Output` of the table of the newer form's section, and that
 table itself, which a heading with no table misses (the column `Files named` is never missing: a
-section without it is the earlier form of the section); the columns `Input`, `Cached input` and
+section without it is the earlier form of the section; the columns `Cache write (5 minutes)` and
+`Cache write (1 hour)` are a pair, never missing when neither stands, and where one stands the
+other is the field missing); the columns `Input`, `Cached input` and
 `Output` of the older form's table, `Model` being its sign; the section and the table both, where
 the file has neither the heading nor a table beginning with `Model`; and, where the file has one of
 the lines `- Working time without waiting for tools:` and `- Waiting for tools:`, the other (a file
@@ -330,6 +344,14 @@ STAGES_HEADING = "## " + SECTION_TITLE
 STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
 FILES_COLUMN = "Files named"
+# The two columns of the cache writes of each lifetime, a pair that follows *Files named* in the
+# newest form of the section and is never missing when neither stands (WAY-344).
+WRITE_5M_COLUMN = "Cache write (5 minutes)"
+WRITE_1H_COLUMN = "Cache write (1 hour)"
+WRITE_COLUMNS = [WRITE_5M_COLUMN, WRITE_1H_COLUMN]
+# The three forms of the header of the section, each a prefix of the next.
+SECTION_FORMS = (STAGE_COLUMNS, STAGE_COLUMNS + [FILES_COLUMN],
+                 STAGE_COLUMNS + [FILES_COLUMN] + WRITE_COLUMNS)
 # The table of tokens by model, which every form of `stages.md` has and the older form is read
 # from: the table whose header row begins with `Model`.
 MODEL_COLUMN = "Model"
@@ -356,7 +378,7 @@ ROUND_ENTRY = re.compile(r"findings `([^`\n]{1,200})`")
 FINDINGS_WORD = "findings"
 PRICE_HEADING = "List date"
 PRICE_MODEL = "Model id in stages.md"
-PRICE_COLUMNS = ("Input", "Cached input", "Output")
+PRICE_COLUMNS = ("Input", "Cached input", "Output", WRITE_5M_COLUMN, WRITE_1H_COLUMN)
 # A token count longer than this is not a count of tokens: no model's input comes near it.
 TOKEN_DIGITS = 15
 PRICE = re.compile(r"[0-9]{1,6}(?:\.[0-9]{1,6})?")
@@ -823,12 +845,23 @@ def is_separator(cells: list[str]) -> bool:
     return all(cell and set(cell) <= set("-:") for cell in cells)
 
 
+@dataclass(frozen=True)
+class ModelPrice:
+    """The prices of one model per million tokens. A write price is None where the list has `—`
+    for that lifetime: the model has no price for such a write, while the other prices stand."""
+    input: Decimal
+    cached: Decimal
+    output: Decimal
+    write_5m: Decimal | None
+    write_1h: Decimal | None
+
+
 @dataclass
 class Prices:
-    """The price list: its date, and per model its prices per million tokens as (input, cached
-    input, output), or None where no page gives a price."""
+    """The price list: its date, and per model its prices, or None where no page gives the price
+    of its input, its cached input or its output: a model with no price at all."""
     date: str
-    table: dict[str, tuple[Decimal, Decimal, Decimal] | None]
+    table: dict[str, ModelPrice | None]
 
 
 @dataclass
@@ -836,7 +869,8 @@ class StageTokens:
     """One row of the section of `stages.md` that gives each stage's tokens by model. `files` is
     what its cell *Files named* gives: the files of `reports/` the turn was given, None where the
     cell reads `unknown` or the form has no such column; `files_read` is False where the cell is
-    not a list of such files."""
+    not a list of such files. `write_5m` and `write_1h` are the cache writes of each lifetime, parts
+    of `input`: zero for the forms that have no such columns and for the older table."""
     number: str
     name: str
     model: str
@@ -845,6 +879,8 @@ class StageTokens:
     output: int
     files: frozenset[str] | None = None
     files_read: bool = True
+    write_5m: int = 0
+    write_1h: int = 0
 
 
 def read_prices(name: str) -> Prices:
@@ -877,7 +913,7 @@ def read_prices(name: str) -> Prices:
         date.fromisoformat(dates[0])
     except ValueError:
         raise AuditCountError(f"the line `List date` of {label} is no date") from None
-    table: dict[str, tuple[Decimal, Decimal, Decimal] | None] = {}
+    table: dict[str, ModelPrice | None] = {}
     columns: list[int] | None = None
     for line, inside in zip(lines, fenced):
         if inside or not line.startswith("|"):
@@ -886,9 +922,10 @@ def read_prices(name: str) -> Prices:
         cells = table_cells(line)
         if columns is None:
             if cells[:1] == [PRICE_MODEL]:
-                if not all(name_of in cells for name_of in PRICE_COLUMNS):
-                    raise AuditCountError(f"a table of {label} lacks one of the columns "
-                                          f"{', '.join(PRICE_COLUMNS)}")
+                lacking = [name_of for name_of in PRICE_COLUMNS if name_of not in cells]
+                if lacking:
+                    raise AuditCountError(f"a table of {label} lacks the column "
+                                          f"{', '.join(lacking)}")
                 columns = [cells.index(name_of) for name_of in PRICE_COLUMNS]
             continue
         if is_separator(cells):
@@ -909,8 +946,10 @@ def read_prices(name: str) -> Prices:
                 # would point away from the list.
                 raise AuditCountError(f"a price of model `{display(model[:TEXT_CAP])}` in {label} "
                                       "is neither a number nor `—`")
-        table[model] = None if any(number is None for number in numbers) else (
-            numbers[0], numbers[1], numbers[2])
+        # A `—` in *Input*, *Cached input* or *Output* is a model with no price at all; one in a
+        # write column leaves only that lifetime with no price.
+        table[model] = None if any(number is None for number in numbers[:3]) else ModelPrice(
+            numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
     if not table:
         raise AuditCountError(f"{label} names no model")
     return Prices(dates[0], table)
@@ -980,7 +1019,8 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     """The newer form: the rows of the table under the heading of the section. A heading with no
     table, or a table whose header row lacks one of the columns the form needs, is a field missing;
     the column *Files named* is never one: a section without it is the earlier form of the
-    section."""
+    section. The two columns of the cache writes are a pair: with neither the table is of an earlier
+    form, and with one the other is a field missing."""
     table: list[list[str]] = []
     for line, inside in zip(lines[heading + 1:], fenced[heading + 1:]):
         if inside:
@@ -992,14 +1032,20 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     if not table:
         return StageTable(reason="the section in `stages.md` holds no table",
                           missing=[FIELD_SECTION_TABLE])
-    absent = missing_columns(table[0], STAGE_COLUMNS, f"of the section {SECTION_TITLE}")
+    where = f"of the section {SECTION_TITLE}"
+    absent = missing_columns(table[0], STAGE_COLUMNS, where)
+    written = [name for name in WRITE_COLUMNS if name in table[0]]
+    if len(written) == 1:
+        absent += missing_columns(table[0], [name for name in WRITE_COLUMNS if name not in written],
+                                  where)
     if absent:
         return StageTable(reason="the table of the section in `stages.md` lacks a column",
                           missing=absent)
-    named = table[0] == STAGE_COLUMNS + [FILES_COLUMN]
-    if table[0] != STAGE_COLUMNS and not named:
+    if table[0] not in SECTION_FORMS:
         return StageTable(reason=("the table of the section in `stages.md` is not of the form the "
                                   "stage report gives"))
+    named = len(table[0]) > len(STAGE_COLUMNS)
+    writes = len(table[0]) > len(STAGE_COLUMNS) + 1
     columns = len(table[0])
     body = [cells for cells in table[1:] if not is_separator(cells)]
     if not body:
@@ -1010,10 +1056,14 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
             return StageTable(reason=(f"a row of the section in `stages.md` has {len(cells)} "
                                       f"cells, not {columns}"))
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
+        if writes:
+            counts += [token_count(cells[index]) for index in (9, 10)]
         if any(count is None for count in counts):
             return StageTable(reason=("a token count in the section of `stages.md` is not a number "
                                       f"of at most {TOKEN_DIGITS} digits"))
-        row = StageTokens(cells[0], cells[1], cells[4], counts[0], counts[1], counts[2])
+        row = StageTokens(cells[0], cells[1], cells[4], *counts[:3])
+        if writes:
+            row.write_5m, row.write_1h = counts[3], counts[4]
         if named:
             row.files, row.files_read = files_cell(cells[8])
         rows.append(row)
@@ -1308,19 +1358,38 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
                           "is not known")
         if row.cached > row.input:
             return None, f"the cached input of stage `{name}` is above its input"
+        if row.cached + row.write_5m + row.write_1h > row.input:
+            return None, (f"the cached input and the cache writes of stage `{name}` are above its "
+                          "input")
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
-        costs.append(cost_at(price, row))
+        cost, reason = cost_at(price, row)
+        if cost is None:
+            return None, reason
+        costs.append(cost)
     return costs, None
 
 
-def cost_at(price: tuple[Decimal, Decimal, Decimal], row: StageTokens) -> Decimal:
-    """The cost in dollars of a row at a price: its input less its cached input at the *Input*
-    price, its cached input at the *Cached input* price and its output at the *Output* price."""
-    input_price, cached_price, output_price = price
-    return (Decimal(row.input - row.cached) * input_price + Decimal(row.cached) * cached_price
-            + Decimal(row.output) * output_price) / MILLION
+def cost_at(price: ModelPrice, row: StageTokens) -> tuple[Decimal | None, str | None]:
+    """The cost in dollars of a row at a price, or None with the reason where the row holds writes
+    of a lifetime the price list gives no price for. The input that is neither read from a cache nor
+    written to one is priced at the *Input* price, the cached input at the *Cached input* price,
+    the writes of each lifetime at their own price and the output at the *Output* price; a row with
+    no writes is priced by the first, the second and the last alone. The caller has checked that the
+    cached input and the writes together are not above the input."""
+    plain = row.input - row.cached - row.write_5m - row.write_1h
+    total = (Decimal(plain) * price.input + Decimal(row.cached) * price.cached
+             + Decimal(row.output) * price.output)
+    for count, write_price, lifetime in ((row.write_5m, price.write_5m, "5 minutes"),
+                                         (row.write_1h, price.write_1h, "1 hour")):
+        if count == 0:
+            continue
+        if write_price is None:
+            return None, (f"the price list gives no price of a cache write of {lifetime} for "
+                          f"model `{row.model[:TEXT_CAP]}`")
+        total += Decimal(count) * write_price
+    return total / MILLION, None
 
 
 def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
@@ -1338,7 +1407,10 @@ def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal]
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{name}`"
-        costs.append(cost_at(price, row))
+        cost, reason = cost_at(price, row)
+        if cost is None:
+            return None, reason
+        costs.append(cost)
     return costs, None
 
 
@@ -2907,7 +2979,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
         "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
-        "nothing. A cycle whose stage report has no section of stages is priced from its table of "
+        "nothing. A stage report whose section of stages has the columns *Cache write (5 minutes)* "
+        "and *Cache write (1 hour)* is priced with each of them at its own price; an earlier form "
+        "has its cache writes inside its input and prices them as input, an approximation. "
+        "A cycle whose stage report has no section of stages is priced from its table of "
         "tokens by model at the same prices, and its share of the cost in fix rounds is unknown. "
         "*Fix rounds* is the number of findings files the record's *Review rounds* "
         "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "

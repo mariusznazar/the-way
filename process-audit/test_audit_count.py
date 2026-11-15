@@ -593,6 +593,25 @@ class Locations(AuditCountCase):
         self.assert_refused(done, "List date", "--prices")
         self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
 
+    def test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column(
+            self):
+        # A table that lacks one of the two write columns ends the run with exit code 2, as one
+        # that lacks *Input* does, and the error names the option and the column, never the path.
+        self.write_locations(self.places(product=self.product()))
+        prices = self.home / "prices.md"
+        for label, column, other in (("1 hour", "Cache write (1 hour)", "Cache write (5 minutes)"),
+                                     ("5 minutes", "Cache write (5 minutes)",
+                                      "Cache write (1 hour)")):
+            with self.subTest(label):
+                header = ("| Model id in stages.md | Input | Cached input | Output | "
+                          + other + " |\n|---|---|---|---|---|\n| model-a | 2 | 1 | 10 | 3 |\n")
+                prices.write_text("# Prices\n\n- List date: 2026-01-01\n\n" + header,
+                                  encoding="utf-8")
+                done = self.run_count("--prices", str(prices))
+                self.assert_refused(done, "--prices", column)
+                self.assertNotIn(other, done.stderr.decode("utf-8"))
+                self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
+
     def test_a_file_that_is_not_json_or_no_object(self):
         self.write_locations("{\"the-way\": ")
         self.assert_refused(self.run_count(), "is not JSON")
@@ -729,10 +748,12 @@ TEST_PRICES = """# Test prices
 
 ## Test provider
 
-| Model id in stages.md | Page name | Input | Cached input | Output |
-|---|---|---|---|---|
-| model-a | Model A | 2 | 1 | 10 |
-| model-b | Model B | 4 | 0.5 | 20 |
+| Model id in stages.md | Page name | Input | Cached input | Output | Cache write (5 minutes) | Cache write (1 hour) |
+|---|---|---|---|---|---|---|
+| model-a | Model A | 2 | 1 | 10 | 3 | 5 |
+| model-b | Model B | 4 | 0.5 | 20 | 6 | 8 |
+| model-x | Model X | 2 | 1 | 10 | — | — |
+| model-y | Model Y | 2 | 1 | 10 | 3 | — |
 """
 STAGES_HEADER = ("# Stages of the cycle run\n\n- Working time without waiting for tools: 0:20:00\n"
                  "- Waiting for tools: 0:05:00\n\n"
@@ -769,6 +790,20 @@ def stage_row(number, name, model, input_, cached, output, files=None) -> str:
     named = "" if files is None else f" {files} |"
     return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
             f"| {output} |{named}\n")
+
+
+WRITE_COLUMNS = ["Cache write (5 minutes)", "Cache write (1 hour)"]
+# The newest form of the section: the columns of the form that names files, then the two columns
+# of the cache writes, in that order.
+STAGES_HEADER_WRITES = STAGES_HEADER.replace(
+    "| Output |\n|---|---|---|---|---|---|---|---|\n",
+    "| Output | Files named | " + " | ".join(WRITE_COLUMNS) + " |\n" + "|---" * 11 + "|\n")
+
+
+def write_row(number, name, model, input_, cached, output, write_5m, write_1h, files="") -> str:
+    """A row of the section of the newest form, with the cache writes of each lifetime."""
+    return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
+            f"| {output} | {files} | {write_5m} | {write_1h} |\n")
 
 
 WHOLE = "reports/review_whole_findings.md"
@@ -844,9 +879,11 @@ class Cost(AuditCountCase):
     def test_the_stage_report_cycle_stages_writes_gives_the_share(self):
         # Transcripts in Claude Code's form, where the fix and the review of the fix are each a
         # resumed subagent whose message names the findings file. Worked by hand at model-a's
-        # prices: the orchestrator 1000*2 + 100*10 = 3000; the author's first turn 3000 and its
-        # fix 500*2 + 50*10 = 1500; the reviewer's first turn 2000*2 + 200*10 = 6000 and its review
-        # of the fix 250*2 + 25*10 = 750. 2250 of 14250 is 15.79 %.
+        # prices, which are 3 for a write of 5 minutes and 5 for one of 1 hour: the orchestrator,
+        # whose response wrote 100 tokens for 5 minutes and 200 for 1 hour on top of its 1000 plain
+        # input, 1000*2 + 100*3 + 200*5 + 100*10 = 4300; the author's first turn 3000 and its fix
+        # 500*2 + 50*10 = 1500; the reviewer's first turn 2000*2 + 200*10 = 6000 and its review
+        # of the fix 250*2 + 25*10 = 750. 2250 of 15550 is 14.47 %.
         def line(kind, clock, **fields):
             entry = {"type": kind, "timestamp": f"2026-11-11T{clock}.000Z"}
             entry.update(fields)
@@ -858,20 +895,22 @@ class Cost(AuditCountCase):
                 fields["isMeta"] = True
             return line("user", clock, **fields)
 
-        def answered(clock, ident, input_, output):
+        def answered(clock, ident, input_, output, write_5m=0, write_1h=0):
             return line("assistant", clock, message={
                 "id": ident, "model": "model-a", "stop_reason": "end_turn",
                 "content": [{"type": "text"}],
-                "usage": {"input_tokens": input_, "cache_creation_input_tokens": 0,
+                "usage": {"input_tokens": input_,
+                          "cache_creation_input_tokens": write_5m + write_1h,
                           "cache_read_input_tokens": 0, "output_tokens": output,
-                          "cache_creation": {"ephemeral_5m_input_tokens": 0,
-                                             "ephemeral_1h_input_tokens": 0}}})
+                          "cache_creation": {"ephemeral_5m_input_tokens": write_5m,
+                                             "ephemeral_1h_input_tokens": write_1h}}})
 
         project = self.home / "claude" / "projects" / "p"
         agents = project / "sess" / "subagents"
         agents.mkdir(parents=True)
         (project / "sess.jsonl").write_text(
-            told("09:00:00", "run the cycle") + answered("09:00:10", "o1", 1000, 100), "utf-8")
+            told("09:00:00", "run the cycle")
+            + answered("09:00:10", "o1", 1000, 100, write_5m=100, write_1h=200), "utf-8")
         (agents / "agent-f.jsonl").write_text(
             told("09:01:00", "Implement; handoff .runs/task-cycles/t/reports/author_handoff.md")
             + answered("09:02:00", "f1", 1000, 100)
@@ -892,7 +931,7 @@ class Cost(AuditCountCase):
              "--output", str(output)], capture_output=True, stdin=subprocess.DEVNULL)
         self.assertEqual(0, written.returncode, written.stderr)
         row, why = self.share_of(output.read_text(encoding="utf-8"))
-        self.assertEqual(["0.014250", "1", "15.8%"], row[3:6])
+        self.assertEqual(["0.015550", "1", "14.5%"], row[3:6])
         self.assertEqual([], why)
 
     def test_the_same_record_with_an_earlier_form_of_stages_md_leaves_the_share_unknown(self):
@@ -1160,7 +1199,7 @@ class Cost(AuditCountCase):
         self.assertTrue(any("limit" in why for why in self.unknown_why("Cost")))
 
     def test_a_price_list_naming_a_model_twice_refuses_the_run(self):
-        doubled = TEST_PRICES + "| model-a | Model A again | 2 | 1 | 10 |\n"
+        doubled = TEST_PRICES + "| model-a | Model A again | 2 | 1 | 10 | 3 | 5 |\n"
         done = self.count(one_fix_round(), prices=doubled)
         self.assertEqual(2, done.returncode, done.stdout + done.stderr)
         self.assertIn("twice", done.stderr.decode("utf-8"))
@@ -1170,6 +1209,8 @@ class Cost(AuditCountCase):
         cases = {
             "a price cell that is no number": (
                 TEST_PRICES.replace("| 4 | 0.5 | 20 |", "| 1e9 | 0.5 | 20 |"), "neither a number"),
+            "a write price that is no number": (
+                TEST_PRICES.replace("| 6 | 8 |", "| 6 | free |"), "neither a number"),
             "a doubled list date": (TEST_PRICES.replace(
                 "- List date: 2026-01-01\n", "- List date: 2026-01-01\n- List date: 2026-02-01\n"),
                 "more than once"),
@@ -1267,6 +1308,130 @@ class Cost(AuditCountCase):
                 self.assertTrue(any("disagree" in reason for reason in why), why)
 
 
+    def written_cost(self, *rows, prices=TEST_PRICES):
+        """The run on a section of the newest form made of `rows`: its Cost cell and the reasons
+        the cost is unknown. The run ends with exit code 0 and no `Error:` line."""
+        done = self.count(STAGES_HEADER_WRITES + "".join(rows), prices=prices)
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        return self.cost_row()[3], self.unknown_why("Cost")
+
+    def test_the_cache_writes_of_each_lifetime_are_priced_each_at_its_own_price(self):
+        # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and writes of 3 for 5
+        # minutes and 5 for 1 hour: of 10000 input tokens, 2000 are read and 3000 + 1000 written,
+        # so 4000 are plain: 4000 * 2 + 2000 * 1 + 3000 * 3 + 1000 * 5 + 100 * 10 = 25000. Both
+        # lifetimes at the 5-minute price would give 23000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 10000, 2000, 100, 3000, 1000))
+        self.assertEqual("0.025000", cost)
+        self.assertEqual([], why)
+
+    def test_the_writes_are_priced_at_the_prices_of_their_own_model(self):
+        # model-b, 2000 in of which 500 are read and 200 + 300 written: 1000 plain * 4 + 500 * 0.5
+        # + 200 * 6 + 300 * 8 + 10 * 20 = 4000 + 250 + 1200 + 2400 + 200 = 8050; model-a, 550 in
+        # of which 100 + 50 are written: 400 plain * 2 + 100 * 3 + 50 * 5 + 20 * 10 = 1550.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-b", 2000, 500, 10, 200, 300),
+            write_row(1, "orchestrator", "model-a", 550, 0, 20, 100, 50))
+        self.assertEqual("0.009600", cost)
+        self.assertEqual([], why)
+
+    def test_a_row_with_no_writes_in_the_newest_form_is_priced_as_before(self):
+        # model-a: (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 3000, 1000, 300, 0, 0))
+        self.assertEqual("0.008000", cost)
+        self.assertEqual([], why)
+
+    def test_a_codex_row_with_no_writes_is_priced_at_the_old_price_whatever_its_write_cells(self):
+        # model-x has `—` in both write columns, as the OpenAI table of the list has: its row of
+        # 0 and 0 is priced as a row with no writes: (5000 - 1000) * 2 + 1000 * 1 + 200 * 10 =
+        # 11000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-x", 5000, 1000, 200, 0, 0))
+        self.assertEqual("0.011000", cost)
+        self.assertEqual([], why)
+
+    def test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it(self):
+        # model-y has 3 for the writes of 5 minutes and `—` for those of 1 hour.
+        for label, row in (("the writes of 1 hour", write_row(1, "orchestrator", "model-y", 1000,
+                                                              0, 100, 400, 100)),
+                           ("only the writes of 1 hour", write_row(1, "orchestrator", "model-y",
+                                                                   1000, 0, 100, 0, 100)),
+                           ("a write of one token of 1 hour", write_row(1, "orchestrator",
+                                                                        "model-y", 1000, 0, 100,
+                                                                        0, 1))):
+            with self.subTest(label):
+                cost, why = self.written_cost(row)
+                self.assertEqual("unknown", cost)
+                self.assertTrue(any("no price of a cache write of 1 hour for model `model-y`"
+                                    in reason for reason in why), why)
+
+    def test_a_model_with_no_price_for_a_lifetime_is_priced_where_its_row_holds_none_of_it(self):
+        # model-y: 600 plain * 2 + 400 * 3 + 100 * 10 = 3400 with no writes of 1 hour.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-y", 1000, 0, 100, 400, 0))
+        self.assertEqual("0.003400", cost)
+        self.assertEqual([], why)
+
+    def test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either(self):
+        for label, row in (("5 minutes", write_row(1, "orchestrator", "model-x", 1000, 0, 100,
+                                                    1, 0)),
+                           ("1 hour", write_row(1, "orchestrator", "model-x", 1000, 0, 100, 0, 1))):
+            with self.subTest(label):
+                cost, why = self.written_cost(row)
+                self.assertEqual("unknown", cost)
+                self.assertTrue(any(f"no price of a cache write of {label} for model `model-x`"
+                                    in reason for reason in why), why)
+
+    def test_a_row_whose_cached_input_and_writes_exceed_its_input_leaves_the_cost_unknown(self):
+        # 600 read + 300 + 200 written is 1100, above 1000; each of them alone is below it.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 600, 100, 300, 200))
+        self.assertEqual("unknown", cost)
+        self.assertTrue(any("above its input" in reason and "orchestrator" in reason
+                            for reason in why), why)
+
+    def test_the_writes_alone_above_the_input_leave_the_cost_unknown(self):
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 0, 100, 700, 301))
+        self.assertEqual("unknown", cost)
+        self.assertTrue(any("above its input" in reason for reason in why), why)
+
+    def test_a_row_whose_cached_input_and_writes_make_exactly_its_input_is_priced(self):
+        # Nothing is plain: 500 * 1 + 300 * 3 + 200 * 5 = 2400.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 500, 0, 300, 200))
+        self.assertEqual("0.002400", cost)
+        self.assertEqual([], why)
+
+    def test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback(self):
+        for label, cell in (("words", "many"), ("sixteen digits", "9" * 16), ("negative", "-5"),
+                            ("empty", ""), ("a float", "1.5")):
+            with self.subTest(label):
+                done = self.count(STAGES_HEADER_WRITES + write_row(
+                    1, "orchestrator", "model-a", 1000, 0, 100, cell, 0))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Traceback", done.stderr)
+                self.assertEqual("unknown", self.cost_row()[3])
+                self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+
+    def test_the_share_of_a_fix_round_counts_the_writes_of_its_turns(self):
+        # Orchestrator: 1000 * 2 + 100 * 10 = 3000. The fix, with 1000 in and 300 of them written
+        # for 5 minutes: 700 plain * 2 + 300 * 3 + 50 * 10 = 2800; its review, with 500 in and 400
+        # of them written for 1 hour: 100 * 2 + 400 * 5 + 100 * 10 = 3200. The total is 9000; the
+        # fix and its review, 6000 of it, are 66.7 %.
+        stages = (STAGES_HEADER_WRITES
+                  + write_row(1, "orchestrator", "model-a", 1000, 0, 100, 0, 0)
+                  + write_row(2, "One author (general-purpose) — turn 2", "model-a", 1000, 0, 50,
+                              300, 0, f"reports/fix_handoff.md, {WHOLE}")
+                  + write_row(3, "Review whole change (general-purpose) — turn 2", "model-a", 500,
+                              0, 100, 0, 400, WHOLE + ", reports/fix.md"))
+        row, why = self.share_of(stages)
+        self.assertEqual(["0.009000", "1", "66.7%"], row[3:6])
+        self.assertEqual([], why)
+
+
 SECTION = "Stages: start, waiting for tools and tokens by model"
 NEWER_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
@@ -1286,14 +1451,14 @@ class StagesForms(AuditCountCase):
         test_prices.write_text(TEST_PRICES, encoding="utf-8")
         return self.run_count("--prices", str(test_prices))
 
-    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True) -> str:
+    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True, row=None) -> str:
         """The newer form: the table of tokens by model, then the section whose table has the
-        columns given."""
+        columns given and the row `row` (one of eight cells where it is none)."""
         text = ("# Stages of the cycle run\n\n" + times + "\n" + OLDER_HEADER
                 + older_row("model-a", 1000, 0, 100) + f"\n## {SECTION}\n\nTimes are UTC.\n")
         if table:
             text += ("\n| " + " | ".join(columns) + " |\n|" + "---|" * len(columns) + "\n"
-                     + stage_row(1, "orchestrator", "model-a", 1000, 0, 100))
+                     + (row or stage_row(1, "orchestrator", "model-a", 1000, 0, 100)))
         return text
 
     def error_line(self, field, folder="a-task") -> str:
@@ -1384,6 +1549,70 @@ class StagesForms(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("0.003000", self.rows("Cost")[0][3])
+
+    def test_a_table_with_neither_write_column_is_the_earlier_form_and_misses_nothing(self):
+        # With and without the column *Files named*: the cost is the one the rows gave before the
+        # write columns stood in the form, the run ends with exit code 0, and no `Error:` line and
+        # no value unknown is added for the columns that were never there.
+        named = NEWER_COLUMNS + ["Files named"]
+        for label, columns, row in (
+                ("without the files", NEWER_COLUMNS, None),
+                ("with the files", named, stage_row(1, "orchestrator", "model-a", 1000, 0, 100,
+                                                    ""))):
+            with self.subTest(label):
+                done = self.count(self.newer(columns, row=row))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("0.003000", self.rows("Cost")[0][3])
+                self.assertEqual([], [unknown for unknown in self.rows("Unknown values")
+                                      if "Cache write" in unknown[3]])
+
+    def test_a_table_with_one_write_column_and_not_the_other_misses_the_other(self):
+        # The cost is unknown with the reason, the result is written, the run ends with exit code 1
+        # and one `Error:` line names `stages.md` and the column that is missing.
+        named = NEWER_COLUMNS + ["Files named"]
+        first, second = WRITE_COLUMNS
+        for label, columns, absent in (("the 5 minutes alone", named + [first], second),
+                                       ("the 1 hour alone", named + [second], first)):
+            with self.subTest(label):
+                row = stage_row(1, "orchestrator", "model-a", 1000, 0, 100, "")[:-1] + " 0 |\n"
+                done = self.count(self.newer(columns, row=row))
+                field = f"column {absent} of the table of the section {SECTION}"
+                self.assert_missing(done, [field])
+
+    def test_one_write_column_is_missing_whatever_else_stands_in_the_header(self):
+        first, second = WRITE_COLUMNS
+        for label, columns, absent in (
+                ("with no files named", NEWER_COLUMNS + [first], second),
+                ("before the files named", NEWER_COLUMNS + [second, "Files named"], first)):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                field = f"column {absent} of the table of the section {SECTION}"
+                self.assert_missing(done, [field])
+
+    def test_the_two_write_columns_without_the_files_or_in_another_order_are_refused(self):
+        # Every column the cost needs is there and both write columns stand, so no field is
+        # missing: the header is of no form the stage report gives, and the cost is unknown.
+        first, second = WRITE_COLUMNS
+        named = NEWER_COLUMNS + ["Files named"]
+        for label, columns in (("no files", NEWER_COLUMNS + WRITE_COLUMNS),
+                               ("the writes swapped", named + [second, first]),
+                               ("a column after them", named + WRITE_COLUMNS + ["Note"])):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.rows("Cost")[0][3])
+                self.assertTrue(any("not of the form" in row[3]
+                                    for row in self.rows("Unknown values")))
+
+    def test_a_table_with_both_write_columns_is_priced_at_the_prices_of_both_lifetimes(self):
+        # model-a: 600 plain * 2 + 300 * 3 + 100 * 5 + 100 * 10 = 3600.
+        row = write_row(1, "orchestrator", "model-a", 1000, 0, 100, 300, 100)
+        done = self.count(self.newer(NEWER_COLUMNS + ["Files named"] + WRITE_COLUMNS, row=row))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        self.assertEqual("0.003600", self.rows("Cost")[0][3])
 
     def test_columns_in_another_order_or_with_another_column_miss_nothing_and_are_refused(self):
         swapped = [("Cached input" if name == "Input" else "Input" if name == "Cached input"
