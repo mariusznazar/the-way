@@ -27,17 +27,22 @@ second entry: the writer ties the row to that entry, and the request names both,
 projected entries its plan item assigns; one that falls to another item returns to the plan through
 a blocked draft request. The writer keeps in its report, for each entry, one sentence of its meaning
 in English and one in the task document's language, and marks the entry `row <n>`, `projected` or
-`the cycle's` — the last for an entry no row and no projected entry carries whole, which the request
-puts before the human (WAY-114). A question for the human arises only where the writer has no
-recommendation, an entry would change the meaning of an approved decision beyond what the accepted
-task document or plan carries (WAY-30), a row's meaning cannot hold — the code shows an exception
-the row does not allow, or the row collides with a current entry other than as the task commands —
-or a row's entry needs a value neither the row nor the work gives — save a decision's *Rejected*,
-which takes the ways not chosen that the row's source keeps, `none considered` where the human
-said so, or `unknown`, as the decisions' template gives (WAY-134); two decisions colliding with no
-precedence recorded raise one too, unless what the human accepted gives the outcome and the change
-may write the decision that prevails: then the writer records the precedence in that decision, marks
-it `the cycle's`, and keeps in its report the passages of what the human accepted that give the
-outcome, quoted (WAY-25). The writer never writes a row with another meaning: it returns such a
-question with the status `blocked`, and the orchestrator opens the blocked draft request holding
-it, as `task-cycle/skill/request_template.md` gives.
+`the cycle's` — the last for an entry no row and no projected entry carries whole; a part the
+writer adds that its row or projected entry does not give — a pair of examples, a field the
+projected entry left `TODO` — makes the entry `the cycle's`, save a pair kept only until a test of
+the same change holds the sentence, and a link written into its *Relations* does not; the request
+puts each entry so marked before the human (WAY-114), and the writer keeps in its report the added
+pair word for word for the description to quote under the entry. A question for the human arises only where
+the writer has no recommendation, an entry would change the meaning of an approved decision beyond
+what the accepted task document or plan carries (WAY-30), a row's meaning cannot hold — the code
+shows an exception the row does not allow, or the row collides with a current entry other than as
+the task commands — or a row's entry needs a value neither the row nor the work gives — save a
+decision's *Rejected*, which takes the ways not chosen that the row's source keeps, `none
+considered` where the human said so, or `unknown`, as the decisions' template gives (WAY-134), and
+an entry marked `the cycle's` takes it as that template gives for such an entry; two decisions
+colliding with no precedence recorded raise one too, unless what the human accepted gives the
+outcome and the change may write the decision that prevails: then the writer records the precedence
+in that decision, marks it `the cycle's`, and keeps in its report the passages of what the human
+accepted that give the outcome, quoted (WAY-25). The writer never writes a row with another meaning:
+it returns such a question with the status `blocked`, and the orchestrator opens the blocked draft
+request holding it, as `task-cycle/skill/request_template.md` gives.

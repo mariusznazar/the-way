@@ -85,6 +85,8 @@ such part; none where there is no such part>
   it; `none considered` where the human said so; or `unknown`, written with no question to the
   human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
   the way chosen, or from the foundation — never enters it (WAY-134).
+- The *Rejected* of a decision marked `the cycle's` takes `unknown`, unless a statement of the human
+  names the ways weighed — then those ways, or `none considered` where the human said so.
 - In the decision of a technology choice a project or a task settles, the lacks of the option chosen
   and the risks the human took with it stand in *Rationale*, each risk marked as a hypothesis, never
   in *Based on* (WAY-138). The writer of a decision from a row whose *Source* names a question a run
@@ -235,7 +237,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
   double quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The
   quotation holds no `"`, begins at the start of a sentence of the entry's binding sentences — the
   start of them, the start of one of their paragraphs, or the first word after a full stop and a
-  space — and holds at least three words; it stands in the binding sentences once every run of
+  space, the full stop not standing inside a passage between quotation marks, `"…"`, `“…”` or `„…”`,
+  which is no end of a sentence — and holds at least three words; it stands in the binding sentences once every run of
   spaces and line breaks is replaced by a single space. The line stands at the test that holds the
   sentence (WAY-02).
 - *Verification* names the tests that hold the sentences of the decision by the clause

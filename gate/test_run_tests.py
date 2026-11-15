@@ -6,10 +6,12 @@ process of its own, and compares its exit code and report with the values writte
 Run from the root of the-way: python -B gate/run_tests.py gate
 """
 
+import inspect
 import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 sys.dont_write_bytecode = True
@@ -35,26 +37,41 @@ SKIPPING = "\n".join((
     "        self.fail('a skipped test ran')", ""))
 
 
+def log_event(log, text):
+    """Records the event `text` in the directory `log` as an empty file, its name the time in
+    nanoseconds and the text. Each event is a file of its own: on Windows, processes that append at
+    the same moment to one file lose lines."""
+    os.makedirs(log, exist_ok=True)
+    with open(os.path.join(log, "%019d-%s" % (time.time_ns(), text)), "w"):
+        pass
+
+
+def logged_events(log):
+    """The events recorded in the directory `log`, in the order they were recorded."""
+    try:
+        names = sorted(os.listdir(log))
+    except FileNotFoundError:
+        return []
+    return [name.split("-", 1)[1] for name in names]
+
+
 def timed_module(log, name, wait_for=(), pause=0.0, lines=0, fail=False, after_an_end=False):
     """A module of one test for the runs of directories at the same time.
 
-    The test appends `start <name>` to the file `log`, prints `lines` lines of its own to the error
-    output (half of them before it waits, half after), waits until `log` holds each line of `wait_for`
-    (up to 120 seconds, a failure after that), sleeps `pause` seconds and appends `end <name>`. With
-    `after_an_end` it fails unless `log` already holds an `end` line when it starts. With `fail` it
-    fails after the wait."""
+    The test records `start <name>` as an event in the directory `log` (`log_event`), prints `lines`
+    lines of its own to the error output (half of them before it waits, half after), waits until
+    `log` holds each event of `wait_for` (up to 120 seconds, a failure after that), sleeps `pause`
+    seconds and records `end <name>`. With `after_an_end` it fails unless `log` already holds an
+    `end` event when it starts. With `fail` it fails after the wait."""
     return "\n".join((
-        "import sys, time, unittest", "",
+        "import os, sys, time, unittest", "",
         "LOG = %r" % log, "",
+        inspect.getsource(log_event), "",
+        inspect.getsource(logged_events), "",
         "def logged():",
-        "    try:",
-        "        with open(LOG, encoding='utf-8') as handle:",
-        "            return handle.read().splitlines()",
-        "    except FileNotFoundError:",
-        "        return []", "",
+        "    return logged_events(LOG)", "",
         "def append(text):",
-        "    with open(LOG, 'a', encoding='utf-8') as handle:",
-        "        handle.write(text + '\\n')", "",
+        "    log_event(LOG, text)", "",
         "def say(first, last):",
         "    for number in range(first, last):",
         "        print(%r + '-line-' + str(number), file=sys.stderr)" % name, "",
@@ -299,11 +316,10 @@ class EveryDirectory(RunnerTestCase):
 
 class DirectoriesAtOnce(RunnerTestCase):
     def log(self):
-        return os.path.join(self.root, "timeline.log")
+        return os.path.join(self.root, "timeline")
 
     def logged(self):
-        with open(self.log(), encoding="utf-8") as handle:
-            return handle.read().splitlines()
+        return logged_events(self.log())
 
     def test_an_interrupt_leaves_the_directories_still_queued_unstarted(self):
         # The interrupt is made to come at once, when the runner starts waiting for the first
@@ -384,7 +400,7 @@ except KeyboardInterrupt:
         self.assertIn("Ran 1 test", output)
 
     def runner_noting(self, line, note):
-        """Runs the runner from the root; when it has printed the line `line` it appends `note` to
+        """Runs the runner from the root; when it has printed the line `line` it records `note` in
         the log, so that a test that waits for the note waits for what the runner printed. Returns
         its exit code and all it printed."""
         process = subprocess.Popen([sys.executable, "-B", RUNNER], cwd=self.root,
@@ -394,8 +410,7 @@ except KeyboardInterrupt:
         for text in process.stdout:
             printed.append(text)
             if text.rstrip("\n") == line:
-                with open(self.log(), "a", encoding="utf-8") as handle:
-                    handle.write(note + "\n")
+                log_event(self.log(), note)
         process.stdout.close()
         return process.wait(), "".join(printed)
 

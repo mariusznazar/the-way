@@ -1146,6 +1146,25 @@ class FoundationCheckTest(unittest.TestCase):
                          "tests/test_decision.py:2: the quotation does not begin a sentence of "
                          "`ABC-01`", "1 error")
 
+    def test_a_full_stop_inside_a_quoted_string_ends_no_sentence(self):
+        # Each entry has a real sentence after a string that holds a full stop and a space, in the
+        # straight, the curly or the low-and-curly (opening U+201E) quotation marks; "Next game is
+        # ready" follows the full stop inside the string, and "A save shows" follows the one that
+        # ends the first sentence.
+        for opening, closing in (('"', '"'), ("“", "”"), ("„", "”")):
+            with self.subTest(marks=opening):
+                decisions = self.edit(
+                    DECISIONS, "A game is saved to one file.",
+                    "A game says %sSaved. Next game is ready%s when it is saved. A save shows its name."
+                    % (opening, closing))
+                inside = self.decision_test('decision: ABC-01 "Next game is ready"',
+                                            foundations__decisions_dot_md=decisions)
+                self.assertFails(inside, "tests/test_decision.py:2: the quotation does not begin a "
+                                         "sentence of `ABC-01`", "1 error")
+                after = self.decision_test('decision: ABC-01 "A save shows its name"',
+                                           foundations__decisions_dot_md=decisions)
+                self.assertPasses(after)
+
     def test_decision_line_quotation_wrapped_over_two_lines_passes(self):
         decisions = self.edit(DECISIONS, "A game is saved to one file.",
                               "A game is saved\nto one file.")
@@ -1557,14 +1576,47 @@ class FoundationCheckTest(unittest.TestCase):
                 self.assertIn("the entry lacks *%s*" % field.capitalize(), report)
                 self.assertNotIn("listed:", report)
 
-    def test_reworded_invariant_lacking_method_or_part_at_base_adds_no_listing(self):
-        # decision: WAY-03 "The listing stops no change"
-        cases = {"method": self.edit(INVARIANTS, "- **Method:** test\n", ""),
-                 "part": self.edit(INVARIANTS, "- **Part:** core · shell\n", "")}
+    def listed_lines(self, product):
+        """The lines `listed:` of a report with exit code 0, whose last line is the count."""
+        lines = self.lines(product.check())
+        self.assertEqual(lines[-1], "0 errors")
+        return [line for line in lines if ": listed: " in line]
+
+    def test_reworded_invariant_lacking_method_or_part_at_base_is_listed_with_the_field(self):
+        # decision: WAY-344 "Where a script whose purpose is to check the form of a file reads a copy"
+        cases = {"Method": self.edit(INVARIANTS, "- **Method:** test\n", ""),
+                 "Part": self.edit(INVARIANTS, "- **Part:** core · shell\n", "")}
         for field, text in cases.items():
             with self.subTest(field=field):
                 base = {"foundations__invariants_dot_md": text}
-                self.assertEqual(self.lines(self.reworded(base=base).check()), ["0 errors"])
+                listed = self.listed_lines(self.reworded(base=base))
+                self.assertEqual(len(listed), 1, listed)
+                self.assertTrue(listed[0].startswith(self.LISTED_INVARIANT), listed)
+                self.assertIn("*%s*" % field, listed[0])
+
+    def test_reworded_invariant_lacking_both_fields_at_base_is_listed_in_one_line(self):
+        text = self.edit(self.edit(INVARIANTS, "- **Method:** test\n", ""),
+                         "- **Part:** core · shell\n", "")
+        listed = self.listed_lines(self.reworded(base={"foundations__invariants_dot_md": text}))
+        self.assertEqual(len(listed), 1, listed)
+        self.assertTrue(listed[0].startswith(self.LISTED_INVARIANT), listed)
+        self.assertIn("*Method*", listed[0])
+        self.assertIn("*Part*", listed[0])
+
+    def test_reworded_invariant_lacking_a_field_at_base_is_listed_though_its_citing_file_changed(self):
+        # decision: WAY-344 "Where a script whose purpose is to check the form of a file reads a copy"
+        text = self.edit(INVARIANTS, "- **Method:** test\n", "")
+        touched = FILES["tests/test_saving.py"] + "# touched\n"
+        product = self.reworded(base={"foundations__invariants_dot_md": text},
+                                tests__test_saving_dot_py=touched)
+        listed = self.listed_lines(product)
+        self.assertEqual(len(listed), 1, listed)
+        self.assertIn("*Method*", listed[0])
+
+    def test_invariant_lacking_a_field_at_base_whose_sentence_is_unchanged_is_not_listed(self):
+        text = self.edit(INVARIANTS, "- **Method:** test\n", "")
+        product = self.reworded(INVARIANTS, base={"foundations__invariants_dot_md": text})
+        self.assertEqual(self.listed_lines(product), [])
 
     # --- a log divided into topical sections --------------------------------------------------
 

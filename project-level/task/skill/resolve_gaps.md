@@ -110,3 +110,7 @@ logs lives, between deployments too, and how a human learns of a failure of the 
 - Where the product has no deployment skill at all, ask these questions before the human splits
   that work off: a task that only writes a skill has no deployment outcome and takes no check. The
   split task carries the answer or the refusal.
+
+Each item of the *To do* that writes into the skill the answer to one of the three, or the record of
+the human's refusal, names the guide as the item of the first paragraph of this check does, since
+the guide has a part for each of the three.

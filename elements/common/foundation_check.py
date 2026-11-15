@@ -74,8 +74,10 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   which a test that holds a sentence of a decision carries (WAY-12): no decision number as the log
   writes it; a number that names no decision of the log or a withdrawn one; no quotation, or text
   after it; a quotation that stands in no binding sentence of that decision's entry, does not begin
-  one of its sentences, or has fewer than three words. The binding sentences of an entry are the
-  paragraphs before its first field, where its *Rationale* and *Rejected* stand after the fields.
+  one of its sentences, or has fewer than three words. A sentence begins at the start of a
+  paragraph or after a full stop and a space; a full stop inside a passage between quotation marks,
+  `"…"`, `“…”` or `„…”`, ends no sentence. The binding sentences of an entry are the paragraphs
+  before its first field, where its *Rationale* and *Rejected* stand after the fields.
   Words of the quotation and of the entry are compared with every run of spaces and line breaks
   made one space, so a sentence wrapped over lines matches. A line in a file whose name ends in
   `.md` or in a file git does not track counts for nothing;
@@ -93,9 +95,11 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   when no file whose name does not end in `.md` that cites it by `invariant:` now differs between
   the base and the working tree and none that cited it at the base was deleted; where a deleted
   file was the only one that cited it, the invariant has no citing file now. An
-  invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
-  and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
-  the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
+  invariant added by the change, or one lacking *Method* or *Part* now, is left out, and so is one
+  with no citing file, which the report of an uncited `test` invariant covers. One whose copy at the
+  base lacks *Method* or *Part* is listed by one line that names it and the missing field, whether
+  or not a citing file changed, for the comparison could not be made (WAY-344). Where the base is
+  unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
 
 Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
 and before the count line. A listed line is no error: it is counted nowhere and changes no exit
@@ -105,7 +109,8 @@ The state the branch left. The script asks git itself and takes no input for it.
 the one `refs/remotes/origin/HEAD` names; where that does not exist, the local branch `main`; where
 that does not exist, `master`. The commit the branch left it from is `git merge-base HEAD` that
 branch (the `{fork-point}` of `elements/common/rules.md`); `fork_point` gives it and `at_commit`
-reads a file as that commit holds it, for the checks that compare the foundation with it. Where
+reads a file as that commit holds it, for the checks that compare the foundation with it; both
+stand in `foundation_source.py` beside this file. Where
 there is no such branch or no merge base (no remote HEAD, no `main`, no `master`, a shallow history,
 no commit), the base is unknown, and so it is for a file the base lacks or git cannot give as UTF-8
 text: `foundations/decisions.md` or `foundations/invariants.md`, never read as an empty file. An
@@ -119,9 +124,10 @@ or git cannot list or match its files.
 
 import os
 import re
-import subprocess
 import sys
 import tempfile
+
+from foundation_source import at_commit, fork_point, git, read
 
 sys.dont_write_bytecode = True
 
@@ -135,8 +141,6 @@ GUIDELINES = re.compile(r"^guidelines/[^/]+\.md$")
 WITHDRAWN = "Withdrawn identifiers"
 LEFT_OUT = "Files left out on purpose"
 SKIP_TEST_CITATIONS = "--skip-test-citations"
-# The branches that may be the main branch, in the order the script takes the first that exists.
-MAIN_BRANCHES = ("refs/remotes/origin/HEAD", "refs/heads/main", "refs/heads/master")
 # The files of the foundation that the script reads at the commit the branch left.
 BASE_FILES = (DECISIONS, INVARIANTS)
 UNKNOWN_BASE = ("the commit the branch left the main branch from is not known, so nothing was "
@@ -157,7 +161,7 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decis
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
-QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
+QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
@@ -196,48 +200,6 @@ class Report:
         """A line that is no error: it is written after the errors and counted nowhere."""
         where = "%s:%d" % (path, line) if line else path
         self.listed.setdefault("%s: listed: %s" % (where, message), None)
-
-
-def git(root, *args, stdin=None):
-    """(exit code, output) of git, or (None, why) where git cannot be started."""
-    try:
-        result = subprocess.run(["git", *args], cwd=root, input=stdin, capture_output=True,
-                                text=True, encoding="utf-8")
-    except OSError as error:
-        return None, str(error)
-    return result.returncode, result.stdout
-
-
-def fork_point(root):
-    """The commit the branch left the main branch from, as `git merge-base HEAD` the first of
-    MAIN_BRANCHES that exists gives it, or None where there is no such branch or no merge base."""
-    for branch in MAIN_BRANCHES:
-        code, tip = git(root, "rev-parse", "--verify", "--quiet", branch + "^{commit}")
-        if code == 0 and tip.strip():
-            code, base = git(root, "merge-base", "HEAD", tip.strip())
-            return base.strip() if code == 0 and base.strip() else None
-    return None
-
-
-def at_commit(root, commit, path):
-    """The lines of a file as a commit holds it, or None where the commit holds no file of that
-    name or git cannot give it as UTF-8 text. A file the commit lacks is no empty file."""
-    try:
-        result = subprocess.run(["git", "show", "%s:%s" % (commit, path)], cwd=root,
-                                capture_output=True)
-        text = result.stdout.decode("utf-8")
-    except (OSError, UnicodeDecodeError):
-        return None
-    return text.replace("\r\n", "\n").split("\n") if result.returncode == 0 else None
-
-
-def read(root, path):
-    """The lines of a file, or none where it cannot be read as UTF-8 text."""
-    try:
-        with open(os.path.join(root, *path.split("/")), encoding="utf-8") as handle:
-            return handle.read().split("\n")
-    except (OSError, UnicodeDecodeError):
-        return []
 
 
 def blocks(lines, level):
@@ -344,6 +306,17 @@ def binding(body):
     if current:
         paragraphs.append(" ".join(" ".join(current).split()))
     return paragraphs
+
+
+def begins_sentence(paragraph, start):
+    """Whether a sentence of the paragraph begins at `start`: at the start of the paragraph, or after
+    a full stop and a space, the full stop standing outside a passage between quotation marks."""
+    if start == 0:
+        return True
+    stop = start - 2
+    if paragraph[stop:start] != ". ":
+        return False
+    return not any(match.start() <= stop < match.end() for match in QUOTED.finditer(paragraph))
 
 
 def table(lines, title):
@@ -751,8 +724,9 @@ class Foundation:
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
         whose name does not end in `.md` that cites it now differs between the base and the working
         tree and no such file that cited it at the base was deleted (WAY-03). An invariant the base
-        lacks, or lacking *Method* or *Part* at either state, is left out. The listing is no
-        error."""
+        lacks, or lacking *Method* or *Part* now, is left out; one lacking either at the base is
+        listed by a line that names the missing field, since the comparison was not made (WAY-344).
+        The listing is no error."""
         if not self.base or self.base_files.get(INVARIANTS) is None:
             return
         before = invariant_entries(self.base_files[INVARIANTS])
@@ -760,9 +734,16 @@ class Foundation:
         for name, (number, sentence, found) in invariant_entries(self.files[INVARIANTS]).items():
             if name not in before:
                 continue
-            old_found = before[name][2]
-            if all(field in found and field in old_found for field in ("Method", "Part")) \
-                    and found["Method"][0] == "test" and sentence != before[name][1]:
+            if not all(field in found for field in ("Method", "Part")) \
+                    or found["Method"][0] != "test" or sentence == before[name][1]:
+                continue
+            lacking = [field for field in ("Method", "Part") if field not in before[name][2]]
+            if lacking:
+                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is changed "
+                                 "by this change, while its copy at the base lacks %s, so it was "
+                                 "not compared with the files that cite it"
+                                 % (name, " and ".join("*%s*" % field for field in lacking)))
+            else:
                 candidates.append((name, number))
         if not candidates:
             return
@@ -824,7 +805,7 @@ class Foundation:
         for paragraph in binding(self.bodies.get(key, [])):
             for match in re.finditer(re.escape(quote), paragraph):
                 found = True
-                if match.start() == 0 or paragraph[:match.start()].endswith(". "):
+                if begins_sentence(paragraph, match.start()):
                     starts = True
         if not found:
             self.report.error(path, number, "the quotation stands in no binding sentence of `%s`"

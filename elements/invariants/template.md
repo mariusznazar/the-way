@@ -83,9 +83,11 @@ gives.
   an entry of the foundation or a decision — of the product's own log, or of the-way at the commit
   the product pins — holds it; then the entry names that entry or decision by its identifier, in
   *Derives from* or *Rests on* where one of them is the link the form gives, and otherwise in the
-  sentence (WAY-60). A condition held in a document the product neither writes nor pins,
-  such as an outside standard, stands in the sentence, and the fact it rests on is named in
-  *Rests on* (WAY-60, WAY-73).
+  sentence (WAY-60). An identifier of a decision written into the sentence because that decision
+  holds the condition is a part of the condition, not a link that WAY-17 requires; where such a link
+  is due, it stands beside the sentence, in its own field, as the point above gives (WAY-60). A
+  condition held in a document the product neither writes nor pins, such as an outside standard,
+  stands in the sentence, and the fact it rests on is named in *Rests on* (WAY-60, WAY-73).
 - A sentence names no branch — neither as a point to compare with nor as the place where it holds —
   since a branch names a different commit by the hour: outside quoted text it holds neither the
   words "main branch" nor "task branch" (WAY-60). A sentence measuring what a commit, a merge or a
@@ -171,7 +173,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Field | Who reads it, when |
 |---|---|
 | identifier (heading) | a test citing the invariant; `elements/common/foundation_check.py`, which finds every citation and link naming it |
-| sentence | the agent making or reviewing a change the invariant reaches; `foundation_check.py`, which lists an invariant that reads `test` whose sentence a change reworded while no file citing it changed (WAY-03) |
+| sentence | the agent making or reviewing a change the invariant reaches; `foundation_check.py`, which lists an invariant that reads `test` whose sentence a change reworded while no file citing it changed (WAY-03), and, whether or not a file citing it changed, one that reads `test` whose sentence a change reworded and whose copy at the base lacks *Method* or *Part*, the line naming the invariant and the field (WAY-344) |
 | Method | the agent making a change the invariant reaches, which runs its test or keeps to its sentence; the agent reviewing that change; `foundation_check.py`, which reports a `test` that no test cites |
 | Rests on | the author of a change to a fact it names, through the search of the foundation; `foundation_check.py` |
 | Derives from | the author of a change to a decision it names, through the search of the foundation; the human weighing a change to a recovered invariant or to one taken from a source outside the log; `foundation_check.py`, which reports a decision number the log does not hold, outside a quoted source |

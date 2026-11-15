@@ -171,8 +171,15 @@ Write the plan in this form; the script reads the slice headings and the fields 
   judged by the review of the whole change (WAY-136).
 - *Checks* are commands that can actually run in the product, named with their arguments. A slice
   that changes behaviour names the test it starts from. They are the slice's focused checks — its
-  tests and those of the code and invariants it reaches — never the product's gate, which the
-  orchestrator runs once on the finished change (WAY-160).
+  tests, those of the code it reaches and those of the invariants the slice's change may make
+  false, which the planner chooses among the invariants the slice reaches (WAY-62) and not all of
+  them — never the product's gate, which the orchestrator runs once on the finished change
+  (WAY-160). A slice that writes an invariant whose *Method* reads `test` while a later slice of the
+  same change writes its test (WAY-61) runs in its *Checks* the check of the foundation,
+  `elements/common/foundation_check.py` (in a product `.the-way/elements/common/foundation_check.py`),
+  with the switch `--skip-test-citations`, as the run right after the entry is written that WAY-321
+  exempts, never a test or a command that runs it without the switch, which in the-way is
+  `test_the_way_foundation_passes`, as the compliance example of WAY-321 gives it.
 - Where a slice adds to a function or a file that stands over the threshold of the rule of size in
   the product's coding guidelines (WAY-365), the plan begins with a slice that moves a part of that
   function or file out without a change of behaviour, and the slice that adds depends on it. Read

@@ -185,5 +185,6 @@ For the author who writes the styleguide in a task's cycle:
   and its source as the human settled them, or the exact address of the source and the item in it
   the value is read from; never from memory or from a mockup.
 - Point to the values; write none into the styleguide.
-- A meaning the task did not settle is a question that stops the cycle at a blocked draft request,
-  never a row of `## Roles` (WAY-172).
+- A meaning the task did not settle that carries a real cost is a question that stops the cycle at a
+  blocked draft request, never a row of `## Roles`; a rule that only says how to write the look of
+  the product is the cycle's own, which the human accepts at the merge (WAY-172).
