@@ -18,6 +18,13 @@ GIT_ENV = dict(os.environ, GIT_AUTHOR_NAME="Tester", GIT_AUTHOR_EMAIL="tester@ex
 
 PIN = "0123456789abcdef0123456789abcdef01234567"
 BASE = "89abcdef0123456789abcdef0123456789abcdef"
+# The four tools that write a file of a cycle's copy and whose change by a cycle the count notes.
+STAGE_SCRIPT = "task-cycle/cycle_stages.py"
+MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
+GATE_SCRIPT = "task-cycle/gate_times.py"
+GATE_RUNNER = "gate/run_tests.py"
+TOOLS = (STAGE_SCRIPT, MEASURES_SCRIPT, GATE_SCRIPT, GATE_RUNNER)
+CHANGED_WHY = "the cycle changed the tool that wrote them"
 
 # The register of problems, as the template gives it; the tests add rows under its headers.
 TEMPLATE = (HERE / "problem_register.md").read_text(encoding="utf-8")
@@ -223,6 +230,33 @@ class AuditCountCase(unittest.TestCase):
         lines = [line for line in section.splitlines() if line.startswith("|")]
         header = [cell.strip() for cell in lines[0].strip("|").split("|")]
         return [dict(zip(header, row)) for row in self.rows("Cycles")]
+
+    def own_cycle(self, files, changed=None, record_text=None, folder="a-task") -> tuple[str, str]:
+        """A cycle of the-way whose copy of the record is in the-way's own history: the version
+        the cycle ran on (a commit holding the four tools), a commit of the task branch that
+        replaces the files of `changed`, and the commit that adds the copy, whose record names the
+        version as its *Process pin* (each PIN of `record_text` is replaced by it). Writes the
+        locations file; returns the commit that adds the copy and the version."""
+        way = self.repository("the-way")
+        base = {"README.md": "the-way\n", **{path: "version one\n" for path in TOOLS}}
+        version = way.commit(base, "The version the cycle ran on")
+        after = {**base, **(changed or {})}
+        work = way.commit(after, "The task branch changes files", version)
+        text = (record_text if record_text is not None else record()).replace(PIN, version)
+        added, _ = way.cycle(folder, {"cycle.md": text, **files}, base_files=after, parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        return added, version
+
+    def fresh(self) -> None:
+        """Start over with new places and an empty result, for the next case of a `subTest`."""
+        self.tearDown()
+        self.setUp()
+
+    def run_with_prices(self, prices=None):
+        """The command run with the test price list (`--prices`), which prices `model-a`."""
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES if prices is None else prices, encoding="utf-8")
+        return self.run_count("--prices", str(test_prices))
 
 
 class CycleFound(AuditCountCase):
@@ -455,6 +489,75 @@ class Times(AuditCountCase):
         cycle, unknown = self.times_of(None)
         self.assertEqual("unknown", cycle["Waiting for tools"])
         self.assertIn("no `stages.md`", self.reasons_of(unknown, "Waiting for tools"))
+
+    # What the stage script writes into a copy, as the cost row and the times of the fix-round
+    # stage report of Cost give them: 0.011250 dollars, one fix round, 28.9 % of the cost in it, and
+    # the times of STAGES_HEADER. The other two files are given too, to show they are read as
+    # before.
+    def stage_files(self) -> dict:
+        return {"stages.md": one_fix_round(), MEASURES: measures_file(),
+                GATE: gate_file(rows=gate_row(STARTED, 0, "100.000", 0, "gate/a", "100.0"))}
+
+    STAGE_VALUES = ["0.011250", "1", "28.9%"]
+    STAGE_NAMES = (WORKING, "Waiting for tools", "Cost", "Fix rounds share")
+
+    def own_values(self, changed) -> tuple[str, dict, list[list[str]]]:
+        """The copy of an own cycle that changes the files of `changed`: its record, its row of the
+        cycle table and the rows of *Unknown values*; the files of the other two groups are read."""
+        added, _ = self.own_cycle(self.stage_files(), changed, fix_record())
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        [cost] = self.rows("Cost")
+        self.assertEqual(["the-way", added], cost[:2])
+        return added, self.cycles()[0], cost
+
+    def test_a_changed_stage_script_gives_the_times_the_cost_and_the_share_unknown(self):
+        # The cycle changes `task-cycle/cycle_stages.py` between the version it ran on and its copy:
+        # the figures that script wrote are unknown with the reason, and the number of fix rounds,
+        # which the record gives, and the two other files stand as before.
+        added, cycle, cost = self.own_values({STAGE_SCRIPT: "version two\n"})
+        self.assertEqual(["unknown", "unknown"], [cycle[self.WORKING], cycle["Waiting for tools"]])
+        self.assertEqual(["unknown", "1", "unknown"], [cost[3], cost[4], cost[5]])
+        # The files of the other two groups are read as before.
+        self.assertEqual([["the-way", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([["the-way", added, STARTED, "0", "100.000", "0", "gate/a 100.0 s"]],
+                         self.rows("Gate runs"))
+        unknown = self.rows("Unknown values")
+        for name in self.STAGE_NAMES:
+            reason = self.reasons_of(unknown, name)
+            self.assertIn(CHANGED_WHY, reason, name)
+            self.assertIn("`task-cycle/cycle_stages.py`", reason, name)
+            self.assertEqual(1, [row[2] for row in unknown].count(name), name)
+
+    def test_a_cycle_that_changed_none_of_the_stage_tools_gives_the_stage_values_as_before(self):
+        # The cycle changes the other three tools and another file, which the stage script does not
+        # write: the times and the cost are read as written.
+        changed = {MEASURES_SCRIPT: "two\n", GATE_SCRIPT: "two\n", GATE_RUNNER: "two\n",
+                   "README.md": "two\n"}
+        added, cycle, cost = self.own_values(changed)
+        self.assertEqual(["0:20:00", "0:05:00"], [cycle[self.WORKING], cycle["Waiting for tools"]])
+        self.assertEqual(self.STAGE_VALUES, [cost[3], cost[4], cost[5]])
+        self.assertEqual([], [name for name in self.STAGE_NAMES
+                              if self.reasons_of(self.rows("Unknown values"), name)])
+
+    def test_a_cycle_of_a_product_is_not_put_in_doubt_by_a_change_of_a_tool(self):
+        # A cycle of another repository holds no tool of the-way in its own change: the script of
+        # the-way is not compared with its copy, so the cycle's values stand though the-way's
+        # script differs between the pin and the commit of its copy.
+        way = self.repository("the-way")
+        version = way.commit({"README.md": "the-way\n", STAGE_SCRIPT: "one\n"}, "Version")
+        way.commit({"README.md": "the-way\n", STAGE_SCRIPT: "two\n"}, "Later", version)
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record(pin_line=f"- Process pin: `{version}`"),
+                                 "stages.md": one_fix_round()}, base_files={
+            "README.md": "a product\n", STAGE_SCRIPT: "other\n"})
+        self.write_locations(self.places(**{"the-way": way, "product": product}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        [row] = [row for row in self.rows("Cost") if row[0] == "product"]
+        self.assertEqual("0.011250", row[3])
+        self.assertNotIn(CHANGED_WHY, self.latest())
 
 
 class CraftedInput(AuditCountCase):
@@ -1731,6 +1834,39 @@ class MeasuresCase(AuditCountCase):
         return [row for row in self.rows("Unknown values")
                 if row[2] in values or row[2].startswith("Gate runs")]
 
+    def own_files(self) -> dict:
+        """The three files of a copy that the three groups of tools write, each with a value worked
+        out by hand: the times 0:20:00 and 0:05:00 and the cost of 100 input and 10 output tokens of
+        model-a, 100*2 + 10*10 = 300 millionths of a dollar; the values of MEASURE_VALUES; one run
+        of 100.000 seconds with the directory gate/a."""
+        return {"stages.md": older_stages(older_row("model-a", 100, 0, 10)),
+                MEASURES: measures_file(),
+                GATE: gate_file(rows=gate_row(STARTED, 0, "100.000", 0, "gate/a", "100.0"))}
+
+    def own_run(self, changed, files=None) -> str:
+        """The command run on an own cycle that changes the files of `changed`: ends with exit
+        code 0 and no `Error:` line; returns the commit of its record."""
+        added, _ = self.own_cycle(self.own_files() if files is None else files, changed)
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        return added
+
+    def assert_stage_values_stand(self, added) -> None:
+        """What the stage script writes, as worked out in `own_files`."""
+        self.assertEqual(["0:20:00", "0:05:00"], [self.cycles()[0]["Working time without waiting "
+                                                                   "for tools"],
+                                                  self.cycles()[0]["Waiting for tools"]])
+        self.assertEqual("0.000300", self.rows("Cost")[0][3])
+
+    def assert_measures_stand(self, added) -> None:
+        self.assertEqual([["the-way", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+
+    def assert_runs_stand(self, added) -> None:
+        self.assertEqual([["the-way", added, STARTED, "0", "100.000", "0", "gate/a 100.0 s"]],
+                         self.rows("Gate runs"))
+
 
 class MechanismMeasures(MeasuresCase):
     def test_both_files_give_the_values_and_the_runs_of_the_cycle_worked_out_by_hand(self):
@@ -1826,8 +1962,126 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual("unknown", row[5])
         self.assertNotIn("x" * 50, text)
 
+    def test_a_changed_measures_script_gives_its_measures_unknown_and_the_rest_as_before(self):
+        added = self.own_run({MEASURES_SCRIPT: "version two\n"})
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        reason = self.reasons_of(self.rows("Unknown values"), "Mechanism measures")
+        self.assertIn(CHANGED_WHY, reason)
+        self.assertIn("`task-cycle/cycle_measures.py`", reason)
+        self.assertEqual(1, [row[2] for row in self.rows("Unknown values")].count(
+            "Mechanism measures"))
+        # What the other two scripts wrote is read as before.
+        self.assert_stage_values_stand(added)
+        self.assert_runs_stand(added)
+        self.assertNotIn("Gate runs", [row[2] for row in self.rows("Unknown values")])
+
+    def test_a_cycle_that_changed_none_of_the_measures_tools_gives_its_measures_as_before(self):
+        # The cycle changes the other three tools, which write other files, and another file.
+        added = self.own_run({STAGE_SCRIPT: "two\n", GATE_SCRIPT: "two\n", GATE_RUNNER: "two\n",
+                              "README.md": "two\n"})
+        self.assert_measures_stand(added)
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Mechanism measures"))
+
+    def test_a_field_missing_from_the_file_of_a_changed_tool_is_not_read_and_ends_no_run(self):
+        # The values of that file are unknown for the change of the tool, so no field of it is read
+        # as missing and the run ends with exit code 0.
+        values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
+        added = self.own_run({MEASURES_SCRIPT: "version two\n"},
+                             {**self.own_files(), MEASURES: measures_file(values)})
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertIn(CHANGED_WHY, self.reasons_of(self.rows("Unknown values"),
+                                                   "Mechanism measures"))
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Calls of subagents"))
+
+    def test_a_copy_of_an_earlier_cycle_holding_no_such_file_keeps_its_own_reason(self):
+        # The cycle changed the script, but its copy holds no `mechanism_measures.md`: nothing was
+        # written by the script, so the copy is of an earlier form and is not put in doubt.
+        files = {name: text for name, text in self.own_files().items() if name != MEASURES}
+        self.own_run({MEASURES_SCRIPT: "version two\n"}, files)
+        reason = self.reasons_of(self.rows("Unknown values"), "Mechanism measures")
+        self.assertIn("the copy holds no `mechanism_measures.md`: an earlier cycle", reason)
+        self.assertNotIn(CHANGED_WHY, self.latest())
+
 
 class GateRunsMeasures(MeasuresCase):
+    def test_a_changed_tool_of_the_gate_gives_its_runs_unknown_and_the_rest_as_before(self):
+        # Either tool of the gate: the script that records the times, and the test runner whose
+        # output gives the time of each directory.
+        for path in (GATE_SCRIPT, GATE_RUNNER):
+            with self.subTest(path):
+                self.fresh()
+                added = self.own_run({path: "version two\n"})
+                self.assertEqual([], self.rows("Gate runs"))
+                reason = self.reasons_of(self.rows("Unknown values"), "Gate runs")
+                self.assertIn(CHANGED_WHY, reason)
+                self.assertIn(f"`{path}`", reason)
+                self.assertEqual(1, [row[2] for row in self.rows("Unknown values")].count(
+                    "Gate runs"))
+                self.assert_stage_values_stand(added)
+                self.assert_measures_stand(added)
+
+    def test_a_cycle_that_changed_none_of_the_tools_of_the_gate_gives_its_runs_as_before(self):
+        added = self.own_run({STAGE_SCRIPT: "two\n", MEASURES_SCRIPT: "two\n",
+                              "README.md": "two\n"})
+        self.assert_runs_stand(added)
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Gate runs"))
+
+    def test_changing_every_tool_gives_all_three_groups_unknown_with_their_own_reasons(self):
+        added = self.own_run({path: "version two\n" for path in TOOLS})
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual("unknown", self.cycles()[0]["Waiting for tools"])
+        self.assertEqual("unknown", self.rows("Cost")[0][3])
+        unknown = self.rows("Unknown values")
+        for name, path in (("Gate runs", GATE_SCRIPT), ("Mechanism measures", MEASURES_SCRIPT),
+                           ("Cost", STAGE_SCRIPT)):
+            reason = self.reasons_of(unknown, name)
+            self.assertIn(CHANGED_WHY, reason, name)
+            self.assertIn(f"`{path}`", reason, name)
+
+    def test_a_cycle_of_the_way_whose_pin_does_not_resolve_is_not_put_in_doubt(self):
+        # The version the cycle ran on is not in the-way's history, so no change of a tool can be
+        # told: the values stand as the copy gives them, and the pin is unknown as before.
+        way = self.repository("the-way")
+        work = way.commit({"README.md": "the-way\n", **{path: "two\n" for path in TOOLS}}, "Task")
+        added, _ = way.cycle("a-task", {"cycle.md": record(), **self.own_files()},
+                             base_files={"README.md": "the-way\n"}, parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assert_measures_stand(added)
+        self.assert_runs_stand(added)
+        self.assertNotIn(CHANGED_WHY, self.latest())
+
+    def test_a_cycle_that_changed_no_tool_gives_the_values_of_all_three_groups_as_before(self):
+        added = self.own_run({})
+        self.assert_runs_stand(added)
+        self.assert_measures_stand(added)
+        self.assert_stage_values_stand(added)
+
+    def test_a_cycle_corrected_after_the_tool_changed_is_judged_by_its_last_copy(self):
+        # The first copy of the record is added before the tool is changed, the last one after it:
+        # the change counts, since it lies between the version and the last copy.
+        way = self.repository("the-way")
+        base = {"README.md": "the-way\n", **{path: "version one\n" for path in TOOLS}}
+        version = way.commit(base, "The version the cycle ran on")
+        text = record().replace(PIN, version)
+        _, removed = way.cycle("a-task", {"cycle.md": text, **self.own_files()}, base_files=base,
+                               parent=version)
+        changed = {**base, GATE_SCRIPT: "version two\n"}
+        work = way.commit(changed, "The task branch changes the script", removed)
+        way.cycle("a-task", {"cycle.md": text, **self.own_files()}, base_files=changed,
+                  parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertIn(CHANGED_WHY, self.reasons_of(self.rows("Unknown values"), "Gate runs"))
+        self.assert_measures_stand(self.cycles()[0]["Record"])
+
     def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
         table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
                  "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
@@ -2943,6 +3197,25 @@ class ProcessVersions(AuditCountCase):
                                                 "`task-cycle/cycle_stages.py` changed between the "
                                                 "two versions."))
 
+    def test_a_cycle_that_changed_the_stage_script_stays_in_its_version_with_no_known_cost(self):
+        # The cycle stays in the version it ran on and in its series: its row counts it, its
+        # answers are those of the record, and only its cost is out of the median. Unchanged, the
+        # same cycle costs 1,000,000 * 2 / 1,000,000 = 2 dollars.
+        day = "2025-10-09"
+        for changed, cost, known in (({STAGE_SCRIPT: "version two\n"}, "unknown", "0"),
+                                     ({}, "2.000000", "1")):
+            with self.subTest(sorted(changed)):
+                self.fresh()
+                _, version = self.own_cycle({"stages.md": self.stages_of(1_000_000)}, changed,
+                                            process_record(PIN))
+                done = self.run_with_prices()
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertEqual([[version, day, "1", known, cost, "unknown"]],
+                                 self.cost_series(1))
+                self.assertEqual([[version, day, "1", "no", "0 of 0", "unknown"]],
+                                 self.count_series(1))
+                self.assertNotIn("### Cost, series 2", self.latest())
+
     # Each path, with whether a change of the file starts a series of the cost and of the count of
     # remarks, and the reason the count gives: the files of the count are named by the path of the
     # list (a folder, or the one file), and the stage script stands in both.
@@ -3364,6 +3637,31 @@ class MeasureVersions(AuditCountCase):
         text = self.latest()
         self.assertLess(text.index("## Process versions"), text.index("## Measure versions"))
         self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
+
+    def test_a_changed_tool_of_a_measure_gives_no_value_to_the_median_of_its_version(self):
+        # One own cycle with both files, in the version it ran on. Where it changed the script of
+        # the measures, its version gives no value of them and its gate times stand; where it
+        # changed the test runner, the gate times are the ones without a value and the mechanism
+        # measures stand; where it changed none, both give their one value (12 calls, 100 seconds).
+        calls = "Calls in all"
+        for changed, mechanism, runs in (
+                ({"task-cycle/cycle_measures.py": "two\n"}, False, True),
+                ({"gate/run_tests.py": "two\n"}, True, False),
+                ({"task-cycle/gate_times.py": "two\n"}, True, False),
+                ({}, True, True)):
+            with self.subTest(sorted(changed)):
+                self.fresh()
+                files = {MEASURES: measures_file(), GATE: gate_file(rows=gate_run(1, 0, "100.000"))}
+                _, version = self.own_cycle(files, changed, process_record(PIN))
+                done = self.run_with_prices()
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertEqual([[version, calls, "1", "12", "unknown"]] if mechanism
+                                 else [[version, "—", "0", "unknown", "unknown"]],
+                                 self.measure(1, calls if mechanism else "—"))
+                self.assertEqual([[version, TOTAL, "1", "100.000", "unknown", "0", "unknown"]]
+                                 if runs else [[version, "—", "0", "unknown", "unknown", "0",
+                                                "unknown"]],
+                                 self.gate(1, TOTAL if runs else "—"))
 
     def test_a_change_of_the_test_runner_starts_a_new_series_of_gate_times_only(self):
         # v2 changes the test runner of the gate, v3 the script of the measures. The gate times

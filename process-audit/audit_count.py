@@ -208,6 +208,20 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 `GIT_` variable of the environment it is started in and no signature shown: `rev-parse`, `log`,
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
 
+A cycle of the-way whose own change changes a tool that wrote a file of its copy gives the values
+that tool wrote as `unknown`, with the reason that the cycle changed the tool that wrote them, and
+its other values as they stand, under the version it ran on (WAY-339). The tools are those that start
+the series of what they measure: `task-cycle/cycle_stages.py` for the times, the cost and the share
+of the cost in fix rounds, read from `stages.md`; `task-cycle/cycle_measures.py` for
+`mechanism_measures.md`; `task-cycle/gate_times.py` and `gate/run_tests.py` for `gate_times.md`. The
+cycle changed a tool where its files differ between the version it ran on and the commit of the last
+copy of its record in the-way's own history (`git diff --quiet`; exit 1, or any other failure,
+counts as changed). Only a cycle of `the-way` is read so: the change of a cycle of another
+repository lies in that repository, which holds none of these tools. A copy that holds no such file
+is of an earlier form and a cycle whose version does not resolve has none to compare, so neither is
+put in doubt. The file of a changed tool is not read for the cycle, so no field of it is missing,
+and the number of fix rounds, which the record gives, stands.
+
 The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
 `task-cycle/cycle_measures.py` (WAY-339) and `gate_times.md` by `task-cycle/gate_times.py`.
 A copy that holds neither is of an earlier cycle or of one whose script failed, and the
@@ -426,7 +440,8 @@ PRICES_LABEL = "the price list (`--prices`)"
 MAX_LISTED = 500
 # The two files of a cycle's record that the count reads (WAY-339), each written by its
 # script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
-# task-cycle/gate_times.py. A copy holding neither is an earlier form.
+# task-cycle/gate_times.py. A copy that holds neither is of an earlier cycle or of one whose script
+# failed.
 MEASURES_FILE = "mechanism_measures.md"
 GATE_FILE = "gate_times.md"
 MEASURE_LABELS = (
@@ -465,6 +480,16 @@ GATE_TEST_RUNNER = "gate/run_tests.py"
 GATE_SCRIPTS = (GATE_SCRIPT, GATE_TEST_RUNNER)
 TOTAL_MEASURE = "Total time of the run"
 DIRECTORY_MEASURE = "Directory: "
+# The three groups of tools that write the files of a cycle's copy, each as the file and the paths
+# of the tools that wrote it: the paths are those that start the series of what they measure
+# (COST_SCRIPTS, MEASURES_SCRIPT and GATE_SCRIPTS above), not a second list. A cycle of the-way whose
+# own change changes one of them gives the values of that file as unknown (WAY-339).
+STAGES_FILE = "stages.md"
+WORKING_NAME = "Working time without waiting for tools"
+WAITING_NAME = "Waiting for tools"
+STAGES_VALUES = (WORKING_NAME, WAITING_NAME, "Cost", "Fix rounds share")
+TOOL_GROUPS = ((STAGES_FILE, COST_SCRIPTS), (MEASURES_FILE, (MEASURES_SCRIPT,)),
+               (GATE_FILE, GATE_SCRIPTS))
 
 
 class AuditCountError(Exception):
@@ -679,6 +704,10 @@ class Cycle:
     gate_timed: list[GateRun] = field(default_factory=list)
     # The fields of the two files that the copy lacks, as (file, field), for the `Error:` line.
     missing_in: list[tuple[str, str]] = field(default_factory=list)
+    # The files of the copy that held a text to read (`stages.md`, `mechanism_measures.md`,
+    # `gate_times.md`): a copy that holds no such file is of an earlier form and is not put in
+    # doubt by a change of the tool that would write it.
+    held: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -1760,14 +1789,14 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         if reason:
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
+    cycle.held = {name for name, text in ((STAGES_FILE, stages), (MEASURES_FILE, measures[0]),
+                                          (GATE_FILE, gate[0])) if text is not None}
     # The two files after the record's own values, so that the rows of *Unknown values* of a
     # cycle keep their order.
     read_measures(cycle, *measures)
     read_gate(cycle, *gate)
-    working_name = "Working time without waiting for tools"
     if stages is None:
-        cycle.unknown += [(working_name, stages_reason), ("Waiting for tools", stages_reason),
-                          ("Cost", stages_reason), ("Fix rounds share", stages_reason)]
+        cycle.unknown += [(name, stages_reason) for name in STAGES_VALUES]
         return
     lines = remarks_check.split_lines(stages)
     fenced = remarks_check.fenced_flags(lines)
@@ -1780,12 +1809,12 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
     if has_waiting and not has_working:
         reason = missing_line(cycle, WORKING_LINE)
     if reason:
-        cycle.unknown.append((working_name, reason))
+        cycle.unknown.append((WORKING_NAME, reason))
     cycle.waiting, reason = stages_time(lines, fenced, WAITING_LINE, "waiting for tools")
     if has_working and not has_waiting:
         reason = missing_line(cycle, WAITING_LINE)
     if reason:
-        cycle.unknown.append(("Waiting for tools", reason))
+        cycle.unknown.append((WAITING_NAME, reason))
     add_cost(cycle, record_lines, record_fenced, record_reason, lines, fenced, prices)
 
 
@@ -2462,16 +2491,77 @@ def median_of(costs: list[Decimal]) -> Decimal | None:
 FIRST_VERSION = "the first version of the result"
 
 
+def changed_paths(ancestry: Ancestry, earlier: str, later: str,
+                  paths: tuple[str, ...]) -> list[str]:
+    """The paths of `paths` whose files differ between two full commit hashes of the-way, none
+    where no file does: `git diff --quiet` of each, a failure counting as changed, so that a series
+    is never joined by mistake (WAY-339)."""
+    if not ancestry.differs(earlier, later, paths):
+        return []
+    return [path for path in paths if ancestry.differs(earlier, later, (path,))] or list(paths)
+
+
+def names_of(paths: list[str]) -> str:
+    return " and ".join(f"`{path}`" for path in paths)
+
+
 def changed_reason(ancestry: Ancestry, earlier: str, later: str,
                    paths: tuple[str, ...]) -> str | None:
     """None where the files at `paths` do not differ between two full commit hashes of the-way,
-    else a reason that names the paths that changed: `git diff --quiet` of each, a failure counting
-    as changed, so that a series is never joined by mistake (WAY-339)."""
-    if not ancestry.differs(earlier, later, paths):
-        return None
-    changed = [path for path in paths if ancestry.differs(earlier, later, (path,))] or list(paths)
-    names = " and ".join(f"`{path}`" for path in changed)
-    return f"{names} changed between the two versions"
+    else a reason that names the paths that changed (WAY-339)."""
+    changed = changed_paths(ancestry, earlier, later, paths)
+    return f"{names_of(changed)} changed between the two versions" if changed else None
+
+
+# A cycle that changed the tool that wrote a file of its copy (WAY-339)
+
+
+def withdraw_values(cycle: Cycle, file: str, reason: str) -> None:
+    """Give the values the tool that wrote `file` measured as unknown, with the reason, in place of
+    what the file gave and of the reasons and the missing fields of its reading: the file is not
+    read for this cycle. The number of fix rounds stands, since the record gives it, not the
+    script."""
+    if file == STAGES_FILE:
+        cycle.working = cycle.waiting = cycle.cost = cycle.share = None
+        names = STAGES_VALUES
+        cycle.missing = []
+    elif file == MEASURES_FILE:
+        cycle.measures = {}
+        names = ("Mechanism measures",)
+        cycle.unknown = [pair for pair in cycle.unknown if pair[0] not in MEASURE_LABELS]
+        cycle.missing_in = [pair for pair in cycle.missing_in if pair[0] != MEASURES_FILE]
+    else:
+        cycle.gate_runs, cycle.gate_timed = [], []
+        names = ("Gate runs",)
+        cycle.unknown = [pair for pair in cycle.unknown if not pair[0].startswith("Gate runs")]
+        cycle.missing_in = [pair for pair in cycle.missing_in if pair[0] != GATE_FILE]
+    cycle.unknown = [pair for pair in cycle.unknown if pair[0] not in names]
+    cycle.unknown += [(name, reason) for name in names]
+
+
+def note_changed_tools(reads: list["Read"], ancestry: Ancestry) -> None:
+    """For each cycle of the-way, give as unknown the values of each file of its copy whose tool
+    the cycle's own change changed (WAY-339): the files of the tool differ between the version the
+    cycle ran on and the commit of the last copy of its record in the-way's own history, by `git
+    diff --quiet`, a failure counting as changed. Only a cycle of the-way is read so: the change of
+    a cycle of another repository lies in that repository, which holds none of these tools, and its
+    copy is not a commit of the-way's history. A cycle whose version does not resolve, and a copy
+    that holds no such file, which is of an earlier form, are left as they are."""
+    for read in reads:
+        if read.key != THE_WAY:
+            continue
+        for cycle in read.cycles:
+            version = ancestry.commit(cycle.pin)[0] if cycle.pin is not None else None
+            if version is None:
+                continue
+            last = cycle.later[-1] if cycle.later else cycle.record
+            for file, paths in TOOL_GROUPS:
+                changed = changed_paths(ancestry, version, last, paths) if file in cycle.held else []
+                if changed:
+                    withdraw_values(cycle, file, f"the cycle changed the tool that wrote them: "
+                                                 f"{names_of(changed)} changed between the "
+                                                 f"version it ran on and the last copy of its "
+                                                 f"record")
 
 
 def cost_boundary(earlier: Version, later: Version, ancestry: Ancestry) -> str | None:
@@ -2946,7 +3036,9 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "add it again after a correction, and the values are read from the last copy. *Process "
         "pin* is the version of the-way the cycle ran on, *Remarks* the number of its process "
         "remarks, and the times are h:mm:ss from the copy's `stages.md`. `unknown` is a value the "
-        "copy does not give, never zero; *Unknown values* says why.",
+        "copy does not give, never zero; *Unknown values* says why. A cycle of the-way whose own "
+        "change changed the tool that wrote a file of its copy has the values of that file "
+        "`unknown` for that reason (WAY-339), and stands in the version it ran on.",
         "",
         "## Repositories",
         "",
@@ -3135,6 +3227,7 @@ def main(argv: list[str] | None = None) -> int:
         register = read_register(register_path)
         ancestry = Ancestry(Git(the_way))
         reads = [read_repository(key, path, prices) for key, path in named.items()]
+        note_changed_tools(reads, ancestry)
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
         measured = measure_versions(versions, ancestry)
