@@ -764,6 +764,7 @@ class Links(CheckTestCase):
                                  ("info", "walk", "loop", "a link to a directory, not followed")])
 
     def test_a_file_link_out_of_the_repository_is_neither_read_nor_listed(self):
+        # invariant: check-instructions-refuses-outside-links
         repo = self.repo({}, outside={"secret.md": "Read `MARKER-SECRET-9/x.md`.\n"})
         make_file_link(self, os.path.join(repo.base, "secret.md"), os.path.join(repo.root, "AGENTS.md"))
         self.assertEqual([(f.level, f.check, f.file, f.message) for f in repo.findings()],
