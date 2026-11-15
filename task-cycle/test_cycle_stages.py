@@ -1029,6 +1029,43 @@ class ClaudeFieldsTest(unittest.TestCase):
                         f"no field {field}" if kind == "no field"
                         else f"field {field} is not a whole number"), stderr)
 
+    def test_a_count_of_more_than_fifteen_digits_is_no_whole_number_and_one_of_fifteen_is(
+            self) -> None:
+        # The audit bounds the same counts at 15 digits (`TOKEN_DIGITS`): a longer count is no
+        # count of tokens, and the script refuses it as a count that is no whole number.
+        for count in COUNTS:
+            with self.subTest(count=count):
+                line = self.with_usage(**{count: 10 ** 15})
+                self.assert_missing(line, f"message.usage.{count}")
+                _, stderr, _ = self.failing(line)
+                self.assertTrue(stderr.strip().endswith(
+                    f"field message.usage.{count} is not a whole number"), stderr)
+        for lifetime in ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens"):
+            with self.subTest(lifetime=lifetime):
+                line = self.with_usage()
+                line["message"]["usage"]["cache_creation"][lifetime] = 10 ** 15
+                self.assert_missing(line, f"message.usage.cache_creation.{lifetime}")
+        for count in COUNTS:
+            with self.subTest(count=count, digits=15):
+                write_lines(self.transcript, [
+                    prompt("09:00:00", "run the cycle"),
+                    self.with_usage(**{count: 10 ** 15 - 1})])
+                code, stderr, output = self.run_main()
+                self.assertEqual(0, code, stderr)
+                self.assertTrue(output.exists())
+
+    def test_counts_of_thousands_of_digits_end_with_exit_code_2_and_no_stack_trace(self) -> None:
+        # Three counts of 4300 digits sum to one of 4301, which Python refuses to write out: the
+        # run ends with the message of a count that is no whole number, not with a trace.
+        huge = 9 * 10 ** 4299
+        line = self.with_usage(input_tokens=huge, cache_creation_input_tokens=huge,
+                               cache_read_input_tokens=huge)
+        code, stderr, output = self.failing(line)
+        self.assertEqual(2, code, stderr)
+        self.assertTrue(stderr.strip().endswith(
+            "field message.usage.input_tokens is not a whole number"), stderr)
+        self.assertFalse(output.exists())
+
     def test_a_response_without_the_lifetimes_of_its_cache_writes_ends_with_exit_code_2(
             self) -> None:
         # The fields the route adds (WAY-344): `cache_creation` and the two lifetimes in it.

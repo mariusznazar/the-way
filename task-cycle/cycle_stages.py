@@ -87,9 +87,9 @@ every `user` or `assistant` line that has a `timestamp` it needs the `timestamp`
 `message` and `message.content`; of every `assistant` line whose model is not `<synthetic>`, also
 `message.usage` with `input_tokens`, `cache_creation_input_tokens`, `cache_read_input_tokens` and
 `output_tokens`, and `cache_creation` with `ephemeral_5m_input_tokens` and
-`ephemeral_1h_input_tokens`, each a non-negative whole number. A `null` is a missing field. A field
-that is missing, or a count that is no whole number, ends the run with a message that names the
-transcript, the line and the field. Read with a fallback, and no error where absent: a line with no
+`ephemeral_1h_input_tokens`, each a non-negative whole number of at most 15 digits. A `null` is a
+missing field. A field that is missing, or a count that is no whole number, ends the run with a
+message that names the transcript, the line and the field. Read with a fallback, and no error where absent: a line with no
 `timestamp`, which is skipped before its type is looked at, a line that is no JSON object, `type`,
 `isMeta`,
 `message.model` (absent, `null` or no text it counts under the model `unknown`, with the warning),
@@ -528,9 +528,16 @@ def required(holder: object, key: str, name: str, where: str) -> object:
     return value
 
 
+# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
+# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
+# would end the report with a stack trace where the sums of it are written out.
+TOKEN_DIGITS = 15
+
+
 def required_count(holder: object, key: str, name: str, where: str) -> int:
     value = required(holder, key, name, where)
-    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
+            or value >= 10 ** TOKEN_DIGITS):
         raise MissingFieldError(f"{where}: field {name} is not a whole number")
     return value
 
