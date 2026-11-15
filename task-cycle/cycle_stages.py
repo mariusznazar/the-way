@@ -136,7 +136,7 @@ class CycleStagesError(Exception):
 
 
 class MissingFieldError(CycleStagesError):
-    """A Claude Code transcript that lacks a field the reading needs, or holds one of the wrong
+    """A transcript or rollout that lacks a field the reading needs, or holds one of the wrong
     kind."""
 
 
@@ -324,6 +324,52 @@ def add_call_notes(agent: Agent) -> None:
                            f"({', '.join(sorted(set(unrecognised)))}): their waits are unknown")
 
 
+# Fields a reading needs
+
+
+def required(holder: object, key: str, name: str, where: str) -> object:
+    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
+    `where` and the field's `name`."""
+    value = holder.get(key) if isinstance(holder, dict) else None
+    if value is None:
+        raise MissingFieldError(f"{where}: no field {name}")
+    return value
+
+
+# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
+# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
+# would end the report with a stack trace where the sums of it are written out.
+TOKEN_DIGITS = 15
+
+
+def required_count(holder: object, key: str, name: str, where: str) -> int:
+    value = required(holder, key, name, where)
+    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
+            or value >= 10 ** TOKEN_DIGITS):
+        raise MissingFieldError(f"{where}: field {name} is not a whole number")
+    return value
+
+
+def required_text(holder: object, key: str, name: str, where: str) -> str:
+    """The value of a needed field that has to be a text, not empty."""
+    value = required(holder, key, name, where)
+    if not isinstance(value, str) or not value:
+        raise MissingFieldError(f"{where}: field {name} is not a text")
+    return value
+
+
+def required_time(entry: dict, where: str) -> datetime:
+    """The time of a line, in UTC; a naive time is taken as UTC."""
+    value = required(entry, "timestamp", "timestamp", where)
+    try:
+        if not isinstance(value, str):
+            raise ValueError(value)
+        at = parse_time(value)
+        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+    except (ValueError, OverflowError) as error:
+        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
+
+
 # Codex
 
 
@@ -425,6 +471,8 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     unrecognised: list[Call] = []
     left_out = 0
     for number, entry in numbered_lines(path):
+        if not isinstance(entry, dict):
+            raise MissingFieldError(f"{path}:{number}: the line is not a JSON object")
         payload = entry.get("payload")
         if not isinstance(payload, dict):
             continue
@@ -557,49 +605,6 @@ def read_codex_session(path: Path, codex_home: Path) -> Session:
 
 
 # Claude Code
-
-
-def required(holder: object, key: str, name: str, where: str) -> object:
-    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
-    `where` and the field's `name`."""
-    value = holder.get(key) if isinstance(holder, dict) else None
-    if value is None:
-        raise MissingFieldError(f"{where}: no field {name}")
-    return value
-
-
-# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
-# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
-# would end the report with a stack trace where the sums of it are written out.
-TOKEN_DIGITS = 15
-
-
-def required_count(holder: object, key: str, name: str, where: str) -> int:
-    value = required(holder, key, name, where)
-    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
-            or value >= 10 ** TOKEN_DIGITS):
-        raise MissingFieldError(f"{where}: field {name} is not a whole number")
-    return value
-
-
-def required_text(holder: object, key: str, name: str, where: str) -> str:
-    """The value of a needed field that has to be a text, not empty."""
-    value = required(holder, key, name, where)
-    if not isinstance(value, str) or not value:
-        raise MissingFieldError(f"{where}: field {name} is not a text")
-    return value
-
-
-def required_time(entry: dict, where: str) -> datetime:
-    """The time of a line, in UTC; a naive time is taken as UTC."""
-    value = required(entry, "timestamp", "timestamp", where)
-    try:
-        if not isinstance(value, str):
-            raise ValueError(value)
-        at = parse_time(value)
-        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
-    except (ValueError, OverflowError) as error:
-        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
 
 
 def text_of(value: object) -> str:

@@ -1332,6 +1332,23 @@ class CodexFieldsTest(unittest.TestCase):
                                      "number\n", stderr)
                     self.assertFalse(output.exists())
 
+    def test_the_largest_count_of_fifteen_digits_is_read(self) -> None:
+        # The bound is 10 ** 15 (TOKEN_DIGITS): the count just below it is a count of tokens.
+        rollout(self.home, "orchf", self.lines_with(self.record(input_tokens=999999999999999)))
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(0, code, stderr)
+        self.assertTrue(output.exists())
+
+    def test_a_line_that_is_json_but_no_object_ends_with_exit_code_2_naming_the_line(self) -> None:
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        lines = self.lines_with(self.record())
+        lines.insert(3, [1])
+        path = rollout(self.home, "orchf", lines)
+        code, stderr, output = self.run_main("orchf")
+        self.assertEqual(2, code, stderr)
+        self.assertEqual(f"Error: {path}:4: the line is not a JSON object\n", stderr)
+        self.assertFalse(output.exists())
+
     def test_a_missing_field_in_a_subagents_rollout_names_that_rollout(self) -> None:
         rollout(self.home, "orchf", [
             meta("orchf", "10:00:00"), started("10:00:00", "o1"),
