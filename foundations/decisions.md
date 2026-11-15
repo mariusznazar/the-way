@@ -1890,7 +1890,7 @@ already reads; hiding tests from the executor — it costs honest work.
 ### WAY-321 — When does the check of a foundation report an invariant that reads `test` and has no test citing it?
 
 `elements/common/foundation_check.py` reports an invariant whose method reads `test` and which no
-line `invariant: <identifier>` in a file git tracks other than Markdown cites, in every run but the
+line `invariant: <identifier>` in a file git tracks whose name does not end in `.md` cites, in every run but the
 one made right after an entry is written, which passes the switch `--skip-test-citations` and so
 skips this report and no other. The one command that runs a product's tests runs the script without
 that switch (WAY-16).
@@ -2760,7 +2760,15 @@ unknown, with no line `Error:` and no change of the exit code. Each reading of a
 covers has one test that gives the file without one of the fields it needs and asserts the failure
 that names that field, the review of the change answering for the other fields; the *Scope* names
 every part of the-way's part map, and a change that adds a part to the part map adds it to this
-*Scope*.
+*Scope*. The same command, where a table of weights or a table of the costs of an occurrence in the
+register of problems lacks one of its levels, writes its result, gives the values that depend on
+the table as unknown and ends with exit code 1 and a line `Error:` that names the missing level;
+where a stage report has neither of the two columns of the cache writes in its detailed section, it
+reads the report as an earlier form too, with no line `Error:`, giving the cost with the writes
+standing inside *Input* and priced as input, an approximation, and no value unknown for the missing
+columns, while a stage report that has one of the two columns and not the other has a missing
+field, with the line `Error:`; and where the locations file has no entry `repository` under
+`the-way`, no field is missing and the command takes the checkout in which its script lies.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -2781,8 +2789,20 @@ every part of the-way's part map, and a change that adds a part to the part map 
     that key and asserts that line; the command that counts the audit meets a stage report of the
     form before the detailed section, one with neither of its two time lines, or one whose detailed
     section has no column *Files named*, gives the values that need what that form never had as
-    unknown and ends with no line `Error:` for it, and its tests pin that; a change that adds a
-    part to the part map adds its identifier to the *Scope* of this decision in the same change;
+    unknown and ends with no line `Error:` for it, and its tests pin that; the command that counts
+    the audit meets a stage report whose detailed section has neither column of the cache writes,
+    gives its cost with the writes priced as input and ends with no line `Error:` and no value
+    unknown because of the missing columns, and meets one with a single one of the two columns,
+    gives its cost as unknown with the reason, writes its result and ends with exit code 1 and a
+    line `Error:` that names the stage report and the column missing, and its tests pin both; the
+    command that counts the audit meets a register whose table of the costs of an occurrence has no
+    level `stage`, writes its result with the values that depend on the table unknown and ends with
+    exit code 1 and a line `Error:` that names the level, its test gives the table without that
+    level and asserts that line, and the same holds for the table of weights; the command that
+    counts the audit meets a locations file with no entry `repository` under `the-way`, counts the
+    checkout in which its script lies and ends with no line `Error:`, and its test pins that; a
+    change that adds a part to the part map adds its identifier to the *Scope* of this decision in
+    the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
     field as an item with exit code 1; a script whose purpose is to check the form of a file stops
@@ -2792,7 +2812,14 @@ every part of the-way's part map, and a change that adds a part to the part map 
     counts the audit ends with a line `Error:` for a field that the earlier form of a stage report
     never had, so that every count of cycles of that form ends with exit code 1; the command that
     counts the audit reads a stage report that holds one of its two time lines and not the other as
-    the earlier form, with no line `Error:`; a change that reworks the reading of a file checks the
+    the earlier form, with no line `Error:`; the command that counts the audit reads a stage report
+    that holds one of the two columns of the cache writes and not the other as the earlier form, or
+    ends with a line `Error:` for a report that has neither; the command that counts the audit ends
+    with exit code 2 and no result at a level missing from a table of weights or of the costs of an
+    occurrence, names only the table in its line `Error:`, or reads the missing level as zero; the
+    command that counts the audit ends with exit code 2 for a locations file with no entry
+    `repository` under `the-way`, or reads any other missing entry of that file as having a value
+    of its own; a change that reworks the reading of a file checks the
     field it added and leaves the other fields of that file unchecked; a new script's reading of a
     file, or a changed script's reworked reading of a file, has no test that gives the file without
     a field; a change that adds a part to the part map leaves this *Scope* as it was.
@@ -2818,11 +2845,24 @@ the whole reading of a file a change reworks, so that the old reads of that file
 format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
 the cost of the check in proportion. The price: a change that reworks the reading of a file
 pays for the check of every field of that file; a stage report that has lost its two time lines, its
-detailed section while a table of tokens by model remains, or the column *Files named* of that
-section, is read as the earlier form and gives unknown where the rule alone would give an error; an
+detailed section while a table of tokens by model remains, the column *Files named* of that
+section, or the two columns of its cache writes, is read as the earlier form and gives unknown, or
+for the cache writes the cost as the approximation, where the rule alone would give an error; an
 existing script that no change touches stays as it is, so the rule protects new and changed readings
 first; and the review alone answers for the fields beyond the one each test gives up. Tests of a
-script's behaviour stand without an invariant, since WAY-12 concerns how a decision is checked.
+script's behaviour stand without an invariant, since WAY-12 concerns how a decision is checked. A
+table of the register of problems that lacks one of its levels leaves the rest of the register
+readable, so the count writes what it can read, gives unknown the values that depend on the table
+and names the missing level, and one misspelt level costs the session of the audit those values and
+not the whole result; a heading or a table that the register lacks leaves what depends on it
+unreadable and stays exit code 2. The entry `repository` under `the-way` is the one entry of the
+locations file that the count can do without: the checkout in which its script lies is the-way's
+own, so the lack of the entry is a choice to read from it and no field lost. The exception is
+written for that entry alone, since a rule that let a script read any field that has a default as
+optional would let the next author call any field optional. A stage report with neither column of
+the cache writes was written before the columns existed, and its cost is the approximation it has
+always been, so the count reads it as that; a report with one of the two columns has lost the other,
+which is the case the rule is for.
 *Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
 the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
 withdrawn after the-way's own guidelines are written the rule would have to be moved, and until then
@@ -2849,7 +2889,15 @@ extended; exit code 2 with no result for the count of the audit — the count ru
 human present, so the session of the audit has no result, the numbers of the register of problems
 included, until someone mends the script; the exception for the stage report alone, the file of
 measures and the file of gate times keeping exit code 2 — a file of either kind from any old cycle
-that fits no form stops the whole weekly result.
+that fits no form stops the whole weekly result; for a table of the register of problems that lacks
+a level, exit code 2 with the level named and no result — one misspelt level leaves the session of
+the audit without a result until the register is mended; for the entry `repository` under
+`the-way`, exit code 2 — whoever has no entry gets no result of the audit in the morning, and the
+intended return to the own checkout is gone; for the same entry, a general exception for a field
+whose absence the description of a script allows with a default — a door by which the next author
+can call any field optional; for a generator of copies that shares its exit codes with another
+script, an exception written into this decision — the list of exceptions grows by a case with no
+reason beyond convenience, and the next script can copy it.
 
 ## Instruction files
 
@@ -7383,21 +7431,32 @@ of a cycle's stages carries the tie — the measure stays empty in every cycle t
 
 ### WAY-339 — When do the measures of the audit stop being comparable?
 
-A new price list, or a change of the form of a stage report, of the list of classes or of the
-instructions of the reviewer, starts a new series of measures, except for the measures of how a
-cycle's agents use context and the prompt cache and the times of the gate: a new
-series of those starts only with a change of the script that counts them or of the script that
-records them, and, for the times of the gate, also with a change of the test runner of the process,
-whose output gives the time of each directory; no change of the instructions of the cycle, the
-reviewer's and the author's included, starts one. The audit compares measures only within one series,
-and judges a version of the process by the cycles that ran on it, never one week against another.
+A new series of the cost of cycles, the two numbers of WAY-337, starts only with a new price list or
+with a change of the script that measures the cost, `task-cycle/cycle_stages.py`; a new series of
+the count of remarks starts wherever a series of the cost starts and also with a change of the form
+of a stage report, of the list of classes or of the instructions of the reviewer. The measures of
+how a cycle's agents use context and the prompt cache and the times of the gate form series of
+their own: a new series of those starts only with a change of the script that counts them or of the
+script that records them, and, for the times of the gate, also with a change of the test runner of
+the process, whose output gives the time of each directory; no change of the instructions of the
+cycle, the reviewer's and the author's included, starts one. The audit compares each measure only
+within a series of its own kind, and judges a version of the process by the cycles that ran on it,
+never one week against another; and where a cycle's own change changes a tool that measures — the
+script that measures the cost, the script that counts the measures of context and cache use, the
+script that records the gate times or the test runner of the process — the audit gives the measures
+of that tool for that cycle as unknown, with the reason that the cycle changed the tool that wrote
+them, and its other measures as they stand under the version it ran on.
 
 The measures of how a cycle's agents use the context and the prompt cache of the model — the number
 of model calls, the size of each call's context, the tokens written to the cache and the tokens
 written to it again, and, for each agent of the cycle, the bytes of the decision log and of the
 index of decisions that entered its context and how many times each entered it — are counted by a
 script of their own into a file of their own in the cycle's record, and are never columns of the
-stage report.
+stage report of the cycle's stages, the table of its tokens by model. The one exception is that this
+report holds, for each stage and model, the tokens written to the cache at each lifetime, as an
+input of the cost (WAY-337) and not as a measure of cache use: the script that measures the cost
+counts them, the script of the other measures counts the same tokens for its own file, and neither
+takes its figures from the file of the other.
 
 - **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
@@ -7407,48 +7466,81 @@ stage report.
   - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
     not set against the median of the other; the cycles of one version of the process are compared
     with the cycles of another version inside a series; a change of the reviewer's instructions
-    starts a new series of the cost and none of the measures of context and cache use or of the
-    gate times, whose cycles on the two sides of it are compared; a change of the script that
-    counts the measures of context and cache use starts a new series of those measures and none of
-    the cost; a change of the test runner of the process starts a new series of the gate times and
-    none of the cost or of the measures of context and cache use;
+    starts a new series of the count of remarks and none of the cost, of the measures of context
+    and cache use or of the gate times, whose cycles on the two sides of it are compared; a change
+    of the script that measures the cost, such as the one that brings the columns of the tokens
+    written to the cache by lifetime, starts a new series of the cost and of the count of remarks
+    and none of the measures of context and cache use; a change of the script that counts the
+    measures of context and cache use starts a new series of those measures and none of the cost or
+    of the count of remarks; a change of the test runner of the process starts a new series of the
+    gate times and none of the cost, of the count of remarks or of the measures of context and cache
+    use; a cycle whose own change changes the script that records the gate times gives its gate
+    times as unknown, with the reason that the cycle changed the tool that wrote them, and its cost
+    and its count of remarks as they stand under the version it ran on;
   - violates: the number of remarks of one week is set against that of the week before, across a
-    change of the form of a stage report; a change of the reviewer's or the author's instructions
+    change of the form of a stage report, of the list of classes or of the instructions of the
+    reviewer; the cost of one week is set against that of the week before, across a new price list
+    or a change of the script that measures the cost; a change of the reviewer's instructions
+    divides the series of the cost; a change of the reviewer's or the author's instructions
     divides the series of the gate times; a change of the script that records the gate times leaves
     their series whole; a change of the test runner of the process leaves the series of the gate
     times whole; the addition of the script that counts the measures of context and cache use starts
-    a new series of the cost.
+    a new series of the cost; a cycle whose own change changes the script that records the gate
+    times gets its gate times counted as measured, in a series of its own or in the series of the
+    version it ran on.
   For where the measures of context and cache use are counted, an agent compares a change with the
   decision:
   - complies: a later change that adds one more measure of context or cache use adds it to the
     script and the file of those measures, and the stage report keeps the columns it has; the
     file of those measures gives for the reviewer of the whole change the bytes of the decision log
     that entered its context and in how many reads, and the bytes and reads of the index of
-    decisions it wrote, beside its other figures;
-  - violates: a change adds a column of context or cache use to the stage report; the script of
-    those measures writes its numbers into the stage report; the bytes of the decision log are
-    counted once for the whole cycle and not for each agent, or the reads of the index of
-    decisions are left out of them.
+    decisions it wrote, beside its other figures; the stage report of the cycle's stages holds, for
+    each stage and model, the tokens written to the cache at each lifetime, which the script that
+    measures the cost counts for the cost, while the script of the measures of context and cache use
+    counts the same tokens for its file from the transcripts and not from that report;
+  - violates: a change adds to the stage report a column of a measure of context or cache use other
+    than the tokens written to the cache by lifetime that the cost is priced from; the script of
+    those measures writes its numbers into the stage report; the script that measures the cost takes
+    the tokens written to the cache from the file of the measures, or the script of the measures
+    takes them from the stage report; the bytes of the decision log are counted once for the whole
+    cycle and not for each agent, or the reads of the index of decisions are left out of them.
 - **Origin:** none
 
 *Rationale:* a change of the form of a stage report changes how many remarks a cycle yields, as the
 rise of remarks after WAY-260 shows, a change of the price list changes the cost of the same work,
 and a change of the list of classes or of the instructions of the reviewer changes what is counted
 and what is found. A number from before such a change says something about the change as well as
-about the process. The measures of context and cache use and the gate times are the numbers by
-which a change to the instructions of the cycle is judged, so a series that such a change started
-would never hold the two sides to compare; what changes their meaning is a change of the script that
-measures them, or of the test runner whose output the times of the directories are read from, and
-those are the changes that start their series. The test runner is part of the measurement of the gate
-times: a change of how it runs the directories changes what the time of each one measures, and its
-output is what those times are read from. A change of the form of the stage report starts a
-new series of measures, so a column added to the report for the measures of context and cache use
-would end the comparison of the cost of cycles across the change, while a file of its own changes no
-form of the report. The bytes of the decision log and of the index of decisions in each agent's
-context show what the rule of reading the foundation (WAY-150) costs each agent and whether a change
-of that rule lowered the cost, so they are counted with the other measures of context use, in every
-cycle, where the cycles on the two sides of such a change can be compared. The price: a second file
-in each cycle's record, and a second reading of the record for the audit.
+about the process. The cost and the count of remarks are split apart because only a new price list
+and a change of the script that measures the cost change what the cost says of the same work: the
+audit exists to say whether the process got dearer, and a change of the reviewer's instructions is
+a change of the process, so a series of the cost that such a change ended would never hold the two
+sides to compare, as WAY-339 holds for the measures of context and cache use and the gate times. The
+price taken: after a change of the reviewer's instructions the audit cannot tell "the reviewer found
+more" from "the process got dearer", since a rise of the cost in the series of the cost may be
+either, while the count of remarks, which does change meaning with the reviewer, has the series
+that ends there. The measures of context and cache use and the gate times are the numbers by which a change to
+the instructions of the cycle is judged, so a series that such a change started would never hold the
+two sides to compare; what changes their meaning is a change of the script that measures them, or of
+the test runner whose output the times of the directories are read from, and those are the changes
+that start their series. The test runner is part of the measurement of the gate times: a change of
+how it runs the directories changes what the time of each one measures, and its output is what those
+times are read from. A cycle that changes a tool that measures is measured by two versions of that
+tool, the one it ran on and the one it left, and its figure of what the tool measures belongs to
+neither alone; unknown says the measure is missing where a figure would look measured, and the
+cycle's other measures stay as they are. The price: such a cycle gives no figure of the tool it
+changed. A column of
+the stage report for the measures of context and cache use would be a change of the script that
+measures the cost and would end the comparison of the cost of cycles across it, while a file of its
+own changes no form of the report. The columns of the tokens written to the cache by lifetime that
+the stage report does hold have this price, taken on purpose: the cost needs them for each stage and
+model, and the file of the measures, whose figures are for each agent with no model and no stage
+row, cannot give that. The price of the columns: the tokens written to the cache are counted by two
+scripts, and the series of the cost ends at the change that brings the columns. The bytes of the
+decision log and of the index of decisions in each agent's context show what the rule of reading the
+foundation (WAY-150) costs each agent and whether a change of that rule lowered the cost, so they
+are counted with the other measures of context use, in every cycle, where the cycles on the two
+sides of such a change can be compared. The price: a second file in each cycle's record, and a
+second reading of the record for the audit.
 *Rejected:* the changes that start the series of the cost, with the script that counts the measures
 of context and cache use added to them — the comparisons would almost never occur, since nearly
 every change made to improve the process touches those instructions, and adding the script to that
@@ -7460,10 +7552,33 @@ reading of the audit, it leaves the runs made between the move to parallel direc
 decision mixed with the earlier ones, and the old records would need a reading for the runs that carry
 no mark. And no split of the gate times at all, which leaves the times of the two ways of running the
 gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
-the old. New columns of context and cache use in the stage report — a change of the form of the
-stage report starts a new series of measures; a sentence added to the first paragraph saying that
-adding columns starts no series — a file of its own avoids the dispute with no change to that
-paragraph. For the bytes of the decision log and of the index of decisions, a measure made once by
+the old. New columns of context and cache use in the stage report — a column would change the
+script that measures the cost and end the series of the cost; a sentence added to the first
+paragraph saying that adding columns starts no series — a file of its own avoids the dispute with no
+change to that paragraph. For the series of the cost, the rule left as it was, every change of the
+form of a stage report, of the list of classes and of the instructions of the reviewer ending it,
+with only the file of the reviewer's type added to the changes that split — the audit still answers
+unknown for most versions of the process. The rule narrowed by taking the forms of the reports of
+the stages out into files of their own, so that a change of them would not touch the files of the
+methods of the stages — at most 14 of the 34 splits that 134 merges of the first parent of the main
+line gave would go, at the price of rebuilding four files of those methods. For a cycle that
+changes a tool that measures, the measures of that tool counted in a new series and the rest under
+the version the cycle ran on — one cycle stands in two versions, and the grouping and the tests of
+the count grow more complicated. For the tokens written to the cache at each lifetime, the file of
+the measures as their carrier into the cost — its figures are for each agent and carry no model and
+no stage row, while the share of the cost spent in fix rounds needs the cost of each turn, and a
+subagent that the author resumes has several turns, so the file would have to carry turns, with the
+windows and the owners of the nested subagents that the script of the stages computes: a second
+copy of the logic of the stages, or a file of measures that reads the stage report; it also makes a
+second script that measures the cost, so that a change of the script of the measures would end the
+comparison of the cost, which this decision forbids, and, were it wrong, the cost of a turn would be
+wrong or unknown for the cycles that matter and the series of the cost would split at the wrong
+changes. For the same tokens, a second table or section of the stage report keyed by stage and
+model — the audit would join two tables by a key, a row in one and not in the other becomes a new
+refusal, the heading, the table and its columns are three more fields of a reading that WAY-344
+checks, and nothing is gained over columns in the table whose rows already are the stage and the
+model; were it wrong, a cycle whose two tables disagree would cost unknown and the join would be a
+place for a wrong figure. For the bytes of the decision log and of the index of decisions, a measure made once by
 a separate agent outside the cycle, before a change of the rule of reading and again a few cycles
 after it — the second half needs a task of its own with a reminder, and nothing of it stays in the
 process.
