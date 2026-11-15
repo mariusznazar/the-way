@@ -81,7 +81,10 @@ correction the same way, the item it names being the remark the correction binds
   the proposal;
 - for an incomplete reading by the review of the whole change (item 14): a fresh reviewer, who
   did not make the change and did not write that review, reads what stayed unread, and its report
-  holds its **Unread material**, and its findings are handled as those of every review are.
+  holds its **Unread material**, and its findings are handled as those of every review are;
+- for something an entry stands on that the foundation does not hold yet (item 16): the correction
+  writes the missing fact, decision or source, as that item says, and has it reviewed as every
+  correction is.
 
 What such a correction leaves undone, or finds anew, is put by the request only with the question
 of a task, as for item 8, and so is an item that cannot be done in this request at all. The human

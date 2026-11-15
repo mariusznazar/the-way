@@ -341,8 +341,9 @@ the order of their kinds.
   "This correction only refreshed the branch from the target branch at your request; nothing else
   changed, and the cycle made no judgment of whether the task required anything." Where a correction
   has two sources, the one sentence carries each pair once, such as "This correction answered your
-  remark about a defect the task required, and it refreshed the branch from the target branch at
-  your request, which the cycle judged nothing about."
+  remark, and the cycle judged that the task required what the remark asked to change; it also
+  refreshed the branch from the target branch at your request, which the cycle judged nothing
+  about."
 
 **What an item carries.**
 
@@ -531,7 +532,7 @@ reads `none` under its heading.
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |
 | A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question with its options and a recommendation where one exists | as an ordinary request |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | in *Needed from you*, that fact or permission; never partial work presented as complete | **Route**: the ways tried |
-| A correction (`correction.md`) | the state after the correction, with "corrected for your remarks" in the why | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9 or 14, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
+| A correction (`correction.md`) | the state after the correction, with what started it in the why, named from the sources of the pairs that item 17 gives: "corrected for your remarks" only where a remark started it, "corrected for your answer to an item" where an answer did, "refreshed from the target branch at your request" where only that did, and with two sources each in its words | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9, 14 or 16, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |
 | A form error held wrong (above) | `**State: draft** — the form check reports an error the cycle holds wrong`; a request blocked for another cause stays `blocked` and gains only the item | in *You accept by merging*, item 15: the reported error in plain words and why the cycle holds it wrong | *Checks*: the form check's command, exit code and reported line |
 | A remarks listing held wrong (`SKILL.md`, "The process remarks check", WAY-295) | unchanged: the state the request has for its other causes | in *You accept by merging*, the listing as item 10 | *Checks*: the remarks check's command, exit code and listed line |

@@ -5404,8 +5404,8 @@ merges nothing.
     entries included, is made without a plan and gets the same tests and review as any change;
   - violates: a small task skips its review; the cycle runs a migration that cannot be undone; a
     change to a trust boundary's files is reviewed like any other; an agent turns a task into one
-    that returns knowledge instead of a change without a human setting it so; a large task is
-    treated as a reason to split it, or to lighten its checks, because of its size.
+    that returns knowledge instead of a change without a human setting it so; an agent treats a
+    large task as a reason to split it, or to lighten its checks, because of its size.
 - **Origin:** none
 
 *Rationale:* size misleads about what can go wrong: a rename across many files is easy to undo, a
@@ -5909,6 +5909,11 @@ the frozen task and its changed files using the part map, and lists the check be
 outside the task's scope when its file belongs to a different part. This applies in every product,
 whether or not its testing guidelines name flaky tests.
 
+The red result of the first run of the gate on the final tree stays the result of the gate, also
+where the check that failed is one outside the task's scope that passes when run again; the cycle
+does not stop for it, and the request names that check and the task that fixes it, or proposes that
+task where none exists.
+
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-243 · derives from WAY-160 · derives from WAY-161
@@ -5917,13 +5922,19 @@ whether or not its testing guidelines name flaky tests.
     in the cycle record, appears in *Checks* with the rerun result and counts of its failing and
     passing cycle runs, and appears beside out-of-scope findings when its file's part, assigned
     through the part map, differs from the task's parts recovered from its frozen document and
-    changed files;
+    changed files; the first run of the gate on the final tree fails on a flaky test outside the
+    task's scope, the request gives the gate as failed with the rerun's result, names that test and
+    the task that fixes it or proposes one, and the cycle goes on;
   - violates: a successful rerun erases a prior failure from the record or request; a check is
-    listed as outside the task's parts without the part map; a check's run counts are omitted.
+    listed as outside the task's parts without the part map; a check's run counts are omitted; the
+    request gives the gate as passed on the strength of a rerun of a flaky test; the cycle stops, or
+    turns the test off, because a test outside the task's scope failed and passed when run again.
 - **Origin:** none
 
 *Rationale:* a later pass does not undo a failure, and reporting every failure keeps the gate's
-result visible under WAY-243. The counts let the human distinguish an occasional failure from a
+result visible under WAY-243. The first run's red result stays the gate's, since a pass on a later
+run hides the fault that made the test fail, and the cycle goes on, since a test outside its scope
+is no fault of its change. The counts let the human distinguish an occasional failure from a
 repeated one, while naming an outside check beside out-of-scope findings puts it before the person
 who can decide whether it needs separate work. The cost is that an outside check appears twice in
 the request.
@@ -5932,7 +5943,12 @@ still expose a defect and would have no route to the request; listing an outside
 out-of-scope findings — a mistaken part assignment could remove it from *Checks*; applying the rule
 only in products whose testing guidelines name flaky tests — products without that rule would keep
 the gap; omitting counts — a one-off environment failure and a repeated product defect would look
-the same.
+the same; the cycle turning the flaky test off with a cause under WAY-233 until a task fixes it —
+every cycle would change a test outside its scope, and a flaky test seldom has a cause on the side
+of the data or the requirement, which WAY-243 shows by naming a flaky test skipped with "flaky" as
+its only cause a violation; the rule written also in the decision on flaky tests and in the
+template of testing guidelines — one more binding sentence and one more line to keep in every
+product's guidelines, for a gain only in work outside the cycle.
 
 ### WAY-365 — What does a change do where it adds to a function or a file that stands over the threshold of the rule of size?
 
@@ -6021,20 +6037,22 @@ where its tip is the second parent of a merge commit on the first-parent history
 target branch, which git alone shows, so that a branch merged by squash or rebase, a branch that
 stands at the target's tip with no commit of its own and a branch of a request closed unmerged are
 not merged. A directory of a cycle that the script does not remove stays, with its reason, for the
-human to decide, and a detached checkout nested in a directory that is removed goes with it,
-whatever its name, only where it is clean and on the remote, else the directory that holds it stays.
+human to decide, a copy of a base that the script does not assign to a task — one named for no task,
+or for a branch it does not find — among them, and a detached checkout nested in a directory that is
+removed goes with it, whatever its name, only where it is clean and on the remote, else the
+directory that holds it stays.
 
 The script touches only the checkouts that `git worktree list` names for the repository, never the
 main checkout, the directory it is run in or a detached directory outside the cycle's, and it
 removes directories only, never a branch, local or remote. Removing a checkout that git names, also
 one that stands outside the repository's own directory, is a change to the repository's state and no
 effect outside the repository in the sense of WAY-140, so the script that a cycle runs needs no act
-of a human; the first clearing of the directories that gathered before the script, which a task
-document places as a human action, is the human's act.
+of a human. In removing a cycle's own directories whose branches are merged this decision prevails
+over WAY-13, which keeps its reach over every other operation that cannot be undone.
 
 - **Scope:** task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-140 · derives from WAY-153 · derives from WAY-373
+- **Relations:** derives from WAY-140 · derives from WAY-153 · derives from WAY-373 · narrows WAY-13
 - **Verification:** tests: which directories the script marks for removal and which it keeps, what
   makes a branch merged, that it touches only the checkouts git names and none of the directories
   it never removes, and that it removes no branch. An agent compares a change with the part no test
@@ -6060,34 +6078,44 @@ history is read because a merge of the target branch into a task branch makes a 
 the second parent of a merge that is not on the target branch, and a branch created at that commit by
 another cycle would otherwise count as merged; a branch with no commit of its own, which another
 cycle has just made, points at the target's tip and would pass the weaker test that the tip is an
-ancestor of the target. A directory that belongs to no cycle, and a base copy named for no task, is
-not for the script to judge. The directories are removed and the branches stay, since a branch keeps
-every commit and the directory can be made again from it with one command, while deleting a branch is
-a decision of its own that WAY-269 gives to the human. What the script removes stands in the state of
-the repository, which git lists and the cycle may change, and not in a server, a record in DNS, a key
-or an account, which WAY-140 keeps for a human; asking the human for each directory would leave
-the directories where they are. The price: a removal cannot be undone, so the script judges by every
-condition at once and keeps what it cannot place, and a directory that holds a checkout the script
-keeps stays with it.
+ancestor of the target. A directory that belongs to no cycle, and a copy of a base that cannot be
+assigned to a task, is not for the script to judge: a copy it removed for a name that matches no
+branch could be the copy of a cycle running at the same time. The directories are removed and the
+branches stay, since a branch keeps every commit and the directory can be made again from it with
+one command, while deleting a branch is a decision of its own that WAY-269 gives to the human. What
+the script removes stands in the state of the repository, which git lists and the cycle may change,
+and not in a server, a record in DNS, a key or an account, which WAY-140 keeps for a human; asking
+the human for each directory would leave the directories where they are. That is why WAY-13, which
+has a human perform an operation that cannot be undone, yields here and only here. The price: a
+removal cannot be undone, so the script judges by every condition at once and keeps what it cannot
+place, and a directory that holds a checkout the script keeps stays with it.
 *Rejected:* the script alone, with no step in the cycle, run by the human at the merge — whoever
 does not run it does not clean, and the list of directories grows; a rule in the skill alone, with
 no script — each cycle judges "no longer needed" in its own way and nothing gives one dry run for
 clearing the directories that have gathered; the closing of a request without a merge as a reason to
 remove — it needs a question to the host, and the cycle works with hosts of more than one kind; every
 clean, detached copy of a base in the ignored working directory of a checkout — it may remove the
-copy of a cycle running at the same time; a script that leaves the copies of a base alone — the
-loose copies stay for hand clearing; the tip being an ancestor of the target branch — the branch
-another cycle has just made, with no commit, would pass as merged and the cycle that has just
-started would lose its directory; the age of the directory — a heuristic on time that errs on a
-longer task; only directories below the repository's own directory — the directories beside it stay
-for hand clearing.
+copy of a cycle running at the same time; a script that removes a clean copy of a base for which it
+finds no branch — with cycles running at the same time it would remove the copy of a running cycle
+whose name matches no branch, and the gate of that cycle on its base would fail midway; the tip
+being an ancestor of the target branch — the branch another cycle has just made, with no commit,
+would pass as merged and the cycle that has just started would lose its directory; the age of the
+directory — a heuristic on time that errs on a longer task; only directories below the repository's
+own directory — the directories beside it stay for hand clearing; keeping the clause on the first
+clearing of the directories that gathered before the script as the human's act, for a product that
+first pins this version with directories already gathered — the clause would stay for a state that
+ends with that first clearing; narrowing the sentence of WAY-13 to an operation that the change
+holds — WAY-13 would stop reaching the cycle's own operations that cannot be undone outside the
+change, and a new such operation would meet nothing that stops it.
 
 ### WAY-376 — Does a file that git ignores keep a working directory of a task from being removed?
 
 A file that git ignores does not count against a clean tree, so the script of WAY-375 removes a
 directory that holds ignored files, and they end with it. For each directory the script marks for
 removal it lists the paths git ignores in it outside the cycle's `.runs/` directory, leaving out the
-caches a command makes again, so that the human sees before the removal what ends with it.
+caches a command makes again, so that a human who runs the script without `--apply` sees what
+would end with each directory; the cycle's own run, which removes with `--apply`, waits for no one
+to read the list.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -6101,10 +6129,17 @@ caches a command makes again, so that the human sees before the removal what end
 packages, a user's local settings — so to count them as changes would keep almost every directory of
 a product whose dependencies and build output are ignored, and the human would clear those by hand
 all the same. The listing is the price paid for not counting them: a local setting that matters is
-lost with the directory, and the human sees it in the list before the removal is made. The caches
-are left out of the list because a command makes them again and the list would be mostly them.
+lost with the directory, and a human who wants to know what would go runs the script without
+`--apply` and reads the list. The cycle's own run does not wait for that reading: the cycle makes
+the directories of its tasks, so the ignored files in them are what agents and tools left behind,
+and waiting for each would hold the cycle whenever a tool leaves a folder of its own. The caches are
+left out of the list because a command makes them again and the list would be mostly them.
 *Rejected:* ignored files counted as uncommitted — it would keep nearly every directory of a product
-whose dependencies and build output are ignored.
+whose dependencies and build output are ignored; the list moved into the record and the description
+of the request — a new line that repeats in requests, and a removed file is gone all the same; the
+cycle stopping before the removal where the list is not empty — it reverses the removal without a
+word to the human that WAY-375 gives, and the cycle would wait at its start each time a tool leaves
+a folder of its own.
 
 ## Review of a change
 
@@ -6652,13 +6687,15 @@ section for the human's decisions, under *Fix or let through*, as one question w
 fix it in this request, to make a task of it or to let it through, which one answer may settle for
 the whole list. The answer to fix it runs a correction with one fix and one review of that fix; the
 same answer is offered for a step or a check the cycle skipped, a proposal of the task's own
-sections not applied and an incomplete reading of the review of the whole change, and runs the step
-or the check, applies the proposal or has a fresh reviewer read what stayed unread, and what the
-correction leaves unfixed or undone, like whatever cannot be done in the request at all, is put by
-the request only with the question whether it becomes a task, which the human who makes none lets
-through by merging, or stays in the lower part, so that the loop ends after one correction. Every finding stays
-in its list of the lower part with the reviewer's words and its place in the code, and the judgment
-changes no finding's kind or grade and decides no fix and no block.
+sections not applied, an incomplete reading of the review of the whole change and something an entry
+stands on that the foundation does not hold yet, and runs the step or the check, applies the
+proposal, has a fresh reviewer read what stayed unread or has the missing fact, decision or source
+written, and what the correction leaves unfixed or undone, like whatever cannot be done in the
+request at all, is put by the request only with the question whether it becomes a task, which the
+human who makes none lets through by merging, or stays in the lower part, so that the loop ends
+after one correction. Every finding stays in its list of the lower part with the reviewer's words
+and its place in the code, and the judgment changes no finding's kind or grade and decides no fix
+and no block.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -6692,14 +6729,14 @@ it. The clean-ups stay in the lower part for a reading of the lower parts of man
 A human who wants a finding fixed at once has an answer for it in the question, where without one he
 answers against the question and the cycle has no rule for it; one answer may cover the whole list,
 so that a human who wants all of it fixed answers once. A step or a check the cycle skipped, a
-proposal not applied and a reading of the review left incomplete are things the cycle left undone
-and can still do in the request, so the same answer serves them and the human has no second way to
-ask for them. The correction that answer runs brings
-findings of its own, and a second fix for them would raise the same question without end, so what
-the correction leaves goes only with the question of a task, or stays below. The findings nobody
-will feel stay out of the question, since the `none` of the human's section says that nothing waits
-for a yes (WAY-287), and those within the task that the review of the whole change lists have been
-fixed already (WAY-161).
+proposal not applied, a reading of the review left incomplete and a fact, decision or source that an
+entry stands on and the foundation does not hold are things the cycle left undone and can still do
+in the request, so the same answer serves them and the human has no second way to ask for them. The
+correction that answer runs brings findings of its own, and a second fix for them would raise the
+same question without end, so what the correction leaves goes only with the question of a task, or
+stays below. The findings nobody will feel stay out of the question, since the `none` of the human's
+section says that nothing waits for a yes (WAY-287), and those within the task that the review of
+the whole change lists have been fixed already (WAY-161).
 *Rejected:* the question as it was, only whether the finding becomes a task — a human who wants the
 fix at once answers against the question, and the cycle has no rule for the answer; the same
 question for the findings nobody will feel as well — the human's section swells with cosmetics,

@@ -312,13 +312,15 @@ clone, a script, a screenshot, a prepared input of a test — makes it in a dire
 directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never
 in the system's temporary directory, in the scratch directory of a session or in the main checkout
 of the repository. The screenshot that a screenshot tool, such as the Playwright server, saves by
-itself under its session's directory is moved into the agent's directory and the original removed.
-The files that a product's own tools and tests make by themselves are no working copy of the agent
-and stay outside this rule. Before the agent returns, each time it returns, it removes its copy — a
-worktree with `git worktree remove --force`, then `git worktree prune` — keeps in `reports/` beside
-its report what the report needs, and states in the report where each copy stood and that it was
-removed. Where a removal fails, the agent finishes all the same and names in the report the
-remainder, with its full path and the reason it stayed.
+itself under its session's directory is moved into the agent's directory and the original removed,
+except a screenshot that is shown to the human: that one goes where `task-cycle/change/ui_check.md`
+says, to the place the product's foundation settles for screenshots, and into the agent's directory
+only where no such place is settled. The files that a product's own tools and tests make by
+themselves are no working copy of the agent and stay outside this rule. Before the agent returns,
+each time it returns, it removes its copy — a worktree with `git worktree remove --force`, then
+`git worktree prune` — keeps in `reports/` beside its report what the report needs, and states in
+the report where each copy stood and that it was removed. Where a removal fails, the agent finishes
+all the same and names in the report the remainder, with its full path and the reason it stayed.
 
 The handoff gives the directory as `.runs/<name>/`, where `<name>` is the agent's stage or role and,
 where the cycle dispatches that stage more than once, a counter, such as `author`, `planner`,
@@ -484,7 +486,11 @@ contradicts a decision.
     evidence. A check that fails in a cycle run and passes when run
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
     WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
-    Apply this rule even when the product has no *Flaky tests* section in its guidelines.
+    Apply this rule even when the product has no *Flaky tests* section in its guidelines. The red
+    result of the first run of the gate on the final tree stays the result of the gate, also where
+    the check that failed is a flaky test outside the task's scope that passes when run again: the
+    cycle does not stop for it, and the request names that test and the task that will fix it, or
+    proposes that task where none exists (WAY-261).
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
