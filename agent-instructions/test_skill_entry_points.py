@@ -256,13 +256,17 @@ class Writing(unittest.TestCase):
         self.assertEqual(repository.run("--write"), (0, "entry points are current\n", ""))
 
     def test_without_write_it_lists_the_plan_and_writes_nothing(self) -> None:
+        # invariant: generator-writes-only-with-write
         repository = Repository(self)
         repository.write("elements/decisions/skill/SKILL.md", DECISION)
         repository.write(".claude/skills/the-way-record-decision/SKILL.md", "stale\n")
+        repository.write(".agents/skills/the-way-renamed/SKILL.md", "old\n")
         before = repository.files()
         self.assertEqual(repository.run(), (
             0, "would change .claude/skills/the-way-record-decision/SKILL.md\n"
-               "would create .agents/skills/the-way-record-decision/SKILL.md\n", ""))
+               "would create .agents/skills/the-way-record-decision/SKILL.md\n"
+               "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
+               "git rm -r -- .agents/skills/the-way-renamed\n", ""))
         self.assertEqual(repository.files(), before)
 
     def test_an_orphan_directory_is_listed_and_kept(self) -> None:
