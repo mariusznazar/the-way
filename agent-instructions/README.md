@@ -13,8 +13,8 @@ another change.
 `elements/common/foundation_check.py` checks the identifiers, references, fields, the lines
 `decision:` of the tests and the part of each file of the foundation of the-way; it reports the
 decisions that nothing holds and lists the invariants that read `test` whose sentence a change
-rewords while no file citing them changes, both against the commit the branch left the main branch
-from. The script `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
+rewords while no file citing them changes, and those whose copy at that commit lacks *Method* or
+*Part*, naming the field, both against the commit the branch left the main branch from. The script `elements/common/migrate_foundation.py` brings a foundation of the earlier form to
 the current one.
 
 ## Start a change

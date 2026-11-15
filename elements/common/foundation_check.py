@@ -74,8 +74,10 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   which a test that holds a sentence of a decision carries (WAY-12): no decision number as the log
   writes it; a number that names no decision of the log or a withdrawn one; no quotation, or text
   after it; a quotation that stands in no binding sentence of that decision's entry, does not begin
-  one of its sentences, or has fewer than three words. The binding sentences of an entry are the
-  paragraphs before its first field, where its *Rationale* and *Rejected* stand after the fields.
+  one of its sentences, or has fewer than three words. A sentence begins at the start of a
+  paragraph or after a full stop and a space; a full stop inside a passage between quotation marks,
+  `"…"` or `“…”`, ends no sentence. The binding sentences of an entry are the paragraphs before its
+  first field, where its *Rationale* and *Rejected* stand after the fields.
   Words of the quotation and of the entry are compared with every run of spaces and line breaks
   made one space, so a sentence wrapped over lines matches. A line in a file whose name ends in
   `.md` or in a file git does not track counts for nothing;
@@ -93,9 +95,11 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   when no file whose name does not end in `.md` that cites it by `invariant:` now differs between
   the base and the working tree and none that cited it at the base was deleted; where a deleted
   file was the only one that cited it, the invariant has no citing file now. An
-  invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
-  and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
-  the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
+  invariant added by the change, or one lacking *Method* or *Part* now, is left out, and so is one
+  with no citing file, which the report of an uncited `test` invariant covers. One whose copy at the
+  base lacks *Method* or *Part* is listed by one line that names it and the missing field, whether
+  or not a citing file changed, for the comparison could not be made (WAY-344). Where the base is
+  unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
 
 Beside the errors it writes lines of a second kind, `path:line: listed: message`, after the errors
 and before the count line. A listed line is no error: it is counted nowhere and changes no exit
@@ -302,6 +306,17 @@ def binding(body):
     if current:
         paragraphs.append(" ".join(" ".join(current).split()))
     return paragraphs
+
+
+def begins_sentence(paragraph, start):
+    """Whether a sentence of the paragraph begins at `start`: at the start of the paragraph, or after
+    a full stop and a space, the full stop standing outside a passage between quotation marks."""
+    if start == 0:
+        return True
+    stop = start - 2
+    if paragraph[stop:start] != ". ":
+        return False
+    return not any(match.start() <= stop < match.end() for match in QUOTED.finditer(paragraph))
 
 
 def table(lines, title):
@@ -709,8 +724,9 @@ class Foundation:
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
         whose name does not end in `.md` that cites it now differs between the base and the working
         tree and no such file that cited it at the base was deleted (WAY-03). An invariant the base
-        lacks, or lacking *Method* or *Part* at either state, is left out. The listing is no
-        error."""
+        lacks, or lacking *Method* or *Part* now, is left out; one lacking either at the base is
+        listed by a line that names the missing field, since the comparison was not made (WAY-344).
+        The listing is no error."""
         if not self.base or self.base_files.get(INVARIANTS) is None:
             return
         before = invariant_entries(self.base_files[INVARIANTS])
@@ -718,9 +734,16 @@ class Foundation:
         for name, (number, sentence, found) in invariant_entries(self.files[INVARIANTS]).items():
             if name not in before:
                 continue
-            old_found = before[name][2]
-            if all(field in found and field in old_found for field in ("Method", "Part")) \
-                    and found["Method"][0] == "test" and sentence != before[name][1]:
+            if not all(field in found for field in ("Method", "Part")) \
+                    or found["Method"][0] != "test" or sentence == before[name][1]:
+                continue
+            lacking = [field for field in ("Method", "Part") if field not in before[name][2]]
+            if lacking:
+                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is changed "
+                                 "by this change, while its copy at the base lacks %s, so it was "
+                                 "not compared with the files that cite it"
+                                 % (name, " and ".join("*%s*" % field for field in lacking)))
+            else:
                 candidates.append((name, number))
         if not candidates:
             return
@@ -782,7 +805,7 @@ class Foundation:
         for paragraph in binding(self.bodies.get(key, [])):
             for match in re.finditer(re.escape(quote), paragraph):
                 found = True
-                if match.start() == 0 or paragraph[:match.start()].endswith(". "):
+                if begins_sentence(paragraph, match.start()):
                     starts = True
         if not found:
             self.report.error(path, number, "the quotation stands in no binding sentence of `%s`"
