@@ -1585,12 +1585,24 @@ class FoundationCheckTest(unittest.TestCase):
 
     # --- the-way's own foundation -------------------------------------------------------------
 
+    # The findings of the check that the two invariants name: a part-map reference that names no
+    # part (map-reference-target), and a test invariant that no test cites (test-method-citation).
+    # The check's other findings depend on the branch a clone calls its main one, or on the
+    # foundation beyond these two, so they are left out (WAY-08; causes 5 and 23).
+    OWN_FINDINGS = ("names no part", "is no identifier of a part",
+                    "reads `test` and no test cites it")
+
     def test_the_way_foundation_passes(self):
-        result = subprocess.run([sys.executable, "-B", SCRIPT, THE_WAY], capture_output=True,
-                                text=True, encoding="utf-8")
         # invariant: map-reference-target
         # invariant: test-method-citation
-        self.assertPasses((result.returncode, result.stdout + result.stderr))
+        result = subprocess.run([sys.executable, "-B", SCRIPT, THE_WAY], capture_output=True,
+                                text=True, encoding="utf-8")
+        report = result.stdout + result.stderr
+        self.assertNotEqual(result.returncode, 2, report)
+        findings = [line for line in result.stdout.splitlines()
+                    if ": listed: " not in line
+                    and any(text in line for text in self.OWN_FINDINGS)]
+        self.assertEqual(findings, [], report)
 
 
 if __name__ == "__main__":
