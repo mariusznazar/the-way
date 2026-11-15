@@ -100,11 +100,11 @@ def frontmatter(path: str, text: str) -> dict[str, str]:
     end = next((index for index in range(1, len(lines)) if lines[index].strip() == "---"), None)
     if end is None:
         raise GeneratorError(f"{path}: no frontmatter between the first two '---' lines")
-    # A line that holds a field in another form, such as `Name:`, counts as present, as
-    # agent_type_copies.py counts it.
+    # A field counts as present only where a line holds it as FIELD reads it, lowercase at the
+    # line's start, so a line such as `Name:` leaves the field missing.
+    held = {found.group(1) for found in map(FIELD.fullmatch, lines[1:end]) if found}
     for field in ("name", "description"):
-        pattern = re.compile(rf"\s*{field}\s*:", re.IGNORECASE)
-        if not any(pattern.match(line) for line in lines[1:end]):
+        if field not in held:
             raise MissingFieldError(f"{path}: the frontmatter has no line `{field}:`")
     fields: dict[str, str] = {}
     for line in lines[1:end]:
