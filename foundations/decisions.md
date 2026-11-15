@@ -6796,16 +6796,19 @@ for itself, and a repository with no review tag counts from the start of its his
 From the threshold on, the orchestrator reads the product's backlog for an open line of the review
 of this repository — a line whose name holds the name of the skill `review-foundation` and the name
 of the repository, which is the same in every cycle, open as the rules of the task place say
-(WAY-107). Where no such line stands, or
-the backlog cannot be read, the sentence asks the human to add the task of the review and gives what
-its name holds, the number of merges, the tag of the last review and the skill that starts the
-review; where the line stands, the sentence points to it and does not urge. The cycle adds and
-changes no line of the backlog (WAY-140).
+(WAY-107). Where no such line stands, or the backlog cannot be read, the sentence asks the human to
+add the task of the review and gives what its name holds, the number of merges, the tag of the last
+review and the skill that starts the review; where the line stands, the sentence points to it and
+does not urge. The cycle adds and changes no line of the backlog (WAY-140).
 
 - **Scope:** task-cycle, foundation-review
 - **Based on:** none
 - **Relations:** derives from WAY-24 · derives from WAY-107 · derives from WAY-140
-- **Verification:** an agent compares the cycle and its request with the decision:
+- **Verification:** tests: the count of merges to the main branch since the nearest review tag, from
+  the start of the history where none stands, with the merges of the main branch into task branches
+  left out; that the reminder line of the script turns to yes at the threshold and not one merge
+  before it, and that the script gives one threshold. An agent compares the cycle and its request
+  with the part no test holds:
   - complies: a cycle that ends at the threshold with no open line of the review in the backlog
     ends *How to merge* with a reminder that asks the human to add the task, names what its name
     holds, the number of merges, the tag and the skill, and the request merges like any other; the
@@ -6813,7 +6816,6 @@ changes no line of the backlog (WAY-140).
     ends *How to merge* with a sentence that points to that line and does not ask; where the
     backlog cannot be read, the sentence says so and asks as it does for a missing line; a cycle in
     a repository with no review tag and a count below the threshold writes nothing about a review;
-    the count leaves out the merges of the main branch into task branches;
   - violates: the reminder stops the merge or fails a check of the gate; a product sets a number of
     its own; the count starts at the merge of the review's own change; the reminder is written
     only in the first request after the number is reached; the sentence urges while an open line

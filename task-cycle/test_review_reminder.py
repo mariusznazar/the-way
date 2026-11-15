@@ -88,6 +88,7 @@ class ReviewReminderTest(unittest.TestCase):
             self.head = self.repo.merge_into_main(self.head, number)
 
     def test_without_a_tag_every_merge_since_the_start_of_history_counts(self) -> None:
+        # decision: WAY-300 "The reminder blocks nothing, the threshold is one number"
         self.merges(3)
         code, out, _ = run(self.repo, "main")
         self.assertEqual(0, code)
@@ -96,6 +97,7 @@ class ReviewReminderTest(unittest.TestCase):
         self.assertIn("reminder: no\n", out)
 
     def test_only_the_merges_after_the_nearest_review_tag_count(self) -> None:
+        # decision: WAY-300 "At the end of every task cycle the orchestrator counts the merges"
         self.merges(2)
         self.repo.tag("foundation-review/2026-01-10", self.head)
         self.merges(1, start=3)
@@ -116,6 +118,7 @@ class ReviewReminderTest(unittest.TestCase):
         self.assertIn("merges: 3\n", out)
 
     def test_a_merge_of_the_main_branch_into_a_task_branch_does_not_count(self) -> None:
+        # decision: WAY-300 "At the end of every task cycle the orchestrator counts the merges"
         self.merges(1)
         self.repo.tag("foundation-review/2026-01-10", self.head)
         branch_point = self.head
@@ -129,6 +132,8 @@ class ReviewReminderTest(unittest.TestCase):
         self.assertIn("merges: 2\n", out)
 
     def test_the_reminder_starts_at_sixty_merges_and_not_at_fifty_nine(self) -> None:
+        # decision: WAY-300 "At the end of every task cycle the orchestrator counts the merges"
+        # decision: WAY-300 "The reminder blocks nothing, the threshold is one number"
         self.merges(59)
         _, out, _ = run(self.repo, "main")
         self.assertIn("merges: 59\n", out)
@@ -140,6 +145,7 @@ class ReviewReminderTest(unittest.TestCase):
         self.assertIn("reminder: yes\n", out)
 
     def test_the_count_after_a_tag_restarts_the_reminder(self) -> None:
+        # decision: WAY-300 "At the end of every task cycle the orchestrator counts the merges"
         # A threshold of 3 stands in for the real one, so that the test builds 4 merges, not 61.
         with mock.patch.object(review_reminder, "THRESHOLD", 3):
             self.merges(4)
