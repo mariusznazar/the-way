@@ -451,9 +451,10 @@ contradicts a decision.
    Then the review of the whole change: a fresh reviewer that made none of it, on the strongest
    class available (WAY-229), with `review-change`, on the range from the task's base to the head,
    with the frozen task, any spec and plan, each slice's range and whether it had a review of its
-   own, the report of each executor whose slice had none with any mismatch its mechanical check passed
-   on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had no
-   review of its own, and the Minor and out-of-scope findings of the slice reviews (WAY-164); where
+   own, the report of each executor whose slice had none with any mismatch its mechanical check
+   passed on, the report of the agent that wrote the plan's *Foundation entries* where slice 1 had
+   no review of its own, and the Minor and out-of-scope findings of the slice reviews (WAY-164);
+   where
    the task moved the pin, it is told of that commit and given the checks the move carried. It
    selects its own foundation and guidelines, judges every slice that had no review of its own, and
    names for each blocking finding the slice it comes from, or that it comes from none (WAY-136).

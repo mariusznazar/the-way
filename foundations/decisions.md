@@ -2436,18 +2436,18 @@ rather than written by hand and how it is compared with its generator.
 
 Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
 matches, each naming a directory or one kind of file — every invariant test, say — rather than
-listing a directory's files one by one, except the files at the root of the repository, which is
-the directory of no part and whose files the map names one by one; a file that no pattern matches,
-and a file that two parts claim, is an error of the check of the foundation, unless the map lists that file as left out on
-purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
-tracks. Tests belong to the part they test and generated files to the part of their generator; the
-files that serve the whole repository — the lockfile and the build configuration — are a part of
-their own; the files that serve the tests of several parts are another, which its sentence describes
-as such with no field of its own, and which the tests of every part may import while code that is no
-test may not; and the files that only direct whoever carries out its tasks — instructions for
-agents, skills, hooks and the configuration of agents' tools and of CI — are another. For a file
-that collects entries about many parts, the parts a change touches follow from the entries it adds
-or changes, not from the part the file itself belongs to.
+listing a directory's files one by one, except the files at the root of the repository, which is the
+directory of no part and whose files the map names one by one; a file that no pattern matches, and a
+file that two parts claim, is an error of the check of the foundation, unless the map lists that
+file as left out on purpose, and so is a pattern of a part's *Files* or *Trust boundary* that
+matches no file git tracks. Tests belong to the part they test and generated files to the part of
+their generator; the files that serve the whole repository — the lockfile and the build
+configuration — are a part of their own; the files that serve the tests of several parts are
+another, which its sentence describes as such with no field of its own, and which the tests of every
+part may import while code that is no test may not; and the files that only direct whoever carries
+out its tasks — instructions for agents, skills, hooks and the configuration of agents' tools and of
+CI — are another. For a file that collects entries about many parts, the parts a change touches
+follow from the entries it adds or changes, not from the part the file itself belongs to.
 
 - **Scope:** part-map, agent-instructions, task-cycle
 - **Based on:** git-path-patterns
@@ -5180,13 +5180,13 @@ account — is made only by a human, through a human action the task document na
 the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
 of the request and of the task's state in the backlog entry the product names (WAY-107) is no effect
 of the task, nor is the removal of the repository's own working directories that stand outside its
-directory (WAY-375). For the human actions placed in the cycle, the cycle does what the repository allows
-and opens a blocked draft request listing them, and the human performs them at the request; a human
-action the cycle finds that the task document does not name joins that list for the human to place,
-and the request opens as a blocked draft listing it even where the document places no human action
-in the cycle. The human places each human action the task document names while the task is refined,
-on the agent's proposal: before the cycle when the cycle's code needs its effect, such as an
-account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
+directory (WAY-375). For the human actions placed in the cycle, the cycle does what the repository
+allows and opens a blocked draft request listing them, and the human performs them at the request; a
+human action the cycle finds that the task document does not name joins that list for the human to
+place, and the request opens as a blocked draft listing it even where the document places no human
+action in the cycle. The human places each human action the task document names while the task is
+refined, on the agent's proposal: before the cycle when the cycle's code needs its effect, such as
+an account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
 deployment or a DNS record pointing to a new address.
 
 - **Scope:** project-level, task-cycle
@@ -6458,14 +6458,15 @@ the request.
 
 *Rationale:* the problem is a single executor that checks itself: a model judging what it wrote
 favours it, so an agent that did not make the change reads it. That agent usually runs on the
-author's model or on a model of the author's family, and the favouring is taken to belong
-rather to a family of models than to one model, so the other agent removes the author's shared
-context and not the favouring itself; the process has no reviewer from another provider, and the
-price is taken. An error of the product shows where the code and the foundation meet, and the
-review of the whole change reads both against the task; an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
-review are faults of form and of checks, which the tests and the review of the whole change also
-meet. The reviewer reads the whole diff, while the human reads the section that holds what the human
-has not yet accepted, since a diff the human does not read accepts nothing.
+author's model or on a model of the author's family, and the favouring is taken to belong rather to
+a family of models than to one model, so the other agent removes the author's shared context and not
+the favouring itself; the process has no reviewer from another provider, and the price is taken. An
+error of the product shows where the code and the foundation meet, and the review of the whole
+change reads both against the task; an assessment of the foundation apart from the code sees only
+entries, so what it finds beyond the review are faults of form and of checks, which the tests and
+the review of the whole change also meet. The reviewer reads the whole diff, while the human reads
+the section that holds what the human has not yet accepted, since a diff the human does not read
+accepts nothing.
 *Rejected:* one independent assessor on a model other than the author's, which sees the diff
 without the author's reasoning and names what of the change can be cut — a stage of its own in
 every cycle that writes entries, reading entries without the code the review reads with them; a
@@ -6928,19 +6929,18 @@ would still move everything a decision asks the human to see into the section, w
 a decision adds in a group it names keeps the `none` of the section a statement that the request can
 be merged. Listing both kinds in this entry's sentence — two more enumerations in a long sentence,
 and the next decision that adds a kind must change this entry again, a forgotten change giving the
-same gap between the decision and this entry. A sentence of
-the top part outside this section on the incomplete reading — an incomplete review would pass
-without the human's yes, with a note in a place the template gives to something else; the lower
-part, in the section of the checks — the human does not read it, so would still not know that the
-review was incomplete. The skipped steps and unrun checks, the proposals not applied and the
-incomplete reading of the review in one group with what the request cannot go on without — a skipped
-step is a matter of doing it here or letting it through, so the group would mix two matters; only
-the groups that hold an item — shorter, but a group with nothing in it cannot be told from a
-forgotten one, by the human or by the script; three sections of the description in place of the
-groups — it changes the skeleton of the request's description and every reference to the section,
-and gives the
-human nothing beyond headings in one section; bold lines in place of headings — they look the same,
-but the script cannot tell them from plain text and checks nothing.
+same gap between the decision and this entry. A sentence of the top part outside this section on the
+incomplete reading — an incomplete review would pass without the human's yes, with a note in a place
+the template gives to something else; the lower part, in the section of the checks — the human does
+not read it, so would still not know that the review was incomplete. The skipped steps and unrun
+checks, the proposals not applied and the incomplete reading of the review in one group with what
+the request cannot go on without — a skipped step is a matter of doing it here or letting it
+through, so the group would mix two matters; only the groups that hold an item — shorter, but a
+group with nothing in it cannot be told from a forgotten one, by the human or by the script; three
+sections of the description in place of the groups — it changes the skeleton of the request's
+description and every reference to the section, and gives the human nothing beyond headings in one
+section; bold lines in place of headings — they look the same, but the script cannot tell them from
+plain text and checks nothing.
 
 ### WAY-288 — In what language is a request's description written?
 
@@ -7798,35 +7798,34 @@ cycle's record, and a second reading of the record for the audit.
 of context and cache use added to them — the comparisons would almost never occur, since nearly
 every change made to improve the process touches those instructions, and adding the script to that
 list would end the series of the cost as well. For the gate times, a mark on each run of how many
-directories ran at once, which would split the runs by that mark and not by a change of a script — it
-changes the test runner, the script that records the times, the tables of the gate times and of
-WAY-350 and the
-reading of the audit, it leaves the runs made between the move to parallel directories and this
-decision mixed with the earlier ones, and the old records would need a reading for the runs that carry
-no mark. And no split of the gate times at all, which leaves the times of the two ways of running the
-gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
-the old. New columns of context and cache use in the stage report — a column would change the
-script that measures the cost and end the series of the cost; a sentence added to the first
-paragraph saying that adding columns starts no series — a file of its own avoids the dispute with no
-change to that paragraph. For the series of the cost, the rule left as it was, every change of the
-form of a stage report, of the list of classes and of the instructions of the reviewer ending it,
-with only the file of the reviewer's type added to the changes that split — the audit still answers
-unknown for most versions of the process. The rule narrowed by taking the forms of the reports of
-the stages out into files of their own, so that a change of them would not touch the files of the
-methods of the stages — at most 14 of the 34 splits that 134 merges of the first parent of the main
-line gave would go, at the price of rebuilding four files of those methods. For a cycle that
-changes a tool that measures, the measures of that tool counted in a new series and the rest under
-the version the cycle ran on — one cycle stands in two versions, and the grouping and the tests of
-the count grow more complicated. For the tokens written to the cache at each lifetime, the file of
-the measures as their carrier into the cost — its figures are for each agent and carry no model and
-no stage row, while the share of the cost spent in fix rounds needs the cost of each turn, and a
-subagent that the author resumes has several turns, so the file would have to carry turns, with the
-windows and the owners of the nested subagents that the script of the stages computes: a second
-copy of the logic of the stages, or a file of measures that reads the stage report; it also makes a
-second script that measures the cost, so that a change of the script of the measures would end the
-comparison of the cost, which this decision forbids, and, were it wrong, the cost of a turn would be
-wrong or unknown for the cycles that matter and the series of the cost would split at the wrong
-changes. For the same tokens, a second table or section of the stage report keyed by stage and
+directories ran at once, which would split the runs by that mark and not by a change of a script —
+it changes the test runner, the script that records the times, the tables of the gate times and of
+WAY-350 and the reading of the audit, it leaves the runs made between the move to parallel
+directories and this decision mixed with the earlier ones, and the old records would need a reading
+for the runs that carry no mark. And no split of the gate times at all, which leaves the times of
+the two ways of running the gate mixed for weeks, so that whoever reads the audit must remember it
+until the new runs outnumber the old. New columns of context and cache use in the stage report — a
+column would change the script that measures the cost and end the series of the cost; a sentence
+added to the first paragraph saying that adding columns starts no series — a file of its own avoids
+the dispute with no change to that paragraph. For the series of the cost, the rule left as it was,
+every change of the form of a stage report, of the list of classes and of the instructions of the
+reviewer ending it, with only the file of the reviewer's type added to the changes that split — the
+audit still answers unknown for most versions of the process. The rule narrowed by taking the forms
+of the reports of the stages out into files of their own, so that a change of them would not touch
+the files of the methods of the stages — at most 14 of the 34 splits that 134 merges of the first
+parent of the main line gave would go, at the price of rebuilding four files of those methods. For a
+cycle that changes a tool that measures, the measures of that tool counted in a new series and the
+rest under the version the cycle ran on — one cycle stands in two versions, and the grouping and the
+tests of the count grow more complicated. For the tokens written to the cache at each lifetime, the
+file of the measures as their carrier into the cost — its figures are for each agent and carry no
+model and no stage row, while the share of the cost spent in fix rounds needs the cost of each turn,
+and a subagent that the author resumes has several turns, so the file would have to carry turns,
+with the windows and the owners of the nested subagents that the script of the stages computes: a
+second copy of the logic of the stages, or a file of measures that reads the stage report; it also
+makes a second script that measures the cost, so that a change of the script of the measures would
+end the comparison of the cost, which this decision forbids, and, were it wrong, the cost of a turn
+would be wrong or unknown for the cycles that matter and the series of the cost would split at the
+wrong changes. For the same tokens, a second table or section of the stage report keyed by stage and
 model — the audit would join two tables by a key, a row in one and not in the other becomes a new
 refusal, the heading, the table and its columns are three more fields of a reading that WAY-344
 checks, and nothing is gained over columns in the table whose rows already are the stage and the
@@ -9505,9 +9504,10 @@ every test (WAY-16), so the recipe gives that command and how far it narrows, an
 tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
 only by a change of its code. A time limit copied into the guidelines goes stale beside the
 configuration that holds it, and where none holds a limit the field reads `none`, as the field of
-the command does, so that no product words its own way of saying so. The default order of doubles — the real thing where it is fast,
-deterministic and simple, then a working simpler version, then a stub or a mock — follows the
-preference for real implementations, with a check of a call kept for an effect outside the product.
+the command does, so that no product words its own way of saying so. The default order of doubles —
+the real thing where it is fast, deterministic and simple, then a working simpler version, then a
+stub or a mock — follows the preference for real implementations, with a check of a call kept for an
+effect outside the product.
 *Rejected:* commands of the test tool for each level, as an exception to WAY-16 — a list of checks
 written by hand beside the gate; no field of the command — an agent looking for how to run one level
 finds nothing; the value of the time limit in the recipe — a copy of the configuration that goes
