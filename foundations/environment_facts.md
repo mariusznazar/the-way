@@ -273,6 +273,17 @@ On GitHub, a ruleset can allow certain users to bypass its rules, and repository
 
 - **Source:** https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository (archived: https://web.archive.org/web/20260822111548/https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository, 2026-08-22) § Creating rulesets for a repository — "When you create a ruleset, you can allow certain users to bypass the rules in the ruleset." · § Granting bypass permissions for your branch or tag ruleset — "You can grant certain roles, teams, or apps bypass permissions for your ruleset. The following are eligible for bypass access:" · § Granting bypass permissions for your branch or tag ruleset — "Repository admins, organization owners, and enterprise owners"; read 2026-11-14
 
+## foundations-branch-ruleset
+
+On GitHub, the repository `mariusznazar/the-way` has an active branch ruleset named `foundations_tests` that targets `refs/heads/foundations` and requires the status check `tests` of the integration 15368 without requiring the branch to be up to date before merging, its one bypass actor is the repository role with the id 5 in the mode `always`, and the account `mariusznazar`, which holds the permission `admin` on that repository, is reported able to bypass it always.
+
+- **Source:** reading: the command below on the GitHub API (api.github.com), with the GitHub CLI gh 2.88.1, whose option `--jq` filters the answer — “{"bypass_actors":[{"actor_id":5,"actor_type":"RepositoryRole","bypass_mode":"always"}],"current_user_can_bypass":"always","enforcement":"active","include":["refs/heads/foundations"],"name":"foundations_tests","rules":[{"parameters":{"do_not_enforce_on_create":false,"required_status_checks":[{"context":"tests","integration_id":15368}],"strict_required_status_checks_policy":false},"type":"required_status_checks"},{"parameters":null,"type":"deletion"},{"parameters":null,"type":"non_fast_forward"}]}” · “{"permission":"admin","role_name":"admin"}”; run 2026-11-15
+
+  ```
+  gh api repos/mariusznazar/the-way/rulesets/27308872 --jq '{name, enforcement, include: .conditions.ref_name.include, rules: [.rules[] | {type, parameters}], bypass_actors, current_user_can_bypass}'
+  gh api repos/mariusznazar/the-way/collaborators/mariusznazar/permission --jq '{permission, role_name}'
+  ```
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |

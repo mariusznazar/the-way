@@ -2529,10 +2529,7 @@ result of that run is a check the repository requires before a merge, and the ow
 repository may bypass it.
 
 - **Scope:** invariants, agent-instructions, task-cycle, gate, installation
-- **Based on:** github-required-status-checks · github-ruleset-bypass · TODO — a reading, as
-  WAY-84 asks for a setting changed outside the repository, of the rule of the branch `foundations`
-  of the-way that requires the check `tests` with a bypass for the owner, once the owner has set it;
-  no such rule stands yet
+- **Based on:** github-required-status-checks · github-ruleset-bypass · foundations-branch-ruleset
 - **Relations:** derives from WAY-34
 - **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
   everyone and for its run in CI, an agent compares the change with the decision:
