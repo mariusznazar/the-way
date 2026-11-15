@@ -585,11 +585,20 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     Keep the worktree for corrections; it stands until the task's branch is merged, and the script
     of step 4 removes it at the start of a later cycle.
 13. Before you write the description, count the merges since the last review of the foundation: in
-    the worktree's root (in a product, the path starts with `.the-way/`), after a fetch, run
-    `python -B task-cycle/review_reminder.py origin/<target branch>`. When its last line reads
-    `reminder: yes`, the description's *How to merge* carries the reminder as
-    `task-cycle/skill/request_template.md` gives; it blocks nothing, and every request the cycle
-    writes or rewrites gets it while the count stands (WAY-300). Record the output under
+    the worktree's root (in a product, the path starts with `.the-way/`), after a fetch that brings
+    the tags, run `python -B task-cycle/review_reminder.py origin/<target branch>`; where the script
+    ends with exit code 2, record its message under *Verification* and write no reminder, since the
+    count is unknown. When its last line reads `reminder: yes`, read the product's backlog as
+    `project-level/backlog_place.md` gives and look in it for an open line of the review of this
+    repository: a line whose name holds the name of the skill `review-foundation` and the name of
+    the repository, as the `## Backlog` section of the root `AGENTS.md` names the product, what
+    open means being the rules of the task place (WAY-107). The description's *How to merge* then
+    carries the reminder as `task-cycle/skill/request_template.md` gives it, in the form that
+    result asks for: to add the task of the review where no such line stands or the backlog cannot
+    be read, to point to the line where it stands. The cycle adds and changes no line of the
+    backlog (WAY-140); the reminder blocks nothing, and every request the cycle writes or rewrites
+    gets it while the count stands (WAY-300). Where the last line reads `reminder: no`, the
+    description says nothing about a review of the foundation. Record the output under
     *Verification*.
     Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by
     `task-cycle/skill/request_template.md` of the pinned the-way, which holds its sections, where each

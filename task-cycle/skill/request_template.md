@@ -108,7 +108,7 @@ only where no group has an item does the section read `none` alone, with no grou
 
 ## How to merge
 
-<the merge that keeps the commits, and why; the reminder of a review of the foundation where the count asks for it>
+<the merge that keeps the commits, and why; the reminder of a review of the foundation, in the form the backlog asks for, where the count asks for it>
 
 <details>
 <summary><"In your language", in the task document's language></summary>
@@ -440,12 +440,22 @@ where the product's rules squash or rebase, that limitation named. For a blocked
 instead of merging.
 
 Where the count of `SKILL.md` step 13 reads `reminder: yes`, *How to merge* ends with the reminder
-(WAY-300): in plain words, that the foundation has waited for a review through the number of merges
-the script gives since the tag of the last review, or since the start of the history where the
-script gives no tag; that the review is the skill `the-way-review-foundation`, started in a session
-in this repository; and that nothing in this request waits for it. The reminder is no item of *For
-you to decide*, as it asks for no yes to the merge, and it repeats in the block like the rest of
-*How to merge*. Where the count reads `reminder: no`, nothing is written.
+(WAY-300), in plain words, in the form that the cycle's reading of the backlog asks for. Both forms
+say that the foundation has waited for a review through the number of merges the script gives since
+the tag of the last review, or since the start of the history where the script gives no tag; that
+the review is the skill `the-way-review-foundation`, started in a session in this repository; and
+that nothing in this request waits for it.
+
+- Where no open line of the review of this repository stands in the backlog, or the cycle could not
+  read the backlog, the reminder asks the human to add the task of the review to it, and says what
+  the task's name holds — the name of the skill `review-foundation` and the name of the repository,
+  as in "Review of the foundation of <repository> (`review-foundation`)" — and, where the backlog
+  could not be read, that it could not be read.
+- Where the line stands, the reminder points to it by its name and neither asks for it nor urges.
+
+The reminder is no item of *For you to decide*, as it asks for no yes to the merge, and it repeats
+in the block like the rest of *How to merge*. Where the count reads `reminder: no`, nothing is
+written about a review of the foundation.
 
 ## The lower part
 
