@@ -24,8 +24,8 @@ Before adding or changing a file of the kind `shared-module`: a module that othe
 
 A file of this kind holds what other scripts import. Code that reads input or writes output stays
 under `if __name__ == "__main__":`, so that importing the file runs nothing. The invariant's test
-starts a new interpreter that imports the module with its input closed, and checks that it ends with
-exit code 0 and writes and reads nothing.
+starts a new interpreter that imports the module with its input open and empty, and checks that it
+ends with exit code 0 and writes and reads nothing.
 
 ## Examples
 

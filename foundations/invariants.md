@@ -457,7 +457,7 @@ Run without `--write`, `agent-instructions/skill_entry_points.py` and `agent-ins
 
 ## repository-changer-acts-only-when-told
 
-Without `--apply`, or where the confirmation is declined, `task-cycle/remove_merged_worktrees.py`, `elements/common/migrate_foundation.py` and `installation/install.py` change no file that the repository tracks and no working directory.
+Without `--apply`, or where the confirmation is declined, `task-cycle/remove_merged_worktrees.py`, `elements/common/migrate_foundation.py` and `installation/install.py` change no file that the repository tracks, other than a report that the human names with `--report`, and no working directory.
 
 - **Method:** test
 - **Rests on:** none
@@ -477,7 +477,7 @@ Without `--apply`, or where the confirmation is declined, `task-cycle/remove_mer
 
 ## shared-module-import-runs-nothing
 
-A new process of the Python interpreter that imports `relation-model/fingerprint.py`, with its input closed, ends with exit code 0, writes nothing to either output and reads nothing from its input.
+A new process of the Python interpreter that imports `relation-model/fingerprint.py`, with its input open and empty, ends with exit code 0, writes nothing to either output and reads nothing from its input.
 
 - **Method:** test
 - **Rests on:** none

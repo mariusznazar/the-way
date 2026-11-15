@@ -14,15 +14,8 @@ directories, one that copies files into a product, or one that installs a submod
 | File | Status | Decision |
 |---|---|---|
 | `task-cycle/remove_merged_worktrees.py` | `exemplar` | WAY-389 |
-| `elements/common/migrate_foundation.py` | `do not copy` | — |
+| `elements/common/migrate_foundation.py` | `copy` | — |
 | `installation/install.py` | `do not copy` | — |
-
-The status of `elements/common/migrate_foundation.py` is a finding of the slice's check against the
-code, not of the audit of the kinds, which had marked it `copy`. Its function `run()` opens the
-report path, which `--report` takes from the human, for writing before the `--apply` gate. A trial
-given a tracked file as that path overwrites the file, against the invariant
-`repository-changer-acts-only-when-told`. It stays `do not copy` until the function refuses a
-tracked report path.
 
 ## Rules
 
@@ -30,13 +23,14 @@ tracked report path.
 
 - **Decision:** WAY-389
 - **Invariant:** repository-changer-acts-only-when-told
-- **Good:** a run without `--apply` prints what it would change and changes no tracked file and no working directory
-- **Bad:** a run without `--apply`, or after the human declines the confirmation, removes or writes a tracked file or a working directory
+- **Good:** a run without `--apply` prints what it would change and changes no tracked file, other than a report the human names with `--report`, and no working directory
+- **Bad:** a run without `--apply`, or after the human declines the confirmation, removes or writes a tracked file the human did not name with `--report`, or a working directory
 
 A script of this kind changes nothing until it is told to. Without `--apply`, or where it asks for a
 confirmation and the answer is no, it only reports what it would do and leaves every tracked file and
-every working directory as they stand. A report may be written to a path that git ignores. A new
-script of the kind puts each change behind that act, so that the run without it is only a report.
+every working directory as they stand. A report it writes goes to a path that git ignores, or to the
+path the human names with `--report`. A new script of the kind puts each change behind that act, so
+that the run without it is only a report.
 
 ## Examples
 

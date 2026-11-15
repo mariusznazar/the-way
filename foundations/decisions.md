@@ -9991,8 +9991,9 @@ code 2 that WAY-344 gives, so that no later generator copies the fault.
 ### WAY-389 — Which file is the exemplar of the kind `repository-changer` in the-way's code?
 
 `task-cycle/remove_merged_worktrees.py` is the exemplar of the kind `repository-changer` of the-way's
-code, and a script of the kind changes neither a file that the repository tracks nor a working
-directory without `--apply`, or where the confirmation is declined.
+code, and a script of the kind changes neither a file that the repository tracks, other than a report
+that the human names with `--report`, nor a working directory without `--apply`, or where the
+confirmation is declined.
 
 - **Scope:** task-cycle, elements-common, installation
 - **Based on:** none
