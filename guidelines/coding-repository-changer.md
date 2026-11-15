@@ -14,8 +14,15 @@ directories, one that copies files into a product, or one that installs a submod
 | File | Status | Decision |
 |---|---|---|
 | `task-cycle/remove_merged_worktrees.py` | `exemplar` | WAY-389 |
-| `elements/common/migrate_foundation.py` | `copy` | — |
+| `elements/common/migrate_foundation.py` | `do not copy` | — |
 | `installation/install.py` | `do not copy` | — |
+
+The status of `elements/common/migrate_foundation.py` is a finding of the slice's check against the
+code, not of the audit of the kinds, which had marked it `copy`. Its function `run()` opens the
+report path, which `--report` takes from the human, for writing before the `--apply` gate. A trial
+given a tracked file as that path overwrites the file, against the invariant
+`repository-changer-acts-only-when-told`. It stays `do not copy` until the function refuses a
+tracked report path.
 
 ## Rules
 
