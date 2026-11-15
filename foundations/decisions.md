@@ -1736,9 +1736,9 @@ only as surely as the reviewer reads it.
 *Rejected:* a main branch holding only what the code meets — no existing product could enter; the
 rule weakened until the code fits it — the foundation describes the accident (WAY-225); a derived
 list of violated invariants beside the invariants file — a second file to keep in step with the
-entries, which a reader of the invariant does not see; a derived list of the dependencies the code
-holds against the part map — the same second file, and a dependency the map does not allow is an
-invariant like any other (WAY-225); a rule left out or marked "not checked yet" until met — the gap
+entries, which a reader of the invariant does not see; a derived list of the dependencies of a part
+that the code holds against the part map — the same second file, and a dependency of a part that the
+map does not allow is an invariant like any other (WAY-225); a rule left out or marked "not checked yet" until met — the gap
 stops being countable; debt paid by an end date — repaid by weakening the rule; beside the marked
 invariant, a second one holding from its first day that no file holds more breaks than on
 `{fork-point}` and a file not there holds none — an entry kept only for the time of the cleaning,
@@ -2487,21 +2487,22 @@ derived file compared as a subset of its version on the commit the branch left t
 What can be derived from what the product executes — code, configuration, infrastructure as code,
 runtime traces — is derived, never written by hand, and what is derived describes the state. Rules
 are written by hand: what is allowed and what the product promises, which the code cannot show, and
-a dependency the code holds that the part map does not allow is recorded as an invariant the
-product does not meet (WAY-51), never by rewriting the allowed dependencies to fit the code.
+a dependency of a part that the code holds and the part map does not allow is recorded as an
+invariant the product does not meet (WAY-51), never by rewriting the allowed dependencies of a part
+to fit the code.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts
 - **Based on:** none
 - **Relations:** none
 - **Verification:** invariants: derived-file-content. For what is derived and what is written by
   hand, an agent compares the change with the decision:
-  - complies: the map's allowed dependencies are written by hand, and the return step compares
-    them with the dependencies the code holds; a dependency of the code that a human accepts
-    although the map does not allow it stands as the invariant "the part `ui` does not depend on
-    `storage`", marked violated;
+  - complies: the map's allowed dependencies of a part are written by hand, and the return step
+    compares them with the dependencies of a part that the code holds; a dependency of a part that
+    the code holds and a human accepts although the map does not allow it stands as the invariant
+    "the part `ui` does not depend on `storage`", marked violated;
   - violates: a hand-written architecture document appears next to the part map; a hand-written
-    list of the product's endpoints kept next to the code; the allowed dependencies in the part
-    map copied from the current import graph.
+    list of the product's endpoints kept next to the code; the allowed dependencies of a part in the
+    part map copied from the current import graph.
 - **Origin:** none
 
 *Rationale:* a hand-written copy of the state goes stale, and code shows only what exists: a view
@@ -7356,7 +7357,7 @@ stage report.
 - **Scope:** process-audit, task-cycle, gate
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: gate-runner-path. For the rest, an agent compares a change with the
+- **Verification:** invariants: audit-series-script-paths. For the rest, an agent compares a change with the
   decision:
   - complies: the cost of cycles priced by two lists is shown as two series and the median of one is
     not set against the median of the other; the cycles of one version of the process are compared

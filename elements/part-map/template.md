@@ -39,7 +39,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ```markdown
 ## <identifier>
 
-<one sentence: what this part is responsible for>
+<what this part is responsible for, briefly, in as few sentences as that needs>
 
 - **Files:** <git path patterns, one per line, each a directory or one kind of file> | none
 - **Depends on:** <identifier> · <identifier> | none
@@ -52,7 +52,7 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ```markdown
 ## <identifier>
 
-<one sentence: what the product promises to keep>
+<what the product promises to keep, briefly, in as few sentences as that needs>
 
 - **Relied on by:** <who outside the product relies on it>
 ```
@@ -131,7 +131,8 @@ holds no list of such dependencies of a part.
 ## Surfaces
 
 - A surface is what someone outside the product relies on — an API, a file format, a command — and
-  its entry states the promise in one sentence and names in *Relied on by* who relies on it.
+  its entry states the promise briefly, in as few sentences as it needs, and names in *Relied on by*
+  who relies on it.
 - A change that alters a surface names the surface in its request, since a broken promise falls on
   someone who took no part in the change, and the request names it for the agent reviewing the
   change and the human merging it.
@@ -190,11 +191,11 @@ A field stays in this template only while someone or something reads it (WAY-05)
 
 ## The binding part
 
-The binding part of an entry is one sentence: a part's responsibility or a surface's promise.
-*Files*, *Depends on*, *Trust boundary* and *Relied on by* stay outside it. Whatever names an entry
-relies on what the entry answers for, and the other fields change more often without changing that,
-so making them binding would send the author to the entries naming it for changes that do not alter
-the promise.
+The binding part of an entry is a part's responsibility or a surface's promise, each described
+briefly, in as few sentences as it needs. *Files*, *Depends on*, *Trust boundary* and *Relied on by*
+stay outside it. Whatever names an entry relies on what the entry answers for, and the other fields
+change more often without changing that, so making them binding would send the author to the
+entries naming it for changes that do not alter the promise.
 
 ## Examples
 

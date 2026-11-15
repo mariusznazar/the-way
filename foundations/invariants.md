@@ -395,14 +395,14 @@ The wording that `project-level/plan_state.py` takes for the field *Request URL 
 - **Part:** project-level · task-cycle
 - **Violated:** no
 
-## gate-runner-path
+## audit-series-script-paths
 
-The path of the test runner of the gate whose history `process-audit/audit_count.py` reads, to start a series of the gate times where the runner changes, is a file git tracks.
+Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the mechanism measures or of the gate times — the script that counts the measures of a cycle, the script that records the gate times and the test runner of the gate — is a file git tracks.
 
 - **Method:** test
 - **Rests on:** none
 - **Derives from:** WAY-339
-- **Part:** process-audit · gate
+- **Part:** process-audit · task-cycle · gate
 - **Violated:** no
 
 ## review-tag-pattern
