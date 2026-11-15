@@ -5435,20 +5435,20 @@ open and the gaps of the document itself, at most about four, the most consequen
 plain language as WAY-113 asks a decision, with the ways, the cost of each and a recommendation; the
 full list and the critique stay in a file in the ignored `.runs/` directory of the product, whose
 path the agent gives the human. Before it shows a matter, and before it keeps a guess from the human
-on the critique's verdict that the repository already settles it or that it is most likely right, it
-checks the quotations behind that verdict and gives the matter one explicit verdict (WAY-120), and
-where no matter is open it says nothing of the step.
+on the critique's verdict that the repository or the task document already settles it or that it is
+most likely right, it checks the quotations behind that verdict and gives the matter one explicit
+verdict (WAY-120), and where no matter is open it says nothing of the step.
 
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** derives from WAY-377
 - **Verification:** an agent compares the work with the decision:
   - complies: the list of a task has 11 guesses, of which the critic finds 6 already settled in the
-    repository and 3 most likely right; the refining agent opens the file the critic quotes from,
-    sees that the quotation of one of the 6 does not say what the critic claims, and counts that
-    guess open; it shows the human 3 matters, each with the ways, their cost and a recommendation,
-    the most consequential first, and the path of the file; a task whose list holds no open matter
-    gets no mention of the step;
+    repository or the task document and 3 most likely right; the refining agent opens the file the
+    critic quotes from, sees that the quotation of one of the 6 does not say what the critic claims,
+    and counts that guess open; it shows the human 3 matters, each with the ways, their cost and a
+    recommendation, the most consequential first, and the path of the file; a task whose list holds
+    no open matter gets no mention of the step;
   - violates: the human is shown the whole list of guesses; a matter is shown, or a guess kept from
     the human, on the critic's verdict with no check of the quotation behind it; more than about
     four matters are shown at once, or a matter with no recommendation; the path of the file is not

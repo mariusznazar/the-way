@@ -27,10 +27,11 @@ orchestrator `orchestrated_mode.md` gives who writes what.
    right, most likely wrong, or truly open. It writes in plain language and names what it did not
    check as not checked.
 3. **Verdicts.** For each matter you will show and each guess the critique keeps from the human by
-   judging it already settled in the repository or most likely right, open the file the critique
-   quotes from and check the quotation word for word, then write one explicit verdict under
-   *Verdicts*: the critique's, or yours with its reason. A quotation that does not hold voids the
-   critique's verdict on that matter; settle the matter from what the file says, or count it open.
+   judging it already settled in the repository or in the task document or most likely right, open
+   the file the critique quotes from and check the quotation word for word, then write one explicit
+   verdict under *Verdicts*: the critique's, or yours with its reason. A quotation that does not
+   hold voids the critique's verdict on that matter; settle the matter from what the file says, or
+   count it open.
 4. **Show.** Show the human only the matters whose verdict is truly open and the gaps of the
    document itself — a guess the critique found most likely wrong is such a gap — at most about
    four, the most consequential first, each in plain language as "How a skill asks" gives for a
