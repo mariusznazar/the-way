@@ -5924,21 +5924,25 @@ The executor of a slice, and the one author of a change without a plan, work on 
 set for them, named in general terms and never by the name of a model: by default a class cheaper
 than the orchestrator's, for code that carries settled matters into the product, ordinary
 implementation that takes decisions of its own included; the orchestrator's class, for a change
-across many parts; or the strongest class available, for one that needs design — each class other
-than the default with one sentence of its reason. The planner sets each slice's class in the plan;
-the orchestrator sets the one author's when it selects that route (WAY-136), by the same measure,
-and records it with its reason. The one author writes its foundation entries, takes its return step
-and fixes its findings on its own class. An executor that returns `blocked` for a fact or permission
-no source supplies, reports a failing check of its slice, or fails the orchestrator's mechanical
-check (no commit in its range, or a repair it was sent back for left undone) gets one retry: a fresh
-executor one class higher, from the slice's base, given the failed executor's report and what
-failed; and an executor of the strongest class that fails, or a retry that fails, stops the cycle.
+across many parts; or the strongest class available, which is the strongest that the cycle's
+session lets its agents use, for one that needs design — each class other than the default with one
+sentence of its reason. The planner sets each slice's class in the plan; the orchestrator sets the
+one author's when it selects that route (WAY-136), by the same measure, and records it with its
+reason. The one author writes its foundation entries, takes its return step and fixes its findings
+on its own class.
+
+An executor that returns `blocked` for a fact or permission no source supplies, reports a failing
+check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
+repair it was sent back for left undone) gets one retry: a fresh executor one class higher, from the
+slice's base, given the failed executor's report and what failed; and an executor of the strongest
+class available that fails, or a retry that fails, stops the cycle.
+
 The fix of a slice's findings runs on the class of the executor whose work stands, of findings in
 several slices on the highest of their classes and of a planned change's finding of no slice on the
 orchestrator's, while the spec's designer and reviewer, the planner, the writer of the plan's
-foundation entries, the return step of a planned change and every reviewer — the review of the whole
-change and the review of the return step included — work on no class cheaper than the
-orchestrator's.
+foundation entries, the return step of a planned change and every other reviewer work on no class
+cheaper than the orchestrator's, and the review of the whole change and the review of the return
+step work on the strongest class available.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -5957,58 +5961,79 @@ orchestrator's.
   decision:
   - complies: the plan sets the default class for a slice that applies a pattern the spec settles
     and for one of ordinary implementation that takes decisions of its own, the orchestrator's
-    class with its reason for a slice that joins several parts, and the strongest with its reason
-    for one that needs design; the record gives the one author's class, with its reason where it is not
-    the default, and the
-    author writes its foundation entries, its return step and its fix on that class; an executor of
-    the cheaper class whose check fails is replaced, from the slice's base, by one of the
-    orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
-    runs on the class of the executor whose work stands; the review of the whole change runs on the
-    orchestrator's class or a stronger one;
+    class with its reason for a slice that joins several parts, and the strongest available with its
+    reason for one that needs design; the record gives the one author's class, with its reason where
+    it is not the default, and the author writes its foundation entries, its return step and its fix
+    on that class; an executor of the cheaper class whose check fails is replaced, from the slice's
+    base, by one of the orchestrator's class given its report and the failure; the fix of a reviewed
+    slice's finding runs on the class of the executor whose work stands; the review of the whole
+    change and the review of the return step run on the strongest class available, whatever the
+    class of the orchestrator;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
-    executor of the strongest class gets a retry; a review or the spec runs on a class cheaper than
-    the orchestrator's; the one author works on the orchestrator's model with no class recorded.
+    executor of the strongest class available gets a retry; a review or the spec runs on a class
+    cheaper than the orchestrator's; the review of the whole change or of the return step runs on a
+    class below the strongest available; the one author works on the orchestrator's model with no
+    class recorded.
 - **Origin:** none
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
 change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
 the cost. Ordinary implementation within a settled task, spec and plan is within that reach too, and
 the one author's change is bound by the same settled task; the reviews of the whole change and of
-the return step, on the orchestrator's class, are what finds a cheaper model's error in code, in a
-foundation entry or in the return step. The planner, who cut the slice, knows best what it demands,
-and on the route without a plan the orchestrator, who judged that one agent can hold the change,
-knows what that agent faces. A failure gets one retry a class higher before the cycle stops, which
-costs less than running every slice on the strongest class and less than stopping at the first
-failure of a cheaper one; the slice's own review where it has one, and the review of the whole
-change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on four
-merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on each
-change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
+the return step, on the strongest class available, are what finds a cheaper model's error in code,
+in a foundation entry or in the return step. The planner, who cut the slice, knows best what it
+demands, and on the route without a plan the orchestrator, who judged that one agent can hold the
+change, knows what that agent faces. A failure gets one retry a class higher before the cycle stops,
+which costs less than running every slice on the strongest class available and less than stopping at
+the first failure of a cheaper one; the slice's own review where it has one, and the review of the
+whole change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on
+four merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on
+each change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
 could not run the product's tests, and worked on a reviewer's instruction newer than the changes
 they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in 4 of the 8 runs,
 each time a change in which the original review had found a blocking flaw, repaired later, and a
 reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
 8. The measurement is this product's own, and its record is not open to a reader of this repository.
-Classes in general terms survive the release of new models and fit any harness. The decision takes
-from the skills of Open Mercato for planning and dispatching an executor a class of model for each
-step of the work and one retry a class higher before the stop (WAY-100).
+The orchestrator's class is the class of the session that leads the cycle and may be a cheaper one,
+so a review that follows it lets a flaw through in about half the runs of that measurement; the
+reviews of the whole change and of the return step therefore follow no class of the session and run
+on the strongest class available. That costs more, the price taken: fewer fixes after review are
+counted to repay part of it, and the audit of the process shows what the version after the change
+costs. What is available is the human's choice when a session starts, never a sentence of this log:
+a cycle started with every model allowed takes the strongest it has, the review included, and a
+session that leaves a model out takes the strongest of the rest, so the log names no model and no
+setting. Classes in general terms survive the release of new models and fit any harness. The
+decision takes from the skills of Open Mercato for planning and dispatching an executor a class of
+model for each step of the work and one retry a class higher before the stop (WAY-100).
 *Rejected:* every slice on the orchestrator's model — it pays the strongest price for transcription;
 the orchestrator's class for ordinary implementation, or for the one author by inheritance — it pays
 the strongest price for code whose decisions the task, the spec and the plan already bound; the
 class chosen by the orchestrator at each dispatch of a slice — it judges again what the planner
 judged when it cut the slice; the return step of the one author handed to a fresh agent of the
 orchestrator's class — it pays a second agent to read the foundation again, while the review of the
-return step judges it on that class; the orchestrator's class as the default — it leaves the cheaper
-class to a judgment made slice by slice and rarely taken; retries without bound, or on the same
-class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or a
-review — their errors reach every later step; two runs of a reviewer of a cheaper class in place of
-one run of the orchestrator's class — both runs together caught 5 of the 14 reference errors, as
-many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
-verdict, since a change with three blocking flaws got a PASS in both (the same measurement, this
-product's own, whose record is not open to a reader of this repository); model names in the process
-— they age with every release; the source's rule that typical implementation stays on the default
-tier — here ordinary implementation within a settled task, spec and plan is on the cheaper class
-too.
+return step judges it on the strongest class available; the orchestrator's class as the default — it
+leaves the cheaper class to a judgment made slice by slice and rarely taken; retries without bound,
+or on the same class — the same failure repeats at the same cost; a cheaper class for the spec, the
+plan or a review — their errors reach every later step; two runs of a reviewer of a cheaper class in
+place of one run of the strongest class available — both runs together caught 5 of the 14 reference
+errors, as many as one run of the orchestrator's class in the measurement (5 and 6 in two such
+runs), and did not improve the verdict, since a change with three blocking flaws got a PASS in both
+(the same measurement, this product's own, whose record is not open to a reader of this repository);
+model names in the process — they age with every release; the source's rule that typical
+implementation stays on the default tier — here ordinary implementation within a settled task, spec
+and plan is on the cheaper class too; the reviews of the whole change and of the return step on the
+orchestrator's class, with the price in the rationale — with the orchestrator on a cheaper class a
+review lets a flaw through in about half the runs of the measurement, and the protection the
+rationale counts on then depends on the model of the session that leads the cycle; a bound written
+in general terms with no criterion that tells the classes apart without a name — an agent reads a
+general word as it pleases; the strongest class of the family the cycle runs on — a model of that
+family that the human keeps out of cycles would take the reviews and the slices that need design; a
+review one class above the session that leads the cycle, never above the strongest model — with the
+session on the cheapest class the review would run on the middle class, which let a flaw through in
+4 of the 8 runs of the measurement, and a bound on the strongest model has to stand somewhere all
+the same; a restriction of models on the human's whole account — the model leaves every session of
+the human, and each work on it would need a change of that restriction.
 
 ## The work of a cycle's agents
 
@@ -6414,9 +6439,12 @@ the request.
 - **Origin:** none
 
 *Rationale:* the problem is a single executor that checks itself: a model judging what it wrote
-favours it, so an agent that did not make the change reads it. An error of the product shows where
-the code and the foundation meet, and the review of the whole change reads both against the task;
-an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
+favours it, so an agent that did not make the change reads it. That agent usually runs on the
+author's model or on a model of the author's family, and the favouring is taken to belong
+rather to a family of models than to one model, so the other agent removes the author's shared
+context and not the favouring itself; the process has no reviewer from another provider, and the
+price is taken. An error of the product shows where the code and the foundation meet, and the
+review of the whole change reads both against the task; an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
 review are faults of form and of checks, which the tests and the review of the whole change also
 meet. The reviewer reads the whole diff, while the human reads the section that holds what the human
 has not yet accepted, since a diff the human does not read accepts nothing.
@@ -6424,8 +6452,10 @@ has not yet accepted, since a diff the human does not read accepts nothing.
 without the author's reasoning and names what of the change can be cut — a stage of its own in
 every cycle that writes entries, reading entries without the code the review reads with them; a
 panel of two assessors and a settler reading both orders — its cost per change outweighs what one
-reader misses, and its uncertainty becomes questions for the human; the author assessing its own
-change — it checks itself.
+reader misses, and its uncertainty becomes questions for the human; a binding sentence that the
+reviewer works on a model other than the author's — with the author on the strongest model the
+reviewer would be a weaker one or one of another provider; the author assessing its own change — it
+checks itself.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
