@@ -152,6 +152,25 @@ class SectionFormsTest(unittest.TestCase):
                   "  - the first search\n  - the second search\n- **Problems:** none\n")
         self.assertEqual(items(report), ["the first search", "the second search"])
 
+    def test_a_label_right_under_a_list_item_of_the_section_before_opens_a_section(self) -> None:
+        # The layout of the plan's report: the label stands on the line under the last item of the
+        # section before it, with no blank line between.
+        for marker in ("- ", "* ", "1. "):
+            report = (f"## Own-work check\n\n{marker}`python -B x.py` exit 0\n"
+                      "**Searches not found or unclear:**\n- the first search\n"
+                      "- the second search\n\n**Problems:** none\n")
+            self.assertEqual(items(report), ["the first search", "the second search"], marker)
+
+    def test_a_label_under_a_list_item_with_its_item_on_the_label_line_gives_that_text(self) -> None:
+        report = ("- Status: done with concerns\n"
+                  "**Searches not found or unclear:** none found for the screenshot route.\n\n"
+                  "**Problems:** none\n")
+        self.assertEqual(items(report), ["none found for the screenshot route."])
+
+    def test_a_label_under_a_paragraph_line_still_opens_no_section(self) -> None:
+        self.assertEqual(items("Status: done with concerns\n"
+                               "**Searches not found or unclear:**\n- an item\n"), [])
+
     def test_a_non_list_label_section_ends_at_the_next_bold_label_or_heading(self) -> None:
         report = ("**Searches not found or unclear**\n- inside\n\n"
                   "**Own-work check.** not inside\n")
