@@ -169,7 +169,7 @@ agents' tools and of CI that direct them.
   .github/workflows/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines ·
-  foundation-review · process-audit
+  foundation-review · process-audit · repository
 - **Trust boundary:** none
 
 ## instruction-files
