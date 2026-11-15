@@ -6109,13 +6109,9 @@ a subscription spends usage credits. Where the harness states no cache lifetime,
 the harness allows.
 
 - **Scope:** task-cycle
-- **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
-  prefixes expire after a period of inactivity. Each request that hits the cache resets the timer,
-  so the cache stays warm as long as you keep working." · § "Cache lifetime" — "a one-hour TTL
-  that keeps the cache warm through longer breaks but charges a higher rate for cache writes" ·
-  § "Subagents and the cache" — "Subagents fall outside the main-conversation TTL bucket, so they
-  get five minutes even on a subscription until you choose a longer one."; read 2026-10-27 ·
-  claude-code-subagent-cache-ttl · claude-code-subagent-cache-ttl-credits
+- **Based on:** claude-code-prompt-cache-expiry · claude-code-prompt-cache-ttls ·
+  claude-code-subagent-cache-default · claude-code-subagent-cache-ttl ·
+  claude-code-subagent-cache-ttl-credits
 - **Relations:** none
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:

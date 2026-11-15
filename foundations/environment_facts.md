@@ -91,13 +91,13 @@ GitHub answers a request for a private resource that is not properly authenticat
 
 Anthropic describes the lifecycle of its models by the states Active, Legacy, Deprecated and Retired, in which an Active model is fully supported and recommended for use and a Retired one is no longer available for use.
 
-- **Source:** https://platform.claude.com/docs/en/about-claude/model-deprecations (archived: http://web.archive.org/web/20260926103650/https://platform.claude.com/docs/en/about-claude/model-deprecations, 2026-09-26) § Overview — "Anthropic uses the following terms to describe the model lifecycle:" · § Overview — "Active: The model is fully supported and recommended for use." · § Overview — "Legacy: The model will no longer receive updates and may be deprecated in the future." · § Overview — "Deprecated: The model is still functional but no longer recommended." · § Overview — "Retired: The model is no longer available for use. Requests to retired models will fail."; read 2026-09-26
+- **Source:** https://platform.claude.com/docs/en/about-claude/model-deprecations (archived: https://web.archive.org/web/20261114003641/https://platform.claude.com/docs/en/about-claude/model-deprecations, 2026-11-14) § Overview — "Anthropic uses the following terms to describe the model lifecycle:" · § Overview — "Active: The model is fully supported and recommended for use." · § Overview — "Legacy: The model will no longer receive updates and might be deprecated in the future." · § Overview — "Deprecated: The model is still functional but no longer recommended." · § Overview — "Retired: The model is no longer available for use. Requests to retired models fail."; read 2026-11-15
 
 ## openai-model-states
 
-OpenAI lists the models of its API in a catalogue of models; a model it announces as being deprecated is deprecated at once and has a shutdown date after which it is no longer accessible, and a legacy model no longer receives updates.
+OpenAI describes the lifecycle of its models by three states, Active, Deprecated and Shutdown, in which an Active model can be used through the API with no retirement announced, a Deprecated model has an announced retirement and can still be used until its shutdown date, and a Shutdown model no longer accepts requests through the standard API.
 
-- **Source:** https://developers.openai.com/api/docs/models (archived: https://web.archive.org/web/20261022015628/https://developers.openai.com/api/docs/models, 2026-10-22) § Models — "Browse our full catalog of models"; read 2026-10-22 · https://developers.openai.com/api/docs/deprecations (archived: https://web.archive.org/web/20261020162442/https://developers.openai.com/api/docs/deprecations, 2026-10-20) § Deprecation vs. legacy — "When we announce that a model or endpoint is being deprecated, it immediately becomes deprecated. All deprecated models and endpoints will also have a shut down date. At the time of the shut down, the model or endpoint will no longer be accessible." · § Deprecation vs. legacy — "We use the term “legacy” to refer to models and endpoints that no longer receive updates."; read 2026-10-22
+- **Source:** https://developers.openai.com/api/docs/deprecations (archived: https://web.archive.org/web/20261114004355/https://developers.openai.com/api/docs/deprecations, 2026-11-14) § Overview — "Each model has one of three lifecycle states." · § Overview — "Active. You can use the model through the API. OpenAI hasn’t announced its retirement." · § Overview — "Deprecated. OpenAI has announced the model’s retirement. You can still use it until its shutdown date." · § Overview — "Shutdown. The model no longer accepts requests through the standard API."; read 2026-11-15
 
 ## python-314-bugfix-status
 
@@ -113,9 +113,9 @@ The Python Developer's Guide says the bugfix phase builds and releases new binar
 
 ## claude-code-project-skills
 
-Claude Code loads project skills from `.claude/skills/` in the directory where it starts and in each parent directory up to the repository root, only up to the worktree root in a session running in a linked git worktree, and, on v2.1.277 or later, the main checkout's project skills instead when the worktree checkout has no `.claude/skills` directory at its root; on v2.1.246 or later, when a session is moved with `/cd`, it adds the new directory's project skills.
+Claude Code loads project skills from `.claude/skills/` in the directory where it starts and in each parent directory up to the repository root, only up to the worktree root in a session running in a linked git worktree that was created with `--worktree` or `git worktree add`, and, on v2.1.277 or later, the main checkout's project skills instead when the worktree checkout has no `.claude/skills` directory at its root; on v2.1.246 or later, when a session is moved with `/cd`, it adds the new directory's project skills.
 
-- **Source:** https://code.claude.com/docs/en/skills (archived: http://web.archive.org/web/20261006214359/https://code.claude.com/docs/en/skills, 2026-10-06) § Load skills in monorepos and subdirectories — "Claude Code loads project skills from .claude/skills/ in the directory where you start it and in every parent directory up to the repository root, so starting in packages/frontend/ still picks up skills defined at the root." · § Load skills in monorepos and subdirectories — "When you move the session with /cd on v2.1.246 or later, Claude Code adds the new directory’s project skills." · § Load skills in monorepos and subdirectories — "In a session running in a linked git worktree, Claude Code searches parent directories only up to the worktree root." · § Load skills in monorepos and subdirectories — "On Claude Code v2.1.277 or later, when the worktree checkout has no .claude/skills directory at its root, Claude Code loads the main checkout’s project skills instead."; read 2026-10-08
+- **Source:** https://code.claude.com/docs/en/skills (archived: https://web.archive.org/web/20261114004012/https://code.claude.com/docs/en/skills, 2026-11-14) § Load skills in monorepos and subdirectories — "Claude Code loads project skills from .claude/skills/ in the directory where you start it and in every parent directory up to the repository root, so starting in packages/frontend/ still picks up skills defined at the root." · § Load skills in monorepos and subdirectories — "When you move the session with /cd on v2.1.246 or later, Claude Code adds the new directory’s project skills." · § Load skills in monorepos and subdirectories — "In a session running in a linked git worktree that you created with --worktree or git worktree add, Claude Code searches parent directories only up to the worktree root." · § Load skills in monorepos and subdirectories — "On Claude Code v2.1.277 or later, when the worktree checkout has no .claude/skills directory at its root, Claude Code loads the main checkout’s project skills instead."; read 2026-11-15
 
 ## claude-code-nested-skills
 
@@ -137,9 +137,9 @@ Codex's initial list of skills includes each skill's file path.
 
 ## claude-code-imports
 
-Claude Code expands a file that a `CLAUDE.md` imports with `@path/to/import` syntax and loads it into context at launch alongside that `CLAUDE.md`, and skips Markdown code spans and fenced code blocks when it parses imports.
+Claude Code expands a file that a `CLAUDE.md` imports with `@path/to/import` syntax and loads it into context alongside that `CLAUDE.md`, loads at launch the `CLAUDE.md` files in the directory hierarchy above the working directory, and skips Markdown code spans and fenced code blocks when it parses imports.
 
-- **Source:** https://code.claude.com/docs/en/memory (archived: http://web.archive.org/web/20261007150822/https://code.claude.com/docs/en/memory, 2026-10-07) § Import additional files — "CLAUDE.md files can import additional files using @path/to/import syntax." · § Import additional files — "Imported files are expanded and loaded into context at launch alongside the CLAUDE.md that references them." · § Import additional files — "Import parsing skips Markdown code spans and fenced code blocks."; read 2026-10-08
+- **Source:** https://code.claude.com/docs/en/memory (archived: https://web.archive.org/web/20261114174608/https://code.claude.com/docs/en/memory, 2026-11-14) § Import additional files — "CLAUDE.md files can import additional files using @path/to/import syntax." · § Import additional files — "Imported files are expanded and loaded into context alongside the CLAUDE.md that references them." · § Import additional files — "Import parsing skips Markdown code spans and fenced code blocks." · § Choose where to put CLAUDE.md files — "CLAUDE.md and CLAUDE.local.md files in the directory hierarchy above the working directory are loaded at launch."; read 2026-11-15
 
 ## claude-code-agents-md
 
@@ -212,6 +212,24 @@ In the report of a trial of a shorter guidelines file in one product, all 45 run
 Claude Code prevents a subagent from invoking skills when its definition omits `Skill` from its `tools` list or adds it to `disallowedTools`.
 
 - **Source:** https://code.claude.com/docs/en/sub-agents.md (archived: http://web.archive.org/web/20261019125207/https://code.claude.com/docs/en/sub-agents.md, 2026-10-19) § Preload skills into subagents — "To prevent a subagent from invoking skills entirely, omit Skill from the tools list or add it to disallowedTools."; read 2026-11-13
+
+## claude-code-prompt-cache-expiry
+
+Claude Code's cached prompt prefixes expire after a period of inactivity, and each request that hits the cache resets the timer.
+
+- **Source:** https://code.claude.com/docs/en/prompt-caching (archived: https://web.archive.org/web/20261114163725/https://code.claude.com/docs/en/prompt-caching, 2026-11-14) § Cache lifetime — "Cached prefixes expire after a period of inactivity. Each request that hits the cache resets the timer, so the cache stays warm as long as you keep working."; read 2026-11-15
+
+## claude-code-prompt-cache-ttls
+
+The API offers Claude Code a five-minute prompt cache lifetime and a one-hour one, which keeps the cache warm through longer breaks and charges a higher rate for cache writes.
+
+- **Source:** https://code.claude.com/docs/en/prompt-caching § Cache lifetime — "The API offers two: a five-minute TTL, and a one-hour TTL that keeps the cache warm through longer breaks but charges a higher rate for cache writes."; read 2026-11-15
+
+## claude-code-subagent-cache-default
+
+Claude Code gives the requests of a subagent a five-minute prompt cache lifetime, even on a subscription, until a longer one is chosen.
+
+- **Source:** https://code.claude.com/docs/en/prompt-caching (archived: https://web.archive.org/web/20261114163725/https://code.claude.com/docs/en/prompt-caching, 2026-11-14) § Subagents and the cache — "Subagents fall outside the main-conversation TTL bucket, so they get five minutes even on a subscription until you choose a longer one."; read 2026-11-15
 
 ## claude-code-subagent-cache-ttl
 
