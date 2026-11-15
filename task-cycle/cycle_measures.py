@@ -75,9 +75,12 @@ What stays approximate:
 The transcript is untrusted input. Each field the reading needs has to be there, or the run ends with
 exit code 2 and a message that names the file, the line and the field: of a tool call its `id`,
 `name` and `input` (Codex: `call_id`, `name` and `arguments` or `input`), of a result its
-`tool_use_id` and `content` (Codex: `call_id` and `output`). A line or a block that is no tool call
-or result, a content that is no string or list, a block that is no object and a result that is no
-text are not counted and are no error. Nothing of a transcript reaches the file but through `cell`:
+`tool_use_id` and `content` (Codex: `call_id` and `output`); of every assistant or user line its
+`message` and `message.content` (Codex: of every `response_item` its `payload`); of a text block of a
+result its `text`. A `null` is a missing field. A line or a block that is no tool call or result, a
+content that is no string or list, a block that is no object and a result that is no text are not
+counted and are no error. The `type` that tells one kind of block or record from another is not
+checked: one that lacks it is a kind the reading does not know. Nothing of a transcript reaches the file but through `cell`:
 the figures of the log and the index are whole numbers made here.
 
 The file is Markdown, written to PATH or printed. Exit code: 0 when it is written; 2 with
@@ -262,16 +265,21 @@ def names_log(texts: Iterable[str]) -> bool:
     return any(LOG_PATH.search(text.replace(BACKSLASH, "/")) for text in texts)
 
 
-def result_text(content: object, kinds: frozenset[str]) -> str | None:
+def result_text(content: object, kinds: frozenset[str], label: str, where: str) -> str | None:
     """The text of a result: a string as it is, a list as the `text` of its blocks of the given kinds
-    joined with nothing between them; None for any other content."""
+    joined with nothing between them; None for any other content. A block of those kinds that lacks
+    its `text` ends the reading, naming `label[index].text`."""
     if isinstance(content, str):
         return content
     if isinstance(content, list):
-        return "".join(
-            block["text"] for block in content
-            if isinstance(block, dict) and isinstance(block.get("type"), str)
-            and block["type"] in kinds and isinstance(block.get("text"), str))
+        parts = []
+        for index, block in enumerate(content):
+            if (isinstance(block, dict) and isinstance(block.get("type"), str)
+                    and block["type"] in kinds):
+                text = member(block, "text", f"{label}[{index}].text", where)
+                if isinstance(text, str):
+                    parts.append(text)
+        return "".join(parts)
     return None
 
 
@@ -307,11 +315,14 @@ class ReadCounter:
 
 def read_claude_blocks(entry: dict, where: str, counter: ReadCounter) -> None:
     """The tool calls of an assistant line and the results of a user line. Each field they need is
-    read: a missing one ends the reading. Anything that is no tool block is not counted."""
+    read: a missing one ends the reading, the `message` and the `message.content` of the line
+    included. A content that is no list, and anything that is no tool block, is not counted."""
     kind = entry.get("type")
-    message = entry.get("message")
-    content = message.get("content") if isinstance(message, dict) else None
-    if kind not in ("assistant", "user") or not isinstance(content, list):
+    if kind not in ("assistant", "user"):
+        return
+    message = member(entry, "message", "message", where)
+    content = member(message, "content", "message.content", where)
+    if not isinstance(content, list):
         return
     for index, block in enumerate(content):
         if not isinstance(block, dict):
@@ -325,7 +336,8 @@ def read_claude_blocks(entry: dict, where: str, counter: ReadCounter) -> None:
         elif kind == "user" and block.get("type") == "tool_result":
             ident = identifier(block, "tool_use_id", f"{label}.tool_use_id", where)
             result = member(block, "content", f"{label}.content", where)
-            counter.result(ident, result_text(result, CLAUDE_TEXT_BLOCKS))
+            counter.result(ident, result_text(result, CLAUDE_TEXT_BLOCKS, f"{label}.content",
+                                              where))
 
 
 def read_claude_agent(path: Path) -> tuple[list[Call], Reads]:
@@ -427,8 +439,9 @@ def rollout_meta(path: Path) -> RolloutMeta | None:
 
 def read_codex_record(entry: dict, where: str, counter: ReadCounter) -> None:
     """A tool call or the output of one, from a record `response_item`. Each field it needs is read:
-    a missing one ends the reading. Any other record is not counted."""
-    payload = entry.get("payload")
+    a missing one ends the reading, the `payload` of the record included. A payload that is no object
+    or of another kind is not counted."""
+    payload = member(entry, "payload", "payload", where)
     kind = payload.get("type") if isinstance(payload, dict) else None
     if not isinstance(kind, str):
         return
@@ -447,7 +460,7 @@ def read_codex_record(entry: dict, where: str, counter: ReadCounter) -> None:
     elif kind in CODEX_OUTPUTS:
         ident = identifier(payload, "call_id", "payload.call_id", where)
         output = member(payload, "output", "payload.output", where)
-        counter.result(ident, result_text(output, CODEX_TEXT_BLOCKS))
+        counter.result(ident, result_text(output, CODEX_TEXT_BLOCKS, "payload.output", where))
 
 
 def read_codex_calls(path: Path, ident: str) -> tuple[list[Call], Reads]:

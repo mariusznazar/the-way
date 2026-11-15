@@ -436,15 +436,12 @@ class CraftedReadsTest(ReadsTestCase):
         self.assertFalse(output.exists())
 
     def test_a_content_that_is_no_string_or_list_is_not_counted_and_ends_no_run(self) -> None:
-        for value in (5, 1.5, True, None, {"type": "tool_use"}, "a string", "DELETE"):
+        for value in (5, 1.5, True, {"type": "tool_use"}, "a string"):
             with self.subTest(content=value):
                 before = tool_call("09:00:01", "b1", "tb", "Read", {"file_path": LOG})
                 after = tool_return("09:00:02", "tc", "x")
                 for line in (before, after):
-                    if value == "DELETE":
-                        del line["message"]["content"]
-                    else:
-                        line["message"]["content"] = value
+                    line["message"]["content"] = value
                 self.assertEqual(["10", "1", "0", "0"], self.figures([before, after, *self.GOOD]))
 
     def test_blocks_that_are_no_objects_or_no_tool_blocks_are_not_counted(self) -> None:
@@ -522,6 +519,33 @@ class CraftedReadsTest(ReadsTestCase):
                 line = tool_return("09:01:05", "t1", "x")
                 line["message"]["content"][0]["tool_use_id"] = value
                 self.assert_error_names([line], "message.content[0].tool_use_id")
+
+    def test_a_line_without_its_message_or_its_content_ends_with_exit_2_naming_the_field(self) -> None:
+        # The container of the blocks is a field of the reading too: its absence, or a null in its
+        # place, is no empty list of blocks. An assistant line lacks `message` for `read_response`
+        # before the blocks are read, so its case is the content.
+        cases = [("assistant", "message.content"), ("user", "message.content"),
+                 ("user", "message")]
+        for kind, field in cases:
+            for null in (False, True):
+                with self.subTest(line=kind, field=field, null=null):
+                    line = (tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+                            if kind == "assistant" else tool_return("09:01:05", "t1", "x"))
+                    holder = line if field == "message" else line["message"]
+                    key = field.split(".")[-1]
+                    if null:
+                        holder[key] = None
+                    else:
+                        del holder[key]
+                    self.assert_error_names([line], field)
+
+    def test_a_text_block_of_a_result_without_its_text_ends_with_exit_2_naming_the_field(self) -> None:
+        for block in ({"type": "text"}, {"type": "text", "text": None}):
+            with self.subTest(block=block):
+                self.assert_error_names([
+                    tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+                    tool_return("09:01:05", "t1", [{"type": "text", "text": "a"}, block])],
+                    "message.content[0].content[1].text")
 
     def test_the_error_of_a_missing_field_names_the_block_of_the_line(self) -> None:
         # The broken block is the second of its line, on the third line of the file.
@@ -1155,6 +1179,22 @@ class CodexReadsTest(CodexTest):
                     codex_call("09:02:00", "k1", "shell",
                                json.dumps({"command": "cat foundations/decisions.md"})),
                     codex_output("09:02:05", "k1", value)]))
+
+    def test_a_response_item_without_its_payload_ends_with_exit_2_naming_the_field(self) -> None:
+        for null in (False, True):
+            with self.subTest(null=null):
+                record = codex_call("09:02:00", "k1", "shell", "{}")
+                if null:
+                    record["payload"] = None
+                else:
+                    del record["payload"]
+                self.assert_codex_error(self.rollout("orch", [codex_meta("orch"), record]), "payload")
+
+    def test_a_text_block_of_an_output_without_its_text_ends_with_exit_2_naming_the_field(self) -> None:
+        output = [{"type": "input_text", "text": "a"}, {"type": "input_text"}]
+        self.assert_codex_error(self.rollout("orch", [
+            codex_meta("orch"), codex_call("09:02:00", "k1", "shell", "{}"),
+            codex_output("09:02:05", "k1", output)]), "payload.output[1].text")
 
     def test_a_missing_field_of_a_call_or_an_output_ends_with_exit_2_naming_it(self) -> None:
         cases = [
