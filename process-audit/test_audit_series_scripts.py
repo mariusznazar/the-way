@@ -1,7 +1,8 @@
 """Test of the invariant audit-series-script-paths: each path of a script whose history
-`process-audit/audit_count.py` reads, to start a new series of the measures of how a cycle's agents
-use context and the prompt cache or of the gate times, is a file git tracks — the script that counts
-those measures, the script that records the gate times and the test runner of the gate.
+`process-audit/audit_count.py` reads, to start a new series of the cost of cycles, of the measures of how a cycle's
+agents use context and the prompt cache or of the gate times, is a file git tracks — the script
+that measures the cost, the script that counts those measures, the script that records the gate
+times and the test runner of the gate.
 
 The reader, `audit_count.py`, is imported: it is a file of this part. The writing side is the
 repository itself, read through git, never imported.
@@ -33,20 +34,21 @@ class AuditSeriesScriptPaths(unittest.TestCase):
 
     def test_each_path_the_audit_reads_the_history_of_is_a_file_git_tracks(self):
         # invariant: audit-series-script-paths
-        # Break caught: moving or renaming one of the three scripts while the audit keeps the old
+        # Break caught: moving or renaming one of the four scripts while the audit keeps the old
         # path; the history of a path that does not exist is empty, so no change of the script
         # would ever start a new series and the audit would compare measures of two scripts.
-        paths = (audit_count.MEASURES_SCRIPT, audit_count.GATE_SCRIPT,
+        paths = (audit_count.COST_SCRIPT, audit_count.MEASURES_SCRIPT, audit_count.GATE_SCRIPT,
                  audit_count.GATE_TEST_RUNNER)
         for path in paths:
             with self.subTest(path=path):
                 self.assertEqual([path], tracked(path))
 
-    def test_the_paths_are_those_that_start_the_two_series(self):
+    def test_the_paths_are_those_that_start_the_series(self):
         # Break caught: a path added to the audit's series that the test above does not name, so
         # that it would stand unguarded.
-        self.assertEqual({audit_count.GATE_SCRIPT, audit_count.GATE_TEST_RUNNER},
-                         set(audit_count.GATE_SCRIPTS))
+        started = {path for _file, paths in audit_count.TOOL_GROUPS for path in paths}
+        self.assertEqual({audit_count.COST_SCRIPT, audit_count.MEASURES_SCRIPT,
+                          audit_count.GATE_SCRIPT, audit_count.GATE_TEST_RUNNER}, started)
 
     def test_a_path_git_does_not_track_is_listed_as_no_file(self):
         # Break caught: a listing that names a path git does not track, which would let the test
