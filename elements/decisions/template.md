@@ -237,8 +237,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
   double quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The
   quotation holds no `"`, begins at the start of a sentence of the entry's binding sentences — the
   start of them, the start of one of their paragraphs, or the first word after a full stop and a
-  space, the full stop not standing inside a passage between quotation marks, `"…"` or `“…”`, which
-  is no end of a sentence — and holds at least three words; it stands in the binding sentences once every run of
+  space, the full stop not standing inside a passage between quotation marks, `"…"`, `“…”` or `„…”`,
+  which is no end of a sentence — and holds at least three words; it stands in the binding sentences once every run of
   spaces and line breaks is replaced by a single space. The line stands at the test that holds the
   sentence (WAY-02).
 - *Verification* names the tests that hold the sentences of the decision by the clause

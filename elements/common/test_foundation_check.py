@@ -1148,9 +1148,10 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_a_full_stop_inside_a_quoted_string_ends_no_sentence(self):
         # Each entry has a real sentence after a string that holds a full stop and a space, in the
-        # straight or the curly quotation marks; "Next game is ready" follows the full stop inside the string,
-        # and "A save shows" follows the one that ends the first sentence.
-        for opening, closing in (('"', '"'), ("“", "”")):
+        # straight, the curly or the low-and-curly (opening U+201E) quotation marks; "Next game is
+        # ready" follows the full stop inside the string, and "A save shows" follows the one that
+        # ends the first sentence.
+        for opening, closing in (('"', '"'), ("“", "”"), ("„", "”")):
             with self.subTest(marks=opening):
                 decisions = self.edit(
                     DECISIONS, "A game is saved to one file.",
@@ -1601,6 +1602,16 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertTrue(listed[0].startswith(self.LISTED_INVARIANT), listed)
         self.assertIn("*Method*", listed[0])
         self.assertIn("*Part*", listed[0])
+
+    def test_reworded_invariant_lacking_a_field_at_base_is_listed_though_its_citing_file_changed(self):
+        # decision: WAY-344 "Where a script whose purpose is to check the form of a file reads a copy"
+        text = self.edit(INVARIANTS, "- **Method:** test\n", "")
+        touched = FILES["tests/test_saving.py"] + "# touched\n"
+        product = self.reworded(base={"foundations__invariants_dot_md": text},
+                                tests__test_saving_dot_py=touched)
+        listed = self.listed_lines(product)
+        self.assertEqual(len(listed), 1, listed)
+        self.assertIn("*Method*", listed[0])
 
     def test_invariant_lacking_a_field_at_base_whose_sentence_is_unchanged_is_not_listed(self):
         text = self.edit(INVARIANTS, "- **Method:** test\n", "")

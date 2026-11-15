@@ -76,8 +76,8 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   after it; a quotation that stands in no binding sentence of that decision's entry, does not begin
   one of its sentences, or has fewer than three words. A sentence begins at the start of a
   paragraph or after a full stop and a space; a full stop inside a passage between quotation marks,
-  `"…"` or `“…”`, ends no sentence. The binding sentences of an entry are the paragraphs before its
-  first field, where its *Rationale* and *Rejected* stand after the fields.
+  `"…"`, `“…”` or `„…”`, ends no sentence. The binding sentences of an entry are the paragraphs
+  before its first field, where its *Rationale* and *Rejected* stand after the fields.
   Words of the quotation and of the entry are compared with every run of spaces and line breaks
   made one space, so a sentence wrapped over lines matches. A line in a file whose name ends in
   `.md` or in a file git does not track counts for nothing;
@@ -161,7 +161,7 @@ CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decis
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
-QUOTED = re.compile(r"\"[^\"]*\"|\u201c[^\u201d]*\u201d")
+QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
