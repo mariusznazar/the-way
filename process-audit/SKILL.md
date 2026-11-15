@@ -152,8 +152,8 @@ cycle's values of how its agents use context and the prompt cache, and *Gate run
 product's gate with its times; both are read from the cycles' records. *Measure versions* gives
 their medians per version of the process and whether each falls against the version before, series
 by series. Read the newest
-earlier note `audit-<YYYY-MM-DD>.md`, if there is one, only to see which matters the human weighed or
-set aside; say so beside a matter that comes again.
+earlier note `audit-<YYYY-MM-DD>.md`, if there is one, only to see which matters the human weighed,
+decided on a step or set aside; say so beside a matter that comes again.
 
 Take the matters one at a time, in this order, and wait for the human's word on each before the
 next. Show each as the rows of the count quoted word for word with the header row of their table,

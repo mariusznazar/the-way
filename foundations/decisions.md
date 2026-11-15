@@ -1448,7 +1448,9 @@ the human's words nor the material give it; the refinement of a task keeps the r
     that changes a decision, or that follows a loose remark, is written as given, while an answer
     that contradicts a sentence the person said earlier gets one question quoting that sentence; in
     the rounds of a project definition an answer from which a consequence follows draws one
-    question that quotes the person's sentence and asks whether the consequence holds;
+    question that quotes the person's sentence and asks whether the consequence holds, and a
+    decision that is costly to reverse, whose reason neither the person's words nor the material
+    give, draws one question asking the reason;
   - violates: the choice appears only in a separate option panel, a decision question recommends a
     way and names no weak point of it, or names for a shortcut a weak point that leaves out the right
     way; an agent asks a generic challenge unrelated to the person's answer, or an agent asks against
@@ -5533,12 +5535,12 @@ gaps named above and its quotations agreed with the repository.
 
 The refining agent shows the human only the matters that the second agent of WAY-377 leaves truly
 open and the gaps of the document itself, at most about four, the most consequential first, each in
-plain language as WAY-113 asks a decision; the
-full list and the critique stay in a file in the ignored `.runs/` directory of the product, whose
-path the agent gives the human. Before it shows a matter, and before it keeps a guess from the human
-on the critique's verdict that the repository or the task document already settles it or that it is
-most likely right, it checks the quotations behind that verdict and gives the matter one explicit
-verdict (WAY-120), and where no matter is open it says nothing of the step.
+plain language as WAY-113 asks a decision; the full list and the critique stay in a file in the
+ignored `.runs/` directory of the product, whose path the agent gives the human. Before it shows a
+matter, and before it keeps a guess from the human on the critique's verdict that the repository or
+the task document already settles it or that it is most likely right, it checks the quotations
+behind that verdict and gives the matter one explicit verdict (WAY-120), and where no matter is open
+it says nothing of the step.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -8216,15 +8218,14 @@ over WAY-114, under which a question goes to the human only where the agent has 
 - **Relations:** derives from WAY-113 · narrows WAY-114
 - **Verification:** an agent compares the conversation with the decision:
   - complies: the styleguide skill shows "the button that saves stands out, and the one that deletes
-    is red with white text on it", as a question of decision (WAY-113); it asks
-    whether to adopt WCAG though it recommends adopting it, after saying in plain words what
-    contrast is; the coding-guidelines skill shows "a change that adds a library with a known
-    security hole does not get in" as a question of decision, asks
-    whether to adopt the formatter it recommends, and shows a linter's set as "this many rules will
-    block a change, and these few flagged sound code here and stay as examples", and the human
-    adopts the set with that split; the testing-guidelines skill shows "the tests of the account
-    server talk to a real database, so a broken query turns them red, at the price of a slower run",
-    after saying in plain words what an integration test is;
+    is red with white text on it", as a question of decision (WAY-113); it asks whether to adopt
+    WCAG though it recommends adopting it, after saying in plain words what contrast is; the
+    coding-guidelines skill shows "a change that adds a library with a known security hole does not
+    get in" as a question of decision, asks whether to adopt the formatter it recommends, and shows
+    a linter's set as "this many rules will block a change, and these few flagged sound code here
+    and stay as examples", and the human adopts the set with that split; the testing-guidelines
+    skill shows "the tests of the account server talk to a real database, so a broken query turns
+    them red, at the price of a slower run", after saying in plain words what an integration test is;
   - violates: the skill asks the human to choose between two hexadecimal values of a design token,
     or between two names of a linter's rules; it writes into the task a role or a linter it
     recommends without asking; it speaks of focus rings before saying what focus is; it asks rule by

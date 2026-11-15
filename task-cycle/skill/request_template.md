@@ -421,8 +421,8 @@ The fifth part, for an item about a check the human can do by hand, stands after
    agent could not start the product here. If saving fails, whoever edits a profile loses the change
    on the first day. Running the check in this request costs a session with a product that starts
    and a round of review; undoing it, nothing. Making a task of it leaves the page unchecked until
-   someone opens it; undoing it, nothing. Letting it through accepts that risk; undoing it, nothing.
-   I recommend running it in this request, since the page is the one thing the change added. Its
+   someone opens it; undoing it, nothing. Letting it through accepts that risk; undoing it, a
+   correction after someone has lost a change. I recommend running it in this request, since the page is the one thing the change added. Its
    weak point: the agent could not start the product here, so the session may fail the same way and
    cost a round for nothing. Run it in this request, make a task of it, or let it through?
    The steps of the check by hand, whose result you write down as a remark:
