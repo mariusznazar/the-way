@@ -13,9 +13,9 @@ that write example paths in order to find or to test them.
 The script reads each other file git tracks that the working tree still has and lists, as
 `private_paths_check.py` does and in its format, every absolute path in it, and every note link in
 a Markdown file, a file whose name ends in `.md`, `.markdown`, `.mdx` or `.mdc` in any letter case:
-in code, `[[a, b]]` is a list inside a list and `[[ -f x ]]` a test of the shell. The rules for what a path and a link are
-stand in `private_paths_check.py` (WAY-309). A file that is binary is not read and is counted on
-the last line, as there.
+in code, `[[a, b]]` is a list inside a list and `[[ -f x ]]` a test of the shell. The rules for what
+a path and a link are stand in `private_paths_check.py` (WAY-309). A file that is binary is not read
+and is counted on the last line, as there.
 
 Exit code: 0 when nothing is listed; 1 with the hits listed; 2 with `Error: <message>` on stderr
 when the argument is missing, the directory lies in no git repository, the invariants file or the
