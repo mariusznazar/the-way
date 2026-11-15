@@ -173,7 +173,7 @@ A field stays in this template only while someone or something reads it (WAY-05)
 | Field | Who reads it, when |
 |---|---|
 | identifier (heading) | a test citing the invariant; `elements/common/foundation_check.py`, which finds every citation and link naming it |
-| sentence | the agent making or reviewing a change the invariant reaches; `foundation_check.py`, which lists an invariant that reads `test` whose sentence a change reworded while no file citing it changed (WAY-03), and, naming the field and whether or not a file citing it changed, one that reads `test` whose reworded sentence's copy at the base lacks *Method* or *Part* (WAY-344) |
+| sentence | the agent making or reviewing a change the invariant reaches; `foundation_check.py`, which lists an invariant that reads `test` whose sentence a change reworded while no file citing it changed (WAY-03), and, whether or not a file citing it changed, one that reads `test` whose sentence a change reworded and whose copy at the base lacks *Method* or *Part*, the line naming the invariant and the field (WAY-344) |
 | Method | the agent making a change the invariant reaches, which runs its test or keeps to its sentence; the agent reviewing that change; `foundation_check.py`, which reports a `test` that no test cites |
 | Rests on | the author of a change to a fact it names, through the search of the foundation; `foundation_check.py` |
 | Derives from | the author of a change to a decision it names, through the search of the foundation; the human weighing a change to a recovered invariant or to one taken from a source outside the log; `foundation_check.py`, which reports a decision number the log does not hold, outside a quoted source |

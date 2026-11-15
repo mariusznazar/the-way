@@ -1223,7 +1223,8 @@ the merge of the change that holds it, where the section of the request's descri
 human's decisions gives one plain sentence of its meaning with no identifier, repeated in the
 human's language in the description's collapsed block, while the full list of the change's entries,
 each by its identifier with one English sentence of its meaning, stands in the description's lower
-part. Before that, a question goes to the human only where the agent has no recommendation or the
+part, and an entry that is marked as the cycle's because of a pair of examples its writer added has
+that pair there word for word under it. Before that, a question goes to the human only where the agent has no recommendation or the
 entry would change the meaning of an approved decision; a translation never enters the foundation.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
@@ -1236,12 +1237,14 @@ entry would change the meaning of an approved decision; a translation never ente
     the meaning of each entry the cycle wrote with no row or projected entry carrying it — from the
     spec, a correction the search of the foundation made, the part of a projected entry — repeated
     in Polish in the collapsed block, while every entry, those from rows and projected ones
-    included, stands by its identifier in English in the lower part; the human reads that section
-    and merges;
+    included, stands by its identifier in English in the lower part, and an entry that gained a
+    pair of examples the row did not give has the pair there word for word; the human reads that
+    section and merges;
   - violates: an agent asks the human to confirm a choice it already recommends; a translation is
     written into the foundation; an entry changes the meaning of an approved decision without a
     question; an entry written from the spec stands only in the lower part; the section for the
-    human's decisions lists the entries written from accepted rows.
+    human's decisions lists the entries written from accepted rows; an entry marked as the cycle's
+    for an added pair of examples reaches the merge with the pair not shown.
 - **Origin:** none
 
 *Rationale:* the human judges what an entry settles, and its wording rarely changes that. A row is
@@ -1252,7 +1255,9 @@ whose wording drifts from its row reaches the merge unseen by the human, and the
 change, which reads the entry against the row, is what catches it (WAY-134, WAY-10).
 *Rejected:* acceptance of the whole wording before an entry is written — attention goes to wording
 while the meaning rarely moves, and each acceptance costs a round; storing a translation in the
-foundation — two binding wordings could drift apart; every entry of the change at the top of the
+foundation — two binding wordings could drift apart; the sentence of meaning alone for an entry
+that gained a pair of examples — the examples are what agents measure every later change by, and a
+sentence of meaning does not show them; every entry of the change at the top of the
 request with its sentence in Polish, as before — a wall of text the human does not read; the full
 list in the lower part and nothing about the entries at the top — the entries the cycle adds enter
 without the human's knowledge; at the top also an entry from a row whose wording the cycle wrote,

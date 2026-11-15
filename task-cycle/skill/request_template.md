@@ -298,7 +298,12 @@ the order of their kinds.
   or by the return step, corrections the search of the whole foundation made, the part of a
   projected entry the code makes true, and a precedence between two decisions the cycle recorded,
   which gives beside its sentence the passages of what the human accepted that give the outcome,
-  quoted from the report of the step that wrote it (WAY-25). Entries written whole from rows of
+  quoted from the report of the step that wrote it (WAY-25). An entry marked `the cycle's` because
+  of a pair of examples that its writer added — a *complies* and a *violates* the row or the
+  projected entry does not give, which agents will compare later changes with — says so in its
+  sentence here, and the pair stands word for word under the entry in *Foundation entries*, as
+  that item gives it; a pair kept only until a test of the same change holds the sentence, and a
+  link in *Relations*, make no such mark. Entries written whole from rows of
   *Settlements to record*, and projected entries written whole as approved, are not here; they stand
   under *Foundation entries*. Also here: a guidelines rule with no decision that the cycle found
   itself, named as a rule whose *Decision* reads `none`, with one plain sentence of what it asks for;
@@ -491,7 +496,9 @@ repository's root; each directory of an earlier task that the script of step 4 o
 standing, with its name, its branch and its reason, and no absolute path.
 
 **Foundation entries.** Each foundation entry the change writes or changes, by its identifier and
-one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; each topical
+one English sentence of its meaning, marked `row <n>`, `projected` or `the cycle's`; under an entry
+marked `the cycle's` because of an added pair of examples, the pair word for word, the *complies*
+and the *violates* sentence each as the entry holds it (WAY-12, WAY-114); each topical
 section of the decision log that the change opens, with its heading and its one sentence (WAY-18);
 each kept row tied to an entry already stated, with that entry (WAY-134); each invariant test the
 change alters (WAY-03), each surface it alters and each *Violated* mark it sets or clears (WAY-51).

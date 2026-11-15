@@ -14,9 +14,10 @@ another change.
 `decision:` of the tests and the part of each file of the foundation of the-way; it reports the
 decisions that nothing holds and lists the invariants that read `test` whose sentence a change
 rewords while no file citing them changes, both against the commit the branch left the main branch
-from; an invariant whose sentence a change rewords and whose copy at that commit lacks *Method* or
-*Part* it lists too, naming the field, whether or not a file citing it changes. The script
-`elements/common/migrate_foundation.py` brings a foundation of the earlier form to the current one.
+from; an invariant that reads `test` whose sentence a change rewords and whose copy at that commit
+lacks *Method* or *Part* it lists too, naming the field, whether or not a file citing it changes.
+The script `elements/common/migrate_foundation.py` brings a foundation of the earlier form to the
+current one.
 
 ## Start a change
 

@@ -31,7 +31,8 @@ in English and one in the task document's language, and marks the entry `row <n>
 writer adds that its row or projected entry does not give — a pair of examples, a field the
 projected entry left `TODO` — makes the entry `the cycle's`, save a pair kept only until a test of
 the same change holds the sentence, and a link written into its *Relations* does not; the request
-puts each entry so marked before the human (WAY-114). A question for the human arises only where
+puts each entry so marked before the human (WAY-114), and the writer keeps in its report the added
+pair word for word for the description to quote under the entry. A question for the human arises only where
 the writer has no recommendation, an entry would change the meaning of an approved decision beyond
 what the accepted task document or plan carries (WAY-30), a row's meaning cannot hold — the code
 shows an exception the row does not allow, or the row collides with a current entry other than as
