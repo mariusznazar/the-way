@@ -147,12 +147,8 @@ class FrontmatterErrors(unittest.TestCase):
          "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
         ("byte order mark", "﻿---\nname: alpha\ndescription: Use for alpha.\n---\n",
          "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
-        ("no name", "---\ndescription: Use for alpha.\n---\n",
-         "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n"),
         ("empty name", "---\nname:\ndescription: Use for alpha.\n---\n",
          "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n"),
-        ("no description", "---\nname: alpha\n---\n",
-         "Error: a/SKILL.md: frontmatter has no 'description:' with a value\n"),
         ("folded description", "---\nname: alpha\ndescription: >\n  Use for alpha.\n---\n",
          "Error: a/SKILL.md: description is not on one line\n"),
         ("name off the form", "---\nname: Record_Decision\ndescription: Use for it.\n---\n",
@@ -196,6 +192,30 @@ class FrontmatterErrors(unittest.TestCase):
         before = repository.files()
         self.assertEqual(repository.run("--write"), (
             1, "", "Error: name 'record-decision' is held by both a/SKILL.md and b/SKILL.md\n"))
+        self.assertEqual(repository.files(), before)
+
+
+class MissingField(unittest.TestCase):
+    def test_a_skill_without_name_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\ndescription: Use for alpha.\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(repository.files(), before)
+
+    def test_a_skill_without_description_stops_with_exit_2_naming_the_field(self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        repository = Repository(self)
+        repository.write("a/SKILL.md", "---\nname: alpha\n---\n")
+        repository.write("b/SKILL.md", DECISION)
+        before = repository.files()
+        self.assertEqual(repository.run("--write"), (
+            2, "", "Error: a/SKILL.md: the frontmatter has no line `description:`\n"))
         self.assertEqual(repository.files(), before)
 
 
