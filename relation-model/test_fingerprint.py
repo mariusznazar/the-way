@@ -120,7 +120,7 @@ class Fingerprint(unittest.TestCase):
         that reads the input waits for it, so the process is killed at the timeout and the test
         fails."""
         # invariant: shared-module-import-runs-nothing
-        code = "import sys; sys.path.insert(0, sys.argv[1]); import fingerprint"
+        code = "import sys; here = sys.argv[1]; sys.path.insert(0, here); import fingerprint"
         with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
             process = subprocess.Popen([sys.executable, "-I", "-B", "-c", code, HERE],
                                        stdin=subprocess.PIPE, stdout=output, stderr=errors)

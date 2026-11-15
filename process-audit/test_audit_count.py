@@ -189,10 +189,20 @@ class AuditCountCase(unittest.TestCase):
             data.setdefault(key, {})["repository"] = str(repository.root)
         return data
 
-    def run_count(self, *arguments, locations=True, timeout=None, env=None, script=SCRIPT):
+    def run_count(self, *arguments, locations=True, timeout=None, env=None):
         """The command run as a process. `timeout` is no limit unless a test passes one, since
         only a test that asks whether the count stalls has the limit as its oracle."""
-        command = [sys.executable, "-B", str(script)]
+        command = [sys.executable, "-B", str(SCRIPT)]
+        return self.run_command(command, arguments, locations, timeout, env)
+
+    def run_count_of_the_copy(self, *arguments):
+        """The command as the copy of it that the test of the checkout `checkout` builds, run as a
+        process."""
+        command = [sys.executable, "-B", str(self.home / "repos" / "checkout" / "process-audit"
+                                             / "audit_count.py")]
+        return self.run_command(command, arguments, True, None, None)
+
+    def run_command(self, command, arguments, locations, timeout, env):
         if locations:
             command += ["--locations", str(self.locations)]
         try:
@@ -3203,8 +3213,7 @@ class Run(AuditCountCase):
             (checkout.root / name).write_bytes(files[name])
         checkout.cycle("a-task", {"cycle.md": record()}, base_files=files)
         self.write_locations(self.places())
-        done = self.run_count("--repository", "the-way",
-                              script=checkout.root / "process-audit" / "audit_count.py")
+        done = self.run_count_of_the_copy("--repository", "the-way")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["the-way", "1", "yes"]], self.rows("Repositories"))
 
