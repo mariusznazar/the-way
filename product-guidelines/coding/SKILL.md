@@ -125,10 +125,10 @@ coding guidelines, or coding guidelines refreshed or extended — read
 `kinds.md` beside this skill, and then `product-guidelines/audit_end.md`, which ends the audit. In
 that audit, where the task carries the testing guidelines too (WAY-247), read also
 `product-guidelines/testing/recognize.md`, that skill's step 1, for the mode it gives alone, before
-the audit ends: `audit_end.md` says what it decides (WAY-265). Where step 1 gave the mode of one
-kind whose files the product already has, and not the trial run and the audit, read the template in
-full unless an earlier step did, and `kinds.md` alone, for that kind; there is no trial run on that
-route, and that comparison, being no audit, has no such end.
+the audit ends: `product-guidelines/audit_end.md` says what it decides (WAY-265). Where step 1 gave
+the mode of one kind whose files the product already has, and not the trial run and the audit, read
+the template in full unless an earlier step did, and `kinds.md` alone, for that kind; there is no
+trial run on that route, and that comparison, being no audit, has no such end.
 
 - **A new kind.** Where the task creates the first file of a kind of code, that file is the kind's
   exemplar, and its file of guidelines comes into being with it: step 4 settles

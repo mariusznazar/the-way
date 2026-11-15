@@ -17,8 +17,8 @@ sees a reason to change the decision it opens the choice and shows the option th
 the others, and the human's choice is the consent to the change (WAY-313, WAY-314, WAY-315). The
 human weighs consequences for the product, not technologies
 (WAY-123). The form and rules of the Technology section — which choices it lists, its markers, the
-weighing and the tests of options — stand in `definition_template.md`, and the section's form in a
-task document in `project-level/task/template.md`; how a skill asks stands in
+weighing and the tests of options — stand in `project-level/definition_template.md`, and the
+section's form in a task document in `project-level/task/template.md`; how a skill asks stands in
 `elements/common/way_of_working.md`; the critique stands in `elements/common/critique/SKILL.md`;
 this skill holds the order of the work and the rules that hold across it, and a file beside it
 holds the work of each step.

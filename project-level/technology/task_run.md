@@ -95,7 +95,8 @@ In place of sub-step 7 of `settle.md`, with no `record-decision`:
 
 The step writes no row of *Settlements to record*: step 5 of `refine-task` takes the settled
 question as a candidate that repeats the human's choice among the options shown, so the row enters
-the table accepted and marked, and the human strikes it or leaves it (`find_settlements.md`).
+the table accepted and marked, and the human strikes it or leaves it
+(`project-level/task/skill/find_settlements.md`).
 
 ## Close
 

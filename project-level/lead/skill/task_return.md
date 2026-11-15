@@ -18,5 +18,5 @@ word, in this order:
 
 Left in place, the trace shows as a conflict on a `to refine` row, and on a `ready for cycle` row
 as a false proposal that the new cycle has started. Should a removal fail, the reader
-(`plan_state.py`) reports the conflict, which goes to the human as `SKILL.md` step 1 gives for a
-conflicting trace. The new cycle keeps the task's name on a new branch.
+(`project-level/plan_state.py`) reports the conflict, which goes to the human as `SKILL.md` step 1
+gives for a conflicting trace. The new cycle keeps the task's name on a new branch.

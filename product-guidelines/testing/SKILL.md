@@ -109,11 +109,11 @@ At step 3, where the product has tests and step 1 gave the audit — tests and n
 or guidelines refreshed or extended — read `audit.md` beside this skill and then
 `product-guidelines/audit_end.md`, which ends the audit. In that audit, where the task carries the
 coding guidelines too (WAY-247), read also `product-guidelines/coding/recognize.md`, that skill's
-step 1, for the mode it gives alone, before the audit ends: `audit_end.md` says what it decides
-(WAY-265). Where the task's required outcome is itself the first test of a level whose recipe
-already stands with an empty *Exemplar*, read `new_level.md` beside this skill; a new level is no
-audit and has no such end. For either, read `product-guidelines/testing/template.md` in full unless
-step 2 did (WAY-256). Otherwise there is no step 3.
+step 1, for the mode it gives alone, before the audit ends: `product-guidelines/audit_end.md` says
+what it decides (WAY-265). Where the task's required outcome is itself the first test of a level
+whose recipe already stands with an empty *Exemplar*, read `new_level.md` beside this skill; a new
+level is no audit and has no such end. For either, read `product-guidelines/testing/template.md` in
+full unless step 2 did (WAY-256). Otherwise there is no step 3.
 
 ## 4. Settle with the human
 
