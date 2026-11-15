@@ -59,5 +59,7 @@ Follow [`find_settlements.md`](find_settlements.md) to identify and route candid
 ## 6. Review and hand off
 
 Follow [`final_review.md`](final_review.md) to check the complete task, obtain its final human
-acceptance and hand it off. For a newly reached part, unresolved guideline classification or
+acceptance and hand it off. Beside the check of the complete document, it lists the decisions the
+document leaves to the executor where *Decisions in play* is not `none` or the task changes a skill
+or an instruction file (WAY-377, WAY-378). For a newly reached part, unresolved guideline classification or
 missing-discipline question, also follow `guideline_findings.md`.

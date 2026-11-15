@@ -22,6 +22,16 @@ to guess or overwrite another task.
   package, candidates and the WAY-113 questions it requires, which at refinement are those for an
   answer that contradicts a sentence the human said earlier, quoted; you approve nothing on its
   behalf.
+- The step that lists the decisions the document leaves to the executor (`final_review.md`,
+  WAY-377, WAY-378) is run by the project orchestrator, and you start no agent for it. Write it as
+  one *Child-work request* in your turn, never as a question: it names the list and then the
+  critique, in that order, the path of this task document and the file
+  `.runs/decisions-list/<task-name>.md` of the product, `<task-name>` being the one of your
+  conversation file. The project orchestrator writes the *List* and the *Critique* of that file from
+  what its two agents return, and ends your turn with `questions`. In the turn resumed once the file
+  holds them, check the critique's quotations as `final_review.md` gives and write the *Verdicts*,
+  then put the matters for the human into your turn as human material with the path of the file.
+  Where the step is skipped by its condition, request nothing and say nothing of it.
 - A run of the step that settles technology (WAY-267), whether `refine-task` starts it for a
   reserved choice or the human asked for it, is led through this file by
   `project-level/technology/task_run.md`.
