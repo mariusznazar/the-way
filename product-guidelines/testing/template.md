@@ -272,5 +272,6 @@ For the author who writes the testing guidelines in a task's cycle:
   that binds from the task's settlements and from the decisions the task's foundation step wrote,
   never from memory (WAY-172).
 - Point to the configuration and to the tests; copy no value into the guidelines.
-- A choice the task did not settle is a question that stops the cycle at a blocked draft request,
-  never a rule, a row or a field (WAY-172).
+- A choice the task did not settle that carries a real cost is a question that stops the cycle at a
+  blocked draft request, never a rule, a row or a field; a rule that only says how to write tests is
+  the cycle's own, which the human accepts at the merge (WAY-172).

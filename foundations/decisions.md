@@ -1829,7 +1829,9 @@ A condition deciding an invariant stands in its sentence, or where changing it t
 change a human decides, or where a decision in the product's log or the pinned the-way places it.
 An invariant whose condition stands outside its sentence names by identifier the entry or the
 decision that holds the condition, in a field where the template gives one and otherwise in its
-sentence.
+sentence. An identifier of a decision written into the sentence because that decision holds the
+condition is a part of the condition, not a link that WAY-17 requires; where such a link is due, it
+stands beside the sentence, in its own field.
 
 An invariant's sentence names no branch, measures any change it speaks of against `{fork-point}`
 (WAY-61), while a state it compares may be the one on `{merge-onto}`, and states what is to hold on
@@ -1842,18 +1844,24 @@ quantity measured while the product runs names its bound or tolerance, statistic
 - **Verification:** an agent compares the change with the decision:
   - complies: "every entry of the log has every field of the template"; an invariant whose
     condition a decision of the pinned the-way holds names that decision's number in its sentence,
-    its template giving no field for it;
+    its template giving no field for it, and, where a link to that decision is due, names it also in
+    *Derives from*;
   - violates: "every request is answered within the limit set in `config.py`"; an invariant whose
     condition stands in a decision and which names that decision nowhere; "every fingerprint
     on `main` equals the current fingerprint of the decision it names"; "a commit that changes
     `template.md` also appends a decision version to the log"; a bound written "~2 seconds"; a
-    sentence measuring a change against `{merge-onto}`.
+    sentence measuring a change against `{merge-onto}`; an invariant whose entry has the link WAY-17
+    requires only as the identifier in its sentence, with no field of its own for it.
 - **Origin:** none
 
 *Rationale:* a condition outside the sentence moves while the sentence stays, so it stands only
 where moving it takes a decision, and the invariant names that place so that whoever changes it finds
 the invariant; a branch names another commit by the hour; a change is measured from the fork point,
-where the work on it began; a measured bound needs its statistic and population.
+where the work on it began; a measured bound needs its statistic and population. An identifier
+in the sentence says where the condition lies, as a number in a quoted sentence does, and the links
+of an entry stand beside its sentence in their own fields (WAY-17); the two are different things
+even where one decision stands in both places, so a reader who finds the same number in the sentence
+and in *Derives from* finds no collision.
 *Rejected:* every condition in the sentence — two answers where a measure meets a definition or a
 method; a closed list of places — it leaves out places a log uses; every place outside the
 foundation forbidden — WAY-38 and WAY-53 place conditions in the product; an invariant kept aside
@@ -1861,7 +1869,12 @@ until its condition has a home — nothing counts it (WAY-51); a commit's parent
 spreads one change over several commits; the template's own text left as it stood, without the
 naming in the decision — the set of links WAY-17 gives stops being complete, and the case of a
 decision of the pinned the-way stays impossible to write; the obligation to name the place removed
-— invariants that go quietly stale when the decision holding their condition changes.
+— invariants that go quietly stale when the decision holding their condition changes; the clause
+resting on a decision outside the product's log not being an entry of it — it does not cover an
+invariant of the-way whose decisions stand in its own log; the clause in the rule of the withdrawn
+decision on how much an invariant entry holds — it narrows an approved decision's reach; no clause —
+a reader who meets the rule of the template first may reject the correct form, and the round of
+correction falls on the task of another change.
 
 ### WAY-61 — How is an invariant's method of checking written?
 
@@ -1873,7 +1886,7 @@ test checks what its invariant's sentence is about, as it stands on the commit b
 test fed input made up for it is the method of a sentence about the check it exercises, never of one
 about the data that check reads.
 
-- **Scope:** invariants, gate, decisions, part-map, elements-common
+- **Scope:** invariants, gate, decisions, part-map, elements-common, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-08 · derives from WAY-16 ·
   derives from WAY-54 · derives from WAY-07 · derives from WAY-38 ·
@@ -2796,8 +2809,9 @@ page and was not waited for.
 author's focused checks give, and the orchestrator owns that run. The command and its exit code
 tell the human what passed; the checks that failed or did not run, named, keep what stayed
 unchecked in view. A gate run after every slice repeats for each slice a run the finished change
-needs once and holds the next slice until it ends, while the focused checks of the code and
-invariants a slice reaches find what it breaks there. The return step compares the foundation with
+needs once and holds the next slice until it ends, while the focused checks of the code a slice
+reaches and of the invariants its change may make false find what it breaks there. The return
+step compares the foundation with
 the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
 tree it and its review leave covers the finished change, where a run before it would be made again
 on the tree it changes; the merge with the target branch is the one change to the tree that can
@@ -2840,7 +2854,10 @@ a table of tokens by model, for one that has neither of its two time lines, and 
 detailed section has no column *Files named*, and which gives the values that need that field as
 unknown, with no line `Error:` and no change of the exit code; a file of a tool that the cycle's own
 change changed is not read for that cycle (WAY-339), so none of its fields is missing and it gives
-no line `Error:`. Each reading of a file that the rule covers has one test that gives the file
+no line `Error:`. Where a script whose purpose is to check the form of a file reads a copy of the
+file from the commit the branch left the main branch from, a field missing from that copy is listed
+by a line `listed:` that names the entry and the field, with no error and no change of the exit
+code. Each reading of a file that the rule covers has one test that gives the file
 without one of the fields it needs and asserts the failure that names that field, the review of the
 change answering for the other fields; the *Scope* names every part of the-way's part map, and a
 change that adds a part to the part map adds it to this *Scope*. The command that counts the audit,
@@ -2873,15 +2890,20 @@ and that command takes the checkout in which its script lies.
   write columns and not the other as a missing field; that a table of weights or of the costs of an
   occurrence which lacks a level gives the result, unknown values and the line `Error:` that names
   the level; that a locations file with no entry `repository` under `the-way` gives the checkout in
-  which the script lies and no line `Error:`; and that the file of a tool the cycle's own change
-  changed is not read. An agent compares a change with the part no test holds:
+  which the script lies and no line `Error:`; that the check of the foundation lists an invariant
+  whose sentence the change reworded and whose copy at the commit the branch left lacks its *Method*
+  or its *Part* by one line `listed:` that names the invariant and the missing field, with no error
+  and no change of the exit code; and that the file of a tool the cycle's own change changed is not
+  read. An agent compares a change with the part no test holds:
   - complies: a new script reads a JSON file in which the key `due` of the issues has become
     `due_date`, and ends with exit code 2 and a message naming the file and `issues.due`, and its
     test gives the file without that key and asserts that the message names it; a change that
     reworks how a script reads the section headings of a report brings every field of that report
     under the check, adds one test that gives the report without one heading, and leaves the
     script's reading of other files as it was; a script whose purpose is to check the form of a file
-    lists an absent section it checks as a problem with exit code 1; a change that adds a part to
+    lists an absent section it checks as a problem with exit code 1; the same script, reading a
+    copy of the file at the commit the branch left, lists an absent section of that copy on a line
+    `listed:` and keeps its exit code; a change that adds a part to
     the part map adds its identifier to the *Scope* of this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
@@ -2889,8 +2911,9 @@ and that command takes the checkout in which its script lies.
     with exit code 2 at an absent section whose presence it checks; a change that reworks the
     reading of a file checks the field it added and leaves the other fields of that file unchecked;
     a new script's reading of a file, or a changed script's reworked reading of a file, has no test
-    that gives the file without a field; a change that adds a part to the part map leaves this
-    *Scope* as it was.
+    that gives the file without a field; a script that checks the form of a file ends with an error
+    at a field missing from the copy at the commit the branch left, or passes over it without a
+    word; a change that adds a part to the part map leaves this *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
@@ -2930,7 +2953,10 @@ written for that entry alone, since a rule that let a script read any field that
 optional would let the next author call any field optional. A stage report with neither column of
 the cache writes was written before the columns existed, and its cost is the approximation it has
 always been, so the count reads it as that; a report with one of the two columns has lost the other,
-which is the case the rule is for.
+which is the case the rule is for. A copy of a file at the commit the branch left is a file no
+change can mend, and what it lacks is a gap in what the check compares with, never a fault of the
+change; the check lists it, so that the reviewer learns that a reworded sentence was not compared,
+and ends with no error for a gap the change did not make.
 *Rejected:* the rule as a sentence of WAY-379 — WAY-379 settles whether the-way applies the template
 of the coding discipline, and this rule is a requirement, not an adoption or a departure; an agent
 that writes a script would look for rules in WAY-38 and the invariants `script-language`,
@@ -2964,7 +2990,11 @@ intended return to the own checkout is gone; for the same entry, a general excep
 whose absence the description of a script allows with a default — a door by which the next author
 can call any field optional; for a generator of copies that shares its exit codes with another
 script, an exception written into this decision — the list of exceptions grows by a case with no
-reason beyond convenience, and the next script can copy it.
+reason beyond convenience, and the next script can copy it; for a field missing from the copy at the
+commit the branch left, an exception that leaves the invariant out with no word — a reworded
+sentence whose copy has a gap passes with no one told that it was not compared; the same case left
+as the cycle that wrote the check left it, with no sentence — the code departs from this decision
+and the departure returns at the next review.
 
 ## Instruction files
 
@@ -4314,7 +4344,9 @@ answering nothing for the item on that; where nothing answers the item on how to
 goes as the other items of the list do, and where nothing answers the item on the record's life or
 on a failure, the check asks the human whether to run the step that settles technology at the task
 (WAY-267), with a note on what the skill leaves unsaid, instead of filling the item in, and a skill
-that records the human's refusal covers the item, so the question does not return.
+that records the human's refusal covers the item, so the question does not return; each item of the
+To do that writes into the skill the answer to one of these three, or the record of the human's
+refusal, points to the guide too.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -4337,7 +4369,9 @@ that records the human's refusal covers the item, so the question does not retur
     covers the item at every later deployment; a task that changes the text of a page is refined
     without the check; the item that a check adds for a missing deployment skill points to the guide,
     and the agent that writes the skill reads the guide, with its parts of loop2 marked as that
-    product's own, while the refinement of a task that deploys nothing does not read it;
+    product's own, while the refinement of a task that deploys nothing does not read it; the item
+    that writes into the skill the answer a decision gives for how a human learns of a failure, or
+    the record of the human's refusal to settle it, points to the guide as well;
   - violates: the-way carries a deployment skill for one kind of host; the check fills in how a
     human learns of a failure with no choice of the human's and no entry that answers it; the check
     quotes a logs decision silent on how an agent reads the logs as the answer to the item on
@@ -4345,8 +4379,10 @@ that records the human's refusal covers the item, so the question does not retur
     question returns at each later deployment after a refusal recorded in the skill; a task that changes where
     the product runs reaches its cycle with a deployment skill that does not say where the secrets
     lie, and with no item or task for it; the list stands only in a template, and the decision
-    points to it; the guide stands as a skill that a product applies as it is, or as a condition
-    that a skill must meet to cover an item; the refinement of every task reads the guide; the guide
+    points to it; an item that writes into the skill the answer for how to read the logs, how long
+    the record lives or how a human learns of a failure names no guide; the guide stands as a skill
+    that a product applies as it is, or as a condition that a skill must meet to cover an item; the
+    refinement of every task reads the guide; the guide
     carries the public address of the product it shows, or the address of its sender's mailbox in
     its maker's domain.
 - **Origin:** none
@@ -4376,8 +4412,15 @@ reads the guide, so the refinement of every other task reads nothing more, and s
 nothing, the list and the check stay what decides whether an item is covered. The price is that the
 guide shows the product's skill as it stood at one commit and ages as that skill changes, and that
 it shows no real address, since the repository is public; fragments of one commit with a link to it
-need no change until someone chooses to show a newer one.
-*Rejected:* the skill saying how a human reads the logs and the decision how an agent reads them —
+need no change until someone chooses to show a newer one. The guide has a part for each of the three
+items the check handles apart, so the item of the To do that writes into the skill the answer to one
+of them points to the guide as well: an agent that is given only that item, with no pointer, reads
+the one skill that exists as its pattern and separates the general from the particular alone. The
+price is one more place that names the guide.
+*Rejected:* the pointer on the item that adds a missing deployment skill alone, the items that write
+the answer to one of the three left without one — the agent that completes a skill for one of them
+may not find the guide; the skill saying how a human reads the logs and the decision how an agent
+reads them —
 two answers that are usually the same and can drift apart; the item on how to read the logs left as
 it was — the drift shows only when an agent meets two different instructions; a deployment skill
 carried by the-way — what to run and where differs for every
@@ -5902,9 +5945,11 @@ The executor of a slice, and the one author of a change without a plan, work on 
 set for them, named in general terms and never by the name of a model: by default a class cheaper
 than the orchestrator's, for code that carries settled matters into the product, ordinary
 implementation that takes decisions of its own included; the orchestrator's class, for a change
-across many parts; or the strongest class available, which is the strongest that the cycle's
-session lets its agents use, for one that needs design — each class other than the default with one
-sentence of its reason. The planner sets each slice's class in the plan; the orchestrator sets the
+across many parts; or the strongest class available, which is the strongest of the models that the
+session's settings allow, which the orchestrator takes from the list of allowed models (the setting
+`availableModels`) and never from the name of the strongest model of the family, for one that needs
+design — each class other than the default with one sentence of its reason. The planner sets each
+slice's class in the plan; the orchestrator sets the
 one author's when it selects that route (WAY-136), by the same measure, and records it with its
 reason. The one author writes its foundation entries, takes its return step and fixes its findings
 on its own class.
@@ -5946,13 +5991,15 @@ step work on the strongest class available.
     base, by one of the orchestrator's class given its report and the failure; the fix of a reviewed
     slice's finding runs on the class of the executor whose work stands; the review of the whole
     change and the review of the return step run on the strongest class available, whatever the
-    class of the orchestrator;
+    class of the orchestrator, the orchestrator taking it from the models the session's settings
+    allow;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
     executor of the strongest class available gets a retry; a review or the spec runs on a class
     cheaper than the orchestrator's; the review of the whole change or of the return step runs on a
-    class below the strongest available; the one author works on the orchestrator's model with no
-    class recorded.
+    class below the strongest available; a review is asked for on the strongest model of the family
+    while the session's settings keep that model out; the one author works on the orchestrator's
+    model with no class recorded.
 - **Origin:** none
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
@@ -5980,7 +6027,10 @@ on the strongest class available. That costs more, the price taken: fewer fixes 
 counted to repay part of it, and the audit of the process shows what it costs (WAY-337, WAY-339).
 What is available is the human's choice when a session starts, never a sentence of this log: a cycle
 started with every model allowed takes the strongest it has, the review included, and a session that
-leaves a model out takes the strongest of the rest, so the log names no model and no setting.
+leaves a model out takes the strongest of the rest, read from the list the settings give. A request
+for a model outside that list gets the session's own model, so a review asked for on the strongest
+model of the family runs on a cheaper one where the session keeps that model out; the log names no
+model.
 Classes in general terms survive the release of new models and fit any harness. The decision takes
 from the skills of Open Mercato for planning and dispatching an executor a class of model for each
 step of the work and one retry a class higher before the stop (WAY-100).
@@ -6006,7 +6056,8 @@ review lets a flaw through in about half the runs of the measurement, and the pr
 rationale counts on then depends on the model of the session that leads the cycle; a bound written
 in general terms with no criterion that tells the classes apart without a name — an agent reads a
 general word as it pleases; the strongest class of the family the cycle runs on — a model of that
-family that the human keeps out of cycles would take the reviews and the slices that need design; a
+family that the human keeps out of cycles would take the reviews and the slices that need design, and
+a request for it gets the session's own model; a
 review one class above the session that leads the cycle, never above a model the human names — with
 the session on the cheapest class the review would run on the middle class, which let a flaw through
 in 4 of the 8 runs of the measurement, and a line that keeps a model out of the cycle's work has to

@@ -94,7 +94,9 @@ Candidates: <rows shown> shown, <rows accepted> accepted — YYYY-MM-DD
 
 `Acceptance criteria` and `Questions to settle` appear only when they have content, and `Technology`
 only once a run of `settle-technology` has begun at the task, staying after the run ends. The other
-sections always appear. `Status:` reads `refining`, `waiting for human`, or `ready for cycle`.
+sections always appear. `Status:` reads `refining`, `waiting for human`, `ready for cycle`, or
+`dropped — approved by human` for a task the human gave up, the word the plan template gives for a
+row in that state (WAY-142).
 `Project relation:` records whether the task is independent, belongs to an item of an approved
 project plan, or only uses an approved project definition as a source. A task that uses a
 definition without plan membership never acquires that plan's assignments or dependencies.
