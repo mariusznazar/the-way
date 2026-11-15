@@ -2856,9 +2856,9 @@ detailed section has no column *Files named*, and which gives the values that ne
 unknown, with no line `Error:` and no change of the exit code; a file of a tool that the cycle's own
 change changed is not read for that cycle (WAY-339), so none of its fields is missing and it gives
 no line `Error:`. Where a script whose purpose is to check the form of a file reads a copy of the
-file from the commit the branch left the main branch from, a field missing from that copy is listed
-by a line `listed:` that names the entry and the field, with no error and no change of the exit
-code. Each reading of a file that the rule covers has one test that gives the file
+file from the commit the branch left the main branch from, a field it needs for a comparison and
+finds missing from that copy is listed by a line `listed:` that names the entry and the field, with
+no error and no change of the exit code. Each reading of a file that the rule covers has one test that gives the file
 without one of the fields it needs and asserts the failure that names that field, the review of the
 change answering for the other fields; the *Scope* names every part of the-way's part map, and a
 change that adds a part to the part map adds it to this *Scope*. The command that counts the audit,
@@ -2902,9 +2902,7 @@ and that command takes the checkout in which its script lies.
     reworks how a script reads the section headings of a report brings every field of that report
     under the check, adds one test that gives the report without one heading, and leaves the
     script's reading of other files as it was; a script whose purpose is to check the form of a file
-    lists an absent section it checks as a problem with exit code 1; the same script, reading a
-    copy of the file at the commit the branch left, lists an absent section of that copy on a line
-    `listed:` and keeps its exit code; a change that adds a part to
+    lists an absent section it checks as a problem with exit code 1; a change that adds a part to
     the part map adds its identifier to the *Scope* of this decision in the same change;
   - violates: a script reads the absent key `due` as no due date and gives its result with no
     error; a script that is neither a check of form nor the count of the audit lists an absent
@@ -2912,9 +2910,8 @@ and that command takes the checkout in which its script lies.
     with exit code 2 at an absent section whose presence it checks; a change that reworks the
     reading of a file checks the field it added and leaves the other fields of that file unchecked;
     a new script's reading of a file, or a changed script's reworked reading of a file, has no test
-    that gives the file without a field; a script that checks the form of a file ends with an error
-    at a field missing from the copy at the commit the branch left, or passes over it without a
-    word; a change that adds a part to the part map leaves this *Scope* as it was.
+    that gives the file without a field; a change that adds a part to the part map leaves this
+    *Scope* as it was.
 - **Origin:** none
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
