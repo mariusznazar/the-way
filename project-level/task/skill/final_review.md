@@ -35,7 +35,7 @@ orchestrator `orchestrated_mode.md` gives who writes what.
 4. **Show.** Show the human only the matters whose verdict is truly open and the gaps of the
    document itself — a guess the critique found most likely wrong is such a gap — at most about
    four, the most consequential first, each in plain language as "How a skill asks" gives for a
-   decision: the ways, the cost of each and a recommendation (WAY-113). Give the path of the file.
+   question of decision (WAY-113). Give the path of the file.
    Where no matter is open, say nothing of the step.
 5. **Answers.** Put the human's answer under *Questions to settle* with the human's words as its
    source and the ways not chosen, as for any question (WAY-134); what it changes in *Decisions in

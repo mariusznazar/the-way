@@ -82,7 +82,7 @@ guidelines, settle of the standing checks only those the kind touches, as "A new
     - the thresholds of a function and of a file, in lines. Show the trial run's count: how many
       functions and files stand over each candidate, and the longest ones by place and size, so that
       the human sees what a threshold stops and what is already over it; where the product has no
-      code, put the thresholds as a question with the ways open and their cost, and say that no
+      code, put the thresholds as a question of decision, and say that no
       code of the product was tried. Say what a threshold means later: a function or a file over it
       fails the test, and where code other than the exceptions is already over, the invariant stands
       marked violated until that code is cleaned (WAY-51);

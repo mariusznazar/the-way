@@ -30,9 +30,10 @@ whose resolution changes the definition goes the way the paragraph below on that
 If two answers conflict, show both and ask which holds. A current foundation decision describes what
 the product does today and is material for the refinement, not a limit on its options (WAY-313):
 where an option that changes such a decision serves the task, show it as you show any other, with
-the decision it changes named by its identifier, the costs of the ways and a recommendation, which
-may be that option, and ask no leave first. The option says in its line which decision it changes,
-and the human's choice of it is the one consent to the change (WAY-314); no step asks about it again
+the decision it changes named by its identifier and the rest as "How a skill asks" gives a question
+of decision, the recommendation being that option where it serves, and ask no leave first. The
+option says in its line which decision it changes, and the human's choice of it is the one consent
+to the change (WAY-314); no step asks about it again
 before the acceptance of the complete document, which reads the document as for any task. The task
 document then carries the change as WAY-30 gives, in *Decisions in play*, and the cycle writes it
 with the code. All this holds only until the cycle starts, where no agent departs from a decision

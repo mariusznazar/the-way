@@ -15,7 +15,7 @@
 - A candidate from the material is a proposal: it enters only on the human's word, and the
   conversation may change it.
 - A candidate that repeats a choice the human made between ways shown — the answer to a question
-  of decision that gave the ways open, their costs and a recommendation — is built `accepted`, not
+  of decision, as "How a skill asks" in `way_of_working.md` gives it — is built `accepted`, not
   `waiting`, and marked in its state as the human's choice, so that the shown table lets the human
   strike it. The human accepts or rejects only the rows you derived from the material or from the
   human's loose words (WAY-134); this holds only until the task's cycle starts (WAY-315).

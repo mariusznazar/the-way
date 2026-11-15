@@ -1413,57 +1413,112 @@ it — the rules are the-way's own text, changed and reviewed like any other cha
 
 ### WAY-113 — How does an agent of the-way ask a human decision?
 
-An agent asks in plain conversation text: a decision question gives the available ways, the cost
-of each and a recommendation, while a question of assessment stays open; neither opens a separate
-question panel. After a human choice enters an entry's binding part, the agent asks one question
-against that choice anchored in the human's words or supplied material, unless the choice ends
-with the work, or the human took one of the ways offered and the decision question named, anchored
-in the material, the weak point of that way. While a project definition or a task document is
-refined, the technology step included, that question is asked only where the choice contradicts a
-sentence the human said earlier, which the question quotes, and that holds as well for the entries
-written during that refinement; in a task's cycle and where an entry is written outside such a
-refinement it is asked as above, the looser rule holding only before the cycle starts (WAY-315).
+An agent asks in plain conversation text, with no separate question panel: a question of
+assessment stays open, and a decision question gives the available ways, the cost of each, a
+recommendation and the weak point of the way recommended. The cost of a way includes the cost of
+undoing it later, written as one word where it is nil; the weak point is the strongest argument
+against the way recommended, anchored in the material where the material gives one, and for a
+shortcut, where another way would be right were cost no matter, it names that way and says why it
+is not recommended. After a human choice enters an entry's binding part, the agent asks one
+question against that choice anchored in the human's words or supplied material, unless the choice
+ends with the work, or the human took one of the ways offered and the decision question named,
+anchored in the material, the weak point of that way.
+
+While a project definition or a task document is refined, the technology step included, that
+question is asked only where the choice contradicts a sentence the human said earlier, which the
+question quotes, and that holds as well for the entries written during that refinement; in a task's
+cycle and where an entry is written outside such a refinement it is asked as above, the looser rule
+holding only before the cycle starts (WAY-315). In the whole refinement of a project definition, its
+rounds and its step of projected foundation changes, a question may also follow an answer where it
+takes the move of implication, "you wrote X; from X follows Y — does Y hold?", anchored in a
+sentence of the human, or asks the reason of a decision that is costly to reverse, where neither
+the human's words nor the material give it; the refinement of a task keeps the rule above.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
-  project-level
+  project-level, task-cycle, foundation-review, process-audit, product-guidelines
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the exchange with the decision:
-  - complies: a choice is presented in text with the costs of both ways and a recommendation,
-    followed by a source-anchored question against the answer when it enters a binding entry,
-    unless the person took a way offered whose weak point the question named; in the refinement of
-    a task or a project definition, the entries written during it included, an answer that changes
-    a decision, or that follows a loose remark, is written as given, while an answer that
-    contradicts a sentence the person said earlier gets one question quoting that sentence;
-  - violates: the choice appears only in a separate option panel, an agent asks a generic
-    challenge unrelated to the person's answer, or an agent asks against a way offered whose weak
-    point the question already named and the person took as offered; in the refinement of a task or
-    a project definition, an agent asks against an answer, for an entry written during it too,
-    because it changes a decision or follows a loose remark, with no earlier sentence of the person
-    that the answer contradicts.
+  - complies: a choice is presented in text with the cost of each way, the cost of undoing it in
+    one word where it is nil, a recommendation and the weak point of the way recommended, which for
+    a shortcut names the right way and why it is not recommended, followed by a source-anchored
+    question against the answer when it enters a binding entry, unless the person took the way
+    recommended as offered and the question named its weak point, anchored in the material; in the
+    refinement of a task or a project definition, the entries written during it included, an answer
+    that changes a decision, or that follows a loose remark, is written as given, while an answer
+    that contradicts a sentence the person said earlier gets one question quoting that sentence; in
+    the rounds of a project definition an answer from which a consequence follows draws one
+    question that quotes the person's sentence and asks whether the consequence holds, and a
+    decision that is costly to reverse, whose reason neither the person's words nor the material
+    give, draws one question asking the reason;
+  - violates: the choice appears only in a separate option panel, a decision question recommends a
+    way and names no weak point of it, or names for a shortcut a weak point that leaves out the right
+    way; an agent asks a generic challenge unrelated to the person's answer, or an agent asks against
+    a way offered whose weak point the question already named, anchored in the material, and the
+    person took as offered; in the refinement of a task or a project definition, an agent asks
+    against an answer, for an entry written during it too, because it changes a decision or follows a
+    loose remark, with no earlier sentence of the person that the answer contradicts; in the
+    refinement of a task, an agent asks a question of implication or of the reason of a decision
+    after an answer.
 - **Origin:** none
 
-*Rationale:* the person sees the trade-off where they make the choice. A challenge grounded in
-their own material can expose a contradiction without inventing one. Where the question already
-named the weak point of a way and the person took that way as offered, a challenge asks again what
-was weighed at the choice; it is kept for an answer in the person's own words, which the question
-did not weigh. While a document is refined an answer is no commitment yet, since the person reads
-the whole document at its acceptance and anything in it may change, so a question after every
-answer, or after a loose remark, spends attention on what that reading covers; only a
-contradiction with the person's own earlier sentence is both real and quotable, and only the person
-can resolve it. Where an entry is written outside such a refinement or a cycle runs, the answer is
-about to bind, so the question stays; the entries written during a refinement, such as the projected
-entries of a definition, wait for the person's acceptance of the whole document or at the gate, so
-they follow the rule of the refinement. The price at refinement: an answer that contradicts the
-material, such as a product description or a note, and no sentence of the person, passes with no
-question.
+*Rationale:* the person sees the trade-off where they make the choice. The weak point puts the
+strongest argument against a recommendation before a person who may not be able to form that
+argument as well as the agent can, so that the recommendation is weighed and not only accepted; one
+anchored in the material also tells the person what was already weighed, which is why a way taken
+as offered needs no question after it. The cost of undoing a way is part of its cost, and one word
+where it is nil keeps the question short while naming the choice that cannot be taken back cheaply,
+which would otherwise pass unnamed. The-way takes from a practice of the Mega.DEV course, whose
+recording of the first episode of its third season a reader of this repository cannot open, the cost
+of undoing for each way and the naming of the right way in the weak point of a shortcut; the
+practice there gives the variants with their effort and whether each can be cheaply undone, then a
+recommendation, then which variant would be right were cost no matter and why it is not
+recommended, and it shows when an agent picks a shortcut, which is a cheap sign of debt (WAY-100).
+The price is a longer question, and a weak point the agent finds weak lets a doubtful
+recommendation pass. A challenge grounded in the person's own material can expose a contradiction
+without inventing one. Where the question already named the weak point of a way and the person took
+that way as offered, a challenge asks again what was weighed at the choice; it is kept for an
+answer in the person's own words, which the question did not weigh. While a document is refined an
+answer is no commitment yet, since the person reads the whole document at its acceptance and
+anything in it may change, so a question after every answer, or after a loose remark, spends
+attention on what that reading covers; only a contradiction with the person's own earlier sentence
+is both real and quotable, and only the person can resolve it. Where an entry is written outside
+such a refinement or a cycle runs, the answer is about to bind, so the question stays; the entries
+written during a refinement, such as the projected entries of a definition, wait for the person's
+acceptance of the whole document or at the gate, so they follow the rule of the refinement. The
+price at refinement: an answer that contradicts the material, such as a product description or a
+note, and no sentence of the person, passes with no question. A project definition takes more than
+a task document, since it settles scope, success and risks, where a counter-argument after the
+answer is worth more than the further question it costs, and the move of implication is the only
+move that follows an answer; the price is more questions after answers, longer rounds, and no
+evidence that the move ever caught anything.
 *Rejected:* a panel of options separate from the conversation — its context is detached from the
 material; a challenge to every choice, including one that ends with the work — repeated questions
 would add no later protection; a challenge to every choice entering a binding entry, even a way
 taken as offered whose weak point the question named — it asks again what the choice already
 weighed; at refinement no question at all — a contradiction with the person's own earlier sentence
 passes unnoticed too; at refinement no question only where the answer changes a decision, otherwise
-as before — a loose remark still draws a question.
+as before — a loose remark still draws a question; a weak point for every way, not only the one
+recommended — the questions grow clearly longer, and much of it repeats the cost of each way; the
+counter-argument beside the recommendation and the question after the choice always, with no
+exception — the person hears the same doubt twice, before the choice and after it; the practice of
+the right fix beside the recommended one in the whole form of the course, a paragraph of its own with
+the effort and the reversibility of every variant — a third thing beside the cost and the weak
+point, partly repeating them, and clearly longer questions; the right fix named in the weak point
+with no cost of undoing — the person may choose a way that cannot be undone cheaply without knowing
+it; nothing of that practice — a plain "I recommend the patch, though a rebuild would be right"
+depends on whether the agent happens to pick it as the strongest argument; for a project
+definition, fitting the instructions to the rule above, so that the move of implication drops out
+and the reason of a costly decision stays an ordinary question for a missing fact — a few sentences
+in one file and nothing to undo, but a consequence the person did not notice shows only when the
+whole definition is read, or never; leaving the instructions as they were, with the rule above for
+a definition unchanged — nothing to undo today, but the contradiction stays, one place asks a
+question the rule forbids and another does not; the two moves for the step of projected foundation
+changes alone — nothing to undo beyond the rule itself, but the answers on scope, success and risks
+fall in the rounds, where no counter-argument would follow an answer; the two moves for the whole
+refinement of a definition with the rounds left as they were — nothing to undo today, but the
+decision would allow what no instruction asks for, and an agent of the rounds that asked such a
+question would comply with the decision though its own instructions foresee none.
 
 ### WAY-120 — How does the-way critique an agent's proposal?
 
@@ -5236,7 +5291,7 @@ The answering agent answers a refinement question only with a quotation and sour
 definition, plan, foundation or other task documents, or with a factual code observation naming
 file and line; a question about how the product is to be is answered only from a document, never
 from code or the agent's inference. It reads the round's conversations, makes an unanswered
-choice a question to the human with options, costs and a recommendation, and brings the same
+choice a question of decision to the human, as WAY-113 gives it, and brings the same
 question to the human once while preserving its affected tasks; in the area of the choices a
 refinement round leaves unanswered, this decision prevails over WAY-114, under which a question
 goes to the human only where the agent has no recommendation. The project orchestrator
@@ -5480,27 +5535,27 @@ gaps named above and its quotations agreed with the repository.
 
 The refining agent shows the human only the matters that the second agent of WAY-377 leaves truly
 open and the gaps of the document itself, at most about four, the most consequential first, each in
-plain language as WAY-113 asks a decision, with the ways, the cost of each and a recommendation; the
-full list and the critique stay in a file in the ignored `.runs/` directory of the product, whose
-path the agent gives the human. Before it shows a matter, and before it keeps a guess from the human
-on the critique's verdict that the repository or the task document already settles it or that it is
-most likely right, it checks the quotations behind that verdict and gives the matter one explicit
-verdict (WAY-120), and where no matter is open it says nothing of the step.
+plain language as WAY-113 asks a decision; the full list and the critique stay in a file in the
+ignored `.runs/` directory of the product, whose path the agent gives the human. Before it shows a
+matter, and before it keeps a guess from the human on the critique's verdict that the repository or
+the task document already settles it or that it is most likely right, it checks the quotations
+behind that verdict and gives the matter one explicit verdict (WAY-120), and where no matter is open
+it says nothing of the step.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-377
+- **Relations:** derives from WAY-377 · derives from WAY-113
 - **Verification:** an agent compares the work with the decision:
   - complies: the list of a task has 11 guesses, of which the critic finds 6 already settled in the
     repository or the task document and 3 most likely right; the refining agent opens the file the
     critic quotes from, sees that the quotation of one of the 6 does not say what the critic claims,
-    and counts that guess open; it shows the human 3 matters, each with the ways, their cost and a
-    recommendation, the most consequential first, and the path of the file; a task whose list holds
+    and counts that guess open; it shows the human 3 matters, each as a question of decision
+    (WAY-113), the most consequential first, and the path of the file; a task whose list holds
     no open matter gets no mention of the step;
   - violates: the human is shown the whole list of guesses; a matter is shown, or a guess kept from
     the human, on the critic's verdict with no check of the quotation behind it; more than about
-    four matters are shown at once, or a matter with no recommendation; the path of the file is not
-    given; the agent writes to the human that the step ran and found nothing open.
+    four matters are shown at once, or a matter that is no question of decision; the path of the
+    file is not given; the agent writes to the human that the step ran and found nothing open.
 - **Origin:** none
 
 *Rationale:* the raw list of guesses is too long and too thin to assess: in the product's own trial,
@@ -8163,15 +8218,14 @@ over WAY-114, under which a question goes to the human only where the agent has 
 - **Relations:** derives from WAY-113 · narrows WAY-114
 - **Verification:** an agent compares the conversation with the decision:
   - complies: the styleguide skill shows "the button that saves stands out, and the one that deletes
-    is red with white text on it", with the ways open, their cost and its recommendation; it asks
-    whether to adopt WCAG though it recommends adopting it, after saying in plain words what
-    contrast is; the coding-guidelines skill shows "a change that adds a library with a known
-    security hole does not get in" with the ways open, their cost and its recommendation, asks
-    whether to adopt the formatter it recommends, and shows a linter's set as "this many rules will
-    block a change, and these few flagged sound code here and stay as examples", and the human
-    adopts the set with that split; the testing-guidelines skill shows "the tests of the account
-    server talk to a real database, so a broken query turns them red, at the price of a slower run",
-    after saying in plain words what an integration test is;
+    is red with white text on it", as a question of decision (WAY-113); it asks whether to adopt
+    WCAG though it recommends adopting it, after saying in plain words what contrast is; the
+    coding-guidelines skill shows "a change that adds a library with a known security hole does not
+    get in" as a question of decision, asks whether to adopt the formatter it recommends, and shows
+    a linter's set as "this many rules will block a change, and these few flagged sound code here
+    and stay as examples", and the human adopts the set with that split; the testing-guidelines
+    skill shows "the tests of the account server talk to a real database, so a broken query turns
+    them red, at the price of a slower run", after saying in plain words what an integration test is;
   - violates: the skill asks the human to choose between two hexadecimal values of a design token,
     or between two names of a linter's rules; it writes into the task a role or a linter it
     recommends without asking; it speaks of focus rings before saying what focus is; it asks rule by

@@ -10,9 +10,10 @@ read all turns and the requested change, and follow this workflow with these rou
   definition or foundation. Record each plan change with its reason and run the
   existing whole-original checks; preserve stable task names and unaffected states.
 - Return every human question, scope choice, projected-entry writer reassignment and handover
-  request through the conversation with complete material, ways/costs/recommendation as applicable,
-  then return to the project orchestrator. Its recorded human answers authorize only the choices
-  they actually settle. Do not speak to the human, approve on their behalf or start child agents.
+  request through the conversation with complete material, in the form "How a skill asks" gives for
+  its kind of question, then return to the project orchestrator. Its recorded human answers
+  authorize only the choices they actually settle. Do not speak to the human, approve on their
+  behalf or start child agents.
 - Request step 6's independent critique through the file, including the complete authoritative
   plan and source paths. The project orchestrator dispatches it and records its report for you;
   verify and settle its observations as step 6 requires. Missing critique remains a block.

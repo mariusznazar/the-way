@@ -58,8 +58,8 @@ carries takes no approval.
 - **How to show.** Show each choice by its effect on the product in plain words — "the tests of the
   account server talk to a real database, so a broken query turns them red, at the price of a
   slower run", "a change that loosens what a test checks says what changed in the requirement, or
-  the review reads it as hiding a fault" — never by the name of a technique or a tool, with the ways
-  open, their cost and a recommendation. Put every choice to the human, a choice the skill
+  the review reads it as hiding a fault" — never by the name of a technique or a tool, as a question
+  of decision "How a skill asks" gives. Put every choice to the human, a choice the skill
   recommends included, and after a choice that enters a binding part ask the one question "How a
   skill asks" gives. Before first using a term of the field — a level of tests, a double, a
   property test — say in plain words what it means (WAY-174, WAY-113).
