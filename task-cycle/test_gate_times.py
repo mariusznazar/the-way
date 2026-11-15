@@ -391,6 +391,7 @@ class RegistryTest(GateTimesTest):
         # met this run's); the malformed ones count for nothing.
         self.assertEqual("2", self.rows()[0][3])
 
+    # invariant: gate-times-refuses-impossible-entry
     def test_a_malformed_entry_that_cannot_be_deleted_still_counts_for_nothing(self) -> None:
         # A directory in the place of a file cannot be unlinked: a warning, and no count.
         self.registry.mkdir(parents=True)
