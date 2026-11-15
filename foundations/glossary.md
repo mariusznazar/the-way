@@ -201,3 +201,21 @@ A transitional state is a state of a product that a decision describes until wor
 A Markdown file is a file whose name ends in `.md`, `.markdown`, `.mdx` or `.mdc`, in any letter case.
 
 - **Not:** none
+
+## files test
+
+A files test is a test that works on files in a temporary directory and on the process of a Python interpreter, and uses no git.
+
+- **Not:** none
+
+## git test
+
+A git test is a test that works on git repositories that it builds in a temporary directory.
+
+- **Not:** none
+
+## repository test
+
+A repository test is a test that works on the real checkout of the-way and checks a property of the repository itself.
+
+- **Not:** none

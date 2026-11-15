@@ -15,8 +15,9 @@ directory for each part of the process other than `repository`, which the part m
 with its files, the files that configure the whole repository, which its part map gives to the
 `repository` part (WAY-44), the root agent instruction files, the project skill entry points under
 `.claude/skills/` and `.agents/skills/`, the copies of the cycle's agent type definitions under
-`.claude/agents/` and the CI configuration under `.github/workflows/`, which the map gives to
-`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches
+`.claude/agents/`, the CI configuration under `.github/workflows/` and the directory `guidelines/`
+with the guidelines of the-way's own code and tests, which the map gives to `agent-instructions`
+(WAY-44, WAY-167), and a `README.md` that describes the repository. A directory reaches
 the main branch only once it holds what its part requires: an element its template and rules,
 examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
 entries; any other directory what the sentence of its part in the part map names. The entries in
@@ -42,7 +43,8 @@ entries; any other directory what the sentence of its part in the part map names
     the script that generates them stands with its test in `agent-instructions/`; the copies of
     the cycle's agent type definitions under `.claude/agents/` stand there too, generated from the
     definitions in `task-cycle/`; the CI configuration stands under `.github/workflows/` as files of
-    `agent-instructions`; the principles,
+    `agent-instructions`, and so do the guidelines of the-way's own code and tests, which stand in
+    `guidelines/`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
     styleguide discipline stand together in `product-guidelines/`; the skill of the review of a
@@ -65,7 +67,9 @@ product's screens built on a meaning nobody approved, guidelines telling agents 
 not those of instruction files; the review of a product's foundation answers neither the question
 of a task cycle nor that of an element, so its skill stands apart from both; the audit of the process
 over many cycles answers neither of those questions either, so its template, command and skill stand
-in a directory of their own.
+in a directory of their own. The guidelines of the-way's own code and tests direct whoever
+carries out its tasks, as its instruction files do, so they stand in the directory where a product
+keeps its guidelines (WAY-167) and belong to the part that holds those files.
 *Rejected:* material merged as soon as it is written — a store from the first day; an element whose
 only tool is a skill — the form holds only while someone remembers to run it; one `tools/` directory
 for everything shared — it matches no part and grows into a store; one set of template, skill and
@@ -2649,6 +2653,9 @@ commands a product declares in its own repository, reading their output through 
 format. Where a product declares no such command, the script reports what it could not check, never
 agreement.
 
+A test of a standing check runs the tool that the check pins from the environment that the
+repository declares.
+
 - **Scope:** elements-common, relation-model, gate, installation, agent-instructions,
   instruction-files, project-level, task-cycle, process-audit
 - **Based on:** none
@@ -2658,7 +2665,9 @@ agreement.
 
 *Rationale:* a product runs the scripts of its pinned commit (WAY-34), so every language and
 package they need is something each product has to provide. The state of a language the scripts do
-not parse, the product's tools already compute; a check that quietly sees nothing would pass.
+not parse, the product's tools already compute; a check that quietly sees nothing would pass. A test
+of a standing check starts the tool that the repository pins, from an environment that the repository
+declares, so the check runs the same version on every machine and no script imports a library for it.
 *Rejected:* Node.js without packages — no abler than Python, and a second interpreter for every
 product; shell scripts in Bash or PowerShell — they run differently on Windows and on Linux; a
 compiled program in Go or Rust — every change needs a build and published files; each script in
@@ -2811,57 +2820,6 @@ visible only on the CI's system reaches the human and returns as a round of corr
 result in place of the cycle's final gate — an error visible only on the cycle's own system is no
 longer caught, and the cycle stops where the host of the repository fails.
 
-### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
-
-The-way departs, for its own code and its own tests, from the general coding guidelines and from the
-testing guidelines of a product, under the shared reading of product guidelines: in each part named
-in *Scope*, neither is missing, so a task of the-way that writes code, or writes or changes a test,
-in such a part waits for neither. The *Scope* names every part of the-way's part map, and a change
-that adds a part to the part map adds that part to this decision's *Scope*. A separate task that
-writes the general coding guidelines of the-way's own takes the coding guidelines out of this
-decision, one that writes its testing guidelines takes the testing guidelines out of it, and once
-both are written the decision is withdrawn.
-
-- **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
-  elements-common, project-level, task-cycle, foundation-review, gate, repository,
-  agent-instructions, instruction-files, installation, product-guidelines, process-audit
-- **Based on:** none
-- **Relations:** derives from WAY-173
-- **Verification:** an agent compares a change and the refinement of a task of the-way with the
-  decision:
-  - complies: a change adds a part to the part map and adds its identifier to the *Scope* of this
-    decision in the same change; the refinement of a task of the-way that writes a script or a test in
-    a part named in *Scope* finds neither the general coding guidelines nor the testing guidelines
-    missing and keeps the task out of the wait of WAY-215;
-  - violates: a change adds a part to the part map and leaves this *Scope* as it was; the refinement
-    of a task of the-way that changes a test waits for testing guidelines of the-way; an agent reads
-    this departure as the departure of a product that pins the-way, or as covering the styleguide of a
-    screen.
-- **Origin:** none
-
-*Rationale:* the-way departs rather than writes its own guidelines because that is a large task of its
-own whose gain lies mostly in code and tests that already exist and would have to be cleaned, while
-every task of the-way with code or tests waits for it. The reason lies in the-way as a whole, not in
-the directories that hold code today, so a scope drawn by where code stands would raise the question
-again at the first script or test of another part. The departure has no time limit because its reason
-does not end with a stage of the repository, and without a decision of the-way's log the rule that a
-task waits for guidelines either stops every task of the-way with code or tests, or lets each pass
-with no basis on record. Recorded once in the log, the basis holds for every later task (WAY-173), and
-the departure covers the coding guidelines and the testing guidelines only; the-way has no screens, so
-a styleguide is no part of it. The price: nothing of a product's guidelines protects the-way's code and
-tests, and new code copies the code already there.
-*Rejected:* the-way writing its own coding guidelines and testing guidelines, as every product does —
-a large task of its own: an audit of the code and the tests that exist, the choice of tools with a
-trial run, a change to WAY-09 and the assignment of the guidelines directory to a part; until it
-merges, every task of the-way with code or tests waits, and the gain lies mostly in code that
-already exists and would have to be cleaned; WAY-215 and the shared reading of guidelines saying
-that the rule does not concern the-way itself — an exception for the-way would enter the text that
-every product pins, and the-way, which elsewhere treats itself as a product, would stop being one
-with no decision in its own log, the same effect as the way chosen in a worse place; a scope of only
-the parts that hold code today — the first script or test in another part would raise the question
-again and force an extension of the decision; a decision with no sentence that adds a new part to its
-*Scope* — the first script in a new part would raise the question of missing guidelines again.
-
 ### WAY-344 — What does a script of the-way do when a file it reads lacks a field it needs?
 
 A script of the-way that reads a file an agent or a human writes checks that the file holds each
@@ -2938,10 +2896,10 @@ and that command takes the checkout in which its script lies.
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
 and an absent field read as a value — no items, no date, no finding — lets the check the script
 exists for pass with no error to show it, the same quiet pass that WAY-38 keeps out of the check of a
-product's commands. The-way departs from the guidelines of a product for its own code (WAY-328), so
-no guideline of a product asks that a script check its input, and new code copies the code already
-there; this rule is the requirement that stands in the-way's own log. An error naming the field lets
-the author of the change or the cycle repair the file or the script at once; exit code 2 says the
+product's commands. The coding guidelines of the-way point to this rule for a missing field of a file
+a script reads and repeat none of it (WAY-379), so the requirement stands once, in the-way's own log.
+An error naming the field lets the author of the change or the cycle repair the file or the script at
+once; exit code 2 says the
 file was not read, apart from a listing of findings, which a caller carries out as findings, and
 apart from the count of the audit, whose file in the history of git no later change can mend and
 whose run, at night with no human present, would otherwise leave the session of the audit with no
@@ -2973,11 +2931,10 @@ optional would let the next author call any field optional. A stage report with 
 the cache writes was written before the columns existed, and its cost is the approximation it has
 always been, so the count reads it as that; a report with one of the two columns has lost the other,
 which is the case the rule is for.
-*Rejected:* the rule as an exception written into WAY-328 — WAY-328 settles whether the-way applies
-the guidelines of a product, and this rule is a requirement, not a departure; once WAY-328 is
-withdrawn after the-way's own guidelines are written the rule would have to be moved, and until then
-an agent that writes a script would look for rules in WAY-38 and the invariants `script-language`,
-`script-imports` and `script-subprocesses`, not in a decision about a departure; the rule as a
+*Rejected:* the rule as a sentence of WAY-379 — WAY-379 settles whether the-way applies the template
+of the coding discipline, and this rule is a requirement, not an adoption or a departure; an agent
+that writes a script would look for rules in WAY-38 and the invariants `script-language`,
+`script-imports` and `script-subprocesses`, not in a decision about a template; the rule as a
 decision with an invariant whose *Part* is `every`, like `script-imports` — an invariant claims
 something of every tracked script on every commit, so it needs an entry stating whether it holds
 today; without a review of every existing script any such entry is a guess, and marking it violated
@@ -6712,7 +6669,7 @@ graded as any other finding.
   - complies: a reviewer who finds that a change added forty lines to a function that stays under the
     threshold, or left a helper with no caller, grades each finding Minor, and the fix for Minor
     findings (WAY-161) takes in what the change itself left; a reviewer who finds that a script of
-    this repository, which has no coding guidelines (WAY-328), grew by forty lines in one function,
+    a product that has no coding guidelines grew by forty lines in one function,
     or a product that departed from the rule of size by a decision, or whose guidelines were written
     before the rule and hold none of it, grades the finding Minor; a finding that a function the
     change pushed over the threshold stands over it is graded as any other finding; a finding about
@@ -9729,6 +9686,642 @@ assertion; the run in CI — a run that admits nothing has no place where change
 commands of the test tool for each level, which WAY-241 rejects, stay rejected, since they run the
 product's tests beside the gate.
 
+## The-way's own coding and testing guidelines
+
+What the-way adopts of the templates of the coding and the testing discipline for its own code and
+tests, where it departs from them, the kinds of its code and the levels of its tests, and the
+exemplar of each.
+
+### WAY-379 — Does the-way adopt the template of the coding discipline for its own code?
+
+The-way adopts the template of the coding discipline for the code of each part named in *Scope*: its
+coding guidelines stand in the file `guidelines/coding.md`, with a file `guidelines/coding-<kind>.md`
+for each kind of code that has an exemplar, and the rules of the template bind its code through the
+decisions of this log that adopt them or depart from them. The-way departs from the template only by
+a decision of this log that gives the reason. The *Scope* names every part of the-way's part map that
+holds Python code, and a change that gives a part Python code, or adds a part that holds it, adds that
+part to this decision's *Scope*.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-202
+- **Verification:** an agent compares the guidelines and a change with the decision:
+  - complies: the rule of the linter in `guidelines/coding.md` names the decision that adopts the
+    linter, the rule of the formatter reads `none —` with the decision that departs from it, and a
+    change that gives a part its first Python file adds that part to this *Scope* in the same change;
+  - violates: a rule of the-way's coding guidelines that executes a choice with a real cost names no
+    decision of this log; the template of the coding discipline is edited to fit a departure of the-way
+    (WAY-173); a part that holds Python code stands outside this *Scope*.
+- **Origin:** none
+
+*Rationale:* a rule of a template of the-way binds a product only through a decision of the product's
+log that adopts it (WAY-173), and the-way, which treats itself as a product everywhere else, binds its
+own code the same way. Without the decision each rule of its coding guidelines would cite nothing and
+bind nothing, new code would copy the code already there, and a reviewer would have no threshold by
+which to grade a finding of structure (WAY-363). The standing checks and the rule of size come with the
+template, each adopted or departed from by a decision of its own, so that a departure has its reason on
+record (WAY-202, WAY-360). Naming in *Scope* every part that holds Python code, and adding a part to it
+when a part gains such code, keeps a new part from standing outside the guidelines unseen.
+*Rejected:* no decision adopting the template — the rules of the coding guidelines would have no
+decision to cite and would bind nothing (WAY-173).
+
+### WAY-380 — Which linter checks the-way's code, and which of its rules block a change?
+
+Ruff 0.17.1 checks the code of the parts that WAY-379 names, tests included, with the default set of
+that version, which the environment fact `ruff-default-rules` gives, with no preview rules and for the
+target version `py314`. The rules that block a change are the default set less the 18 rules `UP031`,
+`ISC004`, `PLW1510`, `RUF100`, `FURB167`, `FLY002`, `I001`, `B023`, `UP017`, `SIM117`, `UP012`,
+`RUF015`, `SIM102`, `C419`, `RUF012`, `SIM114`, `SIM905` and `SIM115`, which stand among the examples
+of the coding guidelines. A comment in the code that turns a rule off has no effect, a fault of one
+file is fixed in that file, and turning a rule off for the whole of the-way, or moving a rule between
+the blocking rules and the examples, is a change of this decision.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines, repository
+- **Based on:** ruff-default-rules
+- **Relations:** derives from WAY-379 · derives from WAY-203 · derives from WAY-204
+- **Verification:** invariants: ruff-blocking-rules. For what the invariant leaves, an agent compares
+  a change with the decision:
+  - complies: a report of `F841` in one file is fixed in that file and the configuration of Ruff stays
+    as it is; a rule on which a later report leads to no change worth making moves among the examples
+    by a change of this decision that the human approves; the test of the invariant runs Ruff with the
+    flag that ignores comments turning rules off;
+  - violates: a comment that turns a blocking rule off stays in a file; a task turns a blocking rule
+    off in the configuration of Ruff on meeting a report, with no change of this decision; a rule of
+    the examples blocks a change.
+- **Origin:** none
+
+*Rationale:* a rule blocks a change only where every report it gives leads to a change of code worth
+making, and which rules do so shows only on the code itself (WAY-203, WAY-204). A trial run of the
+default set on the-way's code, made by its own author and agents at the commit of the review of the
+foundation, with Ruff 0.17.1, no preview rules and Python 3.14, gave 649 reports from 26 rules in 55
+files; an agent that wrote none of that code judged each report by whether it led to a change worth
+making. The 18 rules above gave at least one report that did not, and the other rules that reported,
+among them `RUF059` and `UP022`, gave only reports that did. That run is the product's own measurement,
+and its record is not open to a reader of the repository. A comment that turns a rule off has no effect
+because a rule that blocks gives no report that leads to no change, so no such comment is sound
+(WAY-203). The target version follows the version of Python the repository declares. The price: a
+rule that gave good reports in the trial run can give a bad one later, which only a change of this
+decision moves among the examples, and the 18 rules reach an agent only as examples to read.
+*Rejected:* the split that another product of the same owner keeps, taken as it stands — it would block
+nine rules whose reports led here to no change worth making, among them `B023`, `FLY002` and `UP017`,
+and let `RUF059` pass, whose reports were worth a change; a departure from a linter with a reason —
+it costs nothing today, but nothing then stops the return of the faults the trial run found or of new
+ones.
+
+### WAY-381 — How is the version of the linter pinned and installed?
+
+The version of Ruff is pinned by `required-version = "==0.17.1"` in `ruff.toml`, which makes Ruff
+refuse to run in any other version, and by the files of requirements for the tools of quality:
+`requirements-quality.in`, which holds `ruff==0.17.1` and allows wheels only, and
+`requirements-quality.txt`, which holds the SHA-256 sum of every wheel of that release and no source
+distribution. Ruff stands in the environment `.runs/quality-venv`, which the section "Running the
+tests" of `README.md` tells how to install from the requirements file, and the job of CI gains one step
+that installs it there, while the one command that runs the checks stays
+`python -B gate/run_tests.py` (WAY-16).
+
+- **Scope:** repository, agent-instructions
+- **Based on:** ruff-required-version
+- **Relations:** derives from WAY-380 · derives from WAY-16
+- **Verification:** an agent compares the change with the decision:
+  - complies: the configuration of Ruff holds `required-version`, the requirements file holds a sum
+    for every wheel and no source distribution, the README tells how to create `.runs/quality-venv` and
+    install from the file, and the job of CI differs from before by one step that installs the
+    requirements;
+  - violates: the version stands in one place only; the requirements file holds a source
+    distribution or a wheel with no sum; CI runs a command of Ruff beside the one command that runs the
+    checks.
+- **Origin:** none
+
+*Rationale:* a linter in another version checks another set of rules, so its version has to be the same
+on every machine that runs the gate. Ruff refuses to run in a version that `required-version` does
+not allow, so a version that does not match shows at once and the check needs no code of its own to
+find it, while the sums of the wheels let an installation be verified and are meant to let the
+repository's host read the dependency. The linter is the first dependency of the-way beyond Python
+itself: it has to be installed wherever the gate runs, and without it the gate is red.
+*Rejected:* the version lock of the linter's configuration alone — one file fewer, but no checksums
+and nothing for the alerts of the repository's host to read.
+
+### WAY-382 — Does the-way's code get an automatic formatter?
+
+The-way's code has no automatic formatter, so `### Formatter` of its coding guidelines reads
+`none — WAY-382`. A formatter enters the-way only by a decision of this log that adopts it and by one
+reformatting of the whole of its code in the task that brings it (WAY-205).
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: `### Formatter` of `guidelines/coding.md` reads `none — WAY-382`, no configuration of a
+    formatter stands in the repository and CI runs none;
+  - violates: a task configures a formatter or reformats files of the code with no decision that
+    adopts one; `### Formatter` names an invariant.
+- **Origin:** none
+
+*Rationale:* reformatting the whole of the code would move every line to which the documents of the
+tasks waiting in the backlog point by its place in a file, and so give a conflict to every branch open
+at the merge, while `git blame` would then name the one commit of the reformatting for each line. The
+formatter is a choice that the-way and the other product of its owner can make together, in a decision
+of its own, and the way back is that decision and the one reformatting that WAY-205 gives, with no
+task opened for it now.
+*Rejected:* a formatter with one reformatting of the whole of the code in the task that writes these
+guidelines — a single commit across the code, `git blame` pointing at it and a conflict in every
+branch open at the merge, for the gain of ending disputes over layout.
+
+### WAY-383 — Does the-way's code get an audit of its dependencies?
+
+The-way departs from the audit of dependencies, so `### Dependency audit` of its coding guidelines
+reads `none — WAY-383`: its code imports nothing from outside the standard library of Python, and the
+one dependency it declares is the linter, in the version WAY-381 pins. A change that brings a
+dependency of its code other than the linter ends this departure and is a change of this decision.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: `### Dependency audit` reads `none — WAY-383`, and a change that adds a library to a
+    script comes with a change of this decision;
+  - violates: a script imports a library with no change of this decision; the reason of this decision
+    still says that the-way has no dependency at all.
+- **Origin:** none
+
+*Rationale:* an audit of dependencies checks the versions of what a product depends on, and a product
+that depends on nothing but the tool that checks its code has no version to check beyond the one
+decision pins. The reason is worded to include that tool, since the declaration of the linter is a
+dependency, and a reason that said the-way has none would stop being true at the merge.
+*Rejected:* the reason as first worded, that the-way has no libraries outside its own code — it stops
+being true once the linter is declared.
+
+### WAY-384 — Does the-way adopt the six rules of the coding template on failures and logs?
+
+The-way's scripts write no logs: they print their result to the console and report a failure by an
+exit code and a line `Error:`. The-way departs from all six rules on failures and logs, so each of the
+headings `### Recording a failure`, `### Hiding a failure`, `### Identifiers in log lines`,
+`### Business events`, `### Secrets and personal data` and `### Logging scope` of its coding
+guidelines holds only `none — WAY-384`.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-173
+- **Verification:** an agent compares the change with the decision:
+  - complies: the six headings of `guidelines/coding.md` read `none — WAY-384` and nothing else, and a
+    script reports a failure by an exit code and a line `Error:`;
+  - violates: a heading of the six holds a rule or a list of identifiers; a script writes a log file
+    and no decision adopts the rule for it.
+- **Origin:** none
+
+*Rationale:* the six rules say how code writes to a product's logs and what a product promises to log,
+so a product whose programs write none has nothing for them to bind; the way of the template that
+departs from all six keeps the headings and holds no principle, boundary or form of a line. How a
+script ends in an error, and what it does with a missing field of a file it reads, stands in WAY-344.
+Its weak point: that a failure is not turned into an answer that all went well stands in no rule of the
+guidelines, and WAY-344 for a missing field and the review of each change answer for it.
+*Rejected:* adopting `### Hiding a failure` in the wording of the template and departing from the other
+five — that rule speaks of a line in the logs, which the-way has none of.
+
+### WAY-385 — How large may a function and a file of a script of the-way be?
+
+A function of a script of the-way has at most 80 lines, counted with the functions nested in it, and a
+file of a script has at most 1000 lines, in each part that WAY-379 names; a test file stands outside
+the rule, and no function and no file is kept whole over a threshold as an exception. A test of the
+suite counts the lines with the `ast` module of the standard library, runs apart from the run of the
+linter and, where it fails, names every function and file over a threshold with its size (WAY-361).
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361
+- **Verification:** invariants: function-and-file-size. For what the invariant leaves, an agent
+  compares a change with the decision:
+  - complies: a test file of two thousand lines stays outside the rule; a change that adds a branch to
+    a function over its threshold begins with a move of a part of it out (WAY-365); a function that
+    cannot be divided is divided or the threshold is changed in this decision, never kept as an
+    exception;
+  - violates: the configuration of the test lists a function or a file as an exception; the test
+    counts a function with no regard to the functions nested in it; the rule covers test files.
+- **Origin:** none
+
+*Rationale:* the thresholds come from a trial run of sizes on the-way's own code, since only that shows
+what a threshold stops and what already stands over it (WAY-360); the run counted, at the commit of
+the review of the foundation, how many functions and files of scripts stand over each pair of
+thresholds, and 80 and 1000 leave 11 functions and 2 files over. That run is the product's own
+measurement, and its record is not open to a reader of the repository. Tests stand outside the rule
+because their rules stand in the testing guidelines (WAY-231). No exception stands: the invariant
+of the rule is marked violated until the functions and files over a threshold are divided (WAY-51),
+and until then only review keeps a cleaned or a new file from growing over it. The price: tasks that
+change the largest scripts begin with a move of a part out (WAY-365), one move does not bring the
+largest script under its threshold, a count of lines says nothing of whether a function is well made,
+and a function can be divided only to stand under a threshold.
+*Rejected:* 60 lines and 800 lines — 19 functions and 4 files over in the same run; 100 lines and 1500
+lines — 7 functions and 1 file over; a departure from the rule — every remark of a reviewer on the
+structure of code stays Minor (WAY-363); the rule covering test files, with a rule of the testing
+guidelines — 5 test files over 1000 lines in the same run and more invariants marked violated;
+exceptions pointed out one by one by the human, with a reason each.
+
+### WAY-386 — Which file is the exemplar of the kind `check` in the-way's code?
+
+`task-cycle/tracked_private_paths_check.py` is the exemplar of the kind `check` of the-way's code. The
+coding guidelines of the kind hold no rule that a test checks, so the exemplar stands there as an
+example and binds no later code.
+
+- **Scope:** task-cycle, project-level, elements-common, instruction-files
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** an agent compares the change with the decision:
+  - complies: `guidelines/coding-check.md` lists the file as `exemplar` beside this decision;
+  - violates: another file takes the status `exemplar` with no change of this decision; a rule that
+    no test checks is drawn from the exemplar and names an invariant.
+- **Origin:** none
+
+*Rationale:* an exemplar that a decision designates is a model the human approved, where a file
+copied because an agent found it first turns whichever file that is into law (WAY-198); the kind has
+no rule that a cheap test checks, so the exemplar stands as an example.
+*Rejected:* another script of the kind as the exemplar — it shows the reading of arguments better and
+does not show the check of a missing field.
+
+### WAY-387 — Which file is the exemplar of the kind `measuring-report` in the-way's code?
+
+`task-cycle/cycle_measures.py` is the exemplar of the kind `measuring-report` of the-way's code. The
+coding guidelines of the kind hold no rule that a test checks, so the exemplar stands there as an
+example and binds no later code.
+
+- **Scope:** task-cycle, process-audit, project-level
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** an agent compares the change with the decision:
+  - complies: `guidelines/coding-measuring-report.md` lists the file as `exemplar` beside this
+    decision, and the file breaks no rule of the linter that blocks;
+  - violates: another file takes the status `exemplar` with no change of this decision; the exemplar
+    keeps a report of a blocking rule that the new files of the kind would copy.
+- **Origin:** none
+
+*Rationale:* the exemplar is what every later file of its kind follows, so a fault that the linter
+reports in it is corrected before it is designated; otherwise each new file of the kind would take
+the fault over (WAY-198).
+*Rejected:* marking the invariant of the linter violated with no correction in the exemplar — the
+exemplar of the kind would keep two faults that every new file of the kind copies.
+
+### WAY-388 — Which file is the exemplar of the kind `generator` in the-way's code?
+
+`agent-instructions/skill_entry_points.py` is the exemplar of the kind `generator` of the-way's code,
+and a script of the kind changes no file of the repository it runs in without `--write`.
+
+- **Scope:** agent-instructions
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** invariants: generator-writes-only-with-write. For the designation, an agent
+  compares the change with the decision:
+  - complies: `guidelines/coding-generator.md` lists the file as `exemplar` beside this decision, and
+    the file ends with exit code 2 where a field it reads is missing, as WAY-344 gives;
+  - violates: another file takes the status `exemplar` with no change of this decision; a generator
+    writes a file in a run with no `--write`.
+- **Origin:** none
+
+*Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
+approved, and what a script can check of it stands in the guidelines of the kind as a rule that names
+an invariant (WAY-198); for a generator that is the rule that without `--write` no file changes. The
+exemplar is designated once its ending at a missing field of a file it reads is corrected to the exit
+code 2 that WAY-344 gives, so that no later generator copies the fault.
+*Rejected:* unknown.
+
+### WAY-389 — Which file is the exemplar of the kind `repository-changer` in the-way's code?
+
+`task-cycle/remove_merged_worktrees.py` is the exemplar of the kind `repository-changer` of the-way's
+code, and a script of the kind changes neither a file that the repository tracks nor a working
+directory without `--apply`, or where the confirmation is declined.
+
+- **Scope:** task-cycle, elements-common, installation
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** invariants: repository-changer-acts-only-when-told. For the designation, an agent
+  compares the change with the decision:
+  - complies: `guidelines/coding-repository-changer.md` lists the file as `exemplar` beside this
+    decision;
+  - violates: another file takes the status `exemplar` with no change of this decision; a script of
+    the kind removes or rewrites something in a run without `--apply`.
+- **Origin:** none
+
+*Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
+approved, and what a script can check of it stands in the guidelines of the kind as a rule that names
+an invariant (WAY-198); for a repository changer that is the rule that without `--apply`, or where the
+confirmation is declined, nothing changes.
+*Rejected:* unknown.
+
+### WAY-390 — Which file is the exemplar of the kind `command-runner` in the-way's code?
+
+`task-cycle/gate_times.py` is the exemplar of the kind `command-runner` of the-way's code, and a
+script of the kind that wraps one command ends with that command's exit code unchanged.
+
+- **Scope:** task-cycle, gate
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** invariants: command-runner-passes-exit-code. For the designation, an agent
+  compares the change with the decision:
+  - complies: `guidelines/coding-command-runner.md` lists the file as `exemplar` beside this decision;
+  - violates: another file takes the status `exemplar` with no change of this decision; a script that
+    wraps one command ends with the exit code 1 for every failure of the command.
+- **Origin:** none
+
+*Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
+approved, and what a script can check of it stands in the guidelines of the kind as a rule that names
+an invariant (WAY-198); for a command runner that is the rule that the exit code of the wrapped
+command is passed on unchanged.
+*Rejected:* unknown.
+
+### WAY-391 — Which file is the exemplar of the kind `shared-module` in the-way's code?
+
+`relation-model/fingerprint.py` is the exemplar of the kind `shared-module` of the-way's code, and
+importing a file of the kind runs nothing.
+
+- **Scope:** relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-379 · derives from WAY-198
+- **Verification:** invariants: shared-module-import-runs-nothing. For the designation, an agent
+  compares the change with the decision:
+  - complies: `guidelines/coding-shared-module.md` lists the file as `exemplar` beside this decision;
+  - violates: another file takes the status `exemplar` with no change of this decision; a module that
+    other scripts import reads its input or writes output when it is imported.
+- **Origin:** none
+
+*Rationale:* the exemplar of a kind is designated by a decision so that it is a model the human
+approved, and what a script can check of it stands in the guidelines of the kind as a rule that names
+an invariant (WAY-198); for a shared module that is the rule that importing it runs nothing.
+*Rejected:* unknown.
+
+### WAY-392 — Does the-way adopt the template of the testing discipline for its own tests?
+
+The-way adopts the template of the testing discipline for the tests of each part named in *Scope*: its
+testing guidelines stand in the file `guidelines/testing.md`, and the rules of the template bind its
+tests through the decisions of this log that adopt them or depart from them. The-way departs from the
+template only by a decision of this log that gives the reason, as it does from the field *Time limit*
+of a recipe and from the rule of mutation testing, and the rule `### AI in tests` enters with no
+decision on a tool, since no test of the-way uses an AI tool. The *Scope* names every part of the-way's
+part map that holds a test, and a change that gives a part a test adds that part to this decision's
+*Scope*.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-173 · derives from WAY-231
+- **Verification:** an agent compares the guidelines and a change with the decision:
+  - complies: each rule of `guidelines/testing.md` that executes a choice with a real cost names a
+    decision of this log, `### Mutation testing` reads `none —` with the decision that departs from
+    it, and a change that gives a part its first test adds that part to this *Scope*;
+  - violates: a rule of the testing guidelines names no decision; `### AI in tests` names a tool that
+    no decision of this log adopts; a part that holds a test stands outside this *Scope*.
+- **Origin:** none
+
+*Rationale:* the rules of the template of the testing discipline bind a product only through a decision
+of its log (WAY-173), and the-way binds its own tests the same way, so that each rule of its testing
+guidelines cites a decision and a departure has its reason on record. Naming the parts in *Scope* keeps
+a new part with tests from standing outside the guidelines unseen.
+*Rejected:* no decision adopting the template — the rules of the testing guidelines would have no
+decision to cite and would bind nothing (WAY-173).
+
+### WAY-393 — At which levels do the tests of the-way stand?
+
+The tests of the-way stand at five levels: unit, files test, git test, repository test and e2e. The
+files test, the git test and the repository test are terms of the glossary, which gives each by the
+resources a test of that level may touch, and an e2e test runs a whole path of a session through
+several scripts.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines, glossary
+- **Based on:** none
+- **Relations:** derives from WAY-392 · derives from WAY-240
+- **Verification:** an agent compares the guidelines with the decision:
+  - complies: the table of levels of `guidelines/testing.md` names the five levels, names the three
+    glossary terms and copies none of their definitions, and a test of the level files test starts no
+    git;
+  - violates: a sixth level appears in the table with no change of this decision; the table of levels
+    defines a files test in its own words; a test named a files test starts git.
+- **Origin:** none
+
+*Rationale:* a level defined by what its test may touch can be checked without judgement, while the
+usual names of levels mean different things to different readers (WAY-240); three of the five levels
+mean in the-way something narrower or other than in the field, so each is a term of the glossary of
+the-way, which every product that pins the-way receives too. Keeping the files test and the git test
+apart keeps the distinction whether a test needs git.
+*Rejected:* four levels, unit, integration with files and git together, e2e and a test of the
+repository — two glossary terms instead of three, and the distinction whether a test needs git
+disappears.
+
+### WAY-394 — Where does a test of the-way take its expected value from?
+
+A test of the-way takes the value it expects from the entries of the-way's foundation, from its
+glossary, from the templates and skills that the script under test carries out, or from the
+description at the head of the script, which gives its exit codes and the form of its result, and
+from no other document (WAY-232).
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-392 · derives from WAY-232
+- **Verification:** an agent compares the tests with the decision:
+  - complies: a test of an exit code names the description at the head of its script in a comment at
+    the value; a test of the form of a file that a skill writes takes the form from that skill;
+  - violates: a test takes its expected value from a constant or a function of the code it checks; a
+    test takes it from a document outside the-way's foundation, its templates, its skills and the
+    description of its scripts.
+- **Origin:** none
+
+*Rationale:* the expected value of a test comes from a document of the product that its testing
+guidelines name (WAY-232); the foundation, the glossary, and the templates and skills that a script
+carries out are such documents, and the description at the head of a script gives its exit codes and
+the form of its result, which for most scripts stand in no other document. Its weak point: the author changes the code and its description in one
+commit, and the test follows both, so the review asks of each assertion where its value comes from.
+*Rejected:* the sources without the description at the head of a script — the exit codes of most
+scripts stand in no other document.
+
+### WAY-395 — Which fields of a recipe of a level of the-way's tests bind?
+
+In the recipe of each level of the-way's tests the fields *Purpose*, *Files*, *Doubles*, *Data*, *Time
+and randomness*, *Exemplar* and *Command* bind and name this decision, and *Shape* stands as an
+example. *Purpose* says what the level is for and when not to use it; *Files* has the tests as files
+`test_*.py` in the directory of the part, beside the script they test, under `unittest`; *Doubles*
+allows a double only of the clock and of what a test cannot do on a git repository it builds in a
+temporary directory, git and the file system being real and standing in a temporary directory, and at
+the level of a repository test the checkout being real; *Data* has the values of a test written out in
+it, each with its source in a comment; *Time and randomness* has the time given from outside the
+script, as the option `--today` gives it, and no fixed pause; *Command* is `python -B
+gate/run_tests.py <directory>`, which the gate narrows to a directory and no further. The field
+*Time limit* reads `none — WAY-395`, since the-way has no file that holds a limit and each limit
+stands at the call that needs it.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-392 · derives from WAY-241
+- **Verification:** an agent compares the guidelines and the tests with the decision:
+  - complies: the recipe of the level git test names this decision at *Doubles*, builds the
+    repository in a temporary directory and replaces nothing but the clock; a test gets its time from
+    `--today` and not from the real clock; *Time limit* reads `none — WAY-395`;
+  - violates: a test replaces git with a double where a repository in a temporary directory is
+    cheap; a test waits a fixed time for another process; a recipe lists a command of the test tool
+    beside the gate; a recipe holds a value of a time limit.
+- **Origin:** none
+
+*Rationale:* a recipe of the same fields for every level lets an agent find what binds at any level in
+one place, and a field binds only where a decision of the product carries it (WAY-241, WAY-173); the
+fields above bind as rules what the-way's tests do today, and the one command that runs every test
+(WAY-16) is the one the recipe gives. The field *Time limit* points to the configuration file that
+holds a limit, and the-way has no such file, since each limit stands at the call that needs it.
+*Rejected:* unknown.
+
+### WAY-396 — Which test is the exemplar of the level unit of the-way's tests?
+
+`relation-model/test_fingerprint.py::Fingerprint.test_a_tab_is_kept` is the exemplar test of the level
+unit of the-way's tests.
+
+- **Scope:** relation-model
+- **Based on:** none
+- **Relations:** derives from WAY-393 · derives from WAY-242
+- **Verification:** an agent compares the change with the decision:
+  - complies: the field *Exemplar* of the recipe of the level unit names this test beside this
+    decision;
+  - violates: the field names another test with no change of this decision; the field stands with a
+    placeholder.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of every
+later one, while a test that a decision designates is one the human approved (WAY-242).
+*Rejected:* unknown.
+
+### WAY-397 — Which test is the exemplar of the level files test of the-way's tests?
+
+`task-cycle/test_cycle_measures.py::RewriteEdgesTest.test_a_rewrite_of_2000_tokens_is_not_counted` is
+the exemplar test of the level files test of the-way's tests.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-393 · derives from WAY-242
+- **Verification:** an agent compares the change with the decision:
+  - complies: the field *Exemplar* of the recipe of the level files test names this test beside this
+    decision;
+  - violates: the field names another test with no change of this decision; the field stands with a
+    placeholder.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of every
+later one, while a test that a decision designates is one the human approved (WAY-242).
+*Rejected:* unknown.
+
+### WAY-398 — Which test is the exemplar of the level git test of the-way's tests?
+
+`project-level/test_plan_state_invariant.py::PlanStateEvidence.test_fresh_remote_record_composes_both_transitions`
+is the exemplar test of the level git test of the-way's tests.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-393 · derives from WAY-242
+- **Verification:** an agent compares the change with the decision:
+  - complies: the field *Exemplar* of the recipe of the level git test names this test beside this
+    decision;
+  - violates: the field names another test with no change of this decision; the field stands with a
+    placeholder.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of every
+later one, while a test that a decision designates is one the human approved (WAY-242).
+*Rejected:* unknown.
+
+### WAY-399 — Which test is the exemplar of the level repository test of the-way's tests?
+
+`elements/common/test_elements_pending_marker.py::TrackedFilesUnderElementsTest.test_no_tracked_file_under_elements_holds_the_pending_marker`
+is the exemplar test of the level repository test of the-way's tests.
+
+- **Scope:** elements-common
+- **Based on:** none
+- **Relations:** derives from WAY-393 · derives from WAY-242
+- **Verification:** an agent compares the change with the decision:
+  - complies: the field *Exemplar* of the recipe of the level repository test names this test beside
+    this decision;
+  - violates: the field names another test with no change of this decision; the field stands with a
+    placeholder.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of every
+later one, while a test that a decision designates is one the human approved (WAY-242).
+*Rejected:* unknown.
+
+### WAY-400 — Which test is the exemplar of the level e2e of the-way's tests?
+
+`process-audit/test_audit_count.py::Cost.test_the_stage_report_cycle_stages_writes_gives_the_share` is
+the exemplar test of the level e2e of the-way's tests.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-393 · derives from WAY-242
+- **Verification:** an agent compares the change with the decision:
+  - complies: the field *Exemplar* of the recipe of the level e2e names this test beside this
+    decision, and the file that holds it runs git with the configuration of the user and of the system
+    shut out;
+  - violates: the field names another test with no change of this decision; the file that holds the
+    exemplar runs git under the user's global configuration.
+- **Origin:** none
+
+*Rationale:* a test copied from whichever test an agent finds turns an accident into the model of every
+later one, while a test that a decision designates is one the human approved (WAY-242). The exemplar
+is the model of every later test of its level, so the fault of the file that holds it, git run under
+the user's own configuration, is corrected before the test is designated, and no copy takes it over.
+*Rejected:* agreeing that the copies of the exemplar take over the fault of running git under the
+user's global configuration.
+
+### WAY-401 — What does the-way deliberately not test?
+
+The-way does not test automatically what an agent does when it follows a skill: its tests check the
+form of the texts of the skills and their consistency, and the behaviour of the agents is checked by
+the human's review of a cycle at the merge and by the audit of the process, never by the gate. The
+category is tested again when an error of an agent's behaviour repeats that the audit does not catch
+before the merge.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-392 · derives from WAY-237
+- **Verification:** an agent compares the guidelines and the tests with the decision:
+  - complies: `## Not tested on purpose` of `guidelines/testing.md` names the category and this
+    decision; a test of a skill checks that the files it names exist and that its text agrees with the
+    template it applies;
+  - violates: the gate starts a model to check what an agent does; the section lists a single test or
+    file; the section names no decision.
+- **Origin:** none
+
+*Rationale:* a test of what an agent does would start a model in every run of the gate, at a cost in
+tokens, and its result would not be the same on the same code; the review of a cycle by the human at
+the merge and the audit of the process look at the behaviour instead. The price: an error of an agent's
+behaviour that neither of them sees passes the gate.
+*Rejected:* unknown.
+
+### WAY-402 — Does the-way adopt a mutation tool?
+
+The-way adopts no mutation tool and departs from the rule of mutation testing of the template of the
+testing discipline, so `### Mutation testing` of its testing guidelines reads `none — WAY-402` and the
+author of a change checks its tests in every part by mutating the code in their head (WAY-253). A
+mutation tool enters the-way, for the parts whose complexity lies in computation, when an error
+passes after a merge in such a part for want of an assertion.
+
+- **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+- **Based on:** none
+- **Relations:** derives from WAY-392 · derives from WAY-252
+- **Verification:** an agent compares the change with the decision:
+  - complies: `### Mutation testing` reads `none — WAY-402`; the author of a change to a calculation
+    names a mutation of the code that no test catches and adds the assertion;
+  - violates: a task adds a mutation tool to the repository with no change of this decision; the
+    rule is left out with no decision.
+- **Origin:** none
+
+*Rationale:* a check in the head costs no dependency, and a tool would be one more dependency run at
+every change. The return of a tool is tied to the case it is for: a part whose complexity lies in
+computation, where a missing assertion lets an error through (WAY-252).
+*Rejected:* a mutation tool for the parts whose complexity lies in computation — a separate choice of
+technology, with the cost of its configuration.
+
 ## Withdrawn identifiers
 
 | Identifier | Why | Successors |
@@ -9881,6 +10474,7 @@ product's tests beside the gate.
 | WAY-325 | its rule, the answer to "What does the orchestrator of a task cycle do when a stage report says material its handoff names stayed unread?", stands in `task-cycle/skill/SKILL.md` | none |
 | WAY-326 | its rule, the answer to "What does a task-cycle stage report about the material its handoff names that stayed unread?", stands in `task-cycle/skill/SKILL.md` | none |
 | WAY-327 | its rule, the answer to "What does an item of a request's section for the human's decisions carry where the human chooses?", stands in `task-cycle/skill/request_template.md` | none |
+| WAY-328 | withdrawn: the coding guidelines and the testing guidelines of the-way's own are written, so neither is missing and the departure that this decision recorded has ended | WAY-379 · WAY-392 |
 | WAY-329 | its rule, the answer to "How is the identifier of a project task's line in the backlog derived?", stands in `project-level/task_line.md` | none |
 | WAY-331 | its rule, the answer to "Where in the repository does the audit of the process stand?", stands in `foundations/part_map.md` | none |
 | WAY-332 | its rule, the answer to "Where do the results of the audit lie?", stands in `process-audit/SKILL.md` | none |

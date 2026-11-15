@@ -135,7 +135,7 @@ No script git tracks imports a module other than one of the standard library of 
 
 ## script-subprocesses
 
-No script git tracks starts a program other than git, the Python interpreter running the script, or a command the product declares in its repository.
+No script git tracks starts a program other than git, the Python interpreter running the script, a command the product declares in its repository or, in a test of a standing check, the tool that check pins, run from the environment the repository declares.
 
 - **Method:** review
 - **Rests on:** none
@@ -423,4 +423,124 @@ Every file of a product's guidelines that `product-guidelines/template.md` names
 - **Rests on:** none
 - **Derives from:** WAY-167
 - **Part:** elements-common · product-guidelines
+- **Violated:** no
+
+## ruff-blocking-rules
+
+No file of a part named in the *Scope* of WAY-379 breaks a rule that WAY-380 gives as blocking when the Ruff that WAY-381 pins runs over it with the configuration `ruff.toml` and the flag `--ignore-noqa`.
+
+- **Method:** test
+- **Rests on:** ruff-default-rules
+- **Derives from:** WAY-380
+- **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines · repository
+- **Violated:** yes
+
+## function-and-file-size
+
+No function of a script of a part named in the *Scope* of WAY-379 has more lines than WAY-385 allows a function, counted with the functions nested in it, and no such script has more lines than WAY-385 allows a file, a file named `test_*.py` being no script here.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-385
+- **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines
+- **Violated:** yes
+
+## generator-writes-only-with-write
+
+Run without `--write`, `agent-instructions/skill_entry_points.py` and `agent-instructions/agent_type_copies.py` change no file of the repository they run in, also where they find a file to create, a file to change or an orphan to list.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-388
+- **Part:** agent-instructions
+- **Violated:** no
+
+## repository-changer-acts-only-when-told
+
+Without `--apply`, or where the confirmation is declined, `task-cycle/remove_merged_worktrees.py`, `elements/common/migrate_foundation.py` and `installation/install.py` change no file that the repository tracks and no working directory.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-389
+- **Part:** task-cycle · elements-common · installation
+- **Violated:** no
+
+## command-runner-passes-exit-code
+
+`task-cycle/gate_times.py`, run with a command, ends with the exit code of that command unchanged, and with 128 plus the number of the signal where a signal kills the command.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-390
+- **Part:** task-cycle
+- **Violated:** no
+
+## shared-module-import-runs-nothing
+
+A new process of the Python interpreter that imports `relation-model/fingerprint.py`, with its input closed, ends with exit code 0, writes nothing to either output and reads nothing from its input.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-391
+- **Part:** relation-model
+- **Violated:** no
+
+## readiness-check-refuses-non-utf-8
+
+The project readiness check, given a file that is not UTF-8 text, ends with exit code 2 and a message that the file is not UTF-8 text.
+
+- **Method:** test
+- **Rests on:** utf-8
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** project-level
+- **Violated:** no
+
+## cycle-stages-refuses-crafted-names
+
+In the report of the stages of a cycle, the column of files named holds only names of files of `reports/` that are well formed as the description of `task-cycle/cycle_stages.py` gives, and no name that a message of a session carries splits a row of the report.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** task-cycle
+- **Violated:** no
+
+## cycle-measures-refuses-nested-line
+
+The script that counts the measures of the agents of a cycle, given a transcript with a line nested too deeply to be read, ends with exit code 2 and a line `Error:` that names the file and the line, and writes no result.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** task-cycle
+- **Violated:** no
+
+## gate-times-refuses-impossible-entry
+
+The script that runs the gate for the task cycle deletes an entry of its registry whose end or start lies more than a minute after the present, or whose end lies before its start, and counts that entry as no other run.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** task-cycle
+- **Violated:** no
+
+## audit-count-refuses-record-links
+
+The command that counts the audit follows no symbolic link that leaves the record of a cycle: it reads no file through such a link and gives the values that need that file as unknown.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** process-audit
+- **Violated:** no
+
+## check-instructions-refuses-outside-links
+
+The script that checks instruction files neither reads nor lists a file that is a link out of the repository, and reports the link as not read.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-48 · WAY-235
+- **Part:** instruction-files
 - **Violated:** no
