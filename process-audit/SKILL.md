@@ -163,8 +163,10 @@ two outcomes: the human weighs it further, or sets it aside.
 1. **What the count could not read.** The *Repositories* table: any repository read `no`, a shallow
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
    kinds of `unknown` in *Unknown values* and how many cycles each touches, and any *Refused rows*.
-   *Unknown values* gives the values the register holds back as one line for each field and reason,
-   with how many values the pair has and its first examples; the full list stays in the register.
+   *Unknown values* gives every value the count did not establish as one line for each field and
+   reason, with how many values the pair has and its first three examples; the full list of a pair
+   stays where its values come from: the register's own values in the register, the cycles' values
+   in the copies of their records in git history and in a new run of the count.
    A row refused for its class is one such line, with the reason `the class is not in the list of
    classes` and its row of *Problems* among the first examples: it is the matter of a class the list
    lacks, below. The user's own tool corrects any other refused row in the register. An archive of
