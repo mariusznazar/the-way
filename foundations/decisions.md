@@ -5418,8 +5418,9 @@ outside the condition keeps the gaps its executor settles, and a gap the two age
 for the executor. The-way takes this practice from the course AI Tech Leaders, in whose notes of the
 author it stands as the idea of listing the decisions a task document leaves to the executor with a
 mark of where each answer is known, to be tried on two tasks; the notes are not open to a reader of
-this repository. It takes the list and the mark; the second agent, the bound, the condition and the
-class are the-way's own (WAY-100).
+this repository. It takes the list and the mark, and leaves out the count of how many guesses the
+human would settle otherwise and the minutes of reading the list, which the notes keep for the
+trial; the second agent, the bound, the condition and the class are the-way's own (WAY-100).
 *Rejected:* the step at every refinement of a task — one run cost about 200 to 250 thousand tokens
 and 3 to 5 minutes in the trial, and for a small task such as a rename or a small fix the cost
 exceeds the gain; the step only at the human's request — it depends on the human remembering it, and
@@ -5433,9 +5434,10 @@ The refining agent shows the human only the matters that the second agent of WAY
 open and the gaps of the document itself, at most about four, the most consequential first, each in
 plain language as WAY-113 asks a decision, with the ways, the cost of each and a recommendation; the
 full list and the critique stay in a file in the ignored `.runs/` directory of the product, whose
-path the agent gives the human. Before it shows a matter it checks the quotations of the critique for
-that matter and gives the matter one explicit verdict (WAY-120), and where no matter is open it says
-nothing of the step.
+path the agent gives the human. Before it shows a matter, and before it keeps a guess from the human
+on the critique's verdict that the repository already settles it or that it is most likely right, it
+checks the quotations behind that verdict and gives the matter one explicit verdict (WAY-120), and
+where no matter is open it says nothing of the step.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -5447,10 +5449,10 @@ nothing of the step.
     guess open; it shows the human 3 matters, each with the ways, their cost and a recommendation,
     the most consequential first, and the path of the file; a task whose list holds no open matter
     gets no mention of the step;
-  - violates: the human is shown the whole list of guesses; a matter is shown on the critic's
-    verdict with no check of its quotation; more than about four matters are shown at once, or a
-    matter with no recommendation; the path of the file is not given; the agent writes to the human
-    that the step ran and found nothing open.
+  - violates: the human is shown the whole list of guesses; a matter is shown, or a guess kept from
+    the human, on the critic's verdict with no check of the quotation behind it; more than about
+    four matters are shown at once, or a matter with no recommendation; the path of the file is not
+    given; the agent writes to the human that the step ran and found nothing open.
 - **Origin:** none
 
 *Rationale:* the raw list of guesses is too long and too thin to assess: in the product's own trial,
@@ -5458,14 +5460,17 @@ whose record is not open to a reader of this repository, the human looked throug
 and could not judge it, and only the critique of an agent with read access to the repository,
 written in plain language, gave matters to settle: the human settled 7 of them, and 5 of the 7 added
 a sentence to the task document. A critic can call a matter settled while the first agent was right
-or the reverse, so the refining agent opens the file the critique quotes before it shows a matter,
-and the full list and the critique stay in a file, where the human who wants to check one finds it.
-Plain language and a limit on the number keep the human's reading to what only the human can
-settle. The price: a matter the critic judged settled or most likely right and the refining agent
-did not re-check stays out of the human's sight, and a human who wants the whole list opens the file.
+or the reverse, so the refining agent opens the file the critique quotes before it shows a matter and
+before it keeps a guess from the human, and the full list and the critique stay in a file, where the
+human who wants to check one finds it. Plain language and a limit on the number keep the human's
+reading to what only the human can settle. The price: the refining agent opens one file for each
+guess the critic keeps from the human, which the list bounds, a guess whose quotation holds but does
+not settle the matter stays out of the human's sight, and a human who wants the whole list opens the
+file.
 *Rejected:* the full list of guesses shown to the human — the raw list took the human 5 minutes and
 could not be assessed, and a critic could call a matter right while the agent was wrong, which is why
-the full list stays in the file and the refining agent checks the critique's quotations.
+the full list stays in the file and the refining agent checks the critique's quotations, those of the
+guesses kept from the human included.
 
 ## The course of a task cycle
 
