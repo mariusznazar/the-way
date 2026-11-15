@@ -397,7 +397,7 @@ The wording that `project-level/plan_state.py` takes for the field *Request URL 
 
 ## audit-series-script-paths
 
-Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the mechanism measures or of the gate times — the script that counts the measures of a cycle, the script that records the gate times and the test runner of the gate — is a file git tracks.
+Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
 
 - **Method:** test
 - **Rests on:** none

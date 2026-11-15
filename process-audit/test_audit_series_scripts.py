@@ -1,7 +1,7 @@
 """Test of the invariant audit-series-script-paths: each path of a script whose history
-`process-audit/audit_count.py` reads, to start a new series of the mechanism measures or of the gate
-times, is a file git tracks — the script that counts the measures of a cycle, the script that
-records the gate times and the test runner of the gate.
+`process-audit/audit_count.py` reads, to start a new series of the measures of how a cycle's agents
+use context and the prompt cache or of the gate times, is a file git tracks — the script that counts
+those measures, the script that records the gate times and the test runner of the gate.
 
 The reader, `audit_count.py`, is imported: it is a file of this part. The writing side is the
 repository itself, read through git, never imported.
