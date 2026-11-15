@@ -1460,7 +1460,6 @@ class Cost(AuditCountCase):
                 self.assertEqual("unknown", row[5])
                 self.assertTrue(any("disagree" in reason for reason in why), why)
 
-
     def written_cost(self, *rows, prices=TEST_PRICES):
         """The run on a section of the newest form made of `rows`: its Cost cell and the reasons
         the cost is unknown. The run ends with exit code 0 and no `Error:` line."""

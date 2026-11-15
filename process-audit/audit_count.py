@@ -125,8 +125,8 @@ series of the cost ends, and also at either of these changes:
 
 - the register's list of classes: a date of *Added* or *Withdrawn* on or between the days of the
   two versions, or a list the register does not give in full, which splits at every version;
-- the form of a stage report or the instructions of the reviewer, taken as the files of the-way under
-  `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and
+- the form of a stage report or the instructions of the reviewer, taken as the files of the-way
+  under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and
   `task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its instruction
   (the same `git diff --quiet`). Any change of those files ends the series, whether or not it alters
   that form or those instructions: the count of remarks compares less, and the series of the cost,
@@ -210,9 +210,9 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 
 A cycle of the-way whose own change changes a tool that wrote a file of its copy gives the values
 that tool wrote as `unknown`, with the reason that the cycle changed the tool that wrote them, and
-its other values as they stand, under the version it ran on (WAY-339). The tools are those that start
-the series of what they measure: `task-cycle/cycle_stages.py` for the times, the cost and the share
-of the cost in fix rounds, read from `stages.md`; `task-cycle/cycle_measures.py` for
+its other values as they stand, under the version it ran on (WAY-339). The tools are those that
+start the series of what they measure: `task-cycle/cycle_stages.py` for the times, the cost and the
+share of the cost in fix rounds, read from `stages.md`; `task-cycle/cycle_measures.py` for
 `mechanism_measures.md`; `task-cycle/gate_times.py` and `gate/run_tests.py` for `gate_times.md`. The
 cycle changed a tool where its files differ between the version it ran on and the commit of the last
 copy of its record in the-way's own history (`git diff --quiet`; exit 1, or any other failure,
@@ -288,11 +288,11 @@ no part of the field. The result keeps no more of a pair, and no option of the c
 The full list of a pair's values stands where they are read: the register's own values (its refused
 rows and the problems of a cycle it names) in the register, and the cycles' values in the copies of
 the cycles' records in the history of git. The values about an issue or a version are made by the
-count from the register and from those copies, and have no list of their own. A section *Cost*, a table of
-one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
-number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
-of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
-its gate times; the section *Measure versions* gives them per version. The sections *Problems by
+count from the register and from those copies, and have no list of their own. A section *Cost*, a
+table of one row per cycle with its price list's date (the series the cost belongs to), its cost in
+USD, its number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a
+table of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run
+of its gate times; the section *Measure versions* gives them per version. The sections *Problems by
 cycle*, *Fixed
 issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* give the register's
 counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
@@ -300,7 +300,8 @@ counts, and sit before *Unknown values*. On stdout it names the two files and th
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
 read, a table of the register refused as a whole, or a field missing in a `stages.md`, a
 `mechanism_measures.md` or a `gate_times.md`, named in the
-result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written,
+result and in an `Error:` line on stderr, which for a table of levels of the register names the
+level it lacks or writes twice; 2 with `Error: <message>` on stderr and nothing written,
 when an argument is wrong, the locations file, the price list, the register or an entry it needs is
 missing or wrong, the register lacks a heading, a table or a column it needs, the register is
 larger than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the
@@ -495,8 +496,8 @@ TOTAL_MEASURE = "Total time of the run"
 DIRECTORY_MEASURE = "Directory: "
 # The three groups of tools that write the files of a cycle's copy, each as the file and the paths
 # of the tools that wrote it: the paths are those that start the series of what they measure
-# (COST_SCRIPTS, MEASURES_SCRIPT and GATE_SCRIPTS above), not a second list. A cycle of the-way whose
-# own change changes one of them gives the values of that file as unknown (WAY-339).
+# (COST_SCRIPTS, MEASURES_SCRIPT and GATE_SCRIPTS above), not a second list. A cycle of the-way
+# whose own change changes one of them gives the values of that file as unknown (WAY-339).
 STAGES_FILE = "stages.md"
 WORKING_NAME = "Working time without waiting for tools"
 WAITING_NAME = "Waiting for tools"
@@ -2277,8 +2278,9 @@ def counted(count: int, refused: int) -> str:
 @dataclass
 class Analysis:
     """The tables the register adds to the result, as rows of text; the values it leaves unknown
-    as (repository, record, value, why), each in full (`unknown`), and the values the register
-    holds back, its refused rows and problems whose cycle is not read (`held`)."""
+    as (repository, record, value, why) (`unknown`), and the values the register holds back, its
+    refused rows and problems whose cycle is not read (`held`); both go into the pairs of
+    *Unknown values* alike."""
     cycle_rows: list[list[str]]
     fixed_rows: list[list[str]]
     open_rows: list[list[str]]
@@ -2307,8 +2309,8 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     uncounted: Counter = Counter()
     found = [(problem, index.get((problem.repository, problem.record)))
              for problem in register.problems]
-    # The values the register holds back, its refused rows and the problems whose cycle is not read,
-    # are the ones grouped by field and reason; every other unknown value is given in full.
+    # The values the register holds back are its refused rows and the problems whose cycle is not
+    # read; every unknown value, those included, is grouped by field and reason in `unknown_rows`.
     held = list(register.refused)
     unknown: list[tuple[str, str, str, str]] = []
     counts: dict[tuple[str, str], Counter] = {}
@@ -2592,7 +2594,8 @@ def note_changed_tools(reads: list["Read"], ancestry: Ancestry) -> None:
                 continue
             last = cycle.later[-1] if cycle.later else cycle.record
             for file, paths in TOOL_GROUPS:
-                changed = changed_paths(ancestry, version, last, paths) if file in cycle.held else []
+                changed = (changed_paths(ancestry, version, last, paths)
+                           if file in cycle.held else [])
                 if changed:
                     withdraw_values(cycle, file, f"the cycle changed the tool that wrote them: "
                                                  f"{names_of(changed)} changed between the "
@@ -3106,9 +3109,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "## Cost",
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
-        "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
-        "nothing. A stage report whose section of stages has the columns *Cache write (5 minutes)* "
-        "and *Cache write (1 hour)* is priced with each of them at its own price; an earlier form "
+        "list or a change of `task-cycle/cycle_stages.py` starts a new one (WAY-339). A stretch of "
+        "the orchestrator with no token usage costs nothing. A stage report whose section of "
+        "stages has the columns *Cache write (5 minutes)* and *Cache write (1 hour)* is priced "
+        "with each of them at its own price; an earlier form "
         "has its cache writes inside its input and prices them as input, an approximation. "
         "A cycle whose stage report has no section of stages is priced from its table of "
         "tokens by model at the same prices, and its share of the cost in fix rounds is unknown. "
@@ -3204,11 +3208,11 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "The values the count did not establish, one row for each field and reason, with how many "
         "values the pair has and its first three examples, each as repository, record and value. "
         "The result keeps the number and three examples of each pair, and no option of the count "
-        "lists the rest. The full list of a pair's values stands where they are read: the register's "
-        "own values (its refused rows and the problems of a cycle it names) in the register; the "
-        "cycles' values in the copies of the cycles' records in the history of git. The values "
-        "about an issue or a version are made by the count from the register and from those "
-        "copies, and have no list of their own.",
+        "lists the rest. The full list of a pair's values stands where they are read: the "
+        "register's own values (its refused rows and the problems of a cycle it names) in the "
+        "register; the cycles' values in the copies of the cycles' records in the history of git. "
+        "The values about an issue or a version are made by the count from the register and from "
+        "those copies, and have no list of their own.",
         "",
     ]
     entries = [(cycle.repository, cycle.record, value, why)
