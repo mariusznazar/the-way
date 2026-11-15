@@ -36,8 +36,8 @@ script of the kind puts each change behind that act, so that the run without it 
 ### The rest of the exemplar
 
 The exemplar's fetch of the remote before it judges, its listing of each working directory with the
-reason for keeping or removing it, its removal of nested directories first, and its exit code 1 for a
-removal that failed stand here as examples. The kind holds no rule on these: a new script of the kind
+reason for keeping or removing it, its removal of nested directories first, and its own exit code
+for a removal that failed stand here as examples. The kind holds no rule on these: a new script of the kind
 may do each of them another way.
 
 ## Where in code
