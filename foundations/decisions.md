@@ -9895,14 +9895,15 @@ linter and, where it fails, names every function and file over a threshold with 
   agent-instructions, instruction-files, installation, process-audit, product-guidelines
 - **Based on:** none
 - **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361
-- **Verification:** invariants: function-and-file-size. For what the invariant leaves, an agent
-  compares a change with the decision:
+- **Verification:** invariants: function-and-file-size. tests: that a function is counted with the
+  functions nested in it and that a method is a function. For what the invariant and the test leave,
+  an agent compares a change with the decision:
   - complies: a test file of two thousand lines stays outside the rule; a change that adds a branch to
     a function over its threshold begins with a move of a part of it out (WAY-365); a function that
     cannot be divided is divided or the threshold is changed in this decision, never kept as an
     exception;
-  - violates: the configuration of the test lists a function or a file as an exception; the test
-    counts a function with no regard to the functions nested in it; the rule covers test files.
+  - violates: the configuration of the test lists a function or a file as an exception; the rule
+    covers test files.
 - **Origin:** none
 
 *Rationale:* the thresholds come from a trial run of sizes on the-way's own code, since only that shows

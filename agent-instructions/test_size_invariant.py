@@ -55,6 +55,7 @@ def script_files() -> list[Path]:
 
 class Counting(unittest.TestCase):
     def test_a_function_counts_the_functions_nested_in_it_and_a_method_is_a_function(self) -> None:
+        # decision: WAY-385 "A function of a script of the-way has at most 80 lines, counted with the functions nested in it"
         source = (
             "def outer():\n"
             "    x = 1\n"
