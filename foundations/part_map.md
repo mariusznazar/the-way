@@ -11,7 +11,7 @@ log of the-way itself.
 
 - **Files:** elements/decisions/**
   foundations/decisions.md
-- **Depends on:** elements-common
+- **Depends on:** elements-common · invariants · product-guidelines · project-level
 - **Trust boundary:** none
 
 ## part-map
@@ -21,7 +21,7 @@ the-way itself and the test that holds the imports of the-way's code to the depe
 
 - **Files:** elements/part-map/**
   foundations/part_map.md
-- **Depends on:** elements-common · invariants
+- **Depends on:** elements-common · invariants · decisions
 - **Trust boundary:** none
 
 ## relation-model
@@ -73,22 +73,26 @@ skill that finds entries in a source, and the critique skill, which reads a prop
 before the human sees it.
 
 - **Files:** elements/common/**
-- **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts
+- **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts ·
+  product-guidelines
 - **Trust boundary:** none
 
 ## project-level
 
 The part answers for the form and writing of a project definition, its readiness gate, the
-breakdown of an approved definition into a project plan and the check of that plan, and the
-refinement of a task before its implementation cycle, whether the task belongs to a project,
-uses its settlements as a source, or stands on its own, and for leading a handed-over plan through
-refinement and evidence-backed upkeep of task states, and for how the line of a task in the product's
-backlog is made, given its dependencies and moved to ready, and for the tests of its readiness
-check, its plan check and its reader of task-cycle evidence for plan states.
+breakdown of an approved definition into a project plan and the check of that plan, the refinement
+of a task before its implementation cycle, whether the task belongs to a project, uses its
+settlements as a source, or stands on its own, the leading of a handed-over plan through refinement
+and the evidence-backed upkeep of task states, and the tests of its readiness check, its plan check
+and its reader of task-cycle evidence for plan states. It also answers for the guide that an agent
+writing or completing a product's deployment skill reads,
+`project-level/task/deployment_skill_guide.md`, and for when the line of a task in the product's
+backlog is written, given its dependencies and moved to ready, but not for how a line is made,
+which the rules of the task place say (WAY-107).
 
 - **Files:** project-level/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · relation-model · product-guidelines
+  elements-common · relation-model · product-guidelines · task-cycle
 - **Trust boundary:** project-level/readiness_check.py
   project-level/plan_check.py
   project-level/plan_state.py
@@ -100,7 +104,7 @@ them and for the definitions of the agent types that run those steps in Claude C
 
 - **Files:** task-cycle/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · gate · product-guidelines · installation
+  elements-common · project-level · gate · product-guidelines · installation · foundation-review
 - **Trust boundary:** task-cycle/cycle_stages.py
   task-cycle/cycle_measures.py
   task-cycle/gate_times.py
@@ -125,7 +129,7 @@ answers how the whole process fares over many cycles, which is not how one task 
 what only work on the audit needs stays out of what every agent of the cycle reads.
 
 - **Files:** process-audit/**
-- **Depends on:** task-cycle · project-level
+- **Depends on:** task-cycle · project-level · gate
 - **Trust boundary:** process-audit/audit_count.py
 
 ## gate
@@ -162,7 +166,8 @@ agents' tools and of CI that direct them.
   .claude/agents/**
   .agents/skills/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines
+  elements-common · project-level · task-cycle · gate · instruction-files · product-guidelines ·
+  foundation-review · process-audit
 - **Trust boundary:** none
 
 ## instruction-files

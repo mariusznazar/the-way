@@ -7,7 +7,7 @@ the identifier a dependency names, how a line is found, which fields may change,
 an identifier is already carried — is the rules of the task place, never the-way's and never text
 written at the product (WAY-107): find them as `project-level/backlog_place.md` gives, the line
 `Task rules`, and read the passages of those rules on a task's line before writing one. Where the
-rules give none of the three forms, ask the human once; write no form of your own.
+rules are silent on a matter of that list, ask the human once; write no form of your own.
 
 ## Make the line
 
@@ -40,6 +40,10 @@ the-way; a line of it takes one only where the rules require it.
 The derivation is unambiguous only while the plan file names of the place differ, and only while no
 two pairs join to the same text: the plan `a-b.md` with the task `c` and the plan `a.md` with the
 task `b-c` both give `a-b-c`. The derivation does not check this.
+
+Where the rules of the task place do not accept the derived identifier — they forbid hyphens, say —
+ask the human and write no line; do not change the identifier to fit the rules, since a dependency
+of another line may already name it as derived.
 
 ## The dependencies
 

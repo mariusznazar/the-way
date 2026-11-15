@@ -88,10 +88,12 @@ one left behind is withdrawn and never reused stand in `elements/common/rules.md
 ## Allowed dependencies
 
 *Depends on* names the parts this part may depend on, not those its code reaches for today: the map
-holds the rule, and the code shows the state (WAY-225). The return step of a change compares the two
-for the parts the change touches (WAY-11).
+holds the rule, and the code shows the state (WAY-225). A dependency of a part is any reach of it to
+another part, not only an import, so *Depends on* names also a part whose skill the part calls or
+whose file, form of a file or tag of git its script reads. The return step of a change compares the
+two for the parts the change touches (WAY-11).
 
-Every product whose parts import code from other parts holds one invariant of allowed dependencies,
+Every product whose parts import code from other parts holds one invariant of allowed imports,
 with its test in the product's suite, that a file of a part imports only files of its own part, of
 the parts its *Depends on* names, of a part of test helpers where the importing file is a test (see
 "Assigning files"), and of a part that an invariant "the part `<part>` does not depend on `<part>`"
@@ -112,10 +114,10 @@ A dependency the code holds that *Depends on* does not allow goes to the human. 
 accepts it as it stands, it is written as an invariant — "the part `<part>` does not depend on
 `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the code
 meets it, as the invariants template's "Violated" gives it, while the invariant of allowed
-dependencies above lets that import pass and keeps every other boundary; *Depends on* is never
-rewritten to fit what the code reaches for today (WAY-225, WAY-51). Each such invariant is a whole
-entry a human accepted, not a list of known violations, and the map holds no list of such
-dependencies.
+imports above lets that import pass, where the dependency is an import, and keeps every other
+boundary; *Depends on* is never rewritten to fit what the code reaches for today (WAY-225, WAY-51).
+Each such invariant is a whole entry a human accepted, not a list of known violations, and the map
+holds no list of such dependencies.
 
 ## Trust boundary
 
@@ -178,8 +180,8 @@ A field stays in this template only while someone or something reads it (WAY-05)
 |---|---|
 | identifier (heading) | `elements/common/foundation_check.py`, which finds every *Scope*, *Part* and *Depends on* naming it; whoever follows such a reference |
 | sentence | the agent making a change to the part's files or to what the surface promises; the search of the foundation, when the sentence changes |
-| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part; the test of the invariant of allowed dependencies, which finds the part of each file |
-| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py`; the test of the invariant of allowed dependencies, which compares it with the imports |
+| Files | the agent naming the parts its work touches; `foundation_check.py`, which finds each tracked file in one part; the test of the invariant of allowed imports, which finds the part of each file |
+| Depends on | the agent making a change, which keeps the code within it; the return step, which compares it with the code; `foundation_check.py`; the test of the invariant of allowed imports, which compares it with the imports |
 | Trust boundary | the agent making a change that touches its files, and the agent reviewing it, who check crafted input |
 | Relied on by | the agent making a change to the surface, and the human merging its request, who see whom the change reaches |
 | external context | whoever records a trust boundary at the part that handles an exchange (WAY-48) |
