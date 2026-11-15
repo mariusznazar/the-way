@@ -19,9 +19,9 @@ Without --write the generator prints what it would create or change and writes n
 remove with `git rm -r`; it deletes nothing. A malformed frontmatter, a name two skills hold, or a
 failed git call stops the run before anything is written.
 
-Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise; 2 with `Error: <message>`
-on stderr when the frontmatter of a skill has no line `name:` or no line `description:`, the
-message naming the file and that field.
+Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise, a `name:` or a
+`description:` with no value included; 2 with `Error: <message>` on stderr when the frontmatter of
+a skill has no line `name:` or no line `description:`, the message naming the file and that field.
 
 Standard library only; the only program started is git.
 """

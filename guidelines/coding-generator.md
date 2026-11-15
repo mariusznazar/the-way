@@ -35,8 +35,9 @@ generator puts every write behind that option, so that the run without it is onl
 ### The rest of the exemplar
 
 The exemplar's reading of each skill's frontmatter, its listing of the repository's files through
-git, its message for each orphan, and its exit code 2 at a missing field, which WAY-344 gives, stand
-here as examples. The kind holds no rule on these: a new generator may do each of them another way.
+git, its message for each orphan, its exit code 2 at a missing line of the frontmatter, which WAY-344
+gives, and its exit code 1 at a line with no value, stand here as examples. The kind holds no rule
+on these: a new generator may do each of them another way.
 
 ## Where in code
 

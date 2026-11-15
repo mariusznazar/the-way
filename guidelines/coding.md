@@ -36,11 +36,9 @@ comment that turns a rule off has no effect: the test of the invariant runs the 
 flag that ignores such comments, so the report stays, and the review of each change finds a comment
 the flag cannot reach. Turning a rule off in `ruff.toml`, or moving a rule between the rules that
 block and the examples, is a change of WAY-380 that the human approves. A rule under `## Examples`
-blocks nothing and no invariant checks it; an agent reads its reports and may pass them by. While
-the entry of the invariant reads `Violated: yes`, its test is an expected failure and shows no
-report that returns to a cleaned file or reaches a new one, so the review of each change compares
-the changed files with this rule. No command of the linter stands beside the one command of the
-gate (WAY-16).
+blocks nothing and no invariant checks it; an agent reads its reports and may pass them by. The
+review of each change compares the changed files with this rule. No command of the linter stands
+beside the one command of the gate (WAY-16).
 
 ### Formatter
 
@@ -86,9 +84,8 @@ nested in it, and a file by its lines. The thresholds and the exceptions stand i
 A change that adds to a function or a file over its threshold begins with a move of a part of it out,
 with no change of behaviour (WAY-365). The test of the invariant runs apart from the linter and,
 where it fails, names every function and file over a threshold with its size; no command of its own
-that counts sizes stands beside the one command of the gate (WAY-361). While the entry of the
-invariant reads `Violated: yes`, only the review of each change keeps a cleaned file or a new one
-from going over, so it compares the changed files with the thresholds.
+that counts sizes stands beside the one command of the gate (WAY-361). The review of each change
+compares the changed files with the thresholds.
 
 ### How a script starts and ends
 
@@ -99,11 +96,12 @@ from going over, so it compares the changed files with the thresholds.
 
 Each script that is started from the command line opens with a description of how it is run
 (`python -B …`) and of what its exit codes mean, and has one fixed place of start that returns the
-exit code. A file of the kind `shared-module`, which is only imported, has no place of start, and
-this rule does not reach it. The reason: the one who runs a script, a human or an agent, finds there
-how to run it and what an exit code tells, and the exit code reaches the caller only through one
-place that returns it. The review of each change that adds or changes a script compares it with this
-rule.
+exit code. A module that other scripts import and that has no more for the command line than a fixed
+`if __name__ == "__main__":` block, as a file of the kind `shared-module` has, is no such script,
+and this rule does not reach it. The reason: the one who runs a script, a human or an agent, finds
+there how to run it and what an exit code tells, and the exit code reaches the caller only through
+one place that returns it. The review of each change that adds or changes a script compares it with
+this rule.
 
 ### A field missing from a file a script reads
 
