@@ -1290,7 +1290,10 @@ because the definition and the plan of its tasks rest on it, and a change made f
 leave them saying the old thing with no sign (WAY-118). The price is that refinement reaches
 decisions more often, and a hurried one could open decisions nobody needed to open, which the
 human's choice among the options answers (WAY-314).
-*Rejected:* unknown.
+*Rejected:* for the sentences that open the entry, unknown; for its last sentence, a task that
+changes a projected decision with one choice, as it changes a decision of the foundation — the
+definition and the plan go on saying the old version, other tasks of the plan diverge with no
+signal, and bringing the change into the definition and the plan is a larger task.
 
 ### WAY-314 — Which act of the human consents to a change of a decision that refinement shows?
 
@@ -2434,8 +2437,9 @@ rather than written by hand and how it is compared with its generator.
 
 Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
 matches, each naming a directory or one kind of file — every invariant test, say — rather than
-listing a directory's files one by one; a file that no pattern matches, and a file that two parts
-claim, is an error of the check of the foundation, unless the map lists that file as left out on
+listing a directory's files one by one, except the files at the root of the repository, which is
+the directory of no part and whose files the map names one by one; a file that no pattern matches,
+and a file that two parts claim, is an error of the check of the foundation, unless the map lists that file as left out on
 purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
 tracks. Tests belong to the part they test and generated files to the part of their generator; the
 files that serve the whole repository — the lockfile and the build configuration — are a part of
@@ -2454,7 +2458,8 @@ or changes, not from the part the file itself belongs to.
   - complies: a change renaming `net/` to `network/` rewrites the *Trust boundary* `net/*.py` of
     its part, and `elements/common/foundation_check.py` reports no pattern matching no file; a
     helper that the tests of two parts import stands in a part whose sentence says it serves the
-    tests of several parts;
+    tests of several parts; the root `AGENTS.md` and `CLAUDE.md` stand in the *Files* of their part
+    each by its path, since the root is the directory of no part;
   - violates: the *Trust boundary* still names `net/*.py`, which matches no file git tracks, and
     the change is merged with that error of the check; a part whose tests use a helper of another
     part names that part in its *Depends on*; code that is no test imports a part of test helpers.
@@ -2467,7 +2472,9 @@ file is added or moved inside it. A test changes what its part promises; files d
 carries out tasks change every later task. A helper serving the tests of several parts tests
 nothing, so a part of its own takes no test away from the part it tests, and the tests importing
 it need no *Depends on* that would let the code of their part import it too; its sentence says
-what it is, so the form of an entry stays as it is.
+what it is, so the form of an entry stays as it is. The root of the repository holds files of
+several parts and is the directory of none, so a pattern for it would name no part's directory, and
+each file there is named by its path.
 *Rejected:* a file in several parts — two answers, no rule to pick; patterns matched by a script
 (fnmatch) — a second dialect beside git's; a pattern for each file — the map changes with every file
 added or removed; tests as a part of their own — a test change stops counting against what it tests,
@@ -2479,7 +2486,9 @@ nothing in the process changes, but the code of those parts may then import that
 rule loosening for a whole part to let its tests through; imports from tests left unchecked — the
 simplest check of the boundaries, but a test of one part reaching into the code of another goes
 unseen; a field or a mark in the entry of a part of test helpers — it changes the form of the map in
-every product while nothing needs it, and would serve only a script of the process reading the map.
+every product while nothing needs it, and would serve only a script of the process reading the map;
+the sentence left without the clause on the files at the root — the map goes on with no effect, but
+a reader of this decision who reads it strictly sees a map that goes against it.
 
 ### WAY-48 — How is a trust boundary recorded?
 
@@ -6551,15 +6560,16 @@ that remains. Where a blocking finding remains after that review of the fix, no 
 the orchestrator does not rule on it, no further slice is made, and the cycle opens a draft request
 marked `blocked` that lists each remaining blocking finding with its place in the code and its
 reason, what the fix tried, and the time, models and tokens the cycle has used so far, from its
-record of stages, with the number of review rounds. Where the review of the whole change leaves no
-blocking finding and lists Minor findings that WAY-161 has the cycle fix, one fix takes them in and
-one review of that fix follows, and where that review finds a new Critical or Important finding in
-the fix, the cycle reverts the fix's commits with a commit of its own, so that they stay in
-history, runs no third round and opens the request, not blocked, on the code the review of the whole
-change accepted, the request listing the Minor findings the fix tried and the new finding with its
-grade and as the review of the fix found it. In the code reviews after the review of the whole
-change, and for a Minor finding that remains after a fix, the findings that do not block go unfixed
-to the request's lists as WAY-161 gives them.
+record of stages, with the number of review rounds.
+
+Where the review of the whole change leaves no blocking finding and lists Minor findings that
+WAY-161 has the cycle fix, one fix takes them in and one review of that fix follows, and where that
+review finds a new Critical or Important finding in the fix, the cycle reverts the fix's commits
+with a commit of its own, so that they stay in history, runs no third round and opens the request,
+not blocked, on the code the review of the whole change accepted, the request listing the Minor
+findings the fix tried and the new finding with its grade and as the review of the fix found it. In
+the code reviews after the review of the whole change, and for a Minor finding that remains after a
+fix, the findings that do not block go unfixed to the request's lists as WAY-161 gives them.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -6725,13 +6735,12 @@ rule of size there is no threshold and no such test, so the same reasoning leave
 structure Minor and not blocking. The reviewer still judges the scope of each finding, so a
 restructuring of code from before the change reaches the request's list and not the fix.
 *Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
-block the change and give a round of fixes, with the same chance in the grade as today for the form
-of an entry; findings of structure always outside the task's scope, on the request's list and for the
+block the change and give a round of fixes on the reviewer's impression of the structure;
+findings of structure always outside the task's scope, on the request's list and for the
 review of the foundation — code with no user and a name no longer true, which the change itself
 left, are cleaned only by a separate task after the review of the foundation, a full cycle; the
 finding graded as any other where the product has no rule of size — with no threshold a finding of
-structure can block the change on the reviewer's impression and give a round of correction, with
-the same chance in the grade as today for the form of an entry.
+structure can block the change on the reviewer's impression and give a round of correction.
 
 ### WAY-364 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
 
@@ -7638,8 +7647,8 @@ class, a weight or a cost of an occurrence itself.
 that a tool of the user fills holds that judgment once, where an audit that read the records of
 cycles itself would repeat it every week, and could repeat it differently. A template lets another
 user of the-way keep the same register in their own way, as WAY-103 asks of a process meant for
-more than its author. The price taken: until a user has a tool that fills the register, the audit
-has nothing to count.
+more than its author. The price taken: a user who has no tool that fills the register has nothing
+for the audit to count, since the template of the register does not fill it itself.
 *Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost
 — the same remarks would be judged by two agents, who may judge differently, and the tie of a
 problem to its fix would have to be rebuilt each time; the-way taking over the review of the
@@ -8868,16 +8877,16 @@ dependency on the main branch passes with no signal, as it did in a product whos
 
 ### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
 
-The template of the coding discipline requires, in the general file of a product's coding guidelines,
-a rule of the size of a function and a file under the heading `### Size of a function and a file`,
-after the six rules on failures and logs, with an invariant of its own and a test of its own, outside
-the set of rules of the product's linter. A product sets its thresholds after a trial run on its
-existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
-a decision of its log that gives the reason (WAY-173), and a product that already has coding
-guidelines gets the rule by an ordinary extension, as the skill `maintain-coding-guidelines` gives
-it for the rules on failures and
-logs. Where code other than the exceptions of the product's decision stands over a threshold, the
-rule's invariant is marked violated until that code is cleaned (WAY-51).
+The template of the coding discipline requires, in the general file of a product's coding
+guidelines, a rule of the size of a function and a file under the heading
+`### Size of a function and a file`, after the six rules on failures and logs, with an invariant of
+its own and a test of its own, outside the set of rules of the product's linter. A product sets its
+thresholds after a trial run on its existing code and writes its exceptions in its decision on the
+rule, or departs from the rule only by a decision of its log that gives the reason (WAY-173), and a
+product that already has coding guidelines gets the rule by an ordinary extension, as the skill
+`maintain-coding-guidelines` gives it for the rules on failures and logs. Where code other than the
+exceptions of the product's decision stands over a threshold, the rule's invariant is marked
+violated until that code is cleaned (WAY-51).
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -8919,8 +8928,9 @@ stand under a threshold.
 from it — a product with no rule has no threshold, so blocking a change over a threshold and the
 change in a task's plan do nothing there, and a skill that only proposes the checks leaves it so for
 as long as nobody takes the proposal up (WAY-202); no rule in the template, only the question about
-the structure of code in the review — nothing blocks, and the assessment of structure depends on the
-reviewer, with the same chance in the grade as today for a remark on the form of an entry.
+the structure of code in the review — nothing blocks, since a finding of structure in a product with
+no rule of size is graded Minor (WAY-363), and the assessment of structure depends on the reviewer's
+impression.
 
 ### WAY-361 — How does the review of a change get the sizes of functions and files from a product?
 
