@@ -95,16 +95,16 @@ gives.
    - Add with `--decision NUMBER` the decisions the task's *Decisions in play* or the work's source
      names, and each decision whose sentence a test the work alters holds by a line `decision:`
      (WAY-02, WAY-150), as step 3 adds the invariants such a test cites.
-   - Read the index. Open whole only the decisions the work changes, goes against or proposes
-     another answer to, those the task or the work's source names, those whose sentence a test the
-     work alters holds by a line `decision:` and those whose binding sentences leave open what the
-     work has to do; of a decision the work goes against or proposes another answer to, the
+   - Read the index. Of its decisions, open whole only those the work changes, goes against or
+     proposes another answer to, those the task or the work's source names, those whose sentence a
+     test the work alters holds by a line `decision:` and those whose binding sentences leave open
+     what the work has to do; of a decision the work goes against or proposes another answer to, the
      *Rejected* is read as well. An entry read whole is the range of lines from its heading to the
      next heading of any level, with its rationale and *Rejected*, since a section heading can
      follow an entry in the decision log, and `##` ends an entry in the other foundation files. An
      index line or a search hit locates a decision and states what binds; it never replaces the
      entry for a decision the work changes, goes against or answers otherwise. The log beyond the
-     index and the entries opened is not read.
+     index, the entries opened and the decisions step 3 reaches by a link is not read.
    - The reviewer of the whole change, selecting for its own review in a task cycle, writes and
      reads the index of its whole selection, and states in its report how many decisions it read
      whole (WAY-150). It reads no decision of its selection by title: the run through the

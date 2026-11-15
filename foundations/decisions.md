@@ -1472,16 +1472,18 @@ the decisions whose *Scope* names it and the invariants whose *Part* names it or
 the invariants a test the work alters cites, the decisions whose sentence such a test holds by a
 line `decision:`, the decisions the task's *Decisions in play* or the work's source names, the
 touched parts' entries of the map and the entries these link to as far as the work needs. Of the
-decisions it selects, whoever selects reads the index and opens whole only the decisions the work
-changes, goes against or proposes another answer to — that one with its rejected options — those
-the task or the work's source names, those whose sentence a test the work alters holds by a line
-`decision:` and those whose binding sentences leave open what the work has to do; each selected
-entry that is no decision — an invariant, an entry of the map of a touched part, or an entry other
-than a decision that these link to — it reads whole, and it reads more entries where relevance is
-uncertain and a whole file only where it is short; the reviewer of the whole change reads the index
-of its whole selection and states in its report how many decisions it read whole. The selection is
-neither recorded nor compared with every *Scope* of the log, and the search of the whole foundation
-(WAY-33) and the whole reading of templates, rules and examples keep their domain.
+decisions it finds by *Scope*, by a line `decision:` or as the task or the work's source names
+them, whoever selects reads the index and opens whole only the decisions the work changes, goes
+against or proposes another answer to — that one with its rejected options — those the task or the
+work's source names, those whose sentence a test the work alters holds by a line `decision:` and
+those whose binding sentences leave open what the work has to do; each other entry it selects — an
+invariant, an entry of the map of a touched part, or an entry, a decision included, that these or
+the decisions of the index link to as far as the work needs — it reads whole, and it reads more
+entries where relevance is uncertain and a whole file only where it is short; the reviewer of the
+whole change reads the index of its whole selection and states in its report how many decisions it
+read whole. The selection is neither recorded nor compared with every *Scope* of the log, and the
+search of the whole foundation (WAY-33) and the whole reading of templates, rules and examples keep
+their domain.
 
 The index of a selection of decisions is no file of the repository: a script of the-way writes it
 on demand into a file the agent names, and it gives for each selected decision its number, its
