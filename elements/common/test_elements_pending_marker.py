@@ -1,4 +1,4 @@
-"""The invariant `elements-no-pending-marker`: no file git tracks under `elements/` holds the marker
+"""The invariant `elements-pending-marker`: no file git tracks under `elements/` holds the marker
 of a decision still to be made.
 
 The test reads the files of this repository that git tracks under `elements/`, this file among them,
@@ -24,7 +24,7 @@ def tracked_files_under_elements() -> list[str]:
 
 
 class TrackedFilesUnderElementsTest(unittest.TestCase):
-    # invariant: elements-no-pending-marker
+    # invariant: elements-pending-marker
     def test_no_tracked_file_under_elements_holds_the_pending_marker(self) -> None:
         names = tracked_files_under_elements()
         self.assertTrue(names, "git lists no file under elements/")

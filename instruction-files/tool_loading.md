@@ -39,8 +39,8 @@ method is at the end.
 - **After compaction:** the project-root `CLAUDE.md` is read again from disk; nested `CLAUDE.md`
   files and rules with `paths` load again on demand
   (https://code.claude.com/docs/en/memory § Instructions seem lost after /compact).
-- **`@path`** expands the imported file and loads it into context at launch, alongside the
-  `CLAUDE.md` that references it; Markdown code spans and fenced code blocks are skipped
+- **`@path`** expands the imported file and loads it into context alongside the `CLAUDE.md` that
+  references it; Markdown code spans and fenced code blocks are skipped
   (fact `claude-code-imports`).
 - **`@path` depth and paths:** imports may nest to a depth of four hops, and a relative path
   resolves from the file that holds the import

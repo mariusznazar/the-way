@@ -246,7 +246,8 @@ those decisions and invariants in its own foundation; the testing guidelines nam
      change of that decision (WAY-242);
   8. *Command* — the gate's one command and how it narrows to the level, a file or a test, where the
      gate can; `none` where it cannot; no command of the test tool of its own (WAY-241, WAY-16);
-  9. *Time limit* — a pointer to the configuration file that holds it, never its value (WAY-241).
+  9. *Time limit* — a pointer to the configuration file that holds it, never its value; `none` where
+     no configuration file holds a limit (WAY-241).
 
   The defaults of fields 3 to 6 are what this template proposes; a product adopts them or departs
   from them by a decision (WAY-241, WAY-173).

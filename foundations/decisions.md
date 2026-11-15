@@ -82,9 +82,10 @@ differ.
 
 Nothing in this repository points to a source outside it that its readers cannot reach: every entry
 carries its whole reasoning, and what is seen only in such a source is described in the entry
-instead of being pointed to. The one exception is the place of its tasks and the rules of that
-place, named in the `## Backlog` section of its root `AGENTS.md` and nowhere else, each by an entry
-of the locations file of WAY-320 and never by a path.
+instead of being pointed to. The one exception is the places where the work of the-way lies — the
+place of its tasks and the rules of that place, the register of problems and the results of the
+audit — which are no source of reasoning, and a file that needs one names it by an entry of the
+locations file of WAY-320, never by a path.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
   installation, agent-instructions, instruction-files, product-guidelines, task-cycle
@@ -95,23 +96,29 @@ of the locations file of WAY-320 and never by a path.
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
     `AGENTS.md` names, in `## Backlog`, the entries of the locations file where the place of its
-    tasks and the rules of that place are kept;
+    tasks and the rules of that place are kept, and the instructions of the audit name the entry
+    that holds the register of problems;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
-    without saying what was seen; the `## Backlog` section holds the path of the place of the
-    tasks.
+    without saying what was seen; a file holds the path of the place of the tasks or of the
+    register of problems; a decision rests its reasoning on a task document or on a result of the
+    audit.
 - **Origin:** none
 
 *Rationale:* a pointer to a source the reader cannot open is a dead end, leaving a claim nobody
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
-to name. A backlog place is where work is kept, not reasoning an entry rests on, and WAY-107 sends
-an agent there, to the rules by which the lines of that place are written as well; named in that one
-section, it stays a place to find work and never becomes a
-source an entry points to. Named by an entry of the locations file, it adds no path to a public
-repository, which would tell every reader how one user's disk is laid out.
+to name. A place where work lies — a backlog, the register of problems, the results of the audit —
+is where work is kept and found, not reasoning an entry rests on, and WAY-107 sends an agent to the
+backlog, to the rules by which the lines of that place are written as well; named only by an entry
+of the locations file, such a place stays a place to find work and never becomes a source an entry
+points to. A general sentence takes in each place the work comes to lie in, where a list would need
+a change of this decision for each one. Named by an entry of the locations file, a place adds no
+path to a public repository, which would tell every reader how one user's disk is laid out.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them; the path of the place of the tasks left in `## Backlog`, with the check for paths excepting
 that section — the repository would go on saying how the user's disk is laid out, the very thing the
-check is there to stop.
+check is there to stop; a closed list of the places with the one file that may name each — every new
+place needs a change of this decision, and a change forgotten leaves the same gap between the
+decision and the files.
 
 ### WAY-28 — How does the process enter a product that already exists?
 
@@ -1283,7 +1290,10 @@ because the definition and the plan of its tasks rest on it, and a change made f
 leave them saying the old thing with no sign (WAY-118). The price is that refinement reaches
 decisions more often, and a hurried one could open decisions nobody needed to open, which the
 human's choice among the options answers (WAY-314).
-*Rejected:* unknown.
+*Rejected:* for the sentences that open the entry, unknown; for its last sentence, a task that
+changes a projected decision with one choice, as it changes a decision of the foundation — the
+definition and the plan go on saying the old version, other tasks of the plan diverge with no
+signal, and bringing the change into the definition and the plan is a larger task.
 
 ### WAY-314 — Which act of the human consents to a change of a decision that refinement shows?
 
@@ -1391,12 +1401,13 @@ repeats the first search, and a record shows that a search ran, not what it miss
 An element's skill holds only the way of working particular to its element: every rule of the
 element's entries stands in the element's template, or once in the part the elements share
 (WAY-09) where it is common to them; the way of working the skills share stands once in that part,
-and a skill reads the rules and that way of working from there instead of restating them.
+and a skill reads the rules and that way of working from there instead of restating them. No
+template and no skill of an element carries a note that a rule waits for a decision.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: skill-rule-source · elements-no-pending-marker.
+- **Verification:** invariants: skill-rule-source · elements-pending-marker.
   For what the skill holds, an agent compares the change with the decision:
   - complies: a fix to a field's form in the skill's output goes into the template, not the
     skill; the skill orders its steps and says what to ask;
@@ -1406,10 +1417,15 @@ and a skill reads the rules and that way of working from there instead of restat
 
 *Rationale:* an entry written by hand or by another agent meets only the template and the shared
 part, so the rules stand where every writer and every check reaches them; steps and questions are
-no rule of an entry.
+no rule of an entry. A note in a template or a skill that a rule waits for a decision reads as a
+rule that does not bind yet, and it stays when the decision comes, since nothing leads from the
+decision to the note (WAY-33); a writer who meets it takes a settled rule for an open one.
 *Rejected:* rules restated in the skill next to the template — two copies that drift, and the
 template and the skill hold entries to different rules; each rule citing the decision that sets
-it — the rules are the-way's own text, changed and reviewed like any other change to it.
+it — the rules are the-way's own text, changed and reviewed like any other change to it; the
+decision left without a sentence on the note that a rule waits — the reason for the invariant that
+keeps such notes out lives in the description of one request alone, and whoever goes from the
+invariant to the decision finds no reason.
 
 ### WAY-113 — How does an agent of the-way ask a human decision?
 
@@ -2170,15 +2186,14 @@ changes — the author's search finds the decision without it (WAY-33); the part
 map's external context as linked facts — a new link with no known consumer; for a measurement the
 product's people made, a summary of it with its conditions kept as a file of this repository that a
 fact would name at a fixed commit — a new form of source beside those an environment fact takes, a
-new kind of file
-with a rule on what it may not carry, and a summary to write and clean for each experiment, with the
-decisions that carry such figures rewritten and a fact written for each; the figure with a note that
-it comes from the author's private notes in place of a source — it points a reader to a source the
-reader cannot open, which WAY-27 rejects; the rule alone, with no sentence in the decision that the
-measurement is the product's own — a reviewer would still guess whether a figure with no source is a
-measurement of the product or a citation left without its fact; no rule — each decision that rests
-on such a measurement meets the collision of this decision with WAY-27 again, and the verdict
-depends on which of the two a reviewer reads as prevailing.
+new kind of file with a rule on what it may not carry, and a summary to write and clean for each
+experiment, with the decisions that carry such figures rewritten and a fact written for each; the
+figure with a note that it comes from the author's private notes in place of a source — it points a
+reader to a source the reader cannot open, which WAY-27 rejects; the rule alone, with no sentence in
+the decision that the measurement is the product's own — a reviewer would still guess whether a
+figure with no source is a measurement of the product or a citation left without its fact; no rule —
+each decision that rests on such a measurement meets the collision of this decision with WAY-27
+again, and the verdict depends on which of the two a reviewer reads as prevailing.
 
 ## Glossary
 
@@ -2421,17 +2436,18 @@ rather than written by hand and how it is compared with its generator.
 
 Every file git tracks belongs to exactly one part of the map, by path patterns that git itself
 matches, each naming a directory or one kind of file — every invariant test, say — rather than
-listing a directory's files one by one; a file that no pattern matches, and a file that two parts
-claim, is an error of the check of the foundation, unless the map lists that file as left out on
-purpose, and so is a pattern of a part's *Files* or *Trust boundary* that matches no file git
-tracks. Tests belong to the part they test and generated files to the part of their generator; the
-files that serve the whole repository — the lockfile and the build configuration — are a part of
-their own; the files that serve the tests of several parts are another, which its sentence describes
-as such with no field of its own, and which the tests of every part may import while code that is no
-test may not; and the files that only direct whoever carries out its tasks — instructions for
-agents, skills, hooks and the configuration of agents' tools and of CI — are another. For a file
-that collects entries about many parts, the parts a change touches follow from the entries it adds
-or changes, not from the part the file itself belongs to.
+listing a directory's files one by one, except the files at the root of the repository, which is the
+directory of no part and whose files the map names one by one; a file that no pattern matches, and a
+file that two parts claim, is an error of the check of the foundation, unless the map lists that
+file as left out on purpose, and so is a pattern of a part's *Files* or *Trust boundary* that
+matches no file git tracks. Tests belong to the part they test and generated files to the part of
+their generator; the files that serve the whole repository — the lockfile and the build
+configuration — are a part of their own; the files that serve the tests of several parts are
+another, which its sentence describes as such with no field of its own, and which the tests of every
+part may import while code that is no test may not; and the files that only direct whoever carries
+out its tasks — instructions for agents, skills, hooks and the configuration of agents' tools and of
+CI — are another. For a file that collects entries about many parts, the parts a change touches
+follow from the entries it adds or changes, not from the part the file itself belongs to.
 
 - **Scope:** part-map, agent-instructions, task-cycle
 - **Based on:** git-path-patterns
@@ -2441,7 +2457,8 @@ or changes, not from the part the file itself belongs to.
   - complies: a change renaming `net/` to `network/` rewrites the *Trust boundary* `net/*.py` of
     its part, and `elements/common/foundation_check.py` reports no pattern matching no file; a
     helper that the tests of two parts import stands in a part whose sentence says it serves the
-    tests of several parts;
+    tests of several parts; the root `AGENTS.md` and `CLAUDE.md` stand in the *Files* of their part
+    each by its path, since the root is the directory of no part;
   - violates: the *Trust boundary* still names `net/*.py`, which matches no file git tracks, and
     the change is merged with that error of the check; a part whose tests use a helper of another
     part names that part in its *Depends on*; code that is no test imports a part of test helpers.
@@ -2454,7 +2471,9 @@ file is added or moved inside it. A test changes what its part promises; files d
 carries out tasks change every later task. A helper serving the tests of several parts tests
 nothing, so a part of its own takes no test away from the part it tests, and the tests importing
 it need no *Depends on* that would let the code of their part import it too; its sentence says
-what it is, so the form of an entry stays as it is.
+what it is, so the form of an entry stays as it is. The root of the repository holds files of
+several parts and is the directory of none, so a pattern for it would name no part's directory, and
+each file there is named by its path.
 *Rejected:* a file in several parts — two answers, no rule to pick; patterns matched by a script
 (fnmatch) — a second dialect beside git's; a pattern for each file — the map changes with every file
 added or removed; tests as a part of their own — a test change stops counting against what it tests,
@@ -2466,7 +2485,9 @@ nothing in the process changes, but the code of those parts may then import that
 rule loosening for a whole part to let its tests through; imports from tests left unchecked — the
 simplest check of the boundaries, but a test of one part reaching into the code of another goes
 unseen; a field or a mark in the entry of a part of test helpers — it changes the form of the map in
-every product while nothing needs it, and would serve only a script of the process reading the map.
+every product while nothing needs it, and would serve only a script of the process reading the map;
+the sentence left without the clause on the files at the root — the gap has no effect on the map or
+its check, but a reader of this decision who reads it strictly sees a map that goes against it.
 
 ### WAY-48 — How is a trust boundary recorded?
 
@@ -2794,12 +2815,12 @@ longer caught, and the cycle stops where the host of the repository fails.
 
 The-way departs, for its own code and its own tests, from the general coding guidelines and from the
 testing guidelines of a product, under the shared reading of product guidelines: in each part named
-in *Scope*, neither is missing, so
-a task of the-way that writes code, or writes or changes a test, in such a part waits for neither.
-The *Scope* names every part of the-way's part map, and a change that adds a part to the part map adds
-that part to this decision's *Scope*. A separate task that writes the general coding guidelines of
-the-way's own takes the coding guidelines out of this decision, one that writes its testing guidelines
-takes the testing guidelines out of it, and once both are written the decision is withdrawn.
+in *Scope*, neither is missing, so a task of the-way that writes code, or writes or changes a test,
+in such a part waits for neither. The *Scope* names every part of the-way's part map, and a change
+that adds a part to the part map adds that part to this decision's *Scope*. A separate task that
+writes the general coding guidelines of the-way's own takes the coding guidelines out of this
+decision, one that writes its testing guidelines takes the testing guidelines out of it, and once
+both are written the decision is withdrawn.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -3665,12 +3686,12 @@ writes a new entry only for a rule none of them states.
     that decision whole in its foundation step, and the task the plan assigns later finds it and
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
     that sentence and puts its meaning before the human in the request's section for the human's
-    decisions;
-    a plan member whose code would make another item's entry true returns to the plan first;
+    decisions; a plan member whose code would make another item's entry true returns to the plan
+    first;
   - violates: the return step writes a new decision for a rule a projected entry of the
     task's source states; a shortened projected entry is written as the gate approved it, its
-    meaning left out of the request's section for the human's decisions;
-    the code a late-found projected invariant covers is set aside and rewritten.
+    meaning left out of the request's section for the human's decisions; the code a late-found
+    projected invariant covers is set aside and rewritten.
 - **Origin:** none
 
 *Rationale:* a projected entry is wording a human already settled at the gate, and the task
@@ -3813,16 +3834,16 @@ with no need of its own; the rule of belonging alone for those matters — their
 would never be listed, and looking at them would settle nothing; a requirement of the step beside
 the list — a new place in the form of a definition, and its answer would not reach later projects
 as a decision of the foundation; the logs, the interface, the development data and the place of the
-screenshots as one choice — it binds independent choices together, and a later change to one
-reopens them all; one heading the
-step splits into as many choices as the product needs — whether a matter is left out would rest on
-the agent's judgment alone; the matters on the list the deployment skill of a product covers
-(WAY-139) — only a task that deploys the product checks that list, so a product run on a local
-machine alone would leave an agent with no way to it; only the behaviour when no place for
-screenshots is settled (WAY-316), with the step unchanged — a product learns that it has no place
-only at its first request with a changed screen; the lesson's hard limit that keeps an agent away
-from the production database and from root access — left out of what the step takes from the
-lesson.
+screenshots as one choice — it binds independent choices together, and a later change to one reopens
+them all; one heading the step splits into as many choices as the product needs — whether a matter
+is left out would rest on the agent's judgment alone; the matters on the list the deployment skill
+of a product covers (WAY-139) — only a task that deploys the product checks that list, so a product
+run on a local machine alone would leave an agent with no way to it; only the behaviour when no
+place for screenshots is settled (WAY-316), with the step unchanged — a product learns that it has
+no place only at its first request with a changed screen; the lesson's hard limit that keeps an
+agent away from the production database and from root access — left out of what the step takes from
+the lesson, since WAY-140 already leaves every effect outside the repository to a human, and reading
+stays with the agent.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -4897,8 +4918,8 @@ enters its cycle under that name, and the cycle names its record by it.
 - **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-form. For the cycle, an agent compares the cycle with
   the decision:
-  - complies: the task `forest-on-hex-grid` of a plan keeps its cycle record under
-    `docs/task-cycles/forest-on-hex-grid/`;
+  - complies: the task `forest-on-hex-grid` of a plan names its record directory and its committed
+    copy by `forest-on-hex-grid`;
   - violates: the cycle of a task of a plan names its record by a name it makes up; a task's name
     changes when its goal is reworded; a plan carries a second table of its tasks with titles for a
     tracker.
@@ -5006,11 +5027,10 @@ stated, every known question blocking that outcome is answered, the human has ac
 rejected every candidate settlement its refinement derived, a row that repeats a choice the human
 made between ways shown standing accepted until the human strikes it (WAY-134), every human action
 it places before the cycle is done (WAY-140), and implementation questions carried into the cycle
-are named. A
-project member also matches its plan item's scope, dependencies and assigned entries; any task
-using an approved definition checks that its approval still holds and names each projected
-entry, or the part of it, that its code makes true, while source-only use takes no other
-assignment or dependency from the plan.
+are named. A project member also matches its plan item's scope, dependencies and assigned entries;
+any task using an approved definition checks that its approval still holds and names each projected
+entry, or the part of it, that its code makes true, while source-only use takes no other assignment
+or dependency from the plan.
 
 - **Scope:** project-level, task-cycle
 - **Based on:** none
@@ -5159,13 +5179,14 @@ A task's effect outside the product's repository — on a server, in DNS, on key
 account — is made only by a human, through a human action the task document names and places before
 the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
 of the request and of the task's state in the backlog entry the product names (WAY-107) is no effect
-of the task. For the human actions placed in the cycle, the cycle does what the repository allows
-and opens a blocked draft request listing them, and the human performs them at the request; a human
-action the cycle finds that the task document does not name joins that list for the human to place,
-and the request opens as a blocked draft listing it even where the document places no human action
-in the cycle. The human places each human action the task document names while the task is refined,
-on the agent's proposal: before the cycle when the cycle's code needs its effect, such as an
-account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
+of the task, nor is the removal of the repository's own working directories that stand outside its
+directory (WAY-375). For the human actions placed in the cycle, the cycle does what the repository
+allows and opens a blocked draft request listing them, and the human performs them at the request; a
+human action the cycle finds that the task document does not name joins that list for the human to
+place, and the request opens as a blocked draft listing it even where the document places no human
+action in the cycle. The human places each human action the task document names while the task is
+refined, on the agent's proposal: before the cycle when the cycle's code needs its effect, such as
+an account, a key or a database, and in the cycle when it uses code the cycle writes, such as a
 deployment or a DNS record pointing to a new address.
 
 - **Scope:** project-level, task-cycle
@@ -5380,10 +5401,10 @@ tests and its own request to merge, so it costs a whole cycle more, and it earns
 where the work comes out better or cheaper; a part ready sooner is neither. The three reasons are
 the cases where a split gives something one task cannot: a part that cannot start or finish alone
 would wait inside one task and no cycle could end it, and parts in different repositories are not
-one change. Naming the reason makes the proposal checkable, which a
-bare "better" is not, since an agent readily makes one up. A word about a task's size draws a
-question, and the question returns at every larger task, while the human who sees the whole document
-at its acceptance can ask for a split without it.
+one change. Naming the reason makes the proposal checkable, which a bare "better" is not, since an
+agent readily makes one up. A word about a task's size draws a question, and the question returns at
+every larger task, while the human who sees the whole document at its acceptance can ask for a split
+without it.
 *Rejected:* a split sensible only where the work comes out faster, cheaper and better all at once —
 it passes practically only a split where one task would not go through one cycle anyway, and it
 rejects even a better result paid for with a second cycle; a split sensible where any one of the
@@ -5924,21 +5945,25 @@ The executor of a slice, and the one author of a change without a plan, work on 
 set for them, named in general terms and never by the name of a model: by default a class cheaper
 than the orchestrator's, for code that carries settled matters into the product, ordinary
 implementation that takes decisions of its own included; the orchestrator's class, for a change
-across many parts; or the strongest class available, for one that needs design — each class other
-than the default with one sentence of its reason. The planner sets each slice's class in the plan;
-the orchestrator sets the one author's when it selects that route (WAY-136), by the same measure,
-and records it with its reason. The one author writes its foundation entries, takes its return step
-and fixes its findings on its own class. An executor that returns `blocked` for a fact or permission
-no source supplies, reports a failing check of its slice, or fails the orchestrator's mechanical
-check (no commit in its range, or a repair it was sent back for left undone) gets one retry: a fresh
-executor one class higher, from the slice's base, given the failed executor's report and what
-failed; and an executor of the strongest class that fails, or a retry that fails, stops the cycle.
+across many parts; or the strongest class available, which is the strongest that the cycle's
+session lets its agents use, for one that needs design — each class other than the default with one
+sentence of its reason. The planner sets each slice's class in the plan; the orchestrator sets the
+one author's when it selects that route (WAY-136), by the same measure, and records it with its
+reason. The one author writes its foundation entries, takes its return step and fixes its findings
+on its own class.
+
+An executor that returns `blocked` for a fact or permission no source supplies, reports a failing
+check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
+repair it was sent back for left undone) gets one retry: a fresh executor one class higher, from the
+slice's base, given the failed executor's report and what failed; and an executor of the strongest
+class available that fails, or a retry that fails, stops the cycle.
+
 The fix of a slice's findings runs on the class of the executor whose work stands, of findings in
 several slices on the highest of their classes and of a planned change's finding of no slice on the
 orchestrator's, while the spec's designer and reviewer, the planner, the writer of the plan's
-foundation entries, the return step of a planned change and every reviewer — the review of the whole
-change and the review of the return step included — work on no class cheaper than the
-orchestrator's.
+foundation entries, the return step of a planned change and every other reviewer work on no class
+cheaper than the orchestrator's, and the review of the whole change and the review of the return
+step work on the strongest class available.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -5957,38 +5982,48 @@ orchestrator's.
   decision:
   - complies: the plan sets the default class for a slice that applies a pattern the spec settles
     and for one of ordinary implementation that takes decisions of its own, the orchestrator's
-    class with its reason for a slice that joins several parts, and the strongest with its reason
-    for one that needs design; the record gives the one author's class, with its reason where it is not
-    the default, and the
-    author writes its foundation entries, its return step and its fix on that class; an executor of
-    the cheaper class whose check fails is replaced, from the slice's base, by one of the
-    orchestrator's class given its report and the failure; the fix of a reviewed slice's finding
-    runs on the class of the executor whose work stands; the review of the whole change runs on the
-    orchestrator's class or a stronger one;
+    class with its reason for a slice that joins several parts, and the strongest available with its
+    reason for one that needs design; the record gives the one author's class, with its reason where
+    it is not the default, and the author writes its foundation entries, its return step and its fix
+    on that class; an executor of the cheaper class whose check fails is replaced, from the slice's
+    base, by one of the orchestrator's class given its report and the failure; the fix of a reviewed
+    slice's finding runs on the class of the executor whose work stands; the review of the whole
+    change and the review of the return step run on the strongest class available, whatever the
+    class of the orchestrator;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
-    executor of the strongest class gets a retry; a review or the spec runs on a class cheaper than
-    the orchestrator's; the one author works on the orchestrator's model with no class recorded.
+    executor of the strongest class available gets a retry; a review or the spec runs on a class
+    cheaper than the orchestrator's; the review of the whole change or of the return step runs on a
+    class below the strongest available; the one author works on the orchestrator's model with no
+    class recorded.
 - **Origin:** none
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
 change is the carrying of settled matters into code, which a cheaper model can do at a fraction of
 the cost. Ordinary implementation within a settled task, spec and plan is within that reach too, and
 the one author's change is bound by the same settled task; the reviews of the whole change and of
-the return step, on the orchestrator's class, are what finds a cheaper model's error in code, in a
-foundation entry or in the return step. The planner, who cut the slice, knows best what it demands,
-and on the route without a plan the orchestrator, who judged that one agent can hold the change,
-knows what that agent faces. A failure gets one retry a class higher before the cycle stops, which
-costs less than running every slice on the strongest class and less than stopping at the first
-failure of a cheaper one; the slice's own review where it has one, and the review of the whole
-change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on four
-merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on each
-change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
+the return step, on the strongest class available, are what finds a cheaper model's error in code,
+in a foundation entry or in the return step. The planner, who cut the slice, knows best what it
+demands, and on the route without a plan the orchestrator, who judged that one agent can hold the
+change, knows what that agent faces. A failure gets one retry a class higher before the cycle stops,
+which costs less than running every slice on the strongest class available and less than stopping at
+the first failure of a cheaper one; the slice's own review where it has one, and the review of the
+whole change, find what a cheaper model got wrong. A measurement of the class of the reviewer: on
+four merged changes of one product, of 959 to 1740 added lines each, two runs of each variant on
+each change, which is 8 runs a variant; the reviewers read the code and ran scripts of their own but
 could not run the product's tests, and worked on a reviewer's instruction newer than the changes
 they reviewed. A reviewer of the cheaper class (Sonnet 5.5) passed the change in 4 of the 8 runs,
 each time a change in which the original review had found a blocking flaw, repaired later, and a
 reviewer of the orchestrator's class (Opus 5.5) that read the author's report passed it in 1 of the
 8. The measurement is this product's own, and its record is not open to a reader of this repository.
+The orchestrator's class is the class of the session that leads the cycle and may be a cheaper one,
+so a review that follows it lets a flaw through in about half the runs of that measurement; the
+reviews of the whole change and of the return step therefore follow no class of the session and run
+on the strongest class available. That costs more, the price taken: fewer fixes after review are
+counted to repay part of it, and the audit of the process shows what it costs (WAY-337, WAY-339).
+What is available is the human's choice when a session starts, never a sentence of this log: a cycle
+started with every model allowed takes the strongest it has, the review included, and a session that
+leaves a model out takes the strongest of the rest, so the log names no model and no setting.
 Classes in general terms survive the release of new models and fit any harness. The decision takes
 from the skills of Open Mercato for planning and dispatching an executor a class of model for each
 step of the work and one retry a class higher before the stop (WAY-100).
@@ -5998,17 +6033,28 @@ the strongest price for code whose decisions the task, the spec and the plan alr
 class chosen by the orchestrator at each dispatch of a slice — it judges again what the planner
 judged when it cut the slice; the return step of the one author handed to a fresh agent of the
 orchestrator's class — it pays a second agent to read the foundation again, while the review of the
-return step judges it on that class; the orchestrator's class as the default — it leaves the cheaper
-class to a judgment made slice by slice and rarely taken; retries without bound, or on the same
-class — the same failure repeats at the same cost; a cheaper class for the spec, the plan or a
-review — their errors reach every later step; two runs of a reviewer of a cheaper class in place of
-one run of the orchestrator's class — both runs together caught 5 of the 14 reference errors, as
-many as one run of the orchestrator's class (5 and 6 in two such runs), and did not improve the
-verdict, since a change with three blocking flaws got a PASS in both (the same measurement, this
-product's own, whose record is not open to a reader of this repository); model names in the process
-— they age with every release; the source's rule that typical implementation stays on the default
-tier — here ordinary implementation within a settled task, spec and plan is on the cheaper class
-too.
+return step judges it on the strongest class available; the orchestrator's class as the default — it
+leaves the cheaper class to a judgment made slice by slice and rarely taken; retries without bound,
+or on the same class — the same failure repeats at the same cost; a cheaper class for the spec, the
+plan or a review — their errors reach every later step; two runs of a reviewer of a cheaper class in
+place of one run of the strongest class available — both runs together caught 5 of the 14 reference
+errors, as many as one run of the orchestrator's class in the measurement (5 and 6 in two such
+runs), and did not improve the verdict, since a change with three blocking flaws got a PASS in both
+(the same measurement, this product's own, whose record is not open to a reader of this repository);
+model names in the process — they age with every release; the source's rule that typical
+implementation stays on the default tier — here ordinary implementation within a settled task, spec
+and plan is on the cheaper class too; the reviews of the whole change and of the return step on the
+orchestrator's class, with the price in the rationale — with the orchestrator on a cheaper class a
+review lets a flaw through in about half the runs of the measurement, and the protection the
+rationale counts on then depends on the model of the session that leads the cycle; a bound written
+in general terms with no criterion that tells the classes apart without a name — an agent reads a
+general word as it pleases; the strongest class of the family the cycle runs on — a model of that
+family that the human keeps out of cycles would take the reviews and the slices that need design; a
+review one class above the session that leads the cycle, never above a model the human names — with
+the session on the cheapest class the review would run on the middle class, which let a flaw through
+in 4 of the 8 runs of the measurement, and a line that keeps a model out of the cycle's work has to
+be drawn somewhere all the same; a restriction of models on the human's whole account — the model
+leaves every session of the human, and each work on it would need a change of that restriction.
 
 ## The work of a cycle's agents
 
@@ -6071,13 +6117,9 @@ a subscription spends usage credits. Where the harness states no cache lifetime,
 the harness allows.
 
 - **Scope:** task-cycle
-- **Based on:** https://code.claude.com/docs/en/prompt-caching.md § "Cache lifetime" — "Cached
-  prefixes expire after a period of inactivity. Each request that hits the cache resets the timer,
-  so the cache stays warm as long as you keep working." · § "Cache lifetime" — "a one-hour TTL
-  that keeps the cache warm through longer breaks but charges a higher rate for cache writes" ·
-  § "Subagents and the cache" — "Subagents fall outside the main-conversation TTL bucket, so they
-  get five minutes even on a subscription until you choose a longer one."; read 2026-10-27 ·
-  claude-code-subagent-cache-ttl · claude-code-subagent-cache-ttl-credits
+- **Based on:** claude-code-prompt-cache-expiry · claude-code-prompt-cache-ttls ·
+  claude-code-subagent-cache-default · claude-code-subagent-cache-ttl ·
+  claude-code-subagent-cache-ttl-credits
 - **Relations:** none
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:
@@ -6199,9 +6241,10 @@ product's guidelines, for a gain only in work outside the cycle.
 
 Where a slice of a plan adds to a function or a file that stands over the threshold of the product's
 rule of size, the plan begins with a slice that moves a part of that function or file out without a
-change of behaviour, writes the choice in its table of choices, and puts the slice that adds after it.
-The author of a change without a plan makes that move the first commit that changes the code. Such an addition is a choice of how to make the change and no open design choice, so it gets no
-spec (WAY-135).
+change of behaviour, writes the choice in its table of choices, and puts the slice that adds after
+it. The author of a change without a plan makes that move the first commit that changes the code.
+Such an addition is a choice of how to make the change and no open design choice, so it gets no spec
+(WAY-135).
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -6414,18 +6457,24 @@ the request.
 - **Origin:** none
 
 *Rationale:* the problem is a single executor that checks itself: a model judging what it wrote
-favours it, so an agent that did not make the change reads it. An error of the product shows where
-the code and the foundation meet, and the review of the whole change reads both against the task;
-an assessment of the foundation apart from the code sees only entries, so what it finds beyond the
-review are faults of form and of checks, which the tests and the review of the whole change also
-meet. The reviewer reads the whole diff, while the human reads the section that holds what the human
-has not yet accepted, since a diff the human does not read accepts nothing.
+favours it, so an agent that did not make the change reads it. That agent usually runs on the
+author's model or on a model of the author's family, and the favouring is taken to belong rather to
+a family of models than to one model, so the other agent removes the author's shared context and not
+the favouring itself; the process has no reviewer from another provider, and the price is taken. An
+error of the product shows where the code and the foundation meet, and the review of the whole
+change reads both against the task; an assessment of the foundation apart from the code sees only
+entries, so what it finds beyond the review are faults of form and of checks, which the tests and
+the review of the whole change also meet. The reviewer reads the whole diff, while the human reads
+the section that holds what the human has not yet accepted, since a diff the human does not read
+accepts nothing.
 *Rejected:* one independent assessor on a model other than the author's, which sees the diff
 without the author's reasoning and names what of the change can be cut — a stage of its own in
 every cycle that writes entries, reading entries without the code the review reads with them; a
 panel of two assessors and a settler reading both orders — its cost per change outweighs what one
-reader misses, and its uncertainty becomes questions for the human; the author assessing its own
-change — it checks itself.
+reader misses, and its uncertainty becomes questions for the human; a binding sentence that the
+reviewer works on a model other than the author's — with the author on the strongest model the
+reviewer would be a weaker one or one of another provider; the author assessing its own change — it
+checks itself.
 
 ### WAY-161 — Which findings of the review of the whole change are fixed, and how does the request carry the rest?
 
@@ -6480,7 +6529,8 @@ widens the work is a new piece of work rather than a repair of this one, and the
 no stake in closing the cycle, is the one to say which findings lie outside the task, since an
 orchestrator sorting them could move an inconvenient finding out of the way of the blocked request.
 The human creates the new task because each product keeps its backlog where it chooses (WAY-101),
-and where that is outside the repository, only a human makes an effect there (WAY-140).
+and where that is outside the repository, a cycle makes no effect there beyond its own record
+(WAY-140).
 *Rejected:* the cycle leaving the small findings in the request, which asks in its section for the
 human's decisions whether to fix them in the request or make a task of them — every request with
 such findings then costs the human a turn of conversation and a round of correction, and a small
@@ -6512,15 +6562,16 @@ that remains. Where a blocking finding remains after that review of the fix, no 
 the orchestrator does not rule on it, no further slice is made, and the cycle opens a draft request
 marked `blocked` that lists each remaining blocking finding with its place in the code and its
 reason, what the fix tried, and the time, models and tokens the cycle has used so far, from its
-record of stages, with the number of review rounds. Where the review of the whole change leaves no
-blocking finding and lists Minor findings that WAY-161 has the cycle fix, one fix takes them in and
-one review of that fix follows, and where that review finds a new Critical or Important finding in
-the fix, the cycle reverts the fix's commits with a commit of its own, so that they stay in
-history, runs no third round and opens the request, not blocked, on the code the review of the whole
-change accepted, the request listing the Minor findings the fix tried and the new finding with its
-grade and as the review of the fix found it. In the code reviews after the review of the whole
-change, and for a Minor finding that remains after a fix, the findings that do not block go unfixed
-to the request's lists as WAY-161 gives them.
+record of stages, with the number of review rounds.
+
+Where the review of the whole change leaves no blocking finding and lists Minor findings that
+WAY-161 has the cycle fix, one fix takes them in and one review of that fix follows, and where that
+review finds a new Critical or Important finding in the fix, the cycle reverts the fix's commits
+with a commit of its own, so that they stay in history, runs no third round and opens the request,
+not blocked, on the code the review of the whole change accepted, the request listing the Minor
+findings the fix tried and the new finding with its grade and as the review of the fix found it. In
+the code reviews after the review of the whole change, and for a Minor finding that remains after a
+fix, the findings that do not block go unfixed to the request's lists as WAY-161 gives them.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -6686,13 +6737,12 @@ rule of size there is no threshold and no such test, so the same reasoning leave
 structure Minor and not blocking. The reviewer still judges the scope of each finding, so a
 restructuring of code from before the change reaches the request's list and not the fix.
 *Rejected:* the reviewer grading findings of structure as any other — a finding of structure can
-block the change and give a round of fixes, with the same chance in the grade as today for the form
-of an entry; findings of structure always outside the task's scope, on the request's list and for the
+block the change and give a round of fixes on the reviewer's impression of the structure;
+findings of structure always outside the task's scope, on the request's list and for the
 review of the foundation — code with no user and a name no longer true, which the change itself
 left, are cleaned only by a separate task after the review of the foundation, a full cycle; the
 finding graded as any other where the product has no rule of size — with no threshold a finding of
-structure can block the change on the reviewer's impression and give a round of correction, with
-the same chance in the grade as today for the form of an entry.
+structure can block the change on the reviewer's impression and give a round of correction.
 
 ### WAY-364 — How does a reviewer grade a finding that a foundation entry departs from the form of its template?
 
@@ -6790,6 +6840,9 @@ A blocked request keeps the same skeleton, with `blocked` in its first sentence 
 needs, in plain words, and the stages it did not run because it stopped, under *Needed from you*,
 while each remaining finding stands with its place in the code in the lower part.
 
+Another decision may add a kind of item to one of the three groups, naming the group, and the
+template of a request's description lists every kind.
+
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-227
@@ -6823,7 +6876,8 @@ while each remaining finding stands with its place in the code in the lower part
     what is missing; a value that names a fact the foundation holds and then
     `TODO — a second fact, from the vendor` is one gap, shown with the second fact alone;
   - violates: the section reads `none` while a choice beyond the task stands only among the
-    foundation entries; a group with no item is left out, or its heading stands with nothing under
+    foundation entries; a decision adds a kind of item to the section without naming the group that
+    takes it; a group with no item is left out, or its heading stands with nothing under
     it; the numbering of the items starts again in each group; a choice the cycle made within its
     authority stands under *Needed from you*, or ends with a question that waits for an answer; a
     skipped step is named only in the last line of the checks; a blocked
@@ -6857,7 +6911,10 @@ the request cannot go on without, what the human can still have done in it and w
 accepts look alike and end in a similar question, so the human answers all of them in one way, or
 reads none, and the matter that needs a real decision is lost among the rest; three groups put the
 criterion of each before the human, and a group that always stands lets the human tell a group with
-nothing in it from one that was forgotten.
+nothing in it from one that was forgotten. The list above is the base: a decision of its own, such
+as WAY-308 for the relation line it cleaned and WAY-316 for the screenshot it does not show, adds a
+kind of item to the section, and a sentence that lets a decision do so by naming the group spares
+this entry a change for each one, while every new kind still needs a decision of its own.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
@@ -6866,19 +6923,24 @@ knowledge, and WAY-274 describes a mechanism the product does not have; a review
 change with WAY-274 would count its complies as met. A general item for everything a decision asks
 the human to see at the merge. It would encourage moving everything into the section, though its
 `none` is to mean the request can be merged. A search of the log by the words "at the merge",
-"sees" and "merges" found no second such case; that is a word search, not proof. A sentence of
-the top part outside this section on the incomplete reading — an incomplete review would pass
-without the human's yes, with a note in a place the template gives to something else; the lower
-part, in the section of the checks — the human does not read it, so would still not know that the
-review was incomplete. The skipped steps and unrun checks, the proposals not applied and the
-incomplete reading of the review in one group with what the request cannot go on without — a skipped
-step is a matter of doing it here or letting it through, so the group would mix two matters; only
-the groups that hold an item — shorter, but a group with nothing in it cannot be told from a
-forgotten one, by the human or by the script; three sections of the description in place of the
-groups — it changes the skeleton of the request's description and every reference to the section,
-and gives the
-human nothing beyond headings in one section; bold lines in place of headings — they look the same,
-but the script cannot tell them from plain text and checks nothing.
+"sees" and "merges" finds WAY-308 and WAY-316 as further cases, each with a kind of item of its own;
+that is a word search, not proof. Weighed again on those cases, the general item stays rejected: it
+would still move everything a decision asks the human to see into the section, whereas a kind that
+a decision adds in a group it names keeps the `none` of the section a statement that the request can
+be merged. Listing both kinds in this entry's sentence — two more enumerations in a long sentence,
+and the next decision that adds a kind must change this entry again, a forgotten change giving the
+same gap between the decision and this entry. A sentence of the top part outside this section on the
+incomplete reading — an incomplete review would pass without the human's yes, with a note in a place
+the template gives to something else; the lower part, in the section of the checks — the human does
+not read it, so would still not know that the review was incomplete. The skipped steps and unrun
+checks, the proposals not applied and the incomplete reading of the review in one group with what
+the request cannot go on without — a skipped step is a matter of doing it here or letting it
+through, so the group would mix two matters; only the groups that hold an item — shorter, but a
+group with nothing in it cannot be told from a forgotten one, by the human or by the script; three
+sections of the description in place of the groups — it changes the skeleton of the request's
+description and every reference to the section, and gives the human nothing beyond headings in one
+section; bold lines in place of headings — they look the same, but the script cannot tell them from
+plain text and checks nothing.
 
 ### WAY-288 — In what language is a request's description written?
 
@@ -7437,6 +7499,9 @@ which write example paths in order to find or to test them; a file that points t
 its entry in the locations file. The copy of a task cycle's record and the description of a request
 are checked for a note link in every file, as WAY-309 gives.
 
+A place that a script of the-way keeps for itself under `~/.the-way/`, such as the register of the
+runs of the gate, `~/.the-way/gate_runs`, needs no entry of the locations file.
+
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle,
   process-audit
 - **Based on:** none
@@ -7446,7 +7511,8 @@ are checked for a note link in every file, as WAY-309 gives.
   - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
     product's name in `~/.the-way/locations.json`, and one that needs the rules of that place reads
     the entry `task-rules` under the same name; a file the repository tracks says "the entry
-    `tasks` under `the-way`" where it means a place on the user's disk;
+    `tasks` under `the-way`" where it means a place on the user's disk; the script of the gate keeps
+    its register of runs under `~/.the-way/` with no entry for it in the locations file;
   - violates: a skill reads the location from an environment variable; a tracked file the
     invariant does not name holds the path of a directory on the user's disk, or a Markdown file it
     does not name holds a link to a private note; the locations file is put in a repository, or
@@ -7459,22 +7525,28 @@ publishes how one user's disk is laid out and what that user's private notes are
 history keeps it after the file is corrected. `~` reads the same for every user and says nothing
 about any of them, so one file in a fixed place lets any file say which place it means by a name,
 and each user lays the disk out as they like. With no environment variable, every tool started in
-the user's home finds the file whether or not a variable was set for it. The price taken: each user
-creates the file once on each machine, and an agent that finds no file asks the human; a session
-that runs in the cloud has no such file and asks too. The check for paths reads every tracked file
-but those that must write example paths, and the list of those files stands in the invariant, so
-adding a file to it shows in the change; a real path pasted into a file on the list passes. A note
-link is text of a note, so it counts in a Markdown file; in code the same brackets are an array
-inside an array or a test of the shell, and a run of the check over every tracked file of one public
-product on 2026-11-09 listed 71 such texts in code among 88 findings (the run is this product's own,
-and its record is not open to a reader of this repository). A link in a report of the copy of a
-cycle's record, of any kind of file, is still a leak, so the copy and the description keep the
-check of WAY-309 in every file.
-*Rejected:* the check for paths alone, with an exception for the `## Backlog` section and the path
-of the tasks file left in the root `AGENTS.md` — a path in the repository is the problem ("there
-should be no such paths in the repository, and that they are there is the problem"); the place
-described in words in `## Backlog`, with the path in the user's global instructions — "global
-instructions are probably not the place for such things"; the file found
+the user's home finds the file whether or not a variable was set for it. A place that a script keeps
+for itself is the-way's own file, as the locations file is, and gives the user no path to choose: a
+script that cannot ask the human needs a default path where no entry is, and one file for each run
+needs no lock where gates run at the same time. The price taken: each user creates the file once on
+each machine, and an agent that finds no file asks the human; a session that runs in the cloud has
+no such file and asks too. The check for paths reads every tracked file but those that must write
+example paths, and the list of those files stands in the invariant, so adding a file to it shows in
+the change; a real path pasted into a file on the list passes. A note link is text of a note, so it
+counts in a Markdown file; in code the same brackets are an array inside an array or a test of the
+shell, and a run of the check over every tracked file of one public product on 2026-11-09 listed 71
+such texts in code among 88 findings (the run is this product's own, and its record is not open to a
+reader of this repository). A link in a report of the copy of a cycle's record, of any kind of file,
+is still a leak, so the copy and the description keep the check of WAY-309 in every file.
+*Rejected:* the register of the gate's runs as an entry of the locations file — it changes the
+script of the gate, its tests and WAY-350, and a script that cannot ask the human needs a default
+path where no entry is all the same; one file with the data of every run in place of a directory of
+files — gates that run at the same time would write to one file and need a lock on writing, which
+one file for each run avoids; the check for paths alone, with an exception for the `## Backlog`
+section and the path of the tasks file left in the root `AGENTS.md` — a path in the repository is
+the problem ("there should be no such paths in the repository, and that they are there is the
+problem"); the place described in words in `## Backlog`, with the path in the user's global
+instructions — "global instructions are probably not the place for such things"; the file found
 through an environment variable, as the private layer of another project does — the file in a fixed
 place plus a variable to set on every machine and in every tool, and an agent in a tool that does
 not see the variable does not find the backlog; a local file in the repository that git ignores,
@@ -7487,15 +7559,14 @@ tasks lie elsewhere would silently take the rules of another place; for the file
 paths by their nature, a check that skips only the lines marked as examples — every example line to
 mark and the code of the marks, and a real path in a marked line passes too; no exceptions, with the
 examples rewritten so that the pattern does not find them — every example to rewrite, the tests and
-the description of the script harder to read,
-and every later author of a test has to remember it; a check that skips all test files and both
-scripts — a path in any test of the-way passes; a note link counted in a Markdown file only, also
-in the copy of the record and in the description — a link in a report of the copy kept as a text
-or a log file passes, and an agent quoting a task document carries its links into a report, and it
-changes WAY-309; a note link counted in every file but the files of code recognised by their
-extension — a list of extensions to extend with each new language of a product, and a script with
-no extension still gives false hits; no change to the rule for a link — false hits for every array
-inside an array in code and a long list of files to except.
+the description of the script harder to read, and every later author of a test has to remember it; a
+check that skips all test files and both scripts — a path in any test of the-way passes; a note link
+counted in a Markdown file only, also in the copy of the record and in the description — a link in a
+report of the copy kept as a text or a log file passes, and an agent quoting a task document carries
+its links into a report, and it changes WAY-309; a note link counted in every file but the files of
+code recognised by their extension — a list of extensions to extend with each new language of a
+product, and a script with no extension still gives false hits; no change to the rule for a link —
+false hits for every array inside an array in code and a long list of files to except.
 
 ### WAY-324 — How does a product check the files it tracks for private paths and notes?
 
@@ -7577,13 +7648,14 @@ class, a weight or a cost of an occurrence itself.
 that a tool of the user fills holds that judgment once, where an audit that read the records of
 cycles itself would repeat it every week, and could repeat it differently. A template lets another
 user of the-way keep the same register in their own way, as WAY-103 asks of a process meant for
-more than its author. The price taken: until a user has a tool that fills the register, the audit
-has nothing to count.
-*Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost
-— the same remarks would be judged by two agents, who may judge differently, and the tie of a
-problem to its fix would have to be rebuilt each time; the-way taking over the review of the
-remarks of cycles — the largest change, and the remarks would turn into issues once a week instead
-of every night.
+more than its author. The price taken: a user who has no tool that fills the register has nothing
+for the audit to count, since the template of the register does not fill it itself.
+*Rejected:* the audit reading the records of cycles itself and giving the class, weight and cost —
+the same remarks would be judged by two agents, who may judge differently, and the tie of a problem
+to its fix would have to be rebuilt each time; the-way taking over the review of the remarks of
+cycles — the largest change, and the remarks would turn into issues once a week instead of every
+night; the price left in its conditional form, true for every new user — a reader takes the audit
+for a tool that has nothing to count today.
 
 ### WAY-337 — How is the cost of a cycle measured?
 
@@ -7694,13 +7766,13 @@ and a change of the list of classes or of the instructions of the reviewer chang
 and what is found. A number from before such a change says something about the change as well as
 about the process. The cost and the count of remarks are split apart because only a new price list
 and a change of the script that measures the cost change what the cost says of the same work: the
-audit exists to say whether the process got dearer, and a change of the reviewer's instructions is
-a change of the process, so a series of the cost that such a change ended would never hold the two
+audit exists to say whether the process got dearer, and a change of the reviewer's instructions is a
+change of the process, so a series of the cost that such a change ended would never hold the two
 sides to compare, as WAY-339 holds for the measures of context and cache use and the gate times. The
 price taken: after a change of the reviewer's instructions the audit cannot tell "the reviewer found
 more" from "the process got dearer", since a rise of the cost in the series of the cost may be
-either, while the count of remarks, which does change meaning with the reviewer, has the series
-that ends there. The measures of context and cache use and the gate times are the numbers by which a
+either, while the count of remarks, which does change meaning with the reviewer, has the series that
+ends there. The measures of context and cache use and the gate times are the numbers by which a
 change to the instructions of the cycle is judged, so a series that such a change started would
 never hold the two sides to compare; what changes their meaning is a change of the script that
 measures them, or of the test runner whose output the times of the directories are read from, and
@@ -7710,52 +7782,50 @@ its output is what those times are read from. A cycle that changes a tool that m
 by two versions of that tool, the one it ran on and the one it left, and its figure of what the tool
 measures belongs to neither alone; unknown says the measure is missing where a figure would look
 measured, and the cycle's other measures stay as they are. The price: such a cycle gives no figure
-of the tool it changed. A column of
-the stage report for the measures of context and cache use would be a change of the script that
-measures the cost and would end the comparison of the cost of cycles across it, while a file of its
-own changes no form of the report. The columns of the tokens written to the cache by lifetime that
-the stage report does hold have this price, taken on purpose: the cost needs them for each stage and
-model, and the file of the measures, whose figures are for each agent with no model and no stage
-row, cannot give that. The price of the columns: the tokens written to the cache are counted by two
-scripts, and the series of the cost ends at the change that brings the columns. The bytes of the
-decision log and of the index of decisions in each agent's context show what the rule of reading the
-foundation (WAY-150) costs each agent and whether a change of that rule lowered the cost, so they
-are counted with the other measures of context use, in every cycle, where the cycles on the two
-sides of such a change can be compared. The price: a second file in each cycle's record, and a
-second reading of the record for the audit.
+of the tool it changed. A column of the stage report for the measures of context and cache use would
+be a change of the script that measures the cost and would end the comparison of the cost of cycles
+across it, while a file of its own changes no form of the report. The columns of the tokens written
+to the cache by lifetime that the stage report does hold have this price, taken on purpose: the cost
+needs them for each stage and model, and the file of the measures, whose figures are for each agent
+with no model and no stage row, cannot give that. The price of the columns: the tokens written to
+the cache are counted by two scripts, and the series of the cost ends at the change that brings the
+columns. The bytes of the decision log and of the index of decisions in each agent's context show
+what the rule of reading the foundation (WAY-150) costs each agent and whether a change of that rule
+lowered the cost, so they are counted with the other measures of context use, in every cycle, where
+the cycles on the two sides of such a change can be compared. The price: a second file in each
+cycle's record, and a second reading of the record for the audit.
 *Rejected:* the changes that start the series of the cost, with the script that counts the measures
 of context and cache use added to them — the comparisons would almost never occur, since nearly
 every change made to improve the process touches those instructions, and adding the script to that
 list would end the series of the cost as well. For the gate times, a mark on each run of how many
-directories ran at once, which would split the runs by that mark and not by a change of a script — it
-changes the test runner, the script that records the times, the tables of the gate times and of
-WAY-350 and the
-reading of the audit, it leaves the runs made between the move to parallel directories and this
-decision mixed with the earlier ones, and the old records would need a reading for the runs that carry
-no mark. And no split of the gate times at all, which leaves the times of the two ways of running the
-gate mixed for weeks, so that whoever reads the audit must remember it until the new runs outnumber
-the old. New columns of context and cache use in the stage report — a column would change the
-script that measures the cost and end the series of the cost; a sentence added to the first
-paragraph saying that adding columns starts no series — a file of its own avoids the dispute with no
-change to that paragraph. For the series of the cost, the rule left as it was, every change of the
-form of a stage report, of the list of classes and of the instructions of the reviewer ending it,
-with only the file of the reviewer's type added to the changes that split — the audit still answers
-unknown for most versions of the process. The rule narrowed by taking the forms of the reports of
-the stages out into files of their own, so that a change of them would not touch the files of the
-methods of the stages — at most 14 of the 34 splits that 134 merges of the first parent of the main
-line gave would go, at the price of rebuilding four files of those methods. For a cycle that
-changes a tool that measures, the measures of that tool counted in a new series and the rest under
-the version the cycle ran on — one cycle stands in two versions, and the grouping and the tests of
-the count grow more complicated. For the tokens written to the cache at each lifetime, the file of
-the measures as their carrier into the cost — its figures are for each agent and carry no model and
-no stage row, while the share of the cost spent in fix rounds needs the cost of each turn, and a
-subagent that the author resumes has several turns, so the file would have to carry turns, with the
-windows and the owners of the nested subagents that the script of the stages computes: a second
-copy of the logic of the stages, or a file of measures that reads the stage report; it also makes a
-second script that measures the cost, so that a change of the script of the measures would end the
-comparison of the cost, which this decision forbids, and, were it wrong, the cost of a turn would be
-wrong or unknown for the cycles that matter and the series of the cost would split at the wrong
-changes. For the same tokens, a second table or section of the stage report keyed by stage and
+directories ran at once, which would split the runs by that mark and not by a change of a script —
+it changes the test runner, the script that records the times, the tables of the gate times and of
+WAY-350 and the reading of the audit, it leaves the runs made between the move to parallel
+directories and this decision mixed with the earlier ones, and the old records would need a reading
+for the runs that carry no mark. And no split of the gate times at all, which leaves the times of
+the two ways of running the gate mixed for weeks, so that whoever reads the audit must remember it
+until the new runs outnumber the old. New columns of context and cache use in the stage report — a
+column would change the script that measures the cost and end the series of the cost; a sentence
+added to the first paragraph saying that adding columns starts no series — a file of its own avoids
+the dispute with no change to that paragraph. For the series of the cost, the rule left as it was,
+every change of the form of a stage report, of the list of classes and of the instructions of the
+reviewer ending it, with only the file of the reviewer's type added to the changes that split — the
+audit still answers unknown for most versions of the process. The rule narrowed by taking the forms
+of the reports of the stages out into files of their own, so that a change of them would not touch
+the files of the methods of the stages — at most 14 of the 34 splits that 134 merges of the first
+parent of the main line gave would go, at the price of rebuilding four files of those methods. For a
+cycle that changes a tool that measures, the measures of that tool counted in a new series and the
+rest under the version the cycle ran on — one cycle stands in two versions, and the grouping and the
+tests of the count grow more complicated. For the tokens written to the cache at each lifetime, the
+file of the measures as their carrier into the cost — its figures are for each agent and carry no
+model and no stage row, while the share of the cost spent in fix rounds needs the cost of each turn,
+and a subagent that the author resumes has several turns, so the file would have to carry turns,
+with the windows and the owners of the nested subagents that the script of the stages computes: a
+second copy of the logic of the stages, or a file of measures that reads the stage report; it also
+makes a second script that measures the cost, so that a change of the script of the measures would
+end the comparison of the cost, which this decision forbids, and, were it wrong, the cost of a turn
+would be wrong or unknown for the cycles that matter and the series of the cost would split at the
+wrong changes. For the same tokens, a second table or section of the stage report keyed by stage and
 model — the audit would join two tables by a key, a row in one and not in the other becomes a new
 refusal, the heading, the table and its columns are three more fields of a reading that WAY-344
 checks, and nothing is gained over columns in the table whose rows already are the stage and the
@@ -8344,10 +8414,9 @@ the coding-guidelines skill left as they were, with the gap described as a propo
 the comparison goes on improvising and may make a full audit; the wording "Neither task is an
 extension under WAY-251, and neither takes research of the standing checks" — it takes research
 from a task that is an extension for another reason, against the rule that an extension researches;
-only the checks the kind
-touches, with no exception for a new language — the tool for that language would be chosen on a
-route without research of tools; no standing check for the kind, the exemption from research read
-literally — a script in a new language would enter without a linter.
+only the checks the kind touches, with no exception for a new language — the tool for that language
+would be chosen on a route without research of tools; no standing check for the kind, the exemption
+from research read literally — a script in a new language would enter without a linter.
 
 ### WAY-247 — May one task write a product's coding and testing guidelines together?
 
@@ -8777,46 +8846,45 @@ alerts; the skill proposes that the product turn them on, and a human turns them
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
 a vulnerability published that morning, so the audit checks what the change brings, against the fork
 point; the decision takes that from Open Mercato's audit, which compares with a base (WAY-100). The
-severity from which a
-vulnerability counts and the database read are conditions of the product's invariant, so they stand
-in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
-severity among the ways. The tools stand at pinned versions, while the database is read as it stands
-when the check runs, so that a change brings in nothing known to be vulnerable that day. The audit
-sees only what a change brings in, so a vulnerability found in a dependency the product already holds
-reaches the product through the alerts of its repository's service, which scan the repository when a
-new vulnerability is published and not only when a change brings in a version, and are enabled by
-the repository's administrators; the owner answers an alert with a task that raises the library.
-They are a setting of the service, no file of the repository, so a human turns them on. Two weak
-points follow. The alerts are set outside the repository, so nothing in it shows whether they are
-on, and they stay off until a human turns them on. A later run on the same commit may record `fail`
-where an earlier one recorded `pass`, when an advisory is published for a version that commit brings
-in; such
-a check is answered as any check that gives different verdicts on one commit is, by a fix of the
-test with no quarantine recorded, which this decision leaves unchanged.
+severity from which a vulnerability counts and the database read are conditions of the product's
+invariant, so they stand in the decision that adopts the audit (WAY-60), and the severity is the
+product's choice, every severity among the ways. The tools stand at pinned versions, while the
+database is read as it stands when the check runs, so that a change brings in nothing known to be
+vulnerable that day. The audit sees only what a change brings in, so a vulnerability found in a
+dependency the product already holds reaches the product through the alerts of its repository's
+service, which scan the repository when a new vulnerability is published and not only when a change
+brings in a version, and are enabled by the repository's administrators; the owner answers an alert
+with a task that raises the library. They are a setting of the service, no file of the repository,
+so a human turns them on. Two weak points follow. The alerts are set outside the repository, so
+nothing in it shows whether they are on, and they stay off until a human turns them on. A later run
+on the same commit may record `fail` where an earlier one recorded `pass`, when an advisory is
+published for a version that commit brings in; such a check is answered as any check that gives
+different verdicts on one commit is, by a fix of the test with no quarantine recorded, which this
+decision leaves unchanged.
 *Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
 published that morning; a copy of the database the product commits — nothing moves it apart from a
 change, so it ages without bound, and a change bringing in a version first flagged after it passes;
 the rule on a check that gives different verdicts on one commit narrowed so that a later `fail` on
 the same commit is no such check — a new meaning of that rule for a rare case; a fixed threshold of
-severity for every product — the
-severity is the product's choice; a daily run in CI of the product's audit tool over the whole set
-of dependencies — a second CI file in every product and a run each day, a stronger change to this
-decision, for the one gain that the severity threshold agrees with the audit of a change; no
-signal, the limitation accepted for good — with the alerts off, a vulnerability of high severity in a
-dependency on the main branch passes with no signal, as it did in a product whose alerts were off.
+severity for every product — the severity is the product's choice; a daily run in CI of the
+product's audit tool over the whole set of dependencies — a second CI file in every product and a
+run each day, a stronger change to this decision, for the one gain that the severity threshold
+agrees with the audit of a change; no signal, the limitation accepted for good — with the alerts
+off, a vulnerability of high severity in a dependency on the main branch passes with no signal, as
+it did in a product whose alerts were off.
 
 ### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
 
-The template of the coding discipline requires, in the general file of a product's coding guidelines,
-a rule of the size of a function and a file under the heading `### Size of a function and a file`,
-after the six rules on failures and logs, with an invariant of its own and a test of its own, outside
-the set of rules of the product's linter. A product sets its thresholds after a trial run on its
-existing code and writes its exceptions in its decision on the rule, or departs from the rule only by
-a decision of its log that gives the reason (WAY-173), and a product that already has coding
-guidelines gets the rule by an ordinary extension, as the skill `maintain-coding-guidelines` gives
-it for the rules on failures and
-logs. Where code other than the exceptions of the product's decision stands over a threshold, the
-rule's invariant is marked violated until that code is cleaned (WAY-51).
+The template of the coding discipline requires, in the general file of a product's coding
+guidelines, a rule of the size of a function and a file under the heading
+`### Size of a function and a file`, after the six rules on failures and logs, with an invariant of
+its own and a test of its own, outside the set of rules of the product's linter. A product sets its
+thresholds after a trial run on its existing code and writes its exceptions in its decision on the
+rule, or departs from the rule only by a decision of its log that gives the reason (WAY-173), and a
+product that already has coding guidelines gets the rule by an ordinary extension, as the skill
+`maintain-coding-guidelines` gives it for the rules on failures and logs. Where code other than the
+exceptions of the product's decision stands over a threshold, the rule's invariant is marked
+violated until that code is cleaned (WAY-51).
 
 - **Scope:** product-guidelines
 - **Based on:** none
@@ -8858,8 +8926,9 @@ stand under a threshold.
 from it — a product with no rule has no threshold, so blocking a change over a threshold and the
 change in a task's plan do nothing there, and a skill that only proposes the checks leaves it so for
 as long as nobody takes the proposal up (WAY-202); no rule in the template, only the question about
-the structure of code in the review — nothing blocks, and the assessment of structure depends on the
-reviewer, with the same chance in the grade as today for a remark on the form of an entry.
+the structure of code in the review — nothing blocks, since a finding of structure in a product with
+no rule of size is graded Minor (WAY-363), and the assessment of structure depends on the reviewer's
+impression.
 
 ### WAY-361 — How does the review of a change get the sizes of functions and files from a product?
 
@@ -9259,8 +9328,8 @@ missing check is the fault itself, so it is never excluded. The rule takes from 
 10xDevs course on agentic development its section of what is deliberately not tested, each item
 with its reason and the change that calls for its re-evaluation; the course keeps it in its plan of
 tests, and here it stands in a product's guidelines (WAY-100). The kinds of tests without
-value the template gives among its examples — a duplicate of a stronger test, a test that pins
-trivial constants, a loop over nearly identical inputs — come from how Limen trimmed its own tests
+value the template gives among its examples — a duplicate of another test, a test of trivial code, a
+loop over nearly identical inputs — come from how Limen trimmed its own tests
 (https://raw.githubusercontent.com/overment/limen/89ef3786a6c2f893b2d31cd9944ad76c483f7841/spec/features/done/2026-10/F776-trim-low-signal-tests/notes.md
 § What was cut — "Duplicates. The same rule was proven twice. The stronger, end-to-end test stays." ·
 § What was cut — "Trivia. Tests that pin constants" · § What was cut — "Variants. Loops over
@@ -9405,8 +9474,8 @@ level's exemplar test, the command and the time limit — each field that binds 
 decision that carries it, a field naming none standing as an example, and a field that repeats
 another level's reading "as in <level>". The field of the command names the gate and how it narrows
 to the level, a file or a test, where the gate can, and otherwise reads `none`; the field of the
-time limit points to the configuration file that holds it; and no recipe lists commands of the test
-tool of its own.
+time limit points to the configuration file that holds it, and reads `none` where no configuration
+file holds one; and no recipe lists commands of the test tool of its own.
 
 - **Scope:** product-guidelines
 - **Based on:**
@@ -9423,7 +9492,8 @@ tool of its own.
     doubles of integration tests names the product's decision to run them against a real database;
     the recipe of end-to-end tests reads "as in unit tests" for its data;
   - violates: a recipe lists a command of the test tool for its level beside the gate; the field of
-    the time limit reads "5 s"; a field of doubles binds a change while it names no decision.
+    the time limit reads "5 s", or stays empty where no configuration file holds a limit; a field of
+    doubles binds a change while it names no decision.
 - **Origin:** none
 
 *Rationale:* the same fields for every level let an agent find what binds at any level in one place,
@@ -9433,9 +9503,11 @@ its doubles, its data and its time are proposals a product adopts or departs fro
 every test (WAY-16), so the recipe gives that command and how far it narrows, and a command of the
 tool beside it would be a second list that drifts; a product whose gate cannot narrow gets narrowing
 only by a change of its code. A time limit copied into the guidelines goes stale beside the
-configuration that holds it. The default order of doubles — the real thing where it is fast,
-deterministic and simple, then a working simpler version, then a stub or a mock — follows the
-preference for real implementations, with a check of a call kept for an effect outside the product.
+configuration that holds it, and where none holds a limit the field reads `none`, as the field of
+the command does, so that no product words its own way of saying so. The default order of doubles —
+the real thing where it is fast, deterministic and simple, then a working simpler version, then a
+stub or a mock — follows the preference for real implementations, with a check of a call kept for an
+effect outside the product.
 *Rejected:* commands of the test tool for each level, as an exception to WAY-16 — a list of checks
 written by hand beside the gate; no field of the command — an agent looking for how to run one level
 finds nothing; the value of the time limit in the recipe — a copy of the configuration that goes
@@ -9514,13 +9586,12 @@ deleting such a test is a change of an existing test under WAY-233.
 the product, and each run again trades that fault's cause for a green result; a verdict of the gate
 means something only while a red run is answered. A flaky test disabled or deleted loses its check
 as surely as a test skipped for a failing change, so it takes the same cause and evidence. The rule
-on a check that gives different verdicts on one commit
-gives the test of an invariant the same answer.
+on a check that gives different verdicts on one commit gives the test of an invariant the same
+answer.
 *Rejected:* a quarantine of flaky tests, with a limit for fixing them — a second state of tests to
 keep, which ages, as that rule refuses it for the tests of invariants; automatic runs again in the
-gate
-— the fault stays hidden; every flaky test fixed before the next change — unrelated work stops for
-it.
+gate — the fault stays hidden; every flaky test fixed before the next change — unrelated work stops
+for it.
 
 ### WAY-244 — When do a product's testing guidelines come into being?
 
