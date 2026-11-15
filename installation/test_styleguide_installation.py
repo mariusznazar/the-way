@@ -2,6 +2,7 @@
 foundation, which checks guidelines too."""
 
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -34,8 +35,18 @@ class StyleguideInstallationTest(unittest.TestCase):
         self.git("init", "-q")
         self.git("config", "user.email", "test@example.invalid")
         self.git("config", "user.name", "Styleguide Installation Test")
-        self.commit = self.git("rev-parse", "HEAD", cwd=SOURCE).stdout.strip()
-        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}", cwd=SOURCE)
+        # The tests install from this clone, not from the live repository: a commit made to the-way
+        # while the run goes on cannot change the commit the installer pins or the one expected.
+        self.source = Path(temporary.name) / "source"
+        cloned = command("git", "clone", "-q", str(SOURCE), str(self.source), cwd=SOURCE)
+        self.assertEqual(cloned.returncode, 0, cloned.stderr)
+        self.commit = self.git("rev-parse", "HEAD", cwd=self.source).stdout.strip()
+        self.installer = self.source / "installation" / "install.py"
+        # The installer under test is the one in the working tree, committed or not; the clone
+        # supplies the source that is installed, whose commit the installer pins.
+        shutil.copyfile(INSTALL, self.installer)
+        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}",
+                            cwd=self.source)
         self.assertEqual(available.returncode, 0, f"{SKILL_SOURCE} is not committed")
 
     def git(self, *args: str, cwd: Path | None = None):
@@ -44,8 +55,8 @@ class StyleguideInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str, answer: str = "y\n"):
-        return command(sys.executable, "-B", str(INSTALL), str(self.product),
-                       "--url", str(SOURCE), *args, cwd=self.product, input_text=answer)
+        return command(sys.executable, "-B", str(self.installer), str(self.product),
+                       "--url", str(self.source), *args, cwd=self.product, input_text=answer)
 
     def product_files(self):
         return {path.relative_to(self.product).as_posix(): path.read_bytes()
