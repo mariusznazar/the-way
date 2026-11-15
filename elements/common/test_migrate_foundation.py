@@ -562,6 +562,26 @@ def read(root, path):
         return handle.read()
 
 
+def tree(root):
+    """Every directory below `root` (None) and every file of it with its bytes, by path from
+    `root`, git's own directory left out."""
+    found = {}
+    for directory, folders, files in os.walk(root):
+        folders[:] = [name for name in folders if name != ".git"]
+        for name in folders:
+            found[os.path.relpath(os.path.join(directory, name), root).replace(os.sep, "/")] = None
+        for name in files:
+            path = os.path.relpath(os.path.join(directory, name), root).replace(os.sep, "/")
+            found[path] = read(root, path)
+    return found
+
+
+def changed(before, after):
+    """The paths that appeared, vanished or changed between two states of `tree`."""
+    return sorted(path for path in before.keys() | after.keys()
+                  if path not in before or path not in after or before[path] != after[path])
+
+
 def run(root, *arguments):
     report = os.path.join(tempfile.mkdtemp(), "report.md")
     result = subprocess.run([sys.executable, "-B", SCRIPT, root, "--report", report, *arguments],
@@ -666,8 +686,11 @@ class Applied(unittest.TestCase):
 
 class Trial(unittest.TestCase):
     def test_a_run_without_apply_writes_nothing_but_its_report(self):
+        # invariant: repository-changer-acts-only-when-told
         root = build(FILES)
+        before = tree(root)
         code, output, report = run(root)
+        self.assertEqual([], changed(before, tree(root)))
         for path, text in FILES.items():
             self.assertEqual(read(root, path), text.encode("utf-8"), path)
         self.assertEqual(code, 1, output)

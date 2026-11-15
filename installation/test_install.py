@@ -129,6 +129,26 @@ def make_writable(function, path, error) -> None:
     function(path)
 
 
+def tree(root: Path) -> dict[str, bytes | None]:
+    """Every directory below `root` (None) and every file of it with its bytes, by path from
+    `root`, git's own directory left out."""
+    found: dict[str, bytes | None] = {}
+    for directory, folders, files in os.walk(root):
+        folders[:] = [name for name in folders if name != ".git"]
+        for name in folders:
+            found[Path(directory, name).relative_to(root).as_posix()] = None
+        for name in files:
+            path = Path(directory, name)
+            found[path.relative_to(root).as_posix()] = path.read_bytes()
+    return found
+
+
+def changed(before: dict[str, bytes | None], after: dict[str, bytes | None]) -> list[str]:
+    """The paths that appeared, vanished or changed between two states of `tree`."""
+    return sorted(path for path in before.keys() | after.keys()
+                  if path not in before or path not in after or before[path] != after[path])
+
+
 class InstallTest(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="the-way-install-test-")
@@ -706,6 +726,26 @@ class InstallTest(unittest.TestCase):
         self.assertFalse((self.product / "foundations").exists())
         self.assertFalse((self.product / "AGENTS.md").exists())
         self.assertFalse((self.product / ".gitignore").exists())
+
+    def test_without_apply_or_declined_no_tracked_file_or_working_directory_changes(self) -> None:
+        # invariant: repository-changer-acts-only-when-told
+        (self.product / "README.md").write_text("Product\n", encoding="utf-8")
+        (self.product / "AGENTS.md").write_text("# Product rules\n", encoding="utf-8")
+        added = command("git", "add", "--", "README.md", "AGENTS.md", cwd=self.product)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        committed = command("git", "commit", "-q", "-m", "Product", cwd=self.product)
+        self.assertEqual(committed.returncode, 0, committed.stderr)
+        staged = command("git", "ls-files", "--stage", cwd=self.product).stdout
+        before = tree(self.product)
+        preview = self.install()
+        self.assertEqual(preview.returncode, 0, preview.stderr)
+        self.assertIn("Preview only", preview.stdout)
+        self.assertEqual([], changed(before, tree(self.product)))
+        declined = self.install("--apply", input_text="n\n")
+        self.assertEqual(declined.returncode, 0, declined.stderr)
+        self.assertIn("Cancelled; no changes", declined.stdout)
+        self.assertEqual([], changed(before, tree(self.product)))
+        self.assertEqual(staged, command("git", "ls-files", "--stage", cwd=self.product).stdout)
 
     def test_existing_claude_import_detection_and_cancel_preserve_bytes(self) -> None:
         # invariant: installation-claude-guidance
