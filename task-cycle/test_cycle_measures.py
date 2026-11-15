@@ -57,6 +57,20 @@ def prompt(clock: str, text: str) -> dict:
             "message": {"role": "user", "content": text}}
 
 
+def tool_call(clock: str, ident: str, tool_id: str, name: str, tool_input: object) -> dict:
+    """A Claude Code response line whose one content block is a tool call."""
+    line = response(clock, ident)
+    line["message"]["content"] = [{"type": "tool_use", "id": tool_id, "name": name,
+                                   "input": tool_input}]
+    return line
+
+
+def tool_return(clock: str, tool_id: str, content: object) -> dict:
+    """The line that holds the result of a tool call."""
+    return {"type": "user", "timestamp": at(clock), "message": {"role": "user", "content": [
+        {"type": "tool_result", "tool_use_id": tool_id, "content": content}]}}
+
+
 def minutes(first: int, count: int) -> list[str]:
     """Clock times one minute apart, from the given minute of the morning."""
     return [f"09:{first + index:02d}:00" for index in range(count)]
@@ -177,13 +191,16 @@ class HandWorkedCycleTest(MeasuresTest):
             "## Agents",
             "",
             "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
-            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-            f"| orchestrator {SESSION} | Claude Code | 3 | 1100 | 4105 | 4203 | 5000 | 3000 | 3900 | 1 |",
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again "
+            + NEW_COLUMNS,
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+            f"| orchestrator {SESSION} | Claude Code | 3 | 1100 | 4105 | 4203 | 5000 | 3000 | 3900 | 1 "
+            "| 0 | 0 | 0 | 0 |",
             "| implement task 1 (general-purpose) | Claude Code | 3 | 510 | 2901 | 4502 | 4500 "
-            "| 2500 | 2400 | 1 |",
-            "| a2 | Claude Code | 1 | 301 | 301 | 301 | 300 | 0 | 0 | 0 |",
-            "| nested check (Explore) | Claude Code | 1 | 10 | 10 | 10 | 0 | 0 | 0 | 0 |",
+            "| 2500 | 2400 | 1 | 0 | 0 | 0 | 0 |",
+            "| a2 | Claude Code | 1 | 301 | 301 | 301 | 300 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |",
+            "| nested check (Explore) | Claude Code | 1 | 10 | 10 | 10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 "
+            "| 0 |",
             "",
         ], self.lines_of(text))
 
@@ -212,6 +229,319 @@ class HandWorkedCycleTest(MeasuresTest):
         by_path = self.measures(str(self.project / f"{SESSION}.jsonl"))
         by_id = self.measures(SESSION)
         self.assertEqual(by_path, by_id)
+
+
+LOG = "foundations/decisions.md"
+TITLE_INDEX = "# decision_index.py: index of the decisions of the log"  # 54 bytes
+TITLE_SECTIONS = "# decision_index.py: list of the sections of the log"  # 52 bytes
+NEW_COLUMNS = ("| Decision log bytes | Decision log reads | Decision index bytes "
+               "| Decision index reads |")
+
+
+class ReadsTestCase(MeasuresTest):
+    """The figures of the decision log and the index, read from the transcript of an agent."""
+
+    def row_of(self, text: str, start: str) -> list[str]:
+        """The cells of the table row that begins with `start`."""
+        row = next(line for line in self.lines_of(text) if line.startswith(start))
+        return [cell.strip() for cell in row.strip("|").split("|")]
+
+    def figures(self, entries: list[dict]) -> list[str]:
+        """The last four cells of the orchestrator's row: log bytes, log reads, index bytes, index
+        reads."""
+        self.session(entries)
+        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
+        return self.row_of(text, f"| orchestrator {SESSION} |")[-4:]
+
+
+class DecisionLogReadsTest(ReadsTestCase):
+    """The bytes of the decision log and of the index that entered an agent's context, and how many
+    times, each figure worked out by hand from the transcript written here.
+
+    Only relative paths are written in the transcripts."""
+
+    def test_a_read_of_the_log_counts_its_bytes_and_one_read(self) -> None:
+        # The result "héllo log" is h, é (2 bytes), l, l, o, a space and l, o, g: 10 bytes.
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "héllo log"),
+        ]))
+
+    def test_the_table_of_agents_ends_with_the_four_columns_after_the_old_ones(self) -> None:
+        self.session([tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+                      tool_return("09:01:05", "t1", "héllo log")])
+        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
+        self.assertIn(
+            "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again "
+            + NEW_COLUMNS + "\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- "
+            "| --- | --- |\n", text)
+
+    def test_a_cycle_of_reads_has_hand_worked_figures_for_each_agent(self) -> None:
+        """The orchestrator reads the log with a Read (10 bytes) and by a shell command with a
+        backslash path (a result of two text blocks, "ab" and "cé", and an image block: 5 bytes),
+        reads an index file (70 bytes), and makes calls that are no reads of the log or of the index.
+        Its subagent reads the log by a path that begins with ./ (3 bytes) and the list of sections
+        by a shell command (53 bytes: 52 and a newline)."""
+        self.session([
+            prompt("09:00:00", "run"),
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "héllo log"),
+            tool_call("09:02:00", "c2", "t2", "Bash", {
+                "command": "grep -n WAY-339 .the-way\\foundations\\decisions.md | head -3"}),
+            tool_return("09:02:05", "t2", [{"type": "text", "text": "ab"},
+                                           {"type": "image", "source": {}},
+                                           {"type": "text", "text": "cé"}]),
+            tool_call("09:03:00", "c3", "t3", "Read", {"file_path": "task-cycle/index.md"}),
+            tool_return("09:03:05", "t3", "     1" + chr(9) + TITLE_INDEX + "\n     2" + chr(9) + "\n"),
+            tool_call("09:04:00", "c4", "t4", "Grep", {"pattern": "decisions.md", "path": "foundations"}),
+            tool_return("09:04:05", "t4", "no match"),
+            tool_call("09:05:00", "c5", "t5", "Read", {"file_path": LOG + ".bak"}),
+            tool_return("09:05:05", "t5", "zzz"),
+            tool_call("09:06:00", "c6", "t6", "Read", {"file_path": "my" + LOG}),
+            tool_return("09:06:05", "t6", "zzz"),
+            tool_call("09:07:00", "c7", "t7", "Read", {"file_path": "elements/common/decision_index.py"}),
+            tool_return("09:07:05", "t7", 'TITLE = "' + TITLE_INDEX + '"\n'),
+            tool_return("09:08:05", "ghost", "the log, though no call of this agent names its id"),
+        ])
+        agents = self.project / SESSION / "subagents"
+        write_lines(agents / "agent-a1.jsonl", [
+            tool_call("09:09:00", "d1", "u1", "Read", {"file_path": "./" + LOG}),
+            tool_return("09:09:05", "u1", "xyz"),
+            tool_call("09:10:00", "d2", "u2", "Bash", {"command": "cat sections.md"}),
+            tool_return("09:10:05", "u2", TITLE_SECTIONS + "\n"),
+        ])
+        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
+        self.assertEqual(["15", "2", "70", "1"], self.row_of(text, f"| orchestrator {SESSION} |")[-4:])
+        self.assertEqual(["3", "1", "53", "1"], self.row_of(text, "| a1 |")[-4:])
+
+    def test_a_result_with_no_call_before_it_a_call_with_no_result_and_a_second_result_are_not_counted(
+            self) -> None:
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_return("09:00:30", "t0", "before its call"),
+            tool_call("09:01:00", "c0", "t0", "Read", {"file_path": LOG}),
+            tool_call("09:02:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:02:05", "t1", "héllo log"),
+            tool_return("09:02:06", "t1", "a second result of the same call"),
+            tool_call("09:03:00", "c2", "t2", "Read", {"file_path": LOG}),
+        ]))
+
+    def test_a_repeated_call_id_counts_once(self) -> None:
+        # The same call written on two lines, and a result: one read, not two. The call that comes
+        # again after its result is no new read.
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_call("09:01:01", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "héllo log"),
+            tool_call("09:01:06", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:07", "t1", "héllo log"),
+        ]))
+
+    def test_a_call_id_written_twice_is_a_read_of_the_log_where_either_line_names_it(self) -> None:
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_call("09:01:01", "c1", "t1", "Read", {"file_path": "elsewhere.md"}),
+            tool_return("09:01:05", "t1", "héllo log"),
+        ]))
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": "elsewhere.md"}),
+            tool_call("09:01:01", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "héllo log"),
+        ]))
+
+    def test_lines_of_another_type_than_assistant_and_user_are_not_read(self) -> None:
+        use = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+        back = tool_return("09:01:05", "t1", "héllo log")
+        use["type"] = "api-request-blob"
+        back["type"] = "api-request-blob"
+        self.assertEqual(["0", "0", "0", "0"], self.figures([use, back]))
+
+    def test_a_result_in_an_assistant_line_is_not_read(self) -> None:
+        use = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+        back = tool_return("09:01:05", "t1", "héllo log")
+        back["type"] = "assistant"
+        back["message"].update({key: value for key, value in response("09:01:05", "r1")["message"].items()
+                                if key != "content"})
+        self.assertEqual(["0", "0", "0", "0"], self.figures([use, back]))
+
+    def test_a_tool_call_in_a_user_line_is_no_call(self) -> None:
+        use = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+        use["type"] = "user"
+        self.assertEqual(["0", "0", "0", "0"], self.figures([
+            use, tool_return("09:01:05", "t1", "héllo log")]))
+
+    def test_the_index_is_read_by_its_title_line_in_both_forms_and_not_by_a_quoted_one(self) -> None:
+        # The first result is the title and a newline, 55 bytes; the second is "Log: x", a CR and a
+        # newline (8 bytes) and the other title and a newline (53), 61; the third quotes the title
+        # inside a line and is no read of the index.
+        self.assertEqual(["0", "0", "116", "2"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Bash", {"command": "cat a.md"}),
+            tool_return("09:01:05", "t1", TITLE_INDEX + "\n"),
+            tool_call("09:02:00", "c2", "t2", "Bash", {"command": "cat b.md"}),
+            tool_return("09:02:05", "t2", "Log: x\r\n" + TITLE_SECTIONS + "\n"),
+            tool_call("09:03:00", "c3", "t3", "Bash", {"command": "cat c.md"}),
+            tool_return("09:03:05", "t3", "see " + TITLE_INDEX + "\n"),
+        ]))
+
+    def test_a_result_that_holds_the_index_and_a_call_that_names_the_log_count_in_both(self) -> None:
+        # A command that names the log and prints the title of the index: 54 bytes and a newline.
+        self.assertEqual(["55", "1", "55", "1"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Bash", {"command": "cat " + LOG + " a.md"}),
+            tool_return("09:01:05", "t1", TITLE_INDEX + "\n"),
+        ]))
+
+    def test_the_log_is_named_by_any_text_of_the_input_at_any_depth(self) -> None:
+        self.assertEqual(["3", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Edit", {"edits": [{"old": ["x", {"file": LOG}]}]}),
+            tool_return("09:01:05", "t1", "ok."),
+        ]))
+
+    def test_a_key_that_names_the_log_and_a_value_that_does_not_are_no_read(self) -> None:
+        self.assertEqual(["0", "0", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {LOG: "x", "n": 5, "ok": True, "none": None}),
+            tool_return("09:01:05", "t1", "text"),
+        ]))
+
+    def test_a_lone_surrogate_in_a_result_counts_as_three_bytes_and_ends_no_run(self) -> None:
+        self.assertEqual(["4", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "a" + chr(0xD800)),
+        ]))
+
+    def test_a_result_of_a_few_million_bytes_is_counted_whole(self) -> None:
+        text = "é" * 1500000
+        self.assertEqual(["3000000", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", text),
+        ]))
+
+
+class CraftedReadsTest(ReadsTestCase):
+    """A transcript is untrusted input. What is no tool block is not counted and ends no run; a field
+    the reading needs and the transcript lacks ends it with exit code 2 naming the file, the line
+    and the field."""
+
+    GOOD = [tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+            tool_return("09:01:05", "t1", "héllo log")]  # 10 bytes, one read
+
+    def assert_error_names(self, entries: list[dict], field: str) -> None:
+        transcript = self.session(entries)
+        output = self.root / "out" / "measures.md"
+        code, errors = self.run_script(str(transcript), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertNotIn("Traceback", errors)
+        self.assertRegex(errors, rf"{transcript.name}:\d+: ")
+        self.assertIn(field, errors)
+        self.assertFalse(output.exists())
+
+    def test_a_content_that_is_no_string_or_list_is_not_counted_and_ends_no_run(self) -> None:
+        for value in (5, 1.5, True, None, {"type": "tool_use"}, "a string", "DELETE"):
+            with self.subTest(content=value):
+                before = tool_call("09:00:01", "b1", "tb", "Read", {"file_path": LOG})
+                after = tool_return("09:00:02", "tc", "x")
+                for line in (before, after):
+                    if value == "DELETE":
+                        del line["message"]["content"]
+                    else:
+                        line["message"]["content"] = value
+                self.assertEqual(["10", "1", "0", "0"], self.figures([before, after, *self.GOOD]))
+
+    def test_blocks_that_are_no_objects_or_no_tool_blocks_are_not_counted(self) -> None:
+        junk = ["text", 5, None, True, [1, 2], {}, {"type": 7}, {"type": ["tool_use"]},
+                {"type": "text", "text": LOG}, {"type": "tool_reference", "tool_name": LOG}]
+        use = tool_call("09:00:01", "b1", "tb", "Read", {"file_path": LOG})
+        use["message"]["content"] = junk + use["message"]["content"]
+        back = tool_return("09:00:02", "tb", "bytes")
+        back["message"]["content"] = junk + back["message"]["content"]
+        self.assertEqual(["15", "2", "0", "0"], self.figures([use, back, *self.GOOD]))
+
+    def test_a_result_that_is_no_text_is_a_call_that_returned_nothing_countable(self) -> None:
+        # A number, a mapping and a boolean give no text, so the call is no read; a list of blocks
+        # with no text block gives an empty text, which is a read of 0 bytes.
+        for value, expected in ((5, ["0", "0", "0", "0"]), ({"a": LOG}, ["0", "0", "0", "0"]),
+                                (True, ["0", "0", "0", "0"]),
+                                ([5, "x", None, [], {"type": "text", "text": 5},
+                                  {"type": ["text"], "text": "a"}, {"type": "image"}],
+                                 ["0", "1", "0", "0"])):
+            with self.subTest(content=value):
+                self.assertEqual(expected, self.figures([
+                    tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG}),
+                    tool_return("09:01:05", "t1", value)]))
+
+    def test_an_input_that_is_a_string_a_list_or_a_number_is_searched_or_skipped(self) -> None:
+        for value, expected in ((LOG, ["10", "1", "0", "0"]), ([LOG], ["10", "1", "0", "0"]),
+                                (7, ["0", "0", "0", "0"]), ({}, ["0", "0", "0", "0"]),
+                                ([], ["0", "0", "0", "0"]), (True, ["0", "0", "0", "0"])):
+            with self.subTest(tool_input=value):
+                self.assertEqual(expected, self.figures([
+                    tool_call("09:01:00", "c1", "t1", "Read", value),
+                    tool_return("09:01:05", "t1", "héllo log")]))
+
+    def test_an_input_nested_3000_levels_deep_is_searched_without_a_traceback(self) -> None:
+        line = json.dumps(tool_call("09:01:00", "c1", "t1", "Read", "HERE"))
+        deep = "[" * 3000 + json.dumps(LOG) + "]" * 3000
+        transcript = self.session([tool_return("09:01:05", "t1", "héllo log")])
+        transcript.write_text(line.replace('"HERE"', deep) + "\n"
+                              + json.dumps(tool_return("09:01:05", "t1", "héllo log")) + "\n",
+                              encoding="utf-8")
+        text = self.measures(str(transcript))
+        self.assertEqual(["10", "1", "0", "0"], self.row_of(text, f"| orchestrator {SESSION} |")[-4:])
+
+    def test_an_input_text_of_a_few_million_characters_is_searched_whole(self) -> None:
+        self.assertEqual(["10", "1", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Bash", {"command": "x" * 3000000 + " " + LOG}),
+            tool_return("09:01:05", "t1", "héllo log")]))
+
+    def test_a_text_that_never_ends_a_name_is_searched_in_one_pass(self) -> None:
+        # Many near matches that fail at their end: no figure, and the run ends.
+        self.assertEqual(["0", "0", "0", "0"], self.figures([
+            tool_call("09:01:00", "c1", "t1", "Bash", {"command": (LOG + "x ") * 200000}),
+            tool_return("09:01:05", "t1", "héllo log")]))
+
+    def test_a_missing_field_of_a_call_or_a_result_ends_with_exit_2_naming_it(self) -> None:
+        for field in ("id", "name", "input"):
+            with self.subTest(field=field):
+                line = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+                del line["message"]["content"][0][field]
+                self.assert_error_names([line], f"message.content[0].{field}")
+        for field in ("tool_use_id", "content"):
+            with self.subTest(field=field):
+                line = tool_return("09:01:05", "t1", "x")
+                del line["message"]["content"][0][field]
+                self.assert_error_names([line], f"message.content[0].{field}")
+
+    def test_a_field_that_is_null_or_no_identifier_ends_with_exit_2_naming_it(self) -> None:
+        for field, value in (("id", 7), ("id", ""), ("name", ["Read"]), ("input", None)):
+            with self.subTest(field=field, value=value):
+                line = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+                line["message"]["content"][0][field] = value
+                self.assert_error_names([line], f"message.content[0].{field}")
+        for value in (["t1"], 7, None):
+            with self.subTest(tool_use_id=value):
+                line = tool_return("09:01:05", "t1", "x")
+                line["message"]["content"][0]["tool_use_id"] = value
+                self.assert_error_names([line], "message.content[0].tool_use_id")
+
+    def test_the_error_of_a_missing_field_names_the_block_of_the_line(self) -> None:
+        # The broken block is the second of its line, on the third line of the file.
+        line = tool_call("09:01:00", "c1", "t1", "Read", {"file_path": LOG})
+        line["message"]["content"].append({"type": "tool_use", "name": "Read", "input": {}})
+        transcript = self.session([prompt("09:00:00", "run"), *self.GOOD[:1], line])
+        code, errors = self.run_script(str(transcript), "--output", str(self.root / "o" / "m.md"))
+        self.assertEqual(2, code, errors)
+        self.assertIn(f"{transcript.name}:3: no field message.content[1].id", errors)
+
+    def test_nothing_of_a_transcript_reaches_the_file_but_numbers(self) -> None:
+        name = "evil|name" + chr(10) + "# injected"
+        use = tool_call("09:01:00", "c1", "id|x" + chr(10) + "- injected", name, {"file_path": LOG})
+        back = tool_return("09:01:05", use["message"]["content"][0]["id"], "héllo log | # injected")
+        self.session([use, back])
+        text = self.measures(str(self.project / f"{SESSION}.jsonl"))
+        self.assertNotIn("injected", text)
+        self.assertNotIn("evil", text)
+        # "héllo log" is 10 bytes, then a space, a bar, a space, a hash, a space and "injected" (8).
+        self.assertEqual(["23", "1", "0", "0"], self.row_of(text, f"| orchestrator {SESSION} |")[-4:])
 
 
 class RewriteEdgesTest(MeasuresTest):
@@ -630,13 +960,17 @@ class HandWorkedCodexTest(CodexTest):
             "## Agents",
             "",
             "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
-            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again "
+            + NEW_COLUMNS,
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
             "| orchestrator orch | Codex | 3 | 1000 | 2000 | 3000 | unknown | unknown | unknown "
-            "| unknown |",
-            "| /root/design | Codex | 2 | 5000 | 5000 | 6000 | unknown | unknown | unknown | unknown |",
-            "| scout-nick | Codex | 1 | 400 | 400 | 400 | unknown | unknown | unknown | unknown |",
-            "| /root/design/check | Codex | 1 | 7 | 7 | 7 | unknown | unknown | unknown | unknown |",
+            "| unknown | 0 | 0 | 0 | 0 |",
+            "| /root/design | Codex | 2 | 5000 | 5000 | 6000 | unknown | unknown | unknown | unknown "
+            "| 0 | 0 | 0 | 0 |",
+            "| scout-nick | Codex | 1 | 400 | 400 | 400 | unknown | unknown | unknown | unknown "
+            "| 0 | 0 | 0 | 0 |",
+            "| /root/design/check | Codex | 1 | 7 | 7 | 7 | unknown | unknown | unknown | unknown "
+            "| 0 | 0 | 0 | 0 |",
             "",
         ], self.lines_of(text))
 
@@ -683,11 +1017,13 @@ class MixedCycleTest(CodexTest):
             "## Agents",
             "",
             "| Agent | Tool | Calls | First call | Middle call | Last call | Cache written, 5 minutes "
-            "| Cache written, 1 hour | Cache written again | Calls with a cache write again |",
-            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
-            "| orchestrator cycle1 | Claude Code | 1 | 1100 | 1100 | 1100 | 1000 | 0 | 0 | 0 |",
+            "| Cache written, 1 hour | Cache written again | Calls with a cache write again "
+            + NEW_COLUMNS,
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+            "| orchestrator cycle1 | Claude Code | 1 | 1100 | 1100 | 1100 | 1000 | 0 | 0 | 0 | 0 | 0 "
+            "| 0 | 0 |",
             "| orchestrator orch | Codex | 1 | 300 | 300 | 300 | unknown | unknown | unknown "
-            "| unknown |",
+            "| unknown | 0 | 0 | 0 | 0 |",
             "",
         ], self.lines_of(text))
 
@@ -728,6 +1064,111 @@ class CodexReadingErrorsTest(CodexTest):
         self.assertEqual(2, code, errors)
         self.assertRegex(errors, rf"{orchestrator.name}:2: ")
         self.assertFalse(output.exists())
+
+
+def codex_item(clock: str, payload: dict) -> dict:
+    """A record of a rollout that holds one item of the model's conversation."""
+    return {"timestamp": at(clock), "type": "response_item", "payload": payload}
+
+
+def codex_call(clock: str, call_id: str, name: str, arguments: str, custom: bool = False) -> dict:
+    """The call of a tool: a function call with its arguments as a JSON text, or a custom tool call
+    with its input as a text."""
+    if custom:
+        return codex_item(clock, {"type": "custom_tool_call", "call_id": call_id, "name": name,
+                                  "input": arguments, "status": "completed"})
+    return codex_item(clock, {"type": "function_call", "call_id": call_id, "name": name,
+                              "arguments": arguments, "status": "completed"})
+
+
+def codex_output(clock: str, call_id: str, output: object, custom: bool = False) -> dict:
+    kind = "custom_tool_call_output" if custom else "function_call_output"
+    return codex_item(clock, {"type": kind, "call_id": call_id, "output": output})
+
+
+class CodexReadsTest(CodexTest):
+    """The decision log and the index in the context of a Codex agent, read from the records of its
+    tool calls and their outputs, in the form of a rollout; the content is written here."""
+
+    def figures(self, ident: str, entries: list[dict]) -> list[str]:
+        path = self.rollout(ident, [codex_meta(ident), codex_usage("09:01:00", ident, 10), *entries])
+        text = self.measures(str(path))
+        row = next(line for line in self.lines_of(text) if line.startswith(f"| orchestrator {ident} |"))
+        return [cell.strip() for cell in row.strip("|").split("|")][-4:]
+
+    def test_the_reads_of_a_codex_agent_and_its_subagent_have_hand_worked_figures(self) -> None:
+        """The orchestrator reads the log by a function call whose arguments hold a backslash path
+        (a result "héllo log": 10 bytes), by a custom tool call (an output of two text blocks, "ab"
+        and "cé", and an image: 5 bytes), and by arguments that are no JSON (1 byte), and reads the
+        list of sections by a command (53 bytes). Its subagent reads the log (3 bytes)."""
+        path = self.rollout("orch", [
+            codex_meta("orch"),
+            codex_usage("09:01:00", "orch", 10),
+            codex_call("09:02:00", "k1", "shell", json.dumps(
+                {"command": "cat .the-way" + chr(92) + "foundations" + chr(92) + "decisions.md"})),
+            codex_output("09:02:05", "k1", "héllo log"),
+            codex_call("09:03:00", "k2", "exec", "tools.read('foundations/decisions.md')", True),
+            codex_output("09:03:05", "k2", [{"type": "input_text", "text": "ab"},
+                                            {"type": "input_image", "image_url": "u", "detail": "low"},
+                                            {"type": "input_text", "text": "cé"}], True),
+            codex_call("09:04:00", "k3", "wait", "not JSON: foundations/decisions.md"),
+            codex_output("09:04:05", "k3", "q"),
+            codex_call("09:05:00", "k4", "shell", json.dumps({"command": "cat sections.md"})),
+            codex_output("09:05:05", "k4", "# decision_index.py: list of the sections of the log\n"),
+            codex_call("09:06:00", "k5", "shell", json.dumps({"command": "ls foundations"})),
+            codex_output("09:06:05", "k5", "decisions.md"),
+            codex_output("09:07:05", "ghost", "no call of this agent has this id"),
+        ])
+        self.rollout("scout", [
+            codex_meta("scout", "09:02:00", parent="orch", agent_nickname="scout"),
+            codex_usage("09:02:30", "scout", 5),
+            codex_call("09:03:00", "k1", "shell", json.dumps({"command": "cat foundations/decisions.md"})),
+            codex_output("09:03:05", "k1", "xyz"),
+        ])
+        text = self.measures(str(path))
+        self.assertEqual(["16", "3", "53", "1"],
+                         [cell.strip() for cell in next(line for line in self.lines_of(text) if
+                                                         line.startswith("| orchestrator orch |")
+                                                         ).strip("|").split("|")][-4:])
+        self.assertEqual(["3", "1", "0", "0"],
+                         [cell.strip() for cell in next(line for line in self.lines_of(text) if
+                                                         line.startswith("| scout |")
+                                                         ).strip("|").split("|")][-4:])
+
+    def test_a_record_that_is_no_tool_record_is_not_counted(self) -> None:
+        self.assertEqual(["0", "0", "0", "0"], self.figures("orch", [
+            codex_item("09:02:00", {"type": "message", "role": "user", "content": [
+                {"type": "input_text", "text": "foundations/decisions.md"}]}),
+            codex_item("09:02:01", "not an object"),
+            codex_item("09:02:02", {"type": "reasoning"}),
+            codex_item("09:02:03", {"type": ["function_call"]}),
+            codex_output("09:02:05", "k1", "foundations/decisions.md"),
+            codex_call("09:03:00", "k2", "shell", json.dumps({"command": "cat foundations/decisions.md"})),
+        ]))
+
+    def test_an_output_that_is_no_text_is_not_counted(self) -> None:
+        for value in (5, {"text": "a"}, None):
+            with self.subTest(output=value):
+                if value is None:
+                    continue  # a missing output is an error, tested below
+                self.assertEqual(["0", "0", "0", "0"], self.figures("orch", [
+                    codex_call("09:02:00", "k1", "shell",
+                               json.dumps({"command": "cat foundations/decisions.md"})),
+                    codex_output("09:02:05", "k1", value)]))
+
+    def test_a_missing_field_of_a_call_or_an_output_ends_with_exit_2_naming_it(self) -> None:
+        cases = [
+            ("payload.call_id", codex_call("09:02:00", "k1", "shell", "{}"), "call_id"),
+            ("payload.name", codex_call("09:02:00", "k1", "shell", "{}"), "name"),
+            ("payload.arguments", codex_call("09:02:00", "k1", "shell", "{}"), "arguments"),
+            ("payload.input", codex_call("09:02:00", "k1", "exec", "x", True), "input"),
+            ("payload.call_id", codex_output("09:02:05", "k1", "x"), "call_id"),
+            ("payload.output", codex_output("09:02:05", "k1", "x"), "output"),
+        ]
+        for label, record, key in cases:
+            with self.subTest(field=label, record=record["payload"]["type"]):
+                del record["payload"][key]
+                self.assert_codex_error(self.rollout("orch", [codex_meta("orch"), record]), label)
 
 
 class CodexSearchTest(CodexTest):
