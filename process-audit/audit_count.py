@@ -284,10 +284,11 @@ repository read and its cycles; a section *Cycles*, a table of one row per cycle
 *Unknown values*, a table of every value the count did not establish, one line for each field and
 reason: how many values the pair has and its first three examples, each as repository, record and
 value, where a name or number of one value (a row's number, an issue's name, a version's commit) is
-no part of the field. The result keeps no more of a pair; the full list of its values is where they
-come from: the register's own values (its refused rows and the problems of a cycle it names) in the
-register, and the cycles' values in the copies of their records in the history of git and in a new
-run of the count. A section *Cost*, a table of
+no part of the field. The result keeps no more of a pair, and no option of the count lists the rest.
+The full list of a pair's values stands where they are read: the register's own values (its refused
+rows and the problems of a cycle it names) in the register, and the cycles' values in the copies of
+the cycles' records in the history of git. The values about an issue or a version are made by the
+count from the register and from those copies, and have no list of their own. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
 number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
 of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
@@ -3202,10 +3203,12 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "The values the count did not establish, one row for each field and reason, with how many "
         "values the pair has and its first three examples, each as repository, record and value. "
-        "The result keeps the number and three examples of each pair, no more. The full list of a "
-        "pair is where its values come from: the values of the register, its refused rows and the "
-        "problems of a cycle it names, in the register; the values of the cycles, in the copies of "
-        "the cycles' records in the history of git, and in a new run of the count.",
+        "The result keeps the number and three examples of each pair, and no option of the count "
+        "lists the rest. The full list of a pair's values stands where they are read: the register's "
+        "own values (its refused rows and the problems of a cycle it names) in the register; the "
+        "cycles' values in the copies of the cycles' records in the history of git. The values "
+        "about an issue or a version are made by the count from the register and from those "
+        "copies, and have no list of their own.",
         "",
     ]
     entries = [(cycle.repository, cycle.record, value, why)

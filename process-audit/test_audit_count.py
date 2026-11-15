@@ -2693,6 +2693,24 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(1, sum(1 for line in text.splitlines()
                                 if line.startswith("| Cost | ")))
 
+    def test_the_section_says_where_the_full_list_of_a_pair_stands_and_names_no_run_of_the_count(self):
+        # The result keeps three examples of each pair, and a new run of the count writes the same
+        # table, so the section names the register and the copies of the records in git history
+        # for the full lists, says the count lists no more, and names no new run as a place.
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        section = text.split("\n## Unknown values\n", 1)[1].split("\n## ", 1)[0]
+        intro = " ".join(section.split("| Field |", 1)[0].split())
+        self.assertIn("no option of the count lists the rest", intro)
+        self.assertIn("in the register", intro)
+        self.assertIn("in the copies of the cycles' records in the history of git", intro)
+        self.assertIn("about an issue or a version are made by the count", intro)
+        self.assertNotIn("new run", intro)
+
     def test_issues_that_differ_only_in_their_names_make_one_pair_for_each_kind_of_value(self):
         # Three fixed issues with one fix the history lacks, two open issues each with a problem of
         # a cycle no repository holds: the fix of an issue and the waiting of an issue are one pair

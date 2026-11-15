@@ -164,9 +164,11 @@ two outcomes: the human weighs it further, or sets it aside.
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
    kinds of `unknown` in *Unknown values* and how many cycles each touches, and any *Refused rows*.
    *Unknown values* gives every value the count did not establish as one line for each field and
-   reason, with how many values the pair has and its first three examples; the full list of a pair
-   stays where its values come from: the register's own values in the register, the cycles' values
-   in the copies of their records in git history and in a new run of the count.
+   reason, with how many values the pair has and its first three examples, and no option of the
+   count lists the rest. The full list of a pair's values stands where they are read: the register's
+   own values (its refused rows and the problems of a cycle it names) in the register, the cycles'
+   values in the copies of their records in git history. The values about an issue or a version
+   are made by the count from the register and from those copies, and have no list of their own.
    A row refused for its class is one such line, with the reason `the class is not in the list of
    classes` and its row of *Problems* among the first examples: it is the matter of a class the list
    lacks, below. The user's own tool corrects any other refused row in the register. An archive of
