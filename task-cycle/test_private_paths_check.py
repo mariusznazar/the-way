@@ -66,6 +66,20 @@ class WindowsPathTest(unittest.TestCase):
                      "Note: a / b", "see Q: and A: b", "https://host/C:/x", "key:" + BS + "n and ab:" + BS + "x"):
             self.assertEqual(hits(text), [], text)
 
+    def test_a_windows_path_written_in_the_form_of_an_address_is_listed(self) -> None:
+        # `/C:/Work/x`: a drive path that a tool writes after a slash, as an address shows it.
+        self.assertEqual(shown("at /C:/Work/x and (/d:/data/y)"), ["/C:/Work/x", "/d:/data/y"])
+        self.assertEqual(shown('"/C:/Work/x"'), ["/C:/Work/x"])
+        self.assertEqual(shown("/C:" + BS + "Work" + BS + "x"), ["/C:" + BS + "Work" + BS + "x"])
+
+    def test_a_slash_before_a_drive_letter_in_a_longer_text_starts_no_path(self) -> None:
+        for text in ("task/C:/x", "./C:/x", "a:b/C:/x", "//C:/x", BS + "/C:/x", "www.a.b/C:/x"):
+            self.assertEqual(hits(text), [], text)
+
+    def test_the_form_of_an_address_keeps_the_escape_sequence_rule(self) -> None:
+        self.assertEqual(hits("wait /s:" + BS + "n"), [])
+        self.assertEqual(shown("wait /s:" + BS + "nWynik"), ["/s:" + BS + "nWynik"])
+
     def test_a_letter_after_a_backslash_starts_no_drive(self) -> None:
         # `\d\d:\d\d` of a regular expression holds the letters `d:` and a backslash.
         text = "re.compile(r'" + BS + "d" + BS + "d:" + BS + "d" + BS + "d')"

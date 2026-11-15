@@ -132,7 +132,7 @@ A value is read off when it is what a tool gives from the product or the machine
 
 ## repository instruction file
 
-A repository instruction file is an instruction file for coding agents that a repository's git tracks under the name `AGENTS.md`, `CLAUDE.md` or `CLAUDE.local.md` in any of its directories, `.claude/` among them, or as a Markdown file its root `AGENTS.md` or `CLAUDE.md` names by its path.
+A repository instruction file is an instruction file for coding agents that a repository's git tracks under the name `AGENTS.md`, `CLAUDE.md` or `CLAUDE.local.md` in any of its directories, `.claude/` among them, or as a file whose name ends in `.md` or `.mdc` that its root `AGENTS.md` or `CLAUDE.md` names by its path.
 
 - **Not:** none
 
@@ -193,5 +193,11 @@ The cost of an occurrence is the highest of five levels — `nothing`, `steps`, 
 ## transitional state
 
 A transitional state is a state of a product that a decision describes until work later than the change that brings the decision ends it.
+
+- **Not:** none
+
+## Markdown file
+
+A Markdown file is a file whose name ends in `.md`, `.markdown`, `.mdx` or `.mdc`, in any letter case.
 
 - **Not:** none

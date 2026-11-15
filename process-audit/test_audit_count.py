@@ -18,6 +18,13 @@ GIT_ENV = dict(os.environ, GIT_AUTHOR_NAME="Tester", GIT_AUTHOR_EMAIL="tester@ex
 
 PIN = "0123456789abcdef0123456789abcdef01234567"
 BASE = "89abcdef0123456789abcdef0123456789abcdef"
+# The four tools that write a file of a cycle's copy and whose change by a cycle the count notes.
+STAGE_SCRIPT = "task-cycle/cycle_stages.py"
+MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
+GATE_SCRIPT = "task-cycle/gate_times.py"
+GATE_RUNNER = "gate/run_tests.py"
+TOOLS = (STAGE_SCRIPT, MEASURES_SCRIPT, GATE_SCRIPT, GATE_RUNNER)
+CHANGED_WHY = "the cycle changed the tool that wrote them"
 
 # The register of problems, as the template gives it; the tests add rows under its headers.
 TEMPLATE = (HERE / "problem_register.md").read_text(encoding="utf-8")
@@ -196,11 +203,48 @@ class AuditCountCase(unittest.TestCase):
         return path.read_bytes().decode("utf-8")
 
     def rows(self, heading: str) -> list[list[str]]:
-        """The rows of the table under `## <heading>` of the latest result, as cells."""
+        """The rows of the table under `## <heading>` of the latest result, as cells. Of *Unknown
+        values* they are the values the table gives as examples, each as repository, record, value
+        and reason: the whole list where no pair has more than three values, as the tests that read
+        them have; the pairs are in `pair_rows`."""
+        if heading == "Unknown values":
+            return [self.example_row(example, pair[2])
+                    for pair in self.pair_rows() for example in pair[3].split("; ")]
         text = self.latest()
         self.assertIn(f"\n## {heading}\n", text, f"the result has no section `## {heading}`")
         section = text.split(f"\n## {heading}\n", 1)[1].split("\n## ", 1)[0]
         lines = [line for line in section.splitlines() if line.startswith("|")]
+        return [split_row(line) for line in lines[2:]]
+
+    @staticmethod
+    def example_row(example: str, why: str) -> list[str]:
+        """An example of a pair, written `repository record: value`, as repository, record, value
+        and reason."""
+        repository, rest = example.split(" ", 1)
+        record, value = rest.split(": ", 1)
+        return [repository, record, value, why]
+
+    def pair_rows(self) -> list[list[str]]:
+        """The rows of *Unknown values*: one row for each field and reason, as field, number of
+        values, reason and the first examples."""
+        text = self.latest()
+        self.assertIn("\n## Unknown values\n", text, "the result has no section `## Unknown values`")
+        section = text.split("\n## Unknown values\n", 1)[1].split("\n## ", 1)[0]
+        lines = [line for line in section.splitlines() if line.startswith("|")]
+        return [split_row(line) for line in lines[2:]]
+
+    def register_pair_rows(self) -> list[list[str]]:
+        """The rows of *Unknown values* for the values of the register: the pairs whose field is a
+        row or a table of it."""
+        return [row for row in self.pair_rows() if row[0].startswith(("row of ", "table "))]
+
+    def section(self, kind, number) -> list[list[str]]:
+        """The rows of the table under `### <kind>, series <number>` of the latest result."""
+        text = self.latest()
+        heading = f"\n### {kind}, series {number}\n"
+        self.assertIn(heading, text, "the result has no such series")
+        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+        lines = [line for line in part.splitlines() if line.startswith("|")]
         return [split_row(line) for line in lines[2:]]
 
     def reasons_of(self, rows: list[list[str]], value: str) -> str:
@@ -214,6 +258,33 @@ class AuditCountCase(unittest.TestCase):
         lines = [line for line in section.splitlines() if line.startswith("|")]
         header = [cell.strip() for cell in lines[0].strip("|").split("|")]
         return [dict(zip(header, row)) for row in self.rows("Cycles")]
+
+    def own_cycle(self, files, changed=None, record_text=None, folder="a-task") -> tuple[str, str]:
+        """A cycle of the-way whose copy of the record is in the-way's own history: the version
+        the cycle ran on (a commit holding the four tools), a commit of the task branch that
+        replaces the files of `changed`, and the commit that adds the copy, whose record names the
+        version as its *Process pin* (each PIN of `record_text` is replaced by it). Writes the
+        locations file; returns the commit that adds the copy and the version."""
+        way = self.repository("the-way")
+        base = {"README.md": "the-way\n", **{path: "version one\n" for path in TOOLS}}
+        version = way.commit(base, "The version the cycle ran on")
+        after = {**base, **(changed or {})}
+        work = way.commit(after, "The task branch changes files", version)
+        text = (record_text if record_text is not None else record()).replace(PIN, version)
+        added, _ = way.cycle(folder, {"cycle.md": text, **files}, base_files=after, parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        return added, version
+
+    def fresh(self) -> None:
+        """Start over with new places and an empty result, for the next case of a `subTest`."""
+        self.tearDown()
+        self.setUp()
+
+    def run_with_prices(self, prices=None):
+        """The command run with the test price list (`--prices`), which prices `model-a`."""
+        test_prices = self.home / "prices.md"
+        test_prices.write_text(TEST_PRICES if prices is None else prices, encoding="utf-8")
+        return self.run_count("--prices", str(test_prices))
 
 
 class CycleFound(AuditCountCase):
@@ -447,6 +518,76 @@ class Times(AuditCountCase):
         self.assertEqual("unknown", cycle["Waiting for tools"])
         self.assertIn("no `stages.md`", self.reasons_of(unknown, "Waiting for tools"))
 
+    # What the stage script writes into a copy, as the cost row and the times of the fix-round
+    # stage report of Cost give them: 0.011250 dollars, one fix round, 28.9 % of the cost in it, and
+    # the times of STAGES_HEADER. The other two files are given too, to show they are read as
+    # before.
+    def stage_files(self) -> dict:
+        return {"stages.md": one_fix_round(), MEASURES: measures_file(),
+                GATE: gate_file(rows=gate_row(STARTED, 0, "100.000", 0, "gate/a", "100.0"))}
+
+    STAGE_VALUES = ["0.011250", "1", "28.9%"]
+    STAGE_NAMES = (WORKING, "Waiting for tools", "Cost", "Fix rounds share")
+
+    def own_values(self, changed) -> tuple[str, dict, list[list[str]]]:
+        """The copy of an own cycle that changes the files of `changed`: its record, its row of the
+        cycle table and the rows of *Unknown values*; the files of the other two groups are read."""
+        added, _ = self.own_cycle(self.stage_files(), changed, fix_record())
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        [cost] = self.rows("Cost")
+        self.assertEqual(["the-way", added], cost[:2])
+        return added, self.cycles()[0], cost
+
+    def test_a_changed_stage_script_gives_the_times_the_cost_and_the_share_unknown(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        # The cycle changes `task-cycle/cycle_stages.py` between the version it ran on and its copy:
+        # the figures that script wrote are unknown with the reason, and the number of fix rounds,
+        # which the record gives, and the two other files stand as before.
+        added, cycle, cost = self.own_values({STAGE_SCRIPT: "version two\n"})
+        self.assertEqual(["unknown", "unknown"], [cycle[self.WORKING], cycle["Waiting for tools"]])
+        self.assertEqual(["unknown", "1", "unknown"], [cost[3], cost[4], cost[5]])
+        # The files of the other two groups are read as before.
+        self.assertEqual([["the-way", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual([["the-way", added, STARTED, "0", "100.000", "0", "gate/a 100.0 s"]],
+                         self.rows("Gate runs"))
+        unknown = self.rows("Unknown values")
+        for name in self.STAGE_NAMES:
+            reason = self.reasons_of(unknown, name)
+            self.assertIn(CHANGED_WHY, reason, name)
+            self.assertIn("`task-cycle/cycle_stages.py`", reason, name)
+            self.assertEqual(1, [row[2] for row in unknown].count(name), name)
+
+    def test_a_cycle_that_changed_none_of_the_stage_tools_gives_the_stage_values_as_before(self):
+        # The cycle changes the other three tools and another file, which the stage script does not
+        # write: the times and the cost are read as written.
+        changed = {MEASURES_SCRIPT: "two\n", GATE_SCRIPT: "two\n", GATE_RUNNER: "two\n",
+                   "README.md": "two\n"}
+        added, cycle, cost = self.own_values(changed)
+        self.assertEqual(["0:20:00", "0:05:00"], [cycle[self.WORKING], cycle["Waiting for tools"]])
+        self.assertEqual(self.STAGE_VALUES, [cost[3], cost[4], cost[5]])
+        self.assertEqual([], [name for name in self.STAGE_NAMES
+                              if self.reasons_of(self.rows("Unknown values"), name)])
+
+    def test_a_cycle_of_a_product_is_not_put_in_doubt_by_a_change_of_a_tool(self):
+        # A cycle of another repository holds no tool of the-way in its own change: the script of
+        # the-way is not compared with its copy, so the cycle's values stand though the-way's
+        # script differs between the pin and the commit of its copy.
+        way = self.repository("the-way")
+        version = way.commit({"README.md": "the-way\n", STAGE_SCRIPT: "one\n"}, "Version")
+        way.commit({"README.md": "the-way\n", STAGE_SCRIPT: "two\n"}, "Later", version)
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record(pin_line=f"- Process pin: `{version}`"),
+                                 "stages.md": one_fix_round()}, base_files={
+            "README.md": "a product\n", STAGE_SCRIPT: "other\n"})
+        self.write_locations(self.places(**{"the-way": way, "product": product}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        [row] = [row for row in self.rows("Cost") if row[0] == "product"]
+        self.assertEqual("0.011250", row[3])
+        self.assertNotIn(CHANGED_WHY, self.latest())
+
 
 class CraftedInput(AuditCountCase):
     def test_control_characters_and_bars_stay_inside_one_cell_of_one_line(self):
@@ -464,6 +605,28 @@ class CraftedInput(AuditCountCase):
         self.assertIn("\\x1b", cycles[0]["Folder"])
         self.assertEqual("unknown", cycles[0]["Process pin"])
         self.assertEqual("1", cycles[0]["Remarks"])
+
+    def test_crafted_text_of_a_register_value_reaches_its_pair_as_one_cut_line_with_no_bar(self):
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        # A repository the register names with an escaped bar, a control character and more text
+        # than the cut: its value is unknown, and its example is one cut line with no bar in it.
+        crafted = "g\\|" + "h" * 300 + "\x07"
+        self.register.write_text(register_text(problems=[problem_row(crafted, added)]),
+                                 encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
+        pairs = self.register_pair_rows()
+        self.assertEqual(1, len(pairs), pairs)
+        self.assertEqual(["row of `Problems`", "1"], pairs[0][:2])
+        # The bar is written as `\x7c`, and the text is cut to 200 characters before the example.
+        self.assertIn("\\x7c", pairs[0][3])
+        self.assertNotIn("h" * 201, pairs[0][3])
+        self.assertLess(len(pairs[0][3]), 400, pairs[0][3])
+        self.assertIn(f"{added}: row 1 of `Problems`", pairs[0][3])
 
     def test_a_symbolic_link_leaving_the_record_is_not_followed(self):
         outside = self.home / "outside.md"
@@ -584,6 +747,25 @@ class Locations(AuditCountCase):
         self.assert_refused(done, "List date", "--prices")
         self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
 
+    def test_a_price_list_table_without_a_write_column_is_refused_naming_the_option_and_the_column(
+            self):
+        # A table that lacks one of the two write columns ends the run with exit code 2, as one
+        # that lacks *Input* does, and the error names the option and the column, never the path.
+        self.write_locations(self.places(product=self.product()))
+        prices = self.home / "prices.md"
+        for label, column, other in (("1 hour", "Cache write (1 hour)", "Cache write (5 minutes)"),
+                                     ("5 minutes", "Cache write (5 minutes)",
+                                      "Cache write (1 hour)")):
+            with self.subTest(label):
+                header = ("| Model id in stages.md | Input | Cached input | Output | "
+                          + other + " |\n|---|---|---|---|---|\n| model-a | 2 | 1 | 10 | 3 |\n")
+                prices.write_text("# Prices\n\n- List date: 2026-01-01\n\n" + header,
+                                  encoding="utf-8")
+                done = self.run_count("--prices", str(prices))
+                self.assert_refused(done, "--prices", column)
+                self.assertNotIn(other, done.stderr.decode("utf-8"))
+                self.assertNotIn(self.home.name, done.stderr.decode("utf-8"))
+
     def test_a_file_that_is_not_json_or_no_object(self):
         self.write_locations("{\"the-way\": ")
         self.assert_refused(self.run_count(), "is not JSON")
@@ -653,6 +835,28 @@ class Locations(AuditCountCase):
         self.assert_refused(self.run_count("--repository", "notes"),
                             "no entry `repository` under `notes`")
 
+    def test_the_way_with_no_repository_entry_is_the_checkout_the_script_lies_in(self):
+        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
+        # The entry `repository` under `the-way` is no missing field (WAY-344): the count takes
+        # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
+        own = subprocess.run(["git", "-C", str(HERE.parent), "rev-parse", "--verify", "HEAD"],
+                             capture_output=True, check=True).stdout.decode("utf-8").strip()
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record(
+            pin_line=f"- Process pin: `{own}`")})
+        self.register.write_text(register_text(
+            issues=[issue_row("fixed-one", "fixed", own)],
+            problems=[problem_row("product", added, "fixed-one")]), encoding="utf-8")
+        self.write_locations(self.places(product=product))
+        self.assertNotIn("repository", self.places(product=product)["the-way"])
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual(b"", done.stderr)
+        self.assertEqual(own, self.cycles()[0]["Process pin"])
+        self.assertEqual([], [row for row in self.rows("Unknown values")
+                              if row[2] == "Process pin"])
+        self.assertEqual("1", self.rows("Fixed issues")[0][2])
+
     def test_no_repository_to_read(self):
         self.write_locations(self.places())
         self.assert_refused(self.run_count(), "--repository")
@@ -699,10 +903,12 @@ TEST_PRICES = """# Test prices
 
 ## Test provider
 
-| Model id in stages.md | Page name | Input | Cached input | Output |
-|---|---|---|---|---|
-| model-a | Model A | 2 | 1 | 10 |
-| model-b | Model B | 4 | 0.5 | 20 |
+| Model id in stages.md | Page name | Input | Cached input | Output | Cache write (5 minutes) | Cache write (1 hour) |
+|---|---|---|---|---|---|---|
+| model-a | Model A | 2 | 1 | 10 | 3 | 5 |
+| model-b | Model B | 4 | 0.5 | 20 | 6 | 8 |
+| model-x | Model X | 2 | 1 | 10 | — | — |
+| model-y | Model Y | 2 | 1 | 10 | 3 | — |
 """
 STAGES_HEADER = ("# Stages of the cycle run\n\n- Working time without waiting for tools: 0:20:00\n"
                  "- Waiting for tools: 0:05:00\n\n"
@@ -739,6 +945,20 @@ def stage_row(number, name, model, input_, cached, output, files=None) -> str:
     named = "" if files is None else f" {files} |"
     return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
             f"| {output} |{named}\n")
+
+
+WRITE_COLUMNS = ["Cache write (5 minutes)", "Cache write (1 hour)"]
+# The newest form of the section: the columns of the form that names files, then the two columns
+# of the cache writes, in that order.
+STAGES_HEADER_WRITES = STAGES_HEADER.replace(
+    "| Output |\n|---|---|---|---|---|---|---|---|\n",
+    "| Output | Files named | " + " | ".join(WRITE_COLUMNS) + " |\n" + "|---" * 11 + "|\n")
+
+
+def write_row(number, name, model, input_, cached, output, write_5m, write_1h, files="") -> str:
+    """A row of the section of the newest form, with the cache writes of each lifetime."""
+    return (f"| {number} | {name} | 2026-11-11 10:00:00 | 0:00:00 | {model} | {input_} | {cached} "
+            f"| {output} | {files} | {write_5m} | {write_1h} |\n")
 
 
 WHOLE = "reports/review_whole_findings.md"
@@ -814,9 +1034,11 @@ class Cost(AuditCountCase):
     def test_the_stage_report_cycle_stages_writes_gives_the_share(self):
         # Transcripts in Claude Code's form, where the fix and the review of the fix are each a
         # resumed subagent whose message names the findings file. Worked by hand at model-a's
-        # prices: the orchestrator 1000*2 + 100*10 = 3000; the author's first turn 3000 and its
-        # fix 500*2 + 50*10 = 1500; the reviewer's first turn 2000*2 + 200*10 = 6000 and its review
-        # of the fix 250*2 + 25*10 = 750. 2250 of 14250 is 15.79 %.
+        # prices, which are 3 for a write of 5 minutes and 5 for one of 1 hour: the orchestrator,
+        # whose response wrote 100 tokens for 5 minutes and 200 for 1 hour on top of its 1000 plain
+        # input, 1000*2 + 100*3 + 200*5 + 100*10 = 4300; the author's first turn 3000 and its fix
+        # 500*2 + 50*10 = 1500; the reviewer's first turn 2000*2 + 200*10 = 6000 and its review
+        # of the fix 250*2 + 25*10 = 750. 2250 of 15550 is 14.47 %.
         def line(kind, clock, **fields):
             entry = {"type": kind, "timestamp": f"2026-11-11T{clock}.000Z"}
             entry.update(fields)
@@ -828,18 +1050,22 @@ class Cost(AuditCountCase):
                 fields["isMeta"] = True
             return line("user", clock, **fields)
 
-        def answered(clock, ident, input_, output):
+        def answered(clock, ident, input_, output, write_5m=0, write_1h=0):
             return line("assistant", clock, message={
                 "id": ident, "model": "model-a", "stop_reason": "end_turn",
                 "content": [{"type": "text"}],
-                "usage": {"input_tokens": input_, "cache_creation_input_tokens": 0,
-                          "cache_read_input_tokens": 0, "output_tokens": output}})
+                "usage": {"input_tokens": input_,
+                          "cache_creation_input_tokens": write_5m + write_1h,
+                          "cache_read_input_tokens": 0, "output_tokens": output,
+                          "cache_creation": {"ephemeral_5m_input_tokens": write_5m,
+                                             "ephemeral_1h_input_tokens": write_1h}}})
 
         project = self.home / "claude" / "projects" / "p"
         agents = project / "sess" / "subagents"
         agents.mkdir(parents=True)
         (project / "sess.jsonl").write_text(
-            told("09:00:00", "run the cycle") + answered("09:00:10", "o1", 1000, 100), "utf-8")
+            told("09:00:00", "run the cycle")
+            + answered("09:00:10", "o1", 1000, 100, write_5m=100, write_1h=200), "utf-8")
         (agents / "agent-f.jsonl").write_text(
             told("09:01:00", "Implement; handoff .runs/task-cycles/t/reports/author_handoff.md")
             + answered("09:02:00", "f1", 1000, 100)
@@ -860,7 +1086,7 @@ class Cost(AuditCountCase):
              "--output", str(output)], capture_output=True, stdin=subprocess.DEVNULL)
         self.assertEqual(0, written.returncode, written.stderr)
         row, why = self.share_of(output.read_text(encoding="utf-8"))
-        self.assertEqual(["0.014250", "1", "15.8%"], row[3:6])
+        self.assertEqual(["0.015550", "1", "14.5%"], row[3:6])
         self.assertEqual([], why)
 
     def test_the_same_record_with_an_earlier_form_of_stages_md_leaves_the_share_unknown(self):
@@ -1004,6 +1230,7 @@ class Cost(AuditCountCase):
         self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
 
     def test_stages_md_without_the_section_is_priced_from_the_table_of_tokens_by_model(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and model-b 4 / 0.5 / 20:
         # model-a is (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000; model-b is (500 - 100) * 4
         # + 100 * 0.5 + 50 * 20 = 2650. The total is 10650.
@@ -1128,7 +1355,7 @@ class Cost(AuditCountCase):
         self.assertTrue(any("limit" in why for why in self.unknown_why("Cost")))
 
     def test_a_price_list_naming_a_model_twice_refuses_the_run(self):
-        doubled = TEST_PRICES + "| model-a | Model A again | 2 | 1 | 10 |\n"
+        doubled = TEST_PRICES + "| model-a | Model A again | 2 | 1 | 10 | 3 | 5 |\n"
         done = self.count(one_fix_round(), prices=doubled)
         self.assertEqual(2, done.returncode, done.stdout + done.stderr)
         self.assertIn("twice", done.stderr.decode("utf-8"))
@@ -1138,6 +1365,8 @@ class Cost(AuditCountCase):
         cases = {
             "a price cell that is no number": (
                 TEST_PRICES.replace("| 4 | 0.5 | 20 |", "| 1e9 | 0.5 | 20 |"), "neither a number"),
+            "a write price that is no number": (
+                TEST_PRICES.replace("| 6 | 8 |", "| 6 | free |"), "neither a number"),
             "a doubled list date": (TEST_PRICES.replace(
                 "- List date: 2026-01-01\n", "- List date: 2026-01-01\n- List date: 2026-02-01\n"),
                 "more than once"),
@@ -1234,6 +1463,129 @@ class Cost(AuditCountCase):
                 self.assertEqual("unknown", row[5])
                 self.assertTrue(any("disagree" in reason for reason in why), why)
 
+    def written_cost(self, *rows, prices=TEST_PRICES):
+        """The run on a section of the newest form made of `rows`: its Cost cell and the reasons
+        the cost is unknown. The run ends with exit code 0 and no `Error:` line."""
+        done = self.count(STAGES_HEADER_WRITES + "".join(rows), prices=prices)
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        return self.cost_row()[3], self.unknown_why("Cost")
+
+    def test_the_cache_writes_of_each_lifetime_are_priced_each_at_its_own_price(self):
+        # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and writes of 3 for 5
+        # minutes and 5 for 1 hour: of 10000 input tokens, 2000 are read and 3000 + 1000 written,
+        # so 4000 are plain: 4000 * 2 + 2000 * 1 + 3000 * 3 + 1000 * 5 + 100 * 10 = 25000. Both
+        # lifetimes at the 5-minute price would give 23000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 10000, 2000, 100, 3000, 1000))
+        self.assertEqual("0.025000", cost)
+        self.assertEqual([], why)
+
+    def test_the_writes_are_priced_at_the_prices_of_their_own_model(self):
+        # model-b, 2000 in of which 500 are read and 200 + 300 written: 1000 plain * 4 + 500 * 0.5
+        # + 200 * 6 + 300 * 8 + 10 * 20 = 4000 + 250 + 1200 + 2400 + 200 = 8050; model-a, 550 in
+        # of which 100 + 50 are written: 400 plain * 2 + 100 * 3 + 50 * 5 + 20 * 10 = 1550.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-b", 2000, 500, 10, 200, 300),
+            write_row(1, "orchestrator", "model-a", 550, 0, 20, 100, 50))
+        self.assertEqual("0.009600", cost)
+        self.assertEqual([], why)
+
+    def test_a_row_with_no_writes_in_the_newest_form_is_priced_as_before(self):
+        # model-a: (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 3000, 1000, 300, 0, 0))
+        self.assertEqual("0.008000", cost)
+        self.assertEqual([], why)
+
+    def test_a_codex_row_with_no_writes_is_priced_at_the_old_price_whatever_its_write_cells(self):
+        # model-x has `—` in both write columns, as the OpenAI table of the list has: its row of
+        # 0 and 0 is priced as a row with no writes: (5000 - 1000) * 2 + 1000 * 1 + 200 * 10 =
+        # 11000.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-x", 5000, 1000, 200, 0, 0))
+        self.assertEqual("0.011000", cost)
+        self.assertEqual([], why)
+
+    def test_a_model_with_no_price_for_a_lifetime_is_unknown_where_its_row_holds_writes_of_it(self):
+        # model-y has 3 for the writes of 5 minutes and `—` for those of 1 hour.
+        for label, row in (("the writes of 1 hour", write_row(1, "orchestrator", "model-y", 1000,
+                                                              0, 100, 400, 100)),
+                           ("only the writes of 1 hour", write_row(1, "orchestrator", "model-y",
+                                                                   1000, 0, 100, 0, 100)),
+                           ("a write of one token of 1 hour", write_row(1, "orchestrator",
+                                                                        "model-y", 1000, 0, 100,
+                                                                        0, 1))):
+            with self.subTest(label):
+                cost, why = self.written_cost(row)
+                self.assertEqual("unknown", cost)
+                self.assertTrue(any("no price of a cache write of 1 hour for model `model-y`"
+                                    in reason for reason in why), why)
+
+    def test_a_model_with_no_price_for_a_lifetime_is_priced_where_its_row_holds_none_of_it(self):
+        # model-y: 600 plain * 2 + 400 * 3 + 100 * 10 = 3400 with no writes of 1 hour.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-y", 1000, 0, 100, 400, 0))
+        self.assertEqual("0.003400", cost)
+        self.assertEqual([], why)
+
+    def test_a_model_with_a_dash_in_both_write_columns_is_unknown_for_a_write_of_either(self):
+        for label, row in (("5 minutes", write_row(1, "orchestrator", "model-x", 1000, 0, 100,
+                                                    1, 0)),
+                           ("1 hour", write_row(1, "orchestrator", "model-x", 1000, 0, 100, 0, 1))):
+            with self.subTest(label):
+                cost, why = self.written_cost(row)
+                self.assertEqual("unknown", cost)
+                self.assertTrue(any(f"no price of a cache write of {label} for model `model-x`"
+                                    in reason for reason in why), why)
+
+    def test_a_row_whose_cached_input_and_writes_exceed_its_input_leaves_the_cost_unknown(self):
+        # 600 read + 300 + 200 written is 1100, above 1000; each of them alone is below it.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 600, 100, 300, 200))
+        self.assertEqual("unknown", cost)
+        self.assertTrue(any("above its input" in reason and "orchestrator" in reason
+                            for reason in why), why)
+
+    def test_the_writes_alone_above_the_input_leave_the_cost_unknown(self):
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 0, 100, 700, 301))
+        self.assertEqual("unknown", cost)
+        self.assertTrue(any("above its input" in reason for reason in why), why)
+
+    def test_a_row_whose_cached_input_and_writes_make_exactly_its_input_is_priced(self):
+        # Nothing is plain: 500 * 1 + 300 * 3 + 200 * 5 = 2400.
+        cost, why = self.written_cost(
+            write_row(1, "orchestrator", "model-a", 1000, 500, 0, 300, 200))
+        self.assertEqual("0.002400", cost)
+        self.assertEqual([], why)
+
+    def test_a_write_count_that_is_no_number_leaves_the_cost_unknown_and_no_traceback(self):
+        for label, cell in (("words", "many"), ("sixteen digits", "9" * 16), ("negative", "-5"),
+                            ("empty", ""), ("a float", "1.5")):
+            with self.subTest(label):
+                done = self.count(STAGES_HEADER_WRITES + write_row(
+                    1, "orchestrator", "model-a", 1000, 0, 100, cell, 0))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Traceback", done.stderr)
+                self.assertEqual("unknown", self.cost_row()[3])
+                self.assertTrue(any("token count" in why for why in self.unknown_why("Cost")))
+
+    def test_the_share_of_a_fix_round_counts_the_writes_of_its_turns(self):
+        # Orchestrator: 1000 * 2 + 100 * 10 = 3000. The fix, with 1000 in and 300 of them written
+        # for 5 minutes: 700 plain * 2 + 300 * 3 + 50 * 10 = 2800; its review, with 500 in and 400
+        # of them written for 1 hour: 100 * 2 + 400 * 5 + 100 * 10 = 3200. The total is 9000; the
+        # fix and its review, 6000 of it, are 66.7 %.
+        stages = (STAGES_HEADER_WRITES
+                  + write_row(1, "orchestrator", "model-a", 1000, 0, 100, 0, 0)
+                  + write_row(2, "One author (general-purpose) — turn 2", "model-a", 1000, 0, 50,
+                              300, 0, f"reports/fix_handoff.md, {WHOLE}")
+                  + write_row(3, "Review whole change (general-purpose) — turn 2", "model-a", 500,
+                              0, 100, 0, 400, WHOLE + ", reports/fix.md"))
+        row, why = self.share_of(stages)
+        self.assertEqual(["0.009000", "1", "66.7%"], row[3:6])
+        self.assertEqual([], why)
+
 
 SECTION = "Stages: start, waiting for tools and tokens by model"
 NEWER_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
@@ -1254,14 +1606,14 @@ class StagesForms(AuditCountCase):
         test_prices.write_text(TEST_PRICES, encoding="utf-8")
         return self.run_count("--prices", str(test_prices))
 
-    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True) -> str:
+    def newer(self, columns=NEWER_COLUMNS, times=TIME_LINES, table=True, row=None) -> str:
         """The newer form: the table of tokens by model, then the section whose table has the
-        columns given."""
+        columns given and the row `row` (one of eight cells where it is none)."""
         text = ("# Stages of the cycle run\n\n" + times + "\n" + OLDER_HEADER
                 + older_row("model-a", 1000, 0, 100) + f"\n## {SECTION}\n\nTimes are UTC.\n")
         if table:
             text += ("\n| " + " | ".join(columns) + " |\n|" + "---|" * len(columns) + "\n"
-                     + stage_row(1, "orchestrator", "model-a", 1000, 0, 100))
+                     + (row or stage_row(1, "orchestrator", "model-a", 1000, 0, 100)))
         return text
 
     def error_line(self, field, folder="a-task") -> str:
@@ -1282,6 +1634,7 @@ class StagesForms(AuditCountCase):
             self.assertTrue(any(field in reason for reason in reasons), (field, reasons))
 
     def test_a_column_of_the_newer_table_that_the_file_lacks_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for column in NEWER_COLUMNS:
             with self.subTest(column):
                 columns = [name for name in NEWER_COLUMNS if name != column]
@@ -1300,10 +1653,12 @@ class StagesForms(AuditCountCase):
                                    f"column Output of the table of the section {SECTION}"])
 
     def test_a_heading_with_no_table_at_all_misses_the_table(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(self.newer(table=False))
         self.assert_missing(done, [f"table of the section {SECTION}"])
 
     def test_a_column_of_the_older_table_that_the_file_lacks_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for column in ("Input", "Cached input", "Output"):
             with self.subTest(column):
                 names = ["Model", "Total tokens", "Input", "Cached input", "Output"]
@@ -1313,6 +1668,7 @@ class StagesForms(AuditCountCase):
                 self.assert_missing(done, [f"column {column} of the table with the first cell Model"])
 
     def test_a_file_with_neither_the_section_nor_the_table_misses_both(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         for label, stages in (("only times", "# Stages\n\n" + TIME_LINES),
                               ("a table of another kind", "# Stages\n\n" + TIME_LINES
                                + "\n| Name | Tokens |\n|---|---|\n| model-a | 100 |\n"),
@@ -1323,6 +1679,7 @@ class StagesForms(AuditCountCase):
                                            "table with the first cell Model"])
 
     def test_a_time_line_without_the_other_is_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         cases = (
             ("the wait", "- Working time without waiting for tools: 0:20:00\n",
              "line Waiting for tools", "0:20:00"),
@@ -1338,6 +1695,7 @@ class StagesForms(AuditCountCase):
                 self.assertEqual(sorted([known, "unknown"]), sorted(both))
 
     def test_neither_time_line_is_the_earlier_form_and_no_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(older_stages(older_row("model-a", 1000, 0, 100),
                                        times="- Working time, orchestrator turns and subagent "
                                              "turns joined: 0:30:28\n"))
@@ -1348,10 +1706,78 @@ class StagesForms(AuditCountCase):
                                                   cycle["Waiting for tools"]])
 
     def test_the_column_files_named_is_never_a_missing_field(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done = self.count(self.newer())
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("0.003000", self.rows("Cost")[0][3])
+
+    def test_a_table_with_neither_write_column_is_the_earlier_form_and_misses_nothing(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        # With and without the column *Files named*: the cost is the one the rows gave before the
+        # write columns stood in the form, the run ends with exit code 0, and no `Error:` line and
+        # no value unknown is added for the columns that were never there.
+        named = NEWER_COLUMNS + ["Files named"]
+        for label, columns, row in (
+                ("without the files", NEWER_COLUMNS, None),
+                ("with the files", named, stage_row(1, "orchestrator", "model-a", 1000, 0, 100,
+                                                    ""))):
+            with self.subTest(label):
+                done = self.count(self.newer(columns, row=row))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("0.003000", self.rows("Cost")[0][3])
+                self.assertEqual([], [unknown for unknown in self.rows("Unknown values")
+                                      if "Cache write" in unknown[3]])
+
+    def test_a_table_with_one_write_column_and_not_the_other_misses_the_other(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        # The cost is unknown with the reason, the result is written, the run ends with exit code 1
+        # and one `Error:` line names `stages.md` and the column that is missing.
+        named = NEWER_COLUMNS + ["Files named"]
+        first, second = WRITE_COLUMNS
+        for label, columns, absent in (("the 5 minutes alone", named + [first], second),
+                                       ("the 1 hour alone", named + [second], first)):
+            with self.subTest(label):
+                row = stage_row(1, "orchestrator", "model-a", 1000, 0, 100, "")[:-1] + " 0 |\n"
+                done = self.count(self.newer(columns, row=row))
+                field = f"column {absent} of the table of the section {SECTION}"
+                self.assert_missing(done, [field])
+
+    def test_one_write_column_is_missing_whatever_else_stands_in_the_header(self):
+        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        first, second = WRITE_COLUMNS
+        for label, columns, absent in (
+                ("with no files named", NEWER_COLUMNS + [first], second),
+                ("before the files named", NEWER_COLUMNS + [second, "Files named"], first)):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                field = f"column {absent} of the table of the section {SECTION}"
+                self.assert_missing(done, [field])
+
+    def test_the_two_write_columns_without_the_files_or_in_another_order_are_refused(self):
+        # Every column the cost needs is there and both write columns stand, so no field is
+        # missing: the header is of no form the stage report gives, and the cost is unknown.
+        first, second = WRITE_COLUMNS
+        named = NEWER_COLUMNS + ["Files named"]
+        for label, columns in (("no files", NEWER_COLUMNS + WRITE_COLUMNS),
+                               ("the writes swapped", named + [second, first]),
+                               ("a column after them", named + WRITE_COLUMNS + ["Note"])):
+            with self.subTest(label):
+                done = self.count(self.newer(columns))
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertNotIn(b"Error:", done.stderr)
+                self.assertEqual("unknown", self.rows("Cost")[0][3])
+                self.assertTrue(any("not of the form" in row[3]
+                                    for row in self.rows("Unknown values")))
+
+    def test_a_table_with_both_write_columns_is_priced_at_the_prices_of_both_lifetimes(self):
+        # model-a: 600 plain * 2 + 300 * 3 + 100 * 5 + 100 * 10 = 3600.
+        row = write_row(1, "orchestrator", "model-a", 1000, 0, 100, 300, 100)
+        done = self.count(self.newer(NEWER_COLUMNS + ["Files named"] + WRITE_COLUMNS, row=row))
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        self.assertEqual("0.003600", self.rows("Cost")[0][3])
 
     def test_columns_in_another_order_or_with_another_column_miss_nothing_and_are_refused(self):
         swapped = [("Cached input" if name == "Input" else "Input" if name == "Cached input"
@@ -1470,6 +1896,39 @@ class MeasuresCase(AuditCountCase):
         return [row for row in self.rows("Unknown values")
                 if row[2] in values or row[2].startswith("Gate runs")]
 
+    def own_files(self) -> dict:
+        """The three files of a copy that the three groups of tools write, each with a value worked
+        out by hand: the times 0:20:00 and 0:05:00 and the cost of 100 input and 10 output tokens of
+        model-a, 100*2 + 10*10 = 300 millionths of a dollar; the values of MEASURE_VALUES; one run
+        of 100.000 seconds with the directory gate/a."""
+        return {"stages.md": older_stages(older_row("model-a", 100, 0, 10)),
+                MEASURES: measures_file(),
+                GATE: gate_file(rows=gate_row(STARTED, 0, "100.000", 0, "gate/a", "100.0"))}
+
+    def own_run(self, changed, files=None) -> str:
+        """The command run on an own cycle that changes the files of `changed`: ends with exit
+        code 0 and no `Error:` line; returns the commit of its record."""
+        added, _ = self.own_cycle(self.own_files() if files is None else files, changed)
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn("Error:", done.stderr.decode("utf-8"))
+        return added
+
+    def assert_stage_values_stand(self, added) -> None:
+        """What the stage script writes, as worked out in `own_files`."""
+        self.assertEqual(["0:20:00", "0:05:00"], [self.cycles()[0]["Working time without waiting "
+                                                                   "for tools"],
+                                                  self.cycles()[0]["Waiting for tools"]])
+        self.assertEqual("0.000300", self.rows("Cost")[0][3])
+
+    def assert_measures_stand(self, added) -> None:
+        self.assertEqual([["the-way", added, *[value for _, value in MEASURE_VALUES]]],
+                         self.rows("Mechanism measures"))
+
+    def assert_runs_stand(self, added) -> None:
+        self.assertEqual([["the-way", added, STARTED, "0", "100.000", "0", "gate/a 100.0 s"]],
+                         self.rows("Gate runs"))
+
 
 class MechanismMeasures(MeasuresCase):
     def test_both_files_give_the_values_and_the_runs_of_the_cycle_worked_out_by_hand(self):
@@ -1521,6 +1980,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_measures_file_without_a_label_gives_every_value_unknown_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
         done, added = self.count({MEASURES: measures_file(values)})
         self.assert_missing(done, MEASURES, "Calls of subagents")
@@ -1565,9 +2025,132 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual("unknown", row[5])
         self.assertNotIn("x" * 50, text)
 
+    def test_a_changed_measures_script_gives_its_measures_unknown_and_the_rest_as_before(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        added = self.own_run({MEASURES_SCRIPT: "version two\n"})
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        reason = self.reasons_of(self.rows("Unknown values"), "Mechanism measures")
+        self.assertIn(CHANGED_WHY, reason)
+        self.assertIn("`task-cycle/cycle_measures.py`", reason)
+        self.assertEqual(1, [row[2] for row in self.rows("Unknown values")].count(
+            "Mechanism measures"))
+        # What the other two scripts wrote is read as before.
+        self.assert_stage_values_stand(added)
+        self.assert_runs_stand(added)
+        self.assertNotIn("Gate runs", [row[2] for row in self.rows("Unknown values")])
+
+    def test_a_cycle_that_changed_none_of_the_measures_tools_gives_its_measures_as_before(self):
+        # The cycle changes the other three tools, which write other files, and another file.
+        added = self.own_run({STAGE_SCRIPT: "two\n", GATE_SCRIPT: "two\n", GATE_RUNNER: "two\n",
+                              "README.md": "two\n"})
+        self.assert_measures_stand(added)
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Mechanism measures"))
+
+    def test_a_field_missing_from_the_file_of_a_changed_tool_is_not_read_and_ends_no_run(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # The values of that file are unknown for the change of the tool, so no field of it is read
+        # as missing and the run ends with exit code 0.
+        values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
+        added = self.own_run({MEASURES_SCRIPT: "version two\n"},
+                             {**self.own_files(), MEASURES: measures_file(values)})
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertIn(CHANGED_WHY, self.reasons_of(self.rows("Unknown values"),
+                                                   "Mechanism measures"))
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Calls of subagents"))
+
+    def test_a_copy_of_an_earlier_cycle_holding_no_such_file_keeps_its_own_reason(self):
+        # The cycle changed the script, but its copy holds no `mechanism_measures.md`: nothing was
+        # written by the script, so the copy is of an earlier form and is not put in doubt.
+        files = {name: text for name, text in self.own_files().items() if name != MEASURES}
+        self.own_run({MEASURES_SCRIPT: "version two\n"}, files)
+        reason = self.reasons_of(self.rows("Unknown values"), "Mechanism measures")
+        self.assertIn("the copy holds no `mechanism_measures.md`: an earlier cycle", reason)
+        self.assertNotIn(CHANGED_WHY, self.latest())
+
 
 class GateRunsMeasures(MeasuresCase):
+    def test_a_changed_tool_of_the_gate_gives_its_runs_unknown_and_the_rest_as_before(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        # Either tool of the gate: the script that records the times, and the test runner whose
+        # output gives the time of each directory.
+        for path in (GATE_SCRIPT, GATE_RUNNER):
+            with self.subTest(path):
+                self.fresh()
+                added = self.own_run({path: "version two\n"})
+                self.assertEqual([], self.rows("Gate runs"))
+                reason = self.reasons_of(self.rows("Unknown values"), "Gate runs")
+                self.assertIn(CHANGED_WHY, reason)
+                self.assertIn(f"`{path}`", reason)
+                self.assertEqual(1, [row[2] for row in self.rows("Unknown values")].count(
+                    "Gate runs"))
+                self.assert_stage_values_stand(added)
+                self.assert_measures_stand(added)
+
+    def test_a_cycle_that_changed_none_of_the_tools_of_the_gate_gives_its_runs_as_before(self):
+        added = self.own_run({STAGE_SCRIPT: "two\n", MEASURES_SCRIPT: "two\n",
+                              "README.md": "two\n"})
+        self.assert_runs_stand(added)
+        self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Gate runs"))
+
+    def test_changing_every_tool_gives_all_three_groups_unknown_with_their_own_reasons(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        added = self.own_run({path: "version two\n" for path in TOOLS})
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertEqual([["the-way", added, *["unknown"] * len(MEASURE_LABELS)]],
+                         self.rows("Mechanism measures"))
+        self.assertEqual("unknown", self.cycles()[0]["Waiting for tools"])
+        self.assertEqual("unknown", self.rows("Cost")[0][3])
+        unknown = self.rows("Unknown values")
+        for name, path in (("Gate runs", GATE_SCRIPT), ("Mechanism measures", MEASURES_SCRIPT),
+                           ("Cost", STAGE_SCRIPT)):
+            reason = self.reasons_of(unknown, name)
+            self.assertIn(CHANGED_WHY, reason, name)
+            self.assertIn(f"`{path}`", reason, name)
+
+    def test_a_cycle_of_the_way_whose_pin_does_not_resolve_is_not_put_in_doubt(self):
+        # The version the cycle ran on is not in the-way's history, so no change of a tool can be
+        # told: the values stand as the copy gives them, and the pin is unknown as before.
+        way = self.repository("the-way")
+        work = way.commit({"README.md": "the-way\n", **{path: "two\n" for path in TOOLS}}, "Task")
+        added, _ = way.cycle("a-task", {"cycle.md": record(), **self.own_files()},
+                             base_files={"README.md": "the-way\n"}, parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assert_measures_stand(added)
+        self.assert_runs_stand(added)
+        self.assertNotIn(CHANGED_WHY, self.latest())
+
+    def test_a_cycle_that_changed_no_tool_gives_the_values_of_all_three_groups_as_before(self):
+        added = self.own_run({})
+        self.assert_runs_stand(added)
+        self.assert_measures_stand(added)
+        self.assert_stage_values_stand(added)
+
+    def test_a_cycle_corrected_after_the_tool_changed_is_judged_by_its_last_copy(self):
+        # The first copy of the record is added before the tool is changed, the last one after it:
+        # the change counts, since it lies between the version and the last copy.
+        way = self.repository("the-way")
+        base = {"README.md": "the-way\n", **{path: "version one\n" for path in TOOLS}}
+        version = way.commit(base, "The version the cycle ran on")
+        text = record().replace(PIN, version)
+        _, removed = way.cycle("a-task", {"cycle.md": text, **self.own_files()}, base_files=base,
+                               parent=version)
+        changed = {**base, GATE_SCRIPT: "version two\n"}
+        work = way.commit(changed, "The task branch changes the script", removed)
+        way.cycle("a-task", {"cycle.md": text, **self.own_files()}, base_files=changed,
+                  parent=work)
+        self.write_locations(self.places(**{"the-way": way}))
+        done = self.run_with_prices()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertEqual([], self.rows("Gate runs"))
+        self.assertIn(CHANGED_WHY, self.reasons_of(self.rows("Unknown values"), "Gate runs"))
+        self.assert_measures_stand(self.cycles()[0]["Record"])
+
     def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         table = ("| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
                  "| Directory seconds |\n| --- | --- | --- | --- | --- |\n")
         done, added = self.count({GATE: gate_file(table=table)})
@@ -1575,6 +2158,7 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done, added = self.count({GATE: gate_file(table="")})
         self.assert_missing(done, GATE, "table of the runs")
         self.assertEqual([], self.rows("Gate runs"))
@@ -1753,8 +2337,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
         self.assertEqual([], self.rows("Fixed issues"))
-        self.assertEqual([], [row for row in self.rows("Unknown values")
-                              if row[2].startswith("row ")])
+        self.assertEqual([], self.register_pair_rows())
 
     def test_a_problem_whose_repository_is_not_read_stays_unknown(self):
         product = self.repository()
@@ -1763,8 +2346,10 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertIn(["ghost", added, "row 1 of `Problems`"],
-                      [row[:3] for row in self.rows("Unknown values")])
+        self.assertEqual([["row of `Problems`", "1",
+                           "no named repository holds the cycle of its record; name its key with "
+                           "--repository", f"ghost {added}: row 1 of `Problems`"]],
+                         self.register_pair_rows())
         self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
@@ -1788,13 +2373,23 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         text = self.latest()
         self.assertEqual([], [char for char in text if not char.isprintable() and char != "\n"])
-        unknown = self.rows("Unknown values")
-        self.assertEqual([f"row {number} of `Classes`" for number in range(1, 5)],
-                         [row[2] for row in unknown if row[2].endswith("`Classes`")])
-        self.assertIn("row 2 of `Issues`", [row[2] for row in unknown])
-        self.assertEqual([f"row {number} of `Problems`" for number in range(2, 8)],
-                         [row[2] for row in unknown if row[2].endswith("`Problems`")])
-        self.assertTrue(all(len(cell) < 1000 for row in unknown for cell in row), unknown)
+        pairs = self.pair_rows()
+        self.assertEqual([["row of `Classes`", "3",
+                           "the class name is not lower-case letters, digits and hyphens, or it is "
+                           "`none`", f"the-way none: row 1 of `Classes`; "
+                           "the-way none: row 3 of `Classes`; the-way none: row 4 of `Classes`"],
+                          ["row of `Classes`", "1",
+                           "the column Added is neither `start` nor a date written YYYY-MM-DD",
+                           "the-way none: row 2 of `Classes`"]],
+                         [row for row in pairs if row[0] == "row of `Classes`"])
+        self.assertIn("row of `Issues`", [row[0] for row in pairs])
+        issue_reason = "the issue is in no valid row of Issues"
+        self.assertEqual(["row of `Problems`", "2", issue_reason,
+                          f"product {added}: row 5 of `Problems`; product {added}: row 6 of "
+                          "`Problems`"],
+                         [row for row in pairs if row[2] == issue_reason][0])
+        self.assertIn("row of `Problems`", [row[0] for row in pairs])
+        self.assertTrue(all(len(cell) < 1000 for row in pairs for cell in row), pairs)
         # Four of the seven rows name this cycle and are refused (class, weight, issue, issue); the
         # valid one is counted; the count with refused rows of the cycle reads `at least`.
         self.assertEqual([["product", added, "process-remark", "at least 0", "at least 1",
@@ -1809,14 +2404,13 @@ class RegisterCount(AuditCountCase):
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertEqual(["row 1 of `Classes`", "row 8 of `Classes`"],
-                         [row[2] for row in self.rows("Unknown values")
-                          if row[2].endswith("`Classes`")])
+        self.assertEqual([["row of `Classes`", "2", "the name is written in two rows",
+                           "the-way none: row 1 of `Classes`; the-way none: row 8 of `Classes`"]],
+                         [row for row in self.pair_rows() if row[0] == "row of `Classes`"])
         self.assertEqual([["product", added, "none", "at least 0", "at least 0", "at least 0",
                            "at least 0", "1"]], self.rows("Problems by cycle"))
-        self.assertIn(["product", added, "row 1 of `Problems`",
-                       "the class is not in the list of classes"],
-                      [row[:4] for row in self.rows("Unknown values")])
+        self.assertIn(["row of `Problems`", "1", "the class is not in the list of classes",
+                       f"product {added}: row 1 of `Problems`"], self.pair_rows())
 
     def test_a_refused_row_of_a_cycle_and_an_issue_is_counted_not_hidden(self):
         # Scratch A of the review of slice 5: one open issue, one problem of it in one cycle with a
@@ -1834,7 +2428,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["open-one", "at least 0", "at least 0", "at least 0", "unknown", "1"]],
                          self.rows("Open issues"))
         self.assertIn("the weight is not one of the four levels",
-                      [row[3] for row in self.rows("Unknown values")])
+                      [row[2] for row in self.pair_rows()])
 
     def test_a_long_run_of_blanks_in_a_class_name_does_not_stall_the_count(self):
         product = self.repository()
@@ -1918,8 +2512,7 @@ class RegisterCount(AuditCountCase):
                                          encoding="utf-8")
                 done = self.run_count("--today", "2026-11-11")
                 self.assertEqual(1, done.returncode, done.stderr)
-                self.assertIn(["the-way", "none", "table `Problems`"],
-                              [row[:3] for row in self.rows("Unknown values")])
+                self.assertIn("table `Problems`", [row[0] for row in self.pair_rows()])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                                  self.rows("Problems by cycle"))
 
@@ -2068,6 +2661,104 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
 
+    def test_the_cycles_whose_pin_is_unknown_for_a_fixed_issue_make_one_pair_with_three_examples(self):
+        # Four cycles whose pin the history lacks, all the same pin: more than the three examples
+        # of a pair, so the pair counts four and shows the first three cycles in the order of the
+        # result (WAY-330).
+        way, fix, _, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        cycles, parent = [], None
+        for number in range(1, 5):
+            added, removed = product.cycle(
+                f"pin-task-{number}", {"cycle.md": record(pin_line=f"- Process pin: `{'7' * 40}`")},
+                parent=parent)
+            cycles.append(added)
+            parent = removed
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", added, "fixed-one")
+                                    for added in cycles])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        pairs = [row for row in self.pair_rows() if row[0] == "Process pin"]
+        self.assertEqual(1, len(pairs), pairs)
+        self.assertEqual("4", pairs[0][1])
+        self.assertIn("lacks commit", pairs[0][2])
+        order = [cycle["Record"] for cycle in self.cycles()]
+        self.assertEqual("; ".join(f"product {first}: Process pin" for first in order[:3]),
+                         pairs[0][3])
+
+    def test_more_than_three_values_of_a_pair_are_counted_and_three_are_listed(self):
+        # Five cycles with no `stages.md`: five values of each of the four fields of the stage
+        # report, with one reason each, so four lines of five values, and no value past the third
+        # of a pair in the result.
+        product = self.repository()
+        parent = None
+        for number in range(1, 6):
+            _, parent = product.cycle(f"a-task-{number}", {"cycle.md": record()}, parent=parent)
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        order = [cycle["Record"] for cycle in self.cycles()]
+        self.assertEqual(5, len(order))
+        pairs = [row for row in self.pair_rows() if row[0] == "Cost"]
+        self.assertEqual([["Cost", "5", "the copy holds no `stages.md`",
+                           "; ".join(f"product {first}: Cost" for first in order[:3])]], pairs)
+        text = self.latest()
+        for later in order[3:]:
+            self.assertNotIn(f"product {later}: Cost", text)
+        self.assertEqual(1, sum(1 for line in text.splitlines()
+                                if line.startswith("| Cost | ")))
+
+    def test_the_section_says_where_the_full_list_of_a_pair_stands_and_names_no_run_of_the_count(self):
+        # The result keeps three examples of each pair, and a new run of the count writes the same
+        # table, so the section names the register and the copies of the records in git history
+        # for the full lists, says the count lists no more, and names no new run as a place.
+        product = self.repository()
+        product.cycle("a-task", {"cycle.md": record()})
+        self.write_locations(self.places(product=product))
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        text = self.latest()
+        section = text.split("\n## Unknown values\n", 1)[1].split("\n## ", 1)[0]
+        intro = " ".join(section.split("| Field |", 1)[0].split())
+        self.assertIn("no option of the count lists the rest", intro)
+        self.assertIn("in the register", intro)
+        self.assertIn("in the copies of the cycles' records in the history of git", intro)
+        self.assertIn("about an issue or a version are made by the count", intro)
+        self.assertNotIn("new run", intro)
+
+    def test_issues_that_differ_only_in_their_names_make_one_pair_for_each_kind_of_value(self):
+        # Three fixed issues with one fix the history lacks, two open issues each with a problem of
+        # a cycle no repository holds: the fix of an issue and the waiting of an issue are one pair
+        # each, whatever the names, and the examples carry the names.
+        way, _, _, _ = self.the_way_with_a_fix()
+        missing = "1234567890abcdef1234567890abcdef12345678"
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        self.use_register(
+            issues=[issue_row(name, "fixed", missing) for name in ("one", "two", "three")]
+            + [issue_row(name) for name in ("open-a", "open-b")],
+            problems=[problem_row("ghost", added, name) for name in ("open-a", "open-b")])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        pairs = self.pair_rows()
+        fixes = [row for row in pairs if row[0] == "the fix of an issue"]
+        self.assertEqual(1, len(fixes), pairs)
+        self.assertEqual("3", fixes[0][1])
+        self.assertEqual("; ".join(f"the-way none: the fix of issue `{name}`"
+                                   for name in ("one", "two", "three")), fixes[0][3])
+        waits = [row for row in pairs if row[0] == "waiting of an issue"]
+        self.assertEqual(1, len(waits), pairs)
+        self.assertEqual("2", waits[0][1])
+        self.assertEqual("the-way none: waiting of issue `open-a`; "
+                         "the-way none: waiting of issue `open-b`", waits[0][3])
+
     def test_a_refused_problem_of_a_fixed_issue_is_counted_in_its_row(self):
         way, fix, with_fix, _ = self.the_way_with_a_fix()
         product = self.repository()
@@ -2099,7 +2790,7 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["product", both, "none", "at least 0", "at least 0", "at least 0",
                            "at least 0", "0"]] * 2, self.rows("Problems by cycle"))
-        reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "row 1 of `Problems`"]
+        reasons = [row[2] for row in self.pair_rows() if "row 1 of `Problems`" in row[3]]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("more than one cycle", reasons[0])
         self.assertEqual([["open-one", "at least 0", "1", "1", "unknown", "0"]],
@@ -2127,17 +2818,27 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([[first, again]], [[c["Record"], c["Later copies"]] for c in self.cycles()])
         self.assertEqual([["slow-one", "0", "1", "0", "10", "0"]], self.rows("Open issues"))
 
-    def test_a_register_far_larger_than_a_real_one_lists_its_unknown_rows_in_part(self):
+    def test_a_register_far_larger_than_a_real_one_gives_one_line_for_each_pair(self):
+        # 830 problems whose cycle no repository holds, about the lines the result gave for a
+        # register of that size, and two refused for a weight the scale lacks: two pairs, one line
+        # each, with the count of its values and the first three of them as examples.
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
-        self.use_register(problems=[problem_row("ghost", added) for _ in range(1500)])
+        self.use_register(problems=[problem_row("ghost", added) for _ in range(830)]
+                          + [problem_row("product", added, weight="Blocker") for _ in range(2)])
         self.write_locations(self.places(product=product))
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        unknown = self.rows("Unknown values")
-        listed = [row for row in unknown if row[2].endswith("of `Problems`")]
-        self.assertLess(len(listed), 1500)
-        self.assertIn(f"{1500 - len(listed)} more", " ".join(row[3] for row in unknown))
+        pairs = self.register_pair_rows()
+        self.assertEqual(2, len(pairs), pairs)
+        self.assertEqual(["row of `Problems`", "2", "the weight is not one of the four levels",
+                          f"product {added}: row 831 of `Problems`; "
+                          f"product {added}: row 832 of `Problems`"], pairs[0])
+        self.assertEqual(["row of `Problems`", "830",
+                          "no named repository holds the cycle of its record; name its key with "
+                          "--repository",
+                          "; ".join(f"ghost {added}: row {number} of `Problems`"
+                                    for number in (1, 2, 3))], pairs[1])
 
     def test_problems_whose_cycle_is_not_read_count_apart_for_fixed_and_dropped_issues(self):
         way, fix, _, _ = self.the_way_with_a_fix()
@@ -2231,8 +2932,9 @@ class RegisterCount(AuditCountCase):
                                     problem_row("product", added)])
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
-        self.assertIn(["row 1 of `Problems`", "the Record is no commit of 40 hexadecimal characters"],
-                      [row[2:] for row in self.rows("Unknown values")])
+        self.assertIn(["row of `Problems`", "1",
+                       "the Record is no commit of 40 hexadecimal characters"],
+                      [row[:3] for row in self.pair_rows()])
         self.assertEqual([["product", added, "process-remark", "0", "1", "0", "0", "0"]],
                          self.rows("Problems by cycle"))
 
@@ -2313,16 +3015,19 @@ class RegisterCount(AuditCountCase):
         self.assertEqual([["open-one", "open", "at least 0", "at least 1", "at least 0",
                            "at least 0", "at least 0", "5"]],
                          self.rows("Cost of an occurrence by issue"))
-        reasons = {row[2]: row[3] for row in self.rows("Unknown values")
-                   if row[2].endswith("of `Problems`")}
-        self.assertEqual({f"row {number} of `Problems`" for number in range(2, 9)}, set(reasons))
-        for number in (2, 3, 4, 5, 6):
-            self.assertEqual("the cost of an occurrence is not one of the five levels",
-                             reasons[f"row {number} of `Problems`"])
-        self.assertEqual("the row has 9 cells, not 8", reasons["row 7 of `Problems`"])
-        self.assertEqual("the row has 7 cells, not 8", reasons["row 8 of `Problems`"])
+        # Rows 2 to 6 share one reason, and rows 7 and 8 have one each; rows 2 to 4 are examples.
+        self.assertEqual([
+            ["row of `Problems`", "5", "the cost of an occurrence is not one of the five levels",
+             f"product {added}: row 2 of `Problems`; product {added}: row 3 of `Problems`; "
+             f"product {added}: row 4 of `Problems`"],
+            ["row of `Problems`", "1", "the row has 9 cells, not 8",
+             f"product {added}: row 7 of `Problems`"],
+            ["row of `Problems`", "1", "the row has 7 cells, not 8",
+             f"product {added}: row 8 of `Problems`"]],
+            [row for row in self.pair_rows() if row[0] == "row of `Problems`"])
 
     def test_a_table_of_costs_that_lacks_a_level_is_treated_as_the_table_of_weights_is(self):
+        # decision: WAY-344 "The command that counts the audit, where a table of weights"
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
         lines = TEMPLATE.splitlines(keepends=True)
@@ -2331,16 +3036,26 @@ class RegisterCount(AuditCountCase):
         missing = "".join(line for line in lines if not line.startswith("| stage |"))
         doubled = "".join(line + ("| steps | once more |\n" if line.startswith("| steps |") else "")
                           for line in lines)
+        both = "".join(line + ("| steps | once more |\n" if line.startswith("| steps |") else "")
+                       for line in lines if not line.startswith("| stage |"))
         self.write_locations(self.places(product=product))
-        for label, text in (("a level missing", missing), ("a level written twice", doubled)):
+        cases = (
+            ("a level missing", missing,
+             "must name each level once: it lacks `stage`"),
+            ("a level written twice", doubled,
+             "must name each level once: it writes `steps` in two rows"),
+            ("a level missing and another written twice", both,
+             "must name each level once: it lacks `stage` and writes `steps` in two rows"),
+        )
+        for label, text, words in cases:
             with self.subTest(label):
                 self.register.write_text(text, encoding="utf-8")
                 done = self.run_count("--today", "2026-11-11")
                 self.assertEqual(1, done.returncode, done.stderr)
                 self.assertIn("Error: the register of problems: the table `Costs of an occurrence` "
-                              "must name the five levels, each once", done.stderr.decode("utf-8"))
-                self.assertIn(["the-way", "none", "table `Costs of an occurrence`"],
-                              [row[:3] for row in self.rows("Unknown values")])
+                              + words, done.stderr.decode("utf-8"))
+                self.assertIn("table `Costs of an occurrence`",
+                              [row[0] for row in self.pair_rows()])
                 self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
                                  self.rows("Problems by cycle"))
         with self.subTest("a level the scale lacks, beside the five"):
@@ -2350,13 +3065,46 @@ class RegisterCount(AuditCountCase):
                 encoding="utf-8")
             done = self.run_count("--today", "2026-11-11")
             self.assertEqual(0, done.returncode, done.stderr)
-            self.assertIn(["the-way", "none", "row 5 of `Costs of an occurrence`"],
-                          [row[:3] for row in self.rows("Unknown values")])
+            self.assertIn("row of `Costs of an occurrence`", [row[0] for row in self.pair_rows()])
         with self.subTest("the template as it stands"):
             self.register.write_text(TEMPLATE, encoding="utf-8")
             done = self.run_count("--today", "2026-11-11")
             self.assertEqual(0, done.returncode, done.stderr)
             self.assertEqual(b"", done.stderr)
+
+    def test_a_table_of_weights_that_lacks_a_level_names_the_level(self):
+        # decision: WAY-344 "The command that counts the audit, where a table of weights"
+        product = self.repository()
+        added, _ = product.cycle("a-task", {"cycle.md": record()})
+        lines = TEMPLATE.splitlines(keepends=True)
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| Minor |")))
+        self.assertEqual(1, sum(1 for line in lines if line.startswith("| Important |")))
+        missing = "".join(line for line in lines if not line.startswith("| Minor |"))
+        doubled = "".join(line + ("| Important | once more |\n"
+                                  if line.startswith("| Important |") else "")
+                          for line in lines)
+        both = "".join(line + ("| Important | once more |\n"
+                               if line.startswith("| Important |") else "")
+                       for line in lines if not line.startswith("| Minor |"))
+        self.write_locations(self.places(product=product))
+        cases = (
+            ("a level missing", missing,
+             "must name each level once: it lacks `Minor`"),
+            ("a level written twice", doubled,
+             "must name each level once: it writes `Important` in two rows"),
+            ("a level missing and another written twice", both,
+             "must name each level once: it lacks `Minor` and writes `Important` in two rows"),
+        )
+        for label, text, words in cases:
+            with self.subTest(label):
+                self.register.write_text(text, encoding="utf-8")
+                done = self.run_count("--today", "2026-11-11")
+                self.assertEqual(1, done.returncode, done.stderr)
+                self.assertIn("Error: the register of problems: the table `Weights` " + words,
+                              done.stderr.decode("utf-8"))
+                self.assertIn("table `Weights`", [row[0] for row in self.pair_rows()])
+                self.assertEqual([["product", added, "none", "0", "0", "0", "0", "0"]],
+                                 self.rows("Problems by cycle"))
 
 
 class Run(AuditCountCase):
@@ -2433,6 +3181,7 @@ class Run(AuditCountCase):
                          [(c["Repository"], c["Record"], c["Folder"]) for c in self.cycles()])
 
     def test_the_way_without_a_repository_entry_is_this_checkout(self):
+        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
         self.write_locations(self.places())
         done = self.run_count("--repository", "the-way")
         self.assertEqual(0, done.returncode, done.stderr)
@@ -2494,18 +3243,22 @@ class ProcessVersions(AuditCountCase):
         done = self.run_count("--prices", str(test_prices), "--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
 
-    def series(self, number) -> list[list[str]]:
-        text = self.latest()
-        heading = f"\n### Series {number}\n"
-        self.assertIn(heading, text, "the result has no such series")
-        section = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
-        lines = [line for line in section.splitlines() if line.startswith("|")]
-        return [split_row(line) for line in lines[2:]]
+    def cost_series(self, number) -> list[list[str]]:
+        """The rows of a series of the cost: version, day, cycles, cycles with a known cost, median
+        cost and Q3."""
+        return self.section("Cost", number)
 
-    def test_versions_compare_within_a_series_and_not_across_it(self):
-        # v1 and v2 share a series; a class added between v2 and v3 starts a new one. Medians:
-        # v1 is (2 + 4) / 2 = 3 dollars, v2 is 1 dollar, v3 is 0.5 dollar. v2 falls against v1;
-        # v3 has no previous version in its series, so it is not compared with v2 (0.5 < 1).
+    def count_series(self, number) -> list[list[str]]:
+        """The rows of a series of the count of remarks: version, day, cycles, Q1, plans read and
+        Q2."""
+        return self.section("Count of remarks", number)
+
+    def test_the_cost_is_compared_inside_a_series_of_the_cost_across_a_new_class(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # v1 and v2 share a series of both kinds; a class added on the day of v3 starts a series of
+        # the count of remarks and none of the cost. Medians: v1 is (2 + 4) / 2 = 3 dollars, v2 is
+        # 1 dollar, v3 is 0.5 dollar. v2 falls against v1, and so does v3 against v2 (0.5 < 1):
+        # the cost of v3 is compared with v2's, the count of remarks of v3 is not.
         way = self.the_way()
         v1 = self.version_at(way, self.FIRST)
         v2 = self.version_at(way, self.LATER, parent=v1)
@@ -2519,16 +3272,47 @@ class ProcessVersions(AuditCountCase):
         self.register.write_text(register_text(classes=["| sharp | x | 2026-03-01 | none |"]),
                                  encoding="utf-8")
         self.run_versions(way, product)
-        self.assertEqual([[v1, "2025-10-09", "2", "2", "3.000000", "no", "0 of 0", "unknown",
-                           "unknown"],
-                          [v2, "2025-10-10", "1", "1", "1.000000", "no", "0 of 0", "unknown",
-                           "yes"]], self.series(1))
-        self.assertEqual([[v3, "2026-03-01", "1", "1", "0.500000", "no", "0 of 0", "unknown",
-                           "unknown"]], self.series(2))
+        self.assertEqual([[v1, "2025-10-09", "2", "2", "3.000000", "unknown"],
+                          [v2, "2025-10-10", "1", "1", "1.000000", "yes"],
+                          [v3, "2026-03-01", "1", "1", "0.500000", "yes"]], self.cost_series(1))
+        self.assertNotIn("### Cost, series 2", self.latest())
+        self.assertEqual([[v1, "2025-10-09", "2", "no", "0 of 0", "unknown"],
+                          [v2, "2025-10-10", "1", "no", "0 of 0", "unknown"]],
+                         self.count_series(1))
+        self.assertEqual([[v3, "2026-03-01", "1", "no", "0 of 0", "unknown"]],
+                         self.count_series(2))
         self.assertIn("### No version", self.latest())
         self.assertIn("## Process versions", self.latest())
+        self.assertIn("Begins at this version: the register's list of classes changed between "
+                      "the two versions.", self.latest())
 
-    def test_a_change_of_the_reviewed_files_starts_a_new_series(self):
+    def test_no_row_of_a_series_of_one_kind_holds_a_figure_of_the_other(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        # A table of the cost holds the median and Q3 and none of Q1 and Q2; a table of the count
+        # of remarks holds Q1 and Q2 and none of the cost.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_cycles(product, [("one", process_record(v1), 1_000_000)])
+        self.run_versions(way, product)
+        text = self.latest()
+        parts = []
+        for heading in ("\n### Cost, series 1\n", "\n### Count of remarks, series 1\n"):
+            self.assertIn(heading, text)
+            parts.append(text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0])
+        cost, count = parts
+        for name in ("Median cost (USD)", "Q3: cost falls"):
+            self.assertIn(name, cost)
+            self.assertNotIn(name, count)
+        for name in ("Q1: contradiction only after code", "Q2: more than a third",
+                     "Plans read"):
+            self.assertIn(name, count)
+            self.assertNotIn(name, cost)
+
+    def test_a_change_under_the_change_starts_a_series_of_the_count_and_none_of_the_cost(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # task-cycle/change is one of the files the form of a stage report is taken from; v2's
+        # cost (0.5) falls against v1's (2) in a series of the cost that the change does not end.
         way = self.the_way()
         v1 = self.version_at(way, self.FIRST)
         v2 = self.version_at(way, self.LATER, parent=v1,
@@ -2537,16 +3321,209 @@ class ProcessVersions(AuditCountCase):
         self.add_cycles(product, [("one", process_record(v1), 1_000_000),
                                   ("two", process_record(v2), 250_000)])
         self.run_versions(way, product)
-        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "no", "0 of 0", "unknown",
-                           "unknown"]], self.series(1))
-        self.assertEqual([[v2, "2025-10-10", "1", "1", "0.500000", "no", "0 of 0", "unknown",
-                           "unknown"]], self.series(2))
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "unknown"],
+                          [v2, "2025-10-10", "1", "1", "0.500000", "yes"]], self.cost_series(1))
+        self.assertNotIn("### Cost, series 2", self.latest())
+        self.assertEqual([[v1, "2025-10-09", "1", "no", "0 of 0", "unknown"]],
+                         self.count_series(1))
+        self.assertEqual([[v2, "2025-10-10", "1", "no", "0 of 0", "unknown"]],
+                         self.count_series(2))
+
+    def test_a_change_under_the_review_starts_a_series_of_the_count_and_none_of_the_cost(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # The reviewer's instructions: a change of `task-cycle/review` ends the count of remarks
+        # and none of the cost, whose median of v2 (0.5) is compared with v1's (2).
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1,
+                             changed={"task-cycle/review/SKILL.md": "reviewer\n"})
+        product = self.repository()
+        self.add_cycles(product, [("one", process_record(v1), 1_000_000),
+                                  ("two", process_record(v2), 250_000)])
+        self.run_versions(way, product)
+        self.assertEqual(["unknown", "yes"], [row[5] for row in self.cost_series(1)])
+        self.assertNotIn("### Cost, series 2", self.latest())
+        self.assertEqual([[v1], [v2]], [[row[0] for row in self.count_series(number)]
+                                        for number in (1, 2)])
+        self.assertIn("Begins at this version: `task-cycle/review` changed between the two "
+                      "versions.", self.latest())
+
+    def test_a_change_of_the_reviewers_type_of_agent_starts_a_series_of_the_count_alone(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # `the-way-stage.md` is the instruction the reviewer receives: a change of it ends the
+        # count of remarks and none of the cost. A change of `the-way-author.md`, beside it in
+        # the same folder, ends neither.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1,
+                             changed={"task-cycle/agent-types/the-way-stage.md": "reviewer\n"})
+        v3 = self.version_at(way, self.MARCH, parent=v2,
+                             changed={"task-cycle/agent-types/the-way-stage.md": "reviewer\n",
+                                      "task-cycle/agent-types/the-way-author.md": "author\n"})
+        product = self.repository()
+        self.add_cycles(product, [("one", process_record(v1), 1_000_000),
+                                  ("two", process_record(v2), 500_000),
+                                  ("three", process_record(v3), 250_000)])
+        self.run_versions(way, product)
+        self.assertEqual(["unknown", "yes", "yes"], [row[5] for row in self.cost_series(1)])
+        self.assertNotIn("### Cost, series 2", self.latest())
+        self.assertEqual([[v1], [v2, v3]], [[row[0] for row in self.count_series(number)]
+                                            for number in (1, 2)])
+        self.assertNotIn("### Count of remarks, series 3", self.latest())
+        self.assertIn("Begins at this version: `task-cycle/agent-types/the-way-stage.md` changed "
+                      "between the two versions.", self.latest())
+
+    def test_a_change_of_the_stage_script_starts_a_series_of_both_kinds(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1,
+                             changed={"task-cycle/cycle_stages.py": "changed\n"})
+        product = self.repository()
+        self.add_cycles(product, [("one", process_record(v1), 1_000_000),
+                                  ("two", process_record(v2), 250_000)])
+        self.run_versions(way, product)
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "unknown"]],
+                         self.cost_series(1))
+        self.assertEqual([[v2, "2025-10-10", "1", "1", "0.500000", "unknown"]],
+                         self.cost_series(2))
+        self.assertEqual([[v1], [v2]], [[row[0] for row in self.count_series(number)]
+                                        for number in (1, 2)])
+        self.assertEqual(2, self.latest().count("Begins at this version: "
+                                                "`task-cycle/cycle_stages.py` changed between the "
+                                                "two versions."))
+
+    def test_a_cycle_that_changed_the_stage_script_stays_in_its_version_with_no_known_cost(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        # The cycle stays in the version it ran on and in its series: its row counts it, its
+        # answers are those of the record, and only its cost is out of the median. Unchanged, the
+        # same cycle costs 1,000,000 * 2 / 1,000,000 = 2 dollars.
+        day = "2025-10-09"
+        for changed, cost, known in (({STAGE_SCRIPT: "version two\n"}, "unknown", "0"),
+                                     ({}, "2.000000", "1")):
+            with self.subTest(sorted(changed)):
+                self.fresh()
+                _, version = self.own_cycle({"stages.md": self.stages_of(1_000_000)}, changed,
+                                            process_record(PIN))
+                done = self.run_with_prices()
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertEqual([[version, day, "1", known, cost, "unknown"]],
+                                 self.cost_series(1))
+                self.assertEqual([[version, day, "1", "no", "0 of 0", "unknown"]],
+                                 self.count_series(1))
+                self.assertNotIn("### Cost, series 2", self.latest())
+
+    # Each path, with whether a change of the file starts a series of the cost and of the count of
+    # remarks, and the reason the count gives: the files of the count are named by the path of the
+    # list (a folder, or the one file), and the stage script stands in both.
+    BOUNDARIES = (
+        ("task-cycle/change/SKILL.md", False, "`task-cycle/change`"),
+        ("task-cycle/plan/SKILL.md", False, "`task-cycle/plan`"),
+        ("task-cycle/review/SKILL.md", False, "`task-cycle/review`"),
+        ("task-cycle/spec/SKILL.md", False, "`task-cycle/spec`"),
+        ("task-cycle/agent-types/the-way-stage.md", False,
+         "`task-cycle/agent-types/the-way-stage.md`"),
+        ("task-cycle/cycle_stages.py", True, "`task-cycle/cycle_stages.py`"),
+        # Files that start neither: the other type of agent, the other scripts, the rest of the
+        # method of the cycle and a file of another part.
+        ("task-cycle/agent-types/the-way-author.md", False, None),
+        ("task-cycle/cycle_measures.py", False, None),
+        ("task-cycle/gate_times.py", False, None),
+        ("gate/run_tests.py", False, None),
+        ("task-cycle/skill/SKILL.md", False, None),
+        ("README.md", False, None))
+
+    def two_versions(self, name, path):
+        """Two commits of a temporary the-way that hold every file of BOUNDARIES, the second with
+        `path` changed (None: unchanged), as the versions the audit compares, and the Ancestry that
+        reads the repository."""
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        way = self.repository(name)
+        files = {listed: "a\n" for listed, _, _ in self.BOUNDARIES}
+        first = way.commit(files, "First")
+        second = way.commit({**files, **({path: "b\n"} if path else {})}, "Second", first)
+        return (audit_count.Version(first, 1, "2025-10-09", "2026-01-01", []),
+                audit_count.Version(second, 2, "2025-10-10", "2026-01-01", []),
+                audit_count.Ancestry(audit_count.Git(way.root)))
+
+    def test_each_file_starts_the_series_of_its_own_kind_and_no_other(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        for number, (path, in_cost, reason) in enumerate(self.BOUNDARIES):
+            with self.subTest(path):
+                earlier, later, ancestry = self.two_versions(f"way-{number}", path)
+                cost = audit_count.cost_boundary(earlier, later, ancestry)
+                count = audit_count.count_boundary(earlier, later, audit_count.Register(), ancestry)
+                if reason is None:
+                    self.assertIsNone(cost)
+                    self.assertIsNone(count)
+                    continue
+                expected = f"{reason} changed between the two versions"
+                self.assertEqual(expected if in_cost else None, cost)
+                self.assertEqual(expected, count)
+
+    def test_two_identical_versions_share_a_series_of_each_kind(self):
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        earlier, later, ancestry = self.two_versions("way-same", None)
+        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
+        self.assertIsNone(audit_count.count_boundary(earlier, later, audit_count.Register(),
+                                                     ancestry))
+
+    def test_a_date_of_the_list_of_classes_starts_a_series_of_the_count_alone(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        earlier, later, ancestry = self.two_versions("way-classes", None)
+        known = audit_count.Register(class_dates=["2025-10-10"])
+        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
+        self.assertEqual("the register's list of classes changed between the two versions",
+                         audit_count.count_boundary(earlier, later, known, ancestry))
+        # A date after the two versions, and one before them, divide nothing.
+        for days in (["2025-10-08"], ["2025-10-11"]):
+            with self.subTest(days):
+                self.assertIsNone(audit_count.count_boundary(
+                    earlier, later, audit_count.Register(class_dates=days), ancestry))
+        unknown = audit_count.Register(class_dates_unknown=True)
+        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
+        self.assertIn("not given in full",
+                      audit_count.count_boundary(earlier, later, unknown, ancestry))
+
+    def test_a_git_that_cannot_compare_the_two_versions_counts_as_a_change_of_both_kinds(self):
+        # Versions that the checkout does not hold: `git diff --quiet` ends with exit 128, and a
+        # series is never joined by mistake.
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        _, _, ancestry = self.two_versions("way-failing", None)
+        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-01-01", [])
+        stage = "`task-cycle/cycle_stages.py` changed between the two versions"
+        self.assertEqual(stage, audit_count.cost_boundary(earlier, later, ancestry))
+        self.assertEqual(stage, audit_count.count_boundary(earlier, later, audit_count.Register(),
+                                                           ancestry))
+
+    def test_each_path_that_starts_a_series_is_a_path_git_tracks(self):
+        # Break caught: a rename of one of these files while the audit keeps the old path: the
+        # history of a path that does not exist is empty, so no change would ever start a series.
+        sys.path.insert(0, str(HERE))
+        import audit_count
+        for path in (*audit_count.COST_SCRIPTS, *audit_count.COUNT_PATHS):
+            with self.subTest(path):
+                done = subprocess.run(["git", "-C", str(HERE.parent), "ls-files", "-z", "--",
+                                       ":(literal)" + path], capture_output=True, check=True)
+                self.assertTrue(done.stdout, f"git tracks no file at {path}")
+        self.assertEqual(("task-cycle/cycle_stages.py",), audit_count.COST_SCRIPTS)
+        self.assertEqual(("task-cycle/change", "task-cycle/plan", "task-cycle/review",
+                          "task-cycle/spec", "task-cycle/agent-types/the-way-stage.md"),
+                         audit_count.COUNT_PATHS)
 
     def test_the_older_and_the_newer_form_of_the_stage_report_are_never_in_one_comparison(self):
-        # The form changes with `cycle_stages.py`, a file whose change starts a series; a change of
-        # the scripts that measure the mechanism or the gate does not. v1 to v3 are of the older
-        # form, v4 of the newer; the costs are 2, 1, 0.5 and 0.25 dollars. The median of v4 is not
-        # set against v3's: it begins its own series.
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # The form changes with `cycle_stages.py`, a file whose change starts a series of both
+        # kinds; a change of the scripts that measure the mechanism or the gate does not. v1 to v3
+        # are of the older form, v4 of the newer; the costs are 2, 1, 0.5 and 0.25 dollars. The
+        # median of v4 is not set against v3's: it begins its own series.
         way = self.the_way()
         measures = {"task-cycle/cycle_measures.py": "measures\n"}
         gate = {**measures, "task-cycle/gate_times.py": "gate\n"}
@@ -2566,15 +3543,14 @@ class ProcessVersions(AuditCountCase):
             ("three", process_record(v3), 250_000, older(250_000)),
             ("four", process_record(v4), 125_000)])
         self.run_versions(way, product)
-        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "no", "0 of 0", "unknown",
-                           "unknown"],
-                          [v2, "2025-10-10", "1", "1", "1.000000", "no", "0 of 0", "unknown",
-                           "yes"],
-                          [v3, "2025-10-11", "1", "1", "0.500000", "no", "0 of 0", "unknown",
-                           "yes"]], self.series(1))
-        self.assertEqual([[v4, "2025-10-12", "1", "1", "0.250000", "no", "0 of 0", "unknown",
-                           "unknown"]], self.series(2))
-        self.assertNotIn("### Series 3", self.latest())
+        self.assertEqual([[v1, "2025-10-09", "1", "1", "2.000000", "unknown"],
+                          [v2, "2025-10-10", "1", "1", "1.000000", "yes"],
+                          [v3, "2025-10-11", "1", "1", "0.500000", "yes"]], self.cost_series(1))
+        self.assertEqual([[v4, "2025-10-12", "1", "1", "0.250000", "unknown"]],
+                         self.cost_series(2))
+        self.assertNotIn("### Cost, series 3", self.latest())
+        self.assertEqual([[v1, v2, v3], [v4]],
+                         [[row[0] for row in self.count_series(number)] for number in (1, 2)])
 
     def test_the_questions_read_the_record_items_and_say_unknown_otherwise(self):
         way = self.the_way()
@@ -2591,8 +3567,10 @@ class ProcessVersions(AuditCountCase):
         self.run_versions(way, product)
         # Q1 is yes from reading-a's discarded attempt. Q2 is unknown: reading-c's doubled item
         # is not read, and its slices could change the share of the other two plans.
-        self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "yes", "2 of 3", "unknown",
-                           "unknown"]], self.series(1))
+        self.assertEqual([[v1, "2025-10-09", "3", "yes", "2 of 3", "unknown"]],
+                         self.count_series(1))
+        self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "unknown"]],
+                         self.cost_series(1))
         plan_reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"]
         self.assertEqual(["the record holds the item `Plan` more than once"], plan_reasons)
         self.assertIn("1 cycle(s) are not read",
@@ -2611,7 +3589,7 @@ class ProcessVersions(AuditCountCase):
         ])
         self.run_versions(way, product)
         # 4 + 1 too large of 11 + 3 planned: 15 > 14, so yes; the one-author cycle has no plan.
-        self.assertEqual(["2 of 2", "yes"], self.series(1)[0][6:8])
+        self.assertEqual(["2 of 2", "yes"], self.count_series(1)[0][4:6])
 
     def test_the_count_of_slices_is_the_figure_just_before_the_word(self):
         way = self.the_way()
@@ -2624,7 +3602,7 @@ class ProcessVersions(AuditCountCase):
                                      too_large="\n  - slice 1"), 1_000_000),
         ])
         self.run_versions(way, product)
-        self.assertEqual("1 of 2", self.series(1)[0][6])
+        self.assertEqual("1 of 2", self.count_series(1)[0][4])
         self.assertEqual(["the item `Plan` does not give one count of slices before the word "
                           "`slices`"],
                          [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"])
@@ -2637,7 +3615,7 @@ class ProcessVersions(AuditCountCase):
             ("denies", process_record(v1, discarded="a time overrun; no open design choice"),
              1_000_000)])
         self.run_versions(way, product)
-        self.assertEqual("unknown", self.series(1)[0][5])
+        self.assertEqual("unknown", self.count_series(1)[0][3])
 
     def test_the_templates_own_form_of_a_discarded_open_design_choice_reads_yes(self):
         # The form `task-cycle/record_template.md` gives holds `none` and `report` in its other parts
@@ -2651,7 +3629,7 @@ class ProcessVersions(AuditCountCase):
                               "reports/x.md; foundation entries none; reset to abc1234; next "
                               "route: spec"), 1_000_000)])
         self.run_versions(way, product)
-        self.assertEqual("yes", self.series(1)[0][5])
+        self.assertEqual("yes", self.count_series(1)[0][3])
         self.assertEqual([], [row for row in self.rows("Unknown values")
                               if row[2] == "Discarded attempt"])
 
@@ -2707,7 +3685,7 @@ class ProcessVersions(AuditCountCase):
         self.run_versions(way, product)
         self.assertEqual([], [char for char in self.latest()
                               if not char.isprintable() and char != "\n"])
-        self.assertEqual(["yes"], [self.series(1)[0][5]])
+        self.assertEqual(["yes"], [self.count_series(1)[0][3]])
 
     def test_a_discarded_attempt_opening_with_none_is_not_read_as_a_design_choice(self):
         # `none` with more words names the phrase, but it says nothing was discarded: unknown.
@@ -2718,7 +3696,7 @@ class ProcessVersions(AuditCountCase):
             ("opens", process_record(v1, discarded="none — no open design choice was discarded"),
              1_000_000)])
         self.run_versions(way, product)
-        self.assertEqual("unknown", self.series(1)[0][5])
+        self.assertEqual("unknown", self.count_series(1)[0][3])
         self.assertIn("opens with none",
                       self.reasons_of(self.rows("Unknown values"), "Discarded attempt"))
 
@@ -2731,7 +3709,7 @@ class ProcessVersions(AuditCountCase):
             ("rounds", process_record(v1, rounds="\n  - findings `reports/x_findings.md`: one"),
              1_000_000)])
         self.run_versions(way, product)
-        self.assertEqual("unknown", self.series(1)[0][5])
+        self.assertEqual("unknown", self.count_series(1)[0][3])
 
     def test_a_third_is_not_above_a_third(self):
         # One slice too large of three planned is exactly a third, which is not above it: no.
@@ -2741,7 +3719,7 @@ class ProcessVersions(AuditCountCase):
         self.add_cycles(product, [
             ("exact", process_record(v2, plan="3 slices", too_large="\n  - slice 1"), 1_000_000)])
         self.run_versions(way, product)
-        self.assertEqual(["1 of 1", "no"], self.series(1)[0][6:8])
+        self.assertEqual(["1 of 1", "no"], self.count_series(1)[0][4:6])
 
     def test_unknown_reads_stay_unknown(self):
         # The prose discarded attempt makes Q1 unknown; the cycle whose plan has no figure just
@@ -2755,9 +3733,10 @@ class ProcessVersions(AuditCountCase):
             ("crawling", process_record(v2, plan="9" * 200_000 + " slices"), 1_000_000),
         ])
         self.run_versions(way, product)
-        [row] = self.series(1)
-        self.assertEqual([v2, "2025-10-10", "3", "3", "2.000000", "unknown", "1 of 2", "unknown"],
-                         row[:8])
+        [row] = self.count_series(1)
+        self.assertEqual([v2, "2025-10-10", "3", "unknown", "1 of 2", "unknown"], row)
+        self.assertEqual([[v2, "2025-10-10", "3", "3", "2.000000", "unknown"]],
+                         self.cost_series(1))
         unknown = self.rows("Unknown values")
         self.assertEqual(1, len([row for row in unknown if row[2] == "Discarded attempt"]))
         self.assertEqual(["the item `Plan` does not give one count of slices before the word "
@@ -2789,7 +3768,8 @@ class MeasureVersions(AuditCountCase):
     the_way = ProcessVersions.the_way
     version_at = ProcessVersions.version_at
     run_versions = ProcessVersions.run_versions
-    series = ProcessVersions.series
+    cost_series = ProcessVersions.cost_series
+    count_series = ProcessVersions.count_series
 
     def day(self, number) -> int:
         return self.FIRST + number * 86400
@@ -2810,14 +3790,6 @@ class MeasureVersions(AuditCountCase):
             _, parent = product.cycle(folder, files, parent=parent, branch=None)
         product.branch("main", parent)
 
-    def section(self, kind, number) -> list[list[str]]:
-        text = self.latest()
-        heading = f"\n### {kind}, series {number}\n"
-        self.assertIn(heading, text, "the result has no such series")
-        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
-        lines = [line for line in part.splitlines() if line.startswith("|")]
-        return [split_row(line) for line in lines[2:]]
-
     def measure(self, number, label) -> list[list[str]]:
         """The rows of a series of mechanism measures that are of one measure."""
         return [row for row in self.section("Mechanism measures", number) if row[1] == label]
@@ -2826,6 +3798,7 @@ class MeasureVersions(AuditCountCase):
         return [row for row in self.section("Gate times", number) if row[1] == measure]
 
     def test_a_change_of_an_instrument_starts_only_the_series_of_its_own_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the script of the measures, v3 the script of the gate times, v4 the reviewer's
         # instructions and `cycle_stages.py`. The cost splits at v4 alone; the mechanism measures
         # at v2 alone; the gate times at v3 alone, and no median is set across a split.
@@ -2845,9 +3818,12 @@ class MeasureVersions(AuditCountCase):
             ("three", v3, {"Calls in all": "9"}, gate_run(3, 0, "80.000")),
             ("four", v4, {"Calls in all": "5"}, gate_run(4, 0, "70.000"))])
         self.run_versions(way, product)
-        self.assertEqual([v1, v2, v3], [row[0] for row in self.series(1)])
-        self.assertEqual([v4], [row[0] for row in self.series(2)])
-        self.assertNotIn("### Series 3", self.latest())
+        self.assertEqual([v1, v2, v3], [row[0] for row in self.cost_series(1)])
+        self.assertEqual([v4], [row[0] for row in self.cost_series(2)])
+        self.assertNotIn("### Cost, series 3", self.latest())
+        self.assertEqual([v1, v2, v3], [row[0] for row in self.count_series(1)])
+        self.assertEqual([v4], [row[0] for row in self.count_series(2)])
+        self.assertNotIn("### Count of remarks, series 3", self.latest())
         calls = "Calls in all"
         self.assertEqual([[v1, calls, "1", "10", "unknown"]], self.measure(1, calls))
         self.assertEqual([[v2, calls, "1", "8", "unknown"], [v3, calls, "1", "9", "no"],
@@ -2862,7 +3838,34 @@ class MeasureVersions(AuditCountCase):
         self.assertLess(text.index("## Process versions"), text.index("## Measure versions"))
         self.assertLess(text.index("## Measure versions"), text.index("## Problems by cycle"))
 
+    def test_a_changed_tool_of_a_measure_gives_no_value_to_the_median_of_its_version(self):
+        # decision: WAY-339 "The audit compares each measure only within a series"
+        # One own cycle with both files, in the version it ran on. Where it changed the script of
+        # the measures, its version gives no value of them and its gate times stand; where it
+        # changed the test runner, the gate times are the ones without a value and the mechanism
+        # measures stand; where it changed none, both give their one value (12 calls, 100 seconds).
+        calls = "Calls in all"
+        for changed, mechanism, runs in (
+                ({"task-cycle/cycle_measures.py": "two\n"}, False, True),
+                ({"gate/run_tests.py": "two\n"}, True, False),
+                ({"task-cycle/gate_times.py": "two\n"}, True, False),
+                ({}, True, True)):
+            with self.subTest(sorted(changed)):
+                self.fresh()
+                files = {MEASURES: measures_file(), GATE: gate_file(rows=gate_run(1, 0, "100.000"))}
+                _, version = self.own_cycle(files, changed, process_record(PIN))
+                done = self.run_with_prices()
+                self.assertEqual(0, done.returncode, done.stderr)
+                self.assertEqual([[version, calls, "1", "12", "unknown"]] if mechanism
+                                 else [[version, "—", "0", "unknown", "unknown"]],
+                                 self.measure(1, calls if mechanism else "—"))
+                self.assertEqual([[version, TOTAL, "1", "100.000", "unknown", "0", "unknown"]]
+                                 if runs else [[version, "—", "0", "unknown", "unknown", "0",
+                                                "unknown"]],
+                                 self.gate(1, TOTAL if runs else "—"))
+
     def test_a_change_of_the_test_runner_starts_a_new_series_of_gate_times_only(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the test runner of the gate, v3 the script of the measures. The gate times
         # split at v2 alone, the mechanism measures at v3 alone, and the reason of the split
         # names the file that changed. Medians: the gate series of v2 and v3 has 90 and 80, so v3
@@ -2920,9 +3923,11 @@ class MeasureVersions(AuditCountCase):
         self.assertEqual([[earlier, later]], [block.versions for block in measures])
 
     def test_the_reviewer_the_stage_script_and_the_list_of_classes_split_no_series_of_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # v2 changes the reviewer's instructions, v3 `cycle_stages.py`, and a class is added on the
-        # day of v4: each splits the series of the cost and none splits the measures, whose
-        # medians fall from version to version across all three.
+        # day of v4: each splits the series of the count of remarks, `cycle_stages.py` alone the
+        # series of the cost, and none splits the measures, whose medians fall from version to
+        # version across all three.
         way = self.the_way()
         v1 = self.version_at(way, self.day(0))
         v2 = self.version_at(way, self.day(1), parent=v1,
@@ -2943,7 +3948,10 @@ class MeasureVersions(AuditCountCase):
                                  encoding="utf-8")
         self.run_versions(way, product)
         self.assertEqual([[v1], [v2], [v3], [v4]],
-                         [[row[0] for row in self.series(number)] for number in (1, 2, 3, 4)])
+                         [[row[0] for row in self.count_series(number)] for number in (1, 2, 3, 4)])
+        self.assertEqual([[v1, v2], [v3, v4]],
+                         [[row[0] for row in self.cost_series(number)] for number in (1, 2)])
+        self.assertNotIn("### Cost, series 3", self.latest())
         self.assertEqual([[v1, "Calls in all", "1", "10", "unknown"],
                           [v2, "Calls in all", "1", "9", "yes"],
                           [v3, "Calls in all", "1", "8", "yes"],
@@ -2954,6 +3962,7 @@ class MeasureVersions(AuditCountCase):
         self.assertNotIn("### Gate times, series 2", self.latest())
 
     def test_a_new_price_list_splits_no_series_of_measures(self):
+        # decision: WAY-339 "The measures of how a cycle's agents use context and the prompt"
         # One price list prices a whole run, so no real run splits at it: the series of the
         # measures are asked of the two versions directly, and ask git about their scripts alone.
         sys.path.insert(0, str(HERE))
@@ -2973,8 +3982,7 @@ class MeasureVersions(AuditCountCase):
                 blocks = audit_count.instrument_series([earlier, later], Unchanged(), scripts)
                 self.assertEqual([[earlier, later]], [block.versions for block in blocks])
                 self.assertEqual(scripts, asked[-1])
-        self.assertEqual("the price list changed",
-                         audit_count.series_boundary(earlier, later, audit_count.Register(), None))
+        self.assertEqual("the price list changed", audit_count.cost_boundary(earlier, later, None))
 
     def test_medians_and_falls_of_three_versions_over_an_odd_and_an_even_number_of_cycles(self):
         # Calls in all: v1 has 10, 4 and 7 (median 7, odd), v2 has 6 and 9 (median 7.5, even, so
@@ -3172,13 +4180,15 @@ class MeasureVersions(AuditCountCase):
 
 
 class PriceBoundary(unittest.TestCase):
-    def test_a_new_price_list_starts_a_new_series(self):
+    def test_a_new_price_list_starts_a_new_series_of_the_cost_and_of_the_count_of_remarks(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         sys.path.insert(0, str(HERE))
         import audit_count
         earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
         later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        self.assertEqual("the price list changed", audit_count.cost_boundary(earlier, later, None))
         self.assertEqual("the price list changed",
-                         audit_count.series_boundary(earlier, later, audit_count.Register(), None))
+                         audit_count.count_boundary(earlier, later, audit_count.Register(), None))
 
 
 if __name__ == "__main__":

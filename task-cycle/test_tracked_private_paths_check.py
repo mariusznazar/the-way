@@ -88,6 +88,18 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(self.listing(out), ["B.MD:1: note link: " + link,
                                              "a.md:1: note link: " + link])
 
+    def test_a_note_link_is_listed_in_every_markdown_suffix_in_any_letter_case(self) -> None:
+        self.invariant("No file git tracks contains a link.")
+        link = OPEN + "Meeting notes" + CLOSE
+        for name in ("rules.mdc", "page.mdx", "guide.markdown", "UPPER.MDC"):
+            self.track(name, "see " + link + "\n")
+        self.track("src/a.py", "note = '" + link + "'\n")
+        _, out, _ = self.run_command(INVARIANT)
+        self.assertEqual(self.listing(out), ["UPPER.MDC:1: note link: " + link,
+                                             "guide.markdown:1: note link: " + link,
+                                             "page.mdx:1: note link: " + link,
+                                             "rules.mdc:1: note link: " + link])
+
     def test_a_character_class_of_the_shell_in_a_markdown_file_is_no_note_link(self) -> None:
         self.invariant("No file git tracks contains a link.")
         cls = OPEN + ":alpha:" + CLOSE

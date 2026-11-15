@@ -5,9 +5,9 @@ SKILL.md, which lies next to this script, lists: paths that do not exist, `@path
 Claude Code loads into every session or silently skips, Cursor rules that Cursor ignores, a root
 layout that hides `AGENTS.md` from Claude Code, subdirectory `AGENTS.md` files Codex will not
 reach, skills one of the tools cannot discover, emphasis spread over several rules, and the size
-of every file. The Markdown files that the root `AGENTS.md` or `CLAUDE.md` names in backticks are
-checked as well; a file named by its path elsewhere in the text is not followed, though the
-glossary term and the invariant count it.
+of every file. The files whose name ends in `.md` or `.mdc` that the root `AGENTS.md` or `CLAUDE.md`
+names in backticks are checked as well; a file named by its path elsewhere in the text is not
+followed, though the glossary term and the invariant count it.
 
 Usage, from anywhere:
 
@@ -566,10 +566,11 @@ def excluded(base, rel):
 
 
 def pointed_files(root, texts, files):
-    """The Markdown files the root AGENTS.md or CLAUDE.md names in backticks, as (real path, path
-    from ROOT): each a regular file that leads to a path inside ROOT, outside the skipped
-    directories and nested repositories, that is not already an instruction file; each once, one
-    level deep. A network path is never looked up, and a link is judged by `leads_out`."""
+    """The files whose name ends in `.md` or `.mdc` that the root AGENTS.md or CLAUDE.md names in
+    backticks, as (real path, path from ROOT): each a regular file that leads to a path inside
+    ROOT, outside the skipped directories and nested repositories, that is not already an
+    instruction file; each once, one level deep. A network path is never looked up, and a link is
+    judged by `leads_out`."""
     real_root = os.path.realpath(root)
     known = {os.path.realpath(os.path.join(root, *rel.split("/"))) for rel in files}
     found = []

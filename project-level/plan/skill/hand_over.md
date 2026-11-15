@@ -8,10 +8,10 @@ gives.
   move from the definition's placement with its reason, each change log item letting two tasks go
   side by side with its reason (WAY-230), and each remark of the critique you rejected with why.
   The human corrects the plan; apply each correction, with its line in the change log, and run
-  `plan_check.py` again.
-- A finding of `plan_check.py` that two tasks realize one entry with no order between them is
-  settled as step 3 gives it (`assign_entries.md` beside this skill), each item letting them go
-  side by side shown to the human as the first bullet gives (WAY-230).
+  `project-level/plan_check.py` again.
+- A finding of `project-level/plan_check.py` that two tasks realize one entry with no order between
+  them is settled as step 3 gives it (`assign_entries.md` beside this skill), each item letting
+  them go side by side shown to the human as the first bullet gives (WAY-230).
 - On the human's word, set the status to `handed over YYYY-MM-DD` and add the line to the change
   log. Point to `lead-project` as the next step: it proposes human-confirmed rounds, delegates
   member-task refinement through `refine-task` and maintains evidenced plan states.

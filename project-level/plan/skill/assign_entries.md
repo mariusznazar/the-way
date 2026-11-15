@@ -10,6 +10,6 @@
   `- YYYY-MM-DD — side by side: tasks <n>, <m> on "<entry>" — <why>`, the reason saying why their
   work does not collide; "neither depends on the other" is no reason. A pair with a task done,
   delivered or dropped needs neither (WAY-230).
-- A finding of `plan_check.py` that two tasks realize one entry with no order between them is
-  settled by the bullet above, each item letting them go side by side shown to the human as
-  step 7 gives it (`hand_over.md` beside this skill) (WAY-230).
+- A finding of `project-level/plan_check.py` that two tasks realize one entry with no order between
+  them is settled by the bullet above, each item letting them go side by side shown to the human
+  as step 7 gives it (`hand_over.md` beside this skill) (WAY-230).

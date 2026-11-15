@@ -15,14 +15,16 @@ test writes out — is neither an import nor a run, unless the file runs it as c
 - every run of a file as a script: `runpy.run_path(<path>)` and `runpy.run_module(<name>)`; a
   command line of the running interpreter, `sys.executable`, written out as a list, a list joined
   with `+` to more elements, or the arguments of a call, given a script's path, `-m <module>` or
-  `-c <code>`; and `exec`, `eval` and `compile` given the text of a file, read with
-  `open(<path>).read()` or `<path>.read_text()`. A path resolves as an expression of the file
+  `-c <code>`; and `exec` and `eval` given the text of a file, read with `open(<path>).read()`
+  or `<path>.read_text()`, and `compile` given such text where `exec` or `eval` runs its result (a
+  result that nothing runs is no code of the file). A path resolves as an expression of the file
   (below); a path in a directory made at run time by `tempfile` lies outside the repository and is
   no dependency, and so is a path outside the repository's root;
-- code given as a string — to `-c`, or to `exec`, `eval` or `compile` — parsed as the code of a
-  file and read as above: code given to `-c` from the repository's root, the working directory of
-  the gate and the scripts, with `sys.argv` taken from the command line; code given to `exec`,
-  `eval` or `compile` from the directories of the file that runs it.
+- code given as a string — to `-c`, to `exec` or `eval`, or to `compile` where `exec` or `eval`
+  runs its result — parsed as the code of a file and read as above: code given to `-c` from the
+  repository's root, the working directory of the gate and the scripts, with `sys.argv` taken from
+  the command line; code given to `exec`, `eval` or `compile` from the directories of the file that
+  runs it.
 
 A use of `sys.executable` the check cannot read as a command line fails it, and so does a command
 line whose script, code or module is not written out where the check reads it — joined on later,
@@ -78,6 +80,7 @@ TEMPORARY_CALLS = ("tempfile.mkdtemp", "tempfile.TemporaryDirectory", "tempfile.
 # the keyword that may give their first argument.
 FUNCTIONS = {"runpy": ("run_path", "run_module"), "importlib": ("import_module", "__import__"),
              "builtins": ("exec", "eval", "compile", "__import__")}
+# `compile` is read only where `exec` or `eval` runs its result: `Resolver.runs` finds those calls.
 BUILTINS = ("exec", "eval", "compile", "__import__")
 KEYWORDS = {"run_path": "path_name", "run_module": "mod_name", "import_module": "name",
             "__import__": "name", "compile": "source"}
@@ -403,7 +406,7 @@ class Resolver:
                 found.append((line, "module", name))
 
         def source(line, node, mode):
-            """Code given to `exec`, `eval` or `compile`."""
+            """Code given to `exec` or `eval`, or to `compile` whose result they run."""
             node = self.follow(node)
             if isinstance(node, ast.Call) and self.functions.get(ast.unparse(node.func)) == \
                     "compile":
@@ -465,6 +468,15 @@ class Resolver:
             # No script, code or module written out: what it runs is given elsewhere.
             unknown.append((line, "runs a command line the check cannot read"))
 
+        # The `compile` calls whose result `exec` or `eval` runs; the others read no code.
+        run_results = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and \
+                    self.functions.get(ast.unparse(node.func)) in ("exec", "eval"):
+                given = self.follow(self.argument(node, 0, ""))
+                if isinstance(given, ast.Call) and \
+                        self.functions.get(ast.unparse(given.func)) == "compile":
+                    run_results.add(id(given))
         for node in ast.walk(tree):
             if isinstance(node, ast.BinOp) and command(node) is not None:
                 inner = node.left
@@ -493,7 +505,7 @@ class Resolver:
                         given.value in ("exec", "eval", "single") else None
                 if mode is None:
                     unknown.append((node.lineno, "runs code the check cannot read"))
-                else:
+                elif function != "compile" or id(node) in run_results:
                     source(node.lineno, self.argument(node, 0, KEYWORDS.get(function, "")),
                            mode)
             for position, argument in enumerate(node.args):
@@ -1104,6 +1116,8 @@ class Code(unittest.TestCase):
                                                    "sees")))
 
     def test_each_form_of_code_run_by_exec_eval_or_compile_is_read(self):
+        """The forms of code that exec or eval runs, a compile whose result one of them runs
+        included, are read; the text of a file that nothing runs is read by no form here."""
         screen = "os.path.join(HERE, '..', 'shell', 'screen.py')"
         for line in (
                 "exec('import shell.screen')",
@@ -1114,10 +1128,24 @@ class Code(unittest.TestCase):
                 "exec(open(%s, encoding='utf-8').read(), {})" % screen,
                 "exec((Path(HERE) / '..' / 'shell' / 'screen.py').read_text())",
                 "code = open(%s).read(); exec(code)" % screen,
-                "compile(open(%s).read(), 'screen', mode='exec')" % screen,
+                "exec(compile(open(%s).read(), 'screen', mode='exec'))" % screen,
+                "code = compile(open(%s).read(), 'screen', mode='exec'); exec(code)" % screen,
         ):
             with self.subTest(line=line):
                 self.assertEqual(([FORBIDDEN], []), self.run_from_core(line))
+
+    def test_compile_standing_alone_is_no_dependency(self):
+        # The result of `compile` that nothing runs is no code of the file, so the text it
+        # compiles is no import and no run.
+        screen = "os.path.join(HERE, '..', 'shell', 'screen.py')"
+        for line in (
+                "compile(open(%s).read(), 'screen', mode='exec')" % screen,
+                "compile(open(%s).read(), 'screen', 'exec')" % screen,
+                "code = compile(open(%s).read(), 'screen', mode='exec')" % screen,
+                "compile('import shell.screen', 'shell', 'exec')",
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(([], []), self.run_from_core(line))
 
     def test_code_given_as_a_string_is_read_down_to_its_limit(self):
         def nested(times):

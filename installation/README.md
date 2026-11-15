@@ -121,11 +121,13 @@ the check:
    ```
 
 The command checks the repository in which it is run. It lists, as `<file>:<line>: <kind>: <text>`,
-each absolute path in a file of any kind and each note link in a Markdown file, and exits 1 when it
-lists any, and 2 with `Error: <message>` on stderr when it cannot check: the identifier is not
-given once, the directory lies in no git repository, `foundations/invariants.md` or the invariant
-is not there, the sentence names a file git does not track, or a tracked file is not UTF-8 text
-(a file with a NUL byte near its start is counted as binary and not read). The test runs the
+each absolute path in a file of any kind and each note link in a Markdown file, a file whose name
+ends in `.md`, `.markdown`, `.mdx` or `.mdc` in any letter case, and exits 1 when it lists any, and
+2 with `Error: <message>` on stderr when it cannot check: the identifier is not given once, the
+directory lies in no git repository, `foundations/invariants.md` or the invariant is not there, the
+sentence names a file git does not track, or a tracked file is not UTF-8 text (a file that starts
+with a UTF-16 byte order mark is read as UTF-16, as `private_paths_check.py` reads it, and a file
+with a NUL byte near its start is counted as binary and not read). The test runs the
 command and does not import its functions: the command keeps its path, its argument, the meaning of
 the backticked texts of the sentence and its exit codes (the surface `tracked-private-paths-command`
 of the-way's part map), and its functions are not promised. A product that does not write the

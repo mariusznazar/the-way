@@ -73,9 +73,9 @@ your register; the problem is never given the nearest class instead. A list that
 follows what the sessions find, where a closed list would give a problem it lacks a class for a
 wrong class. A row of *Problems* whose class the list lacks is refused by the count until then. A
 change of what a class means is written as that class withdrawn and a new class, under a new name,
-added on the same date. Each date in *Added* or *Withdrawn* starts a new series of the cost and of
-no mechanism measure or gate time, and the audit compares measures only within one series
-(WAY-339).
+added on the same date. Each date in *Added* or *Withdrawn* starts a new series of the count of
+remarks, and of neither the cost nor any mechanism measure or gate time, and the audit compares
+measures only within one series (WAY-339).
 
 ## Weights
 

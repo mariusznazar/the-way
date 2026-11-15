@@ -165,7 +165,7 @@ Every part map identifier a field of a foundation entry names is an entry of the
 
 ## test-method-citation
 
-Every invariant whose method is `test` is cited by a comment line `invariant: <its identifier>` in a file git tracks other than a Markdown file.
+Every invariant whose method is `test` is cited by a comment line `invariant: <its identifier>` in a file git tracks whose name does not end in `.md`.
 
 - **Method:** test
 - **Rests on:** none
@@ -397,7 +397,7 @@ The wording that `project-level/plan_state.py` takes for the field *Request URL 
 
 ## audit-series-script-paths
 
-Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
+Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the cost of cycles, of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that measures the cost, `task-cycle/cycle_stages.py`, the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
 
 - **Method:** test
 - **Rests on:** none
@@ -417,7 +417,7 @@ Every name that `foundation-review/SKILL.md` gives the tag that marks a review d
 
 ## guidelines-file-place
 
-Every file of a product's guidelines that `product-guidelines/template.md` names in its section on where guidelines go, and the directory it names for them, match the place where `elements/common/foundation_check.py` reads files of guidelines: a Markdown file directly in `guidelines/`.
+Every file of a product's guidelines that `product-guidelines/template.md` names in its section on where guidelines go, and the directory it names for them, match the place where `elements/common/foundation_check.py` reads files of guidelines: a file whose name ends in `.md` directly in `guidelines/`.
 
 - **Method:** test
 - **Rests on:** none

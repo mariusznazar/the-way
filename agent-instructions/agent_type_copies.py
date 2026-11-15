@@ -19,7 +19,9 @@ Without --write the generator prints what it would create or change and writes n
 nothing. A definition that breaks the form above, a file in the directory that is no definition, or
 a failed git call stops the run before anything is written.
 
-Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise.
+Exit code: 0 on success; 1 with `Error: <message>` on stderr otherwise; 2 with `Error: <message>`
+on stderr when the frontmatter of a definition has no line `name:` or no line `description:`, the
+message naming the file and that field.
 
 Standard library only; the only program started is git.
 """
@@ -40,6 +42,30 @@ PREFIX = "the-way-"
 OWN_MARK = "Dispatched only by the task cycle of the-way."
 NAME = re.compile(r"the-way-[a-z0-9]+(?:-[a-z0-9]+)*")
 HEAD = re.compile(r"---\nname: ([^\n]*)\ndescription: ([^\n]*)\n")
+FIELDS = ("name", "description")
+
+
+class MissingFieldError(GeneratorError):
+    """A definition whose frontmatter has no line for a field the generator needs."""
+
+
+def missing_field(text: str) -> str | None:
+    """The first of `name` and `description` that no line of the frontmatter of `text` holds, in
+    any form, or None when the text opens with no frontmatter or every field has a line. A line
+    that holds the field in another form, such as `Name:`, counts as present."""
+    lines = text.split("\n")
+    if lines[0] != "---":
+        return None
+    block = []
+    for line in lines[1:]:
+        if line == "---":
+            break
+        block.append(line)
+    for field in FIELDS:
+        pattern = re.compile(rf"\s*{field}\s*:", re.IGNORECASE)
+        if not any(pattern.match(line) for line in block):
+            return field
+    return None
 
 
 def definition_paths(root: Path) -> list[str]:
@@ -74,6 +100,9 @@ def check_definition(path: str, data: bytes) -> None:
         raise GeneratorError(f"{path}: holds a carriage return; the file uses LF line ends")
     head = HEAD.match(text)
     if not head:
+        field = missing_field(text)
+        if field is not None:
+            raise MissingFieldError(f"{path}: the frontmatter has no line `{field}:`")
         raise GeneratorError(f"{path}: the file must open with `---`, a `name:` line and a "
                              "`description:` line, each on one line")
     name, description = head.groups()
@@ -136,6 +165,9 @@ def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
         if not changes and not left:
             print("agent type copies are current")
         return 0
+    except MissingFieldError as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 2
     except (GeneratorError, OSError) as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1
