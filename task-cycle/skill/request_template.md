@@ -449,8 +449,8 @@ that nothing in this request waits for it.
 - Where no open line of the review of this repository stands in the backlog, or the cycle could not
   read the backlog, the reminder asks the human to add the task of the review to it, and says what
   the task's name holds — the name of the skill `review-foundation` and the name of the repository,
-  as in "Review of the foundation of <repository> (`review-foundation`)" — and, where the backlog
-  could not be read, that it could not be read.
+  taken as `SKILL.md` step 13 gives it, as in "Review of the foundation of <repository>
+  (`review-foundation`)" — and, where the backlog could not be read, that it could not be read.
 - Where the line stands, the reminder points to it by its name and neither asks for it nor urges.
 
 The reminder is no item of *For you to decide*, as it asks for no yes to the merge, and it repeats

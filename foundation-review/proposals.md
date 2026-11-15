@@ -33,10 +33,10 @@ name to give a task that stands in no project plan.
 The entries that `weak_points.md` lists as no decisions are grouped by the place they go to, one
 group for each place: a skill or an instruction file, the guidelines of a discipline, the product's
 data or code, no entry, and a sentence of another entry. A group holds every entry of that place
-that the run found, and its count stands beside its place. The human decides on whole groups, never on part of one: the groups chosen go
-into one task of the product's backlog this time, and the groups not chosen wait for the next
-review, which finds all the entries anew. The review chooses no batch itself, however small its
-entries are.
+that the run found, and its count stands beside its place. The human decides on whole groups, never
+on part of one: the groups chosen go into one task of the product's backlog this time, and the
+groups not chosen wait for the next review, which finds all the entries anew. The review chooses
+no batch itself, however small its entries are.
 
 Each group is put to the human with its place, its count, one entry quoted whole and where its
 sentence would stand in that place, what happens if the group stays in the log — the log goes on

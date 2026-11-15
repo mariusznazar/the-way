@@ -587,17 +587,21 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 13. Before you write the description, count the merges since the last review of the foundation: in
     the worktree's root (in a product, the path starts with `.the-way/`), after a fetch that brings
     the tags, run `python -B task-cycle/review_reminder.py origin/<target branch>`; where the script
-    ends with exit code 2, record its message under *Verification* and write no reminder, since the
-    count is unknown. When its last line reads `reminder: yes`, read the product's backlog as
+    ends with exit code 2, record its message under *Verification*, write no reminder, since the
+    count is unknown, and put the count among the checks not run in the section for the human's
+    decisions (WAY-287). When its last line reads `reminder: yes`, read the product's backlog as
     `project-level/backlog_place.md` gives and look in it for an open line of the review of this
     repository: a line whose name holds the name of the skill `review-foundation` and the name of
-    the repository, as the `## Backlog` section of the root `AGENTS.md` names the product, what
-    open means being the rules of the task place (WAY-107). The description's *How to merge* then
-    carries the reminder as `task-cycle/skill/request_template.md` gives it, in the form that
-    result asks for: to add the task of the review where no such line stands or the backlog cannot
-    be read, to point to the line where it stands. The cycle adds and changes no line of the
-    backlog (WAY-140); the reminder blocks nothing, and every request the cycle writes or rewrites
-    gets it while the count stands (WAY-300). Where the last line reads `reminder: no`, the
+    the repository, what open means being the rules of the task place (WAY-107). The name of the
+    repository the request merges into is the last segment of the address of its remote `origin`,
+    without `.git`, or, where it has no such remote, the name of the directory its main checkout
+    stands in; it is the same in every cycle and in every worktree, whatever the `## Backlog`
+    section names. The description's *How to merge* then carries the reminder as
+    `task-cycle/skill/request_template.md` gives it, in the form that result asks for: to add the
+    task of the review where no such line stands or the backlog cannot be read, to point to the line
+    where it stands. The cycle adds and changes no line of the backlog (WAY-140); the reminder
+    blocks nothing, and every request the cycle writes or rewrites gets it while the count stands
+    (WAY-300). Where the last line reads `reminder: no`, the
     description says nothing about a review of the foundation. Record the output under
     *Verification*.
     Write the request's description into `.runs/task-cycles/<task-slug>/request.md` by

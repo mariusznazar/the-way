@@ -2,8 +2,8 @@
 
 Read at step 2 of `SKILL.md`. For each file of the foundation, judge every entry whole and write one
 of these results: it holds, a proposal, or a line of one of the two lists of decisions below, the
-transitional states and the entries that are no decisions. An entry that holds takes no line beyond the number of items
-checked that the tag message gives.
+transitional states and the entries that are no decisions. An entry that holds takes no line beyond
+the number of items checked that the tag message gives.
 
 ## Decisions
 
@@ -59,8 +59,8 @@ entry that gets no "yes" is a decision and takes no line. The places:
 - a sentence of the entry that already answers the question — a part of one question that stands
   under a number of its own (question 5).
 
-A rule that ends with its own piece of work fails the plan test and belongs to the list of
-transitional states above, not to this one. The list is made by reading, as that one is: no search
+A rule that ends with its own change fails the plan test and gets no line here, as it gets none
+above (WAY-36). The list is made by reading, as that one is: no search
 by a word finds these entries. An entry stands in the log only where someone who does not know the
 decision would do otherwise and a test that stops them would not tell them why, so an entry that
 carries a choice with a real cost stays a decision whatever it is about. For each entry write one

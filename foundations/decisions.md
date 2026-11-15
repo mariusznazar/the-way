@@ -1085,13 +1085,13 @@ effect (WAY-140).
 record appended on the date — the dates pass with nobody looking; a decision that expires on a date
 — the date gets extended; the review set as a task of the backlog, run by a cycle that ends in a
 request of corrections — the judgments of whether an assumption stands arrive whole as ready
-changes with no talk, and refusing one is another round; a ready task of the review copied into the
-backlog — three steps where one command does; a script — it does not judge whether the assumption
+changes with no talk, and refusing one is another round; a task of the review made ready for a cycle
+and copied into the backlog — three steps where one command does; a script — it does not judge whether the assumption
 of a decision stands; the cycle adding the line of the review to the backlog itself — it would need
 a change to WAY-140, against the reason of WAY-161, and a product with its backlog in an outside
-tracker would give the cycle the right to write outside the repository; only the setup of one user,
-with the wording of this decision as it was — another user of the-way is left with a sentence that
-can be scrolled past.
+tracker would give the cycle the right to write outside the repository; a sentence that asks for no
+line and says nothing of the backlog, the human's own setup adding the line — another user of the-way
+is left with a sentence that can be scrolled past.
 
 ### WAY-25 — What settles a collision between two decisions?
 
@@ -6795,7 +6795,8 @@ for itself, and a repository with no review tag counts from the start of its his
 
 From the threshold on, the orchestrator reads the product's backlog for an open line of the review
 of this repository — a line whose name holds the name of the skill `review-foundation` and the name
-of the repository, open as the rules of the task place say (WAY-107). Where no such line stands, or
+of the repository, which is the same in every cycle, open as the rules of the task place say
+(WAY-107). Where no such line stands, or
 the backlog cannot be read, the sentence asks the human to add the task of the review and gives what
 its name holds, the number of merges, the tag of the last review and the skill that starts the
 review; where the line stands, the sentence points to it and does not urge. The cycle adds and
@@ -6844,8 +6845,8 @@ the line of the review to the backlog itself — the backlog is the human's and 
 repository, and it would need a change to WAY-140 against the reason of WAY-161; holding the request
 as a draft from the threshold on — every unrelated change would wait for a click that becomes a
 reflex at more than ten merges a week; the line in the backlog and the held draft together — the sum
-of both costs; the setup of one user alone, with the wording of this decision as it was — another
-user of the-way keeps a sentence that can be scrolled past; an identifier the-way computes for the
+of both costs; a sentence that asks for no line and says nothing of the backlog, the human's own
+setup adding the line — another user of the-way keeps a sentence that can be scrolled past; an identifier the-way computes for the
 review's line, in the field of identifier — a task that belongs to no plan has no identifier from
 the-way, it works only in a task place with identifiers, and each later review needs a new one,
 since the old stays on a done line; no reading of the backlog, the sentence always asking for the
