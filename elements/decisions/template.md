@@ -230,14 +230,14 @@ A field stays in the template only while someone or something reads it (WAY-05).
   derive from the decision, each by its identifier, and only where such invariants exist; each of
   them names the decision in *Derives from* (WAY-12, WAY-17).
 - A test that holds a sentence of the decision carries beside it a line `decision:`: a comment in a
-  tracked file whose name does not end in `.md`, in the comment forms of the line `invariant:`, that holds
-  `decision:`, one decision number as its heading writes it, and one quotation in straight double
-  quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The quotation
-  holds no `"`, begins at the start of a sentence of the entry's binding sentences — the start of
-  them, the start of one of their paragraphs, or the first word after a full stop and a space — and
-  holds at least three words; it stands in the binding sentences once every run of spaces and line
-  breaks is replaced by a single space. The line stands at the test that holds the sentence
-  (WAY-02).
+  tracked file whose name does not end in `.md`, in the comment forms of the line `invariant:`, that
+  holds `decision:`, one decision number as its heading writes it, and one quotation in straight
+  double quotation marks to the end of the line, a closing `*/` or `-->` allowed after it. The
+  quotation holds no `"`, begins at the start of a sentence of the entry's binding sentences — the
+  start of them, the start of one of their paragraphs, or the first word after a full stop and a
+  space — and holds at least three words; it stands in the binding sentences once every run of
+  spaces and line breaks is replaced by a single space. The line stands at the test that holds the
+  sentence (WAY-02).
 - *Verification* names the tests that hold the sentences of the decision by the clause
   `tests: <the parts of the sentences they hold, in words>`, with no path, no test name and no
   number: the lines `decision:` find the tests, so the clause is no second copy of the link, and
