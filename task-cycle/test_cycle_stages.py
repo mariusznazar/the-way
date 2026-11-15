@@ -1093,6 +1093,23 @@ class ClaudeFieldsTest(unittest.TestCase):
         self.assertIn("1 call(s) of a type the reader does not recognise (tool_use): their "
                       "waits are unknown", stderr)
 
+    def test_a_content_that_is_neither_a_text_nor_a_list_is_read_as_no_text(self) -> None:
+        for label, content in (("a number", 5), ("a boolean", True), ("an object", {"a": 1}),
+                               ("a list of no objects", ["x", 1]), ("an empty list", [])):
+            with self.subTest(label):
+                line = prompt("09:00:05", "go")
+                line["message"]["content"] = content
+                write_lines(self.transcript, [
+                    prompt("09:00:00", "run the cycle"),
+                    line,
+                    answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+                ])
+                code, stderr, output = self.run_main()
+                self.assertEqual((0, ""), (code, stderr))
+                # No text: the line sets the agent working no more than a tool's result does.
+                self.assertIn("| 1 | orchestrator | 0:00:10 |",
+                              output.read_text(encoding="utf-8"))
+
     def test_a_line_that_is_no_object_is_skipped_as_a_line_with_no_timestamp(self) -> None:
         self.transcript.parent.mkdir(parents=True)
         lines = [json.dumps(prompt("09:00:00", "run the cycle")), "[1, 2]", "5", '"text"', "null",

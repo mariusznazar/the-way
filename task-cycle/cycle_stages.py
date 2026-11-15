@@ -551,7 +551,9 @@ def is_text(entry: dict) -> bool:
     content = (entry.get("message") or {}).get("content")
     if isinstance(content, str):
         return True
-    return bool(content) and isinstance(content[0], dict) and content[0].get("type") == "text"
+    # A content that is neither a text nor a list holds no text.
+    return (isinstance(content, list) and bool(content) and isinstance(content[0], dict)
+            and content[0].get("type") == "text")
 
 
 def content_blocks(entry: dict) -> list[dict]:
