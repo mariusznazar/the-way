@@ -833,7 +833,9 @@ class Cost(AuditCountCase):
                 "id": ident, "model": "model-a", "stop_reason": "end_turn",
                 "content": [{"type": "text"}],
                 "usage": {"input_tokens": input_, "cache_creation_input_tokens": 0,
-                          "cache_read_input_tokens": 0, "output_tokens": output}})
+                          "cache_read_input_tokens": 0, "output_tokens": output,
+                          "cache_creation": {"ephemeral_5m_input_tokens": 0,
+                                             "ephemeral_1h_input_tokens": 0}}})
 
         project = self.home / "claude" / "projects" / "p"
         agents = project / "sess" / "subagents"

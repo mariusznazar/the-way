@@ -17,6 +17,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import cycle_measures  # noqa: E402
 import cycle_stages  # noqa: E402
 
 DAY = "2026-10-06T"
@@ -267,11 +268,16 @@ def result(clock: str) -> dict:
 
 
 def answer(clock: str, ident: str, model: str, uncached: int, written: int, read: int,
-           output: int, stop: str | None) -> dict:
+           output: int, stop: str | None, five: int | None = None) -> dict:
+    """A response of a Claude Code transcript. Its cache writes are in the 5-minute lifetime
+    unless `five` says otherwise; the rest of them are in the 1-hour lifetime."""
+    five = written if five is None else five
     return {"type": "assistant", "timestamp": at(clock), "message": {
         "id": ident, "model": model, "stop_reason": stop, "content": [{"type": "text"}],
         "usage": {"input_tokens": uncached, "cache_creation_input_tokens": written,
-                  "cache_read_input_tokens": read, "output_tokens": output}}}
+                  "cache_read_input_tokens": read, "output_tokens": output,
+                  "cache_creation": {"ephemeral_5m_input_tokens": five,
+                                     "ephemeral_1h_input_tokens": written - five}}}}
 
 
 class ClaudeCodeTest(unittest.TestCase):
@@ -753,10 +759,11 @@ class ClaudeFilesNamedTest(unittest.TestCase):
              str(Path(self.folder.name) / "codex"), "--output", str(output)]))
         section = output.read_text(encoding="utf-8").split("\n## Stages: start", 1)[1]
         [line] = [line for line in section.splitlines() if "| e3 |" in line]
-        # Nine cells: no crafted bar split one, and only the well-formed names stand in the last.
-        self.assertEqual(10, line.count("|"), line)
+        # Eleven cells: no crafted bar split one, only the well-formed names stand in *Files named*,
+        # and the two cache-write cells follow it.
+        self.assertEqual(12, line.count("|"), line)
         self.assertTrue(line.endswith(" | reports/" + "b" * 117 + ".md, reports/fine-name_1.md, "
-                                      "reports/win.md |"), line)
+                                      "reports/win.md | 0 | 0 |"), line)
 
     def test_a_name_ending_its_sentence_is_read_without_the_mark_that_ends_it(self) -> None:
         for text in ("Fix the findings in reports/review_slice4_findings.md.",
@@ -1022,6 +1029,41 @@ class ClaudeFieldsTest(unittest.TestCase):
                         f"no field {field}" if kind == "no field"
                         else f"field {field} is not a whole number"), stderr)
 
+    def test_a_response_without_the_lifetimes_of_its_cache_writes_ends_with_exit_code_2(
+            self) -> None:
+        # The fields the route adds (WAY-344): `cache_creation` and the two lifetimes in it.
+        self.assert_missing(self.with_usage(cache_creation=ABSENT), "message.usage.cache_creation")
+        self.assert_missing(self.with_usage(cache_creation=None), "message.usage.cache_creation")
+        self.assert_missing(self.with_usage(cache_creation=[1]),
+                            "message.usage.cache_creation.ephemeral_5m_input_tokens")
+        line = self.with_usage()
+        del line["message"]["usage"]["cache_creation"]["ephemeral_1h_input_tokens"]
+        self.assert_missing(line, "message.usage.cache_creation.ephemeral_1h_input_tokens")
+        self.assert_message_names_no_other_field(
+            line, "message.usage.cache_creation.ephemeral_1h_input_tokens")
+
+    def test_every_lifetime_of_the_cache_writes_is_checked_to_be_a_whole_number(self) -> None:
+        for lifetime in ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens"):
+            for label, value, kind in (
+                    ("absent", ABSENT, "no field"), ("null", None, "no field"),
+                    ("a negative number", -1, "is not a whole number"),
+                    ("a text", "5", "is not a whole number"),
+                    ("a fraction", 1.5, "is not a whole number"),
+                    ("a boolean", True, "is not a whole number")):
+                with self.subTest(lifetime=lifetime, value=label):
+                    line = self.with_usage()
+                    creation = line["message"]["usage"]["cache_creation"]
+                    if value is ABSENT:
+                        del creation[lifetime]
+                    else:
+                        creation[lifetime] = value
+                    field = f"message.usage.cache_creation.{lifetime}"
+                    self.assert_missing(line, field)
+                    _, stderr, _ = self.failing(line)
+                    self.assertTrue(stderr.strip().endswith(
+                        f"no field {field}" if kind == "no field"
+                        else f"field {field} is not a whole number"), stderr)
+
     def test_a_timestamp_that_is_no_time_ends_the_script_with_exit_code_2_naming_it(self) -> None:
         for value in ("yesterday", "", 5, None, ["2026-10-06T09:00:00Z"], True, "2026-13-45",
                       "0001-01-01T00:00:00+05:00", "9999-12-31T23:59:59-05:00"):
@@ -1063,7 +1105,9 @@ class ClaudeFieldsTest(unittest.TestCase):
         # and no id, a tool call with no id or name, a result with no tool_use_id, a text that is
         # no string, and a user line with no isMeta.
         usage = {"input_tokens": 10, "cache_creation_input_tokens": 0,
-                 "cache_read_input_tokens": 100, "output_tokens": 2}
+                 "cache_read_input_tokens": 100, "output_tokens": 2,
+                 "cache_creation": {"ephemeral_5m_input_tokens": 0,
+                                    "ephemeral_1h_input_tokens": 0}}
         write_lines(self.transcript, [
             {"type": "user"},
             {"type": "assistant", "message": None},
@@ -1137,7 +1181,9 @@ class ClaudeFieldsTest(unittest.TestCase):
 
     def test_a_crafted_value_neither_crashes_the_script_nor_breaks_the_report(self) -> None:
         usage = {"input_tokens": 1, "cache_creation_input_tokens": 0,
-                 "cache_read_input_tokens": 10, "output_tokens": 1}
+                 "cache_read_input_tokens": 10, "output_tokens": 1,
+                 "cache_creation": {"ephemeral_5m_input_tokens": 0,
+                                    "ephemeral_1h_input_tokens": 0}}
         write_lines(self.transcript, [
             prompt("09:00:00", "run the cycle"),
             # A list for an identifier or a model, a naive time, a lone surrogate in a model.
@@ -1157,6 +1203,193 @@ class ClaudeFieldsTest(unittest.TestCase):
         text = output.read_text(encoding="utf-8")
         self.assertIn("1 response(s) name no model", stderr)
         self.assertIn("| opus?/x | 12 |", text)
+
+
+def section_rows(text: str) -> list[list[str]]:
+    """The cells of each row of the detailed section's table, its header row included, as the
+    report writes them."""
+    section = text.split("\n## Stages: start", 1)[1]
+    return [[cell.strip() for cell in line.strip().strip("|").split("|")]
+            for line in section.splitlines() if line.startswith("| ")]
+
+
+CACHE_WRITE_HEADER = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
+                      "Output", "Files named", "Cache write (5 minutes)", "Cache write (1 hour)"]
+
+
+class CacheWriteColumnsTest(unittest.TestCase):
+    """The two columns of the cache writes after *Files named*: each lifetime of each model of a
+    stage. The figures are worked out by hand from the transcript written here."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        project = self.home / "projects" / "C--repo"
+        self.transcript = write_lines(project / "cache.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            # 300 written: 200 in the 5-minute lifetime and 100 in the 1-hour one.
+            answer("09:00:10", "o1", "opus", 1, 300, 0, 1, "end_turn", five=200),
+        ])
+        agents = project / "cache" / "subagents"
+        write_lines(agents / "agent-b1.jsonl", [
+            prompt("09:01:00", "build"),
+            # sonnet: 80 written, 30 in the 5-minute and 50 in the 1-hour lifetime.
+            answer("09:02:00", "b1", "sonnet", 2, 80, 900, 4, "tool_use", five=30),
+            # sonnet again: 20 written, all in the 1-hour lifetime.
+            answer("09:03:00", "b2", "sonnet", 3, 20, 100, 5, "tool_use", five=0),
+            # haiku: nothing written.
+            answer("09:04:00", "b3", "haiku", 1, 0, 0, 1, "end_turn"),
+        ])
+        (agents / "agent-b1.meta.json").write_text(json.dumps(
+            {"agentType": "general-purpose", "description": "Build"}), "utf-8")
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def run_report(self) -> tuple[int, str, str]:
+        output = self.root / "out" / "cache.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main(["cache", "--claude-home", str(self.home), "--codex-home",
+                                      str(self.root / "codex"), "--output", str(output)])
+        text = output.read_text(encoding="utf-8") if output.exists() else ""
+        return code, stderr.getvalue(), text
+
+    def report(self) -> str:
+        code, stderr, text = self.run_report()
+        self.assertEqual(0, code, stderr)
+        return text
+
+    def test_the_detailed_table_ends_with_the_two_columns_of_the_cache_writes(self) -> None:
+        self.assertEqual(CACHE_WRITE_HEADER, section_rows(self.report())[0])
+
+    def test_each_model_of_a_stage_holds_its_two_lifetimes_apart(self) -> None:
+        rows = section_rows(self.report())
+        self.assertEqual(CACHE_WRITE_HEADER, rows[0])
+        build = [row for row in rows if row[1] == "Build (general-purpose)"]
+        sonnet = [row for row in build if row[4] == "sonnet"]
+        haiku = [row for row in build if row[4] == "haiku"]
+        # Input is the input, the writes and the reads together: (2 + 80 + 900) + (3 + 20 + 100).
+        self.assertEqual([["sonnet", "1,105", "30", "70"]],
+                         [[row[4], row[5], row[9], row[10]] for row in sonnet])
+        self.assertEqual([["haiku", "0", "0"]], [[row[4], row[9], row[10]] for row in haiku])
+
+    def test_the_orchestrators_row_holds_its_own_lifetimes(self) -> None:
+        rows = section_rows(self.report())
+        self.assertEqual(CACHE_WRITE_HEADER, rows[0])
+        opus = [row for row in rows if row[4] == "opus"]
+        self.assertEqual([["opus", "301", "200", "100"]],
+                         [[row[4], row[5], row[9], row[10]] for row in opus])
+
+    def test_lifetimes_that_do_not_add_up_are_warned_and_written_as_read(self) -> None:
+        line = answer("09:00:10", "o1", "opus", 1, 300, 0, 1, "end_turn", five=200)
+        # The lifetimes give 200 and 90, not the 300 the response wrote: 10 are unaccounted for.
+        line["message"]["usage"]["cache_creation"]["ephemeral_1h_input_tokens"] = 90
+        write_lines(self.transcript, [prompt("09:00:00", "run the cycle"), line])
+        code, stderr, text = self.run_report()
+        self.assertEqual(0, code, stderr)
+        warning = (f"Warning: Claude Code session `cache`, the orchestrator: 1 response(s) whose "
+                   f"cache writes by lifetime do not add up to cache_creation_input_tokens "
+                   f"in {self.transcript.resolve()}")
+        self.assertIn(warning, stderr)
+        opus = [row for row in section_rows(text) if row[4] == "opus"]
+        self.assertEqual([["opus", "301", "200", "90"]],
+                         [[row[4], row[5], row[9], row[10]] for row in opus])
+
+
+class CodexCacheWriteColumnsTest(unittest.TestCase):
+    """A Codex record gives no cache write: both columns of a Codex row read 0, with no warning."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.home = Path(self.folder.name) / "codex"
+        rollout(self.home, "orchk", [
+            meta("orchk", "10:00:00"),
+            started("10:00:00", "o1"),
+            context("10:00:00", "o1", "model-o"),
+            tokens("10:00:30", "orchk", "o1", 100, 40, 10),
+            complete("10:01:00", "o1"),
+        ])
+        rollout(self.home, "subk", [
+            meta("subk", "10:00:10", "orchk", "/root/work"),
+            started("10:00:10", "w1"),
+            context("10:00:10", "w1", "model-w"),
+            tokens("10:00:20", "subk", "w1", 500, 200, 20),
+            complete("10:00:40", "w1"),
+        ])
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def test_both_cache_write_columns_of_every_codex_row_read_zero(self) -> None:
+        output = Path(self.folder.name) / "out" / "orchk.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main(["orchk", "--codex-home", str(self.home), "--claude-home",
+                                      str(Path(self.folder.name) / "claude"),
+                                      "--output", str(output)])
+        self.assertEqual(0, code, stderr.getvalue())
+        text = output.read_text(encoding="utf-8")
+        self.assertEqual("", stderr.getvalue())
+        self.assertIn("Warnings: none.", text)
+        rows = section_rows(text)[1:]
+        self.assertEqual({"/root/work", "orchestrator"}, {row[1] for row in rows})
+        for row in rows:
+            with self.subTest(stage=row[1]):
+                self.assertEqual(["0", "0"], row[9:11])
+
+
+class CacheWritesAcrossScriptsTest(unittest.TestCase):
+    """The same Claude Code transcript, given to `cycle_stages.py` and to `cycle_measures.py`,
+    gives the same tokens written at each lifetime in the totals of both."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        project = self.home / "projects" / "C--repo"
+        write_lines(project / "cross.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            # One response written over two lines that share its id: each counts once.
+            answer("09:00:10", "x1", "opus", 1, 100, 0, 1, "end_turn", five=60),
+            answer("09:00:11", "x1", "opus", 1, 100, 0, 1, "end_turn", five=60),
+            answer("09:00:30", "x2", "opus", 1, 200, 0, 1, "end_turn", five=150),
+        ])
+        agents = project / "cross" / "subagents"
+        write_lines(agents / "agent-c1.jsonl", [
+            prompt("09:01:00", "build"),
+            answer("09:02:00", "c1", "sonnet", 2, 80, 900, 4, "tool_use", five=0),
+            answer("09:03:00", "c2", "haiku", 1, 40, 0, 1, "end_turn", five=40),
+        ])
+        (agents / "agent-c1.meta.json").write_text(json.dumps(
+            {"agentType": "general-purpose", "description": "Build"}), "utf-8")
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def test_both_scripts_total_the_same_tokens_written_at_each_lifetime(self) -> None:
+        codex = str(self.root / "codex")
+        stages = self.root / "out" / "stages.md"
+        measures = self.root / "out" / "measures.md"
+        self.assertEqual(0, cycle_stages.main(["cross", "--claude-home", str(self.home),
+                                               "--codex-home", codex, "--output", str(stages)]))
+        self.assertEqual(0, cycle_measures.main(["cross", "--claude-home", str(self.home),
+                                                 "--codex-home", codex,
+                                                 "--output", str(measures)]))
+        # Worked out by hand: 5 minutes 60 + 150 + 0 + 40, 1 hour 40 + 50 + 80 + 0.
+        self.assertEqual(CACHE_WRITE_HEADER, section_rows(stages.read_text(encoding="utf-8"))[0])
+        self.assertEqual(250, self.total_of_stages(stages, 9))
+        self.assertEqual(170, self.total_of_stages(stages, 10))
+        figures = {line.split(":")[0]: line.split(":")[1].strip()
+                   for line in measures.read_text(encoding="utf-8").splitlines()
+                   if line.startswith("- Cache written, ")}
+        self.assertEqual({"- Cache written, 5 minutes": "250",
+                          "- Cache written, 1 hour": "170"}, figures)
+
+    def total_of_stages(self, path: Path, index: int) -> int:
+        rows = section_rows(path.read_text(encoding="utf-8"))[1:]
+        return sum(int(row[index].replace(",", "")) for row in rows)
 
 
 class CommandTest(unittest.TestCase):

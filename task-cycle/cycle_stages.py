@@ -30,9 +30,12 @@ in, the orchestrator's to the subagent turn then running or to the orchestrator'
 several subagent turns run at once, the orchestrator's tokens go to a row of their own naming them,
 rather than being split by a guess.
 
-Tokens are counted as each tool reports them per model response: input with the part read from a
-cache, and output with reasoning. Claude Code writes one response over several lines that repeat
-its usage; each response counts once.
+Tokens are counted as each tool reports them per model response: input with the cache writes and
+the part read from a cache, and output with reasoning. The cache writes of each lifetime, five
+minutes and one hour, are written apart in the detailed section, as the columns *Cache write (5
+minutes)* and *Cache write (1 hour)*; they are parts of input, and a Codex record gives none, so its
+columns read 0. Claude Code writes one response over several lines that repeat its usage; each
+response counts once.
 
 A wait for a tool is the time from a tool call to its result in the transcript: from the entry that
 starts the call to the entry that carries its result — in Claude Code, the `tool_use` block of an
@@ -73,7 +76,8 @@ orchestrator's transcripts holds none.
 
 The report is Markdown, written to PATH or printed. It lists, and prints on stderr as `Warning:`
 lines, what suggests that a transcript was not read as its tool writes it — a session or a
-subagent with no turn or no token usage, a response naming no model, a Codex subagent turn with no
+subagent with no turn or no token usage, a response naming no model, a response whose cache writes
+by lifetime do not add up to its `cache_creation_input_tokens`, a Codex subagent turn with no
 `task_complete`, a Claude Code subagent with no `.meta.json`, a call with no result or of an
 unrecognised type — since a line the reader no longer recognises is skipped and its tokens and
 waits go uncounted.
@@ -82,10 +86,12 @@ A Claude Code transcript is untrusted input, and each field the reading needs ha
 every `user` or `assistant` line that has a `timestamp` it needs the `timestamp`, as a time, and
 `message` and `message.content`; of every `assistant` line whose model is not `<synthetic>`, also
 `message.usage` with `input_tokens`, `cache_creation_input_tokens`, `cache_read_input_tokens` and
-`output_tokens`, each a non-negative whole number. A `null` is a missing field. A field that is
-missing, or a count that is no whole number, ends the run with a message that names the transcript,
-the line and the field. Read with a fallback, and no error where absent: a line with no `timestamp`,
-which is skipped before its type is looked at, a line that is no JSON object, `type`, `isMeta`,
+`output_tokens`, and `cache_creation` with `ephemeral_5m_input_tokens` and
+`ephemeral_1h_input_tokens`, each a non-negative whole number. A `null` is a missing field. A field
+that is missing, or a count that is no whole number, ends the run with a message that names the
+transcript, the line and the field. Read with a fallback, and no error where absent: a line with no
+`timestamp`, which is skipped before its type is looked at, a line that is no JSON object, `type`,
+`isMeta`,
 `message.model` (absent, `null` or no text it counts under the model `unknown`, with the warning),
 `message.id` (the line's `uuid` stands for it), `message.stop_reason`, and of a content block its
 `id`, `name`, `tool_use_id` and `text`. The reading of a Codex rollout and of `agent-<id>.meta.json`
@@ -126,11 +132,16 @@ class Usage:
     input: int = 0
     cached: int = 0
     output: int = 0
+    # The cache writes of each lifetime, parts of `input`; a Codex record gives none, so 0.
+    write_5m: int = 0
+    write_1h: int = 0
 
     def add(self, other: Usage) -> None:
         self.input += other.input
         self.cached += other.cached
         self.output += other.output
+        self.write_5m += other.write_5m
+        self.write_1h += other.write_1h
 
     @property
     def total(self) -> int:
@@ -544,6 +555,8 @@ def text_of(value: object) -> str:
 
 COUNT_FIELDS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
                 "output_tokens")
+# The cache writes of each lifetime, in `message.usage.cache_creation`.
+LIFETIME_FIELDS = ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")
 
 
 def is_text(entry: dict) -> bool:
@@ -617,6 +630,10 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             usage = required(message, "usage", "message.usage", where)
             counts = {key: required_count(usage, key, f"message.usage.{key}", where)
                       for key in COUNT_FIELDS}
+            creation = required(usage, "cache_creation", "message.usage.cache_creation", where)
+            for lifetime in LIFETIME_FIELDS:
+                counts[lifetime] = required_count(creation, lifetime,
+                                                  f"message.usage.cache_creation.{lifetime}", where)
             activity.append(at)
             # Claude Code writes one response over several lines, which share its id.
             ident = text_of(message.get("id")) or text_of(entry.get("uuid")) or None
@@ -651,12 +668,20 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             agent.turns.append((start, inside[-1]))
             agent.turn_files.append(named)
     add_named_note(agent, over)
+    split = sum(1 for _, usage, _ in responses.values()
+                if usage["ephemeral_5m_input_tokens"] + usage["ephemeral_1h_input_tokens"]
+                != usage["cache_creation_input_tokens"])
+    if split:
+        agent.notes.append(f"{split} response(s) whose cache writes by lifetime do not add up to "
+                           f"cache_creation_input_tokens in {path}")
     for at, usage, model in responses.values():
         agent.records.append(Record(at, Usage(
             usage["input_tokens"] + usage["cache_creation_input_tokens"]
             + usage["cache_read_input_tokens"],
             usage["cache_read_input_tokens"],
             usage["output_tokens"],
+            write_5m=usage["ephemeral_5m_input_tokens"],
+            write_1h=usage["ephemeral_1h_input_tokens"],
         ), model))
     agent.records.sort(key=lambda record: record.at)
     return agent
@@ -951,8 +976,8 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "A stage is one turn of a subagent the orchestrator started, from its prompt to its "
         "answer, or a stretch of the orchestrator's own work between such turns. Durations are "
         "h:mm:ss; an orchestrator stretch counts only the time inside the orchestrator's turns, "
-        "never the wait for the human. Tokens are input, which includes the part read from a "
-        "cache, plus output, which includes reasoning.",
+        "never the wait for the human. Tokens are input, which includes the cache writes and the "
+        "part read from a cache, plus output, which includes reasoning.",
         "",
         "Waiting for tools is the time of the stage's tool calls, not of its subagents' calls; "
         "see the section on the stages below.",
@@ -1015,17 +1040,19 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "",
         "Times are UTC. Each stage's waiting for tools is the time of its tool calls, from each "
         "call to its result; `unknown` marks a stage with a call whose result was not read or "
-        "whose type is not recognised. Input includes the part read from a cache. The model `—` "
-        "marks a stage with no token usage, and `unknown` with zero counts one whose transcript "
-        "holds no token usage at all, so that its usage was not read. *Files named* "
+        "whose type is not recognised. Input includes the cache writes and the part read from a "
+        "cache. *Cache write (5 minutes)* and *Cache write (1 hour)* give the cache writes of each "
+        "lifetime, which are parts of *Input*; a Codex record gives none, so its rows show 0. The "
+        "model `—` marks a stage with no token usage, and `unknown` with zero counts one whose "
+        "transcript holds no token usage at all, so that its usage was not read. *Files named* "
         "lists the files of the cycle's `reports/` that the message starting a subagent turn "
         "names — its prompt, or the message that resumes it — each once; it is empty where that "
         "message names none and for the orchestrator's rows, and `unknown` where the message "
         "cannot be read.",
         "",
         "| # | Stage | Start | Waiting for tools | Model | Input | Cached input | Output "
-        "| Files named |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Files named | Cache write (5 minutes) | Cache write (1 hour) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
         models = (sorted(row.by_model.items(), key=lambda item: -item[1].total)
@@ -1034,7 +1061,8 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         for model, usage in models:
             lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
                          f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
-                         f"| {number(usage.cached)} | {number(usage.output)} | {named} |")
+                         f"| {number(usage.cached)} | {number(usage.output)} | {named} "
+                         f"| {number(usage.write_5m)} | {number(usage.write_1h)} |")
     return "\n".join(lines) + "\n"
 
 
