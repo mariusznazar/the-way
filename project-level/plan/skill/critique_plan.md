@@ -14,8 +14,8 @@ verify and settle its observations as this step requires.
   something checkable in the running product, whether each technical element enters with the first
   task that uses it, whether each question stands where the definition puts it or the change log
   gives its move, and whether a quoted answer settles its question. Never ask it what
-  `plan_check.py` decides.
+  `project-level/plan_check.py` decides.
 - Verify each observation, give each a verdict, and correct the plan; a correction that changes a
   human's answer, or which task writes an entry, goes back to the human. If an independent critic cannot run, say so and wait;
   the author's own reading does not stand for it.
-- Run `plan_check.py` again; it must report nothing.
+- Run `project-level/plan_check.py` again; it must report nothing.

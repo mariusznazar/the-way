@@ -13,13 +13,15 @@ The script lists, with the file and the line, each text of these kinds, found by
 holds no list of words that are private, and it neither judges nor rewrites anything:
 
 - an absolute path on Windows: a single letter, a colon and a slash or a backslash, as `C:\\dir`
-  and `C:/dir`, which also covers the home directory `C:\\Users\\<name>`; a letter that ends a word
+  and `C:/dir`, which also covers the home directory `C:\\Users\\<name>`, and in the form of an
+  address with a slash in front of the letter, as `/C:/dir`; a letter that ends a word
   (`https:` in a URL, `Note:` in prose) starts none, neither does a letter after a slash in a
   URL (`https://host/C:/x`) nor a letter after a backslash (the `d:` of `\\d\\d:\\d\\d` in a regular
   expression), while `file:///C:/dir` is a path on a disk and is listed; a hit whose whole text
-  after the letter and the colon is the escape sequences `\\n`, `\\t` and `\\r` (`s:\\n`, the end of
-  a message in a string of code) is no path, though a real directory of that name stands unlisted
-  with it, while `C:\\new\\dir` and a text stuck to the sequence (`s:\\nWynik`) are listed;
+  after the letter and the colon, with a slash in front or not, is the escape sequences `\\n`, `\\t`
+  and `\\r` (`s:\\n`, the end of a message in a string of code) is no path, though a real directory
+  of that name stands unlisted with it, while `C:\\new\\dir` and a text stuck to the sequence
+  (`s:\\nWynik`) are listed;
 - the POSIX form of a drive that some shells and Windows layers show: `/c/dir`, `/mnt/c/dir` and
   `/cygdrive/c/dir`;
 - the home directory of a user on Linux and macOS: `/home/<name>` and `/Users/<name>`, and
@@ -66,8 +68,11 @@ from pathlib import Path
 
 # Where an absolute path may start: not inside a word, a URL or a longer path, and not after a
 # backslash, where the letter ends an escape sequence such as `\d` of a regular expression.
-# A path in a `file://` URL is a path on a disk, so it may start right after `file://`.
-WINDOWS_DRIVE = r"(?:(?<![\w/\\])|(?<=file:///))[A-Za-z]:[\\/]"
+# A path in a `file://` URL is a path on a disk, so it may start right after `file://`. A drive
+# in the form of an address takes the slash in front of it, `/C:/dir`, when no word, dot, tilde,
+# colon, dash, slash or backslash stands before that slash: a URL's `host/C:/x` is no path.
+WINDOWS_DRIVE = (r"(?:(?:(?<![\w/\\])|(?<=file:///))[A-Za-z]:[\\/]"
+                 r"|(?<![\w.~/\\:-])/[A-Za-z]:[\\/])")
 POSIX_DRIVE = r"(?:(?<![\w.~/\\:-])|(?<=file://))(?:/mnt|/cygdrive)?/[A-Za-z]/(?=[\w.~-])"
 HOME_DIRECTORY = r"(?:(?<![\w.~/\\-])|(?<=file://))(?:/home|[\\/]Users)[\\/][\w.-]+"
 # What a path runs through after its start, for showing it: up to a space, a quote or a bracket.
@@ -81,8 +86,9 @@ POSIX_CLASS = (r":(?:alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space
 # and no line end before the closing `]]`.
 NOTE_LINK = (r"(?<![\w.])\[\[(?!" + POSIX_CLASS + r")(?=[^\s\]])(?=[^\]\n]*[^\W_])[^\]\n]+\]\]")
 # A drive letter, a colon and nothing but the escape sequences of a newline, a tab or a carriage
-# return: the end of a message in a string of code, not a directory.
-ESCAPE_SEQUENCES_ONLY = re.compile(r"[A-Za-z]:(?:\\[ntr])+")
+# return, with the slash of the address form in front or not: the end of a message in a string of
+# code, not a directory.
+ESCAPE_SEQUENCES_ONLY = re.compile(r"/?[A-Za-z]:(?:\\[ntr])+")
 
 PATH_PATTERN = (r"(?P<path>(?:" + "|".join((WINDOWS_DRIVE, POSIX_DRIVE, HOME_DIRECTORY)) + r")"
                 + PATH_TAIL + r")")

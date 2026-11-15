@@ -1,10 +1,11 @@
 """Tests of the invariants `instruction-file-imports` and `root-claude-md-import`.
 
 A session that opens a repository of the-way reads its repository instruction files: every
-`AGENTS.md`, `CLAUDE.md` and `CLAUDE.local.md` git tracks, in whatever directory, and the Markdown
-files the root `AGENTS.md` or `CLAUDE.md` names by its path. None of them may hold an `@` a tool
-would take for an import of another file, save the one line that makes the root `CLAUDE.md` load
-the root `AGENTS.md`; and where git tracks a root `CLAUDE.md`, its text begins with that line.
+`AGENTS.md`, `CLAUDE.md` and `CLAUDE.local.md` git tracks, in whatever directory, and the files
+whose name ends in `.md` or `.mdc` that the root `AGENTS.md` or `CLAUDE.md` names by its path. None
+of them may hold an `@` a tool would take for an import of another file, save the one line that
+makes the root `CLAUDE.md` load the root `AGENTS.md`; and where git tracks a root `CLAUDE.md`, its
+text begins with that line.
 
 Every value the tests expect is written out below, taken from the sentences of the two invariants.
 The file imports nothing from `instruction-files/` and nothing from
@@ -32,7 +33,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INSTRUCTION_NAMES = ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md")
 # The root files whose text names further instruction files.
 NAMING_FILES = ("AGENTS.md", "CLAUDE.md")
-MARKDOWN_ENDINGS = (".md", ".markdown")
+POINTED_ENDINGS = (".md", ".mdc")
 # The characters, besides the start of a line and whitespace, that may stand right before a
 # counted `@`; a counted `@` is followed by a character other than whitespace.
 BEFORE_AT = ("(", "[", "{", '"', "'", "“", "‘", "„")
@@ -81,8 +82,8 @@ def names(text, path):
 
 def population(root):
     """The repository instruction files of the repository at `root`: every tracked `AGENTS.md`,
-    `CLAUDE.md` and `CLAUDE.local.md` in any directory, and every tracked Markdown file the root
-    `AGENTS.md` or `CLAUDE.md` names by its path."""
+    `CLAUDE.md` and `CLAUDE.local.md` in any directory, and every tracked file whose name ends in
+    `.md` or `.mdc` that the root `AGENTS.md` or `CLAUDE.md` names by its path."""
     files = tracked(root)
     found = {path for path in files if path.split("/")[-1] in INSTRUCTION_NAMES}
     texts = []
@@ -93,7 +94,7 @@ def population(root):
             except OSError:
                 pass
     for path in files:
-        if path.endswith(MARKDOWN_ENDINGS) and any(names(text, path) for text in texts):
+        if path.endswith(POINTED_ENDINGS) and any(names(text, path) for text in texts):
             found.add(path)
     return sorted(found)
 
@@ -252,7 +253,7 @@ ROOT_AGENTS = "\n".join([
     "",
 ])
 
-ROOT_CLAUDE_TEXT = "@AGENTS.md\n@AGENTS.md\nAlso docs\\other.markdown, docs/unnamed.txt.\n"
+ROOT_CLAUDE_TEXT = "@AGENTS.md\n@AGENTS.md\nAlso docs\\other.mdc, docs/unnamed.txt.\n"
 
 IMPORT_FIXTURE = {
     "AGENTS.md": ROOT_AGENTS,
@@ -262,7 +263,7 @@ IMPORT_FIXTURE = {
     "sub/CLAUDE.local.md": "Text.\n[@sublocal]\n",
     "docs/rules.md": "Rule one.\n@named\n",
     "docs/linked.md": "(@linked)\nThe last line ends in @",
-    "docs/other.markdown": "Text @other\n",
+    "docs/other.mdc": "Text @other\n",
     "docs/accent.md": "@accent\n",
     "docs/l1.md": "@l\n",
     "docs/l2.md": "@l\n",
@@ -287,7 +288,7 @@ IMPORT_UNTRACKED = {
 
 IMPORT_POPULATION = [
     ".claude/CLAUDE.md", "AGENTS.md", "CLAUDE.local.md", "CLAUDE.md", "docs/accent.md",
-    "docs/linked.md", "docs/other.markdown", "docs/rules.md", "pkg/AGENTS.md",
+    "docs/linked.md", "docs/other.mdc", "docs/rules.md", "pkg/AGENTS.md",
     "sub/CLAUDE.local.md", "sub/CLAUDE.md",
 ]
 
@@ -296,7 +297,7 @@ IMPORT_EXPECTED = Counter({
     ("AGENTS.md", 16): 1, ("AGENTS.md", 17): 1, ("AGENTS.md", 20): 1, ("AGENTS.md", 28): 1,
     ("AGENTS.md", 29): 1, ("CLAUDE.md", 2): 1, ("CLAUDE.local.md", 1): 1,
     (".claude/CLAUDE.md", 2): 1, ("sub/CLAUDE.local.md", 2): 1, ("docs/rules.md", 2): 1,
-    ("docs/linked.md", 1): 1, ("docs/other.markdown", 1): 1, ("docs/accent.md", 1): 1,
+    ("docs/linked.md", 1): 1, ("docs/other.mdc", 1): 1, ("docs/accent.md", 1): 1,
     ("sub/CLAUDE.md", 1): 1, ("pkg/AGENTS.md", 2): 1,
 })
 

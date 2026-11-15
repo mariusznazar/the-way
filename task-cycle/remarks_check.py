@@ -17,11 +17,12 @@ its section in either of two forms, and may give both:
   number such as `12.`, with an optional trailing colon, emphasis or parenthesis; the section runs
   to the next heading of the same or a higher level;
 - a bold label `**Searches not found or unclear**`, its colon inside or outside the bold or absent,
-  at the start of a paragraph, of a list item, or after a line opening with another bold label;
-  the text after the label on its line belongs to the section. A label that is a list item ends
-  at the next line indented no deeper than its marker. A label that is no list item ends at the
-  next heading, the next rule, or the next line that is no list item and starts with bold text,
-  so that `**Choices:** ...` ends it.
+  at the start of a paragraph, of a list item, on the line right under a list item (the layout of
+  the plan's report), or after a line opening with another bold label; a label on the line under
+  a line of a paragraph opens no section. The text after the label on its line belongs to the
+  section. A label that is a list item ends at the next line indented no deeper than its marker.
+  A label that is no list item ends at the next heading, the next rule, or the next line that is
+  no list item and starts with bold text, so that `**Choices:** ...` ends it.
 
 A mention of the name inside a sentence and a section inside fenced code are not read, and a
 report with no section gives no item. The items of a section are its list items, each with the
@@ -189,7 +190,7 @@ def split_items(body: list[tuple[str, bool]]) -> list[str]:
 
 def opens_paragraph(lines: list[str], fenced: list[bool], index: int) -> bool:
     """Whether line `index` starts a paragraph: it is the first line, or follows a blank line, a
-    heading, a thematic break or a line opening with bold text."""
+    heading, a thematic break, a list item or a line opening with bold text."""
     if index == 0:
         return True
     if fenced[index - 1]:
@@ -197,7 +198,8 @@ def opens_paragraph(lines: list[str], fenced: list[bool], index: int) -> bool:
         return True
     before = lines[index - 1]
     return (not before.strip() or HEADING.fullmatch(before) is not None
-            or RULE.fullmatch(before) is not None or BOLD_START.match(before) is not None)
+            or RULE.fullmatch(before) is not None or MARKER.fullmatch(before) is not None
+            or BOLD_START.match(before) is not None)
 
 
 def label_end(lines: list[str], fenced: list[bool], start: int, indent: int, is_list: bool) -> int:

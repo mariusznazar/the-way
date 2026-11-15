@@ -30,9 +30,12 @@ in, the orchestrator's to the subagent turn then running or to the orchestrator'
 several subagent turns run at once, the orchestrator's tokens go to a row of their own naming them,
 rather than being split by a guess.
 
-Tokens are counted as each tool reports them per model response: input with the part read from a
-cache, and output with reasoning. Claude Code writes one response over several lines that repeat
-its usage; each response counts once.
+Tokens are counted as each tool reports them per model response: input with the cache writes and
+the part read from a cache, and output with reasoning. The cache writes of each lifetime, five
+minutes and one hour, are written apart in the detailed section, as the columns *Cache write (5
+minutes)* and *Cache write (1 hour)*; they are parts of input, and a Codex record gives none, so its
+columns read 0. Claude Code writes one response over several lines that repeat its usage; each
+response counts once.
 
 A wait for a tool is the time from a tool call to its result in the transcript: from the entry that
 starts the call to the entry that carries its result — in Claude Code, the `tool_use` block of an
@@ -73,11 +76,32 @@ orchestrator's transcripts holds none.
 
 The report is Markdown, written to PATH or printed. It lists, and prints on stderr as `Warning:`
 lines, what suggests that a transcript was not read as its tool writes it — a session or a
-subagent with no turn or no token usage, a response naming no model, a Codex subagent turn with no
+subagent with no turn or no token usage, a response naming no model, a response whose cache writes
+by lifetime do not add up to its `cache_creation_input_tokens`, a Codex subagent turn with no
 `task_complete`, a Claude Code subagent with no `.meta.json`, a call with no result or of an
 unrecognised type — since a line the reader no longer recognises is skipped and its tokens and
-waits go uncounted. Exit code: 0 on success, warnings included; 1 with `Error: <message>` on stderr
-otherwise.
+waits go uncounted.
+
+A Claude Code transcript is untrusted input, and each field the reading needs has to be there. Of
+every `user` or `assistant` line that has a `timestamp` it needs the `timestamp`, as a time, and
+`message` and `message.content`; of every `assistant` line whose model is not `<synthetic>`, also
+`message.usage` with `input_tokens`, `cache_creation_input_tokens`, `cache_read_input_tokens` and
+`output_tokens`, and `cache_creation` with `ephemeral_5m_input_tokens` and
+`ephemeral_1h_input_tokens`, each a non-negative whole number of at most 15 digits. A `null` is a
+missing field. A field that is missing, or a count that is no whole number, ends the run with a
+message that names the transcript, the line and the field. Read with a fallback, and no error where absent: a line with no
+`timestamp`, which is skipped before its type is looked at, a line that is no JSON object, `type`,
+`isMeta`,
+`message.model` (absent, `null` or no text it counts under the model `unknown`, with the warning),
+`message.id` (the line's `uuid` stands for it), `message.stop_reason`, and of a content block its
+`id`, `name`, `tool_use_id` and `text`. The reading of a Codex rollout and of `agent-<id>.meta.json`
+checks no field. The text of a transcript reaches the report only through `cell`; a count in it is a
+whole number read here.
+
+Exit code: 0 on success, warnings included; 2 with `Error: <message>` on stderr and nothing written
+for a field of a Claude Code transcript that is missing or no whole number or no time; 1 with
+`Error: <message>` on stderr for the rest, such as a session that cannot be found or read and a line
+that is not JSON.
 
 Standard library only.
 """
@@ -98,16 +122,26 @@ class CycleStagesError(Exception):
     """A session that cannot be found or read."""
 
 
+class MissingFieldError(CycleStagesError):
+    """A Claude Code transcript that lacks a field the reading needs, or holds one of the wrong
+    kind."""
+
+
 @dataclass
 class Usage:
     input: int = 0
     cached: int = 0
     output: int = 0
+    # The cache writes of each lifetime, parts of `input`; a Codex record gives none, so 0.
+    write_5m: int = 0
+    write_1h: int = 0
 
     def add(self, other: Usage) -> None:
         self.input += other.input
         self.cached += other.cached
         self.output += other.output
+        self.write_5m += other.write_5m
+        self.write_1h += other.write_1h
 
     @property
     def total(self) -> int:
@@ -225,17 +259,25 @@ def parse_time(text: str) -> datetime:
     return datetime.fromisoformat(text.replace("Z", "+00:00"))
 
 
-def read_lines(path: Path):
+def numbered_lines(path: Path):
+    """Each non-blank line of a JSON Lines file as its number in the file and its value. A line that
+    is not JSON, is nested too deep or holds a number of too many digits ends the reading, as does
+    a file that cannot be read or is no UTF-8."""
     try:
         with path.open(encoding="utf-8") as handle:
             for number, line in enumerate(handle, 1):
                 if line.strip():
                     try:
-                        yield json.loads(line)
-                    except json.JSONDecodeError as error:
+                        yield number, json.loads(line)
+                    except (ValueError, RecursionError, MemoryError) as error:
                         raise CycleStagesError(f"{path}:{number}: not JSON: {error}") from error
-    except OSError as error:
+    except (OSError, UnicodeDecodeError) as error:
         raise CycleStagesError(f"cannot read {path}: {error}") from error
+
+
+def read_lines(path: Path):
+    for _, entry in numbered_lines(path):
+        yield entry
 
 
 def first_line(path: Path) -> dict:
@@ -441,12 +483,15 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     return agent
 
 
-def codex_subagent_paths(home: Path, root: str, since: datetime) -> list[tuple[Path, str]]:
-    """Every rollout under `home/sessions` descending from `root`, with its parent's id."""
+def codex_subagent_paths(home: Path, root: str,
+                         since: datetime | None) -> list[tuple[Path, str]]:
+    """Every rollout under `home/sessions` descending from `root`, with its parent's id. Where
+    `since`, the time of the orchestrator's first turn, is None, no rollout is left out by its
+    time."""
     parents: dict[str, tuple[Path, str]] = {}
-    floor = since.timestamp() - 1
+    floor = None if since is None else since.timestamp() - 1
     for path in (home / "sessions").rglob("rollout-*.jsonl"):
-        if path.stat().st_mtime < floor:
+        if floor is not None and path.stat().st_mtime < floor:
             continue
         meta = codex_meta(path)
         if meta and meta.get("parent_thread_id"):
@@ -465,7 +510,7 @@ def codex_subagent_paths(home: Path, root: str, since: datetime) -> list[tuple[P
 def read_codex_session(path: Path, codex_home: Path) -> Session:
     orchestrator = read_codex_agent(path, None)
     orchestrator.name = "orchestrator"
-    since = min((start for start, _ in orchestrator.turns), default=datetime.fromtimestamp(0))
+    since = min((start for start, _ in orchestrator.turns), default=None)
     subagents = [read_codex_agent(p, parent) for p, parent in
                  codex_subagent_paths(codex_home, orchestrator.key, since)]
     return Session("Codex", orchestrator.key, path, orchestrator, subagents)
@@ -474,12 +519,61 @@ def read_codex_session(path: Path, codex_home: Path) -> Session:
 # Claude Code
 
 
+def required(holder: object, key: str, name: str, where: str) -> object:
+    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
+    `where` and the field's `name`."""
+    value = holder.get(key) if isinstance(holder, dict) else None
+    if value is None:
+        raise MissingFieldError(f"{where}: no field {name}")
+    return value
+
+
+# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
+# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
+# would end the report with a stack trace where the sums of it are written out.
+TOKEN_DIGITS = 15
+
+
+def required_count(holder: object, key: str, name: str, where: str) -> int:
+    value = required(holder, key, name, where)
+    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
+            or value >= 10 ** TOKEN_DIGITS):
+        raise MissingFieldError(f"{where}: field {name} is not a whole number")
+    return value
+
+
+def required_time(entry: dict, where: str) -> datetime:
+    """The time of a line, in UTC; a naive time is taken as UTC."""
+    value = required(entry, "timestamp", "timestamp", where)
+    try:
+        if not isinstance(value, str):
+            raise ValueError(value)
+        at = parse_time(value)
+        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+    except (ValueError, OverflowError) as error:
+        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
+
+
+def text_of(value: object) -> str:
+    """`value` where it is a text, else the empty text: what a crafted transcript puts in a field
+    of another kind is no name, no identifier and no model."""
+    return value if isinstance(value, str) else ""
+
+
+COUNT_FIELDS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
+                "output_tokens")
+# The cache writes of each lifetime, in `message.usage.cache_creation`.
+LIFETIME_FIELDS = ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")
+
+
 def is_text(entry: dict) -> bool:
     """A user line holding text rather than a tool's result."""
     content = (entry.get("message") or {}).get("content")
     if isinstance(content, str):
         return True
-    return bool(content) and isinstance(content[0], dict) and content[0].get("type") == "text"
+    # A content that is neither a text nor a list holds no text.
+    return (isinstance(content, list) and bool(content) and isinstance(content[0], dict)
+            and content[0].get("type") == "text")
 
 
 def content_blocks(entry: dict) -> list[dict]:
@@ -500,7 +594,7 @@ def message_text(entry: dict) -> str:
 
 
 def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Agent:
-    responses: dict[str, tuple[datetime, dict, str | None]] = {}
+    responses: dict[str, tuple[datetime, dict[str, int], str | None]] = {}
     # Each line that sets the agent working, with the files of `reports/` it names.
     prompts: list[tuple[datetime, list[str]]] = []
     over = 0
@@ -512,15 +606,19 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
     tail: set[str] = set()
     tail_response: object = None
     unrecognised: list[Call] = []
-    for entry in read_lines(path):
-        if "timestamp" not in entry:
+    for number, entry in numbered_lines(path):
+        if not isinstance(entry, dict) or "timestamp" not in entry:
             continue
-        at = parse_time(entry["timestamp"])
+        if entry.get("type") not in ("user", "assistant"):
+            continue
+        where = f"{path}:{number}"
+        at = required_time(entry, where)
+        required(required(entry, "message", "message", where), "content", "message.content", where)
         if entry.get("type") == "user":
             tail.clear()
             for block in content_blocks(entry):
-                if block.get("type") == "tool_result":
-                    results.setdefault(block.get("tool_use_id"), at)
+                if block.get("type") == "tool_result" and text_of(block.get("tool_use_id")):
+                    results.setdefault(block["tool_use_id"], at)
             # Text the human types, or a notice, sets the agent working; text the tool adds
             # (a loaded skill, a message from the coordinator) does so only once the agent has
             # answered, and is part of the running turn otherwise.
@@ -531,33 +629,39 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
                 answered = False
             else:
                 activity.append(at)
-        elif entry.get("type") == "assistant":
-            message = entry.get("message") or {}
+        else:
+            message = entry["message"]
             model = message.get("model")
             if model == "<synthetic>":
                 continue
+            usage = required(message, "usage", "message.usage", where)
+            counts = {key: required_count(usage, key, f"message.usage.{key}", where)
+                      for key in COUNT_FIELDS}
+            creation = required(usage, "cache_creation", "message.usage.cache_creation", where)
+            for lifetime in LIFETIME_FIELDS:
+                counts[lifetime] = required_count(creation, lifetime,
+                                                  f"message.usage.cache_creation.{lifetime}", where)
             activity.append(at)
             # Claude Code writes one response over several lines, which share its id.
-            ident = message.get("id") or entry.get("uuid")
+            ident = text_of(message.get("id")) or text_of(entry.get("uuid")) or None
             if ident != tail_response:
                 tail.clear()
                 tail_response = ident
             for block in content_blocks(entry):
-                kind = str(block.get("type") or "")
-                call_name = str(block.get("name") or "")
+                kind = text_of(block.get("type"))
+                call_name = text_of(block.get("name"))
                 if kind == "tool_use" and call_name in CLAUDE_SUBAGENT_CALLS:
                     continue
-                if kind == "tool_use" and block.get("id"):
+                if kind == "tool_use" and text_of(block.get("id")):
                     started_calls.setdefault(block["id"], (at, call_name or kind))
                     tail.add(block["id"])
                 elif kind == "tool_use" or kind.endswith("_tool_use"):
                     unrecognised.append(Call(at, None, call_name or kind, known=False))
             if message.get("stop_reason"):
                 answered = message["stop_reason"] == "end_turn"
-            usage = message.get("usage") or {}
             kept = responses.get(ident)
-            if kept is None or usage.get("output_tokens", 0) >= kept[1].get("output_tokens", 0):
-                responses[ident] = (at, usage, model)
+            if kept is None or counts["output_tokens"] >= kept[1]["output_tokens"]:
+                responses[ident] = (at, counts, text_of(model) or None)
     agent = Agent(key, name, parent)
     add_calls(agent, started_calls, results, tail)
     agent.calls.extend(unrecognised)
@@ -571,12 +675,20 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             agent.turns.append((start, inside[-1]))
             agent.turn_files.append(named)
     add_named_note(agent, over)
+    split = sum(1 for _, usage, _ in responses.values()
+                if usage["ephemeral_5m_input_tokens"] + usage["ephemeral_1h_input_tokens"]
+                != usage["cache_creation_input_tokens"])
+    if split:
+        agent.notes.append(f"{split} response(s) whose cache writes by lifetime do not add up to "
+                           f"cache_creation_input_tokens in {path}")
     for at, usage, model in responses.values():
         agent.records.append(Record(at, Usage(
-            usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
-            + usage.get("cache_read_input_tokens", 0),
-            usage.get("cache_read_input_tokens", 0),
-            usage.get("output_tokens", 0),
+            usage["input_tokens"] + usage["cache_creation_input_tokens"]
+            + usage["cache_read_input_tokens"],
+            usage["cache_read_input_tokens"],
+            usage["output_tokens"],
+            write_5m=usage["ephemeral_5m_input_tokens"],
+            write_1h=usage["ephemeral_1h_input_tokens"],
         ), model))
     agent.records.sort(key=lambda record: record.at)
     return agent
@@ -633,6 +745,8 @@ def resolve(name: str, codex_home: Path, claude_home: Path) -> Path:
 
 def read_session(path: Path, codex_home: Path) -> Session:
     entry = first_line(path)
+    if not isinstance(entry, dict):
+        raise CycleStagesError(f"{path} is neither a Codex rollout nor a Claude Code transcript")
     if entry.get("type") == "session_meta":
         meta = entry.get("payload") or {}
         if meta.get("parent_thread_id"):
@@ -822,7 +936,8 @@ def duration_text(value: timedelta | None) -> str:
 
 def one_line(text: str) -> str:
     """Transcript text on one line, so that it cannot break a list or a table."""
-    return " ".join(text.split())
+    # A lone surrogate, which JSON allows in a string, cannot be written as UTF-8.
+    return " ".join(text.split()).encode("utf-8", errors="replace").decode("utf-8")
 
 
 def cell(text: str) -> str:
@@ -868,8 +983,8 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "A stage is one turn of a subagent the orchestrator started, from its prompt to its "
         "answer, or a stretch of the orchestrator's own work between such turns. Durations are "
         "h:mm:ss; an orchestrator stretch counts only the time inside the orchestrator's turns, "
-        "never the wait for the human. Tokens are input, which includes the part read from a "
-        "cache, plus output, which includes reasoning.",
+        "never the wait for the human. Tokens are input, which includes the cache writes and the "
+        "part read from a cache, plus output, which includes reasoning.",
         "",
         "Waiting for tools is the time of the stage's tool calls, not of its subagents' calls; "
         "see the section on the stages below.",
@@ -932,17 +1047,19 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "",
         "Times are UTC. Each stage's waiting for tools is the time of its tool calls, from each "
         "call to its result; `unknown` marks a stage with a call whose result was not read or "
-        "whose type is not recognised. Input includes the part read from a cache. The model `—` "
-        "marks a stage with no token usage, and `unknown` with zero counts one whose transcript "
-        "holds no token usage at all, so that its usage was not read. *Files named* "
+        "whose type is not recognised. Input includes the cache writes and the part read from a "
+        "cache. *Cache write (5 minutes)* and *Cache write (1 hour)* give the cache writes of each "
+        "lifetime, which are parts of *Input*; a Codex record gives none, so its rows show 0. The "
+        "model `—` marks a stage with no token usage, and `unknown` with zero counts one whose "
+        "transcript holds no token usage at all, so that its usage was not read. *Files named* "
         "lists the files of the cycle's `reports/` that the message starting a subagent turn "
         "names — its prompt, or the message that resumes it — each once; it is empty where that "
         "message names none and for the orchestrator's rows, and `unknown` where the message "
         "cannot be read.",
         "",
         "| # | Stage | Start | Waiting for tools | Model | Input | Cached input | Output "
-        "| Files named |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Files named | Cache write (5 minutes) | Cache write (1 hour) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
         models = (sorted(row.by_model.items(), key=lambda item: -item[1].total)
@@ -951,7 +1068,8 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         for model, usage in models:
             lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
                          f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
-                         f"| {number(usage.cached)} | {number(usage.output)} | {named} |")
+                         f"| {number(usage.cached)} | {number(usage.output)} | {named} "
+                         f"| {number(usage.write_5m)} | {number(usage.write_1h)} |")
     return "\n".join(lines) + "\n"
 
 
@@ -991,6 +1109,9 @@ def main(argv: list[str] | None = None) -> int:
         sessions = [read_session(path, args.codex_home) for path in paths]
         warnings = find_warnings(sessions)
         text = report(sessions, build_rows(sessions), warnings)
+    except MissingFieldError as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 2
     except CycleStagesError as error:
         print(f"Error: {error}", file=sys.stderr)
         return 1

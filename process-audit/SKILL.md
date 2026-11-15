@@ -48,23 +48,27 @@ These hold at every step.
   endangered the change. Show it beside an issue and leave it to the human to set it against what
   the issue's returns number and what its fix costs. Give no issue a priority, an order or a rank
   from it, and add the levels into no score.
-- **Measures are compared inside a series only** (WAY-339). A new series of the cost begins at a new
-  price list, or at a change of the form of a stage report, of the list of classes or of the
-  instructions of the reviewer. The count splits more often than that: at a new price list, at a
-  date of the register's list of classes, and at any change of the files of the-way under
-  `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec` or of
-  `task-cycle/cycle_stages.py`, whatever the change, so that it compares less and never across a
-  change WAY-339 names. The mechanism measures (the numbers of how each cycle's agents use context
-  and the prompt cache, from the cycle's `mechanism_measures.md`) and the gate times (the time of
-  each run of the product's gate, from `gate_times.md`) have series of their own (WAY-350):
-  a new series of the mechanism measures begins only at a change of `task-cycle/cycle_measures.py`,
-  and a new series of the gate times only at a change of `task-cycle/gate_times.py` or of
-  `gate/run_tests.py`, the test runner whose output gives the time of each directory (WAY-339). The
-  reason of a new series names the file or files that changed. A change of the instructions of the
-  cycle, of the reviewer or of the author starts none of them, and neither does a new price list.
-  Set no number of one series beside a number of another, no number of the measures or the gate
-  times beside a number of the cost, and no week's count beside the week before; a version of the
-  process is judged by the cycles that ran on it.
+- **Measures are compared inside a series only** (WAY-339). The versions of the process are cut into
+  two kinds of series. A series of the cost, which holds the median cost and the answer Q3, begins
+  at a new price list or at a change of `task-cycle/cycle_stages.py`, the script that measures the
+  cost, and at no other change. A series of the count of remarks, which holds the answers Q1 and Q2,
+  begins wherever a series of the cost begins, and also at a date of *Added* or *Withdrawn* in the
+  register's list of classes, and at any change of the files of the-way under `task-cycle/change`,
+  `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and of
+  `task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its instruction,
+  whatever the change, so that it compares less and never across a change WAY-339 names. The
+  mechanism measures (the numbers of how each cycle's agents use context and the prompt cache, from
+  the cycle's `mechanism_measures.md`) and the gate times (the time of each run of the product's
+  gate, from `gate_times.md`) have series of their own (WAY-350): a new series of the mechanism
+  measures begins only at a change of `task-cycle/cycle_measures.py`, and a new series of the gate
+  times only at a change of `task-cycle/gate_times.py` or of `gate/run_tests.py`, the test runner
+  whose output gives the time of each directory (WAY-339). The reason of a new series names the
+  file or files that changed. A change of the instructions of the cycle, of the reviewer or of the
+  author starts none of the mechanism measures or the gate times, and neither does a new price list.
+  Set no number of one series beside a number of another, no number of the cost beside a number of
+  the count of remarks, no number of the measures or the gate times beside a number of the cost, and
+  no week's count beside the week before; a version of the process is judged by the cycles that ran
+  on it.
 - **No frozen earlier tasks are replayed on an old and a new version**. Where the human asks for
   such a comparison, say that the audit holds no such set and judges a version by its own cycles.
   Cycles run on every version in any case and each record names its version, so the audit has
@@ -159,19 +163,36 @@ two outcomes: the human weighs it further, or sets it aside.
 1. **What the count could not read.** The *Repositories* table: any repository read `no`, a shallow
    clone whose history may lack cycles, a repository the human expected that is missing. Then the
    kinds of `unknown` in *Unknown values* and how many cycles each touches, and any *Refused rows*.
-   A row refused for its class — its row in *Unknown values* names row `<n>` of *Problems* and gives
-   the reason `the class is not in the list of classes` — is the matter of a class the list lacks,
-   below; the user's own tool corrects any other refused row in the register. An archive of earlier
-   cycles gives
-   `unknown` often: a record with no item *Process remarks on the-way* gives no remarks; a
-   `stages.md` without the working-time lines gives no times, as an earlier form does; a `stages.md`
-   with neither the section of tokens by model nor the earlier form's table of tokens by model gives
-   no cost, and an earlier form with that table gives the cost from it. The share of the cost in fix
-   rounds is `unknown` where the record's *Review rounds* is not in the form
-   `task-cycle/record_template.md` gives, or `stages.md` has no column *Files named*, which the
-   earlier form lacks. A copy with no `mechanism_measures.md` or `gate_times.md` is an earlier
-   cycle or one whose measuring script failed, and the record's *Verification* says which.
-   That is the state of those records, and no defect of the count.
+   *Unknown values* gives every value the count did not establish as one line for each field and
+   reason, with how many values the pair has and its first three examples, and no option of the
+   count lists the rest. The full list of a pair's values stands where they are read: the register's
+   own values (its refused rows and the problems of a cycle it names) in the register, the cycles'
+   values in the copies of their records in git history. The values about an issue or a version
+   are made by the count from the register and from those copies, and have no list of their own.
+   A row refused for its class is one such line, with the reason `the class is not in the list of
+   classes` and its row of *Problems* among the first examples: it is the matter of a class the list
+   lacks, below. The user's own tool corrects any other refused row in the register. An archive of
+   earlier cycles gives `unknown` often: a record with no item *Process remarks on the-way* gives no
+   remarks; a `stages.md` with neither of its two time lines gives no times, and no error, as an
+   earlier form does; a `stages.md` with neither the section of tokens by model nor the earlier
+   form's table of tokens by model gives no cost, and an earlier form with that table gives the cost
+   from it. The forms of `stages.md` the count reads, each with what it lacks (WAY-344):
+   (a) the older table of tokens by model, with no detailed section: its cost is given, its cache
+   writes priced as input (an approximation), and the share of the cost in fix rounds `unknown`,
+   since that table gives no turns;
+   (b) the detailed section without the two time lines: the times `unknown`, no error;
+   (c) the detailed section without the column *Files named*: the share of the cost in fix rounds
+   `unknown`, no error;
+   (d) the detailed section without the two columns of the cache writes: its cost is given, the
+   writes priced as input (an approximation), and no value `unknown` for that reason;
+   (e) the newer form, with all of them.
+   A file with one of the two time lines and not the other, or with one of the two columns of the
+   cache writes and not the other, is not a form but a missing field: the run ends with exit 1 and
+   an `Error:` line that names the field. The share of the cost in fix rounds is `unknown` where the
+   record's *Review rounds* is not in the form `task-cycle/record_template.md` gives, and in forms
+   (a) and (c), which have no column *Files named*. A copy with no `mechanism_measures.md` or
+   `gate_times.md` is an earlier cycle or one whose measuring script failed, and the record's
+   *Verification* says which. That is the state of those records, and no defect of the count.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
    a pin that is unknown or a cycle that is not read. Beside each, quote its row of *Cost of an
@@ -183,8 +204,10 @@ two outcomes: the human weighs it further, or sets it aside.
    as the count gives them, with no waiting. Beside each issue, open or dropped, quote its row of
    *Cost of an occurrence by issue* with the header row of that table.
 4. **What each version of the process shows.** For each series of *Process versions*, one at a time,
-   with the line that says why it begins where it does: the median cost at constant prices of each
-   version and its answers Q1, Q2 and Q3, which `yes`, `no` or `unknown` give inside that series. Quote
+   with the line that says why it begins where it does. A series of the cost shows the median cost
+   at constant prices of each version and its answer Q3; a series of the count of remarks shows its
+   answers Q1 and Q2. Each answer is `yes`, `no` or `unknown` inside its series, and a number of one
+   kind of series is never set beside a number of the other. Quote
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
    wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
    the cycles in *No version*, with the reasons *Unknown values* gives.
@@ -207,8 +230,9 @@ class where it is one; what it means; and the day of the session as the date it 
 human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register
 that the entry `problem_register` names, which lies in the user's place and never in a repository,
 and change nothing else of it. Adding a class gives no problem a class (WAY-330): a problem's class
-in *Problems* stays the user's tool's to write. The date starts a new series of the cost and of no
-mechanism measure or gate time (WAY-339), and the next count reads the class; offer to run the count
+in *Problems* stays the user's tool's to write. The date starts a new series of the count of remarks,
+and of neither the cost nor any mechanism measure or gate time (WAY-339), and the next count reads
+the class; offer to run the count
 again as step 2 gives. Where the human says no, or names a class the list already holds, the
 problem's row is a correction for the user's tool.
 

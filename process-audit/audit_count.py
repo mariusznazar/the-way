@@ -34,11 +34,15 @@ on stderr, so that the skill of the audit asks the human; it never asks itself.
 
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
-per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input* and
-*Output*, per million tokens; a price cell `—` is a model with no price, and a cell that is
-neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about the locations file or
-the price list names its option, `--locations` or `--prices`, never the path it was given
-(WAY-320).
+per provider whose header has the columns *Model id in stages.md*, *Input*, *Cached input*,
+*Output*, *Cache write (5 minutes)* and *Cache write (1 hour)*, per million tokens; a table that
+lacks one of them refuses the list, with its `Error:` naming the column. A `—` in *Input*, *Cached
+input* or *Output* is a model with no price at all. A `—` in a write column is no price for that
+lifetime: a model so marked is priced while the row of `stages.md` holds no writes of that
+lifetime, and the cost of a row that holds some is `unknown`, never priced at the price of another
+column. A cell that is neither a number nor `—` refuses the list (WAY-337, WAY-339). An error about
+the locations file or the price list names its option, `--locations` or `--prices`, never the path
+it was given (WAY-320).
 
 A cycle is found where a commit adds the copy of its record, `docs/task-cycles/<folder>/cycle.md`
 (`task-cycle/record_template.md`), in the history of every branch and remote branch, merges
@@ -58,19 +62,27 @@ ones noted, and its values are read from the last copy, the most complete. For e
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
 - the cost at constant prices (WAY-337), from the copy's `stages.md` in either of its two
   forms. The newer form is known by its heading: each row of the section *Stages: start, waiting
-  for tools and tokens by model* is priced at the list's prices, its input less its cached input at
-  the *Input* price, its cached input at the *Cached input* price and its output at the *Output*
-  price. The older form has no such section: it is known by its table of tokens by model, the one
-  table whose header row begins with *Model* and has the columns *Model*, *Total tokens*, *Input*,
-  *Cached input* and *Output*, found exactly once, and each of its rows is priced in the same way.
+  for tools and tokens by model* is priced at the list's prices, its input that is neither read
+  from a cache nor written to one at the *Input* price, its cached input at the *Cached input*
+  price, its cache writes of 5 minutes and of 1 hour each at its own write price, and its output at
+  the *Output* price (the form with the two columns of the writes, *Cache write (5 minutes)* and
+  *Cache write (1 hour)*; a form without them has no writes to price, and its row is priced by the
+  other three). The older form has no such section: it is known by its table of tokens by model,
+  the one table whose header row begins with *Model* and has the columns *Model*, *Total tokens*,
+  *Input*, *Cached input* and *Output*, found exactly once, and each of its rows is priced in the
+  same way.
   The older form is the form most cycles have, so a count that passed it over would leave most
   cycles with no cost.
-  Cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in), so they are priced
-  as input: an approximation. A model the list gives no price for, a row that does not read, a
-  cached input above its input, a subagent stage with no token usage (the model `—`), a stage or a
-  row whose usage the stage report could not read (the model `unknown`), a section where no stage
-  has any, a table of the older form with no row, or such a table written twice, gives the cost
-  `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
+  The cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in). In the form
+  with the two columns of the writes they are priced each at its own price; in the earlier forms of
+  the section and in the older table, which have no such columns, they are priced as input: an
+  approximation. A Codex row has `0` in both columns and is priced as a row with no writes. A model
+  the list gives no price for, a model whose write price for a lifetime is `—` where the row holds
+  writes of that lifetime, a row that does not read, a cached input above its input or cached
+  input and writes together above it, a subagent stage with no token usage (the model `—`), a
+  stage or a row whose usage the stage report could not read (the model `unknown`), a section where
+  no stage has any, a table of the older form with no row, or such a table written twice, gives the
+  cost `unknown`, never zero; a row of the orchestrator with no token usage, time it worked with no
   response of a model, costs nothing;
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
@@ -96,21 +108,39 @@ The process versions (WAY-339): each cycle is grouped by the version of the-way 
 *Process pin* resolves to, the full commit that `git rev-parse --disambiguate` names in the
 checkout of the-way. A cycle whose pin is unknown, does not resolve, is ambiguous, or whose commit
 has no readable date stands apart as *no version*, with its reason, and is in no series. Versions
-are ordered by their commit's date (`git log -1 --format=%ct`), ties by the full hash. A series is
-a run of consecutive versions between which none of these changes:
+are ordered by their commit's date (`git log -1 --format=%ct`), ties by the full hash. The versions
+are cut into series of two kinds, and a measure is compared only inside a series of its own kind:
+no cell sets a number of one kind of series beside a number of the other, and each series is its own
+subsection of the result, with the reason it begins where it does (WAY-339).
+
+A series of the cost, in which the median cost and the answer Q3 are compared, is a run of
+consecutive versions between which neither of these changes:
 
 - the price list the costs are priced by (one list per run, so this never splits a run);
+- `task-cycle/cycle_stages.py`, the script that measures the cost, and no other script
+  (`git diff --quiet`; exit 1, or any other failure, counts as changed).
+
+A series of the count of remarks, in which the answers Q1 and Q2 are compared, ends wherever a
+series of the cost ends, and also at either of these changes:
+
 - the register's list of classes: a date of *Added* or *Withdrawn* on or between the days of the
   two versions, or a list the register does not give in full, which splits at every version;
-- the tree of the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review`,
-  `task-cycle/spec` and `task-cycle/cycle_stages.py` (`git diff --quiet`; exit 1, or any other
-  failure, counts as changed). This test is deliberately conservative: any change of those files
-  starts a series, though not every change alters a stage report's form or the reviewer's
-  instructions. It cannot tell such a change from another one, and errs toward fewer comparisons.
+- the form of a stage report or the instructions of the reviewer, taken as the files of the-way
+  under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and
+  `task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its instruction
+  (the same `git diff --quiet`). Any change of those files ends the series, whether or not it alters
+  that form or those instructions: the count of remarks compares less, and the series of the cost,
+  which none of these changes ends, compares across them.
 
-Measures are compared only within a series, and each series is its own section of the result
-(WAY-339). Per version: the median cost at constant prices of its cycles with a known cost, and
-three answers, each `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
+The cost and the count of remarks are split apart because a change of the reviewer's instructions
+is a change of the process: a series of the cost that it ended would never hold the two sides to
+compare. The price: after such a change the cost cannot tell "the reviewer found more" from "the
+process got dearer", while the count of remarks, whose meaning changes with the reviewer, has a
+series that ends there.
+
+Per version of a series of the cost: the median cost at constant prices of its cycles with a known
+cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
+Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
 is no, text naming an open design choice with no word that denies it (`no`, `not`, `without`...)
 among the last four words just before the phrase, in the same clause, is yes (a denial elsewhere in
@@ -134,11 +164,11 @@ change to the process worked. A series of the mechanism measures of `mechanism_m
 begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
 series of
 the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `gate/run_tests.py`
-differs, by the same test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts
-as changed). No other change splits them: not the price list, a date of the register's list of
-classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
-`task-cycle/spec`, nor one of `task-cycle/cycle_stages.py`, and neither script splits a series of
-the cost. The section
+differs, by the same test as the series of the cost (`git diff --quiet`; exit 1, or any failure,
+counts as changed). No other change splits them: not the price list, a date of the register's list
+of classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
+`task-cycle/spec`, nor one of `task-cycle/agent-types/the-way-stage.md` or
+`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
 *Measure versions* gives, for each version of a series and each cycle-level measure, the number of
 cycles that give a value, their median (the rule of the median of the cost) and whether it falls
 against the previous version of the series, and for the gate times the total of the run and each
@@ -147,7 +177,7 @@ code 0) during which no other gate run was going, and the runs not compared, tho
 gate, with an unknown count, that failed or whose exit code is unknown, are counted and their median
 shown apart, never compared (WAY-350). A version in which no run passed alone, or no cycle gave a
 value, has no comparison; a version in which no cycle gives a value or no run a time has one row,
-with `—` for the measure, and one line in *Unknown values*. The values are kept as `Decimal` and a
+with `—` for the measure, and a value in *Unknown values*. The values are kept as `Decimal` and a
 median that is a half is written with its decimal.
 
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
@@ -159,7 +189,9 @@ field, a line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `
 copy lacks the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
 `Model`, `Input`, `Cached input` and `Output` of the table of the newer form's section, and that
 table itself, which a heading with no table misses (the column `Files named` is never missing: a
-section without it is the earlier form of the section); the columns `Input`, `Cached input` and
+section without it is the earlier form of the section; the columns `Cache write (5 minutes)` and
+`Cache write (1 hour)` are a pair, never missing when neither stands, and where one stands the
+other is the field missing); the columns `Input`, `Cached input` and
 `Output` of the older form's table, `Model` being its sign; the section and the table both, where
 the file has neither the heading nor a table beginning with `Model`; and, where the file has one of
 the lines `- Working time without waiting for tools:` and `- Waiting for tools:`, the other (a file
@@ -175,6 +207,20 @@ then read alike. No path written in them is followed, and nothing of them is run
 outside the years the platform reads gives *Committed* `unknown`. Git runs only to read, with no
 `GIT_` variable of the environment it is started in and no signature shown: `rev-parse`, `log`,
 `diff`, `diff-tree`, `ls-tree`, `cat-file` and `merge-base`.
+
+A cycle of the-way whose own change changes a tool that wrote a file of its copy gives the values
+that tool wrote as `unknown`, with the reason that the cycle changed the tool that wrote them, and
+its other values as they stand, under the version it ran on (WAY-339). The tools are those that
+start the series of what they measure: `task-cycle/cycle_stages.py` for the times, the cost and the
+share of the cost in fix rounds, read from `stages.md`; `task-cycle/cycle_measures.py` for
+`mechanism_measures.md`; `task-cycle/gate_times.py` and `gate/run_tests.py` for `gate_times.md`. The
+cycle changed a tool where its files differ between the version it ran on and the commit of the last
+copy of its record in the-way's own history (`git diff --quiet`; exit 1, or any other failure,
+counts as changed). Only a cycle of `the-way` is read so: the change of a cycle of another
+repository lies in that repository, which holds none of these tools. A copy that holds no such file
+is of an earlier form and a cycle whose version does not resolve has none to compare, so neither is
+put in doubt. The file of a changed tool is not read for the cycle, so no field of it is missing,
+and the number of fix rounds, which the record gives, stands.
 
 The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
 `task-cycle/cycle_measures.py` (WAY-339) and `gate_times.md` by `task-cycle/gate_times.py`.
@@ -202,15 +248,15 @@ header row but not in the template's order, or another stands beside them, or a 
 twice, no field is missing: the table is refused. A row that does not read, an unknown class,
 weight or cost of an occurrence, an issue in no row of *Issues*, a doubled name, a *Fix* that is no
 commit or a date that is no date refuses that row or table with a reason. A table of *Weights* or of
-*Costs of an occurrence* that does not name its levels, four or five, each once is refused, and an
-`Error:` of the register on stderr gives exit 1. A refused row of *Problems* still belongs to the
+*Costs of an occurrence* that does not name each of its levels once is refused: its `Error:` line of
+the register on stderr names the level it lacks or writes twice, and the command gives exit 1. A
+refused row of *Problems* still belongs to the
 cycle and the issue it names: each count of that cycle or issue reads `at least n`, as the row is
 not in it. What else depends on a refused row or table is `unknown`. A problem whose cycle no named
 repository holds is `unknown`, not dropped, and so is a
 problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
 read `at least n`. A problem is counted once, by its row; a cycle copied again after a
-correction is one cycle, and its problems are counted once. *Unknown values* lists at most 500
-values the register leaves unknown, and says how many more there are.
+correction is one cycle, and its problems are counted once. *Unknown values* is described below.
 
 For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
@@ -235,11 +281,18 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 `audit_results`, never inside a repository it reads or the checkout of the-way, read or not:
 a section *Repositories*, a table of each
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
-*Unknown values*, a table of each value given as `unknown` and why. A section *Cost*, a table of
-one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
-number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
-of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
-its gate times; the section *Measure versions* gives them per version. The sections *Problems by
+*Unknown values*, a table of every value the count did not establish, one line for each field and
+reason: how many values the pair has and its first three examples, each as repository, record and
+value, where a name or number of one value (a row's number, an issue's name, a version's commit) is
+no part of the field. The result keeps no more of a pair, and no option of the count lists the rest.
+The full list of a pair's values stands where they are read: the register's own values (its refused
+rows and the problems of a cycle it names) in the register, and the cycles' values in the copies of
+the cycles' records in the history of git. The values about an issue or a version are made by the
+count from the register and from those copies, and have no list of their own. A section *Cost*, a
+table of one row per cycle with its price list's date (the series the cost belongs to), its cost in
+USD, its number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a
+table of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run
+of its gate times; the section *Measure versions* gives them per version. The sections *Problems by
 cycle*, *Fixed
 issues*, *Open issues*, *Dropped issues* and *Cost of an occurrence by issue* give the register's
 counts, and sit before *Unknown values*. On stdout it names the two files and the counts.
@@ -247,7 +300,8 @@ counts, and sit before *Unknown values*. On stdout it names the two files and th
 Exit code: 0 with the result written; 1 with the result written but a repository that could not be
 read, a table of the register refused as a whole, or a field missing in a `stages.md`, a
 `mechanism_measures.md` or a `gate_times.md`, named in the
-result and in an `Error:` line on stderr; 2 with `Error: <message>` on stderr and nothing written,
+result and in an `Error:` line on stderr, which for a table of levels of the register names the
+level it lacks or writes twice; 2 with `Error: <message>` on stderr and nothing written,
 when an argument is wrong, the locations file, the price list, the register or an entry it needs is
 missing or wrong, the register lacks a heading, a table or a column it needs, the register is
 larger than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the
@@ -311,6 +365,14 @@ STAGES_HEADING = "## " + SECTION_TITLE
 STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
                  "Output"]
 FILES_COLUMN = "Files named"
+# The two columns of the cache writes of each lifetime, a pair that follows *Files named* in the
+# newest form of the section and is never missing when neither stands (WAY-344).
+WRITE_5M_COLUMN = "Cache write (5 minutes)"
+WRITE_1H_COLUMN = "Cache write (1 hour)"
+WRITE_COLUMNS = [WRITE_5M_COLUMN, WRITE_1H_COLUMN]
+# The three forms of the header of the section, each a prefix of the next.
+SECTION_FORMS = (STAGE_COLUMNS, STAGE_COLUMNS + [FILES_COLUMN],
+                 STAGE_COLUMNS + [FILES_COLUMN] + WRITE_COLUMNS)
 # The table of tokens by model, which every form of `stages.md` has and the older form is read
 # from: the table whose header row begins with `Model`.
 MODEL_COLUMN = "Model"
@@ -337,7 +399,7 @@ ROUND_ENTRY = re.compile(r"findings `([^`\n]{1,200})`")
 FINDINGS_WORD = "findings"
 PRICE_HEADING = "List date"
 PRICE_MODEL = "Model id in stages.md"
-PRICE_COLUMNS = ("Input", "Cached input", "Output")
+PRICE_COLUMNS = ("Input", "Cached input", "Output", WRITE_5M_COLUMN, WRITE_1H_COLUMN)
 # A token count longer than this is not a count of tokens: no model's input comes near it.
 TOKEN_DIGITS = 15
 PRICE = re.compile(r"[0-9]{1,6}(?:\.[0-9]{1,6})?")
@@ -348,9 +410,16 @@ SHARE = Decimal("0.1")
 # A cost at or above this many dollars is not given: a crafted count would otherwise overrun the
 # precision the cost is written with.
 COST_CEILING = Decimal(10) ** 18
-# The reviewed files of the-way: a change of any of them between two versions starts a series.
-TREE_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
-              "task-cycle/cycle_stages.py")
+# The script that measures the cost, and no other: a change of it between two versions starts a
+# series of the cost (and so of the count of remarks), with a new price list (WAY-339).
+COST_SCRIPT = "task-cycle/cycle_stages.py"
+COST_SCRIPTS = (COST_SCRIPT,)
+# The files of the-way that give the form of a stage report and the instructions of the reviewer: a
+# change of any of them between two versions starts a series of the count of remarks and none of the
+# cost. The type of agent `the-way-stage.md` is here because the reviewer receives its text as its
+# instruction.
+COUNT_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
+               "task-cycle/agent-types/the-way-stage.md")
 # The items of the record the questions of a process version read (task-cycle/record_template.md).
 ITEM_DISCARDED = "Discarded attempt"
 ITEM_PLAN = "Plan"
@@ -374,11 +443,19 @@ CONTRACTED_NOT = ("n't", "n’t")
 # path, which is the user's (WAY-320).
 LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
-# *Unknown values* lists at most this many values the register leaves unknown.
-MAX_LISTED = 500
+# *Unknown values* gives every value the count did not establish one line for each field and
+# reason: the number of values of the pair and its first EXAMPLES values, each as its repository,
+# record and value, and the field is the value with the number of its row, the name of its issue
+# and the commit of its version taken out (WAY-330).
+EXAMPLES = 3
+ROW_NUMBER = re.compile(r"^row [0-9]+ of ")
+ISSUE_VALUE = re.compile(r"^(the fix|waiting) of issue `.*`$")
+VERSION_SUFFIX = re.compile(r"\bversion \S+$")
+UNKNOWN_HEADER = ["Field", "Values", "Why", "First examples"]
 # The two files of a cycle's record that the count reads (WAY-339), each written by its
 # script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
-# task-cycle/gate_times.py. A copy holding neither is an earlier form.
+# task-cycle/gate_times.py. A copy that holds neither is of an earlier cycle or of one whose script
+# failed.
 MEASURES_FILE = "mechanism_measures.md"
 GATE_FILE = "gate_times.md"
 MEASURE_LABELS = (
@@ -417,6 +494,16 @@ GATE_TEST_RUNNER = "gate/run_tests.py"
 GATE_SCRIPTS = (GATE_SCRIPT, GATE_TEST_RUNNER)
 TOTAL_MEASURE = "Total time of the run"
 DIRECTORY_MEASURE = "Directory: "
+# The three groups of tools that write the files of a cycle's copy, each as the file and the paths
+# of the tools that wrote it: the paths are those that start the series of what they measure
+# (COST_SCRIPTS, MEASURES_SCRIPT and GATE_SCRIPTS above), not a second list. A cycle of the-way
+# whose own change changes one of them gives the values of that file as unknown (WAY-339).
+STAGES_FILE = "stages.md"
+WORKING_NAME = "Working time without waiting for tools"
+WAITING_NAME = "Waiting for tools"
+STAGES_VALUES = (WORKING_NAME, WAITING_NAME, "Cost", "Fix rounds share")
+TOOL_GROUPS = ((STAGES_FILE, COST_SCRIPTS), (MEASURES_FILE, (MEASURES_SCRIPT,)),
+               (GATE_FILE, GATE_SCRIPTS))
 
 
 class AuditCountError(Exception):
@@ -631,6 +718,10 @@ class Cycle:
     gate_timed: list[GateRun] = field(default_factory=list)
     # The fields of the two files that the copy lacks, as (file, field), for the `Error:` line.
     missing_in: list[tuple[str, str]] = field(default_factory=list)
+    # The files of the copy that held a text to read (`stages.md`, `mechanism_measures.md`,
+    # `gate_times.md`): a copy that holds no such file is of an earlier form and is not put in
+    # doubt by a change of the tool that would write it.
+    held: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -797,12 +888,23 @@ def is_separator(cells: list[str]) -> bool:
     return all(cell and set(cell) <= set("-:") for cell in cells)
 
 
+@dataclass(frozen=True)
+class ModelPrice:
+    """The prices of one model per million tokens. A write price is None where the list has `—`
+    for that lifetime: the model has no price for such a write, while the other prices stand."""
+    input: Decimal
+    cached: Decimal
+    output: Decimal
+    write_5m: Decimal | None
+    write_1h: Decimal | None
+
+
 @dataclass
 class Prices:
-    """The price list: its date, and per model its prices per million tokens as (input, cached
-    input, output), or None where no page gives a price."""
+    """The price list: its date, and per model its prices, or None where no page gives the price
+    of its input, its cached input or its output: a model with no price at all."""
     date: str
-    table: dict[str, tuple[Decimal, Decimal, Decimal] | None]
+    table: dict[str, ModelPrice | None]
 
 
 @dataclass
@@ -810,7 +912,8 @@ class StageTokens:
     """One row of the section of `stages.md` that gives each stage's tokens by model. `files` is
     what its cell *Files named* gives: the files of `reports/` the turn was given, None where the
     cell reads `unknown` or the form has no such column; `files_read` is False where the cell is
-    not a list of such files."""
+    not a list of such files. `write_5m` and `write_1h` are the cache writes of each lifetime, parts
+    of `input`: zero for the forms that have no such columns and for the older table."""
     number: str
     name: str
     model: str
@@ -819,6 +922,8 @@ class StageTokens:
     output: int
     files: frozenset[str] | None = None
     files_read: bool = True
+    write_5m: int = 0
+    write_1h: int = 0
 
 
 def read_prices(name: str) -> Prices:
@@ -851,7 +956,7 @@ def read_prices(name: str) -> Prices:
         date.fromisoformat(dates[0])
     except ValueError:
         raise AuditCountError(f"the line `List date` of {label} is no date") from None
-    table: dict[str, tuple[Decimal, Decimal, Decimal] | None] = {}
+    table: dict[str, ModelPrice | None] = {}
     columns: list[int] | None = None
     for line, inside in zip(lines, fenced):
         if inside or not line.startswith("|"):
@@ -860,9 +965,10 @@ def read_prices(name: str) -> Prices:
         cells = table_cells(line)
         if columns is None:
             if cells[:1] == [PRICE_MODEL]:
-                if not all(name_of in cells for name_of in PRICE_COLUMNS):
-                    raise AuditCountError(f"a table of {label} lacks one of the columns "
-                                          f"{', '.join(PRICE_COLUMNS)}")
+                lacking = [name_of for name_of in PRICE_COLUMNS if name_of not in cells]
+                if lacking:
+                    raise AuditCountError(f"a table of {label} lacks the column "
+                                          f"{', '.join(lacking)}")
                 columns = [cells.index(name_of) for name_of in PRICE_COLUMNS]
             continue
         if is_separator(cells):
@@ -883,8 +989,10 @@ def read_prices(name: str) -> Prices:
                 # would point away from the list.
                 raise AuditCountError(f"a price of model `{display(model[:TEXT_CAP])}` in {label} "
                                       "is neither a number nor `—`")
-        table[model] = None if any(number is None for number in numbers) else (
-            numbers[0], numbers[1], numbers[2])
+        # A `—` in *Input*, *Cached input* or *Output* is a model with no price at all; one in a
+        # write column leaves only that lifetime with no price.
+        table[model] = None if any(number is None for number in numbers[:3]) else ModelPrice(
+            numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
     if not table:
         raise AuditCountError(f"{label} names no model")
     return Prices(dates[0], table)
@@ -954,7 +1062,8 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     """The newer form: the rows of the table under the heading of the section. A heading with no
     table, or a table whose header row lacks one of the columns the form needs, is a field missing;
     the column *Files named* is never one: a section without it is the earlier form of the
-    section."""
+    section. The two columns of the cache writes are a pair: with neither the table is of an earlier
+    form, and with one the other is a field missing."""
     table: list[list[str]] = []
     for line, inside in zip(lines[heading + 1:], fenced[heading + 1:]):
         if inside:
@@ -966,14 +1075,20 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     if not table:
         return StageTable(reason="the section in `stages.md` holds no table",
                           missing=[FIELD_SECTION_TABLE])
-    absent = missing_columns(table[0], STAGE_COLUMNS, f"of the section {SECTION_TITLE}")
+    where = f"of the section {SECTION_TITLE}"
+    absent = missing_columns(table[0], STAGE_COLUMNS, where)
+    written = [name for name in WRITE_COLUMNS if name in table[0]]
+    if len(written) == 1:
+        absent += missing_columns(table[0], [name for name in WRITE_COLUMNS if name not in written],
+                                  where)
     if absent:
         return StageTable(reason="the table of the section in `stages.md` lacks a column",
                           missing=absent)
-    named = table[0] == STAGE_COLUMNS + [FILES_COLUMN]
-    if table[0] != STAGE_COLUMNS and not named:
+    if table[0] not in SECTION_FORMS:
         return StageTable(reason=("the table of the section in `stages.md` is not of the form the "
                                   "stage report gives"))
+    named = len(table[0]) > len(STAGE_COLUMNS)
+    writes = len(table[0]) > len(STAGE_COLUMNS) + 1
     columns = len(table[0])
     body = [cells for cells in table[1:] if not is_separator(cells)]
     if not body:
@@ -984,10 +1099,14 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
             return StageTable(reason=(f"a row of the section in `stages.md` has {len(cells)} "
                                       f"cells, not {columns}"))
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
+        if writes:
+            counts += [token_count(cells[index]) for index in (9, 10)]
         if any(count is None for count in counts):
             return StageTable(reason=("a token count in the section of `stages.md` is not a number "
                                       f"of at most {TOKEN_DIGITS} digits"))
-        row = StageTokens(cells[0], cells[1], cells[4], counts[0], counts[1], counts[2])
+        row = StageTokens(cells[0], cells[1], cells[4], *counts[:3])
+        if writes:
+            row.write_5m, row.write_1h = counts[3], counts[4]
         if named:
             row.files, row.files_read = files_cell(cells[8])
         rows.append(row)
@@ -1282,19 +1401,38 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
                           "is not known")
         if row.cached > row.input:
             return None, f"the cached input of stage `{name}` is above its input"
+        if row.cached + row.write_5m + row.write_1h > row.input:
+            return None, (f"the cached input and the cache writes of stage `{name}` are above its "
+                          "input")
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
-        costs.append(cost_at(price, row))
+        cost, reason = cost_at(price, row)
+        if cost is None:
+            return None, reason
+        costs.append(cost)
     return costs, None
 
 
-def cost_at(price: tuple[Decimal, Decimal, Decimal], row: StageTokens) -> Decimal:
-    """The cost in dollars of a row at a price: its input less its cached input at the *Input*
-    price, its cached input at the *Cached input* price and its output at the *Output* price."""
-    input_price, cached_price, output_price = price
-    return (Decimal(row.input - row.cached) * input_price + Decimal(row.cached) * cached_price
-            + Decimal(row.output) * output_price) / MILLION
+def cost_at(price: ModelPrice, row: StageTokens) -> tuple[Decimal | None, str | None]:
+    """The cost in dollars of a row at a price, or None with the reason where the row holds writes
+    of a lifetime the price list gives no price for. The input that is neither read from a cache nor
+    written to one is priced at the *Input* price, the cached input at the *Cached input* price,
+    the writes of each lifetime at their own price and the output at the *Output* price; a row with
+    no writes is priced by the first, the second and the last alone. The caller has checked that the
+    cached input and the writes together are not above the input."""
+    plain = row.input - row.cached - row.write_5m - row.write_1h
+    total = (Decimal(plain) * price.input + Decimal(row.cached) * price.cached
+             + Decimal(row.output) * price.output)
+    for count, write_price, lifetime in ((row.write_5m, price.write_5m, "5 minutes"),
+                                         (row.write_1h, price.write_1h, "1 hour")):
+        if count == 0:
+            continue
+        if write_price is None:
+            return None, (f"the price list gives no price of a cache write of {lifetime} for "
+                          f"model `{row.model[:TEXT_CAP]}`")
+        total += Decimal(count) * write_price
+    return total / MILLION, None
 
 
 def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
@@ -1312,7 +1450,10 @@ def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal]
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{name}`"
-        costs.append(cost_at(price, row))
+        cost, reason = cost_at(price, row)
+        if cost is None:
+            return None, reason
+        costs.append(cost)
     return costs, None
 
 
@@ -1662,14 +1803,14 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         if reason:
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
+    cycle.held = {name for name, text in ((STAGES_FILE, stages), (MEASURES_FILE, measures[0]),
+                                          (GATE_FILE, gate[0])) if text is not None}
     # The two files after the record's own values, so that the rows of *Unknown values* of a
     # cycle keep their order.
     read_measures(cycle, *measures)
     read_gate(cycle, *gate)
-    working_name = "Working time without waiting for tools"
     if stages is None:
-        cycle.unknown += [(working_name, stages_reason), ("Waiting for tools", stages_reason),
-                          ("Cost", stages_reason), ("Fix rounds share", stages_reason)]
+        cycle.unknown += [(name, stages_reason) for name in STAGES_VALUES]
         return
     lines = remarks_check.split_lines(stages)
     fenced = remarks_check.fenced_flags(lines)
@@ -1682,12 +1823,12 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
     if has_waiting and not has_working:
         reason = missing_line(cycle, WORKING_LINE)
     if reason:
-        cycle.unknown.append((working_name, reason))
+        cycle.unknown.append((WORKING_NAME, reason))
     cycle.waiting, reason = stages_time(lines, fenced, WAITING_LINE, "waiting for tools")
     if has_working and not has_waiting:
         reason = missing_line(cycle, WAITING_LINE)
     if reason:
-        cycle.unknown.append(("Waiting for tools", reason))
+        cycle.unknown.append((WAITING_NAME, reason))
     add_cost(cycle, record_lines, record_fenced, record_reason, lines, fenced, prices)
 
 
@@ -1883,6 +2024,35 @@ def named_rows(register: Register, title: str, rows: list[list[str]], width: int
     return valid
 
 
+def level_faults(rows: list[list[str]], levels: list[str]) -> str | None:
+    """What a table of levels lacks, in words the `Error:` line can name: each level that none of
+    its rows of the right width names, and each written in two rows; None where each is named
+    once. A row of the wrong width is refused on its own and counts for no level."""
+    width = 2
+    names = [cells[0] for cells in rows if len(cells) == width]
+    missing = [level for level in levels if level not in names]
+    doubled = [level for level in levels if names.count(level) > 1]
+    parts = []
+    if missing:
+        parts.append("lacks " + ", ".join(f"`{level}`" for level in missing))
+    if doubled:
+        parts.append("writes " + ", ".join(f"`{level}`" for level in doubled) + " in two rows")
+    return " and ".join(parts) or None
+
+
+def check_levels(register: Register, title: str, rows: list[list[str]], levels: list[str],
+                 check) -> None:
+    """Refuse the rows of a table of levels that `check` refuses, and where the table does not name
+    each of its levels once, add an `Error:` of the register that names the level it lacks or
+    writes twice (WAY-344). The result is still written: what depends on the table is unknown."""
+    named_rows(register, title, rows, 2, check)
+    fault = level_faults(rows, levels)
+    if fault is not None:
+        why = f"the table `{title}` must name each level once: it {fault}"
+        register.errors.append(why)
+        register.refuse(f"table `{title}`", why)
+
+
 def register_table(lines: list[str], fenced: list[bool], title: str, columns: list[str],
                    missing: list[str]) -> tuple[list[list[str]] | None, str | None]:
     """The rows of the table under the heading `## <title>`, or None with the reason. The table
@@ -1972,17 +2142,9 @@ def read_register(path: Path) -> Register:
             register.class_dates += [text for text in (cells[2], cells[3]) if valid_date(text)]
         register.class_dates.sort()
     if tables["Weights"] is not None:
-        weights = named_rows(register, "Weights", tables["Weights"], 2, check_weight)
-        if sorted(name for name, _, _ in weights) != sorted(LEVELS):
-            why = "the table `Weights` must name the four levels, each once"
-            register.errors.append(why)
-            register.refuse("table `Weights`", why)
+        check_levels(register, "Weights", tables["Weights"], LEVELS, check_weight)
     if tables[COSTS_TITLE] is not None:
-        costs = named_rows(register, COSTS_TITLE, tables[COSTS_TITLE], 2, check_cost_level)
-        if sorted(name for name, _, _ in costs) != sorted(COST_LEVELS):
-            why = f"the table `{COSTS_TITLE}` must name the five levels, each once"
-            register.errors.append(why)
-            register.refuse(f"table `{COSTS_TITLE}`", why)
+        check_levels(register, COSTS_TITLE, tables[COSTS_TITLE], COST_LEVELS, check_cost_level)
     if tables["Issues"] is not None:
         register.issues = [(name, cells[2], cells[3].lower()) for name, _, cells in
                            named_rows(register, "Issues", tables["Issues"], 4, check_issue)]
@@ -2099,11 +2261,6 @@ class Ancestry:
         except ValueError:
             return None, "the date of the commit is not a number"
 
-    def changed(self, earlier: str, later: str) -> bool:
-        """Whether the reviewed files of the-way differ between two full commit hashes; a git
-        that fails counts as changed, so that a series is never joined by mistake (WAY-339)."""
-        return self.differs(earlier, later, TREE_PATHS)
-
     def differs(self, earlier: str, later: str, paths: tuple[str, ...]) -> bool:
         """Whether the files at `paths` differ between two full commit hashes of the-way, by
         `git diff --quiet`: exit 1, or any failure, counts as changed."""
@@ -2120,14 +2277,17 @@ def counted(count: int, refused: int) -> str:
 
 @dataclass
 class Analysis:
-    """The tables the register adds to the result, as rows of text, and the values it leaves
-    unknown as (repository, record, value, why)."""
+    """The tables the register adds to the result, as rows of text; the values it leaves unknown
+    as (repository, record, value, why) (`unknown`), and the values the register holds back, its
+    refused rows and problems whose cycle is not read (`held`); both go into the pairs of
+    *Unknown values* alike."""
     cycle_rows: list[list[str]]
     fixed_rows: list[list[str]]
     open_rows: list[list[str]]
     dropped_rows: list[list[str]]
     cost_rows: list[list[str]]
     unknown: list[tuple[str, str, str, str]]
+    held: list[tuple[str, str, str, str]]
 
 
 def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
@@ -2149,7 +2309,10 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     uncounted: Counter = Counter()
     found = [(problem, index.get((problem.repository, problem.record)))
              for problem in register.problems]
-    unknown = list(register.refused)
+    # The values the register holds back are its refused rows and the problems whose cycle is not
+    # read; every unknown value, those included, is grouped by field and reason in `unknown_rows`.
+    held = list(register.refused)
+    unknown: list[tuple[str, str, str, str]] = []
     counts: dict[tuple[str, str], Counter] = {}
     for problem, cycle in found:
         if cycle is not None:
@@ -2165,8 +2328,8 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         else:
             why = ("no named repository holds the cycle of its record; name its key with "
                    "--repository")
-        unknown.append((problem.repository[:TEXT_CAP], problem.record,
-                        f"row {problem.number} of `Problems`", why))
+        held.append((problem.repository[:TEXT_CAP], problem.record,
+                     f"row {problem.number} of `Problems`", why))
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
     # as `at least n`, since the row's own figure is not in the count.
@@ -2279,14 +2442,32 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         else:
             dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
                                  counted(not_read, refused), str(refused)])
-    listed = list(dict.fromkeys(unknown))
-    if len(listed) > MAX_LISTED:
-        # A register far larger than a real one would make the result as large as itself.
-        more = len(listed) - MAX_LISTED
-        listed = listed[:MAX_LISTED] + [(THE_WAY, NONE, "values of the register not listed",
-                                         f"{more} more values the register leaves unknown are not "
-                                         "listed here; the register holds them")]
-    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows, listed)
+    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows,
+                    list(dict.fromkeys(unknown)), list(dict.fromkeys(held)))
+
+
+def unknown_field(value: str) -> str:
+    """The field of an unknown value: the value with the number of its row, the name of its issue
+    and the commit of its version taken out, so that the values of one kind make one pair."""
+    value = ROW_NUMBER.sub("row of ", value, count=1)
+    value = ISSUE_VALUE.sub(r"\1 of an issue", value, count=1)
+    return VERSION_SUFFIX.sub("a version", value, count=1)
+
+
+def unknown_rows(unknown: list[tuple[str, str, str, str]]) -> list[list[str]]:
+    """The unknown values as one row for each pair of a field and a reason, in the order each pair
+    first occurs: the count is the values of the pair, and the examples are the first EXAMPLES of
+    them, each as repository, record and value."""
+    counts: Counter = Counter()
+    examples: dict[tuple[str, str], list[str]] = {}
+    for repository, record, value, why in unknown:
+        key = (unknown_field(value), why)
+        counts[key] += 1
+        shown = examples.setdefault(key, [])
+        if len(shown) < EXAMPLES:
+            shown.append(f"{repository} {record}: {value}")
+    return [[field_text, str(counts[(field_text, why)]), why,
+             "; ".join(examples[(field_text, why)])] for field_text, why in counts]
 
 
 # The process versions (WAY-339)
@@ -2314,16 +2495,23 @@ class Series:
 
 @dataclass
 class Versions:
-    series: list[Series] = field(default_factory=list)
+    # The two kinds of series of the process versions (WAY-339): the series of the cost, the
+    # median cost and Q3 are compared in; and the series of the count of remarks, Q1 and Q2 are
+    # compared in, which ends wherever a series of the cost ends and at more changes.
+    cost: list[Series] = field(default_factory=list)
+    count: list[Series] = field(default_factory=list)
     no_version: list[Cycle] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
     # Every version, in the order of their dates: the series of the measures are made of them.
     ordered: list["Version"] = field(default_factory=list)
 
 
-VERSION_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
-                  "Median cost (USD)", "Q1: contradiction only after code", "Plans read",
-                  "Q2: more than a third of slices too large", "Q3: cost falls"]
+SERIES_COST = "Cost"
+SERIES_COUNT = "Count of remarks"
+COST_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
+               "Median cost (USD)", "Q3: cost falls"]
+COUNT_HEADER = ["Version (commit)", "Committed", "Cycles", "Q1: contradiction only after code",
+                "Plans read", "Q2: more than a third of slices too large"]
 
 
 def median_of(costs: list[Decimal]) -> Decimal | None:
@@ -2338,20 +2526,120 @@ def median_of(costs: list[Decimal]) -> Decimal | None:
     return (ordered[middle - 1] + ordered[middle]) / 2
 
 
-def series_boundary(earlier: Version, later: Version, register: Register,
-                    ancestry: Ancestry) -> str | None:
-    """Why a new series begins at `later`, or None where both versions share one series."""
+FIRST_VERSION = "the first version of the result"
+
+
+def changed_paths(ancestry: Ancestry, earlier: str, later: str,
+                  paths: tuple[str, ...]) -> list[str]:
+    """The paths of `paths` whose files differ between two full commit hashes of the-way, none
+    where no file does: `git diff --quiet` of each, a failure counting as changed, so that a series
+    is never joined by mistake (WAY-339)."""
+    if not ancestry.differs(earlier, later, paths):
+        return []
+    return [path for path in paths if ancestry.differs(earlier, later, (path,))] or list(paths)
+
+
+def names_of(paths: list[str]) -> str:
+    return " and ".join(f"`{path}`" for path in paths)
+
+
+def changed_reason(ancestry: Ancestry, earlier: str, later: str,
+                   paths: tuple[str, ...]) -> str | None:
+    """None where the files at `paths` do not differ between two full commit hashes of the-way,
+    else a reason that names the paths that changed (WAY-339)."""
+    changed = changed_paths(ancestry, earlier, later, paths)
+    return f"{names_of(changed)} changed between the two versions" if changed else None
+
+
+# A cycle that changed the tool that wrote a file of its copy (WAY-339)
+
+
+def withdraw_values(cycle: Cycle, file: str, reason: str) -> None:
+    """Give the values the tool that wrote `file` measured as unknown, with the reason, in place of
+    what the file gave and of the reasons and the missing fields of its reading: the file is not
+    read for this cycle. The number of fix rounds stands, since the record gives it, not the
+    script."""
+    if file == STAGES_FILE:
+        cycle.working = cycle.waiting = cycle.cost = cycle.share = None
+        names = STAGES_VALUES
+        cycle.missing = []
+    elif file == MEASURES_FILE:
+        cycle.measures = {}
+        names = ("Mechanism measures",)
+        cycle.unknown = [pair for pair in cycle.unknown if pair[0] not in MEASURE_LABELS]
+        cycle.missing_in = [pair for pair in cycle.missing_in if pair[0] != MEASURES_FILE]
+    else:
+        cycle.gate_runs, cycle.gate_timed = [], []
+        names = ("Gate runs",)
+        cycle.unknown = [pair for pair in cycle.unknown if not pair[0].startswith("Gate runs")]
+        cycle.missing_in = [pair for pair in cycle.missing_in if pair[0] != GATE_FILE]
+    cycle.unknown = [pair for pair in cycle.unknown if pair[0] not in names]
+    cycle.unknown += [(name, reason) for name in names]
+
+
+def note_changed_tools(reads: list["Read"], ancestry: Ancestry) -> None:
+    """For each cycle of the-way, give as unknown the values of each file of its copy whose tool
+    the cycle's own change changed (WAY-339): the files of the tool differ between the version the
+    cycle ran on and the commit of the last copy of its record in the-way's own history, by `git
+    diff --quiet`, a failure counting as changed. Only a cycle of the-way is read so: the change of
+    a cycle of another repository lies in that repository, which holds none of these tools, and its
+    copy is not a commit of the-way's history. A cycle whose version does not resolve, and a copy
+    that holds no such file, which is of an earlier form, are left as they are."""
+    for read in reads:
+        if read.key != THE_WAY:
+            continue
+        for cycle in read.cycles:
+            version = ancestry.commit(cycle.pin)[0] if cycle.pin is not None else None
+            if version is None:
+                continue
+            last = cycle.later[-1] if cycle.later else cycle.record
+            for file, paths in TOOL_GROUPS:
+                changed = (changed_paths(ancestry, version, last, paths)
+                           if file in cycle.held else [])
+                if changed:
+                    withdraw_values(cycle, file, f"the cycle changed the tool that wrote them: "
+                                                 f"{names_of(changed)} changed between the "
+                                                 f"version it ran on and the last copy of its "
+                                                 f"record")
+
+
+def cost_boundary(earlier: Version, later: Version, ancestry: Ancestry) -> str | None:
+    """Why a new series of the cost begins at `later`, or None where both versions share one: a
+    new price list, or a change of the script that measures the cost, and nothing else."""
     if earlier.price != later.price:
         return "the price list changed"
+    return changed_reason(ancestry, earlier.commit, later.commit, COST_SCRIPTS)
+
+
+def count_boundary(earlier: Version, later: Version, register: Register,
+                   ancestry: Ancestry) -> str | None:
+    """Why a new series of the count of remarks begins at `later`, or None where both versions
+    share one: wherever a series of the cost begins, and at a date of the register's list of
+    classes or a change of the files that give the form of a stage report or the reviewer's
+    instructions."""
+    why = cost_boundary(earlier, later, ancestry)
+    if why is not None:
+        return why
     if register.class_dates_unknown:
         return "the register's list of classes is not given in full, so it may have changed"
     # A date on the day of either version counts: the test errs toward more series.
     at = bisect.bisect_left(register.class_dates, earlier.day)
     if at < len(register.class_dates) and register.class_dates[at] <= later.day:
         return "the register's list of classes changed between the two versions"
-    if ancestry.changed(earlier.commit, later.commit):
-        return "the reviewed files of the-way changed between the two versions"
-    return None
+    return changed_reason(ancestry, earlier.commit, later.commit, COUNT_PATHS)
+
+
+def split_series(versions: list[Version], boundary) -> list[Series]:
+    """Split the versions, in the order of their dates, into runs: a new one begins at a version
+    for which `boundary(previous version, version)` gives a reason, which the series keeps."""
+    blocks: list[Series] = []
+    for number, version in enumerate(versions):
+        why = boundary(versions[number - 1], version) if number else None
+        if why is None and blocks:
+            blocks[-1].versions.append(version)
+        else:
+            blocks.append(Series(why or FIRST_VERSION, [version]))
+    return blocks
 
 
 def instrument_series(versions: list[Version], ancestry: Ancestry,
@@ -2359,21 +2647,9 @@ def instrument_series(versions: list[Version], ancestry: Ancestry,
     """Split the versions, in the order of their dates, into series by the change of the scripts
     alone: a series begins at a version whose files at `scripts` differ from the previous
     version's (WAY-339), and its reason names the scripts that changed. Nothing else splits it:
-    not the price list, the register's list of classes or the reviewed files of the cost."""
-    blocks: list[Series] = []
-    for version in versions:
-        if not blocks:
-            blocks.append(Series("the first version of the result", [version]))
-            continue
-        earlier = blocks[-1].versions[-1].commit
-        if not ancestry.differs(earlier, version.commit, scripts):
-            blocks[-1].versions.append(version)
-            continue
-        changed = [script for script in scripts
-                   if ancestry.differs(earlier, version.commit, (script,))] or list(scripts)
-        names = " and ".join(f"`{script}`" for script in changed)
-        blocks.append(Series(f"{names} changed between the two versions", [version]))
-    return blocks
+    not the price list, the register's list of classes or the files of the count of remarks."""
+    return split_series(versions, lambda earlier, later: changed_reason(
+        ancestry, earlier.commit, later.commit, scripts))
 
 
 @dataclass
@@ -2570,63 +2846,92 @@ def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
         versions.append(Version(commit, stamp or 0, day, prices.date, members))
     versions.sort(key=lambda version: (version.stamp, version.commit))
     result.ordered = versions
-    for version in versions:
-        if not result.series:
-            result.series.append(Series("the first version of the result", [version]))
-            continue
-        reason = series_boundary(result.series[-1].versions[-1], version, register, ancestry)
-        if reason is None:
-            result.series[-1].versions.append(version)
-        else:
-            result.series.append(Series(reason, [version]))
-    for block in result.series:
-        previous: Version | None = None
-        previous_median: Decimal | None = None
-        for version in block.versions:
-            costs = [cycle.cost for cycle in version.cycles if cycle.cost is not None]
-            median = median_of(costs)
-            answer1, why1 = contradiction_of(version)
-            plans, answer2, why2 = too_large_of(version)
-            if previous is None:
-                answer3, why3 = "unknown", "no previous version in the series"
-            elif median is None or previous_median is None:
-                answer3, why3 = "unknown", "a median cost is not known"
-            else:
-                answer3 = "yes" if median < previous_median else "no"
-                why3 = None
-            for label, why in (("contradiction only after code", why1),
-                               ("slices too large", why2), ("cost falls", why3)):
-                if why:
-                    result.unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}",
-                                           why))
-            block.rows.append([version.commit, version.day, str(len(version.cycles)),
-                               str(len(costs)), money(median), answer1, plans, answer2, answer3])
-            previous, previous_median = version, median
+    result.count = split_series(
+        versions, lambda earlier, later: count_boundary(earlier, later, register, ancestry))
+    result.cost = split_series(
+        versions, lambda earlier, later: cost_boundary(earlier, later, ancestry))
+    for block in result.count:
+        count_rows(block, result.unknown)
+    for block in result.cost:
+        cost_rows(block, result.unknown)
     return result
 
 
+def count_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the count of remarks: for each version its answers Q1 and Q2, each
+    with its reason in `unknown` where it is not known. No number of the cost stands in them."""
+    for version in block.versions:
+        answer1, why1 = contradiction_of(version)
+        plans, answer2, why2 = too_large_of(version)
+        for label, why in (("contradiction only after code", why1), ("slices too large", why2)):
+            if why:
+                unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}", why))
+        block.rows.append([version.commit, version.day, str(len(version.cycles)), answer1, plans,
+                           answer2])
+
+
+def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the cost: for each version the median cost of its cycles with a
+    known cost, and Q3, whether it is lower than the previous version's of the same series."""
+    previous: Version | None = None
+    previous_median: Decimal | None = None
+    for version in block.versions:
+        costs = [cycle.cost for cycle in version.cycles if cycle.cost is not None]
+        median = median_of(costs)
+        if previous is None:
+            answer3, why3 = "unknown", "no previous version in the series"
+        elif median is None or previous_median is None:
+            answer3, why3 = "unknown", "a median cost is not known"
+        else:
+            answer3 = "yes" if median < previous_median else "no"
+            why3 = None
+        if why3:
+            unknown.append((THE_WAY, NONE, f"cost falls, version {version.commit}", why3))
+        block.rows.append([version.commit, version.day, str(len(version.cycles)), str(len(costs)),
+                           money(median), answer3])
+        previous, previous_median = version, median
+
+
 def versions_lines(versions: Versions) -> list[str]:
-    """The section *Process versions*: a table per series and a note of the cycles in no version."""
+    """The section *Process versions*: a table per series of the cost and per series of the
+    count of remarks, each with the reason it begins where it does, and a note of the cycles in no
+    version."""
     lines = [
         "## Process versions",
         "",
         "A version of the process is the commit of the-way that its cycles' *Process pin* "
-        "resolves to, ordered by the commit's date. WAY-339 starts a new series at a new price "
-        "list, or at a change of the form of a stage report, of the list of classes or of the "
-        "instructions of the reviewer. This count splits more often than that: at a new price "
-        "list, at a date of the register's list of classes, and at any change of the files of "
-        "the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and "
-        "`task-cycle/spec` or of `task-cycle/cycle_stages.py`, whatever the change, so that it "
-        "compares less and never across a change WAY-339 names. Measures are compared only "
-        "within one series, and no cell sets a number of one series beside a number of another. "
+        "resolves to, ordered by the commit's date. The versions are cut into series of two kinds "
+        "(WAY-339), and a measure is compared only inside a series of its own kind: no cell sets "
+        "a number of one kind of series beside a number of the other.",
+        "",
+        "A series of the cost holds the median cost and the answer Q3. It begins at a new price "
+        f"list or at a change of `{COST_SCRIPT}`, the script that measures the cost, and at no "
+        "other change: not at a change of the instructions of the reviewer.",
+        "",
+        "A series of the count of remarks holds the answers Q1 and Q2. It begins wherever a "
+        "series of the cost begins, and also at a date of *Added* or *Withdrawn* of the "
+        "register's list of classes, and at any change of the files that give the form of a "
+        "stage report or the instructions of the reviewer: those under `task-cycle/change`, "
+        "`task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and "
+        "`task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its "
+        "instruction. The test is `git diff --quiet` (exit 1, or any other failure, counts as "
+        "changed), and any change of those files begins a series, whether or not it alters that "
+        "form or those instructions. The price of keeping the series of the cost whole across "
+        "such a change: a rise of the cost after a change of the reviewer's instructions may be "
+        "the reviewer finding more or the process getting dearer, and the count of remarks, "
+        "whose meaning changes with the reviewer, is the series that ends there.",
+        "",
         "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
-        "unknown.",
+        "unknown. The reason each series begins where it does stands under its heading.",
         "",
     ]
-    for number, block in enumerate(versions.series, 1):
-        lines += [f"### Series {number}", "", f"Begins at this version: {block.begins}.", ""]
-        lines += table(VERSION_HEADER, block.rows)
-        lines.append("")
+    for title, blocks, header in ((SERIES_COST, versions.cost, COST_HEADER),
+                                  (SERIES_COUNT, versions.count, COUNT_HEADER)):
+        for number, block in enumerate(blocks, 1):
+            lines += [f"### {title}, series {number}", "",
+                      f"Begins at this version: {block.begins}.", ""]
+            lines += table(header, block.rows)
+            lines.append("")
     if versions.no_version:
         lines += [
             "### No version",
@@ -2657,7 +2962,9 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
         "date of the register's list of classes and a change under `task-cycle/change`, "
         "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
-        "`task-cycle/cycle_stages.py` split neither, though they split the series of the cost. "
+        "`task-cycle/cycle_stages.py` split neither, though a new price list and a change of "
+        "`task-cycle/cycle_stages.py` split the series of the cost, and the others the series "
+        "of the count of remarks. "
         "Each series is its own subsection, a number of one series is never set beside a number of "
         "another, and the cycles in no version stand in no series. *Falls* is `yes` where the "
         "median is lower than the previous version's median of the same measure in the same "
@@ -2677,7 +2984,7 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "version in which no run passed alone has no comparison. Each count is of the runs that "
         "give the time of its row, and a directory's median takes the runs that give its time. A "
         "version in which no cycle gives a value, or no run a time, has one row, with `—` for the "
-        "measure, and one line in *Unknown values*.",
+        "measure, and a value in *Unknown values*.",
         "",
     ]
     for title, blocks, header in (("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
@@ -2768,7 +3075,9 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "add it again after a correction, and the values are read from the last copy. *Process "
         "pin* is the version of the-way the cycle ran on, *Remarks* the number of its process "
         "remarks, and the times are h:mm:ss from the copy's `stages.md`. `unknown` is a value the "
-        "copy does not give, never zero; *Unknown values* says why.",
+        "copy does not give, never zero; *Unknown values* says why. A cycle of the-way whose own "
+        "change changed the tool that wrote a file of its copy has the values of that file "
+        "`unknown` for that reason (WAY-339), and stands in the version it ran on.",
         "",
         "## Repositories",
         "",
@@ -2800,8 +3109,12 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "## Cost",
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
-        "list starts a new one (WAY-339). A stretch of the orchestrator with no token usage costs "
-        "nothing. A cycle whose stage report has no section of stages is priced from its table of "
+        "list or a change of `task-cycle/cycle_stages.py` starts a new one (WAY-339). A stretch of "
+        "the orchestrator with no token usage costs nothing. A stage report whose section of "
+        "stages has the columns *Cache write (5 minutes)* and *Cache write (1 hour)* is priced "
+        "with each of them at its own price; an earlier form "
+        "has its cache writes inside its input and prices them as input, an approximation. "
+        "A cycle whose stage report has no section of stages is priced from its table of "
         "tokens by model at the same prices, and its share of the cost in fix rounds is unknown. "
         "*Fix rounds* is the number of findings files the record's *Review rounds* "
         "names; *Share of the cost in fix rounds* is the cost of the subagent turns given one of "
@@ -2892,14 +3205,21 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "## Unknown values",
         "",
-        "| Repository | Record | Value | Why |",
-        "|---|---|---|---|",
+        "The values the count did not establish, one row for each field and reason, with how many "
+        "values the pair has and its first three examples, each as repository, record and value. "
+        "The result keeps the number and three examples of each pair, and no option of the count "
+        "lists the rest. The full list of a pair's values stands where they are read: the "
+        "register's own values (its refused rows and the problems of a cycle it names) in the "
+        "register; the cycles' values in the copies of the cycles' records in the history of git. "
+        "The values about an issue or a version are made by the count from the register and from "
+        "those copies, and have no list of their own.",
+        "",
     ]
-    for cycle in cycles:
-        for value, why in cycle.unknown:
-            lines.append(f"| {cell(cycle.repository)} | {cycle.record} | {value} | {cell(why)} |")
-    for repository, record, value, why in analysis.unknown:
-        lines.append(f"| {cell(repository)} | {cell(record)} | {cell(value)} | {cell(why)} |")
+    entries = [(cycle.repository, cycle.record, value, why)
+               for cycle in cycles for value, why in cycle.unknown]
+    entries += dict.fromkeys(analysis.unknown + versions.unknown + measured.unknown)
+    entries += analysis.held
+    lines += table(UNKNOWN_HEADER, unknown_rows(entries))
     return "\n".join(lines) + "\n"
 
 
@@ -2954,11 +3274,10 @@ def main(argv: list[str] | None = None) -> int:
         register = read_register(register_path)
         ancestry = Ancestry(Git(the_way))
         reads = [read_repository(key, path, prices) for key, path in named.items()]
+        note_changed_tools(reads, ancestry)
         analysis = analyse(reads, register, ancestry, today)
         versions = process_versions(reads, register, ancestry, prices)
         measured = measure_versions(versions, ancestry)
-        analysis.unknown = list(dict.fromkeys(analysis.unknown + versions.unknown
-                                              + measured.unknown))
         text = render(reads, prices, analysis, versions, measured)
         dated = f"count-{today.isoformat()}.md"
         write(results, dated, text)

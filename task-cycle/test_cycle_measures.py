@@ -1241,6 +1241,25 @@ class CodexReadsTest(CodexTest):
                            json.dumps({"command": "cat foundations/decisions.md"})),
                 codex_output("09:02:05", "k1", "héllo log")]))
 
+    def test_a_path_in_a_source_text_with_its_backslashes_doubled_is_a_read_of_the_log(self) -> None:
+        """A custom tool call of a real rollout holds JavaScript source, in which a Windows path is
+        written with each backslash doubled. The result "héllo log" is 10 bytes."""
+        two = chr(92) * 2
+        source = ("tools.exec_command({cmd:\"Get-Content -LiteralPath 'C:" + two + "x" + two
+                  + "foundations" + two + "decisions.md'\"})")
+        self.assertEqual(["10", "1", "0", "0"], self.figures("orch", [
+            codex_call("09:02:00", "k1", "exec", source, True),
+            codex_output("09:02:05", "k1", "héllo log", True)]))
+
+    def test_a_doubled_separator_does_not_make_another_file_the_log(self) -> None:
+        two = chr(92) * 2
+        for name in ("myfoundations" + two + "decisions.md", "foundations" + two + "decisions.md.bak",
+                     "foundations" + two + "decisions.md-old", "foundations" + two + "x.md"):
+            with self.subTest(name=name):
+                self.assertEqual(["0", "0", "0", "0"], self.figures("orch", [
+                    codex_call("09:02:00", "k1", "exec", "cat '" + name + "'", True),
+                    codex_output("09:02:05", "k1", "héllo log", True)]))
+
     def test_an_output_that_is_no_text_is_not_counted(self) -> None:
         for value in (5, {"text": "a"}):
             with self.subTest(output=value):

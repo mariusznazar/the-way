@@ -274,9 +274,9 @@ The check script settles, without reading the content:
 - the pointing line the layout of files loaded with some files gives an `AGENTS.md` in a
   subdirectory;
 - the pointer or copy the layout of skills gives a skill needed in Codex;
-- the Markdown files the root `AGENTS.md` or `CLAUDE.md` names in backticks pass the same checks
-  (the script follows only those; the glossary term and the invariant count a file named by its
-  path anywhere in the text).
+- the files whose name ends in `.md` or `.mdc` that the root `AGENTS.md` or `CLAUDE.md` names in
+  backticks pass the same checks (the script follows only those; the glossary term and the
+  invariant count a file named by its path anywhere in the text).
 
 ## Mistakes this skill prevents
 

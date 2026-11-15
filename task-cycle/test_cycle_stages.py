@@ -6,14 +6,18 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr
+from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import cycle_measures  # noqa: E402
 import cycle_stages  # noqa: E402
 
 DAY = "2026-10-06T"
@@ -221,6 +225,31 @@ class CodexTest(unittest.TestCase):
         with self.assertRaisesRegex(cycle_stages.CycleStagesError, "subagent"):
             cycle_stages.read_session(path, self.home)
 
+    def test_an_orchestrator_with_no_turn_finds_its_subagents_where_the_epoch_is_refused(
+            self) -> None:
+        # Windows refuses fromtimestamp(0) in some time zones. The fixture makes it raise on every
+        # machine, so the test does not depend on the time zone it runs in.
+        idle = rollout(self.home, "idle", [meta("idle", "10:30:00")])
+        rollout(self.home, "idle-sub", [
+            meta("idle-sub", "10:31:00", "idle", "/root/idle-sub"),
+            started("10:31:00", "i1"),
+            context("10:31:00", "i1", "model-i"),
+            tokens("10:32:00", "idle-sub", "i1", 10, 0, 1),
+            complete("10:33:00", "i1"),
+        ])
+
+        class WindowsEpoch(datetime):
+            @classmethod
+            def fromtimestamp(cls, timestamp, tz=None):
+                if timestamp == 0:
+                    raise OSError(22, "Invalid argument")
+                return super().fromtimestamp(timestamp, tz)
+
+        with mock.patch.object(cycle_stages, "datetime", WindowsEpoch):
+            session = cycle_stages.read_codex_session(idle, self.home)
+        self.assertEqual(["idle-sub"], [agent.key for agent in session.subagents])
+        self.assertEqual(1, len(session.subagents[0].turns))
+
 
 # Claude Code
 
@@ -239,11 +268,16 @@ def result(clock: str) -> dict:
 
 
 def answer(clock: str, ident: str, model: str, uncached: int, written: int, read: int,
-           output: int, stop: str | None) -> dict:
+           output: int, stop: str | None, five: int | None = None) -> dict:
+    """A response of a Claude Code transcript. Its cache writes are in the 5-minute lifetime
+    unless `five` says otherwise; the rest of them are in the 1-hour lifetime."""
+    five = written if five is None else five
     return {"type": "assistant", "timestamp": at(clock), "message": {
         "id": ident, "model": model, "stop_reason": stop, "content": [{"type": "text"}],
         "usage": {"input_tokens": uncached, "cache_creation_input_tokens": written,
-                  "cache_read_input_tokens": read, "output_tokens": output}}}
+                  "cache_read_input_tokens": read, "output_tokens": output,
+                  "cache_creation": {"ephemeral_5m_input_tokens": five,
+                                     "ephemeral_1h_input_tokens": written - five}}}}
 
 
 class ClaudeCodeTest(unittest.TestCase):
@@ -725,10 +759,11 @@ class ClaudeFilesNamedTest(unittest.TestCase):
              str(Path(self.folder.name) / "codex"), "--output", str(output)]))
         section = output.read_text(encoding="utf-8").split("\n## Stages: start", 1)[1]
         [line] = [line for line in section.splitlines() if "| e3 |" in line]
-        # Nine cells: no crafted bar split one, and only the well-formed names stand in the last.
-        self.assertEqual(10, line.count("|"), line)
+        # Eleven cells: no crafted bar split one, only the well-formed names stand in *Files named*,
+        # and the two cache-write cells follow it.
+        self.assertEqual(12, line.count("|"), line)
         self.assertTrue(line.endswith(" | reports/" + "b" * 117 + ".md, reports/fine-name_1.md, "
-                                      "reports/win.md |"), line)
+                                      "reports/win.md | 0 | 0 |"), line)
 
     def test_a_name_ending_its_sentence_is_read_without_the_mark_that_ends_it(self) -> None:
         for text in ("Fix the findings in reports/review_slice4_findings.md.",
@@ -863,6 +898,542 @@ class CodexFilesNamedTest(unittest.TestCase):
                       "| 5 | unknown |", text)
         self.assertIn("| /root/fixer — turn 2 | 2026-10-06 10:10:00 | 0:00:00 | model-f | 400 | 0 "
                       "| 40 | reports/review_findings.md |", text)
+
+
+ABSENT = object()  # a field a test takes out of a line
+COUNTS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
+          "output_tokens")
+
+
+class ClaudeFieldsTest(unittest.TestCase):
+    """The reading of a Claude Code transcript under WAY-344: a needed field that is missing ends
+    the script with exit code 2 and a message naming the transcript, the line and the field; the
+    fields that stay lenient read as they always did."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        self.transcript = self.home / "projects" / "C--repo" / "fields.jsonl"
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def run_main(self, name: str = "fields") -> tuple[int, str, Path]:
+        output = self.root / "out" / f"{name}.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main([name, "--claude-home", str(self.home), "--codex-home",
+                                      str(self.root / "codex"), "--output", str(output)])
+        return code, stderr.getvalue(), output
+
+    def failing(self, line: dict) -> tuple[int, str, Path]:
+        """The run of a transcript whose third line is `line`, after a prompt and a good answer."""
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+            line,
+        ])
+        return self.run_main()
+
+    def assert_missing(self, line: dict, field: str) -> None:
+        code, stderr, output = self.failing(line)
+        self.assertEqual(2, code, stderr)
+        self.assertTrue(stderr.startswith("Error: "), stderr)
+        # The transcript, the line (the third of the file) and the field.
+        self.assertIn(f"{self.transcript.resolve()}:3: ", stderr)
+        self.assertIn(field, stderr)
+        self.assertFalse(output.exists())
+
+    def assert_message_names_no_other_field(self, line: dict, field: str) -> None:
+        # A field that is a prefix of another (`message` of `message.usage`) would pass by the
+        # longer name: the message holds the field as the end of its sentence.
+        _, stderr, _ = self.failing(line)
+        self.assertRegex(stderr.strip(), rf"(no field {re.escape(field)}|field {re.escape(field)} "
+                                         r"is not a (whole number|time))$")
+
+    def with_usage(self, **changes: object) -> dict:
+        line = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        usage = line["message"]["usage"]
+        for key, value in changes.items():
+            if value is ABSENT:
+                del usage[key]
+            else:
+                usage[key] = value
+        return line
+
+    def test_a_needed_field_that_is_missing_ends_the_script_with_exit_code_2_naming_it(
+            self) -> None:
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # The test of the reading that WAY-344 asks for: the transcript lacks one count of a
+        # response, and the script names it instead of reading the absent count as zero.
+        code, stderr, output = self.failing(self.with_usage(cache_creation_input_tokens=ABSENT))
+        self.assertEqual(2, code)
+        self.assertEqual(f"Error: {self.transcript.resolve()}:3: no field "
+                         "message.usage.cache_creation_input_tokens\n", stderr)
+        self.assertFalse(output.exists())
+
+    def test_every_needed_field_of_a_line_is_checked(self) -> None:
+        without_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        del without_message["message"]
+        null_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        null_message["message"] = None
+        text_message = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        text_message["message"] = "not an object"
+        no_content = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        del no_content["message"]["content"]
+        null_content = answer("09:00:20", "m2", "opus", 1, 0, 100, 1, "end_turn")
+        null_content["message"]["content"] = None
+        user_without_message = prompt("09:00:20", "go")
+        del user_without_message["message"]
+        user_without_content = prompt("09:00:20", "go")
+        del user_without_content["message"]["content"]
+        user_null_content = prompt("09:00:20", "go")
+        user_null_content["message"]["content"] = None
+        no_usage = self.with_usage()
+        del no_usage["message"]["usage"]
+        null_usage = self.with_usage()
+        null_usage["message"]["usage"] = None
+        list_usage = self.with_usage()
+        list_usage["message"]["usage"] = [1, 2]
+        for label, line, field in (
+                ("an answer with no message", without_message, "message"),
+                ("an answer with a null message", null_message, "message"),
+                ("an answer whose message is a text", text_message, "message.content"),
+                ("an answer with no content", no_content, "message.content"),
+                ("an answer with a null content", null_content, "message.content"),
+                ("a prompt with no message", user_without_message, "message"),
+                ("a prompt with no content", user_without_content, "message.content"),
+                ("a prompt with a null content", user_null_content, "message.content"),
+                ("an answer with no usage", no_usage, "message.usage"),
+                ("an answer with a null usage", null_usage, "message.usage"),
+                ("an answer whose usage is a list", list_usage, "message.usage.input_tokens")):
+            with self.subTest(label):
+                self.assert_missing(line, field)
+                self.assert_message_names_no_other_field(line, field)
+
+    def test_every_count_of_the_usage_is_checked_to_be_a_whole_number(self) -> None:
+        for count in COUNTS:
+            for label, value, kind in (
+                    ("absent", ABSENT, "no field"), ("null", None, "no field"),
+                    ("a negative number", -1, "is not a whole number"),
+                    ("a text", "5", "is not a whole number"),
+                    ("a fraction", 1.5, "is not a whole number"),
+                    ("a boolean", True, "is not a whole number"),
+                    ("a list", [5], "is not a whole number")):
+                with self.subTest(count=count, value=label):
+                    line = self.with_usage(**{count: value})
+                    field = f"message.usage.{count}"
+                    self.assert_missing(line, field)
+                    _, stderr, _ = self.failing(line)
+                    self.assertTrue(stderr.strip().endswith(
+                        f"no field {field}" if kind == "no field"
+                        else f"field {field} is not a whole number"), stderr)
+
+    def test_a_count_of_more_than_fifteen_digits_is_no_whole_number_and_one_of_fifteen_is(
+            self) -> None:
+        # The audit bounds the same counts at 15 digits (`TOKEN_DIGITS`): a longer count is no
+        # count of tokens, and the script refuses it as a count that is no whole number.
+        for count in COUNTS:
+            with self.subTest(count=count):
+                line = self.with_usage(**{count: 10 ** 15})
+                self.assert_missing(line, f"message.usage.{count}")
+                _, stderr, _ = self.failing(line)
+                self.assertTrue(stderr.strip().endswith(
+                    f"field message.usage.{count} is not a whole number"), stderr)
+        for lifetime in ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens"):
+            with self.subTest(lifetime=lifetime):
+                line = self.with_usage()
+                line["message"]["usage"]["cache_creation"][lifetime] = 10 ** 15
+                self.assert_missing(line, f"message.usage.cache_creation.{lifetime}")
+        for count in COUNTS:
+            with self.subTest(count=count, digits=15):
+                write_lines(self.transcript, [
+                    prompt("09:00:00", "run the cycle"),
+                    self.with_usage(**{count: 10 ** 15 - 1})])
+                code, stderr, output = self.run_main()
+                self.assertEqual(0, code, stderr)
+                self.assertTrue(output.exists())
+
+    def test_counts_of_thousands_of_digits_end_with_exit_code_2_and_no_stack_trace(self) -> None:
+        # Three counts of 4300 digits sum to one of 4301, which Python refuses to write out: the
+        # run ends with the message of a count that is no whole number, not with a trace.
+        huge = 9 * 10 ** 4299
+        line = self.with_usage(input_tokens=huge, cache_creation_input_tokens=huge,
+                               cache_read_input_tokens=huge)
+        code, stderr, output = self.failing(line)
+        self.assertEqual(2, code, stderr)
+        self.assertTrue(stderr.strip().endswith(
+            "field message.usage.input_tokens is not a whole number"), stderr)
+        self.assertFalse(output.exists())
+
+    def test_a_response_without_the_lifetimes_of_its_cache_writes_ends_with_exit_code_2(
+            self) -> None:
+        # The fields the route adds (WAY-344): `cache_creation` and the two lifetimes in it.
+        self.assert_missing(self.with_usage(cache_creation=ABSENT), "message.usage.cache_creation")
+        self.assert_missing(self.with_usage(cache_creation=None), "message.usage.cache_creation")
+        self.assert_missing(self.with_usage(cache_creation=[1]),
+                            "message.usage.cache_creation.ephemeral_5m_input_tokens")
+        line = self.with_usage()
+        del line["message"]["usage"]["cache_creation"]["ephemeral_1h_input_tokens"]
+        self.assert_missing(line, "message.usage.cache_creation.ephemeral_1h_input_tokens")
+        self.assert_message_names_no_other_field(
+            line, "message.usage.cache_creation.ephemeral_1h_input_tokens")
+
+    def test_every_lifetime_of_the_cache_writes_is_checked_to_be_a_whole_number(self) -> None:
+        for lifetime in ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens"):
+            for label, value, kind in (
+                    ("absent", ABSENT, "no field"), ("null", None, "no field"),
+                    ("a negative number", -1, "is not a whole number"),
+                    ("a text", "5", "is not a whole number"),
+                    ("a fraction", 1.5, "is not a whole number"),
+                    ("a boolean", True, "is not a whole number")):
+                with self.subTest(lifetime=lifetime, value=label):
+                    line = self.with_usage()
+                    creation = line["message"]["usage"]["cache_creation"]
+                    if value is ABSENT:
+                        del creation[lifetime]
+                    else:
+                        creation[lifetime] = value
+                    field = f"message.usage.cache_creation.{lifetime}"
+                    self.assert_missing(line, field)
+                    _, stderr, _ = self.failing(line)
+                    self.assertTrue(stderr.strip().endswith(
+                        f"no field {field}" if kind == "no field"
+                        else f"field {field} is not a whole number"), stderr)
+
+    def test_a_timestamp_that_is_no_time_ends_the_script_with_exit_code_2_naming_it(self) -> None:
+        for value in ("yesterday", "", 5, None, ["2026-10-06T09:00:00Z"], True, "2026-13-45",
+                      "0001-01-01T00:00:00+05:00", "9999-12-31T23:59:59-05:00"):
+            for kind, line in (("an answer", self.with_usage()),
+                               ("a prompt", prompt("09:00:20", "go"))):
+                with self.subTest(kind=kind, value=value):
+                    line["timestamp"] = value
+                    self.assert_missing(line, "timestamp")
+                    self.assert_message_names_no_other_field(line, "timestamp")
+
+    def test_a_line_of_another_kind_is_no_line_the_reading_checks(self) -> None:
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            {"type": "summary", "timestamp": "no time", "leafUuid": "x"},
+            {"type": "attachment", "timestamp": at("09:00:05"), "message": None},
+            {"timestamp": at("09:00:06")},
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+        code, stderr, _ = self.run_main()
+        self.assertEqual((0, ""), (code, stderr))
+
+    def test_a_missing_field_in_a_subagents_transcript_names_that_transcript(self) -> None:
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+        ])
+        agent = self.transcript.with_suffix("") / "subagents" / "agent-a1.jsonl"
+        bad = self.with_usage(output_tokens=ABSENT)
+        write_lines(agent, [prompt("09:01:00", "implement"), bad])
+        code, stderr, _ = self.run_main()
+        self.assertEqual(2, code)
+        self.assertEqual(f"Error: {agent.resolve()}:2: no field message.usage.output_tokens\n",
+                         stderr)
+
+    def test_the_fields_that_stay_lenient_read_as_they_always_did(self) -> None:
+        # Each line below lacks something the reading does not need, and the run ends with exit
+        # code 0: a line with no timestamp (before its type is looked at), a response that names no
+        # model, early lines of a response whose stop_reason is null, a response that has a uuid
+        # and no id, a tool call with no id or name, a result with no tool_use_id, a text that is
+        # no string, and a user line with no isMeta.
+        usage = {"input_tokens": 10, "cache_creation_input_tokens": 0,
+                 "cache_read_input_tokens": 100, "output_tokens": 2,
+                 "cache_creation": {"ephemeral_5m_input_tokens": 0,
+                                    "ephemeral_1h_input_tokens": 0}}
+        write_lines(self.transcript, [
+            {"type": "user"},
+            {"type": "assistant", "message": None},
+            prompt("09:00:00", "run the cycle"),
+            {"type": "assistant", "timestamp": at("09:00:10"), "uuid": "u1", "message": {
+                "content": [{"type": "text", "text": 5}], "usage": usage}},
+            {"type": "assistant", "timestamp": at("09:00:11"), "uuid": "u2", "message": {
+                "id": "m2", "model": "opus", "stop_reason": None, "content": [{"type": "tool_use"}],
+                "usage": dict(usage, input_tokens=1, output_tokens=1)}},
+            {"type": "assistant", "timestamp": at("09:00:12"), "uuid": "u3", "message": {
+                "id": "m2", "model": "opus", "content": [{"type": "text"}],
+                "usage": dict(usage, input_tokens=1, output_tokens=7)}},
+            {"type": "user", "timestamp": at("09:00:13"), "message": {
+                "content": [{"type": "tool_result", "content": "ok"}]}},
+            {"type": "assistant", "timestamp": at("09:00:14"), "message": {
+                "id": "m3", "model": None, "stop_reason": "end_turn", "content": [],
+                "usage": dict(usage, input_tokens=1, output_tokens=3)}},
+        ])
+        code, stderr, output = self.run_main()
+        self.assertEqual(0, code, stderr)
+        text = output.read_text(encoding="utf-8")
+        # u1: 110 in, 2 out; m2 once, from its later line: 101 in, 7 out; m3: 101 in, 3 out.
+        self.assertIn("- Tokens in all: 324", text)
+        self.assertIn("| unknown | 216 |", text)
+        self.assertIn("| opus | 108 |", text)
+        self.assertIn("2 response(s) name no model", stderr)
+        self.assertIn("1 call(s) of a type the reader does not recognise (tool_use): their "
+                      "waits are unknown", stderr)
+
+    def test_a_content_that_is_neither_a_text_nor_a_list_is_read_as_no_text(self) -> None:
+        for label, content in (("a number", 5), ("a boolean", True), ("an object", {"a": 1}),
+                               ("a list of no objects", ["x", 1]), ("an empty list", [])):
+            with self.subTest(label):
+                line = prompt("09:00:05", "go")
+                line["message"]["content"] = content
+                write_lines(self.transcript, [
+                    prompt("09:00:00", "run the cycle"),
+                    line,
+                    answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"),
+                ])
+                code, stderr, output = self.run_main()
+                self.assertEqual((0, ""), (code, stderr))
+                # No text: the line sets the agent working no more than a tool's result does.
+                self.assertIn("| 1 | orchestrator | 0:00:10 |",
+                              output.read_text(encoding="utf-8"))
+
+    def test_a_line_that_is_no_object_is_skipped_as_a_line_with_no_timestamp(self) -> None:
+        self.transcript.parent.mkdir(parents=True)
+        lines = [json.dumps(prompt("09:00:00", "run the cycle")), "[1, 2]", "5", '"text"', "null",
+                 json.dumps(answer("09:00:10", "m1", "opus", 1, 0, 100, 1, "end_turn"))]
+        self.transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        code, stderr, _ = self.run_main()
+        self.assertEqual((0, ""), (code, stderr))
+
+    def test_a_transcript_that_cannot_be_read_ends_with_exit_code_1_and_no_trace(self) -> None:
+        good = json.dumps(prompt("09:00:00", "run the cycle")) + "\n"
+        self.transcript.parent.mkdir(parents=True)
+        for label, data in (
+                ("a line that is no JSON", (good + "{not json\n").encode()),
+                ("a line nested too deep", (good + "[" * 200_000 + "\n").encode()),
+                ("bytes that are no UTF-8", good.encode() + b"\xff\xfe\n"),
+                ("a number of too many digits", (good + '{"timestamp": ' + "9" * 5000
+                                                 + "}\n").encode())):
+            with self.subTest(label):
+                self.transcript.write_bytes(data)
+                code, stderr, output = self.run_main()
+                self.assertEqual(1, code, stderr)
+                self.assertTrue(stderr.startswith("Error: "), stderr)
+                self.assertEqual(1, len(stderr.strip().splitlines()), stderr)
+                self.assertFalse(output.exists())
+
+    def test_a_crafted_value_neither_crashes_the_script_nor_breaks_the_report(self) -> None:
+        usage = {"input_tokens": 1, "cache_creation_input_tokens": 0,
+                 "cache_read_input_tokens": 10, "output_tokens": 1,
+                 "cache_creation": {"ephemeral_5m_input_tokens": 0,
+                                    "ephemeral_1h_input_tokens": 0}}
+        write_lines(self.transcript, [
+            prompt("09:00:00", "run the cycle"),
+            # A list for an identifier or a model, a naive time, a lone surrogate in a model.
+            {"type": "assistant", "timestamp": "2026-10-06T09:00:10", "uuid": "u1", "message": {
+                "id": ["m"], "model": ["opus"], "content": [
+                    {"type": "tool_use", "id": ["call"], "name": "Bash"},
+                    {"type": "tool_use", "id": "ok", "name": ["Bash"]}], "usage": usage}},
+            {"type": "user", "timestamp": at("09:00:20"), "message": {"content": [
+                {"type": "tool_result", "tool_use_id": ["call"]},
+                {"type": "tool_result", "tool_use_id": "ok"}]}},
+            {"type": "assistant", "timestamp": at("09:00:30"), "uuid": "u2", "message": {
+                "id": "m2", "model": "opus\ud800|x", "stop_reason": "end_turn",
+                "content": [{"type": "text"}], "usage": usage}},
+        ])
+        code, stderr, output = self.run_main()
+        self.assertEqual(0, code, stderr)
+        text = output.read_text(encoding="utf-8")
+        self.assertIn("1 response(s) name no model", stderr)
+        self.assertIn("| opus?/x | 12 |", text)
+
+
+def section_rows(text: str) -> list[list[str]]:
+    """The cells of each row of the detailed section's table, its header row included, as the
+    report writes them."""
+    section = text.split("\n## Stages: start", 1)[1]
+    return [[cell.strip() for cell in line.strip().strip("|").split("|")]
+            for line in section.splitlines() if line.startswith("| ")]
+
+
+CACHE_WRITE_HEADER = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
+                      "Output", "Files named", "Cache write (5 minutes)", "Cache write (1 hour)"]
+
+
+class CacheWriteColumnsTest(unittest.TestCase):
+    """The two columns of the cache writes after *Files named*: each lifetime of each model of a
+    stage. The figures are worked out by hand from the transcript written here."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        project = self.home / "projects" / "C--repo"
+        self.transcript = write_lines(project / "cache.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            # 300 written: 200 in the 5-minute lifetime and 100 in the 1-hour one.
+            answer("09:00:10", "o1", "opus", 1, 300, 0, 1, "end_turn", five=200),
+        ])
+        agents = project / "cache" / "subagents"
+        write_lines(agents / "agent-b1.jsonl", [
+            prompt("09:01:00", "build"),
+            # sonnet: 80 written, 30 in the 5-minute and 50 in the 1-hour lifetime.
+            answer("09:02:00", "b1", "sonnet", 2, 80, 900, 4, "tool_use", five=30),
+            # sonnet again: 20 written, all in the 1-hour lifetime.
+            answer("09:03:00", "b2", "sonnet", 3, 20, 100, 5, "tool_use", five=0),
+            # haiku: nothing written.
+            answer("09:04:00", "b3", "haiku", 1, 0, 0, 1, "end_turn"),
+        ])
+        (agents / "agent-b1.meta.json").write_text(json.dumps(
+            {"agentType": "general-purpose", "description": "Build"}), "utf-8")
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def run_report(self) -> tuple[int, str, str]:
+        output = self.root / "out" / "cache.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main(["cache", "--claude-home", str(self.home), "--codex-home",
+                                      str(self.root / "codex"), "--output", str(output)])
+        text = output.read_text(encoding="utf-8") if output.exists() else ""
+        return code, stderr.getvalue(), text
+
+    def report(self) -> str:
+        code, stderr, text = self.run_report()
+        self.assertEqual(0, code, stderr)
+        return text
+
+    def test_the_detailed_table_ends_with_the_two_columns_of_the_cache_writes(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
+        self.assertEqual(CACHE_WRITE_HEADER, section_rows(self.report())[0])
+
+    def test_each_model_of_a_stage_holds_its_two_lifetimes_apart(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
+        rows = section_rows(self.report())
+        self.assertEqual(CACHE_WRITE_HEADER, rows[0])
+        build = [row for row in rows if row[1] == "Build (general-purpose)"]
+        sonnet = [row for row in build if row[4] == "sonnet"]
+        haiku = [row for row in build if row[4] == "haiku"]
+        # Input is the input, the writes and the reads together: (2 + 80 + 900) + (3 + 20 + 100).
+        self.assertEqual([["sonnet", "1,105", "30", "70"]],
+                         [[row[4], row[5], row[9], row[10]] for row in sonnet])
+        self.assertEqual([["haiku", "0", "0"]], [[row[4], row[9], row[10]] for row in haiku])
+
+    def test_the_orchestrators_row_holds_its_own_lifetimes(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
+        rows = section_rows(self.report())
+        self.assertEqual(CACHE_WRITE_HEADER, rows[0])
+        opus = [row for row in rows if row[4] == "opus"]
+        self.assertEqual([["opus", "301", "200", "100"]],
+                         [[row[4], row[5], row[9], row[10]] for row in opus])
+
+    def test_lifetimes_that_do_not_add_up_are_warned_and_written_as_read(self) -> None:
+        line = answer("09:00:10", "o1", "opus", 1, 300, 0, 1, "end_turn", five=200)
+        # The lifetimes give 200 and 90, not the 300 the response wrote: 10 are unaccounted for.
+        line["message"]["usage"]["cache_creation"]["ephemeral_1h_input_tokens"] = 90
+        write_lines(self.transcript, [prompt("09:00:00", "run the cycle"), line])
+        code, stderr, text = self.run_report()
+        self.assertEqual(0, code, stderr)
+        warning = (f"Warning: Claude Code session `cache`, the orchestrator: 1 response(s) whose "
+                   f"cache writes by lifetime do not add up to cache_creation_input_tokens "
+                   f"in {self.transcript.resolve()}")
+        self.assertIn(warning, stderr)
+        opus = [row for row in section_rows(text) if row[4] == "opus"]
+        self.assertEqual([["opus", "301", "200", "90"]],
+                         [[row[4], row[5], row[9], row[10]] for row in opus])
+
+
+class CodexCacheWriteColumnsTest(unittest.TestCase):
+    """A Codex record gives no cache write: both columns of a Codex row read 0, with no warning."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.home = Path(self.folder.name) / "codex"
+        rollout(self.home, "orchk", [
+            meta("orchk", "10:00:00"),
+            started("10:00:00", "o1"),
+            context("10:00:00", "o1", "model-o"),
+            tokens("10:00:30", "orchk", "o1", 100, 40, 10),
+            complete("10:01:00", "o1"),
+        ])
+        rollout(self.home, "subk", [
+            meta("subk", "10:00:10", "orchk", "/root/work"),
+            started("10:00:10", "w1"),
+            context("10:00:10", "w1", "model-w"),
+            tokens("10:00:20", "subk", "w1", 500, 200, 20),
+            complete("10:00:40", "w1"),
+        ])
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def test_both_cache_write_columns_of_every_codex_row_read_zero(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
+        output = Path(self.folder.name) / "out" / "orchk.md"
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            code = cycle_stages.main(["orchk", "--codex-home", str(self.home), "--claude-home",
+                                      str(Path(self.folder.name) / "claude"),
+                                      "--output", str(output)])
+        self.assertEqual(0, code, stderr.getvalue())
+        text = output.read_text(encoding="utf-8")
+        self.assertEqual("", stderr.getvalue())
+        self.assertIn("Warnings: none.", text)
+        rows = section_rows(text)[1:]
+        self.assertEqual({"/root/work", "orchestrator"}, {row[1] for row in rows})
+        for row in rows:
+            with self.subTest(stage=row[1]):
+                self.assertEqual(["0", "0"], row[9:11])
+
+
+class CacheWritesAcrossScriptsTest(unittest.TestCase):
+    """The same Claude Code transcript, given to `cycle_stages.py` and to `cycle_measures.py`,
+    gives the same tokens written at each lifetime in the totals of both."""
+
+    def setUp(self) -> None:
+        self.folder = tempfile.TemporaryDirectory()
+        self.root = Path(self.folder.name)
+        self.home = self.root / "claude"
+        project = self.home / "projects" / "C--repo"
+        write_lines(project / "cross.jsonl", [
+            prompt("09:00:00", "run the cycle"),
+            # One response written over two lines that share its id: each counts once.
+            answer("09:00:10", "x1", "opus", 1, 100, 0, 1, "end_turn", five=60),
+            answer("09:00:11", "x1", "opus", 1, 100, 0, 1, "end_turn", five=60),
+            answer("09:00:30", "x2", "opus", 1, 200, 0, 1, "end_turn", five=150),
+        ])
+        agents = project / "cross" / "subagents"
+        write_lines(agents / "agent-c1.jsonl", [
+            prompt("09:01:00", "build"),
+            answer("09:02:00", "c1", "sonnet", 2, 80, 900, 4, "tool_use", five=0),
+            answer("09:03:00", "c2", "haiku", 1, 40, 0, 1, "end_turn", five=40),
+        ])
+        (agents / "agent-c1.meta.json").write_text(json.dumps(
+            {"agentType": "general-purpose", "description": "Build"}), "utf-8")
+
+    def tearDown(self) -> None:
+        self.folder.cleanup()
+
+    def test_both_scripts_total_the_same_tokens_written_at_each_lifetime(self) -> None:
+        # decision: WAY-339 "The one exception is that this report holds"
+        codex = str(self.root / "codex")
+        stages = self.root / "out" / "stages.md"
+        measures = self.root / "out" / "measures.md"
+        self.assertEqual(0, cycle_stages.main(["cross", "--claude-home", str(self.home),
+                                               "--codex-home", codex, "--output", str(stages)]))
+        self.assertEqual(0, cycle_measures.main(["cross", "--claude-home", str(self.home),
+                                                 "--codex-home", codex,
+                                                 "--output", str(measures)]))
+        # Worked out by hand: 5 minutes 60 + 150 + 0 + 40, 1 hour 40 + 50 + 80 + 0.
+        self.assertEqual(CACHE_WRITE_HEADER, section_rows(stages.read_text(encoding="utf-8"))[0])
+        self.assertEqual(250, self.total_of_stages(stages, 9))
+        self.assertEqual(170, self.total_of_stages(stages, 10))
+        figures = {line.split(":")[0]: line.split(":")[1].strip()
+                   for line in measures.read_text(encoding="utf-8").splitlines()
+                   if line.startswith("- Cache written, ")}
+        self.assertEqual({"- Cache written, 5 minutes": "250",
+                          "- Cache written, 1 hour": "170"}, figures)
+
+    def total_of_stages(self, path: Path, index: int) -> int:
+        rows = section_rows(path.read_text(encoding="utf-8"))[1:]
+        return sum(int(row[index].replace(",", "")) for row in rows)
 
 
 class CommandTest(unittest.TestCase):

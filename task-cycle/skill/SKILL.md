@@ -569,12 +569,12 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     counts the context and the prompt cache of the cycle's agents and, for each agent, the bytes of
     the decision log and of the index of decisions that entered its context and how many times each
     entered it, which show what the reading of the foundation costs (WAY-339). Where
-    `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends with exit code 2 and an
-    `Error:` line, record the command, the exit code and the `Error:` line under *Verification* of
-    the record and, in the request's *Checks*, as a check that did not run; fix the call where the
-    call was wrong and run it again; never write the file by hand. A cycle whose file stays missing
-    stays missing, and the record's *Verification* tells it from an earlier cycle. Run the process
-    remarks check on
+    `task-cycle/cycle_stages.py`, `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends
+    with exit code 2 and an `Error:` line, record the command, the exit code and the `Error:` line
+    under *Verification* of the record and, in the request's *Checks*, as a check that did not run;
+    fix the call where the call was wrong and run it again; never write the file by hand. A cycle
+    whose file stays missing stays missing, and the record's *Verification* tells it from an earlier
+    cycle. Run the process remarks check on
     the record as "The process remarks check" gives, before the description is written, so that a
     listing you hold wrong reaches the description. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the

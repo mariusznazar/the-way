@@ -77,8 +77,8 @@ project skill with the `the-way-` prefix, never a personal copy.
   conflicting trace goes to the human without automatic correction; a failed fetch or lookup
   cannot become `done`. Do not invent a PR URL or use branch names as proof.
 - You own ordinary State/Document-cell updates and their change-log entries. Pause these writes
-  while a delegated structural plan edit owns that file (step 5). Run `plan_check.py` after plan
-  changes and resolve findings before relying on them.
+  while a delegated structural plan edit owns that file (step 5). Run `project-level/plan_check.py`
+  after plan changes and resolve findings before relying on them.
 - If the last task is `done`, including an established goal delivered through another done task,
   tell the human that project closure is next and no closure skill exists. Stop there. Do not
   equate a dropped task with a delivered goal or perform closure or implementation.
@@ -173,10 +173,10 @@ do not repeat an already settled human choice unless its meaning or source chang
   of the exact complete document. Only then change its `Status:` to `ready for cycle`, update the
   plan State and Document link, move the task's line in the task place to ready as
   `project-level/task_line.md` gives, and log the acceptance with reason (WAY-154). Check the
-  resulting link and run `plan_check.py`. If interrupted between writes, compare recorded
-  acceptance with the actual document, allowing only the intended Status change; finish missing
-  writes, the line's among them, only if that acceptance still applies and the readiness checks
-  still hold. A changed body needs renewed
+  resulting link and run `project-level/plan_check.py`. If interrupted between writes, compare
+  recorded acceptance with the actual document, allowing only the intended Status change; finish
+  missing writes, the line's among them, only if that acceptance still applies and the readiness
+  checks still hold. A changed body needs renewed
   acceptance, not a reconstructed approval.
 - Before deleting the exact conversation file, verify all resolved answers, original sources,
   the ways the human did not choose, accepted candidate meanings and required information survive
