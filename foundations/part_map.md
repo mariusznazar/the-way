@@ -190,7 +190,8 @@ installer, its tests and a README explaining how a product uses the pinned versi
 
 - **Files:** installation/**
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
-  elements-common · project-level · product-guidelines · task-cycle · foundation-review
+  elements-common · project-level · product-guidelines · task-cycle · foundation-review ·
+  instruction-files
 - **Trust boundary:** installation/install.py
 
 ## product-guidelines
