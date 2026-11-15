@@ -25,7 +25,7 @@ Where {merge-onto} exists, every commit of the first-parent history of {merge-on
 
 ## repository-file-location
 
-Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory WAY-09 names for a part of the process, belongs to the `repository` or the `agent-instructions` part of the part map, or is the `README.md` at the root.
+Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a directory that the part map gives to a part of the process as its files (WAY-09), belongs to the `repository` or the `agent-instructions` part of the part map, or is the `README.md` at the root.
 
 - **Method:** review
 - **Rests on:** none
@@ -103,7 +103,7 @@ Every element's skill names its element's template and `elements/common/` as the
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
 - **Violated:** no
 
-## elements-no-pending-marker
+## elements-pending-marker
 
 No file git tracks under `elements/` holds the text "decision pending", every run of spaces and line breaks counting as one space.
 
@@ -180,7 +180,7 @@ No file generated for an agent holds an overview of the repository's directories
 - **Method:** review
 - **Rests on:** none
 - **Derives from:** WAY-52
-- **Part:** part-map · agent-instructions
+- **Part:** part-map · agent-instructions · installation
 - **Violated:** no
 
 ## gate-exit-code

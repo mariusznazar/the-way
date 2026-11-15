@@ -1398,12 +1398,13 @@ repeats the first search, and a record shows that a search ran, not what it miss
 An element's skill holds only the way of working particular to its element: every rule of the
 element's entries stands in the element's template, or once in the part the elements share
 (WAY-09) where it is common to them; the way of working the skills share stands once in that part,
-and a skill reads the rules and that way of working from there instead of restating them.
+and a skill reads the rules and that way of working from there instead of restating them. No
+template and no skill of an element carries a note that a rule waits for a decision.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: skill-rule-source · elements-no-pending-marker.
+- **Verification:** invariants: skill-rule-source · elements-pending-marker.
   For what the skill holds, an agent compares the change with the decision:
   - complies: a fix to a field's form in the skill's output goes into the template, not the
     skill; the skill orders its steps and says what to ask;
@@ -1413,10 +1414,15 @@ and a skill reads the rules and that way of working from there instead of restat
 
 *Rationale:* an entry written by hand or by another agent meets only the template and the shared
 part, so the rules stand where every writer and every check reaches them; steps and questions are
-no rule of an entry.
+no rule of an entry. A note in a template or a skill that a rule waits for a decision reads as a
+rule that does not bind yet, and it stays when the decision comes, since nothing leads from the
+decision to the note (WAY-33); a writer who meets it takes a settled rule for an open one.
 *Rejected:* rules restated in the skill next to the template — two copies that drift, and the
 template and the skill hold entries to different rules; each rule citing the decision that sets
-it — the rules are the-way's own text, changed and reviewed like any other change to it.
+it — the rules are the-way's own text, changed and reviewed like any other change to it; the
+decision left without a sentence on the note that a rule waits — the reason for the invariant that
+keeps such notes out lives in the description of one request alone, and whoever goes from the
+invariant to the decision finds no reason.
 
 ### WAY-113 — How does an agent of the-way ask a human decision?
 
@@ -6827,6 +6833,9 @@ A blocked request keeps the same skeleton, with `blocked` in its first sentence 
 needs, in plain words, and the stages it did not run because it stopped, under *Needed from you*,
 while each remaining finding stands with its place in the code in the lower part.
 
+Another decision may add a kind of item to one of the three groups, naming the group, and the
+template of a request's description lists every kind.
+
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
 - **Relations:** derives from WAY-227
@@ -6860,7 +6869,8 @@ while each remaining finding stands with its place in the code in the lower part
     what is missing; a value that names a fact the foundation holds and then
     `TODO — a second fact, from the vendor` is one gap, shown with the second fact alone;
   - violates: the section reads `none` while a choice beyond the task stands only among the
-    foundation entries; a group with no item is left out, or its heading stands with nothing under
+    foundation entries; a decision adds a kind of item to the section without naming the group that
+    takes it; a group with no item is left out, or its heading stands with nothing under
     it; the numbering of the items starts again in each group; a choice the cycle made within its
     authority stands under *Needed from you*, or ends with a question that waits for an answer; a
     skipped step is named only in the last line of the checks; a blocked
@@ -6894,7 +6904,10 @@ the request cannot go on without, what the human can still have done in it and w
 accepts look alike and end in a similar question, so the human answers all of them in one way, or
 reads none, and the matter that needs a real decision is lost among the rest; three groups put the
 criterion of each before the human, and a group that always stands lets the human tell a group with
-nothing in it from one that was forgotten.
+nothing in it from one that was forgotten. The list above is the base: a decision of its own, such
+as WAY-308 for the relation line it cleaned and WAY-316 for the screenshot it does not show, adds a
+kind of item to the section, and a sentence that lets a decision do so by naming the group spares
+this entry a change for each one, while every new kind still needs a decision of its own.
 *Rejected:* B. Change WAY-274 so that it does not count on the human seeing additions at the merge.
 That brings back the option WAY-274 itself rejected, the principle alone, with the list unseen and
 new items entering without the human, and it changes the meaning of a decision already accepted.
@@ -6903,7 +6916,13 @@ knowledge, and WAY-274 describes a mechanism the product does not have; a review
 change with WAY-274 would count its complies as met. A general item for everything a decision asks
 the human to see at the merge. It would encourage moving everything into the section, though its
 `none` is to mean the request can be merged. A search of the log by the words "at the merge",
-"sees" and "merges" found no second such case; that is a word search, not proof. A sentence of
+"sees" and "merges" finds WAY-308 and WAY-316 as further cases, each with a kind of item of its own;
+that is a word search, not proof. Weighed again on those cases, the general item stays rejected: it
+would still move everything a decision asks the human to see into the section, whereas a kind that
+a decision adds in a group it names keeps the `none` of the section a statement that the request can
+be merged. Listing both kinds in this entry's sentence — two more enumerations in a long sentence,
+and the next decision that adds a kind must change this entry again, a forgotten change giving the
+same gap between the decision and this entry. A sentence of
 the top part outside this section on the incomplete reading — an incomplete review would pass
 without the human's yes, with a note in a place the template gives to something else; the lower
 part, in the section of the checks — the human does not read it, so would still not know that the
