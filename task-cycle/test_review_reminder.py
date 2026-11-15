@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -56,6 +57,22 @@ def run(repository: Repository, *arguments: str) -> tuple[int, str, str]:
     with redirect_stdout(out), redirect_stderr(err):
         code = review_reminder.main([*arguments, "--repository", str(repository.directory)])
     return code, out.getvalue(), err.getvalue()
+
+
+def run_with_failing_git(repository: Repository, command: str,
+                         *arguments: str) -> tuple[int, str, str]:
+    """Run the script on real git, except that each git command named `command` fails with a message
+    in a language the script has no way to read, as a git with another locale would give it."""
+    real_git = review_reminder.git
+
+    def git(directory: Path, *git_arguments: str) -> subprocess.CompletedProcess:
+        if git_arguments[0] == command:
+            return subprocess.CompletedProcess(["git", *git_arguments], 128, "",
+                                               "fatal: nie można odczytać obiektu\n")
+        return real_git(directory, *git_arguments)
+
+    with mock.patch.object(review_reminder, "git", git):
+        return run(repository, *arguments)
 
 
 class ReviewReminderTest(unittest.TestCase):
@@ -111,23 +128,44 @@ class ReviewReminderTest(unittest.TestCase):
         _, out, _ = run(self.repo, "main")
         self.assertIn("merges: 2\n", out)
 
-    def test_the_reminder_starts_at_thirty_merges_and_not_at_twenty_nine(self) -> None:
-        self.merges(29)
+    def test_the_reminder_starts_at_sixty_merges_and_not_at_fifty_nine(self) -> None:
+        self.merges(59)
         _, out, _ = run(self.repo, "main")
-        self.assertIn("merges: 29\n", out)
+        self.assertIn("merges: 59\n", out)
+        self.assertIn("threshold: 60\n", out)
         self.assertIn("reminder: no\n", out)
-        self.merges(1, start=30)
+        self.merges(1, start=60)
         _, out, _ = run(self.repo, "main")
-        self.assertIn("merges: 30\n", out)
+        self.assertIn("merges: 60\n", out)
         self.assertIn("reminder: yes\n", out)
 
     def test_the_count_after_a_tag_restarts_the_reminder(self) -> None:
-        self.merges(31)
-        self.repo.tag("foundation-review/2026-01-10", self.head)
-        self.merges(2, start=32)
-        _, out, _ = run(self.repo, "main")
+        # A threshold of 3 stands in for the real one, so that the test builds 4 merges, not 61.
+        with mock.patch.object(review_reminder, "THRESHOLD", 3):
+            self.merges(4)
+            _, out, _ = run(self.repo, "main")
+            self.assertIn("reminder: yes\n", out)
+            self.repo.tag("foundation-review/2026-01-10", self.head)
+            self.merges(2, start=5)
+            _, out, _ = run(self.repo, "main")
         self.assertIn("merges: 2\n", out)
         self.assertIn("reminder: no\n", out)
+
+    def test_a_git_that_cannot_list_the_review_tags_is_an_error(self) -> None:
+        self.merges(2)
+        code, out, err = run_with_failing_git(self.repo, "tag", "main")
+        self.assertEqual(2, code)
+        self.assertEqual("", out)
+        self.assertTrue(err.startswith("Error: "))
+
+    def test_a_git_that_cannot_describe_a_tag_that_exists_is_an_error(self) -> None:
+        self.merges(2)
+        self.repo.tag("foundation-review/2026-01-10", self.head)
+        self.merges(1, start=3)
+        code, out, err = run_with_failing_git(self.repo, "describe", "main")
+        self.assertEqual(2, code)
+        self.assertEqual("", out)
+        self.assertTrue(err.startswith("Error: "))
 
     def test_a_branch_that_does_not_exist_is_an_error(self) -> None:
         code, out, err = run(self.repo, "no-such-branch")
