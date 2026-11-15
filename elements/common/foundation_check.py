@@ -32,8 +32,8 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   guidelines' *Applies to* name; the invariants a decision's
   *Verification* (after `invariants:`), a flow's *Invariant*, a failure mode's `detected by`, the
   lists of violated, quarantined and recovered invariants, a guidelines rule's *Invariant* and a
-  comment line `invariant: <identifier>` in a file other than Markdown name; the facts an
-  invariant's *Rests on* and a decision's *Based on* as an item of its own — its items joined by
+  comment line `invariant: <identifier>` in a file whose name does not end in `.md` name; the facts
+  an invariant's *Rests on* and a decision's *Based on* as an item of its own — its items joined by
   ` · ` — name; and a reference written
   `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
   are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
@@ -67,17 +67,18 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   itself matches, letter case counting, unless the map lists it under `Files left out on purpose`;
   and a file on that list that a part claims;
 - an invariant whose *Method* reads `test` and that no comment line `invariant: <identifier>`
-  names in a file git tracks other than Markdown: no test cites it (WAY-61). A line in a Markdown
-  file or in a file git does not track counts for nothing. Skipped by `--skip-test-citations`;
-- a comment line `decision: <number> "<quotation>"` in a file other than Markdown, which a test
-  that holds a sentence of a decision carries (WAY-12): no decision number as the log writes it;
-  a number that names no decision of the log or a withdrawn one; no quotation, or text after it; a
-  quotation that stands in no binding sentence of that decision's entry, does not begin one of its
-  sentences, or has fewer than three words. The binding sentences of an entry are the paragraphs
-  before its first field, where its *Rationale* and *Rejected* stand after the fields. Words of the
-  quotation and of the entry are compared with every run of spaces and line breaks made one space,
-  so a sentence wrapped over lines matches. A line in a Markdown file or in a file git does not
-  track counts for nothing;
+  names in a file git tracks whose name does not end in `.md`: no test cites it (WAY-61). A line in
+  a file whose name ends in `.md` or in a file git does not track counts for nothing. Skipped by
+  `--skip-test-citations`;
+- a comment line `decision: <number> "<quotation>"` in a file whose name does not end in `.md`,
+  which a test that holds a sentence of a decision carries (WAY-12): no decision number as the log
+  writes it; a number that names no decision of the log or a withdrawn one; no quotation, or text
+  after it; a quotation that stands in no binding sentence of that decision's entry, does not begin
+  one of its sentences, or has fewer than three words. The binding sentences of an entry are the
+  paragraphs before its first field, where its *Rationale* and *Rejected* stand after the fields.
+  Words of the quotation and of the entry are compared with every run of spaces and line breaks
+  made one space, so a sentence wrapped over lines matches. A line in a file whose name ends in
+  `.md` or in a file git does not track counts for nothing;
 - a decision that nothing holds (WAY-12). A decision is held when its *Verification* names an
   invariant after `invariants:`, when a line `decision:` of a file the report above reads names its
   number, valid or not, or when its *Verification* holds a line that begins `- complies:` and one
@@ -89,9 +90,9 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   second report. The switch `--skip-test-citations` skips none of this;
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
   base once every run of spaces and line breaks is made one space) is listed at its heading line,
-  when no file other than Markdown that cites it by `invariant:` now differs between the base and
-  the working tree and none that cited it at the base was deleted; where a deleted file was the
-  only one that cited it, the invariant has no citing file now. An
+  when no file whose name does not end in `.md` that cites it by `invariant:` now differs between
+  the base and the working tree and none that cited it at the base was deleted; where a deleted
+  file was the only one that cited it, the invariant has no citing file now. An
   invariant added by the change, or one lacking *Method* or *Part* at either state, is left out,
   and so is one with no citing file, which the report of an uncited `test` invariant covers. Where
   the base is unknown or lacks `foundations/invariants.md`, none is listed (WAY-03).
@@ -407,7 +408,8 @@ class Foundation:
         self.entries = {}    # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
-        self.cited = set()  # the identifiers named by a citing line of a file other than Markdown
+        # the identifiers named by a citing line of a file whose name does not end in `.md`
+        self.cited = set()
         self.bodies = {}  # decision number -> the lines of its unversioned entry
         self.headings = {}  # decision number -> the line number of its unversioned heading
         self.held = {}  # number as written -> [(path, line)] of each `decision:` line naming it
@@ -747,9 +749,10 @@ class Foundation:
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
-        other than Markdown that cites it now differs between the base and the working tree and no
-        such file that cited it at the base was deleted (WAY-03). An invariant the base lacks, or
-        lacking *Method* or *Part* at either state, is left out. The listing is no error."""
+        whose name does not end in `.md` that cites it now differs between the base and the working
+        tree and no such file that cited it at the base was deleted (WAY-03). An invariant the base
+        lacks, or lacking *Method* or *Part* at either state, is left out. The listing is no
+        error."""
         if not self.base or self.base_files.get(INVARIANTS) is None:
             return
         before = invariant_entries(self.base_files[INVARIANTS])
@@ -853,7 +856,8 @@ class Foundation:
             if found.get("Method", ("",))[0] == "test" and name not in self.cited:
                 self.report.error(INVARIANTS, found["Method"][1][0],
                                   "`%s` reads `test` and no test cites it: no file git tracks "
-                                  "other than Markdown holds a line `invariant: %s`" % (name, name))
+                                  "whose name does not end in `.md` holds a line `invariant: %s`"
+                                  % (name, name))
 
     def check_guidelines(self, path, lines):
         fenced, kind = None, None
