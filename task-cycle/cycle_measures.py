@@ -46,8 +46,9 @@ entered it. A read is a tool call paired with its result:
   form was read from rollouts under the Codex home.
 
 It is a read of the log where a text value of the call's input, at any depth (a file path, a search
-path, a shell command), names a path that ends with `foundations/decisions.md`, each backslash taken
-as a slash. The path is whole: no character of a name, `.` or `-` stands before it, and neither a
+path, a shell command), names a path that ends with `foundations/decisions.md`, each run of
+backslashes and slashes taken as one slash (a path in the source text of a Codex custom tool call has
+its backslashes doubled). The path is whole: no character of a name, `.` or `-` stands before it, and neither a
 character of a name or `-`, nor a `.` with a character of a name after it, follows it
 (`foundations/decisions.md.bak` and `myfoundations/decisions.md` are other files). It is a read of
 the index where the text of the result holds a line that begins with `# decision_index.py:`, the
@@ -119,7 +120,7 @@ SYNTHETIC_MODEL = "<synthetic>"
 REWRITE_FLOOR = 2000
 REWRITE_SHRINK_LIMIT = (7, 10)  # a context that falls to 7/10 of the previous one or less is a collapse
 LARGE_CONTEXT = 200000
-BACKSLASH = chr(92)
+SEPARATORS = re.compile("[" + chr(92) * 2 + "/]+")  # the class `[\\/]`: a backslash or a slash
 LOG_PATH = re.compile(r"(?<![\w.-])foundations/decisions\.md(?![\w-]|\.\w)")
 INDEX_TITLE = re.compile(r"^(?:[ \t]*\d+[\t\u2192])?# decision_index\.py:", re.MULTILINE)
 CLAUDE_TEXT_BLOCKS = frozenset({"text"})
@@ -276,8 +277,9 @@ def text_values(value: object) -> Iterator[str]:
 
 def names_log(texts: Iterable[str]) -> bool:
     """Whether a text names the decision log: a path that ends with `foundations/decisions.md`, with
-    each backslash taken as a slash."""
-    return any(LOG_PATH.search(text.replace(BACKSLASH, "/")) for text in texts)
+    each run of backslashes and slashes taken as one slash, since a path in source text, such as the
+    input of a Codex custom tool call, is written with its backslashes doubled."""
+    return any(LOG_PATH.search(SEPARATORS.sub("/", text)) for text in texts)
 
 
 def result_text(content: object, kinds: frozenset[str], label: str, where: str) -> str | None:
