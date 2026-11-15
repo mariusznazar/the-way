@@ -559,7 +559,9 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     in `CLAUDE_CODE_SESSION_ID` and Codex in `CODEX_SESSION_ID`. Beside it, run
     `task-cycle/cycle_measures.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/mechanism_measures.md`, naming the same sessions in the same way: it
-    counts the context and the prompt cache of the cycle's agents. Where
+    counts the context and the prompt cache of the cycle's agents and, for each agent, the bytes of
+    the decision log and of the index of decisions that entered its context and how many times each
+    entered it, which show what the reading of the foundation costs (WAY-339). Where
     `task-cycle/cycle_measures.py` or `task-cycle/gate_times.py` ends with exit code 2 and an
     `Error:` line, record the command, the exit code and the `Error:` line under *Verification* of
     the record and, in the request's *Checks*, as a check that did not run; fix the call where the

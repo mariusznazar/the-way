@@ -80,13 +80,14 @@ exit code 2 and a message that names the file, the line and the field: of a tool
 result its `text`. A `null` is a missing field. A line or a block that is no tool call or result, a
 content that is no string or list, a block that is no object and a result that is no text are not
 counted and are no error. The `type` that tells one kind of block or record from another is not
-checked: one that lacks it is a kind the reading does not know. Nothing of a transcript reaches the file but through `cell`:
-the figures of the log and the index are whole numbers made here.
+checked: one that lacks it is a kind the reading does not know. Nothing of a transcript reaches the
+file but through `cell`: the figures of the log and the index are whole numbers made here.
 
 The file is Markdown, written to PATH or printed. Exit code: 0 when it is written; 2 with
 `Error: <message>` on stderr and nothing written otherwise, for a session that cannot be found or
-read, a line that is not JSON, a needed field that is missing or no whole number, and a rollout of a
-subagent named as a session.
+read, a line that is not JSON or too large to read into memory, a needed field that is missing or no
+whole number, and a rollout of a subagent named as a session. Arguments of a Codex function call
+too large to parse are searched as their text alone.
 
 Standard library only.
 """
@@ -197,22 +198,36 @@ def read_time(entry: dict, where: str) -> datetime:
     return at if at.tzinfo else at.replace(tzinfo=timezone.utc)
 
 
+def line_object(line: str, where: str) -> dict | None:
+    """The object of one line of a JSON Lines file; None for a blank line. A line that is not JSON,
+    or not an object, ends the reading with `where` named."""
+    if not line.strip():
+        return None
+    try:
+        entry = json.loads(line)
+    except (ValueError, RecursionError) as error:
+        raise MeasuresError(f"{where}: not JSON: {error}") from error
+    if not isinstance(entry, dict):
+        raise MeasuresError(f"{where}: not a JSON object")
+    return entry
+
+
 def json_lines(path: Path) -> Iterator[tuple[int, dict]]:
     """Each non-blank line of a JSON Lines file, as its number and its object. A line that is not
-    JSON, or not an object, ends the reading with the file and the line named."""
+    JSON, not an object or too large to read into memory ends the reading with the file and the
+    line named."""
+    reading = 1  # the number of the line being read or parsed
     try:
         with path.open(encoding="utf-8") as handle:
             for number, line in enumerate(handle, 1):
-                if not line.strip():
-                    continue
-                where = f"{path}:{number}"
-                try:
-                    entry = json.loads(line)
-                except (ValueError, RecursionError) as error:
-                    raise MeasuresError(f"{where}: not JSON: {error}") from error
-                if not isinstance(entry, dict):
-                    raise MeasuresError(f"{where}: not a JSON object")
-                yield number, entry
+                reading = number
+                entry = line_object(line, f"{path}:{number}")
+                reading = number + 1
+                if entry is not None:
+                    yield number, entry
+    except MemoryError as error:
+        raise MeasuresError(f"{path}:{reading}: the line is too large to read into memory") \
+            from error
     except (OSError, UnicodeDecodeError) as error:
         raise MeasuresError(f"cannot read {path}: {error}") from error
 
@@ -378,7 +393,7 @@ def read_subagent_name(transcript: Path, agent_id: str) -> str:
     if meta_path.is_file():
         try:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, ValueError, RecursionError) as error:
+        except (OSError, UnicodeDecodeError, ValueError, RecursionError, MemoryError) as error:
             raise MeasuresError(f"cannot read {meta_path}: {error}") from error
     if not isinstance(meta, dict):
         meta = {}
@@ -454,8 +469,8 @@ def read_codex_record(entry: dict, where: str, counter: ReadCounter) -> None:
         if kind == "function_call" and isinstance(arguments, str):
             try:
                 texts.extend(text_values(json.loads(arguments)))
-            except (ValueError, RecursionError):
-                pass  # not JSON: the text itself was searched
+            except (ValueError, RecursionError, MemoryError):
+                pass  # not JSON, or too large to parse: the text itself was searched
         counter.call(ident, names_log(texts))
     elif kind in CODEX_OUTPUTS:
         ident = identifier(payload, "call_id", "payload.call_id", where)

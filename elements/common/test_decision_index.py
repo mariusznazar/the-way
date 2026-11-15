@@ -220,6 +220,20 @@ class DecisionIndexTest(unittest.TestCase):
         self.assertIn("### GAME-04 — How is a sound played?", text)
         self.assertNotIn("GAME-02", text)
 
+    def test_a_part_that_no_scope_names_is_named_in_the_index(self):
+        # "core-engin" is a misspelled part ("core-engine" is named) and "sound" a part no decision
+        # of this log names yet: the index still lists the two decisions "core" selects and names
+        # those two parts, and only those, as unnamed.
+        self.write_log(NO_SECTIONS)
+        result = self.index("--part", "core", "--part", "core-engin", "--part", "sound")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = read_text(self.out)
+        self.assertIn("Listed in full: 2. Listed by heading alone: 0.\n"
+                      "Parts that no Scope names: core-engin, sound.\n", text)
+        result = self.index("--part", "core")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("Parts that no Scope names", read_text(self.out))
+
     def test_section_and_part_list_outside_decisions_by_heading_after_the_others(self):
         self.write_log(TWO_SECTIONS)
         result = self.index("--section", "Saving", "--part", "levels")

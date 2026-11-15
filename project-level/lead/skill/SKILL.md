@@ -33,9 +33,9 @@ project skill with the `the-way-` prefix, never a personal copy.
 - Select and read the product's current foundation by "Reading the foundation" in that shared
   file (WAY-150), including the complete part map, the index of the selected decisions and the
   decisions that method opens whole. Every dispatched actor repeats that method for its work. Read
-  a large definition/plan by
-  `project-level/plan/skill/reading_definition_and_plan.md`: complete inventories before selection,
-  whole relevant units and expansion; preserve every borrowed skill's mandatory whole reads.
+  a large definition/plan by `project-level/plan/skill/reading_definition_and_plan.md`: complete
+  inventories before selection, whole relevant units and expansion; preserve every borrowed
+  skill's mandatory whole reads.
 - Require a handed-over plan. Run `python -B <the-way>/project-level/readiness_check.py <definition>`
   and `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole files and read
   their reports. A draft, finding, unreadable source or failed command is an obstacle, never

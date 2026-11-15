@@ -26,7 +26,9 @@ takes no other switch.
 
 The file opens with one fixed title line that holds the script's name, `# decision_index.py: ...`,
 and a line stating how many decisions it lists in full and how many by heading alone (for
-`--sections`, how many sections it lists).
+`--sections`, how many sections it lists). Where a part given by `--part` is named by the *Scope*
+of no decision of the log, a line after it names each such part, so that a misspelled part shows;
+a part no decision names yet is no error.
 
 Exit code: 0 when it has written the file. 2 with `Error: <message>` on stderr and nothing written
 for a log it cannot read, a section the log does not hold, a number the log does not hold, a
@@ -128,10 +130,20 @@ def select(sections, decisions, parts, names, numbers):
     return full, alone
 
 
-def selection_text(full, alone):
+def unnamed_parts(decisions, parts):
+    """The given parts that no decision's *Scope* names, in the order given, each once."""
+    named = set()
+    for decision in decisions:
+        named |= scope_items(decision)[1]
+    return [part for part in dict.fromkeys(parts) if part not in named]
+
+
+def selection_text(full, alone, unnamed):
     text = [TITLE, "", "Log: %s" % DECISIONS,
-            "Listed in full: %d. Listed by heading alone: %d." % (len(full), len(alone)), "",
-            "## Listed in full", ""]
+            "Listed in full: %d. Listed by heading alone: %d." % (len(full), len(alone))]
+    if unnamed:
+        text.append("Parts that no Scope names: %s." % ", ".join(unnamed))
+    text += ["", "## Listed in full", ""]
     for decision in full:
         text += ["### %s — %s" % (decision.number, decision.question), ""]
         for paragraph in binding(decision.body):
@@ -164,7 +176,7 @@ def run(args):
     if args.sections:
         return sections_text(sections, decisions)
     full, alone = select(sections, decisions, args.part, args.section, args.decision)
-    return selection_text(full, alone)
+    return selection_text(full, alone, unnamed_parts(decisions, args.part))
 
 
 def parser():

@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import unittest
+from collections.abc import Iterator
 from contextlib import redirect_stderr
 from datetime import datetime, timezone
 from pathlib import Path
@@ -69,6 +70,19 @@ def tool_return(clock: str, tool_id: str, content: object) -> dict:
     """The line that holds the result of a tool call."""
     return {"type": "user", "timestamp": at(clock), "message": {"role": "user", "content": [
         {"type": "tool_result", "tool_use_id": tool_id, "content": content}]}}
+
+
+def out_of_memory_on(starts: str) -> mock._patch:
+    """`json.loads` that raises MemoryError for a text that begins with `starts`, as it does for a
+    text too large to hold, and parses any other text. Running out of memory is not reproduced."""
+    real = json.loads
+
+    def loads(text: str, *args: object, **kwargs: object) -> object:
+        if text.startswith(starts):
+            raise MemoryError
+        return real(text, *args, **kwargs)
+
+    return mock.patch.object(cycle_measures.json, "loads", loads)
 
 
 def minutes(first: int, count: int) -> list[str]:
@@ -834,6 +848,39 @@ class EdgeReadingTest(MeasuresTest):
                          '"ephemeral_1h_input_tokens": 0}}}}\n')
         self.assert_error_names_line(transcript)
 
+    def test_a_line_too_large_to_parse_in_memory_ends_with_exit_2_naming_the_file_and_line(
+            self) -> None:
+        transcript = self.session([prompt("09:00:00", "run")])
+        with transcript.open("a", encoding="utf-8") as handle:
+            handle.write('{"huge": "x"}\n')
+        with out_of_memory_on('{"huge"'):
+            self.assert_error_names_line(transcript)
+
+    def test_a_line_too_large_to_read_into_memory_ends_with_exit_2_naming_the_file_and_line(
+            self) -> None:
+        # The file gives its first line and runs out of memory reading the second.
+        transcript = self.session([prompt("09:00:00", "run"), prompt("09:01:00", "more")])
+        first = json.dumps(prompt("09:00:00", "run")) + "\n"
+
+        class Handle:
+            def __enter__(self) -> Handle:
+                return self
+
+            def __exit__(self, *details: object) -> None:
+                return None
+
+            def __iter__(self) -> Iterator[str]:
+                yield first
+                raise MemoryError
+
+        real_open = Path.open
+
+        def fake_open(path: Path, *args: object, **kwargs: object) -> object:
+            return Handle() if path.name == transcript.name else real_open(path, *args, **kwargs)
+
+        with mock.patch.object(Path, "open", fake_open):
+            self.assert_error_names_line(transcript)
+
     def assert_error_names_line(self, transcript: Path) -> None:
         output = self.root / "out" / "measures.md"
         code, errors = self.run_script(str(transcript), "--output", str(output))
@@ -864,6 +911,21 @@ class EdgeReadingTest(MeasuresTest):
         self.session([prompt("08:59:00", "run")])
         output = self.root / "out" / "measures.md"
         code, errors = self.run_script(str(self.project / f"{SESSION}.jsonl"), "--output", str(output))
+        self.assertEqual(2, code, errors)
+        self.assertTrue(errors.startswith("Error: "), errors)
+        self.assertIn(meta.name, errors)
+        self.assertFalse(output.exists())
+
+    def test_a_meta_file_too_large_to_parse_in_memory_ends_with_exit_2_naming_it(self) -> None:
+        write_lines(self.project / SESSION / "subagents" / "agent-m1.jsonl", [
+            response("09:00:00", "m", input_tokens=1, output=1)])
+        meta = self.project / SESSION / "subagents" / "agent-m1.meta.json"
+        meta.write_text('{"huge": "x"}', encoding="utf-8")
+        self.session([prompt("08:59:00", "run")])
+        output = self.root / "out" / "measures.md"
+        with out_of_memory_on('{"huge"'):
+            code, errors = self.run_script(str(self.project / f"{SESSION}.jsonl"), "--output",
+                                           str(output))
         self.assertEqual(2, code, errors)
         self.assertTrue(errors.startswith("Error: "), errors)
         self.assertIn(meta.name, errors)
@@ -1170,11 +1232,18 @@ class CodexReadsTest(CodexTest):
             codex_call("09:03:00", "k2", "shell", json.dumps({"command": "cat foundations/decisions.md"})),
         ]))
 
+    def test_arguments_too_large_to_parse_in_memory_are_searched_as_their_text(self) -> None:
+        # The arguments name the log in their text; parsed, they would name it too. The result
+        # "héllo log" is 10 bytes.
+        with out_of_memory_on('{"command"'):
+            self.assertEqual(["10", "1", "0", "0"], self.figures("orch", [
+                codex_call("09:02:00", "k1", "shell",
+                           json.dumps({"command": "cat foundations/decisions.md"})),
+                codex_output("09:02:05", "k1", "héllo log")]))
+
     def test_an_output_that_is_no_text_is_not_counted(self) -> None:
-        for value in (5, {"text": "a"}, None):
+        for value in (5, {"text": "a"}):
             with self.subTest(output=value):
-                if value is None:
-                    continue  # a missing output is an error, tested below
                 self.assertEqual(["0", "0", "0", "0"], self.figures("orch", [
                     codex_call("09:02:00", "k1", "shell",
                                json.dumps({"command": "cat foundations/decisions.md"})),
