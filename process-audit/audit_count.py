@@ -96,21 +96,39 @@ The process versions (WAY-339): each cycle is grouped by the version of the-way 
 *Process pin* resolves to, the full commit that `git rev-parse --disambiguate` names in the
 checkout of the-way. A cycle whose pin is unknown, does not resolve, is ambiguous, or whose commit
 has no readable date stands apart as *no version*, with its reason, and is in no series. Versions
-are ordered by their commit's date (`git log -1 --format=%ct`), ties by the full hash. A series is
-a run of consecutive versions between which none of these changes:
+are ordered by their commit's date (`git log -1 --format=%ct`), ties by the full hash. The versions
+are cut into series of two kinds, and a measure is compared only inside a series of its own kind:
+no cell sets a number of one kind of series beside a number of the other, and each series is its own
+subsection of the result, with the reason it begins where it does (WAY-339).
+
+A series of the cost, in which the median cost and the answer Q3 are compared, is a run of
+consecutive versions between which neither of these changes:
 
 - the price list the costs are priced by (one list per run, so this never splits a run);
+- `task-cycle/cycle_stages.py`, the script that measures the cost, and no other script
+  (`git diff --quiet`; exit 1, or any other failure, counts as changed).
+
+A series of the count of remarks, in which the answers Q1 and Q2 are compared, ends wherever a
+series of the cost ends, and also at either of these changes:
+
 - the register's list of classes: a date of *Added* or *Withdrawn* on or between the days of the
   two versions, or a list the register does not give in full, which splits at every version;
-- the tree of the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review`,
-  `task-cycle/spec` and `task-cycle/cycle_stages.py` (`git diff --quiet`; exit 1, or any other
-  failure, counts as changed). This test is deliberately conservative: any change of those files
-  starts a series, though not every change alters a stage report's form or the reviewer's
-  instructions. It cannot tell such a change from another one, and errs toward fewer comparisons.
+- the form of a stage report or the instructions of the reviewer, taken as the files of the-way under
+  `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and
+  `task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its instruction
+  (the same `git diff --quiet`). Any change of those files ends the series, whether or not it alters
+  that form or those instructions: the count of remarks compares less, and the series of the cost,
+  which none of these changes ends, compares across them.
 
-Measures are compared only within a series, and each series is its own section of the result
-(WAY-339). Per version: the median cost at constant prices of its cycles with a known cost, and
-three answers, each `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
+The cost and the count of remarks are split apart because a change of the reviewer's instructions
+is a change of the process: a series of the cost that it ended would never hold the two sides to
+compare. The price: after such a change the cost cannot tell "the reviewer found more" from "the
+process got dearer", while the count of remarks, whose meaning changes with the reviewer, has a
+series that ends there.
+
+Per version of a series of the cost: the median cost at constant prices of its cycles with a known
+cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
+Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
 is no, text naming an open design choice with no word that denies it (`no`, `not`, `without`...)
 among the last four words just before the phrase, in the same clause, is yes (a denial elsewhere in
@@ -134,11 +152,11 @@ change to the process worked. A series of the mechanism measures of `mechanism_m
 begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
 series of
 the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `gate/run_tests.py`
-differs, by the same test as the reviewed files (`git diff --quiet`; exit 1, or any failure, counts
-as changed). No other change splits them: not the price list, a date of the register's list of
-classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
-`task-cycle/spec`, nor one of `task-cycle/cycle_stages.py`, and neither script splits a series of
-the cost. The section
+differs, by the same test as the series of the cost (`git diff --quiet`; exit 1, or any failure,
+counts as changed). No other change splits them: not the price list, a date of the register's list
+of classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
+`task-cycle/spec`, nor one of `task-cycle/agent-types/the-way-stage.md` or
+`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
 *Measure versions* gives, for each version of a series and each cycle-level measure, the number of
 cycles that give a value, their median (the rule of the median of the cost) and whether it falls
 against the previous version of the series, and for the gate times the total of the run and each
@@ -349,9 +367,16 @@ SHARE = Decimal("0.1")
 # A cost at or above this many dollars is not given: a crafted count would otherwise overrun the
 # precision the cost is written with.
 COST_CEILING = Decimal(10) ** 18
-# The reviewed files of the-way: a change of any of them between two versions starts a series.
-TREE_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
-              "task-cycle/cycle_stages.py")
+# The script that measures the cost, and no other: a change of it between two versions starts a
+# series of the cost (and so of the count of remarks), with a new price list (WAY-339).
+COST_SCRIPT = "task-cycle/cycle_stages.py"
+COST_SCRIPTS = (COST_SCRIPT,)
+# The files of the-way that give the form of a stage report and the instructions of the reviewer: a
+# change of any of them between two versions starts a series of the count of remarks and none of the
+# cost. The type of agent `the-way-stage.md` is here because the reviewer receives its text as its
+# instruction.
+COUNT_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
+               "task-cycle/agent-types/the-way-stage.md")
 # The items of the record the questions of a process version read (task-cycle/record_template.md).
 ITEM_DISCARDED = "Discarded attempt"
 ITEM_PLAN = "Plan"
@@ -2121,11 +2146,6 @@ class Ancestry:
         except ValueError:
             return None, "the date of the commit is not a number"
 
-    def changed(self, earlier: str, later: str) -> bool:
-        """Whether the reviewed files of the-way differ between two full commit hashes; a git
-        that fails counts as changed, so that a series is never joined by mistake (WAY-339)."""
-        return self.differs(earlier, later, TREE_PATHS)
-
     def differs(self, earlier: str, later: str, paths: tuple[str, ...]) -> bool:
         """Whether the files at `paths` differ between two full commit hashes of the-way, by
         `git diff --quiet`: exit 1, or any failure, counts as changed."""
@@ -2336,16 +2356,23 @@ class Series:
 
 @dataclass
 class Versions:
-    series: list[Series] = field(default_factory=list)
+    # The two kinds of series of the process versions (WAY-339): the series of the cost, the
+    # median cost and Q3 are compared in; and the series of the count of remarks, Q1 and Q2 are
+    # compared in, which ends wherever a series of the cost ends and at more changes.
+    cost: list[Series] = field(default_factory=list)
+    count: list[Series] = field(default_factory=list)
     no_version: list[Cycle] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
     # Every version, in the order of their dates: the series of the measures are made of them.
     ordered: list["Version"] = field(default_factory=list)
 
 
-VERSION_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
-                  "Median cost (USD)", "Q1: contradiction only after code", "Plans read",
-                  "Q2: more than a third of slices too large", "Q3: cost falls"]
+SERIES_COST = "Cost"
+SERIES_COUNT = "Count of remarks"
+COST_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
+               "Median cost (USD)", "Q3: cost falls"]
+COUNT_HEADER = ["Version (commit)", "Committed", "Cycles", "Q1: contradiction only after code",
+                "Plans read", "Q2: more than a third of slices too large"]
 
 
 def median_of(costs: list[Decimal]) -> Decimal | None:
@@ -2360,20 +2387,58 @@ def median_of(costs: list[Decimal]) -> Decimal | None:
     return (ordered[middle - 1] + ordered[middle]) / 2
 
 
-def series_boundary(earlier: Version, later: Version, register: Register,
-                    ancestry: Ancestry) -> str | None:
-    """Why a new series begins at `later`, or None where both versions share one series."""
+FIRST_VERSION = "the first version of the result"
+
+
+def changed_reason(ancestry: Ancestry, earlier: str, later: str,
+                   paths: tuple[str, ...]) -> str | None:
+    """None where the files at `paths` do not differ between two full commit hashes of the-way,
+    else a reason that names the paths that changed: `git diff --quiet` of each, a failure counting
+    as changed, so that a series is never joined by mistake (WAY-339)."""
+    if not ancestry.differs(earlier, later, paths):
+        return None
+    changed = [path for path in paths if ancestry.differs(earlier, later, (path,))] or list(paths)
+    names = " and ".join(f"`{path}`" for path in changed)
+    return f"{names} changed between the two versions"
+
+
+def cost_boundary(earlier: Version, later: Version, ancestry: Ancestry) -> str | None:
+    """Why a new series of the cost begins at `later`, or None where both versions share one: a
+    new price list, or a change of the script that measures the cost, and nothing else."""
     if earlier.price != later.price:
         return "the price list changed"
+    return changed_reason(ancestry, earlier.commit, later.commit, COST_SCRIPTS)
+
+
+def count_boundary(earlier: Version, later: Version, register: Register,
+                   ancestry: Ancestry) -> str | None:
+    """Why a new series of the count of remarks begins at `later`, or None where both versions
+    share one: wherever a series of the cost begins, and at a date of the register's list of
+    classes or a change of the files that give the form of a stage report or the reviewer's
+    instructions."""
+    why = cost_boundary(earlier, later, ancestry)
+    if why is not None:
+        return why
     if register.class_dates_unknown:
         return "the register's list of classes is not given in full, so it may have changed"
     # A date on the day of either version counts: the test errs toward more series.
     at = bisect.bisect_left(register.class_dates, earlier.day)
     if at < len(register.class_dates) and register.class_dates[at] <= later.day:
         return "the register's list of classes changed between the two versions"
-    if ancestry.changed(earlier.commit, later.commit):
-        return "the reviewed files of the-way changed between the two versions"
-    return None
+    return changed_reason(ancestry, earlier.commit, later.commit, COUNT_PATHS)
+
+
+def split_series(versions: list[Version], boundary) -> list[Series]:
+    """Split the versions, in the order of their dates, into runs: a new one begins at a version
+    for which `boundary(previous version, version)` gives a reason, which the series keeps."""
+    blocks: list[Series] = []
+    for number, version in enumerate(versions):
+        why = boundary(versions[number - 1], version) if number else None
+        if why is None and blocks:
+            blocks[-1].versions.append(version)
+        else:
+            blocks.append(Series(why or FIRST_VERSION, [version]))
+    return blocks
 
 
 def instrument_series(versions: list[Version], ancestry: Ancestry,
@@ -2381,21 +2446,9 @@ def instrument_series(versions: list[Version], ancestry: Ancestry,
     """Split the versions, in the order of their dates, into series by the change of the scripts
     alone: a series begins at a version whose files at `scripts` differ from the previous
     version's (WAY-339), and its reason names the scripts that changed. Nothing else splits it:
-    not the price list, the register's list of classes or the reviewed files of the cost."""
-    blocks: list[Series] = []
-    for version in versions:
-        if not blocks:
-            blocks.append(Series("the first version of the result", [version]))
-            continue
-        earlier = blocks[-1].versions[-1].commit
-        if not ancestry.differs(earlier, version.commit, scripts):
-            blocks[-1].versions.append(version)
-            continue
-        changed = [script for script in scripts
-                   if ancestry.differs(earlier, version.commit, (script,))] or list(scripts)
-        names = " and ".join(f"`{script}`" for script in changed)
-        blocks.append(Series(f"{names} changed between the two versions", [version]))
-    return blocks
+    not the price list, the register's list of classes or the files of the count of remarks."""
+    return split_series(versions, lambda earlier, later: changed_reason(
+        ancestry, earlier.commit, later.commit, scripts))
 
 
 @dataclass
@@ -2592,63 +2645,92 @@ def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
         versions.append(Version(commit, stamp or 0, day, prices.date, members))
     versions.sort(key=lambda version: (version.stamp, version.commit))
     result.ordered = versions
-    for version in versions:
-        if not result.series:
-            result.series.append(Series("the first version of the result", [version]))
-            continue
-        reason = series_boundary(result.series[-1].versions[-1], version, register, ancestry)
-        if reason is None:
-            result.series[-1].versions.append(version)
-        else:
-            result.series.append(Series(reason, [version]))
-    for block in result.series:
-        previous: Version | None = None
-        previous_median: Decimal | None = None
-        for version in block.versions:
-            costs = [cycle.cost for cycle in version.cycles if cycle.cost is not None]
-            median = median_of(costs)
-            answer1, why1 = contradiction_of(version)
-            plans, answer2, why2 = too_large_of(version)
-            if previous is None:
-                answer3, why3 = "unknown", "no previous version in the series"
-            elif median is None or previous_median is None:
-                answer3, why3 = "unknown", "a median cost is not known"
-            else:
-                answer3 = "yes" if median < previous_median else "no"
-                why3 = None
-            for label, why in (("contradiction only after code", why1),
-                               ("slices too large", why2), ("cost falls", why3)):
-                if why:
-                    result.unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}",
-                                           why))
-            block.rows.append([version.commit, version.day, str(len(version.cycles)),
-                               str(len(costs)), money(median), answer1, plans, answer2, answer3])
-            previous, previous_median = version, median
+    result.count = split_series(
+        versions, lambda earlier, later: count_boundary(earlier, later, register, ancestry))
+    result.cost = split_series(
+        versions, lambda earlier, later: cost_boundary(earlier, later, ancestry))
+    for block in result.count:
+        count_rows(block, result.unknown)
+    for block in result.cost:
+        cost_rows(block, result.unknown)
     return result
 
 
+def count_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the count of remarks: for each version its answers Q1 and Q2, each
+    with its reason in `unknown` where it is not known. No number of the cost stands in them."""
+    for version in block.versions:
+        answer1, why1 = contradiction_of(version)
+        plans, answer2, why2 = too_large_of(version)
+        for label, why in (("contradiction only after code", why1), ("slices too large", why2)):
+            if why:
+                unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}", why))
+        block.rows.append([version.commit, version.day, str(len(version.cycles)), answer1, plans,
+                           answer2])
+
+
+def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
+    """The rows of a series of the cost: for each version the median cost of its cycles with a
+    known cost, and Q3, whether it is lower than the previous version's of the same series."""
+    previous: Version | None = None
+    previous_median: Decimal | None = None
+    for version in block.versions:
+        costs = [cycle.cost for cycle in version.cycles if cycle.cost is not None]
+        median = median_of(costs)
+        if previous is None:
+            answer3, why3 = "unknown", "no previous version in the series"
+        elif median is None or previous_median is None:
+            answer3, why3 = "unknown", "a median cost is not known"
+        else:
+            answer3 = "yes" if median < previous_median else "no"
+            why3 = None
+        if why3:
+            unknown.append((THE_WAY, NONE, f"cost falls, version {version.commit}", why3))
+        block.rows.append([version.commit, version.day, str(len(version.cycles)), str(len(costs)),
+                           money(median), answer3])
+        previous, previous_median = version, median
+
+
 def versions_lines(versions: Versions) -> list[str]:
-    """The section *Process versions*: a table per series and a note of the cycles in no version."""
+    """The section *Process versions*: a table per series of the cost and per series of the
+    count of remarks, each with the reason it begins where it does, and a note of the cycles in no
+    version."""
     lines = [
         "## Process versions",
         "",
         "A version of the process is the commit of the-way that its cycles' *Process pin* "
-        "resolves to, ordered by the commit's date. WAY-339 starts a new series at a new price "
-        "list, or at a change of the form of a stage report, of the list of classes or of the "
-        "instructions of the reviewer. This count splits more often than that: at a new price "
-        "list, at a date of the register's list of classes, and at any change of the files of "
-        "the-way under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` and "
-        "`task-cycle/spec` or of `task-cycle/cycle_stages.py`, whatever the change, so that it "
-        "compares less and never across a change WAY-339 names. Measures are compared only "
-        "within one series, and no cell sets a number of one series beside a number of another. "
+        "resolves to, ordered by the commit's date. The versions are cut into series of two kinds "
+        "(WAY-339), and a measure is compared only inside a series of its own kind: no cell sets "
+        "a number of one kind of series beside a number of the other.",
+        "",
+        "A series of the cost holds the median cost and the answer Q3. It begins at a new price "
+        f"list or at a change of `{COST_SCRIPT}`, the script that measures the cost, and at no "
+        "other change: not at a change of the instructions of the reviewer.",
+        "",
+        "A series of the count of remarks holds the answers Q1 and Q2. It begins wherever a "
+        "series of the cost begins, and also at a date of *Added* or *Withdrawn* of the "
+        "register's list of classes, and at any change of the files that give the form of a "
+        "stage report or the instructions of the reviewer: those under `task-cycle/change`, "
+        "`task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and "
+        "`task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its "
+        "instruction. The test is `git diff --quiet` (exit 1, or any other failure, counts as "
+        "changed), and any change of those files begins a series, whether or not it alters that "
+        "form or those instructions. The price of keeping the series of the cost whole across "
+        "such a change: a rise of the cost after a change of the reviewer's instructions may be "
+        "the reviewer finding more or the process getting dearer, and the count of remarks, "
+        "whose meaning changes with the reviewer, is the series that ends there.",
+        "",
         "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
-        "unknown.",
+        "unknown. The reason each series begins where it does stands under its heading.",
         "",
     ]
-    for number, block in enumerate(versions.series, 1):
-        lines += [f"### Series {number}", "", f"Begins at this version: {block.begins}.", ""]
-        lines += table(VERSION_HEADER, block.rows)
-        lines.append("")
+    for title, blocks, header in ((SERIES_COST, versions.cost, COST_HEADER),
+                                  (SERIES_COUNT, versions.count, COUNT_HEADER)):
+        for number, block in enumerate(blocks, 1):
+            lines += [f"### {title}, series {number}", "",
+                      f"Begins at this version: {block.begins}.", ""]
+            lines += table(header, block.rows)
+            lines.append("")
     if versions.no_version:
         lines += [
             "### No version",
@@ -2679,7 +2761,9 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
         "date of the register's list of classes and a change under `task-cycle/change`, "
         "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
-        "`task-cycle/cycle_stages.py` split neither, though they split the series of the cost. "
+        "`task-cycle/cycle_stages.py` split neither, though a new price list and a change of "
+        "`task-cycle/cycle_stages.py` split the series of the cost, and the others the series "
+        "of the count of remarks. "
         "Each series is its own subsection, a number of one series is never set beside a number of "
         "another, and the cycles in no version stand in no series. *Falls* is `yes` where the "
         "median is lower than the previous version's median of the same measure in the same "
