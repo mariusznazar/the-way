@@ -14,13 +14,13 @@ On the main branch, this repository holds `foundations/` with the entries of the
 directory for each part of the process other than `repository`, which the part map of the-way names
 with its files, the files that configure the whole repository, which its part map gives to the
 `repository` part (WAY-44), the root agent instruction files, the project skill entry points under
-`.claude/skills/` and `.agents/skills/` and the copies of the cycle's agent type definitions under
-`.claude/agents/`, which the map gives to `agent-instructions` (WAY-44), and a `README.md` that
-describes the repository. A directory reaches the main branch only once it holds what its part
-requires: an element its template and rules, examples or a pointer to entries of the-way that serve
-as its examples, and a skill that writes its entries; any other directory what the sentence of its
-part in the part map names. The entries in `foundations/` are checked by
-`elements/common/foundation_check.py`.
+`.claude/skills/` and `.agents/skills/`, the copies of the cycle's agent type definitions under
+`.claude/agents/` and the CI configuration under `.github/workflows/`, which the map gives to
+`agent-instructions` (WAY-44), and a `README.md` that describes the repository. A directory reaches
+the main branch only once it holds what its part requires: an element its template and rules,
+examples or a pointer to entries of the-way that serve as its examples, and a skill that writes its
+entries; any other directory what the sentence of its part in the part map names. The entries in
+`foundations/` are checked by `elements/common/foundation_check.py`.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
@@ -41,7 +41,8 @@ part in the part map names. The entries in `foundations/` are checked by
     `.claude/skills/` and `.agents/skills/` stand at the root as files of `agent-instructions`, and
     the script that generates them stands with its test in `agent-instructions/`; the copies of
     the cycle's agent type definitions under `.claude/agents/` stand there too, generated from the
-    definitions in `task-cycle/`; the principles,
+    definitions in `task-cycle/`; the CI configuration stands under `.github/workflows/` as files of
+    `agent-instructions`; the principles,
     the loading account, the skill and the check script of instruction files stand together in
     `instruction-files/`; the template of guidelines and the template and the skill of the
     styleguide discipline stand together in `product-guidelines/`; the skill of the review of a
@@ -2521,26 +2522,48 @@ rules the-way's own code keeps, and the one command that runs every test, with h
 
 One command runs all of a product's tests, the tests of its invariants among them — the
 same command for an agent, for a human and for whatever runs it when a change is merged —
-and no list of checks written by hand stands beside it.
+and no list of checks written by hand stands beside it. In CI that command runs on every merge
+request, with `.the-way` at the commit the product pins (WAY-34), from a file of CI configuration
+that the product writes itself by the description the-way gives, and the installer writes none. The
+result of that run is a check the repository requires before a merge, and the owner of the
+repository may bypass it.
 
-- **Scope:** invariants, agent-instructions, task-cycle, gate
-- **Based on:** none
-- **Relations:** none
+- **Scope:** invariants, agent-instructions, task-cycle, gate, installation
+- **Based on:** github-required-status-checks · github-ruleset-bypass · foundations-branch-ruleset
+- **Relations:** derives from WAY-34
 - **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
-  everyone, an agent compares the change with the decision:
-  - complies: the instructions for agents name that one command as the way to check a change;
+  everyone and for its run in CI, an agent compares the change with the decision:
+  - complies: the instructions for agents name that one command as the way to check a change; the
+    CI file of the-way runs `python -B gate/run_tests.py` on every pull request into `foundations`;
+    the description that the installer's README gives a product says that its CI file runs the one
+    command on every merge request with `.the-way` at the commit the product pins, and that the
+    result is set as a required check with a bypass for the owner;
   - violates: the instructions for agents list test and lint commands of their own; the tests of
-    the invariants run under a command of their own beside the product's tests.
+    the invariants run under a command of their own beside the product's tests; the installer writes
+    a CI file into a product; a CI file runs a checking command beside the one command; the result
+    of the run shows on a merge request and nothing requires it before the merge.
 - **Origin:** none
 
 *Rationale:* a list of checks written by hand is a second copy of the tests that drifts: a new
 test never runs, a removed one still does. One command for all leaves no doubt which tests ran, and
-running all of them leaves nothing to choose.
+running all of them leaves nothing to choose. The run in CI is the one that does not rest on the
+agent or the human who made the change having run the tests, and it is made on a system that may
+differ from theirs; a result the repository requires cannot be merged red by oversight, and the
+owner's bypass leaves the owner able to merge while the CI itself is broken. The product writes its
+own CI file because the installer knows nothing of the product's environment.
 *Rejected:* a gate taking its checks from the methods written in the entries and running those a
 change calls for — a second runner beside the product's tests, and a choice of tests that can
 leave out the one a change breaks; separate commands for an agent, a human and whatever runs the
 tests when a change is merged — three lists to keep in step; the tests of the invariants under a
-command of their own — of two commands an agent runs one.
+command of their own — of two commands an agent runs one; the installer putting a ready CI file
+into the product — the file needs correcting by hand anyway, after which the installer overwrites
+the product's changes or stops managing the file, and what the installer promises products, which
+names the files it touches, changes; the-way giving products nothing for CI, each product building
+it alone — the rule lives in one product, the next starts from nothing, and the installer goes on
+saying only to run the tests before a merge; a required check with no bypass for the owner — a
+failure of the CI blocks every merge until the owner turns the rule off, which the owner can do
+anyway, so the difference is only more clicking; a result that is shown and requires nothing — a
+red request can be merged by oversight.
 
 ### WAY-38 — In what are the scripts of the-way written?
 
@@ -2654,7 +2677,14 @@ The task-cycle orchestrator itself runs the product's gate on the tree that goes
 and the request gives its command and exit code and names each check that failed or did not run; a
 check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
 author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
-it.
+it. Where CI runs on a request whose code is finished — one open for review, or one that waits only
+for human actions in the cycle — the orchestrator waits for the result of the run on each head it
+pushes to it, a correction's included, treats a red result as a failed gate, handled as the cycle's
+gate gives — a fix and its review, save a check outside the task's scope that passes when run
+again, which WAY-261 governs — and puts the result into the request's description; a request the
+cycle leaves blocked for unfinished
+code is out of that wait, its description saying that the result of the run stands on the request's
+page and was not waited for.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -2662,11 +2692,19 @@ it.
 - **Verification:** an agent compares the gate's run and the request with the decision:
   - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
     and again where the merge with the target branch changed it, and the request gives the command
-    and its exit code;
+    and its exit code; the orchestrator, with CI running on the request, waits for the run on the
+    commit it pushed last, finds it red, has the failure fixed and the fix reviewed (a check outside
+    the task's scope that passes when run again goes as WAY-261 gives), waits for the run on the
+    fixed commit and writes that result into the description; after the human's remarks it
+    waits again for the run on the corrected head; a request blocked for a remaining blocking finding
+    says in its description that the result of the run was not waited for;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
-    its fix changes code, and the return step does not compare the fix's range.
+    its fix changes code, and the return step does not compare the fix's range; the request is
+    marked ready while the CI run on it still goes; a red CI result is left for the human to find;
+    the description names no CI result where CI ran on a request whose code is finished; a
+    correction pushes a corrected head and the description keeps the result of the earlier head.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
@@ -2678,14 +2716,24 @@ invariants a slice reaches find what it breaks there. The return step compares t
 the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
 tree it and its review leave covers the finished change, where a run before it would be made again
 on the tree it changes; the merge with the target branch is the one change to the tree that can
-follow. The price is that a failure of the gate comes after the return step.
+follow. The CI run on the request is a run on a system other than the cycle's own, so a failure that
+shows only there would reach the human, and come back as a round of corrections, were the request
+handed over before it; it adds to the cycle's gate and replaces nothing, so a failure that shows
+only on the cycle's own system stays caught there. Every push to a request with finished code
+starts a new run, so the wait follows each head, a correction's too; a request blocked for unfinished
+code gets no wait, since its code will change and a run on it settles nothing the human decides, and
+its page still shows the run. The price is that a failure of the gate comes
+after the return step, and that the human receives the request later, by the time CI takes.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
 alone — a check that did not run would pass unseen; the gate after every slice — it multiplies the
 gate's run by the number of slices and holds each slice for it; rerunning after the return step
 only the checks that read the foundation — the-way does not know which checks of a product read its
-foundation.
+foundation; a cycle that hands over the request and leaves the CI result to the human — an error
+visible only on the CI's system reaches the human and returns as a round of corrections; the CI
+result in place of the cycle's final gate — an error visible only on the cycle's own system is no
+longer caught, and the cycle stops where the host of the repository fails.
 
 ### WAY-328 — Does the-way hold its own code and tests to the general coding guidelines and the testing guidelines of a product?
 
@@ -8539,23 +8587,29 @@ fails it only where a version of a dependency that the change brings in against 
 known vulnerability, as the advisory database named by the product's decision adopting the audit
 gives it when the check runs, of at least the severity that decision sets, every severity being
 among the ways the skill offers. The template of the coding discipline carries no audit of the
-whole tree of a product's dependencies.
+whole tree of a product's dependencies. The signal of a vulnerability found in a dependency the
+product already holds is the alerts of the service its repository lies on, on GitHub the Dependabot
+alerts; the skill proposes that the product turn them on, and a human turns them on.
 
 - **Scope:** product-guidelines, invariants
 - **Based on:**
   https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/.github/workflows/audit.yml
   § lines 23-24 — "The ci.yml job passes `--baseline <base yarn.lock>` so a change fails only on
-  advisories it introduces."; read 2026-10-18
+  advisories it introduces."; read 2026-10-18 · github-dependabot-alerts
 - **Relations:** derives from WAY-202 · derives from WAY-60 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: a change that adds a library at a version with a known vulnerability of high severity
     fails in a product whose decision sets high; a change to a page's text passes on the morning an
     advisory is published for a dependency the product already holds; a product whose human chose
-    every severity fails a change bringing in a version with an advisory of low severity;
+    every severity fails a change bringing in a version with an advisory of low severity; the skill
+    proposes that the product turn on the alerts of its repository's service, and says that a human
+    turns them on;
   - violates: the audit reads the whole tree on every change, and a change unrelated to the
     dependencies fails on an advisory published that morning; the template sets the threshold at
     high for every product; the audit reads a copy of the database the product committed months
-    before; the template carries an audit of the whole tree of dependencies run every day.
+    before; the template carries an audit of the whole tree of dependencies run every day; the
+    skill turns the alerts on itself, or leaves a vulnerability found in a held dependency with no
+    word of a signal for it.
 - **Origin:** none
 
 *Rationale:* an audit of the whole tree at every change fails a change that touches no dependency on
@@ -8565,10 +8619,16 @@ severity from which a
 vulnerability counts and the database read are conditions of the product's invariant, so they stand
 in the decision that adopts the audit (WAY-60), and the severity is the product's choice, every
 severity among the ways. The tools stand at pinned versions, while the database is read as it stands
-when the check runs, so that a change brings in nothing known to be vulnerable that day. Two weak
-points follow. A vulnerability found in a dependency the product already holds gives no signal while
-no change brings in a version of it. A later run on the same commit may record `fail` where an
-earlier one recorded `pass`, when an advisory is published for a version that commit brings in; such
+when the check runs, so that a change brings in nothing known to be vulnerable that day. The audit
+sees only what a change brings in, so a vulnerability found in a dependency the product already holds
+reaches the product through the alerts of its repository's service, which scan the repository when a
+new vulnerability is published and not only when a change brings in a version, and are enabled by
+the repository's administrators; the owner answers an alert with a task that raises the library.
+They are a setting of the service, no file of the repository, so a human turns them on. Two weak
+points follow. The alerts are set outside the repository, so nothing in it shows whether they are
+on, and they stay off until a human turns them on. A later run on the same commit may record `fail`
+where an earlier one recorded `pass`, when an advisory is published for a version that commit brings
+in; such
 a check is answered as any check that gives different verdicts on one commit is, by a fix of the
 test with no quarantine recorded, which this decision leaves unchanged.
 *Rejected:* the whole tree audited at every change — an unrelated change fails on a vulnerability
@@ -8577,7 +8637,11 @@ change, so it ages without bound, and a change bringing in a version first flagg
 the rule on a check that gives different verdicts on one commit narrowed so that a later `fail` on
 the same commit is no such check — a new meaning of that rule for a rare case; a fixed threshold of
 severity for every product — the
-severity is the product's choice.
+severity is the product's choice; a daily run in CI of the product's audit tool over the whole set
+of dependencies — a second CI file in every product and a run each day, a stronger change to this
+decision, for the one gain that the severity threshold agrees with the audit of a change; no
+signal, the limitation accepted for good — with the alerts off, a vulnerability of high severity in a
+dependency on the main branch passes with no signal, as it did in a product whose alerts were off.
 
 ### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
 

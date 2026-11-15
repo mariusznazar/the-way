@@ -64,6 +64,9 @@ changed files, and the branch still ends with only the pair of step 12.
 5. Commit the removal of the copy and push it. A host that closes the request when its diff empties
    changes nothing: the closed request keeps its description and its link.
 
+The cycle does not wait for CI on this request, whose code is unfinished (WAY-160): where CI runs
+on it, *Checks* says that the result of the run stands on the request's page and was not waited for.
+
 Keep the worktree, take step 14 and end the cycle with the status `blocked`.
 
 ## What the request states

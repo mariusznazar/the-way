@@ -504,13 +504,14 @@ class NetworkShapesOffWindows(CheckTestCase):
     def platform(self, name):
         self.enterContext(mock.patch.object(check_instructions, "WINDOWS", False))
         self.enterContext(mock.patch.object(check_instructions, "PLATFORM", name))
-        self.guard()
+        self.guard(name)
 
-    def guard(self):
+    def guard(self, name):
         def shaped(path):
             text = str(path).replace("\\", "/")
+            # `/net/` and `/Network/` are mount points of network shares on macOS only
             return (text.startswith("//") and not text.startswith("///")) or \
-                text.startswith(("/net/", "/Network/"))
+                (name == "darwin" and text.startswith(("/net/", "/Network/")))
 
         def guarded(name, real):
             def checked(path, *args, **kwargs):
@@ -564,12 +565,18 @@ class NetworkShapesOffWindows(CheckTestCase):
             for token in ("\\\\host\\share\\x.md", "//host/share/x.md"):
                 self.assert_network(token)
 
-    def test_net_and_network_are_mount_points_of_macos_only(self):
+    def test_net_and_network_are_mount_points_on_macos(self):
         self.platform("darwin")
         self.assert_network("/net/host/x.md")
         self.assert_network("/Network/Servers/x.md")
+
+    def test_net_is_no_mount_point_on_linux(self):
+        # One platform for each test: the guard of an earlier `platform` call stays in force, and
+        # that of macOS would flag the lookup this test expects.
         self.platform("linux")
+        calls = self.stub_lookup()  # on Linux this path is looked up like any other
         self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
+        self.assertTrue(any("host" in call and "x.md" in call for call in calls))
 
     def test_a_network_shaped_root_or_file_is_a_usage_error(self):
         for name, token in (("linux", "//host/share"), ("cygwin", "\\\\host\\share"),
@@ -1068,6 +1075,10 @@ class CommandLine(CheckTestCase):
         self.assertIn("ROOT is not a directory", err)
 
     def test_a_network_path_given_as_root_or_file_exits_with_2_without_a_lookup(self):
+        # `NETWORK` is a network path only where the platform judges it so; the platform decision is
+        # two module values, patched as `NetworkShapesOffWindows` does, so that this runs on Linux too.
+        self.enterContext(mock.patch.object(check_instructions, "WINDOWS", False))
+        self.enterContext(mock.patch.object(check_instructions, "PLATFORM", "cygwin"))
         guard_network_paths(self)
         for arguments in ([NETWORK], ["--file", NETWORK]):
             with self.subTest(arguments=arguments):

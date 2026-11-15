@@ -147,7 +147,11 @@ to its agent for repair, and a claim that tests passed does not replace them. A 
 records its method, actor, observed result and evidence, with `not applicable` for the command and
 exit code. Focused checks are not rerun merely to advance the cycle. The orchestrator runs the gate
 on the tree that goes into the request and records its command, exit code and the failures it
-names. Name every check that failed or did not run, with the reason; an unrun check is unchecked,
+names. Where CI runs on the request, the run on its last head is a row of its own in the original,
+its link in place of the command and its conclusion as the result (step 12 of
+`task-cycle/skill/SKILL.md`); the committed copy holds that row only for the runs before its own
+head, since the run on the head that removes the copy comes after it.
+Name every check that failed or did not run, with the reason; an unrun check is unchecked,
 never passed. Each failing run of a check remains in the record with its command and result, even
 if the check passes when run again. A check that fails in a cycle run and passes when run again
 follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*, WAY-243): rerunning

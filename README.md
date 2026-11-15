@@ -115,8 +115,10 @@ branch from.
   transcripts. Its definitions of the two agent types Claude Code dispatches the stages with are in
   `task-cycle/agent-types/`.
 - `agent-instructions/`, with `AGENTS.md` and `CLAUDE.md` at the root, the skill entry points in
-  `.claude/skills/` and `.agents/skills/` and the copies of those definitions in `.claude/agents/` —
-  instructions for agents working on the-way itself, and the scripts that generate those files.
+  `.claude/skills/` and `.agents/skills/`, the copies of those definitions in `.claude/agents/` and
+  the CI configuration in `.github/workflows/` — instructions for agents working on the-way itself,
+  the scripts that generate those files, and the one command of tests run in CI on every pull
+  request into `foundations`.
 - `instruction-files/` — the principles by which instruction files for coding agents are written,
   judged and kept, how Claude Code, Codex and Cursor load them, the skill that applies them, and
   the script that checks instruction files.
