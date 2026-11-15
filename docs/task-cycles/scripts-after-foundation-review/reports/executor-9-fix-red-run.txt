@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_each_cycle_whose_pin_is_unknown_for_a_fixed_issue_keeps_its_own_row (test_audit_count.RegisterCount.test_each_cycle_whose_pin_is_unknown_for_a_fixed_issue_keeps_its_own_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs/executor-9/base-check/process-audit/test_audit_count.py", line 2660, in test_each_cycle_whose_pin_is_unknown_for_a_fixed_issue_keeps_its_own_row
+    self.assertEqual([], [row for row in self.pair_rows() if row[0] == "Process pin"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [] != a list of lists
+
+Second list contains 4 additional elements.
+First extra element 0:
+['Process pin', '1', "the-way's history lacks commit 1111111111111111111111111111111111111111", 'product 13779ea0d580c35c2f7f825b05ceac9ccc4b12bb: Process pin']
+
+Diff is 713 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 1.881s
+
+FAILED (failures=1)
