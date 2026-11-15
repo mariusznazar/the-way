@@ -384,12 +384,11 @@ except KeyboardInterrupt:
         self.assertIn("Ran 1 test", output)
 
     def test_each_report_stands_whole_under_its_own_line_in_the_order_directories_end(self):
-        # a stays running until b has ended, so b's report comes first although a sorts first; each
-        # test prints lines before and after the wait, which a run that let the two reports run
-        # into each other would mix.
+        # a waits until the line `end b` stands in the log, so b's report comes first although a
+        # sorts first; each test prints lines before and after the wait, which a run that let the
+        # two reports run into each other would mix. The wait has the helper's limit of 120 seconds.
         log = self.log()
-        self.write("a/test_one.py",
-                   timed_module(log, "a", ["end b"], pause=2.0, lines=4))
+        self.write("a/test_one.py", timed_module(log, "a", ["end b"], lines=4))
         self.write("b/test_one.py", timed_module(log, "b", lines=4))
         self.track("a/test_one.py", "b/test_one.py")
         code, output = self.runner()
@@ -471,7 +470,10 @@ class SlowestTests(RunnerTestCase):
         header = lines.index("Slowest test durations")
         listed = lines[header + 2:lines.index("", header)]
         self.assertEqual(len(listed), 1, output)
-        self.assertRegex(listed[0], r"^0\.\d{3}s +test_slow ")
+        self.assertRegex(listed[0], r"^\d+\.\d{3}s +test_slow ")
+        # The test sleeps 0.3 seconds, so its time is at least that; the bound lies 0.05 seconds
+        # lower, for the clock's resolution. A slow machine only adds time, so there is no upper bound.
+        self.assertGreaterEqual(float(listed[0].split()[0].rstrip("s")), 0.25, output)
         self.assertNotIn("test_fast", output)
 
     def test_in_a_run_of_every_directory_each_report_holds_its_own_slowest_tests(self):
