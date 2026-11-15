@@ -500,7 +500,8 @@ the code (WAY-162).
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
 each the same way, for the human to choose which become new tasks and to create them (WAY-161);
 beside them, each check whose file belongs to a part outside the task's parts that failed in a cycle
-run and passed again, with its file path, its rerun's result and its counts (WAY-261).
+run and passed again, with its file path, its rerun's result and its counts, and the task that
+fixes it, or the proposal of one where none exists (WAY-261).
 
 **The task's own sections.** Each section the task document keeps of its own, under its own heading,
 here; what in it waits on a yes also stands in *For you to decide*.

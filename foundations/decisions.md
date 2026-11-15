@@ -6037,10 +6037,10 @@ where its tip is the second parent of a merge commit on the first-parent history
 target branch, which git alone shows, so that a branch merged by squash or rebase, a branch that
 stands at the target's tip with no commit of its own and a branch of a request closed unmerged are
 not merged. A directory of a cycle that the script does not remove stays, with its reason, for the
-human to decide, a copy of a base that the script does not assign to a task — one named for no task,
-or for a branch it does not find — among them, and a detached checkout nested in a directory that is
-removed goes with it, whatever its name, only where it is clean and on the remote, else the
-directory that holds it stays.
+human to decide, a copy of a base standing alone that the script does not assign to a task — one
+named for no task, or for a branch it does not find — among them, and a detached checkout nested in
+a directory that is removed goes with it, whatever its name, only where it is clean and on the
+remote, else the directory that holds it stays.
 
 The script touches only the checkouts that `git worktree list` names for the repository, never the
 main checkout, the directory it is run in or a detached directory outside the cycle's, and it
