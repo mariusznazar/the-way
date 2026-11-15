@@ -257,8 +257,9 @@ repository holds is `unknown`, not dropped, and so is a
 problem whose *Record* is a commit that adds the records of more than one cycle, whose counts then
 read `at least n`. A problem is counted once, by its row; a cycle copied again after a
 correction is one cycle, and its problems are counted once. *Unknown values* gives the values the
-register leaves unknown one line for each field and reason, with how many values the pair has and
-its first examples; the full list stays in the register.
+register holds back, its refused rows and the problems whose cycle is not read, one line for each
+field and reason, with how many values the pair has and its first examples; the full list of those
+stays in the register. Every other unknown value is given in full.
 
 For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
@@ -283,8 +284,8 @@ The result is Markdown in UTF-8 with LF line ends, the same bytes for the same i
 `audit_results`, never inside a repository it reads or the checkout of the-way, read or not:
 a section *Repositories*, a table of each
 repository read and its cycles; a section *Cycles*, a table of one row per cycle; and a section
-*Unknown values*, a table of each value given as `unknown` and why, and a table of the values of the
-register, one line for each field and reason. A section *Cost*, a table of
+*Unknown values*, a table of each value given as `unknown` and why, and a table of the values the
+register holds back, one line for each field and reason. A section *Cost*, a table of
 one row per cycle with its price list's date (the series the cost belongs to), its cost in USD, its
 number of fix rounds and the share of the cost in them. A section *Mechanism measures*, a table
 of one row per cycle with its measures, and a section *Gate runs*, a table of one row per run of
@@ -438,7 +439,7 @@ CONTRACTED_NOT = ("n't", "n’t")
 # path, which is the user's (WAY-320).
 LOCATIONS_LABEL = "the locations file (`--locations`)"
 PRICES_LABEL = "the price list (`--prices`)"
-# *Unknown values* gives the values the register leaves unknown one line for each field and reason:
+# *Unknown values* gives the values the register holds back one line for each field and reason:
 # the number of values of the pair and its first EXAMPLES values, each as its repository, record and
 # value, and the field is the value with the number of its row taken out (WAY-330).
 EXAMPLES = 3
@@ -2269,14 +2270,16 @@ def counted(count: int, refused: int) -> str:
 
 @dataclass
 class Analysis:
-    """The tables the register adds to the result, as rows of text, and the values it leaves
-    unknown as (repository, record, value, why)."""
+    """The tables the register adds to the result, as rows of text; the values it leaves unknown
+    as (repository, record, value, why), each in full (`unknown`), and the values the register
+    holds back, its refused rows and problems whose cycle is not read (`held`)."""
     cycle_rows: list[list[str]]
     fixed_rows: list[list[str]]
     open_rows: list[list[str]]
     dropped_rows: list[list[str]]
     cost_rows: list[list[str]]
     unknown: list[tuple[str, str, str, str]]
+    held: list[tuple[str, str, str, str]]
 
 
 def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
@@ -2298,7 +2301,10 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     uncounted: Counter = Counter()
     found = [(problem, index.get((problem.repository, problem.record)))
              for problem in register.problems]
-    unknown = list(register.refused)
+    # The values the register holds back, its refused rows and the problems whose cycle is not read,
+    # are the ones grouped by field and reason; every other unknown value is given in full.
+    held = list(register.refused)
+    unknown: list[tuple[str, str, str, str]] = []
     counts: dict[tuple[str, str], Counter] = {}
     for problem, cycle in found:
         if cycle is not None:
@@ -2314,8 +2320,8 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         else:
             why = ("no named repository holds the cycle of its record; name its key with "
                    "--repository")
-        unknown.append((problem.repository[:TEXT_CAP], problem.record,
-                        f"row {problem.number} of `Problems`", why))
+        held.append((problem.repository[:TEXT_CAP], problem.record,
+                     f"row {problem.number} of `Problems`", why))
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
     # as `at least n`, since the row's own figure is not in the count.
@@ -2429,7 +2435,7 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
             dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
                                  counted(not_read, refused), str(refused)])
     return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows,
-                    list(dict.fromkeys(unknown)))
+                    list(dict.fromkeys(unknown)), list(dict.fromkeys(held)))
 
 
 def register_unknown_rows(unknown: list[tuple[str, str, str, str]]) -> list[list[str]]:
@@ -3181,11 +3187,11 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "",
         "## Unknown values",
         "",
-        "The values the count did not establish. The first table has one row for each value of a "
-        "cycle and each value of the versions and of the measures. The second has the values of "
-        "the register, one row for each field of the register and reason, with how many values the "
-        "pair has and its first examples, each as repository, record and value; the full list stays "
-        "in the register.",
+        "The values the count did not establish. The first table has one row for each such value, "
+        "except the values the register holds back. The second has those: the rows of the register "
+        "that the count refuses and the problems whose cycle is not read, one row for each field of "
+        "the register and reason, with how many values the pair has and its first examples, each as "
+        "repository, record and value; the full list of them stays in the register.",
         "",
         "| Repository | Record | Value | Why |",
         "|---|---|---|---|",
@@ -3193,9 +3199,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
     for cycle in cycles:
         for value, why in cycle.unknown:
             lines.append(f"| {cell(cycle.repository)} | {cycle.record} | {value} | {cell(why)} |")
-    for repository, record, value, why in dict.fromkeys(versions.unknown + measured.unknown):
+    for repository, record, value, why in dict.fromkeys(
+            analysis.unknown + versions.unknown + measured.unknown):
         lines.append(f"| {cell(repository)} | {cell(record)} | {cell(value)} | {cell(why)} |")
-    lines += [""] + table(REGISTER_UNKNOWN_HEADER, register_unknown_rows(analysis.unknown))
+    lines += [""] + table(REGISTER_UNKNOWN_HEADER, register_unknown_rows(analysis.held))
     return "\n".join(lines) + "\n"
 
 

@@ -2626,10 +2626,38 @@ class RegisterCount(AuditCountCase):
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "1", "0", "2", "0", "0"]], self.rows("Fixed issues"))
-        reasons = [row[2] for row in self.pair_rows()
-                   if row[0] == "Process pin" and f"product {lacking}: Process pin" in row[3]]
+        reasons = [row[3] for row in self.rows("Unknown values")
+                   if row[:3] == ["product", lacking, "Process pin"]]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
+
+    def test_each_cycle_whose_pin_is_unknown_for_a_fixed_issue_keeps_its_own_row(self):
+        # Four cycles whose pins the history lacks: more than the examples of one pair hold, so a
+        # grouping would drop some of them. Each stays in the first table with its own repository,
+        # record and reason (WAY-330).
+        way, fix, _, _ = self.the_way_with_a_fix()
+        product = self.repository()
+        cycles, parent = [], None
+        for number in range(1, 5):
+            added, removed = product.cycle(
+                f"pin-task-{number}",
+                {"cycle.md": record(pin_line=f"- Process pin: `{str(number) * 40}`")},
+                parent=parent)
+            cycles.append(added)
+            parent = removed
+        self.use_register(issues=[issue_row("fixed-one", "fixed", fix)],
+                          problems=[problem_row("product", added, "fixed-one")
+                                    for added in cycles])
+        data = self.places(product=product)
+        data["the-way"]["repository"] = str(way.root)
+        self.write_locations(data)
+        done = self.run_count("--today", "2026-11-11")
+        self.assertEqual(0, done.returncode, done.stderr)
+        pins = [row for row in self.rows("Unknown values") if row[2] == "Process pin"]
+        self.assertEqual([["product", added, "Process pin"] for added in cycles],
+                         [row[:3] for row in pins])
+        self.assertTrue(all("lacks commit" in row[3] for row in pins), pins)
+        self.assertEqual([], [row for row in self.pair_rows() if row[0] == "Process pin"])
 
     def test_a_refused_problem_of_a_fixed_issue_is_counted_in_its_row(self):
         way, fix, with_fix, _ = self.the_way_with_a_fix()
@@ -2768,9 +2796,8 @@ class RegisterCount(AuditCountCase):
         done = self.run_count("--today", "2026-11-11")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "0", "0", "1", "0", "0"]], self.rows("Fixed issues"))
-        self.assertIn("ambiguous", " ".join(row[2] for row in self.pair_rows()
-                                            if row[0] == "Process pin"
-                                            and f"product {cycle}: Process pin" in row[3]))
+        self.assertIn("ambiguous", " ".join(row[3] for row in self.rows("Unknown values")
+                                            if row[:3] == ["product", cycle, "Process pin"]))
 
     def test_a_shallow_clone_of_the_way_lacking_the_fix_says_so(self):
         way, fix, with_fix, _ = self.the_way_with_a_fix()
@@ -2789,8 +2816,8 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", fix, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
-        self.assertIn("shallow clone", " ".join(row[2] for row in self.pair_rows()
-                                                if row[0] == "the fix of issue `fixed-one`"))
+        self.assertIn("shallow clone", " ".join(row[3] for row in self.rows("Unknown values")
+                                                if row[2] == "the fix of issue `fixed-one`"))
 
     def test_a_doubled_heading_or_header_row_of_the_register_is_refused(self):
         product = self.repository()
@@ -2826,7 +2853,8 @@ class RegisterCount(AuditCountCase):
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["fixed-one", missing, "unknown", "unknown", "0", "0", "0"]],
                          self.rows("Fixed issues"))
-        reasons = [row[2] for row in self.pair_rows() if row[0] == "the fix of issue `fixed-one`"]
+        reasons = [row[3] for row in self.rows("Unknown values")
+                   if row[2] == "the fix of issue `fixed-one`"]
         self.assertEqual(1, len(reasons), reasons)
         self.assertIn("lacks commit", reasons[0])
 
