@@ -10,6 +10,7 @@ import ast
 import io
 import os
 import re
+import signal
 import subprocess
 import sys
 import tempfile
@@ -268,11 +269,37 @@ class CapTest(GateTimesTest):
 
 class PassThroughTest(GateTimesTest):
 
+    # invariant: command-runner-passes-exit-code
     def test_exit_code_of_the_command_is_passed_on(self) -> None:
-        result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n", code=3))
-        self.assertEqual(3, result.returncode, result.stderr)
-        self.assertNotIn(b"Error:", result.stderr)
-        self.assertEqual("3", self.rows()[0][1])
+        # 2 is also the script's own error code, and 255 the largest code a process gives: each is
+        # the command's, passed on unchanged.
+        for code in (2, 3, 255):
+            with self.subTest(code=code):
+                result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n", code=code))
+                self.assertEqual(code, result.returncode, result.stderr)
+                self.assertNotIn(b"Error:", result.stderr)
+                self.assertEqual(str(code), self.rows()[-1][1])
+
+    # invariant: command-runner-passes-exit-code
+    @unittest.skipIf(os.name == "nt", "Windows gives a killed process no signal number")
+    def test_a_command_killed_by_a_signal_gives_128_plus_the_signal_number(self) -> None:
+        result = self.run_gate([sys.executable, "-c",
+                                "import os, signal; os.kill(os.getpid(), signal.SIGTERM)"])
+        self.assertEqual(128 + signal.SIGTERM, result.returncode, result.stderr)
+        self.assertEqual(str(128 + signal.SIGTERM), self.rows()[-1][1])
+
+    # invariant: command-runner-passes-exit-code
+    def test_a_signal_number_of_the_child_gives_128_plus_it_on_any_platform(self) -> None:
+        # The child is replaced by one that reports a signal, since only some platforms give a
+        # process a signal number; the script's own mapping of that number is what is checked.
+        read_end, write_end = os.pipe()
+        os.close(write_end)
+        child = mock.Mock()
+        child.stdout = os.fdopen(read_end, "rb")
+        child.wait.return_value = -signal.SIGTERM
+        with mock.patch.object(gate_times.subprocess, "Popen", return_value=child):
+            result = self.run_gate_at(NOW, ["gate-command-that-is-replaced"])
+        self.assertEqual(128 + signal.SIGTERM, result.returncode, result.stderr)
 
     def test_output_is_passed_on_unchanged_with_error_output_joined(self) -> None:
         data = "alpha é\r\n== a\nRan 1 test in 0.1s\n|bar \x00 end\n".encode("utf-8")
