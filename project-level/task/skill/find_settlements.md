@@ -26,9 +26,10 @@ material or from the human's loose words (WAY-134); this holds only until the ta
 starts (WAY-315). The run writes no row, and the cycle writes no decision of a technology choice
 otherwise, so its settled question is always shown.
 
-A row that adopts a practice from outside the product (WAY-100) carries, among the ways its source
-keeps, the parts of the practice the human turned down; where the human did not see them as ways,
-the row waits and a question shows them, before the row is accepted (WAY-134).
+A row that adopts a practice from outside the product (WAY-100) enters `accepted` as the human's
+choice, like any row that repeats one, and carries among the ways its source keeps the parts of the
+practice the human turned down; where its source keeps none, a question shows the parts as ways
+before the table closes, and the parts the human turns down go into the row's *Source* (WAY-134).
 
 A candidate that collides with a projected entry or with a current decision the human has not
 agreed to change goes back to step 4 as a conflict; one that changes the task's scope goes back to
