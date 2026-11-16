@@ -3732,7 +3732,7 @@ the human before the plan is handed over.
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
-  WAY-126
+  WAY-126 · derives from WAY-100
 - **Verification:** invariants: project-plan-check. For moves, answers and new questions, an agent
   compares the plan with the decision:
   - complies: the breakdown moves the question on a session's secret from the task of the test
@@ -3753,13 +3753,20 @@ plan's own reading of the definition, so the log makes it visible. Which task wr
 entry sets when the foundation comes to hold it, so a move that shifts it reaches the human. A
 question the breakdown raises was settled by nobody, and the human answers it while the plan can
 still change. An answer the definition or the foundation already gives needs no human to restate
-it, and quoted with its place it can be checked against its source.
+it, and quoted with its place it can be checked against its source. The rule takes from the
+practice of a roadmap (WAY-142) the carrying of each open question of the source into the plan
+word for word, and a question that arises in the breakdown put before the human; the practice is that of the skill of a roadmap of lesson m2l1 of the
+10xDevs course, whose lessons are not open to a reader of this repository, and the move of a
+question written into the log of changes is the rule's own.
 *Rejected:* a move taken through the gate again — the definition would be approved again for a
 change of route alone; a flag marking a task blocked by its unknowns, beside a list of deferred
-work — the states of a task already hold waiting for the human, and the list repeats the
-definition's exclusions; a question moved without a word — a reader takes it for the definition's
-own placement; only the human answering a question the breakdown resolves — the human would restate
-what the foundation already holds.
+work, as the practice of a roadmap has them — the states of a task already hold waiting for the
+human, and the list repeats the definition's exclusions; a question moved without a word — a reader
+takes it for the definition's own placement; only the human answering a question the breakdown
+resolves — the human would restate what the foundation already holds; the practice's blockers
+outside the team, such as an approval a vendor or a stakeholder owes, kept apart from its unknowns
+— left out of what the rule takes from it; the owner the practice names for each unknown — left out
+of what the rule takes from it.
 
 ## Technology choices
 
@@ -4401,7 +4408,8 @@ refusal, points to the guide too.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-267 · derives from WAY-270 · derives from WAY-165
+- **Relations:** derives from WAY-267 · derives from WAY-270 · derives from WAY-165 · derives from
+  WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
@@ -4467,7 +4475,13 @@ need no change until someone chooses to show a newer one. The guide has a part f
 items the check handles apart, so the item of the To do that writes into the skill the answer to one
 of them points to the guide as well: an agent that is given only that item, with no pointer, reads
 the one skill that exists as its pattern and separates the general from the particular alone. The
-price is one more place that names the guide.
+price is one more place that names the guide. The list takes from lesson m1l5 of the 10xDevs course,
+on deploying a product with an agent, the parts of the document of the infrastructure the lesson
+has an agent keep beside the product that say how it is operated — the preview of deployments, where
+the secrets lie, how a faulty deployment is rolled back and in how many steps,
+which actions take a human, and how the agent reaches the logs — and from lesson m3l5 its two items
+on the record's life and on a failure (WAY-270); the lessons of the course are not open to a reader
+of this repository.
 *Rejected:* the pointer on the item that adds a missing deployment skill alone, the items that write
 the answer to one of the three left without one — the agent that completes a skill for one of them
 may not find the guide; the skill saying how a human reads the logs and the decision how an agent
@@ -4475,8 +4489,15 @@ reads them —
 two answers that are usually the same and can drift apart; the item on how to read the logs left as
 it was — the drift shows only when an agent meets two different instructions; a deployment skill
 carried by the-way — what to run and where differs for every
-product; a document of operations kept beside the product — no step reads it, so it goes stale
-unread; the list in a template alone — nothing binds the refinement to check it; adding the logs
+product; a document of operations kept beside the product, as the lesson's document of the
+infrastructure is — no step reads it, so it goes stale unread; the platform chosen and its reasons,
+which that document holds, left out of what the list takes from the lesson — the decisions of the
+foundation carry a choice and its reasons; the fit of the product's stack to the platform, which
+that document holds — left out of what the list takes from the lesson; the known risks, which that
+document holds — left out of what the list takes from the lesson; the region, the runtime and the
+plan paid for, which that document holds — left out of what the list takes from the lesson; the
+signal that would change the choice once the product grows, which that document holds — left out of
+what the list takes from the lesson; the list in a template alone — nothing binds the refinement to check it; adding the logs
 and the failure choice to the step at a task that chooses a place to run — the question comes in
 the step with no extra stop, but WAY-267 gains an exception, rules are needed on an agent opening a
 decision and on waiting for the place to run, and a product still needs the human's note; the
@@ -4511,7 +4532,7 @@ human saying in one sentence what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121 · derives from WAY-270
+- **Relations:** derives from WAY-121 · derives from WAY-270 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: for a game played in a browser, the logs are answered by an agent reading the output
     of the server's container, kept in a store that outlives a redeployment, the interface by an
@@ -4569,14 +4590,21 @@ settled gives the human no sign that something is left for them to say. The scre
 takes to show the human are the evidence of its check, and the human sees them in the description
 of the request, so the answer says both where the files lie, outside the product's repository where
 a file would stay in its history for good (WAY-316), and how the description shows them; a place
-without the second leaves each cycle to improvise how a screenshot reaches the human.
+without the second leaves each cycle to improvise how a screenshot reaches the human. The question
+of how long the record lives comes from lesson m3l5 of the 10xDEVS course, on debugging with an
+agent, which weighs how long a platform keeps its logs (WAY-270); the lessons of the course are not
+open to a reader of this repository.
 *Rejected:* the interface without "as its user does" — access to the store of data past the
 application would count as an interface; the development data asked as data rebuilt from scratch —
 it rules out a dedicated test environment that persists, in many cases the better option; the
 development data with no word on reaching a state — a decision could leave unsaid the state a check
 needs, and the agent of the cycle improvises it; what the product logs and in what form, in the
-same decision — that rule acts where code is written and reviewed, in the task cycle, not where a
-project settles its technology.
+same decision, the identifiers that tie the events of one operation among the lesson's sources of a
+diagnosis included — that rule acts where code is written and reviewed, in the task cycle, not where
+a project settles its technology; the technical and business metrics that the lesson counts among
+the sources of a diagnosis — left out of what the matter takes from the lesson; the history of
+changes and deployments that the lesson counts among those sources — left out of what the matter
+takes from the lesson.
 
 ### WAY-166 — How does whether an agent can use an option weigh in a choice of its way to the running product?
 
