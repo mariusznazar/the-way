@@ -224,7 +224,8 @@ and the number of fix rounds, which the record gives, stands.
 
 The two other files of a copy are read in the form their scripts write, `mechanism_measures.md` by
 `task-cycle/cycle_measures.py` (WAY-339) and `gate_times.md` by `task-cycle/gate_times.py`.
-A copy that holds neither is of an earlier cycle or of one whose script failed, and the
+A copy that holds neither is of an earlier cycle or of one whose script failed, and a copy
+with no `gate_times.md` may also be of a cycle whose final gate ran in CI (WAY-160), and the
 record's *Verification* says which: their values are `unknown`, with that reason, and no error. `mechanism_measures.md` is read by the cycle-level lines it opens with, each
 by its label; a label it lacks is a missing field, and then every value of the file is `unknown`. A
 label written twice, a value that is not what its label gives and a value `unknown` are `unknown`
@@ -455,9 +456,13 @@ UNKNOWN_HEADER = ["Field", "Values", "Why", "First examples"]
 # The two files of a cycle's record that the count reads (WAY-339), each written by its
 # script: `mechanism_measures.md` by task-cycle/cycle_measures.py, `gate_times.md` by
 # task-cycle/gate_times.py. A copy that holds neither is of an earlier cycle or of one whose script
-# failed.
+# failed; the causes are named in ABSENCE_CAUSES below.
 MEASURES_FILE = "mechanism_measures.md"
 GATE_FILE = "gate_times.md"
+# The causes of a copy's lacking the file of a script. `gate_times.md` is written only by a gate
+# run on the cycle's own system, so a cycle whose final gate ran in CI may hold none (WAY-160).
+ABSENCE_CAUSES = {MEASURES_FILE: "an earlier cycle, or a script that failed",
+                  GATE_FILE: "an earlier cycle, a final gate that ran in CI, or a script that failed"}
 MEASURE_LABELS = (
     "Calls in all", "Calls of the orchestrator", "Calls of subagents", "Mean context per call",
     "Mean context per call of the orchestrator",
@@ -1591,10 +1596,11 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
 def read_optional(git: Git, entries: dict, prefix: bytes,
                   name: str) -> tuple[str | None, str | None]:
     """The text of a file of the copy that an earlier form lacks, or None with the reason: the
-    copy may be of an earlier cycle or of one whose script failed."""
+    copy may be of an earlier cycle or of one whose script failed, and for `gate_times.md` of one
+    whose final gate ran in CI."""
     path = prefix + name.encode("ascii")
     if path not in entries:
-        return None, (f"the copy holds no `{name}`: an earlier cycle, or a script that failed "
+        return None, (f"the copy holds no `{name}`: {ABSENCE_CAUSES[name]} "
                       "(the record's *Verification* says which)")
     return read_file(git, entries, path)
 
@@ -2756,7 +2762,7 @@ def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
             block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN, "0", UNKNOWN])
             unknown.append((THE_WAY, NONE, f"Gate times of version {version.commit}",
                             "no run of this version gives a time: its copies hold no "
-                            f"`{GATE_FILE}` (an earlier cycle, or a script that failed; the "
+                            f"`{GATE_FILE}` ({ABSENCE_CAUSES[GATE_FILE]}; the "
                             "record's *Verification* says which) or give none"))
             previous = {}
             continue
