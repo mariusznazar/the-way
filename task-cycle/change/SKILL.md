@@ -97,7 +97,8 @@ of this applies.
   stands in your directory for working copies that the dispatch names, and goes before you return,
   as the dispatch's paragraph on working copies gives.
 - Run the focused checks of your change: the slice's *Checks*, the tests you wrote and the tests of
-  the code you touched. The full suite is the cycle's run before the request; do not run it, also
+  the code you touched. The full suite is the cycle's run, its own before the request or CI's on
+  the request; do not run it, also
   where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under

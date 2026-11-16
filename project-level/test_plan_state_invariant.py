@@ -193,7 +193,9 @@ class PlanStateEvidence(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="plan evidence ")
         self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name)
+        # The reader resolves the repository to its long path; resolve the temporary directory
+        # the same way, since a Windows runner gives it by a short name (`RUNNER~1`).
+        self.root = Path(self.temporary.name).resolve()
         self.remote = self.root / "remote.git"
         self.repo = self.root / "product repository"
         self.env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,

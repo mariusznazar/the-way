@@ -77,7 +77,10 @@ class Fixture:
 
     def __init__(self, target: str = "main") -> None:
         self.holder = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
-        self.root = Path(self.holder.name)
+        # Git and the script name a directory by its long path; the temporary directory may be given
+        # by a short one (`RUNNER~1`, on a Windows runner), so the root is taken as the system
+        # resolves it, and the paths the script prints are found below it.
+        self.root = Path(os.path.realpath(self.holder.name))
         self.target = target
         self.origin = self.root / "origin.git"
         self.main = self.root / "main"

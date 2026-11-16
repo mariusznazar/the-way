@@ -2030,9 +2030,11 @@ class MechanismMeasures(MeasuresCase):
                        "the copy holds no `mechanism_measures.md`: an earlier cycle, or a script that "
                        "failed (the record's *Verification* says which)"],
                       self.rows("Unknown values"))
+        # Where no gate ran on the cycle's own system, the final gate ran in CI and `gate_times.md`
+        # is not written (WAY-160): the reason names that cause as the task's row 6 gives.
         self.assertIn(["product", added, "Gate runs",
-                       "the copy holds no `gate_times.md`: an earlier cycle, or a script that "
-                       "failed (the record's *Verification* says which)"],
+                       "the copy holds no `gate_times.md`: an earlier cycle, a final gate that ran "
+                       "in CI, or a script that failed (the record's *Verification* says which)"],
                       self.rows("Unknown values"))
 
     def test_the_last_copy_is_read_where_a_later_copy_differs(self):
@@ -2232,6 +2234,13 @@ class GateRunsMeasures(MeasuresCase):
     def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
         # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
         done, _ = self.count({GATE: gate_file(table="")})
+        self.assert_missing(done, GATE, "table of the runs")
+        self.assertEqual([], self.rows("Gate runs"))
+
+    def test_an_empty_gate_file_is_a_missing_field_and_not_an_empty_list_of_runs(self):
+        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # An empty file holds no table: the absence of the table is named, never read as no run.
+        done, _ = self.count({GATE: ""})
         self.assert_missing(done, GATE, "table of the runs")
         self.assertEqual([], self.rows("Gate runs"))
 
@@ -3260,6 +3269,7 @@ class Run(AuditCountCase):
         checkout = self.repository("checkout")
         files = {}
         for name in ("process-audit/audit_count.py", "process-audit/record_items.py",
+                     "process-audit/stage_pricing.py",
                      "process-audit/price_list.md", "task-cycle/remarks_check.py"):
             files[name] = (HERE.parent / name).read_bytes()
             (checkout.root / name).parent.mkdir(parents=True, exist_ok=True)
@@ -4230,6 +4240,12 @@ class MeasureVersions(AuditCountCase):
                       self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
         self.assertIn("no run of this version gives a time",
                       self.reasons_of(unknown, f"Gate times of version {v2}"))
+        # The cause named for a version with no gate times is the task's row 6: a final gate that
+        # ran in CI; the mechanism measures, which no CI run leaves out, do not name it.
+        self.assertIn("a final gate that ran in CI",
+                      self.reasons_of(unknown, f"Gate times of version {v2}"))
+        self.assertNotIn("a final gate that ran in CI",
+                         self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
         self.assertEqual([], [row for row in unknown if row[2].startswith("Measure falls")
                               and f"version {v2}" in row[2]])
         self.assertEqual("no cycle of the previous version gives a value",

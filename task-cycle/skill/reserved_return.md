@@ -67,7 +67,8 @@ changed files, and the branch still ends with only the pair of step 12.
    changes nothing: the closed request keeps its description and its link.
 
 The cycle does not wait for CI on this request, whose code is unfinished (WAY-160): where CI runs
-on it, *Checks* says that the result of the run stands on the request's page and was not waited for.
+on it, *Checks* says that the result of the run stands on the request's page and was not waited for;
+no gate runs on your own system either, as the first paragraph of this section gives.
 
 Keep the worktree, take step 14 and end the cycle with the status `blocked`.
 

@@ -44,8 +44,9 @@ recovery "Design and execution choice" gives, with its reset base recorded and i
 under *Discarded attempt* as `task-cycle/record_template.md` gives it, an entry beside the earlier
 ones where the cycle already discarded an attempt, the earlier attempt rewritten as an entry too, as the
 template gives it (WAY-404). Repeat only what the
-remarks touch — the return step included — run the gate on the corrected tree as step 10 gives, and
-repeat the record's pair of commits from step 12, preparing the copy before it as `implement-task`
+remarks touch — the return step included — run the gate on the corrected tree on your own system
+as step 10 gives its local run, where CI does not run on the request and so is not its final gate,
+and repeat the record's pair of commits from step 12, preparing the copy before it as `implement-task`
 ("The record before it is committed") gives, with every report of the cycle in the record, the
 correction's own among them. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
@@ -55,16 +56,17 @@ state after the correction, with the link to the record's new commit and with th
 correction in one sentence as the item of kind 17 in *You accept by merging* (WAY-287), check it
 as the template gives, and edit the request's description from it.
 
-Where CI runs on the request and the correction leaves its code finished, wait for the run on the
-head you pushed last, as step 12 of `implement-task` gives, once the record's pair of commits is
-pushed. Write its result into *Checks* in a further edit of the description, which the template's
-checks, the check of private paths included, pass before it is published (WAY-309), and into
-*Verification* of the original record. A red result is a failed gate, handled as step 10 gives: a
-fix and its review, the gate on the corrected tree, the record's pair of commits again and the wait
-again, save a check outside the task's scope that passes when run again, which WAY-261 governs
-(WAY-160). A request the correction leaves blocked for a reserved choice or a remaining blocking
-finding is not waited for: its description says that the result of the run stands on the request's
-page and was not waited for.
+Where CI runs on the request and the correction leaves its code finished, its run on the head you
+pushed last is the final gate: wait for it, as step 12 of `implement-task` gives, once the record's
+pair of commits is pushed, for at most 30 minutes from the push, and where it gives no result in
+that time run the gate on your own system and say so in *Checks*, as that step gives. Write its
+result into *Checks* in a further edit of the description, which the template's checks, the check of
+private paths included, pass before it is published (WAY-309), and into *Verification* of the
+original record. A red result is a failed gate, handled as step 10 gives: a fix and its review, the
+record's pair of commits again and the wait again on the new head, save a check outside the task's
+scope that passes when run again, which WAY-261 governs (WAY-160). A request the correction leaves
+blocked for a reserved choice or a remaining blocking finding is not waited for: its description
+says that the result of the run stands on the request's page and was not waited for.
 
 Before the record's copy is prepared, add the correction's line to the record's item *Corrections
 after the request opened*, as `task-cycle/record_template.md` gives it: the file of the remarks and

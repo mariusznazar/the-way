@@ -197,10 +197,13 @@ decision that names what is adopted, where it applies, and why. When an agent re
 to a method or practice no decision has adopted, it asks a human before treating it as a rule.
 
 A decision that adopts a method or practice from outside names the practice and what it takes from
-it, in its binding sentences or its *Rationale*; names the source in *Based on*, or, for a source a
-reader of the repository cannot open, describes in *Rationale* what was seen there (WAY-27); and
-puts what it leaves out of the practice in *Rejected*. A list of what is taken from one source is no
-decision: each rule taken stands in the decision that carries it (WAY-19).
+it, in its binding sentences or its *Rationale*, and puts what it leaves out of the practice in
+*Rejected*. Its source is the place the practice was in fact taken from, found by following the
+trace of that taking, never a document that only describes the practice: the decision names that
+source in *Based on*, or, for a source a reader of the repository cannot open, describes in
+*Rationale* what was seen there and says that the source is not open to that reader (WAY-27). A list
+of what is taken from one source is no decision: each rule taken stands in the decision that
+carries it (WAY-19).
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
@@ -211,15 +214,19 @@ decision: each rule taken stands in the decision that carries it (WAY-19).
   - complies: a decision adopts only the risk assessment step of an outside process for task
     planning and gives its reason; an agent offers an unadopted technique as a proposal; the
     decision on that step names the step and what it takes from the process in its *Rationale*,
-    quotes the article that describes the process in *Based on* with its address, the passage and
-    the date it was read, and puts the steps it does not take in *Rejected*; a decision that takes
-    one practice from a course whose lessons a reader cannot open describes in its *Rationale* what
-    the lesson showed; the rules taken from one outside source each stand in the decision that
-    carries them, with no decision of its own for the list of what is taken;
+    quotes in *Based on* the article the step was in fact taken from, with its address, the passage
+    and the date it was read, and puts the steps it does not take in *Rejected*; a decision that
+    takes one practice from a course whose lessons a reader cannot open describes in its *Rationale*
+    what the lesson showed and says that the lessons are not open to that reader; the rules taken
+    from one outside source each stand in the decision that carries them, with no decision of its
+    own for the list of what is taken;
   - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
     without a decision adopting it; a decision adopts an outside practice and says nowhere what it
     takes from it; a decision answers the question "what do we take from this source" with a list
-    of the rules taken, each of which a decision of its own would carry.
+    of the rules taken, each of which a decision of its own would carry; a decision whose practice
+    came from a course cites in *Based on* a public page found afterwards that describes the same
+    practice; a decision that takes a practice from a lesson its reader cannot open describes the
+    lesson and leaves the reader to guess whether its address was forgotten.
 - **Origin:** none
 
 *Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
@@ -227,13 +234,28 @@ explain and change. Naming the chosen piece, its scope and its reason lets later
 it from a resemblance or a habit. A decision that says what it takes from a practice and what it
 leaves out keeps the likeness to the source from passing for the adoption of the whole, and a list
 of what is taken from one source answers no question someone could answer otherwise, so it is no
-decision (WAY-19).
+decision (WAY-19). The source is where the practice was in fact taken from: a public page that
+describes the practice, found afterwards, would look as though the practice came from there, though
+it may have come from elsewhere and in another scope, what is left out would be weighed against a
+text nobody read when the decision was made, and a made-up source looks the same as a true one. A
+decision that says its source is not open to a reader lets a reviewer tell a closed source from a
+forgotten one, and the next decision that takes from the same closed source says it as well.
 *Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
 treating recognition by an agent as adoption — recognition does not settle fit or scope; the
 sentence on the practice stated only in the skill that looks for candidates for entries — the rule
 on borrowing and the rule that "what do we take from X" is no question of a decision would read as
 contradicting each other, the decisions that adopt a practice would have no rule of the foundation
-to follow in one form, and whoever writes a decision outside that search would not see the rule.
+to follow in one form, and whoever writes a decision outside that search would not see the rule;
+any public document that describes the practice as the decision takes it, as its source — the
+decision would look as though it took the practice from there, though it may have taken it from
+elsewhere and in another scope, and what it leaves out would be weighed against a text nobody read
+when it was made; the place the practice came from and, where no trace of it is found, a public
+description of the practice marked in *Rationale* as a description — a new kind of source that no
+rule knows, which this decision and WAY-90 would have to admit; the sentence that a closed source
+is not open to a reader written only in the decisions that already take from a course, with no rule
+here — the next decision from a course would leave it out again, and a reviewer could not tell
+whether its source is closed or forgotten; nothing written, the answer kept only in the document
+of the task that asked — the decisions stay as unclear, and the document ends with its task.
 
 ### WAY-101 — Who chooses the backlog tool used with the-way?
 
@@ -2622,10 +2644,10 @@ rules the-way's own code keeps, and the one command that runs every test, with h
 One command runs all of a product's tests, the tests of its invariants among them — the
 same command for an agent, for a human and for whatever runs it when a change is merged —
 and no list of checks written by hand stands beside it. In CI that command runs on every merge
-request, with `.the-way` at the commit the product pins (WAY-34), from a file of CI configuration
-that the product writes itself by the description the-way gives, and the installer writes none. The
-result of that run is a check the repository requires before a merge, and the owner of the
-repository may bypass it.
+request and on every system the product runs on, with `.the-way` at the commit the product pins
+(WAY-34), from a file of CI configuration that the product writes itself by the description the-way
+gives, and the installer writes none. The result of each such run is a check the repository requires
+before a merge, and the owner of the repository may bypass it.
 
 - **Scope:** invariants, agent-instructions, task-cycle, gate, installation
 - **Based on:** github-required-status-checks · github-ruleset-bypass · foundations-branch-ruleset
@@ -2633,14 +2655,16 @@ repository may bypass it.
 - **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
   everyone and for its run in CI, an agent compares the change with the decision:
   - complies: the instructions for agents name that one command as the way to check a change; the
-    CI file of the-way runs `python -B gate/run_tests.py` on every pull request into `foundations`;
-    the description that the installer's README gives a product says that its CI file runs the one
-    command on every merge request with `.the-way` at the commit the product pins, and that the
-    result is set as a required check with a bypass for the owner;
+    CI file of the-way runs `python -B gate/run_tests.py` on every pull request into `foundations`,
+    on Linux and on Windows; the description that the installer's README gives a product says that
+    its CI file runs the one command on every merge request, on every system the product runs on,
+    with `.the-way` at the commit the product pins, and that the result of each run is set as a
+    required check with a bypass for the owner;
   - violates: the instructions for agents list test and lint commands of their own; the tests of
     the invariants run under a command of their own beside the product's tests; the installer writes
     a CI file into a product; a CI file runs a checking command beside the one command; the result
-    of the run shows on a merge request and nothing requires it before the merge.
+    of the run shows on a merge request and nothing requires it before the merge; the CI file of a
+    product runs on one system where the product runs on two.
 - **Origin:** none
 
 *Rationale:* a list of checks written by hand is a second copy of the tests that drifts: a new
@@ -2648,7 +2672,9 @@ test never runs, a removed one still does. One command for all leaves no doubt w
 running all of them leaves nothing to choose. The run in CI is the one that does not rest on the
 agent or the human who made the change having run the tests, and it is made on a system that may
 differ from theirs; a result the repository requires cannot be merged red by oversight, and the
-owner's bypass leaves the owner able to merge while the CI itself is broken. The product writes its
+owner's bypass leaves the owner able to merge while the CI itself is broken. The run is made on each
+system the product works on because its result is the final gate of the product's task cycle
+(WAY-160): a system left out is checked by no one at the end of the cycle. The product writes its
 own CI file because the installer knows nothing of the product's environment.
 *Rejected:* a gate taking its checks from the methods written in the entries and running those a
 change calls for — a second runner beside the product's tests, and a choice of tests that can
@@ -2662,7 +2688,11 @@ it alone — the rule lives in one product, the next starts from nothing, and th
 saying only to run the tests before a merge; a required check with no bypass for the owner — a
 failure of the CI blocks every merge until the owner turns the rule off, which the owner can do
 anyway, so the difference is only more clicking; a result that is shown and requires nothing — a
-red request can be merged by oversight.
+red request can be merged by oversight; CI on one system alone — the tests that need the other
+system run nowhere, and an error that shows only on that system shows only in use (in the-way, an
+error of the installer with junctions on Windows); CI on one system and, on the machine of the work,
+only the directories of tests that need the other system — the time of that run is unmeasured and
+part of the load of the machine stays.
 
 ### WAY-38 — In what are the scripts of the-way written?
 
@@ -2777,58 +2807,78 @@ security support — years without installers.
 
 ### WAY-160 — How does the task-cycle orchestrator run the finished change's gate?
 
-The task-cycle orchestrator itself runs the product's gate on the tree that goes into the request,
-and the request gives its command and exit code and names each check that failed or did not run; a
-check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
-author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
-it. Where CI runs on a request whose code is finished — one open for review, or one that waits only
-for human actions in the cycle — the orchestrator waits for the result of the run on each head it
-pushes to it, a correction's included, treats a red result as a failed gate, handled as the cycle's
-gate gives — a fix and its review, save a check outside the task's scope that passes when run
-again, which WAY-261 governs — and puts the result into the request's description; a request the
-cycle leaves blocked for unfinished
-code is out of that wait, its description saying that the result of the run stands on the request's
-page and was not waited for.
+The final gate of a task cycle is the product's gate on the tree that goes into the request, and the
+request gives its command and exit code, or the CI run's, and names each check that failed or did
+not run; a check that did not run is unchecked, never passed. The gate's run on the cycle's own
+system is the orchestrator's alone: no author, executor or reviewer runs it, and neither a plan's
+*Checks* nor a handoff names a run of it. Where CI runs on a request whose code is finished — one
+open for review, or one that waits only for human actions in the cycle — the CI run on the head
+pushed last is the final gate, and the orchestrator runs no full gate itself at the end of the cycle
+or after the merge with the target branch; the run on the base of the task branch and the run after
+the pin of the-way moves stay the orchestrator's own, since no request stands then, and where CI
+runs on no request, or the request is left blocked for unfinished code, the orchestrator runs the
+gate itself on the tree that goes into it, save where that tree is one already run.
+
+The orchestrator waits for the result of the CI run on each head it pushes to the request, a
+correction's included, treats a red result as a failed gate, handled as the cycle's gate gives — a
+fix and its review and the wait for the run on the new head, save a check outside the task's scope
+that passes when run again, which WAY-261 governs — and puts the result into the request's
+description. Where the run gives no result within 30 minutes of the push — it does not start, it
+stands in a queue or the host does not answer — the orchestrator runs the gate itself on the tree of
+that head, and the description says that CI did not answer and that the gate ran on the cycle's own
+system; a request the cycle leaves blocked for unfinished code is out of that wait, its description
+saying that the result of the CI run stands on the request's page and was not waited for. Where CI
+is the final gate, the cycle's record says so before it is copied, and names the request whose
+description gives the result, so that the next cycle takes the list of failing tests from there.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
 - **Verification:** an agent compares the gate's run and the request with the decision:
-  - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
-    and again where the merge with the target branch changed it, and the request gives the command
-    and its exit code; the orchestrator, with CI running on the request, waits for the run on the
+  - complies: with CI running on the request, the orchestrator runs no gate of its own after the
+    return step and its review, nor after the merge with the target branch, waits for the run on the
     commit it pushed last, finds it red, has the failure fixed and the fix reviewed (a check outside
     the task's scope that passes when run again goes as WAY-261 gives), waits for the run on the
     fixed commit and writes that result into the description; after the human's remarks it
-    waits again for the run on the corrected head; a request blocked for a remaining blocking finding
-    says in its description that the result of the run was not waited for;
+    waits again for the run on the corrected head; the run gives no result 30 minutes after the push,
+    the orchestrator runs the gate on the tree of that head and the description says that CI did not
+    answer and that the gate ran on the cycle's own system; with no CI on the request it runs the
+    gate once on the tree the return step and its review leave, and again where the merge with the
+    target branch changed it, and the request gives the command and its exit code; a request blocked
+    for a remaining blocking finding says in its description that the result of the CI run was not
+    waited for, and the orchestrator ran the gate on the code the request holds; the record copied
+    for a request whose final gate is CI says that it is, and where the result stands;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
     its fix changes code, and the return step does not compare the fix's range; the request is
     marked ready while the CI run on it still goes; a red CI result is left for the human to find;
     the description names no CI result where CI ran on a request whose code is finished; a
-    correction pushes a corrected head and the description keeps the result of the earlier head.
+    correction pushes a corrected head and the description keeps the result of the earlier head;
+    the orchestrator runs the full gate on the cycle's own system as well, where CI gives a result
+    within 30 minutes; the cycle waits beyond 30 minutes for a run that gives no result, or stops
+    for it, or the description keeps silent that CI did not answer.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
-author's focused checks give, and the orchestrator owns that run. The command and its exit code
-tell the human what passed; the checks that failed or did not run, named, keep what stayed
-unchecked in view. A gate run after every slice repeats for each slice a run the finished change
-needs once and holds the next slice until it ends, while the focused checks of the code a slice
-reaches and of the invariants its change may make false find what it breaks there. The return
-step compares the foundation with
-the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
-tree it and its review leave covers the finished change, where a run before it would be made again
-on the tree it changes; the merge with the target branch is the one change to the tree that can
-follow. The CI run on the request is a run on a system other than the cycle's own, so a failure that
-shows only there would reach the human, and come back as a round of corrections, were the request
-handed over before it; it adds to the cycle's gate and replaces nothing, so a failure that shows
-only on the cycle's own system stays caught there. Every push to a request with finished code
-starts a new run, so the wait follows each head, a correction's too; a request blocked for unfinished
-code gets no wait, since its code will change and a run on it settles nothing the human decides, and
-its page still shows the run. The price is that a failure of the gate comes
-after the return step, and that the human receives the request later, by the time CI takes.
+author's focused checks give. The command and its exit code, or the CI result, tell the human what
+passed; the checks that failed or did not run, named, keep what stayed unchecked in view. A gate run
+after every slice repeats for each slice a run the finished change needs once and holds the next
+slice until it ends, while the focused checks of the code a slice reaches and of the invariants its
+change may make false find what it breaks there. The return step compares the foundation with the
+code and corrects what no longer matches, and it needs no result of the gate, so one run on the tree
+it and its review leave covers the finished change, where a run before it would be made again on the
+tree it changes. The CI run on the request is the same command on the systems the product works on
+(WAY-16), so it replaces the cycle's own full run: a failure that shows only on a system other than
+the cycle's own is caught, and the cycle's own system is not occupied for the length of a run that CI
+repeats. Every push to a request with finished code starts a new run, so the wait follows each head,
+a correction's too; a request blocked for unfinished code gets no wait, since its code will change
+and a run on it settles nothing the human decides, and its page still shows the run. The cycle
+never stops for the host of the repository: a limit on the wait and the gate on the cycle's own
+system keep the work going where the host fails. The price is that a failure of the gate comes after
+the return step, that the human receives the request later, by the time CI takes, and that a product
+whose CI runs on fewer systems than the product works on leaves the others unchecked at the end of
+the cycle.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
@@ -2837,8 +2887,10 @@ gate's run by the number of slices and holds each slice for it; rerunning after 
 only the checks that read the foundation — the-way does not know which checks of a product read its
 foundation; a cycle that hands over the request and leaves the CI result to the human — an error
 visible only on the CI's system reaches the human and returns as a round of corrections; the CI
-result in place of the cycle's final gate — an error visible only on the cycle's own system is no
-longer caught, and the cycle stops where the host of the repository fails.
+run in place of the gate also on the base of the branch and after the pin moves — the cycle would
+push the branch and open a working request at its start, a larger change for two rare cases; a
+cycle that stops and leaves the request blocked until CI answers, for the human to resume — a
+failure of the host of the repository stops the work.
 
 ### WAY-344 — What does a script of the-way do when a file it reads lacks a field it needs?
 
@@ -3416,7 +3468,8 @@ read at an earlier step stays in context, so only the instructions of steps not 
 no one has measured it on a skill. The shape — a main part holding the picture of the whole, the
 rules of working, the pointers and the steps every use comes to, with the guidance of each variant
 and of each step some uses pass by in a file beside it — is borrowed from a course on steering
-models through context, and only that shape is adopted (WAY-100); the course's claim that a model
+models through context, whose lessons are not open to a reader of this repository, and only that
+shape is adopted (WAY-100); the course's claim that a model
 follows all of a long skill's instructions with a chance close to zero is not, since no measurement
 stands behind it. The rules of an element's entries stay where WAY-35 places them, since every
 writer and check reaches them there, and this decision orders what else a skill holds. A change to a
@@ -3720,7 +3773,7 @@ the human before the plan is handed over.
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
-  WAY-126
+  WAY-126 · derives from WAY-100
 - **Verification:** invariants: project-plan-check. For moves, answers and new questions, an agent
   compares the plan with the decision:
   - complies: the breakdown moves the question on a session's secret from the task of the test
@@ -3741,13 +3794,20 @@ plan's own reading of the definition, so the log makes it visible. Which task wr
 entry sets when the foundation comes to hold it, so a move that shifts it reaches the human. A
 question the breakdown raises was settled by nobody, and the human answers it while the plan can
 still change. An answer the definition or the foundation already gives needs no human to restate
-it, and quoted with its place it can be checked against its source.
+it, and quoted with its place it can be checked against its source. The rule takes from the
+practice of a roadmap (WAY-142) the carrying of each open question of the source into the plan
+word for word, and a question that arises in the breakdown put before the human; the practice is that of the skill of a roadmap of lesson m2l1 of the
+10xDevs course, whose lessons are not open to a reader of this repository, and the move of a
+question written into the log of changes is the rule's own.
 *Rejected:* a move taken through the gate again — the definition would be approved again for a
 change of route alone; a flag marking a task blocked by its unknowns, beside a list of deferred
-work — the states of a task already hold waiting for the human, and the list repeats the
-definition's exclusions; a question moved without a word — a reader takes it for the definition's
-own placement; only the human answering a question the breakdown resolves — the human would restate
-what the foundation already holds.
+work, as the practice of a roadmap has them — the states of a task already hold waiting for the
+human, and the list repeats the definition's exclusions; a question moved without a word — a reader
+takes it for the definition's own placement; only the human answering a question the breakdown
+resolves — the human would restate what the foundation already holds; the practice's blockers
+outside the team, such as an approval a vendor or a stakeholder owes, kept apart from its unknowns
+— left out of what the rule takes from it; the owner the practice names for each unknown — left out
+of what the rule takes from it.
 
 ## Technology choices
 
@@ -3823,7 +3883,8 @@ check of the running product, and a file in the product's repository stays in it
 that settles the place with the step learns of the gap before its first request with a changed
 screen, not at it. The step takes from the lesson "Towards Autonomous Product Development" the
 question of how an agent sees the running product — through its logs, its interface and its
-development data; the place of the screenshots is no part of the lesson.
+development data; the place of the screenshots is no part of the lesson. The lesson is not open to
+a reader of this repository.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
@@ -4018,9 +4079,7 @@ the decision of that choice in its *Rationale*, beside the lacks of the option c
 hypothesis, through the task document where the step ran at a task.
 
 - **Scope:** project-level, decisions
-- **Based on:** TODO — the source of the devil's advocate, the pre-mortem and the search for
-  unknown unknowns that the step takes: its address, the place in it, the passage word for word and
-  the date it was read; the entry names the three tests and no source
+- **Based on:** none
 - **Relations:** derives from WAY-100 · derives from WAY-122 · derives from
   WAY-123
 - **Verification:** an agent compares the work with the decision:
@@ -4047,13 +4106,27 @@ the choice, a risk can still change it; carried into the decision as a hypothesi
 reader what was accepted without passing for a sourced fact. The tests run on the option
 recommended, the one the human most often takes, and only where this project or task chooses: a
 choice a decision already holds has been made, and testing it again would reopen it with no reason
-in the work, while a choice the step opens has that reason and is chosen anew.
+in the work, while a choice the step opens has that reason and is chosen anew. The step takes the
+three tests from lesson m1l5 of the 10xDevs course, on deploying a product with an agent, which
+runs them on the platform its research recommends against the confirmation bias of a model: a
+devil's advocate looking for the flaws, hidden costs and risks of the winning option, a pre-mortem
+telling how the choice failed three months later, and a search for the classes of risk the scoring
+missed, each test ending in accepting the risk, recording it as a known limitation or changing the
+choice. The lessons of the course are not open to a reader of this repository.
 *Rejected:* tests on every option of a choice — their cost grows with options the human mostly does
 not take; the risks shown after the choice — the human takes them unseen; the risks put through the
 critique as claims — with no source, every one would be struck; the risks in *Based on* — it names
 facts with sources, and a risk read there passes for one; an entry of its own for each risk —
 assumptions as a kind of entry escape checking (WAY-04); tests on choices decisions of the
-foundation hold — they reopen what was settled.
+foundation hold — they reopen what was settled; a risk taken recorded as a known limitation in a
+document of the product's infrastructure, left out of what the step takes from the lesson — such a
+document answers no question, and the decision of the choice carries it and its reasons; the
+comparison of three alternatives in a table, which the lesson adds beside the three tests, left out
+of what the step takes from the lesson — the step already compares the options of each choice, and
+its decision keeps those not chosen in *Rejected*; the change of roles, in which a model weighs the
+choice as each of several people who will live with it, which the lesson adds beside the three
+tests, left out of what the step takes from the lesson — no decision of the-way has several roles on
+its other side.
 
 ### WAY-267 — How does the step that settles technology run outside a project definition?
 
@@ -4164,7 +4237,8 @@ The test that puts a choice on a project's list (WAY-121) also marks what one ta
 alone: a choice one task can make and change alone costs little to turn back, and stopping for it
 would cost a cycle, research, a critique and a message for the human. The rule takes from lesson
 m2l4 of the 10xDevs course one thing, for these choices: a technical decision that rests on a source
-that can be checked, not on a model's memory. A run of the step gives a choice that source, with a
+that can be checked, not on a model's memory; the lessons of the course are not open to a reader of
+this repository. A run of the step gives a choice that source, with a
 critique and tests of its risks. The request is the cycle's point of human review (WAY-227), so a
 choice met in the cycle leaves it through a blocked draft request and reaches the human in
 refinement, where the step can run. Without the precedence, a cycle meeting such a choice would face
@@ -4185,7 +4259,12 @@ goes against WAY-227, which would have to change, and the cycle would stop worki
 tools of the skills of guidelines sent to the step as well — one way for every choice, but those
 skills and the decisions on their routes
 would have to change, and a task choosing several tools at once takes a longer way, with no recorded
-case of the present route failing.
+case of the present route failing; a search engine built for agents, which the lesson reaches
+through a tool server, as the way to the source, left out of what the rule takes from the lesson —
+it is a choice of a provider of search, not a step of the process; the current documentation of a
+library put into the agent's context before the plan, as the lesson does with a tool for it, left
+out of what the rule takes from the lesson — an agent fetches the documentation when it needs it,
+rather than all of it ahead.
 
 ### WAY-269 — How does a task leave a cycle that met a reserved choice, and how does it come back?
 
@@ -4312,7 +4391,8 @@ fresh agent for the choice, options from documentation with a version, consequen
 and cheapest option recommended (WAY-122, WAY-123) — with no research skill of its own, so one way
 of researching a choice stays to keep current. The step adopts from lesson m3l5 of the 10xDEVS course
 two questions, how long the record of the running product lives and how a human learns of a failure;
-they bind by this decision, by WAY-165 and by WAY-139, and nowhere else (WAY-100). What the code
+they bind by this decision, by WAY-165 and by WAY-139, and nowhere else (WAY-100); the lessons of the
+course are not open to a reader of this repository. What the code
 writes to the record and in what form is a question of the code, not of this step; what a tool's
 hook-up takes in code shows as the cost of changing the choice later.
 *Rejected:* the matter as part of the logs item — one item fewer, but a change to the tool that
@@ -4331,7 +4411,12 @@ step already has a mechanism of research, and a second skill would repeat it and
 each change; the logs and the failure choice added to the step at a task that chooses a place to
 run — the question comes in the step with no extra stop, but WAY-267 gains an exception, rules are
 needed on an agent opening a decision and on waiting for the place to run, and a product still
-needs the human's note.
+needs the human's note; a tool that collects failures set up ahead of the choice, as the lesson sets
+one up through its own path of a change, left out of what the step takes from the lesson — the step
+chooses the tool, with a deliberate absence among its options; an agent reaching the failures
+through the tool's server instead of being given them, left out of what the step takes from the
+lesson — how an agent reads the record of the running product is a matter the step already settles
+(WAY-121).
 
 ## The running product
 
@@ -4364,7 +4449,8 @@ refusal, points to the guide too.
 
 - **Scope:** project-level
 - **Based on:** none
-- **Relations:** derives from WAY-267 · derives from WAY-270 · derives from WAY-165
+- **Relations:** derives from WAY-267 · derives from WAY-270 · derives from WAY-165 · derives from
+  WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: refining a task that moves the product to another host finds that the product's
     deployment skill says nothing of rollback, and the task gains an item of its To do that adds
@@ -4430,7 +4516,13 @@ need no change until someone chooses to show a newer one. The guide has a part f
 items the check handles apart, so the item of the To do that writes into the skill the answer to one
 of them points to the guide as well: an agent that is given only that item, with no pointer, reads
 the one skill that exists as its pattern and separates the general from the particular alone. The
-price is one more place that names the guide.
+price is one more place that names the guide. The list takes from lesson m1l5 of the 10xDevs course,
+on deploying a product with an agent, the parts of the document of the infrastructure the lesson
+has an agent keep beside the product that say how it is operated — the preview of deployments, where
+the secrets lie, how a faulty deployment is rolled back and in how many steps,
+which actions take a human, and how the agent reaches the logs — and from lesson m3l5 its two items
+on the record's life and on a failure (WAY-270); the lessons of the course are not open to a reader
+of this repository.
 *Rejected:* the pointer on the item that adds a missing deployment skill alone, the items that write
 the answer to one of the three left without one — the agent that completes a skill for one of them
 may not find the guide; the skill saying how a human reads the logs and the decision how an agent
@@ -4438,8 +4530,15 @@ reads them —
 two answers that are usually the same and can drift apart; the item on how to read the logs left as
 it was — the drift shows only when an agent meets two different instructions; a deployment skill
 carried by the-way — what to run and where differs for every
-product; a document of operations kept beside the product — no step reads it, so it goes stale
-unread; the list in a template alone — nothing binds the refinement to check it; adding the logs
+product; a document of operations kept beside the product, as the lesson's document of the
+infrastructure is — no step reads it, so it goes stale unread; the platform chosen and its reasons,
+which that document holds, left out of what the list takes from the lesson — the decisions of the
+foundation carry a choice and its reasons; the fit of the product's stack to the platform, which
+that document holds — left out of what the list takes from the lesson; the known risks, which that
+document holds — left out of what the list takes from the lesson; the region, the runtime and the
+plan paid for, which that document holds — left out of what the list takes from the lesson; the
+signal that would change the choice once the product grows, which that document holds — left out of
+what the list takes from the lesson; the list in a template alone — nothing binds the refinement to check it; adding the logs
 and the failure choice to the step at a task that chooses a place to run — the question comes in
 the step with no extra stop, but WAY-267 gains an exception, rules are needed on an agent opening a
 decision and on waiting for the place to run, and a product still needs the human's note; the
@@ -4474,7 +4573,7 @@ human saying in one sentence what that decision leaves unsaid.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121 · derives from WAY-270
+- **Relations:** derives from WAY-121 · derives from WAY-270 · derives from WAY-100
 - **Verification:** an agent compares the work with the decision:
   - complies: for a game played in a browser, the logs are answered by an agent reading the output
     of the server's container, kept in a store that outlives a redeployment, the interface by an
@@ -4532,14 +4631,21 @@ settled gives the human no sign that something is left for them to say. The scre
 takes to show the human are the evidence of its check, and the human sees them in the description
 of the request, so the answer says both where the files lie, outside the product's repository where
 a file would stay in its history for good (WAY-316), and how the description shows them; a place
-without the second leaves each cycle to improvise how a screenshot reaches the human.
+without the second leaves each cycle to improvise how a screenshot reaches the human. The question
+of how long the record lives comes from lesson m3l5 of the 10xDEVS course, on debugging with an
+agent, which weighs how long a platform keeps its logs (WAY-270); the lessons of the course are not
+open to a reader of this repository.
 *Rejected:* the interface without "as its user does" — access to the store of data past the
 application would count as an interface; the development data asked as data rebuilt from scratch —
 it rules out a dedicated test environment that persists, in many cases the better option; the
 development data with no word on reaching a state — a decision could leave unsaid the state a check
 needs, and the agent of the cycle improvises it; what the product logs and in what form, in the
-same decision — that rule acts where code is written and reviewed, in the task cycle, not where a
-project settles its technology.
+same decision, the identifiers that tie the events of one operation among the lesson's sources of a
+diagnosis included — that rule acts where code is written and reviewed, in the task cycle, not where
+a project settles its technology; the technical and business metrics that the lesson counts among
+the sources of a diagnosis — left out of what the matter takes from the lesson; the history of
+changes and deployments that the lesson counts among those sources — left out of what the matter
+takes from the lesson.
 
 ### WAY-166 — How does whether an agent can use an option weigh in a choice of its way to the running product?
 
@@ -4610,7 +4716,8 @@ always leaves a line in the logs.
 
 *Rationale:* the-way takes this one rule from lesson m3l5 of the 10xDEVS course, because the cause of
 a failure nobody sees cannot be found; the lesson says that one first stops hiding what happens in
-the system and only then fixes the cause. An empty list after a failure reads as a true answer, so
+the system and only then fixes the cause. The lessons of the course are not open to a reader of this
+repository. An empty list after a failure reads as a true answer, so
 neither a user nor an agent has anything to act on. A degraded mode can serve a user better than a
 page that falls with one of its functions, so it is allowed; set by a task and recorded as a decision
 it is known later to be deliberate, and its line keeps it from being a hidden failure. Its weak
@@ -4621,7 +4728,9 @@ reads the logs, and how a human learns of a failure stays with the step that set
 logs fill with wrong passwords and repeats, and with a degraded mode forbidden one function going down
 takes a whole page with it; each product defining a failure for itself — the definition fits the
 product, but it is one more item in its decision, most products write the same one, and audits stop
-being comparable.
+being comparable; the search for hidden failures as a class, by an audit of one critical flow run
+before a user reports them, as the lesson sets it — left out of what the template takes from the
+lesson.
 
 ### WAY-274 — Where does a product's logging scope stand, and who adds to it?
 
@@ -4768,9 +4877,7 @@ phases with what closes each where it has any, and a log of its changes, each wi
 written in the language of the definition under headings, states and markers kept in English.
 
 - **Scope:** project-level
-- **Based on:** TODO — the source of the practice of a roadmap of vertical slices that the step
-  takes: its address, the place in it, the passage word for word and the date it was read; the
-  entry names the practice and no source
+- **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
   WAY-100
 - **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
@@ -4793,18 +4900,35 @@ and need short keys made up for them, while a row per entry under its own headin
 definition word for word and shows in one cell the single task that writes it. The columns and the
 states stand in the template, so that a change to them needs no change of this decision. The
 step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
-before any task is planned.
+before any task is planned. The practice is that of lesson m2l1 of the 10xDevs course, on the
+roadmap of a first version of a product, and of the skill of a roadmap the lesson brings, which
+opens a milestone from the product's documents, checks that they are ready, takes stock of the code
+already in place, asks the human three questions that set the order of the work, and breaks the
+milestone into preparatory work and vertical slices, each with a stable name for its change, the
+work it needs first and the slices it can run beside. The lessons of the course are not open to a
+reader of this repository.
 *Rejected:* the realizing and the writing tasks as two columns of the table of tasks — a cell grows
 to many long headings and needs keys made up for them; each task described again in a section of
-its own beside an index table and a table for a tracker — three copies of one task drift apart; the
+its own beside an index table and a table for a tracker, as the practice of a roadmap holds each of
+its items — three copies of one task drift apart; the
 plan inside the definition — every move of a task would change approved sections and send the
 definition through its gate (WAY-118); a stage of the project opened and closed inside the plan —
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it; the columns named in this
-decision — each change of a column would take a change of the decision; the milestones, the
-estimates and the interview on the order of work of the practice of a roadmap of vertical slices —
-left out of what the step takes from it.
+decision — each change of a column would take a change of the decision; the milestones and the
+interview on the order of work of the practice of a roadmap of vertical slices — left out of what
+the step takes from it; the practice's scored check that the product's documents are ready before
+the breakdown, left out of what the step takes from it — the definition passes its stricter
+readiness gate before the breakdown (WAY-118); the practice's stock of the code already in place,
+taken layer by layer by agents working side by side — left out of what the step takes from it; the
+practice's fields of each item from which its acceptance criteria are drawn, among them a sentence
+of why it stands where it does in the order, left out of what the step takes from it — the
+refinement of each task writes its acceptance criteria from its own analysis, and the order stands
+in the dependencies; the practice's list of parked items, left out of what the step takes from it —
+it copies what the definition puts out of scope; the practice's state of an item blocked by an
+unknown the human has to resolve, left out of what the step takes from it — the plan has a state of
+waiting for the human and places each open question where it is resolved.
 
 ### WAY-143 — What does a task of a project plan end with?
 
@@ -4814,9 +4938,7 @@ plan depends on it, the task it opens the way for. A technical element enters th
 first task that uses it, or with a preparatory task that task depends on.
 
 - **Scope:** project-level
-- **Based on:** TODO — the source of the practice of vertical slices, and of its enabling work, that
-  the rule takes: its address, the place in it, the passage word for word and the date it was read;
-  the entry names the practice and no source
+- **Based on:** none
 - **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-check. For what a task ends with and where a technical
   element enters, an agent compares the plan with the decision:
@@ -4836,11 +4958,15 @@ product to run on, and it earns a task of its own only by naming what it opens t
 later reader sees why it stands there; a technical element brought in early for later use is work
 nobody checks until it is needed, and is often built for a need that changes. The rule takes from
 the practice of vertical slices the cut by what can be checked in the running product, and from its
-enabling work the rule that such work names what it opens the way for.
+enabling work the rule that such work names what it opens the way for. The practice is that of the
+skill of a roadmap of lesson m2l1 of the 10xDevs course (WAY-142), whose preparatory work, named
+foundations, stands only with what it unlocks — a slice, a blocking unknown it reduces or a way of
+verifying it enables; the lessons of the course are not open to a reader of this repository.
 *Rejected:* tasks cut by layers of the product — nothing can be checked until the last layer lands;
 preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
-task naming the task it opens the way for — it repeats a dependency the plan already holds; the word
-slice for a task of the plan — the word already names a piece of a task's change.
+task naming the task it opens the way for, as the practice's field of what a foundation unlocks —
+it repeats a dependency the plan already holds; the word slice for a task of the plan, which the
+practice uses for its items — the word already names a piece of a task's change.
 
 ### WAY-144 — How does a project plan show which tasks can be worked on side by side?
 
@@ -4852,9 +4978,7 @@ holds no field naming the tasks a task can be worked on beside, and its order of
 follows the dependencies.
 
 - **Scope:** project-level, task-cycle
-- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
-  place in it, the passage word for word and the date it was read; the entry names the practice
-  and no source
+- **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-100
 - **Verification:** invariants: project-plan-form. For cycle starts and refinement waits, an agent
   compares the plan, or the work on it, with the decision:
@@ -4871,14 +4995,17 @@ follows the dependencies.
 *Rationale:* the dependencies already say which tasks can go together; a second field derived from
 them is a copy that drifts as soon as one dependency changes, and its lists grow long enough that
 nobody reads them. The rule takes from the practice of a roadmap its graph of dependencies and the
-order that follows from it. The task
+order that follows from it; the practice is that of the skill of a roadmap of lesson m2l1 of the
+10xDevs course (WAY-142), whose lessons are not open to a reader of this repository. The task
 order WAY-106 gives the plan is this order of cycle starts. Refinement
 can settle a dependent task before its prerequisites are delivered; only a question needing their
 result earns a wait.
 *Rejected:* a field naming the tasks a task can be worked on beside, which the practice of a roadmap
 has and the rule leaves out — a copy of the dependencies that grows past reading; the order tilted
-by a goal the human picks in an interview before the plan — the definition already states the goal
-and its risks, and the human corrects the finished plan.
+by a goal the human picks in an interview before the plan, as the practice of a roadmap tilts it —
+the definition already states the goal and its risks, and the human corrects the finished plan;
+the practice's slice that proves the product, placed as early as its dependencies allow — left out
+of what the rule takes from it.
 
 ### WAY-146 — What checks a project plan before it is handed over?
 
@@ -4894,9 +5021,7 @@ definition puts it or the log of changes gives its move, and whether a quoted an
 question. A check a script can make is never left to the critique.
 
 - **Scope:** project-level
-- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
-  place in it, the passage word for word and the date it was read; the entry names the practice
-  and no source
+- **Based on:** none
 - **Relations:** derives from WAY-100 · derives from WAY-120
 - **Verification:** invariants: project-plan-form · project-plan-check. For the critique, an agent
   compares the work with the decision:
@@ -4913,11 +5038,16 @@ same thing answers well most of the time and costs a reading of the whole plan; 
 cannot tell — whether an end can be checked, whether an element came early, whether a question was
 moved or answered in full — needs a reader who did not write the plan, since its writer applied the
 rules it would be checking. The rule takes from the practice of a roadmap its review of the plan
-before it is handed on, split between a script and a reader who did not write the plan.
-*Rejected:* the author checking its own plan against the rules before writing it — the same agent
-applies and judges them; checks of a plan's form across several copies of each task — a plan holding
-each task once has no copies to compare; an agent checking what a script decides — it costs more
-and sometimes misses.
+before it is handed on, split between a script and a reader who did not write the plan; the
+practice is that of the skill of a roadmap of lesson m2l1 of the 10xDevs course (WAY-142), whose
+lessons are not open to a reader of this repository.
+*Rejected:* the author checking its own plan against the rules before writing it, as the practice's
+review of its own roadmap does — the same agent applies and judges them; checks of a plan's form
+across several copies of each task, as the practice checks that its table and its sections agree —
+a plan holding each task once has no copies to compare; an agent checking what a script decides —
+it costs more and sometimes misses; the practice's check that no slice stands for anything the
+source does not declare — left out of what the rule takes from it; the practice's check that its
+slices are of a comparable size — left out of what the rule takes from it.
 
 ### WAY-147 — How is a task of a project plan named, and what does its cycle take from the name?
 
@@ -4926,9 +5056,7 @@ task of the plan holds and which stays with the task while the plan changes. A t
 enters its cycle under that name, and the cycle names its record by it.
 
 - **Scope:** project-level, task-cycle
-- **Based on:** TODO — the source of the practice of a roadmap that the rule takes: its address, the
-  place in it, the passage word for word and the date it was read; the entry names the practice
-  and no source
+- **Based on:** none
 - **Relations:** derives from WAY-100
 - **Verification:** invariants: project-plan-form. For the cycle, an agent compares the cycle with
   the decision:
@@ -4942,13 +5070,17 @@ enters its cycle under that name, and the cycle names its record by it.
 *Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
 through its name, so a name that changes leads a reader to the wrong work; words, because a number
 that keeps the plan's own cells short says nothing in a record read apart from the plan. The rule
-takes from the practice of a roadmap the stable name each of its items carries into later work.
+takes from the practice of a roadmap the stable name each of its items carries into later work; the
+practice is that of the skill of a roadmap of lesson m2l1 of the 10xDevs course (WAY-142), whose
+lessons are not open to a reader of this repository.
 Where the product keeps its backlog is its own choice (WAY-107), and a task's entry there links its
 document, so the plan needs no table of its tasks written for a tracker.
 *Rejected:* the cycle naming its record when it starts — the plan and the record name one task
 differently; the plan's number as the name — it says nothing where it is read; a table of the
-plan's tasks with titles for a tracker — a second copy of the tasks, which the product's backlog
-already holds.
+plan's tasks with titles for a tracker, as the practice of a roadmap hands its items to a backlog —
+a second copy of the tasks, which the product's backlog already holds; the practice's states of an
+item that the later steps of a change move forward by its name — left out of what the rule takes
+from it.
 
 ### WAY-153 — What evidence supports a task state in a project plan?
 
@@ -5480,7 +5612,8 @@ the whole document, so asking there costs one question. The-way takes this pract
 of the 10xDEVS course, where an agent that plans a change first probes the terms the request leaves
 undefined — "top N", "latest", "active" — with the smallest case in which two readings give a
 different result; it binds the refinement of a task by this decision and nowhere else (WAY-100).
-What the decision adds are its bounds. The sources are the task document and the sentences its
+The lessons of the course are not open to a reader of this repository. What the decision adds are
+its bounds. The sources are the task document and the sentences its
 required result rests on, so a word that stands only in a quoted decision or in the definition is
 reached and the rest of the foundation is not. A case counts only where a sentence standing in those
 files allows both readings, after the model of WAY-99 for a word of the foundation, and where the
@@ -5500,7 +5633,9 @@ readily adds plausible cases at the edge, so it protects least; one sentence tha
 read two ways — it shows that the check ran, but it turns into a ritual and a temptation to add "but
 maybe", which is inventing cases by the back door; every settled meaning as a candidate glossary
 term — the glossary would grow by words nobody confuses, against WAY-95, which it would have to
-change.
+change; the same probe made again by a review of the finished plan, which looks among its blind
+spots for a term the plan never decides at the tie — left out of what the refinement takes from the
+lesson.
 
 ### WAY-377 — Does the refinement of a task list the decisions its document leaves to the executor before the human sees the document, and who lists them?
 
@@ -5911,7 +6046,7 @@ log, with no method of the cycle keeping a log of its own beside it.
   https://raw.githubusercontent.com/open-mercato/skills/e320bd5e3f0761a6d7249085c42c77a4b37d480d/skills/om-auto-create-pr-loop/references/executor-dispatch.md
   § "Model tier (best-effort)", the executor prompt template — "Full description: {paste the
   Step's bullets from PLAN.md Implementation Plan}"; read 2026-10-23
-- **Relations:** derives from WAY-125
+- **Relations:** derives from WAY-125 · derives from WAY-100
 - **Verification:** an agent compares the stage handoff, return, report and orchestrator's ruling
   with the decision:
   - complies: a short return names its report, commit range and failed or unchecked checks, and
@@ -5937,7 +6072,10 @@ the product, and the orchestrator learns of a path left unchecked without readin
 the price is that a stage that runs no check gives no line. Questions kept in the
 report survive an interrupted session without being copied anywhere. A passage copied word for word
 carries the requirement as its author wrote it, so the agent reads it without opening the whole
-file, while a restatement is a second account of it that drifts from its source unseen. The cycle
+file, while a restatement is a second account of it that drifts from its source unseen. The decision
+takes from Open Mercato's prompt for the executor of one step of a plan, which pastes the step's
+bullets from the plan and names the plan's path among the step's anchors, the handoff that carries
+its section of the plan word for word with the plan's file named as its address (WAY-100). The cycle
 record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
 *Rejected:* the line of the check result dropped from the skill of the stage that plans — the
 orchestrator learns of a path left unchecked only from the full report, which routine progression
@@ -5951,7 +6089,10 @@ record and has to be copied into it before its workspace is cleaned; rereading e
 evidence during ordinary coordination — it pays again for work already delegated; automatic
 compaction — it does not choose the evidence a ruling needs; a handoff that restates the plan,
 spec or task in its own words — the restatement drifts from its source unseen; every agent opening
-the whole task, spec, plan and record — each pays to read what only a part of its work needs.
+the whole task, spec, plan and record — each pays to read what only a part of its work needs; the
+executor's concise report of under three hundred words returned in its message, which Open
+Mercato's prompt for the executor of a step asks for — left out of what the decision takes from that
+prompt.
 
 ### WAY-229 — On which class of model do the executor of a slice and the one author work?
 
@@ -6094,9 +6235,11 @@ whole change — reads that report, and the request lists what each such check s
 evidence.
 
 - **Scope:** task-cycle
-- **Based on:** TODO — the source of the practice of an agent harness for its workers that the rule
-  takes: the harness, its address, the place in it, the passage word for word and the date it was
-  read; the entry names the practice and no source
+- **Based on:**
+  https://raw.githubusercontent.com/overment/limen/e746877e8ef195ab9a34a070bdd3b000d0b6cf10/templates/worker.md
+  § line 25 — "Name the acceptance line most likely to be false and write the check that would catch
+  it; say what that check did in the final message — a suite that only passes is not evidence.";
+  read 2026-11-16
 - **Relations:** derives from WAY-136 · derives from WAY-148 · derives from
   WAY-100
 - **Verification:** an agent compares the author's or executor's report, the review and the request
@@ -6117,9 +6260,10 @@ misses finds what the author can still catch before a reviewer spends a round on
 of each slice does the same against its slice, so that a larger change does not reach review with
 no agent having attacked its own work. The report is the reviewer's material, and the request
 shows the human what the attack found beside the other test evidence. The check does not replace
-an invariant's test, which is seen failing once in its own right (WAY-08). The rule takes from an
-agent harness's practice for its workers the naming of the requirement most likely to be false and
-the check that would catch it.
+an invariant's test, which is seen failing once in its own right (WAY-08). The rule takes from the
+practice that Limen, a harness of agents, sets its workers the naming of the requirement most likely
+to be false, the check that would catch it and the word on what that check did, which is the whole
+of that practice.
 *Rejected:* the author of a one-author change alone — in a larger change made from a plan, no agent
 would attack its own work before review; a review without the author's report — a reviewer of the
 orchestrator's class without the report caught 4 and 3 of the 14 reference errors, with the report 5
@@ -6607,7 +6751,8 @@ fix, the findings that do not block go unfixed to the request's lists as WAY-161
     Minor finding of the review of the reconciliation with the target branch is listed in the
     request; the review of a one-author change returns two Minor findings only, one fix takes them
     in, the review of that fix finds an Important finding in the fix, and the cycle reverts the fix
-    with a revert commit, runs the gate on the code the revert leaves, and opens a request that is
+    with a revert commit, has the gate run on the code the revert leaves as WAY-160 gives, and
+    opens a request that is
     not blocked and lists the two Minor findings and the Important finding with its grade; a fix
     that ran for an Important finding and carried a Minor one ends with a blocked request when the
     review of the fix finds a new Important finding;
@@ -8068,9 +8213,11 @@ meaning; guidelines in the own directory of the part that directs agents — its
 product to product, and no check could find them; one styleguide for every user interface of a
 product — an admin panel and the product's screens are drawn by different parts; all coding
 guidelines of a product in one file — it grows beyond measure, and an agent reads rules its work
-does not touch; a file of coding guidelines for each part of the map — a kind living in two parts
-and the standing checks repeat in several files and drift apart; a file for each kind with no
-general file — the standing checks have no place.
+does not touch; a file of coding guidelines for each part of the map, as Open Mercato keeps a guide
+in each of its packages — a kind living in two parts and the standing checks repeat in several
+files and drift apart; a file for each kind with no general file — the standing checks have no
+place; a row of the table naming a section to read inside a guide, as rows of Open Mercato's table
+do — left out of what the decision takes from that table.
 
 ### WAY-168 — What does a rule of a product's guidelines hold beside the foundation entries that carry it?
 
@@ -8210,7 +8357,10 @@ checks, so the pointer names no command of its own (WAY-16). The table itself is
 the general file; this decision sets how it leads.
 *Rejected:* a line of `AGENTS.md` for each file of the coding guidelines, as it has for each
 styleguide — `AGENTS.md`, loaded into every session, grows with each kind; no pointer, leaving the
-way in to the task cycle — a session outside that cycle can miss them.
+way in to the task cycle — a session outside that cycle can miss them; the table leading from a task
+to the guides standing in the root instruction file itself, as Open Mercato keeps it — `AGENTS.md`,
+loaded into every session, grows with each kind; an agent sent to explore the code for a topic no
+guide covers, as Open Mercato's table allows — left out of what the decision takes from that table.
 
 ### WAY-213 — How do the agents of a task's cycle read the product's guidelines?
 
@@ -8625,7 +8775,8 @@ review of a change: a grade says whether a change can be trusted and blocks it, 
 what is at stake and blocks nothing, so the words differ. From the skill for auditing observability
 of lesson m3l5 of the 10xDEVS course the-way adopts a weight for each problem by its effect, the
 merging of what comes from one source into one cause, and an order of repair, for the audits of its
-skills of guidelines, for the reasons above (WAY-100). Its weak points: the text of the scale is
+skills of guidelines, for the reasons above (WAY-100); the lessons of the course are not open to a
+reader of this repository. Its weak points: the text of the scale is
 general, so the agent judges how serious a harm would be, and screens seldom reach `grave`, so the
 top of a list comes more often from code and tests.
 *Rejected:* a scale of its own for each discipline — it fits the differences between the disciplines
@@ -8723,7 +8874,10 @@ kind give beside the path of each file of the kind they list its status, `exempl
   https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/apps/mercato/src/modules/example/README.md
   § line 46 — "`readable` | The file passed the reference-quality audit. Safe to read and adapt." ·
   § line 47 — "`qa-only` | The file exists and works, but fails at least one current project rule. …
-  Do **not** copy it."; read 2026-10-18
+  Do **not** copy it."; read 2026-10-18 ·
+  https://raw.githubusercontent.com/open-mercato/open-mercato/4374c48def1654927805c4b760f0e7f8648280f2/packages/core/src/modules/customers/AGENTS.md
+  § line 7 — "**MUST use this module as the template** for new CRUD modules — copy file structure
+  and patterns"; read 2026-11-16
 - **Relations:** derives from WAY-172 · derives from WAY-198 · derives from WAY-100
 - **Verification:** for what takes approval, an agent compares the change with the decision:
   - complies: a fix of a typo in the exemplar, and a change of its inner structure that keeps the
@@ -8741,10 +8895,15 @@ decision, while an edit that keeps them uses a meaning a decision carries, which
 and every later copy inherits it; that holds, because approving every change of the exemplar's
 behaviour would have the human judge code they do not judge. The decision takes
 from Open Mercato's statuses the status beside each path, which shows an agent reading the
-guidelines what to copy and what not to (WAY-100).
+guidelines what to copy and what not to (WAY-100): its `readable` and `qa-only` become `copy` and
+`do not copy`. Open Mercato's statuses are two; the third, `exemplar`, marks the one file a decision
+designates (WAY-198), as Open Mercato declares one module the template of its new modules of that
+kind.
 *Rejected:* approval of every change of the exemplar's behaviour — the human would judge code they
 cannot judge; the status of the files kept in the decision alone — an agent reading the guidelines
-would not see which files not to copy.
+would not see which files not to copy; the statuses given to the files of a reference module that
+the product does not run, as Open Mercato gives them, rather than to files of the product's own code
+— left out of what the decision takes from Open Mercato's statuses.
 
 ### WAY-202 — Which standing checks must a product's coding guidelines settle, and from when do they bind?
 
@@ -8836,11 +8995,17 @@ while where it cannot, the review reads each change anyway. The price: some usef
 linter reach the agent only as an example to read, and a comment that turns a rule off in a file
 whose tool cannot ignore it is caught only as surely as the reviewer reads the change.
 *Rejected:* the whole set the tool recommends blocking — the gate blocks sound code; a rule blocking
-while fewer than one report in ten leads to no change, as Google allows for checks shown in code
-review — the gate sometimes blocks sound code, and only a change of a decision passes it; a rule
-that gives such reports kept as a check that only warns — it changes what results the gate knows
-(WAY-63); only rules of correctness blocking, never rules of style — a remark on style never blocks
-in the review of code (WAY-161), and the human does not judge style; a script of the product's own
+while fewer than one report in ten leads to no change, the limit Google's practice allows for checks
+shown in code review, left out of what the decision takes from that practice — the gate sometimes
+blocks sound code, and only a change of a decision passes it; a rule that gives such reports kept as
+a check that only warns — it changes what results the gate knows (WAY-63); only rules of correctness
+blocking, never rules of style, as Google's practice sets for the checks that stop a build, left out
+of what the decision takes from that practice — a remark on style never blocks in the review of code
+(WAY-161), and the human does not judge style; a check that is easily understood, as Google's
+practice also sets for the checks that stop a build — left out of what the decision takes from that
+practice; a check that is easy to act on and to fix, with a fix it suggests wherever it can, as
+Google's practice also sets for those checks — left out of what the decision takes from that
+practice; a script of the product's own
 finding every comment that turns a rule off where the tool has no flag for it — code kept for what
 the review of each change already sees.
 
@@ -8987,12 +9152,15 @@ published that morning; a copy of the database the product commits — nothing m
 change, so it ages without bound, and a change bringing in a version first flagged after it passes;
 the rule on a check that gives different verdicts on one commit narrowed so that a later `fail` on
 the same commit is no such check — a new meaning of that rule for a rare case; a fixed threshold of
-severity for every product — the severity is the product's choice; a daily run in CI of the
-product's audit tool over the whole set of dependencies — a second CI file in every product and a
+severity for every product, as Open Mercato's audit fails from high severity — the severity is the
+product's choice; a daily run in CI of the
+product's audit tool over the whole set of dependencies, as Open Mercato runs its audit on a
+schedule beside the audit of a change — a second CI file in every product and a
 run each day, a stronger change to this decision, for the one gain that the severity threshold
 agrees with the audit of a change; no signal, the limitation accepted for good — with the alerts
 off, a vulnerability of high severity in a dependency on the main branch passes with no signal, as
-it did in a product whose alerts were off.
+it did in a product whose alerts were off; a list of accepted advisories that the audit lets pass,
+as Open Mercato's audit keeps — left out of what the decision takes from that audit.
 
 ### WAY-360 — Does the template of the coding discipline require a rule of the size of a function and a file, and how does it reach a product?
 
@@ -9141,7 +9309,11 @@ naming each file a test's verdict leans on, in place of values written out — e
 becomes the data of some test; the rule left in the coding guidelines — a test written apart from
 code meets no rule; no property tests — a whole class of tests that check a relation over many
 inputs is barred; the rule left silent on property tests — a generated input breaks its letter, and
-nothing says what holds instead.
+nothing says what holds instead; the classical properties of mathematics and of the theory of
+computing, such as an operation that gives the same result in either order or a sort that changes
+nothing when repeated, which developers also apply — left out of what the rule takes from the
+practice of property tests; the property that only provokes a crash, with no relation to check —
+left out of what the rule takes from the practice of property tests.
 
 ### WAY-231 — Where do the rules of a product's tests stand?
 
@@ -9260,7 +9432,9 @@ change, so the rule asks for the cause and its evidence rather than forbidding t
 *Rejected:* existing tests never changed — a wrong test could never be corrected; a cause asked only
 of a changed expected value — a skip or a looser assertion masks the same defect; a test replacing
 an old one required to be seen failing on the code before the fix — a ritual of its own for each
-ordinary test, where only an invariant's test is seen failing once (WAY-08).
+ordinary test, where only an invariant's test is seen failing once (WAY-08); the grade `major` that
+Open Mercato's checklist gives a weakened assertion — left out of what the rule takes from that
+checklist.
 
 ### WAY-234 — What may a test's assertion check?
 
@@ -9412,7 +9586,12 @@ on. The price: checking a judge takes examples a human judged, repeated runs mul
 run, and the conditions are carried over from the evaluation of agents to a product's tests as an
 inference.
 *Rejected:* an AI judge barred from permanent tests — a behaviour no plain comparison can check
-stays untested; guidelines silent on AI — each task lets AI into tests on terms of its own.
+stays untested; guidelines silent on AI — each task lets AI into tests on terms of its own; partial
+credit for a task of several parts, which Anthropic's recommendation builds into a grade — left out
+of what the rule takes from that recommendation; a way out for the judge, which answers "Unknown"
+where it lacks the information — left out of what the rule takes from that recommendation; a rubric
+with each dimension of a task graded by a judge of its own — left out of what the rule takes from
+that recommendation.
 
 ### WAY-237 — What does a product deliberately not test, and where is it said?
 
@@ -9448,7 +9627,8 @@ whenever a change reaches the category, not a date of review (WAY-24). A trust b
 missing check is the fault itself, so it is never excluded. The rule takes from the
 10xDevs course on agentic development its section of what is deliberately not tested, each item
 with its reason and the change that calls for its re-evaluation; the course keeps it in its plan of
-tests, and here it stands in a product's guidelines (WAY-100). The kinds of tests without
+tests, and here it stands in a product's guidelines (WAY-100); the lessons of the course are not
+open to a reader of this repository. The kinds of tests without
 value the template gives among its examples — a duplicate of another test, a test of trivial code, a
 loop over nearly identical inputs — come from how Limen trimmed its own tests
 (https://raw.githubusercontent.com/overment/limen/89ef3786a6c2f893b2d31cd9944ad76c483f7841/spec/features/done/2026-10/F776-trim-low-signal-tests/notes.md
@@ -9939,8 +10119,8 @@ refuse to run in any other version, and by the files of requirements for the too
 `requirements-quality.in`, which holds `ruff==0.17.1` and allows wheels only, and
 `requirements-quality.txt`, which holds the SHA-256 sum of every wheel of that release and no source
 distribution. Ruff stands in the environment `.runs/quality-venv`, which the section "Running the
-tests" of `README.md` tells how to install from the requirements file, and the job of CI gains one step
-that installs it there, while the one command that runs the checks stays
+tests" of `README.md` tells how to install from the requirements file, and each job of CI gains one
+step that installs it there, while the one command that runs the checks stays
 `python -B gate/run_tests.py` (WAY-16).
 
 - **Scope:** repository, agent-instructions
@@ -9949,7 +10129,7 @@ that installs it there, while the one command that runs the checks stays
 - **Verification:** an agent compares the change with the decision:
   - complies: the configuration of Ruff holds `required-version`, the requirements file holds a sum
     for every wheel and no source distribution, the README tells how to create `.runs/quality-venv` and
-    install from the file, and the job of CI differs from before by one step that installs the
+    install from the file, and each job of CI differs from before by one step that installs the
     requirements;
   - violates: the version stands in one place only; the requirements file holds a source
     distribution or a wheel with no sum; CI runs a command of Ruff beside the one command that runs the
