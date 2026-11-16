@@ -230,7 +230,10 @@ counts as a symlink wherever the installer checks for one: a junction on the pat
 writes (`.claude`, `.claude/skills`, the folder of an entry point, `.agents/skills`, `foundations`
 and the rest) stops the run before anything is written, a junction at `.the-way` stops it, and a
 junction at the folder of a skill the commit lacks, or at the path of an agent type's file, is not
-followed, so nothing is deleted through it.
+followed, so nothing is deleted through it. A file at an entry point's path or a definition's path
+that holds the installer's text with CRLF line endings instead of LF, as a checkout with
+`core.autocrlf=true` writes it, is kept as it is and shows no difference; a file whose text differs
+is shown with its real change and written with LF.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line
