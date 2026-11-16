@@ -615,24 +615,22 @@ after the known items; a change that leaves one there puts it before the human.
   task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: that the script reports a bare `TODO` in a decision's *Relations*, a
+  `TODO` behind a relation type there and a `TODO` joined to the relations by a comma as errors,
+  and that it takes the descriptive form after known relations. An agent compares the change with
+  the part no test holds:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
     `Based on: TODO — <what is missing, with its source>`; an invariant whose decision is not
     written yet reads `Derives from: TODO — <the decision, and where it is expected>`; an
     invariant that rests on a fact the foundation holds and on one it lacks reads
-    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`; a decision that
-    derives from one decision the log holds and from one it does not hold yet reads
-    `Relations: derives from WAY-x · TODO — <the decision, and where it is expected>`;
+    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`;
   - violates: an invariant that rests on a known fact and on a missing one reads a whole-value
     `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
     after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
-    `TODO` in *Rests on*, *Derives from*, *Based on* or *Relations*; a decision reads `TODO` in
-    *Origin*; a decision reads `Relations: derives from TODO` with a relation type before the
-    word; a decision joins `TODO — <the decision, and where it is expected>` to the relations
-    before it with a comma instead of ` · `.
+    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Origin*.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten; an undefined value misleads. An invariant

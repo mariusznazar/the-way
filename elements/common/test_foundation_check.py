@@ -736,6 +736,7 @@ class FoundationCheckTest(unittest.TestCase):
                 self.assertPasses(self.mixed_relations(value))
 
     def test_relations_a_bare_todo_names_no_decision(self):
+        # decision: WAY-71 "`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error."
         for value in ("TODO", "`TODO`", "TODO —", "TODO — ",
                       "derives from ABC-01 · TODO", "derives from ABC-01 · `TODO`",
                       "derives from ABC-01 · TODO —"):
@@ -756,6 +757,7 @@ class FoundationCheckTest(unittest.TestCase):
                 self.assertFails(self.mixed_relations(value), self.TYPED_TODO, "1 error")
 
     def test_relations_derives_from_todo_is_an_error(self):
+        # decision: WAY-71 "`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error."
         self.assertFails(self.mixed_relations("derives from TODO"), self.TYPED_TODO, "1 error")
 
     def test_relations_a_known_relation_then_derives_from_todo_is_an_error(self):
