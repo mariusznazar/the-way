@@ -218,9 +218,13 @@ pinned the-way; the agent reads each whole, and the `SKILL.md` of an element, at
 `task-cycle/skill/foundation_step.md` gives, when it writes an entry of that element. For a review,
 it gives the range to review and the author's report. For a fix, it
 gives the findings file, which you write in the reviewer's words from the review's blocking
-findings and, after them, the Minor findings of the review of the whole change within the task
-("The end of a code review"); the fix's range runs from the reviewed head, and the review of the
-fix also gets the fix report. The message that dispatches or resumes the agent of a fix, and the
+findings, each with the reviewer's mark of contradiction with the settlements, and, after them, the
+Minor findings of the review of the whole change within the task ("The end of a code review"); the
+fix's range runs from the reviewed head, and the review of the fix also gets the fix report. The
+entry of the round in the record's *Review rounds* says whether the round had a contradiction, as
+`task-cycle/record_template.md` gives it: `yes` where any blocking finding of the round, one the
+review of the fix found new included, carries the mark `Contradiction: yes`, `no` where none does
+(WAY-403). The message that dispatches or resumes the agent of a fix, and the
 one of the review of that fix, names the findings file by its path in `reports/`, as
 `reports/<file>.md`, besides the handoff that names it, and no other message does: the audit of
 the process ties a turn to its fix round by that path (WAY-337). No handoff tells an agent to run
@@ -368,13 +372,15 @@ it, and you enter it in the questions table. Check that the report holds no code
 Record the attempt's last commit — a historical name, not a link to follow — and the files it
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
 the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
-with its reason and continue at step 6; after the spec's review, step 7 chooses the route again.
+under *Discarded attempt* with the reason `open design choice`, as `task-cycle/record_template.md`
+gives it (WAY-404), and continue at step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
 report, record the attempt's last commit and files, discard the whole attempt and its foundation
 entries by resetting the branch to its base — to the commit that moved the pin where step 2 moved
 it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
-(WAY-136). Record it as a return for size.
+(WAY-136). Record it under *Discarded attempt* with the reason `size`, as
+`task-cycle/record_template.md` gives it (WAY-404).
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices

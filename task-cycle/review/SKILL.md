@@ -150,15 +150,26 @@ beyond the task says so in its own words and counts as out of scope, whatever it
 each line of Declined to judge. Each finding carries its place in the code, what is wrong, why it
 matters and the evidence: the test, check or line that shows it.
 
+Each blocking finding also carries its mark of contradiction with the settlements, written under the
+finding as `Contradiction: yes — <the entry or the settlement>` or as `Contradiction: no`. It is
+`yes` where the finding says that the change does something against an entry of the foundation,
+one the change itself writes included, or against a settlement of the task document: an answer
+under its *Questions to settle*, a row of its *Settlements to record* or a decision of its
+*Decisions in play*; the finding names that entry or settlement. It is `no` for every other
+blocking finding, a point of *To do* left undone among them, since an unmet requirement is no
+contradiction. The mark gives the finding no other grade and no other scope, and it is yours to
+judge, as the grade is. The cycle carries it to its record, from which the audit of the process
+reads whether a contradiction came out only after the code was written (WAY-403).
+
 ## 4. Report
 
 Write the full report to the dispatch's report path. Its first line is `PASS <head sha>` or
 `FAIL <head sha>` and nothing else — or `questions` while the review waits for an answer (below);
 `FAIL` means at least one blocking finding. Then:
 
-- the findings by grade, each with its place in the code, reasoning and evidence, and in the
-  review of the whole change of a plan, each blocking finding with the slice it comes from, or
-  none;
+- the findings by grade, each with its place in the code, reasoning and evidence, each blocking
+  finding with its mark of contradiction (section 3), and in the review of the whole change of a
+  plan, each blocking finding with the slice it comes from, or none;
 - for the review of a fix, each finding of the findings file as fixed or remains, and kept or
   withdrawn where contested; for a correction, each remark as made or not;
 - **Declined to judge**;

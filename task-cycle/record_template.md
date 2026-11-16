@@ -35,10 +35,11 @@ not authorize running it.
   and return step, a class other than `cheaper` with its reason; its resumptions; any replacement
   during a fix and its reason; planned executors appear in Slices>
 - Plan: <none on the one-author route | number of slices and size-report verdicts>
-- Discarded attempt: <time, open design choice, reserved choice or oversized one-author change,
-  report, last commit and changed files including foundation entries, reset base, discard
-  confirmation and next route; after an open choice, spec review and renewed judgment; after a
-  reserved choice, the blocked draft request; after size, planning | none>
+- Discarded attempt: <`none`, or `reason: ` and the reason in backticks — one of `open design
+  choice`, `reserved choice` and `size` — opening the text, and after it the time, report, last
+  commit and changed files including foundation entries, reset base, discard confirmation and next
+  route; after an open design choice, spec review and renewed judgment; after a reserved choice, the
+  blocked draft request; after size, planning>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
   reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
 - Agent waiting: <native completion notification or blocking tool; live-contract limit and any
@@ -51,15 +52,24 @@ not authorize running it.
   entries* with their writer's class>
 - Review rounds: <`none`, or nothing after the colon and, under this line, one entry for each fix
   round of the cycle — a fix of a review's findings and the review of that fix, a slice's round
-  included — in the form below>
-  - findings `reports/<file>.md`: <the findings file the fix and the review of that fix were
-    given, by its path in `reports/`, opening the entry as written here; then, for a code review
-    whose findings blocked — of the whole change, of the return step, of the reconciliation with
-    the target branch, of a correction — its range and report, the blocking findings, the fix
-    range and the review of that fix, and any blocking finding that remained after it; for the
-    fix of the whole-change review's Minor findings within the task, whether it ran alone or with
-    a blocking fix, its review and, where the cycle reverted it, the revert commit and the new
-    finding; for a slice's round, the slice, whose row of Slices holds the rest>
+  included — in the first form below, and one entry for each review that passed with no fix that
+  the cycle lists, in the second>
+  - findings `reports/<file>.md`, contradiction <yes | no>: <the findings file the fix and the
+    review of that fix were given, by its path in `reports/`, and whether the round had a
+    contradiction, opening the entry as written here: `yes` where any blocking finding of the
+    round, those the review of the fix found new included, carries the reviewer's mark of a
+    contradiction with the settlements in the findings file or the report of that review, `no`
+    where none does; then, for a code review whose findings blocked — of the whole change, of
+    the return step, of the reconciliation with the target branch, of a correction — its range and
+    report, the blocking findings, the fix range and the review of that fix, and any blocking
+    finding that remained after it; for the fix of the whole-change review's Minor findings
+    within the task, whether it ran alone or with a blocking fix, its review and, where the cycle
+    reverted it, the revert commit and the new finding; for a slice's round, the slice, whose row
+    of Slices holds the rest>
+  - review `reports/<file>.md`, PASS: <a review that passed with no fix and so has no findings
+    file, by the path of its report in `reports/`, opening the entry as written here; then what it
+    reviewed and its range. It is no fix round, and the audit reads it as a round with no
+    contradiction with the settlements>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
   it showed and the report that states it>
 
