@@ -119,7 +119,7 @@ class Command(unittest.TestCase):
         self.definition = self.plan.with_name("definition.md")
         self.task = self.plan.with_name("task.md")
         self.write(self.definition, "# Reports\n\nStatus: approved 2026-10-01\n\n" + BODY +
-                   "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
+                   "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
                    "- Definition fingerprint: " + FINGERPRINT + "\n")
         self.write(self.task, "# Reports\n\nStatus: ready for cycle\n"
                    "Project relation: plan item: plan.md — reports\n")
@@ -245,7 +245,8 @@ class Command(unittest.TestCase):
         crafted = {
             "wording in prose": "The request is a blocked draft, opened on this commit.\n",
             "wording after another label":
-                "- Writes to the task's backlog entry: blocked draft, opened on this commit\n",
+                "- Writes to the task's line in the backlog: blocked draft, "
+                "opened on this commit\n",
             "wording quoted after the label": "> " + self.BLOCKED_FIELD + "\n",
             "indented field": "  " + self.BLOCKED_FIELD + "\n",
             "only part of the wording":
@@ -421,7 +422,8 @@ class Command(unittest.TestCase):
         original_plan, original_definition = self.plan.read_bytes(), self.definition.read_bytes()
         for path, bad in ((self.plan, original_plan.replace(b"handed over 2026-10-02", b"draft")),
                           (self.plan, original_plan.replace(b"## Phases", b"## Invalid")),
-                          (self.definition, original_definition.replace(b"approved 2026-10-01", b"ready for gate")),
+                          (self.definition, original_definition.replace(
+                              b"approved 2026-10-01", b"awaiting approval")),
                           (self.definition, original_definition.replace(b"Reports exist.", b"TODO"))):
             with self.subTest(path=path, bad=bad):
                 self.plan.write_bytes(original_plan)

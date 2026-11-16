@@ -23,12 +23,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readiness_check  # noqa: E402
 
 # The headings of the form in project-level/definition_template.md, in their order: the sections a
-# definition holds above its gate record, then the gate record. Written out here, not taken from
-# readiness_check.SECTIONS, so that a section the code drops does not vanish from the test data too;
-# the test of the template checks that these are the headings of the form.
+# definition holds above its approval record, then the approval record. Written out here, not
+# taken from readiness_check.SECTIONS, so that a section the code drops does not vanish from the
+# test data too; the test of the template checks that these are the headings of the form.
 FORM = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints", "Deliverables",
         "Success", "Risks", "Open questions", "Touched parts and decisions", "Technology",
-        "Projected foundation changes", "Gate record")
+        "Projected foundation changes", "Approval record")
 
 DECISION = """#### (new) — What does the archive exclude for good?
 
@@ -94,15 +94,15 @@ def wording_fingerprint(text):
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:8]
 
 
-def definition(status="Status: approved 2026-10-03", bodies=None, gate=None, order=None,
+def definition(status="Status: approved 2026-10-03", bodies=None, approval=None, order=None,
                fingerprint=None):
     bodies = dict(BODIES, **(bodies or {}))
     order = order or list(FORM[:-1])
     content = body_text(bodies, order)
-    if gate is None:
-        gate = ("- Approved by: Mariusz, 2026-10-03\n"
+    if approval is None:
+        approval = ("- Approved by: Mariusz, 2026-10-03\n"
                 "- Definition fingerprint: %s" % (fingerprint or wording_fingerprint(content)))
-    return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Gate record\n\n%s\n" % (status, content, gate)
+    return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Approval record\n\n%s\n" % (status, content, approval)
 
 
 def conditions(text, before_approval=False):
@@ -153,7 +153,7 @@ class Whole(unittest.TestCase):
         self.assertEqual(conditions(definition()), [])
 
     def test_a_definition_waiting_for_approval_passes_before_approval(self):
-        text = definition(status="Status: ready for gate", gate="")
+        text = definition(status="Status: awaiting approval", approval="")
         self.assertEqual(conditions(text, before_approval=True), [])
 
 
@@ -166,6 +166,13 @@ class Structure(unittest.TestCase):
     def test_a_status_off_its_forms_is_reported(self):
         # invariant: project-definition-form
         found = conditions(definition(status="Status: almost done"))
+        self.assertEqual([c for c, _ in found], ["structure"])
+
+    def test_the_status_value_before_the_rename_is_reported(self):
+        # invariant: project-definition-form
+        # Source: the human's answer to question 4 of the task, 2026-11-14: the value is
+        # `awaiting approval`, and `ready for gate` is no longer one.
+        found = conditions(definition(status="Status: ready for gate"))
         self.assertEqual([c for c, _ in found], ["structure"])
 
     def test_a_missing_section_is_reported(self):
@@ -184,6 +191,14 @@ class Structure(unittest.TestCase):
         # invariant: project-definition-form
         text = definition().replace("## Risks", "## Stakeholders\n\nMariusz\n\n## Risks")
         self.assertIn(("structure", "`## Stakeholders` is no section of the template"),
+                      conditions(text))
+
+    def test_the_heading_of_the_record_before_the_rename_is_reported(self):
+        # invariant: project-definition-form
+        # Source: the human's answer to question 1 of the task, 2026-11-14: the scripts take no
+        # `## Gate record` beside `## Approval record`.
+        text = definition().replace("## Approval record", "## Gate record")
+        self.assertIn(("structure", "`## Gate record` is no section of the template"),
                       conditions(text))
 
     def test_sections_out_of_order_are_reported(self):
@@ -208,7 +223,7 @@ class Structure(unittest.TestCase):
 
 class Gaps(unittest.TestCase):
     def test_todo_in_a_section_is_reported_with_its_line(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         text = definition(bodies={"Success": "TODO"})
         findings = readiness_check.check(text)
         todo = [f for f in findings if f.condition == "a"]
@@ -239,7 +254,7 @@ class Gaps(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_todo_in_the_binding_sentence_of_a_projected_entry_is_reported(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         decision = DECISION.replace(
             "The archive has no public write API.", "TODO")
         found = conditions(definition(bodies={"Projected foundation changes":
@@ -275,18 +290,18 @@ class Gaps(unittest.TestCase):
         self.assertEqual([c for c, _ in conditions(text) if c == "a"], [])
 
     def test_an_empty_section_is_reported(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         found = conditions(definition(bodies={"Risks": ""}))
         self.assertIn(("a", "`## Risks` is empty — write `none` or `TODO`"), found)
 
-    def test_before_approval_the_empty_gate_record_is_no_gap(self):
-        text = definition(status="Status: ready for gate", gate="")
+    def test_before_approval_the_empty_approval_record_is_no_gap(self):
+        text = definition(status="Status: awaiting approval", approval="")
         self.assertEqual(conditions(text, before_approval=True), [])
 
 
 class OpenQuestions(unittest.TestCase):
     def test_a_question_without_its_place_is_reported(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         text = definition(bodies={"Open questions": "- Jak mierzymy postęp?"})
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
 
@@ -329,7 +344,7 @@ WORKING_TABLE_MESSAGE = ("the working table of candidates still stands — the s
 
 class Candidates(unittest.TestCase):
     def test_a_projected_section_without_the_candidates_line_is_reported(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         found = conditions(definition(bodies={"Projected foundation changes": "none"}))
         self.assertEqual(found, [("f", "`## Projected foundation changes` does not begin with "
                                        "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`")])
@@ -355,15 +370,15 @@ class Candidates(unittest.TestCase):
         self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})), [])
 
     def test_a_working_table_still_standing_is_reported_before_approval(self):
-        # invariant: project-readiness-gate
+        # invariant: project-readiness-check
         body = projected(entries=WORKING_TABLE + "\n\n### Decisions\n\n" + DECISION)
-        text = definition(status="Status: ready for gate", gate="",
+        text = definition(status="Status: awaiting approval", approval="",
                           bodies={"Projected foundation changes": body})
         self.assertEqual(conditions(text, before_approval=True), [("f", WORKING_TABLE_MESSAGE)])
 
     def test_a_section_still_reading_todo_is_one_gap_and_no_f(self):
         text = definition(status="Status: definition — open: Projected foundation changes",
-                          gate="", bodies={"Projected foundation changes": "TODO"})
+                          approval="", bodies={"Projected foundation changes": "TODO"})
         self.assertEqual(conditions(text, before_approval=True),
                          [("a", "`## Projected foundation changes` holds TODO")])
 
@@ -400,7 +415,7 @@ class Technology(unittest.TestCase):
 
     def test_an_open_choice_is_reported_before_approval(self):
         # invariant: project-technology-record
-        text = definition(status="Status: ready for gate", gate="",
+        text = definition(status="Status: awaiting approval", approval="",
                           bodies={"Technology": "- Magazyn danych — open"})
         self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
 
@@ -508,33 +523,33 @@ class Technology(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_a_section_still_reading_todo_is_one_gap_and_no_g(self):
-        text = definition(status="Status: definition — open: Technology", gate="",
+        text = definition(status="Status: definition — open: Technology", approval="",
                           bodies={"Technology": "TODO"})
         self.assertEqual(conditions(text, before_approval=True),
                          [("a", "`## Technology` holds TODO")])
 
 
-class GateRecord(unittest.TestCase):
-    def test_a_missing_gate_record_is_reported_after_approval(self):
-        found = conditions(definition(gate=""))
+class ApprovalRecord(unittest.TestCase):
+    def test_a_missing_approval_record_is_reported_after_approval(self):
+        found = conditions(definition(approval=""))
         self.assertIn("e", [c for c, _ in found])
 
-    def test_a_gate_line_off_its_form_is_reported(self):
-        gate = ("- Approved by: Mariusz\n"
-                "- Definition fingerprint: 00000000")
-        found = conditions(definition(gate=gate))
+    def test_an_approval_line_off_its_form_is_reported(self):
+        approval = ("- Approved by: Mariusz\n"
+                    "- Definition fingerprint: 00000000")
+        found = conditions(definition(approval=approval))
         self.assertIn(("e", "the line is not `- Approved by: …` in its form"), found)
 
-    def test_a_gate_record_naming_the_foundation_commit_searched_is_reported(self):
+    def test_an_approval_record_naming_the_foundation_commit_searched_is_reported(self):
         content = body_text(BODIES, FORM[:-1])
-        gate = ("- Approved by: Mariusz, 2026-10-03\n"
-                "- Foundation searched at: 595f839\n"
-                "- Definition fingerprint: %s" % wording_fingerprint(content))
-        found = conditions(definition(gate=gate))
-        self.assertEqual(found, [("e", "the gate record holds 3 lines, not the two: Approved by, "
-                                       "Definition fingerprint")])
+        approval = ("- Approved by: Mariusz, 2026-10-03\n"
+                    "- Foundation searched at: 595f839\n"
+                    "- Definition fingerprint: %s" % wording_fingerprint(content))
+        found = conditions(definition(approval=approval))
+        self.assertEqual(found, [("e", "the approval record holds 3 lines, not the two: Approved "
+                                       "by, Definition fingerprint")])
 
-    def test_a_definition_changed_after_the_gate_is_reported(self):
+    def test_a_definition_changed_after_its_approval_is_reported(self):
         stale = definition()
         changed = stale.replace("- edytor map", "- edytor map\n- tryb wieloosobowy")
         found = [c for c, _ in conditions(changed)]
@@ -545,7 +560,7 @@ class GateRecord(unittest.TestCase):
                                     "Gra istnieje  tylko\njako koncepcja.")
         self.assertEqual(conditions(text), [])
 
-    def test_the_status_line_and_the_gate_record_stay_outside_the_fingerprint(self):
+    def test_the_status_line_and_the_approval_record_stay_outside_the_fingerprint(self):
         text = definition().replace("Status: approved 2026-10-03", "Status: approved 2026-10-04")
         self.assertEqual(conditions(text), [])
 
@@ -571,13 +586,13 @@ class Command(unittest.TestCase):
         self.assertTrue(out.endswith("readiness: 1 finding(s)\n"))
 
     def test_before_approval_says_what_it_left_out(self):
-        code, out, _ = self.run_main(definition(status="Status: ready for gate", gate=""),
+        code, out, _ = self.run_main(definition(status="Status: awaiting approval", approval=""),
                                      "--before-approval")
-        self.assertEqual((code, out), (0, "readiness: nothing found (gate record left out: "
+        self.assertEqual((code, out), (0, "readiness: nothing found (approval record left out: "
                                           "--before-approval)\n"))
 
     def test_fingerprint_prints_the_definition_fingerprint(self):
-        text = definition(gate="")
+        text = definition(approval="")
         content = body_text(BODIES, FORM[:-1])
         code, out, _ = self.run_main(text, "--fingerprint")
         self.assertEqual((code, out), (0, wording_fingerprint(content) + "\n"))

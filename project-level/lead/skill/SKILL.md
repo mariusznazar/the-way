@@ -39,7 +39,7 @@ project skill with the `the-way-` prefix, never a personal copy.
 - Require a handed-over plan. Run `python -B <the-way>/project-level/readiness_check.py <definition>`
   and `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole files and read
   their reports. A draft, finding, unreadable source or failed command is an obstacle, never
-  agreement. Verify the definition's approved Status and actual human gate record as well;
+  agreement. Verify the definition's approved Status and actual human approval record as well;
   fingerprint/check agreement alone does not establish approval. A changed definition follows
   step 5 below; ordinary plan findings return to its
   owning workflow, not a task-body repair.
@@ -48,10 +48,12 @@ project skill with the `the-way-` prefix, never a personal copy.
   not be overwritten. Read all turns and source identities, pending human answers, final
   acceptance and next actor. Resume the recorded actor; an interrupted write is unfinished work.
   Reconcile an interrupted final acceptance by step 4, not by inferring agreement from a status.
-  Recover a pending definition gate or plan recheck before permitting any readiness writes. Step 5
+  Recover a pending readiness approval of the definition or plan recheck before permitting
+  any readiness writes. Step 5
   gives that recovery.
 - Require child-agent capability for fresh refiners, the round answerer, independent critique,
-  plan changes and definition gates. If unavailable, name the capability and blocked next step
+  plan changes and the readiness approval of the definition. If unavailable, name the
+  capability and blocked next step
   and wait; do not impersonate these actors, claim an independent review or launch task cycles.
 
 ## 1. Reconcile progress
@@ -163,7 +165,8 @@ do not repeat an already settled human choice unless its meaning or source chang
   candidates accepted/rejected with accepted meanings preserved, required challenges answered,
   Human actions placed by the human and every pre-cycle action done, plan scope/dependencies/
   assignments matched, and definition approval still valid. No task becomes ready during step 5's
-  definition gate or pending plan recheck. Dependencies may remain unfinished without invalidating
+  readiness approval of the definition or pending plan recheck. Dependencies may remain
+  unfinished without invalidating
   this document's acceptance; they still prevent a cycle start.
 - Show the exact complete current task document, one at a time, and explicitly ask the human to
   accept it. Wait for that answer before showing the next. A package, candidate or different
@@ -188,6 +191,7 @@ do not repeat an already settled human choice unless its meaning or source chang
 ## 5. Route plan and definition changes
 
 On reaching this step, from a refiner's result `plan change`, from a changed definition in step 0 or
-from a gate or recheck found pending there, read `route_changes.md` beside this skill. For a change
-of the definition, its gate or the plan recheck after it, a gate or recheck found pending in step 0
-included, read `definition_change.md` beside this skill too.
+from a readiness approval or recheck found pending there, read `route_changes.md` beside this skill.
+For a change of the definition, its readiness approval or the plan recheck
+after it, one found pending
+in step 0 included, read `definition_change.md` beside this skill too.

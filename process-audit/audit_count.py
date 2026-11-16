@@ -14,23 +14,23 @@ human present and stdin closed or empty. DATE, written YYYY-MM-DD, is the day of
 the days of waiting count to; the default is today in UTC, so that the same input and the same
 DATE give the same bytes.
 
-The places it needs are entries of the user's locations file (WAY-320), read as
-`project-level/backlog_place.md` reads an entry; FILE defaults to `~/.the-way/locations.json`:
+The places it needs are keys of the user's locations file (WAY-320), read as
+`project-level/backlog_place.md` reads a key; FILE defaults to `~/.the-way/locations.json`:
 
-- under the key `the-way`, the entry `problem_register`, the file of the register of problems
-  (`process-audit/problem_register.md` is its template), and the entry `audit_results`, the
+- under the key `the-way`, the key `problem_register`, the file of the register of problems
+  (`process-audit/problem_register.md` is its template), and the key `audit_results`, the
   directory where the result is written;
 - under the key of each repository whose cycles it reads — the name of a product, as the
-  register's *Repository* column gives it — the entry `repository`, the path of that product's
-  checkout. Each `--repository KEY` names a repository to read; without one, it reads every key
-  that holds an entry `repository`. The-way's own checkout is the entry `repository` under
-  `the-way`, and where that entry is missing, the checkout this script lies in.
+  register's *Repository* column gives it — the key `repository`, the path of that product's
+  checkout. Each `--repository KEY` names a repository to read; without one, it reads every
+  repository key that holds a key `repository`. The-way's own checkout is the key `repository` under
+  `the-way`, and where that key is missing, the checkout this script lies in.
   The command finds every place it needs by itself, since it runs with no human present, and the
   session that reads its result finds the same places by the same names.
 
-A path is absolute or starts with `~`. Where the file, a key, an entry or the path an entry holds
-is missing, or an entry is not a path, the command writes nothing and names it in an `Error:` line
-on stderr, so that the skill of the audit asks the human; it never asks itself.
+A path is absolute or starts with `~`. Where the file, a key or the path a key holds
+is missing, or a key's value is not a path, the command writes nothing and names it in an
+`Error:` line on stderr, so that the skill of the audit asks the human; it never asks itself.
 
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table
@@ -56,7 +56,7 @@ ones noted, and its values are read from the last copy, the most complete. For e
   the commit of its line `Target branch and base`; the agents of such a cycle read the process from
   the worktree the cycle changes, which begins at that commit, so that commit is the process the
   cycle started under;
-- *Remarks*: the number of entries under the record's item `Process remarks on the-way`, `0`
+- *Remarks*: the number of sub-items under the record's item `Process remarks on the-way`, `0`
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
@@ -87,8 +87,9 @@ ones noted, and its values are read from the last copy, the most complete. For e
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
-  round by that path: one entry for each round under the item, opening with the word `findings`
-  and the path between backticks (`task-cycle/record_template.md`). An entry of a review that passed
+  round by that path: one sub-item for each round under the item, opening with the word `findings`
+  and the path between backticks (`task-cycle/record_template.md`). A
+  sub-item of a review that passed
   with no fix opens with the word `review` and holds the path of its report and the result `PASS`:
   it is no fix round, and it is not counted (WAY-337);
 - the share of the cost spent in fix rounds (WAY-337): the cost of the subagent turns whose cell
@@ -144,32 +145,36 @@ Per version of a series of the cost: the median cost at constant prices of its c
 cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
 Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from two marks of the cycle's record, never from the
-words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where an
-entry of *Review rounds* opens with the path of its findings file and `, contradiction yes`, or the
+words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where a
+sub-item of *Review rounds* opens with the path of its findings file and
+`, contradiction yes`, or the
 item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
-any of its entries does, where a cycle that discarded more than one attempt writes one entry for each
+any of its sub-items does, where a cycle that discarded more than one attempt writes one sub-item for each
 (the markers are `open design choice`, `reserved choice` and `size`, and only the start of the item,
-or of the first line of each entry, is read; the entries are read only as a list: nothing stands
-beside the colon, the first line under the item is an entry at the indent of the others and no plain
+or of the first line of each sub-item, is read; the sub-items are read only
+as a list: nothing stands
+beside the colon, the first line under the item is a sub-item at the indent
+of the others and no plain
 line stands at that indent or less; any other lines under the item are the details of one attempt,
 read for a second `reason: ` followed by a backtick alone, whatever word stands there; a line at
 the left margin ends the item). It is no where
-every entry of *Review rounds* gives its mark, `contradiction no` or the form
+every sub-item of *Review rounds* gives its mark, `contradiction no` or the form
 of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
-`reserved choice` or `size` (each of its entries does, where it holds several). Each yes stands over
-the unknown that the other item gives, but the mark of an entry is read only where *Review rounds*
-is held once and in its form (no entry in neither form, no findings file named twice, nothing
+`reserved choice` or `size` (each of its sub-items does, where it holds
+several). Each yes stands over
+the unknown that the other item gives, but the mark of a sub-item is read only where *Review rounds*
+is held once and in its form (no sub-item in neither form, no findings file named twice, nothing
 beside its colon), and the marker only where *Discarded attempt* is held once. It is unknown,
-with the one reason `the entry of a round does not say whether there was a contradiction` for a
-round of any record, older or newer, where a fix round's entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
-not read `none`, where its lines are no entries at one indent alone or text stands beside its
+with the one reason `the sub-item of a round does not say whether there was a contradiction` for a
+round of any record, older or newer, where a fix round's sub-item carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
+not read `none`, where its lines are no sub-items at one indent alone or text stands beside its
 colon and the whole text, which does not read `none`, holds a second `reason: ` followed by a
 backtick or opens with no marker, where it is missing or doubled, or where *Review rounds* is
 missing, doubled or in neither form. Q2, more than one third of the slices of the plans came
 back too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
 before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
-and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times
+and the sub-items of *Slices returned too large* (`none` is 0); the answer is yes where three times
 the sum of too-large slices is above the sum of planned slices, and unknown where the plan of a
 cycle that has one is not read, since its slices could change the answer. Q3, the cost falls: the
 median against the previous version of the same series, yes where lower, unknown where there is
@@ -281,7 +286,7 @@ correction is one cycle, and its problems are counted once. *Unknown values* is 
 For each cycle, its problems by class and weight. For each issue whose *Fate* is `fixed`, its
 problems in the cycles whose *Process pin* holds the fix, and apart those in the cycles whose pin
 does not hold it, never by date: the holding is `git merge-base --is-ancestor <fix> <pin>` in the
-checkout of the-way (the entry `repository` under `the-way`, or this checkout), a pin written as a
+checkout of the-way (the key `repository` under `the-way`, or this checkout), a pin written as a
 short hash resolved there, and a pin or a fix that checkout lacks, an ambiguous short hash or a
 pin `unknown` gives `unknown` with its reason. For each issue whose *Fate* is `open`, the
 number of cycles its problems came back in, and the days it has waited: the cycles in which a
@@ -322,7 +327,7 @@ read, a table of the register refused as a whole, or a field missing in a `stage
 `mechanism_measures.md` or a `gate_times.md`, named in the
 result and in an `Error:` line on stderr, which for a table of levels of the register names the
 level it lacks or writes twice; 2 with `Error: <message>` on stderr and nothing written,
-when an argument is wrong, the locations file, the price list, the register or an entry it needs is
+when an argument is wrong, the locations file, the price list, the register or a key it needs is
 missing or wrong, the register lacks a heading, a table or a column it needs, the register is
 larger than 4 MiB or not UTF-8, the result directory lies inside a repository to read or the
 checkout of the-way, or the result cannot be written.
@@ -362,7 +367,7 @@ THE_WAY = "the-way"
 REGISTER_ENTRY = "problem_register"
 RESULTS_ENTRY = "audit_results"
 REPOSITORY_ENTRY = "repository"
-# The checkout of the-way this script lies in, used where `the-way` has no entry `repository`.
+# The checkout of the-way this script lies in, used where `the-way` has no key `repository`.
 OWN_CHECKOUT = Path(__file__).resolve().parent.parent
 # The price list of this part, read as a file of the-way (`--prices` names another one).
 PRICES = Path(__file__).resolve().parent / "price_list.md"
@@ -514,7 +519,7 @@ TOOL_GROUPS = ((STAGES_FILE, COST_SCRIPTS), (MEASURES_FILE, (MEASURES_SCRIPT,)),
 
 
 class AuditCountError(Exception):
-    """A wrong argument, a missing or wrong entry of the locations file, or a result that cannot
+    """A wrong argument, a missing or wrong key of the locations file, or a result that cannot
     be written: nothing is written."""
 
 
@@ -531,7 +536,7 @@ class Parser(argparse.ArgumentParser):
 
 
 def read_locations(name: str) -> dict:
-    """The locations file as a JSON object; a key or an entry written twice is an error, since
+    """The locations file as a JSON object; a key written twice is an error, since
     JSON readers disagree on which of the two counts."""
     path = Path(name).expanduser()
     label = LOCATIONS_LABEL
@@ -550,7 +555,7 @@ def read_locations(name: str) -> dict:
         seen: dict[str, object] = {}
         for key, value in pairs:
             if key in seen:
-                raise AuditCountError(f"{label} holds the key or entry "
+                raise AuditCountError(f"{label} holds the key "
                                       f"`{display(key[:TEXT_CAP])}` twice in one object")
             seen[key] = value
         return seen
@@ -581,12 +586,12 @@ def key_object(locations: dict, key: str) -> dict:
 
 
 def entry_path(locations: dict, key: str, entry: str, kind: str) -> Path:
-    """The path the entry `entry` under `key` holds, which must exist as a `kind`: "file" or
-    "directory". The path itself is never printed: an error names the entry (WAY-320)."""
-    where = f"the entry `{display(entry)}` under `{display(key)}`"
+    """The path the key `entry` under `key` holds, which must exist as a `kind`: "file" or
+    "directory". The path itself is never printed: an error names the key (WAY-320)."""
+    where = f"the key `{display(entry)}` under `{display(key)}`"
     entries = key_object(locations, key)
     if entry not in entries:
-        raise AuditCountError(f"the locations file holds no entry `{display(entry)}` under "
+        raise AuditCountError(f"the locations file holds no key `{display(entry)}` under "
                               f"`{display(key)}`")
     value = entries[entry]
     if not isinstance(value, str) or not value.strip():
@@ -605,7 +610,7 @@ def entry_path(locations: dict, key: str, entry: str, kind: str) -> Path:
 
 
 def the_way_checkout(locations: dict) -> Path:
-    """The checkout of the-way: the entry `repository` under `the-way`, or this script's own."""
+    """The checkout of the-way: the key `repository` under `the-way`, or this script's own."""
     if REPOSITORY_ENTRY in key_object(locations, THE_WAY):
         return entry_path(locations, THE_WAY, REPOSITORY_ENTRY, "directory")
     return OWN_CHECKOUT
@@ -625,8 +630,8 @@ def repositories(locations: dict, named: list[str]) -> dict[str, Path]:
             if REPOSITORY_ENTRY in key_object(locations, key):
                 found[key] = entry_path(locations, key, REPOSITORY_ENTRY, "directory")
     if not found:
-        raise AuditCountError("no key of the locations file holds an entry `repository`; add one "
-                              "or name a repository with --repository")
+        raise AuditCountError("no repository named in the locations file holds a key "
+                              "`repository`; add one or name a repository with --repository")
     return dict(sorted(found.items()))
 
 
@@ -790,7 +795,7 @@ def process_pin(text_lines, fenced, own: bool) -> tuple[str | None, str | None]:
 
 
 def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
-    """The number of entries under the item `Process remarks on the-way`, or None with the
+    """The number of sub-items under the item `Process remarks on the-way`, or None with the
     reason."""
     openers = [index for index, line in enumerate(lines)
                if not fenced[index] and REMARKS_OPENER.fullmatch(line)]
@@ -814,7 +819,7 @@ def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str
         return markers.count(min(markers)), None
     if remarks_check.reads_none(opener.group("rest")):
         return 0, None
-    return None, ("the item `Process remarks on the-way` holds no entries under it and does not "
+    return None, ("the item `Process remarks on the-way` holds no sub-items under it and does not "
                   "read `none`: an earlier form")
 
 
@@ -884,7 +889,7 @@ def is_separator(cells: list[str]) -> bool:
 
 def read_prices(name: str) -> Prices:
     """The price list, read as a file of the-way: a missing or wrong list stops the run with
-    nothing written, as a wrong entry of the locations file does."""
+    nothing written, as a wrong key of the locations file does."""
     path = Path(name).expanduser()
     label = PRICES_LABEL
     try:
@@ -1132,7 +1137,7 @@ def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, s
 
 
 def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
-    """The item *Slices returned too large*: 0 where it reads `none`, the number of its entries
+    """The item *Slices returned too large*: 0 where it reads `none`, the number of its sub-items
     where it lists them, or None with the reason."""
     items = item_texts(lines, fenced, ITEM_TOO_LARGE)
     if len(items) != 1:
@@ -1143,7 +1148,7 @@ def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, st
     markers = [remarks_check.indent_of(text) for text, inside in below
                if not inside and remarks_check.MARKER.fullmatch(text)]
     if rest.strip() or not markers:
-        return None, ("the item `Slices returned too large` reads neither none nor an entry "
+        return None, ("the item `Slices returned too large` reads neither none nor a sub-item "
                       "per slice")
     base = min(markers)
     return sum(1 for indent in markers if indent == base), None
@@ -1900,7 +1905,7 @@ def read_register(path: Path) -> Register:
 
 class Ancestry:
     """Whether the checkout of the-way holds a version: the answer of `git merge-base
-    --is-ancestor`, asked of the checkout the entry `repository` under `the-way` names.
+    --is-ancestor`, asked of the checkout the key `repository` under `the-way` names.
     A git that cannot read the checkout makes every answer unknown, with the reason."""
 
     def __init__(self, git: Git):
@@ -2947,7 +2952,7 @@ def write(folder: Path, name: str, text: str) -> None:
             handle.write(text)
         os.replace(temporary, target)
     except OSError as error:
-        raise AuditCountError(f"cannot write {name} in the directory of the entry "
+        raise AuditCountError(f"cannot write {name} in the directory of the key "
                               f"`{RESULTS_ENTRY}` under `{THE_WAY}`: "
                               f"{display(error.strerror or error)}") from None
 
@@ -2982,7 +2987,7 @@ def main(argv: list[str] | None = None) -> int:
         # No repository holds the results, the-way's included, whether this run reads it or not.
         for key, path in [*named.items(), (THE_WAY, the_way)]:
             if inside(results, path):
-                raise AuditCountError(f"the directory of the entry `{RESULTS_ENTRY}` under "
+                raise AuditCountError(f"the directory of the key `{RESULTS_ENTRY}` under "
                                       f"`{THE_WAY}` lies inside the repository "
                                       f"`{display(key)}`; the result is never written into a "
                                       f"repository")

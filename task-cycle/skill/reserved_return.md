@@ -33,8 +33,8 @@ Discard the attempt as "Design and execution choice" gives for an open design ch
 foundation entries and the slices already made with it: the report kept, its last commit and files
 recorded, the task branch reset to the recorded base — to the commit that moved the pin where step 2
 moved it. Record the discard under *Discarded attempt* with the reason `reserved choice`, as
-`task-cycle/record_template.md` gives it, an entry of its own where the cycle discarded an attempt
-before, that attempt rewritten as an entry too, as the template gives it (WAY-405), and the choice
+`task-cycle/record_template.md` gives it, a sub-item of its own where the cycle discarded an attempt
+before, that attempt rewritten as a sub-item too, as the template gives it (WAY-405), and the choice
 under *Reserved choice*, and do not continue at step 6.
 
 A choice you find at step 4 has no agent report and leaves nothing to discard: the record holds it

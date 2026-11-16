@@ -8,7 +8,8 @@ The foundation step writes the entries the task carries: each row of *Settlement
 in the place its column *Goes to* names — as an entry of its kind where the column names an entry —
 one no code makes true included — its meaning the row's and its wording the writer's (WAY-134); each
 projected entry of the task's sources that its code makes true or its plan item assigns, whole as
-the readiness gate approved it, or the part the code makes true (WAY-126); and each entry a reviewed
+the human approved it at the readiness approval, or the part the code makes true (WAY-126);
+and each entry a reviewed
 spec or the plan names. Each entry is written by following the pinned `SKILL.md` of its element, on
 the task branch, to reach the main branch with the code in the request, and none is left for later
 (WAY-01). That file is `elements/decisions/skill/SKILL.md` for a decision,

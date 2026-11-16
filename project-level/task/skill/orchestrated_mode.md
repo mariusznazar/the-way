@@ -10,7 +10,7 @@ to guess or overwrite another task.
 
 - Every question or presentation this skill or a borrowed skill would otherwise address to the
   human goes into your conversation turn, then you end the turn. This includes task location, a
-  missing entry of the task place's rules (the human's agreement to write it into the locations file
+  missing key of the task place's rules (the human's agreement to write it into the locations file
   is recorded in the conversation, and you write it then), which task to refine, goal/scope/wording,
   conflicting decisions, Human-action placement/completion, candidate
   acceptance/rejection, questions against choices and final complete-document approval. Supply
@@ -86,4 +86,4 @@ When the common checks pass, place the complete document and acceptance request 
 and return `ready for approval`. This is a turn result, not the task Status. Leave the final Status
 write and the move of the task's line to ready to the project orchestrator, which makes them only
 after the human accepts the exact complete document, one task at a time. No definition awaiting its
-gate permits readiness.
+readiness approval permits readiness.

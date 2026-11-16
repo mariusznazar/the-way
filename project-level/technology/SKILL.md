@@ -1,12 +1,12 @@
 ---
 name: settle-technology
-description: Use when a project definition of a product that uses the-way has to settle the technology and architecture choices its project needs before the readiness gate — a language, a framework, a library, a store of data, a way of logging in, a place to run — or to resume that step from the definition's Technology section. Also runs at a task document, with a note saying what for, for a choice no definition settles or one the human opens, and resumes from that document's Technology section.
+description: Use when a project definition of a product that uses the-way has to settle the technology and architecture choices its project needs before the readiness approval — a language, a framework, a library, a store of data, a way of logging in, a place to run — or to resume that step from the definition's Technology section. Also runs at a task document, with a note saying what for, for a choice no definition settles or one the human opens, and resumes from that document's Technology section.
 ---
 
 # Settle technology
 
 Leads the step of the project level that settles technology. It runs at a document: a project
-definition, before the readiness gate (WAY-121) and after the step that finds the definition's
+definition, before the readiness approval (WAY-121) and after the step that finds the definition's
 foundation entries, or a task document, with a note saying what the run is for (WAY-267). "The
 document", here and in the files beside this skill, is the definition or, in a run at a task, the
 task document with its note. The step lists the choices the document needs, finds the entry that
@@ -65,5 +65,5 @@ comparison or of a message comes.
 Where the list holds no open choice, read `close.md` beside this skill.
 
 A definition approved before this step changes in the sections its fingerprint covers, and goes
-through the gate again
+through the readiness approval again
 (WAY-118).

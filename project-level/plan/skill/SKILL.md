@@ -1,11 +1,11 @@
 ---
 name: plan-project
-description: Use when an approved project definition of a product that uses the-way has to be broken into tasks — the breakdown that writes the project plan, a plan to resume from its status line, or a plan to check again after its definition passed the readiness gate anew. Not for a task's plan of slices, and never refines a task.
+description: Use when an approved project definition of a product that uses the-way has to be broken into tasks — the breakdown that writes the project plan, a plan to resume from its status line, or a plan to check again after its definition passed the readiness approval anew. Not for a task's plan of slices, and never refines a task.
 ---
 
 # Plan a project
 
-Leads the breakdown: the step after the readiness gate that turns an approved project definition
+Leads the breakdown: the step after the readiness approval that turns an approved project definition
 into its plan — the tasks, what each depends on, which tasks realize and write each projected
 entry, and where each open question is resolved. The form of a plan and the rule of each part stand
 in `project-level/plan/template.md`; how a skill asks stands in `elements/common/way_of_working.md`;

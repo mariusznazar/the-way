@@ -20,14 +20,14 @@ definition.
 
 ## Backlog
 
-- Tasks: the entry `tasks` under `the-way` in the locations file `~/.the-way/locations.json`, which
+- Tasks: the key `tasks` under `the-way` in the locations file `~/.the-way/locations.json`, which
   lies on the author's disk outside every repository. A task's description is a document in the
-  `_zadania` folder beside the file the entry names, linked from the task's line. Both are in the
-  author's private notes. Where the file or the entry is missing, or an agent cannot open them, it
-  asks the human and offers to add the entry to the file.
-- Task rules: the entry `task-rules` under `the-way` in the same locations file. It names the
+  `_zadania` folder beside the file the key names, linked from the task's line. Both are in the
+  author's private notes. Where the file or the key is missing, or an agent cannot open them, it
+  asks the human and offers to add the key to the file.
+- Task rules: the key `task-rules` under `the-way` in the same locations file. It names the
   author's rules for a task's line: its status when new, its move to ready, its dependencies. A
-  missing entry or file is handled as for the tasks.
+  missing key or file is handled as for the tasks.
 
 ## Guidelines
 

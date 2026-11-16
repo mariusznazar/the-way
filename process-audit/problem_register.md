@@ -5,7 +5,7 @@ Copy it to a place of your own, adapt it to your needs, and let your own tool fi
 
 ## How the register is kept
 
-- The register lies at a place on your disk outside every repository, which an entry under
+- The register lies at a place on your disk outside every repository, which a key under
   `the-way` in your locations file, `~/.the-way/locations.json`, names (WAY-320). It never lies in a
   repository: it carries the names of your products and what their cycles reported.
 - Your own tool fills it: a review of the reports of your cycles, made by an agent or by hand. The

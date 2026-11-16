@@ -88,7 +88,7 @@ Nothing in this repository points to a source outside it that its readers cannot
 carries its whole reasoning, and what is seen only in such a source is described in the entry
 instead of being pointed to. The one exception is the places where the work of the-way lies — the
 place of its tasks and the rules of that place, the register of problems and the results of the
-audit — which are no source of reasoning, and a file that needs one names it by an entry of the
+audit — which are no source of reasoning, and a file that needs one names it by a key of the
 locations file of WAY-320, never by a path.
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, relation-model,
@@ -99,8 +99,8 @@ locations file of WAY-320, never by a path.
   compares the change with the decision:
   - complies: a decision quotes a public study with its address; a pattern seen in a product
     outside the repository is described in the rationale, without a pointer to it; the-way's root
-    `AGENTS.md` names, in `## Backlog`, the entries of the locations file where the place of its
-    tasks and the rules of that place are kept, and the instructions of the audit name the entry
+    `AGENTS.md` names, in `## Backlog`, the keys of the locations file where the place of its
+    tasks and the rules of that place are kept, and the instructions of the audit name the key
     that holds the register of problems;
   - violates: *Origin* points to a private note; a rationale rests on "as in our other product"
     without saying what was seen; a file holds the path of the place of the tasks or of the
@@ -112,10 +112,10 @@ locations file of WAY-320, never by a path.
 can check; what was seen there, written down, can at least be judged, and WAY-17 still has a fact
 to name. A place where work lies — a backlog, the register of problems, the results of the audit —
 is where work is kept and found, not reasoning an entry rests on, and WAY-107 sends an agent to the
-backlog, to the rules by which the lines of that place are written as well; named only by an entry
+backlog, to the rules by which the lines of that place are written as well; named only by a key
 of the locations file, such a place stays a place to find work and never becomes a source an entry
 points to. A general sentence takes in each place the work comes to lie in, where a list would need
-a change of this decision for each one. Named by an entry of the locations file, a place adds no
+a change of this decision for each one. Named by a key of the locations file, a place adds no
 path to a public repository, which would tell every reader how one user's disk is laid out.
 *Rejected:* *Origin* pointing to the notes where the reasoning was worked out — no reader can open
 them; the path of the place of the tasks left in `## Backlog`, with the check for paths excepting
@@ -340,10 +340,10 @@ conventions; prose addressed only to humans — an agent could not take its assi
 
 A product names where it keeps projects and tasks in a `## Backlog` section of its root `AGENTS.md`,
 outside the block the-way's installer owns, a place on the user's disk outside every repository
-standing there as an entry of the locations file of WAY-320, never as a path, and a directory of the
+standing there as a key of the locations file of WAY-320, never as a path, and a directory of the
 repository or the address of a public tracker as it is. A project definition stands in the named
-project place; when the place is unnamed, or the file or the entry it names is missing, the agent
-asks the human and offers to record the answer where it fits: the entry in the file for a place on
+project place; when the place is unnamed, or the file or the key it names is missing, the agent
+asks the human and offers to record the answer where it fits: the key in the file for a place on
 the user's disk, the section otherwise.
 
 How a task's line is handled — the status of a new line, its move to ready, the form of its
@@ -351,9 +351,9 @@ dependencies, the characters of its identifier and its being unambiguous in the 
 line is found and kept one to a task, which fields an agent may change, the agreement of the lines
 at both ends of a dependency, a clash of identifiers — is taken from the rules of the task place
 itself, never from text written at the product or in the-way's skills; the section names, beside
-the place of the tasks, the entry `task-rules` of the locations file under the product's name,
-whose value is the path of those rules, and where that entry or the file it names is missing, the
-agent asks the human once and offers to add the entry, as for a missing place. The one part of a
+the place of the tasks, the key `task-rules` of the locations file under the product's name,
+whose value is the path of those rules, and where that key or the file it names is missing, the
+agent asks the human once and offers to add the key, as for a missing place. The one part of a
 line that the-way gives is the derivation of a task's identifier from its plan and its name in the
 plan, so that a dependency can name a task before that task's line exists; where the rules of the
 task place do not accept the derived identifier, the agent asks the human and writes no line.
@@ -364,9 +364,9 @@ task place do not accept the derived identifier, the agent asks the human and wr
 - **Verification:** an agent compares the change with the decision:
   - complies: a product names a directory of its repository for projects and a public tracker for
     tasks in its own backlog section, and the project definition is written in that directory; a
-    product whose tasks lie in its user's private notes names, in the section, the entry of the
-    locations file that holds their place and the entry `task-rules` that holds the path of the
-    rules of that place, and an agent that finds either entry missing asks the human once and offers
+    product whose tasks lie in its user's private notes names, in the section, the key of the
+    locations file that holds their place and the key `task-rules` that holds the path of the
+    rules of that place, and an agent that finds either key missing asks the human once and offers
     to add it to the file; an agent that makes a task's new line takes its status from those rules,
     and the same agent in a refinement made by hand and in one led through a plan takes the move to
     ready, the form of the dependencies and how a line already there is handled from them as well;
@@ -376,7 +376,7 @@ task place do not accept the derived identifier, the agent asks the human and wr
     human and writes no line;
   - violates: the project skill assumes one backlog service for every product, or puts the product's
     paths inside the installer's marked block; the section holds the path of a place on the user's
-    disk; an agent that finds the entry missing writes the path into the section; a skill of the-way
+    disk; an agent that finds the key missing writes the path into the section; a skill of the-way
     writes a status of a task's line, the symbol of a dependency, the characters an identifier may
     hold, or a rule of how a line is found or changed, into its own text, or an agent takes the
     status of a new line from text the product keeps in its section or from the default of the tool
@@ -387,7 +387,7 @@ task place do not accept the derived identifier, the agent asks the human and wr
 *Rationale:* the product chooses its own backlog place, and a root instruction gives an agent one
 place to find it. Keeping the place outside the generated block lets the product change it without
 editing the process's installed guidance. A place on the user's disk is the user's own, so it stands
-in the user's file and the section names the entry, which reads alike for every user; a place every
+in the user's file and the section names the key, which reads alike for every user; a place every
 member of the team can reach stands in the section, where a new member finds it. The price taken: a
 backlog can be named in two ways, and the agent that records a missing place judges which fits. The
 rules by which a line of a task is handled belong to the place of the tasks, not to the product that
@@ -402,7 +402,7 @@ the place forbids hyphens, and the agent then asks the human and writes no line,
 identifier it changed to fit would leave two lines naming one task differently.
 *Rejected:* a fixed backlog location for all products — it would require moving an existing backlog;
 asking for the location in every project conversation — the answer would be lost between sessions;
-the file for every place, the section only naming the entry — every user of every product creates
+the file for every place, the section only naming the key — every user of every product creates
 the file, also where the backlog is public or lies in the repository, and a new member of a team
 finds no tasks until writing the path everyone else knows; the place described in words in the
 section, with its path in the user's global instructions — those instructions are not a place for
@@ -1262,7 +1262,8 @@ the entry writer to choose which one governs.
 ### WAY-114 — What does a human accept of an entry, and when?
 
 A human accepts the meaning of a foundation entry while its wording is the agent's: the meaning of a
-projected entry at the readiness gate, shown as one sentence in the human's language with the entry
+projected entry at the readiness approval, shown as one sentence in the
+human's language with the entry
 beside it; that of an entry written whole from an accepted row of a task's *Settlements to record*
 with the task document, the row being the human's own settlement; and that of every other entry at
 the merge of the change that holds it, where the section of the request's description for the
@@ -1278,7 +1279,8 @@ entry would change the meaning of an approved decision; a translation never ente
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the work with the decision:
-  - complies: the readiness gate shows each projected entry's meaning as one sentence in Polish with
+  - complies: the readiness approval shows each projected entry's meaning as
+    one sentence in Polish with
     the entry beside it; the request's section for the human's decisions gives a plain sentence of
     the meaning of each entry the cycle wrote with no row or projected entry carrying it — from the
     spec, a correction the search of the foundation made, the part of a projected entry — repeated
@@ -1295,7 +1297,8 @@ entry would change the meaning of an approved decision; a translation never ente
 
 *Rationale:* the human judges what an entry settles, and its wording rarely changes that. A row is
 the human's own settlement, accepted with the task document, and a projected entry is wording the
-gate approved; asking again at the merge buries the entries the human has not seen among those
+human approved at the readiness approval; asking again at the merge buries the entries the
+human has not seen among those
 already accepted, and a list the human does not read accepts nothing. The price is that an entry
 whose wording drifts from its row reaches the merge unseen by the human, and the review of the whole
 change, which reads the entry against the row, is what catches it (WAY-134, WAY-10).
@@ -1318,7 +1321,7 @@ on the options: refinement shows an option that changes a decision as it shows a
 decision it changes named by its identifier, and may recommend it, asking no leave to open the
 decision first. This holds only before the cycle starts (WAY-315). A projected decision of an
 approved definition is no such material: a change of it goes through the definition and its
-readiness gate (WAY-118).
+readiness approval (WAY-118).
 
 - **Scope:** project-level, elements-common, decisions
 - **Based on:** none
@@ -1330,7 +1333,7 @@ readiness gate (WAY-118).
     at a definition shows a way of logging in that a decision holds as an open choice, the decision's
     present answer among the options, when it sees a reason to change it; a refinement of a task
     that would change a projected decision of an approved definition sends the human to the
-    definition and its readiness gate;
+    definition and its readiness approval;
   - violates: a refinement leaves an option out of its comparison because a decision holds the
     choice; an agent asks the human for leave to show an option that changes a decision; a
     refinement of a task changes a projected decision of an approved definition in the task's
@@ -1355,7 +1358,7 @@ signal, and bringing the change into the definition and the plan is a larger tas
 Where refinement shows an option that changes a decision of the foundation (WAY-313), the option says
 in its line which decision it changes, and the human's choice of that option is the human's consent
 to the change (WAY-14); the acceptance of the complete task document, or the approval of the
-projected entries at the readiness gate of a definition, asks nothing about that change a second
+projected entries at the readiness approval of a definition, asks nothing about that change a second
 time. A task document carries the change and its cycle writes it with the code that needs it
 (WAY-30), and a definition carries it as a projected change of the decision.
 
@@ -1556,7 +1559,8 @@ attention on what that reading covers; only a contradiction with the person's ow
 is both real and quotable, and only the person can resolve it. Where an entry is written outside
 such a refinement or a cycle runs, the answer is about to bind, so the question stays; the entries
 written during a refinement, such as the projected entries of a definition, wait for the person's
-acceptance of the whole document or at the gate, so they follow the rule of the refinement. The
+acceptance of the whole document or at the readiness approval, so they follow the
+rule of the refinement. The
 price at refinement: an answer that contradicts the material, such as a product description or a
 note, and no sentence of the person, passes with no question. A project definition takes more than
 a task document, since it settles scope, success and risks, where a counter-argument after the
@@ -2955,7 +2959,7 @@ item it reads of it — the line `Process pin` or `Target branch and base`, or t
 remarks on the-way`, `Discarded attempt`, `Review rounds`, `Plan` or `Slices returned too large` — the
 record is of an earlier form and no field is missing: the command gives the values that need it as
 unknown, with a reason that names the line or the item, no line `Error:` and no change of the exit
-code. Where the locations file has no entry `repository` under `the-way`, no field is missing and
+code. Where the locations file has no key `repository` under `the-way`, no field is missing and
 that command takes the checkout in which its script lies.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
@@ -2979,7 +2983,7 @@ that command takes the checkout in which its script lies.
   no change of the exit code, and gives the values that need it as unknown with a reason that names
   the line or the item; that a table of weights or of the costs of an
   occurrence which lacks a level gives the result, unknown values and the line `Error:` that names
-  the level; that a locations file with no entry `repository` under `the-way` gives the checkout in
+  the level; that a locations file with no key `repository` under `the-way` gives the checkout in
   which the script lies and no line `Error:`; that the check of the foundation lists an invariant
   whose sentence the change reworded and whose copy at the commit the branch left lacks its *Method*
   or its *Part* by one line `listed:` that names the invariant and the missing field, with no error
@@ -3036,10 +3040,10 @@ table of the register of problems that lacks one of its levels leaves the rest o
 readable, so the count writes what it can read, gives unknown the values that depend on the table
 and names the missing level, and one misspelt level costs the session of the audit those values and
 not the whole result; a heading or a table that the register lacks leaves what depends on it
-unreadable and stays exit code 2. The entry `repository` under `the-way` is the one entry of the
+unreadable and stays exit code 2. The key `repository` under `the-way` is the one key of the
 locations file that the count can do without: the checkout in which its script lies is the-way's
-own, so the lack of the entry is a choice to read from it and no field lost. The exception is
-written for that entry alone, since a rule that let a script read any field that has a default as
+own, so the lack of the key is a choice to read from it and no field lost. The exception is
+written for that key alone, since a rule that let a script read any field that has a default as
 optional would let the next author call any field optional. A stage report with neither column of
 the cache writes was written before the columns existed, and its cost is the approximation it has
 always been, so the count reads it as that; a report with one of the two columns has lost the other,
@@ -3074,9 +3078,9 @@ included, until someone mends the script; the exception for the stage report alo
 measures and the file of gate times keeping exit code 2 — a file of either kind from any old cycle
 that fits no form stops the whole weekly result; for a table of the register of problems that lacks
 a level, exit code 2 with the level named and no result — one misspelt level leaves the session of
-the audit without a result until the register is mended; for the entry `repository` under
-`the-way`, exit code 2 — whoever has no entry gets no result of the audit in the morning, and the
-intended return to the own checkout is gone; for the same entry, a general exception for a field
+the audit without a result until the register is mended; for the key `repository` under
+`the-way`, exit code 2 — whoever has no key gets no result of the audit in the morning, and the
+intended return to the own checkout is gone; for the same key, a general exception for a field
 whose absence the description of a script allows with a default — a door by which the next author
 can call any field optional; for a generator of copies that shares its exit codes with another
 script, an exception written into this decision — the list of exceptions grows by a case with no
@@ -3700,53 +3704,60 @@ realizes or writes each projected entry.
 *Rationale:* the foundation describes what the product holds today; a project first settles what
 the product is to become. The task assignment follows the breakdown and changes with it, while
 the definition remains the source of what was settled.
-*Rejected:* putting projected entries into the foundation at the readiness gate — it would describe
+*Rejected:* putting projected entries into the foundation at the readiness
+approval — it would describe
 a future product as current; keeping the task assignment in the definition — it would duplicate
 the plan and change as the plan changes.
 
 ### WAY-118 — What makes a project definition ready for breakdown?
 
-The readiness gate blocks a definition with a missing section, unresolved content, an open
+The readiness approval is blocked by a missing section, unresolved content, an open
 question without its place of resolution, an unfinished candidate search, or an unsettled
 human-given part of a projected entry: its binding sentence or definition and a decision's
 rationale and rejected options; only projected fields awaiting code or the world may read `TODO`.
 Before approval an agent searches the whole current foundation once for what the definition and
 its projected entries touch, linked or not, the only search of the whole foundation on the way to
-the gate, and the human approves the whole projected entries with permitted `TODO`; the gate
+the readiness approval, and the human approves the whole projected entries with
+permitted `TODO`; the approval
 record then names the approver and the fingerprint of the definition's sections from Goal through
 Projected foundation changes, and no projected entry carries a field of approval. A change to those
-sections after approval goes through the gate again before breakdown relies on it.
+sections after approval goes through the readiness approval again before breakdown relies on it.
 
 - **Scope:** project-level
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: project-readiness-gate. For the foundation search and human
+- **Verification:** invariants: project-readiness-check. For the foundation search and human
   approval, an agent compares the work with the decision:
   - complies: the script stops an unfinished candidate table, the agent resolves a collision with
-    an existing decision found by the one search at the gate, and the human approves the finished
+    an existing decision found by the one search at the readiness approval, and the
+    human approves the finished
     proposals;
   - violates: a warning-only review lets the breakdown begin with a missing decision reason, an
-    edit to a fingerprinted section after approval keeps the old gate record, or the foundation is
-    searched whole for each candidate or projected entry and again at the gate.
+    edit to a fingerprinted section after approval keeps the old approval
+    record, or the foundation is
+    searched whole for each candidate or projected entry and again at the readiness approval.
 - **Origin:** none
 
 *Rationale:* a warning lets a later step guess precisely what definition was meant to settle;
 blocking exposes the missing answer while the person who can give it is present. The fingerprint
 shows which wording was approved. Once every projected entry is written, one search sees them all
-and the definition's own text; the gate record approves them together.
+and the definition's own text; the approval record approves them together.
 *Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
 passing; an approval without a content fingerprint — later edits would still look approved; a
 search of the whole foundation when the candidates are named and for each projected entry as well
-as at the gate — it repeats the gate's search on wording not yet settled; *Approved by* in each
-projected decision — it repeats the gate record.
+as at the readiness approval — it repeats that search on wording not yet
+settled; *Approved by* in each
+projected decision — it repeats the approval record.
 
 ### WAY-126 — How does a projected entry enter the foundation?
 
 A projected entry of an approved project definition enters the product's foundation in the
 change of the first task whose code makes it true — the task the plan assigns, or a task
 that uses the definition as a source only, even where the plan assigns the entry to another task —
-whole, in the wording the readiness gate approved, with the projected terms and environment facts
-it uses or rests on and with no record of approval copied from the gate, since the merge of the
+whole, in the wording the human approved at the readiness approval, with the projected
+terms and environment facts
+it uses or rests on and with no record of approval copied from the approval
+record, since the merge of the
 task's request brings it in; where the code makes only part of it true, the agent writes that part
 and the human accepts its meaning at the merge (WAY-114). The task the plan assigns writes what of
 the entry the foundation does not yet hold, and a projected entry no code makes true. The return
@@ -3775,15 +3786,17 @@ points at it with a reference to it by its identifier: in a decision's *Relation
   - violates: the return step writes a new decision for a rule a projected entry of the
     task's source states; a task writes a projected decision into the log and leaves a decision's
     *Relations* reading `TODO — <that decision, and where it is expected>`; a shortened projected
-    entry is written as the gate approved it, its
+    entry is written as the human approved it at the readiness approval, its
     meaning left out of the request's section for the human's decisions; the code a late-found
     projected invariant covers is set aside and rewritten.
 - **Origin:** none
 
-*Rationale:* a projected entry is wording a human already settled at the gate, and the task
+*Rationale:* a projected entry is wording a human already settled at the
+readiness approval, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
 the foundation describing the present product and keeps one entry per rule. A part of an entry is
-wording the gate did not approve in that form, so its meaning reaches the human at the merge.
+wording the human did not approve at the readiness approval in that form, so its meaning
+reaches the human at the merge.
 *Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
 lag behind the code it describes; a return step that searches only the current foundation — a
 rule settled in a definition comes back as a second entry under another name; carrying a
@@ -3793,12 +3806,13 @@ once and read by the review of the change, guards it without a second implementa
 
 ### WAY-145 — Who sets where an open question of an approved project definition is resolved?
 
-Once a project definition has passed its readiness gate, the place of resolution it gives an open
+Once a project definition has passed its readiness approval, the place of
+resolution it gives an open
 question is the question's first assignment, and the plan decides from then on where the question
 is resolved: in a task of the plan, or by an answer the human gives or the plan quotes, with its
 place, from the definition or the foundation. Work on the plan may move a question to another task,
 with an entry in the plan's log of changes giving the reason and without taking the definition
-through its readiness gate again, while a move that changes which task writes a projected entry
+through its readiness approval again, while a move that changes which task writes a projected entry
 into the foundation is the human's to decide. A question that arises only in the breakdown goes to
 the human before the plan is handed over.
 
@@ -3813,7 +3827,8 @@ the human before the plan is handed over.
     changes; the breakdown finds that nothing says whether the test server is public from the first
     account and asks the human before handing the plan over;
   - violates: a question lands in another task than the definition names with no entry in the log;
-    the definition is edited and gated again to move a question; a move that hands the writing of a
+    the definition is edited and put through the readiness approval again to move a question; a move
+    that hands the writing of a
     projected decision to another task is made without the human; the breakdown answers a question
     from its own reading of the code; a question found in the breakdown waits in a task as an
     unknown.
@@ -3821,7 +3836,8 @@ the human before the plan is handed over.
 
 *Rationale:* the place a definition gives a question is set before the tasks exist, so the
 breakdown is the first to see where the question meets the work; moving it changes the way to the
-approved scope, not the scope the human settled at the gate. A move left unwritten looks like the
+approved scope, not the scope the human settled at the readiness approval. A move
+left unwritten looks like the
 plan's own reading of the definition, so the log makes it visible. Which task writes a projected
 entry sets when the foundation comes to hold it, so a move that shifts it reaches the human. A
 question the breakdown raises was settled by nobody, and the human answers it while the plan can
@@ -3831,7 +3847,8 @@ practice of a roadmap (WAY-142) the carrying of each open question of the source
 word for word, and a question that arises in the breakdown put before the human; the practice is that of the skill of a roadmap of lesson m2l1 of the
 10xDevs course, whose lessons are not open to a reader of this repository, and the move of a
 question written into the log of changes is the rule's own.
-*Rejected:* a move taken through the gate again — the definition would be approved again for a
+*Rejected:* a move taken through the readiness approval again — the definition
+would be approved again for a
 change of route alone; a flag marking a task blocked by its unknowns, beside a list of deferred
 work, as the practice of a roadmap has them — the states of a task already hold waiting for the
 human, and the list repeats the definition's exclusions; a question moved without a word — a reader
@@ -3848,7 +3865,7 @@ human, and what a reserved choice does to a task.
 
 ### WAY-121 — Where does a project settle the technology it needs?
 
-Before a project definition goes through its readiness gate, a step of its own lists the
+Before a project definition goes through its readiness approval, a step of its own lists the
 technology and architecture choices the project needs — such as a language, a framework, a store
 of data or a place to run — and, for each, either names the decision of the foundation that
 already holds it or settles it as a projected decision of the definition; a project whose every
@@ -3893,7 +3910,8 @@ decision.
     the game and the place of its screenshots;
   - violates: a product keeps the way to its game or the place of its screenshots only in a skill,
     with no decision of its log; the first task of the breakdown chooses the database; a definition
-    reaches the gate with a store of data in its scope and no choice of it projected or found in the
+    reaches the readiness approval with a store of data in its scope and no choice of it
+    projected or found in the
     foundation; a project that brings a product's first screen leaves out how an agent operates it
     because a browser on a local address adds nothing to run; the logs, the interface, the
     development data and the place of the screenshots stand on the list as one choice; a project
@@ -3905,11 +3923,13 @@ decision.
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
 its own keeps the comparison of technologies out of the talk about the project's goal and scope,
-while its agent still knows the whole project. Settled before the gate, the choices are approved
+while its agent still knows the whole project. Settled before the readiness
+approval, the choices are approved
 with the rest of the definition, and an exit for a project whose choices the foundation already
 holds keeps the step from being an empty run. A choice a definition missed, or that no definition
 holds, still goes to the human through the step, and at a task document it changes no approved
-section, so no gate returns. A task cycle checks behaviour a user sees in the running product as
+section, so no readiness approval returns. A task cycle checks behaviour a user sees
+in the running product as
 well, and an agent with no way to the running product either leaves that check undone or improvises
 its access in the middle of the cycle. The commonest answers — logs read from
 the output of the product's container, the product opened in a browser on a local address — add
@@ -3933,10 +3953,12 @@ one sentence of reason; the skill of the product keeps the steps of operation an
 decision.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
-after the readiness gate — each settled choice would change approved sections and send the
-definition through the gate again (WAY-118); one step for every project with no exit — an empty
+after the readiness approval — each settled choice would change approved sections and send the
+definition through the readiness approval again (WAY-118); one step for every
+project with no exit — an empty
 run wherever nothing changes; the agent's way to the running product as items every definition
-holds, checked by the readiness gate — every project repeats what is settled once for the product;
+holds, checked by the readiness approval — every project repeats what is
+settled once for the product;
 a question about that way in the refinement of every task — every task records the same answers
 with no need of its own; the rule of belonging alone for those matters — their commonest answers
 would never be listed, and looking at them would settle nothing; a requirement of the step beside
@@ -4185,7 +4207,7 @@ Besides its run at a project definition, the step that settles technology runs a
 with a note saying what the run is for, and a run with no task document starts by creating one
 through `refine-task`. A run at a task settles what the note and the task name, looks at the matters
 of an agent's way to the running product only where the note touches them, does the rest of its work
-as a run at a definition does and ends back in the task's refinement, with no readiness gate; a
+as a run at a definition does and ends back in the task's refinement, with no readiness approval; a
 human may run it for any choice save one a projected decision of an approved definition settles,
 which no run reopens, and the step opens a choice a decision of the foundation holds where it sees
 a reason to change the decision (WAY-313), the result then being a change of that decision. The run
@@ -4222,7 +4244,8 @@ has no definition at all, so the step needs a place every such choice has: a tas
 the human accepts whole and which goes with the task if the work is dropped. Written into the log
 before its code, the choice would describe what the product does not hold (WAY-01); kept in the task
 document, it reaches the log as every settlement does (WAY-134), and an approved definition stays
-untouched, so no gate returns (WAY-118). The price is that even a small choice takes a task document,
+untouched, so no readiness approval returns (WAY-118). The price is that even a small choice
+takes a task document,
 a choice with no code takes a full cycle, and the document has to hold the comparison and its
 sources, since what a run keeps elsewhere does not last with the task. Settling only what the note
 and the task name keeps a task about something else from growing by choices nobody asked for, at the
@@ -4237,7 +4260,7 @@ opens, lets the human strike.
 *Rejected:* the choice written into the decision log at once, in a request of its own with no task —
 it goes against WAY-01: the log would describe what the product does not yet hold, and dropped work
 would leave the entry false; the choice written into the approved definition — one choice means the
-readiness gate and the check of the plan again (WAY-118), and an independent task has no
+readiness approval and the check of the plan again (WAY-118), and an independent task has no
 definition, so a second way would be needed anyway; the note and the matters of an agent's way to
 the running product together, where a task brings something a user sees — a task about something
 else can gain up to four further choices, each with research and a critique, close to the question
@@ -4389,7 +4412,8 @@ definition or a decision of the foundation keeps the product on that machine, an
 foundation settles it, the step that settles technology lists how a human learns of a failure of
 the running product as a choice of its own, answered by a tool that collects failures, an alert or a
 deliberate absence, even where its answer adds nothing to run, pay for or back up; in a run at a task (WAY-267) it enters the list only where the note touches it. No
-definition has to hold this choice, the readiness gate does not check it and an approved definition
+definition has to hold this choice, the readiness approval does not check it
+and an approved definition
 does not come back to the step for it; it is no matter of an agent's way to the running product, so
 whether an agent can read an option is a consequence like any other, and a change to it does not
 open the decision on the logs. A deliberate absence always enters the comparison of this choice,
@@ -4413,10 +4437,11 @@ which leaves out an option with no documentation.
     check the running product this way"; the code a tool's hook-up takes shows as what changing the
     choice later costs (WAY-123); a product kept on the developer's machine, and a product whose
     foundation holds a decision on the matter, list nothing, and a definition without the item
-    passes the readiness gate;
+    passes the readiness approval;
   - violates: the choice is folded into the logs item; the comparison leaves out the deliberate
     absence for want of a page of documentation; the step passes over an option because an agent
-    cannot read its panel (WAY-166); the readiness gate rejects a definition for lacking the item,
+    cannot read its panel (WAY-166); the readiness approval rejects a
+    definition for lacking the item,
     or an approved definition is sent back to the step for it; a product kept on the developer's
     machine gets the item; a run at a task adds the item though its note does not touch it.
 - **Origin:** none
@@ -4929,7 +4954,7 @@ side, how the plan is checked, and how a task's state in it is proven.
 ### WAY-142 — What does the breakdown of a project write, and in what form?
 
 The breakdown of a project writes its plan as one document beside the approved definition, whose
-header names the definition and the fingerprint the definition's gate record holds, and whose
+header names the definition and the fingerprint the definition's approval record holds, and whose
 `Status:` line says whether the plan is still a draft or has been handed to the human. Each task
 stands in one row of one table of tasks, with the columns and states the plan template gives, while
 the tasks that realize each projected entry and the one task that writes it into the foundation
@@ -4945,7 +4970,8 @@ written in the language of the definition under headings, states and markers kep
 - **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
   compares the plan with the decision:
   - complies: the plan of a Polish definition gives each task's goal in Polish under English
-    headings, its header carries the fingerprint the gate recorded, and the projected decision
+    headings, its header carries the fingerprint the approval record holds,
+    and the projected decision
     `(new) — Who owns a document?` stands in the table of entries with tasks 3 and 5 realizing it
     and task 5 writing it;
   - violates: a task stands in the table and again under a heading of its own repeating its
@@ -4954,7 +4980,8 @@ written in the language of the definition under headings, states and markers kep
 - **Origin:** none
 
 *Rationale:* a plan changes with every move of a task, a definition rarely and only through its
-gate, so the two stand apart, and the fingerprint in the plan's header shows when the definition
+readiness approval, so the two stand apart, and the fingerprint in the plan's header
+shows when the definition
 beneath it has changed. One row per task keeps each fact about a task in one place, where no copy
 can drift from it. A definition can project many entries, its decisions named only by their
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
@@ -4974,7 +5001,8 @@ to many long headings and needs keys made up for them; each task described again
 its own beside an index table and a table for a tracker, as the practice of a roadmap holds each of
 its items — three copies of one task drift apart; the
 plan inside the definition — every move of a task would change approved sections and send the
-definition through its gate (WAY-118); a stage of the project opened and closed inside the plan —
+definition through its readiness approval (WAY-118); a stage of the project opened
+and closed inside the plan —
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it; the columns named in this
@@ -4982,7 +5010,8 @@ decision — each change of a column would take a change of the decision; the mi
 interview on the order of work of the practice of a roadmap of vertical slices — left out of what
 the step takes from it; the practice's scored check that the product's documents are ready before
 the breakdown, left out of what the step takes from it — the definition passes its stricter
-readiness gate before the breakdown (WAY-118); the practice's stock of the code already in place,
+readiness approval before the breakdown (WAY-118); the practice's stock of
+the code already in place,
 taken layer by layer by agents working side by side — left out of what the step takes from it; the
 practice's fields of each item from which its acceptance criteria are drawn, among them a sentence
 of why it stands where it does in the order, left out of what the step takes from it — the
@@ -5129,13 +5158,13 @@ enters its cycle under that name, and the cycle names its record by it.
     tracker.
 - **Origin:** none
 
-*Rationale:* a task's cycle record and its entry in the product's backlog meet its row in the plan
+*Rationale:* a task's cycle record and its line in the product's backlog meet its row in the plan
 through its name, so a name that changes leads a reader to the wrong work; words, because a number
 that keeps the plan's own cells short says nothing in a record read apart from the plan. The rule
 takes from the practice of a roadmap the stable name each of its items carries into later work; the
 practice is that of the skill of a roadmap of lesson m2l1 of the 10xDevs course (WAY-142), whose
 lessons are not open to a reader of this repository.
-Where the product keeps its backlog is its own choice (WAY-107), and a task's entry there links its
+Where the product keeps its backlog is its own choice (WAY-107), and a task's line there links its
 document, so the plan needs no table of its tasks written for a tracker.
 *Rejected:* the cycle naming its record when it starts — the plan and the record name one task
 differently; the plan's number as the name — it says nothing where it is read; a table of the
@@ -5380,7 +5409,8 @@ leaves out of a practice holds for every other decision. The price: the refineme
 adopts a practice asks one question more, and a decision from a row whose source kept no left-out
 part says nothing in *Rejected* of what the practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
-a task has no gate to approve their wording, and refining a task would weigh as much as defining a
+a task has no readiness approval to approve their wording, and refining a task would
+weigh as much as defining a
 project; noting a settlement only when the human states one — a settlement said in passing in the
 request is missed, and the agent alone decides what binds; letting the cycle change or drop a
 settlement and show the difference in the request — the human's settlement could be reversed and
@@ -5410,7 +5440,8 @@ adopts a practice meets it again.
 A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
 account — is made only by a human, through a human action the task document names and places before
 the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
-of the request and of the task's state in the backlog entry the product names (WAY-107) is no effect
+of the request and of the task's state in the task's line in the backlog the product
+names (WAY-107) is no effect
 of the task, nor is the removal of the repository's own working directories that stand outside its
 directory (WAY-375). For the human actions placed in the cycle, the cycle does what the repository
 allows and opens a blocked draft request listing them, and the human performs them at the request; a
@@ -5429,7 +5460,7 @@ deployment or a DNS record pointing to a new address.
     creating its key as human actions before the cycle; a task that moves the product to a new
     address names pointing its DNS record there as a human action in the cycle, and the cycle, its
     code done, opens a blocked draft request listing it; the agent reads a server's free disk space
-    while it makes the change; the cycle itself adds the request link to the task's entry in the
+    while it makes the change; the cycle itself adds the request link to the task's line in the
     product's backlog;
   - violates: the cycle runs the deployment against the server itself; the cycle stops halfway and
     waits for the human to rotate a key; a task whose outcome needs a new key on an external account
@@ -5671,7 +5702,7 @@ no finding and no number of cases, and where the agent finds none it says nothin
 meaning the human settles that a reader who knows the product's field would not give the word goes
 to the task's *Settlements to record* as a candidate glossary term, which WAY-95 judges there, and
 an ambiguity in the approved project definition whose resolution changes the definition goes back to
-the definition and its readiness gate (WAY-118).
+the definition and its readiness approval (WAY-118).
 
 - **Scope:** project-level
 - **Based on:** none
@@ -7456,7 +7487,7 @@ request.
 
 *Rationale:* the request is where the human judges the cycle's work, so an approval a stage asks for
 is the orchestrator's provisional one.
-*Rejected:* a workflow with intermediate human gates — it would interrupt the delegated cycle.
+*Rejected:* a workflow with intermediate human approvals — it would interrupt the delegated cycle.
 
 ### WAY-287 — What does a request put before the human for a decision?
 
@@ -8055,11 +8086,12 @@ a text stuck to such a sequence stay listed.
     adds the link to the record is checked again before it is published, its block in Polish
     included; the check of WAY-294 lists an item of a report on the cleaned copy because the report
     and the remarks were cleaned in different words, and the orchestrator makes the two read the
-    same and appends no entry;
+    same and appends no sub-item;
   - violates: a copy of the record is committed with no run of the script on it; a description is
     published after a run that came before the link to the record was added; the script is given a
     list of private words, or rewrites a file; the orchestrator stops after a run that listed
-    something; the orchestrator appends a second entry to the remarks for an item that the check of
+    something; the orchestrator appends a second sub-item to the remarks for
+    an item that the check of
     WAY-294 lists only on the cleaned copy.
   For what the script takes for an absolute path and for a note link, an agent compares the change
   with the decision:
@@ -8085,7 +8117,7 @@ a model reading a long record for what looks private misses an item without a tr
 the description, whose block in another language is the part a reader checking by eye covers least.
 The check of WAY-294 runs first on the original because the original holds the words the reports
 gave, so each item reaches the remarks once before any word changes; the cleaning is one rewriting
-so that a report's item and its entry in the remarks keep reading alike. The price taken: a private
+so that a report's item and its copy in the remarks keep reading alike. The price taken: a private
 name in plain words passes, and a list of such names can be added by a task of its own when one
 appears; the pattern lists some text that is neither a path nor a link, such as a code sample, which
 the orchestrator writes so that the pattern passes it; one more check in every cycle. The patterns
@@ -8136,15 +8168,15 @@ removes by rewriting it in words.
 A user's places on their own disk that lie outside every repository, such as the place of a
 product's tasks and the place of its projects, are kept in one file, `~/.the-way/locations.json`,
 found at that place for every user and through no environment variable: a JSON object whose keys are
-repository names, each holding entries by name, such as `tasks`, `projects` and `task-rules`, whose
+repository names, each holding keys by name, such as `tasks`, `projects` and `task-rules`, whose
 values are paths on the user's disk. No file the repository tracks holds an absolute path, or a note
 link in a Markdown file, other than the files that the invariant `tracked-file-private-paths` names,
 which write example paths in order to find or to test them; a file that points to such a place names
-its entry in the locations file. The copy of a task cycle's record and the description of a request
+its key in the locations file. The copy of a task cycle's record and the description of a request
 are checked for a note link in every file, as WAY-309 gives.
 
 A place that a script of the-way keeps for itself under `~/.the-way/`, such as the register of the
-runs of the gate, `~/.the-way/gate_runs`, needs no entry of the locations file.
+runs of the gate, `~/.the-way/gate_runs`, needs no key of the locations file.
 
 - **Scope:** agent-instructions, project-level, foundation-review, product-guidelines, task-cycle,
   process-audit
@@ -8152,15 +8184,15 @@ runs of the gate, `~/.the-way/gate_runs`, needs no entry of the locations file.
 - **Relations:** derives from WAY-27
 - **Verification:** invariants: tracked-file-private-paths. For the place and the form of the file,
   an agent compares the change with the decision:
-  - complies: a skill that needs the place of a product's tasks reads the entry `tasks` under the
+  - complies: a skill that needs the place of a product's tasks reads the key `tasks` under the
     product's name in `~/.the-way/locations.json`, and one that needs the rules of that place reads
-    the entry `task-rules` under the same name; a file the repository tracks says "the entry
+    the key `task-rules` under the same name; a file the repository tracks says "the key
     `tasks` under `the-way`" where it means a place on the user's disk; the script of the gate keeps
-    its register of runs under `~/.the-way/` with no entry for it in the locations file;
+    its register of runs under `~/.the-way/` with no key for it in the locations file;
   - violates: a skill reads the location from an environment variable; a tracked file the
     invariant does not name holds the path of a directory on the user's disk, or a Markdown file it
     does not name holds a link to a private note; the locations file is put in a repository, or
-    holds an entry of one repository under the name of another, or a single entry for the rules of
+    holds a key of one repository under the name of another, or a single key for the rules of
     the task place at the top level of the file, shared by every product.
 - **Origin:** none
 
@@ -8171,7 +8203,7 @@ about any of them, so one file in a fixed place lets any file say which place it
 and each user lays the disk out as they like. With no environment variable, every tool started in
 the user's home finds the file whether or not a variable was set for it. A place that a script keeps
 for itself is the-way's own file, as the locations file is, and gives the user no path to choose: a
-script that cannot ask the human needs a default path where no entry is, and one file for each run
+script that cannot ask the human needs a default path where no key is, and one file for each run
 needs no lock where gates run at the same time. The price taken: each user creates the file once on
 each machine, and an agent that finds no file asks the human; a session that runs in the cloud has
 no such file and asks too. The check for paths reads every tracked file but those that must write
@@ -8182,9 +8214,9 @@ shell, and a run of the check over every tracked file of one public product on 2
 such texts in code among 88 findings (the run is this product's own, and its record is not open to a
 reader of this repository). A link in a report of the copy of a cycle's record, of any kind of file,
 is still a leak, so the copy and the description keep the check of WAY-309 in every file.
-*Rejected:* the register of the gate's runs as an entry of the locations file — it changes the
+*Rejected:* the register of the gate's runs as a key of the locations file — it changes the
 script of the gate, its tests and WAY-350, and a script that cannot ask the human needs a default
-path where no entry is all the same; one file with the data of every run in place of a directory of
+path where no key is all the same; one file with the data of every run in place of a directory of
 files — gates that run at the same time would write to one file and need a lock on writing, which
 one file for each run avoids; the check for paths alone, with an exception for the `## Backlog`
 section and the path of the tasks file left in the root `AGENTS.md` — a path in the repository is
@@ -8197,7 +8229,7 @@ not see the variable does not find the backlog; a local file in the repository t
 such as `CLAUDE.local.md` — the worktree in which a cycle runs has no such file, and Codex does not
 read `AGENTS.local.md`; introducing nothing and correcting only the line that names the rulebook —
 the path of the tasks file stays in the repository, and the next path written is stopped only by a
-careful review; one entry for the rules of the task place shared by all products, at the top level
+careful review; one key for the rules of the task place shared by all products, at the top level
 of the file — the keys of the file would no longer be only repository names, and a product whose
 tasks lie elsewhere would silently take the rules of another place; for the files that write example
 paths by their nature, a check that skips only the lines marked as examples — every example line to
@@ -8272,14 +8304,14 @@ The-way gives a template of a register of problems, which holds for each problem
 from, its class, its weight, the cost of its occurrence, the issue it belongs to — the one matter
 that like problems of several cycles make — and that issue's fate, the fix of an implemented issue
 included. A user's own tool fills the register and the user adapts the template to their own needs;
-the audit reads the register that an entry of the user's locations file names and gives no problem a
+the audit reads the register that a key of the user's locations file names and gives no problem a
 class, a weight or a cost of an occurrence itself.
 
 - **Scope:** process-audit
 - **Based on:** none
 - **Relations:** derives from WAY-103 · derives from WAY-320
 - **Verification:** an agent compares a change with the decision:
-  - complies: the command of the audit reads the register at the place that an entry of the
+  - complies: the command of the audit reads the register at the place that a key of the
     locations file names, and counts each problem with the class, weight and cost of an occurrence
     the register gives it; a user whose tool records problems another way changes the template for
     themselves;
@@ -8312,18 +8344,19 @@ and of the review of that fix do, and the cycle's record names each round by tha
 is `0.0%` only where the record says the cycle had no fix round, and unknown wherever the record and
 the stages cannot tie each round to the turns that served it.
 
-The record's item *Review rounds* also takes an entry for a review that passed with no fix, in a form
+The record's item *Review rounds* also takes a sub-item for a review that passed with no fix, in a form
 of its own that opens with the word `review` and holds the result `PASS` and the path of the review's
-report in `reports/`, with no findings file. Such an entry is no fix round for the cost of a cycle
+report in `reports/`, with no findings file. Such a sub-item is no fix round for the cost of a cycle
 and for its share, and the audit of the process reads it as a round with no contradiction with the
 settlements (WAY-404).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** tests: that an entry of the item *Review rounds* that opens with the word
+- **Verification:** tests: that a sub-item of the item *Review rounds* that opens with the word
   `review` and holds the result `PASS` is no fix round of the cost and of the share, and that a
-  record whose item holds such entries alone says the cycle had no fix round. For the rest, an agent
+  record whose item holds such sub-items alone says the cycle had no fix
+  round. For the rest, an agent
   compares a change with the decision:
   - complies: the cost of a cycle is shown as an amount at the prices of one dated list and as the
     share of the fix rounds in it; the share counts once each turn whose message named a findings
@@ -8345,7 +8378,7 @@ differ from one cycle to the next. A share given where the tie fails is a figure
 measured; unknown says the measure is missing. A review that passed with no fix has no findings
 file and serves no fix round, so it takes a form of its own in the record: the one form of a fix
 round stays exact, and a cycle that sums up such reviews has a place for them that costs its
-record no unknown. The price: the item holds two forms, and a reader of it tells the entries of
+record no unknown. The price: the item holds two forms, and a reader of it tells the sub-items of
 the fix rounds from the others by their first word.
 *Rejected:* a cost divided by a measure of the size of the task — the human settled that cost is
 measured by the two numbers alone, and the source keeps no reason beside it; a turn put in a fix
@@ -8354,10 +8387,12 @@ fix reports in other words, and a cycle that had a fix round got a share of zero
 round by its time against the times of the record — the record and the report of a cycle's stages
 write times in different forms and zones; the share given only as zero or unknown until the report
 of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round;
-the item *Review rounds* forbidding the entry of a review that passed with no fix, which leaves its
+the item *Review rounds* forbidding the sub-item of a review that passed
+with no fix, which leaves its
 trace in the table of events — the cycle's leader wants those reviews summed up somewhere, so
 without another place they would be written there all the same, and each such record would give
-unknown; the count skipping with no word each entry not opened with `findings` — a fix round written
+unknown; the count skipping with no word each sub-item not opened with
+`findings` — a fix round written
 with a slip in its opening would vanish without a trace, giving a false `no` for Q1 and a share of the
 fix rounds that is too low.
 
@@ -8542,7 +8577,8 @@ as none, and the mark is the reviewer's own. A finding is a contradiction where 
 change does something against an entry of the foundation, one the change itself writes included, or
 against a settlement of the task document — an answer under its *Questions to settle*, a row of its
 *Settlements to record* or a decision of its *Decisions in play* — and a point of *To do* left undone
-is none. The cycle writes the mark into the entry of the round in the record's item *Review rounds*,
+is none. The cycle writes the mark into the sub-item of the round in the
+record's item *Review rounds*,
 and the audit of the process takes from that mark, with the marker of a discarded attempt (WAY-405),
 and never from the text of a reviewer's remarks, whether a contradiction with the settlements came
 out only after the code was written.
@@ -8551,15 +8587,18 @@ out only after the code was written.
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-339
 - **Verification:** tests: that the count answers whether a contradiction with the settlements came
-  out only after the code was written from the mark of the entries of the item *Review rounds* and the
-  marker of the item *Discarded attempt*: yes where an entry of the item *Review rounds* carries the
-  mark of a contradiction, that item being held once and in its form (no entry in neither form, no
+  out only after the code was written from the mark of the sub-items of the item *Review rounds* and the
+  marker of the item *Discarded attempt*: yes where a sub-item of the item
+  *Review rounds* carries the
+  mark of a contradiction, that item being held once and in its form (no
+  sub-item in neither form, no
   findings file named twice, nothing beside its colon), or the record holds the item *Discarded
   attempt* once and it gives the marker `open design choice`, so that each yes stands over the
   unknown that the other item gives and over that of an unmarked round, while a *Review rounds*
-  that is not read gives no yes, nor does a doubled *Discarded attempt*, no where every entry
+  that is not read gives no yes, nor does a doubled *Discarded attempt*, no where every sub-item
   carries the mark of none and the item reads `none` or gives only the markers `reserved choice` and
-  `size`, unknown where an entry carries no mark, or an item is missing, doubled or not read, and no
+  `size`, unknown where a sub-item carries no mark, or an item is missing,
+  doubled or not read, and no
   yes stands, and from no text of a record.
 - **Origin:** none
 
@@ -8573,7 +8612,8 @@ unfinished work that no spec would have caught, which would turn a yes into a me
 other than the spec. The price: the mark is a judgment, and the judgments of reviewers differ from one
 cycle to the next; a round written before the mark gives the audit nothing to read; a change of the
 instructions of the reviewer begins a new series of the count of remarks (WAY-339).
-*Rejected:* the leader of the cycle marking the round when it writes the entry — it judges at second
+*Rejected:* the leader of the cycle marking the round when it writes the
+sub-item — it judges at second
 hand, with no reading of the foundation like the reviewer's, and a remark that a task's answer is not
 kept makes it reach for the sources, which adds context at the dearest place of the cycle; only an
 entry of the foundation counting as a contradiction — the answer would miss the mismatches with the
@@ -8586,36 +8626,39 @@ the spec.
 
 The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
 `reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
-— or, where the cycle discarded more than one attempt, at the start of each entry under the item, one
-entry for each attempt; the item reads `none` where no attempt was discarded. The audit of the
+— or, where the cycle discarded more than one attempt, at the start of each sub-item under the item, one
+sub-item for each attempt; the item reads `none` where no attempt was discarded. The audit of the
 process takes from this item, for its answer whether a contradiction with the settlements came out
 only after the code was written, the markers alone and never the text of the item, so that an item
 that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown. Where
-the lines under the item are not entries at one indent alone — the first line an entry at that indent
+the lines under the item are not sub-items at one indent alone — the first line a sub-item at that indent
 and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
 text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
 one marker and holds no second `reason: ` followed by a backtick (WAY-404); its later lines are
 details of that attempt, read for such a second `reason: ` alone, whatever word stands after the
 backtick, so that a second attempt written in them with no backtick after the `reason: ` or with its
-reason in other words is not read. Where the lines are entries at one indent alone and nothing stands beside the colon, an
-entry that opens with no marker gives the answer unknown unless another entry gives yes, and only the
-first line of each entry is read, so that a marker in a line deeper than the entry, or in an entry
+reason in other words is not read. Where the lines are sub-items at one indent alone and nothing stands beside the colon, a
+sub-item that opens with no marker gives the answer unknown unless another sub-item gives yes, and only the
+first line of each sub-item is read, so that a marker in a line deeper than the
+sub-item, or in a sub-item
 under it, is a detail and is not read. The item reads down to the next line at the left margin: a
-line written there, a continuation of an entry included, is no part of the item and is not read.
+line written there, a continuation of a sub-item included, is no part of the item and is not read.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-404
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
-  the start of the item, or of each entry under it, and from nothing else: a text that names an open
+  the start of the item, or of each sub-item under it, and from nothing else:
+  a text that names an open
   design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an
-  item of several entries gives yes where any of them has the marker `open design choice`; and that an
-  item whose lines under it are not entries at one indent alone, or with text beside its colon, is
+  item of several sub-items gives yes where any of them has the marker `open design choice`; and that an
+  item whose lines under it are not sub-items at one indent alone, or with text beside its colon, is
   read as the text of one attempt, which gives no attempt where it reads `none`, unknown where it
   holds a second `reason: ` followed by a backtick, a word that is no marker included, or opens with
   no marker, and gives its reason where it opens with one marker and holds no such second one, its
   later lines possibly a list of details, read for that second `reason: ` alone; that
-  in a list of entries an entry with no marker gives unknown and only the first line of each entry
+  in a list of sub-items a sub-item with no marker gives unknown and only the
+  first line of each sub-item
   is read; and that a line at the left margin ends the item.
 - **Origin:** none
 
@@ -9261,7 +9304,8 @@ skill for auditing observability, for these audits, and not the audit as a skill
 *Rationale:* the human who approves a product's guidelines judges neither its code nor its tests,
 and an audit that ended with places alone would leave that human to judge what is urgent and an
 agent planning the repairs with no ground for its order, and on a long list small things would come
-first while a serious one drowned in the middle. A weight read off the effect says what a repair is
+first while a serious one drowned in the middle. A weight taken from the
+effect says what a repair is
 worth in terms anyone can judge, and one scale lets causes of different disciplines stand in one
 order. Many small breaks stay small and one open way to someone else's data stays open, so
 what is at stake sets the weight and the number of places does not. A weight is no grade of the
@@ -11321,7 +11365,7 @@ technology, with the cost of its configuration.
 | WAY-338 | its rule, the answer to "What is the time of a cycle?", stands in `task-cycle/cycle_stages.py` | none |
 | WAY-340 | its rule, the answer to "Does the audit replay frozen earlier tasks on an old and a new version of the process?", stands in `process-audit/SKILL.md` | none |
 | WAY-341 | its rule, the answer to "How often does the audit run, and what starts it?", stands in `process-audit/SKILL.md` | none |
-| WAY-342 | its rule, the answer to "Which entries of the locations file does the audit of the process read?", stands in `process-audit/audit_count.py` | none |
+| WAY-342 | its rule, the answer to "Which keys of the locations file does the audit of the process read?", stands in `process-audit/audit_count.py` | none |
 | WAY-343 | its rule, the answer to "Which version of the-way did a cycle of the-way itself run on?", stands in `process-audit/audit_count.py` | none |
 | WAY-345 | its rule, the answer to "How is the cost of one occurrence of a problem that the audit counts graded?", stands in `process-audit/problem_register.md` | none |
 | WAY-346 | its rule, the answer to "Where does the result of the audit's count show the cost of an occurrence?", stands in `process-audit/audit_count.py` | none |

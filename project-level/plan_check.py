@@ -11,9 +11,10 @@ reports:
 
 - form — a `Status:` line reading `draft` or `handed over YYYY-MM-DD`, a calendar date; a line
   `Definition: <path> — fingerprint <8 lower-case hex digits>` naming a definition that can be
-  read, whose In scope reads `none` or holds a top-level list item, and whose gate record and text
-  both give that fingerprint; the sections `## Tasks`, `## Projected entries`, `## Open questions`,
-  `## Phases`, `## Change log` once each, in this order, with no other second-level heading and
+  read, whose In scope reads `none` or holds a top-level list item, and whose approval
+  record and text both give that fingerprint; the sections `## Tasks`, `## Projected entries`,
+  `## Open questions`, `## Phases`, `## Change log` once each, in this order, with no other
+  second-level heading and
   none of them empty; the tasks table and the projected entries table with the template's header
   rows, a separator row of as many cells, and every cell in its form, numbers in ASCII digits and
   `\\|` standing for a literal `|`; no task number or name held twice; a state
@@ -94,9 +95,9 @@ RESOLVED_IN = " — resolved in: "
 PLAN_QUESTION = re.compile(r"^(?P<question>.+?) — definition: (?P<place>.+?) — "
                            r"(?:plan: task (?P<task>.*)|answer:(?: (?P<answer>.*))?)$")
 RAISED = "none"
-GATE_FINGERPRINT = dict(readiness_check.GATE_LINES)["Definition fingerprint"]
+APPROVAL_FINGERPRINT = dict(readiness_check.APPROVAL_LINES)["Definition fingerprint"]
 DEFINITION_NEEDS = ("Goal", "In scope", readiness_check.OPEN_QUESTIONS, readiness_check.PROJECTED,
-                    readiness_check.GATE_RECORD)
+                    readiness_check.APPROVAL_RECORD)
 
 
 @dataclass
@@ -200,29 +201,29 @@ def check_header(preamble, definition_text, definition_error):
     _, sections = split(definition_text)
     names = [s.name for s in sections]
     unread = [name for name in DEFINITION_NEEDS if names.count(name) != 1]
-    if unread or names.index("Goal") > names.index(readiness_check.GATE_RECORD):
+    if unread or names.index("Goal") > names.index(readiness_check.APPROVAL_RECORD):
         findings.append(Finding("form", number, "the definition %s is not in its form: %s"
                                 % (match.group("path"), ", ".join("`## %s` does not stand once"
                                                                   % name for name in unread)
-                                   or "`## Goal` stands after `## Gate record`")))
+                                   or "`## Goal` stands after `## Approval record`")))
         return findings, None
     by_name = {s.name: s for s in sections}
     held = match.group("fingerprint")
-    gate = [m.group(1) for _, l in by_name[readiness_check.GATE_RECORD].lines
-            if (m := GATE_FINGERPRINT.match(l.rstrip()))]
-    if not gate:
-        findings.append(Finding("form", number, "the definition's gate record holds no line "
+    approved = [m.group(1) for _, l in by_name[readiness_check.APPROVAL_RECORD].lines
+                if (m := APPROVAL_FINGERPRINT.match(l.rstrip()))]
+    if not approved:
+        findings.append(Finding("form", number, "the definition's approval record holds no line "
                                 "`- Definition fingerprint: <hex>` — the definition has not "
-                                "passed its readiness gate"))
-    elif gate[0] != held:
+                                "passed its readiness approval"))
+    elif approved[0] != held:
         findings.append(Finding("form", number, "the fingerprint %s is not the one the "
-                                "definition's gate record holds, %s" % (held, gate[0])))
+                                "definition's approval record holds, %s" % (held, approved[0])))
     text_fingerprint = readiness_check.definition_fingerprint(definition_text)
     if text_fingerprint != held:
         findings.append(Finding("form", number, "the fingerprint %s is not the one the "
                                 "definition's text gives, %s — the plan stands on nothing until "
-                                "the definition passes its gate again and the plan is checked "
-                                "against it" % (held, text_fingerprint)))
+                                "the definition passes its readiness approval again and the plan "
+                                "is checked against it" % (held, text_fingerprint)))
     definition = read_definition(by_name)
     if definition.in_scope is None:
         findings.append(Finding("form", number, "the definition's In scope reads neither `none` "

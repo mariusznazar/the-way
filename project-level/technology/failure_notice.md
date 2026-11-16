@@ -23,5 +23,6 @@ template's Technology section gives (WAY-270).
 The human cannot strike the matter from the list: a human who has no tool to learn of a failure
 answers it with a deliberate absence, and that answer settles it.
 
-A list that has the matter already needs nothing from this look. A definition the gate has approved
+A list that has the matter already needs nothing from this look. A definition that has
+passed its readiness approval
 does not come back to the step for it.

@@ -1,11 +1,12 @@
-# 7. The readiness gate
+# 7. The readiness approval
 
 Step 7 of the skill `define-project`, whose `SKILL.md` lies beside this file; its items are 7.1 to
 7.5.
 
 In a turn dispatched through a refinement conversation path, `delegated_mode.md` beside this file
 changes this step: never speak to the human directly, request the critique of 7.3 through the
-conversation instead of running it, and write the fingerprint, the gate record and the `approved`
+conversation instead of running it, and write the fingerprint, the approval
+record and the `approved`
 status only after the human's approval is recorded through the project orchestrator.
 
 1. Run `python -B <the-way>/project-level/readiness_check.py <definition> --before-approval`. A
@@ -20,8 +21,10 @@ status only after the human's approval is recorded through the project orchestra
    projected entry settles; and what the definition collides with that no written link joins — a
    decision whose binding sentences the project would break, an invariant, a glossary term the
    definition uses in another meaning, a fact the project contradicts. This is the one search of
-   the whole foundation on the way to the readiness gate: neither `find-foundation-entries` nor the
-   skill of an element in projected mode makes one. Settle each finding before the readiness gate: a
+   the whole foundation on the way to the readiness approval: neither
+   `find-foundation-entries` nor the
+   skill of an element in projected mode makes one. Settle each finding before
+   the readiness approval: a
    projected change to the entry through the skill of its element in projected mode, a projected
    entry struck or turned into a change of the entry that already states it, shown to the human at
    7.3, or the definition brought into line with it.
@@ -37,7 +40,8 @@ status only after the human's approval is recorded through the project orchestra
 4. After the final review changes, run the check of 7.1 again; a finding goes where 7.1 sends it.
    On the human's approval, print the fingerprint with
    `python -B <the-way>/project-level/readiness_check.py <definition> --fingerprint`, write the
-   gate record, and set the status line to `approved YYYY-MM-DD`. The gate record approves every
+   approval record, and set the status line to `approved YYYY-MM-DD`. The
+   approval record approves every
    projected entry; no entry carries a field of approval.
 5. Run the check with no option; it must report nothing found. Tell the human what it reported,
    and that the approval and the search of 7.2 (condition c) rest on no script's check, and that

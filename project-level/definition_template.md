@@ -2,7 +2,7 @@
 
 A project definition says what a project is to achieve and what it rests on, before the project
 is broken into tasks. The skills in `skill/` and `technology/` beside this file write it with a
-human, and `readiness_check.py` checks what a script can decide at the readiness gate. The
+human, and `readiness_check.py` checks what a script can decide at the readiness approval. The
 decisions that set the rules below are cited beside them.
 
 ## What a definition is not
@@ -23,11 +23,11 @@ decisions that set the rules below are cited beside them.
   ```markdown
   ## Backlog
 
-  - Projects: <a path from the root of the repository, a tool, or the entry of the locations file>
-  - Tasks: <a path from the root of the repository, a tool, or the entry of the locations file>
+  - Projects: <a path from the root of the repository, a tool, or the key of the locations file>
+  - Tasks: <a path from the root of the repository, a tool, or the key of the locations file>
   ```
 
-  A place on the user's disk outside every repository stands in the section as an entry of the
+  A place on the user's disk outside every repository stands in the section as a key of the
   locations file, never as a path; `backlog_place.md` beside this file says how it is read
   (WAY-101; WAY-107; WAY-320.)
 - The text of the definition, its title included, is in the language the human opened the
@@ -67,7 +67,7 @@ Status: definition — open: <the sections still open>
 
 ## Projected foundation changes
 
-## Gate record
+## Approval record
 ```
 
 The headings stand once each, in this order, and no other second-level heading stands in the
@@ -78,9 +78,9 @@ the title where the place of the definition asks for one.
 
 | Status | When |
 |---|---|
-| `definition — open: <sections>` | some section above the gate record still holds `TODO`, or the step that settles the technology has not ended |
-| `ready for gate` | `readiness_check.py --before-approval` reports nothing: no section above the gate record holds a `TODO` it counts as a gap |
-| `approved YYYY-MM-DD` | the gate record is written |
+| `definition — open: <sections>` | some section above the approval record still holds `TODO`, or the step that settles the technology has not ended |
+| `awaiting approval` | `readiness_check.py --before-approval` reports nothing: no section above the approval record holds a `TODO` it counts as a gap |
+| `approved YYYY-MM-DD` | the approval record is written |
 
 ## Every section, and the words `none` and `TODO`
 
@@ -102,7 +102,7 @@ A section is never left empty.
 | Touched parts and decisions | what the foundation says of the project: the parts it touches, the decisions whose *Scope* names them, the invariants it may break |
 | Technology | the technology choices the project needs, each with the entry that settles it; the skill `settle-technology` writes it, and it reads `TODO` until that step begins |
 | Projected foundation changes | what the definition settles about the product, as projected entries of the foundation, each with one sentence of its meaning, below the line that records the step finding them |
-| Gate record | who approved the gate and when, and the fingerprint |
+| Approval record | who approved the definition and when, and the fingerprint |
 
 - **Background, Success and Risks** hold what the human answered. The agent asks for them; what it
   finds in the material enters a question as its anchor, never the section. A fluent draft would
@@ -138,14 +138,14 @@ project, or one task of it, named:
 A section without questions reads `none`.
 
 The place a question names is its first assignment: once the definition has passed its readiness
-gate, the project plan decides where each question is resolved, and moving a question to another
+approval, the project plan decides where each question is resolved, and moving a question to another
 task changes the plan, not the definition (WAY-145).
 
 ## Technology
 
 The section lists the technology and architecture choices the project needs — a language, a
 framework, a library, a store of data, a way of logging in, a place to run — each with the entry
-that settles it (WAY-121). The skill `settle-technology` writes it before the readiness gate
+that settles it (WAY-121). The skill `settle-technology` writes it before the readiness approval
 (WAY-121), after the step that finds the definition's foundation entries; until then it reads
 `TODO`.
 
@@ -186,7 +186,8 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   outside the machine on which it is made, which holds unless the definition, or a decision of the
   foundation, keeps the product on that machine, and no decision of the foundation settles it, even
   where its answer adds nothing to run, pay for or back up. No definition has to hold it, the
-  readiness gate does not check it, and an approved definition does not come back to the step for
+  readiness approval does not check it, and an approved definition does not
+  come back to the step for
   it. It is no matter of an agent's way to the running product, so whether an agent can read an
   option is a consequence like any other. A deliberate absence always enters its comparison, though
   it has no page of documentation, and the comparison anchors its consequences in the definition and
@@ -201,7 +202,7 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   |---|---|
   | `— held by: <PREFIX>-<NN>` | a decision of the product's foundation settles the choice |
   | `— projected: <question>` | a projected decision of this definition settles it; the question reads as in that decision's heading |
-  | `— open` | the step is still settling it; the readiness gate stops it |
+  | `— open` | the step is still settling it; it blocks the readiness approval |
 
 - An item may hold nested items under it, such as the human's preference for the choice, or the
   entry that a choice standing open over a silent entry, or over a decision the step opened for a
@@ -335,9 +336,11 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 - A new projected decision needs no number and no prefix: the task that writes it into the
   foundation gives them. Other projected headings keep the identifier their element requires.
 - Below each entry stands one sentence of its meaning in the language of the definition, a line
-  beginning with `>`; the human approves the meaning at the gate, not the wording. No entry
-  carries a field of approval: the gate record approves them all.
-- At the gate a projected entry holds whole what only the human gives at the project level: its
+  beginning with `>`; the human approves the meaning at the readiness approval,
+  not the wording. No entry
+  carries a field of approval: the approval record approves them all.
+- At the readiness approval a projected entry holds whole what only the human gives
+  at the project level: its
   binding sentence or definition and, for a decision, its *Rationale* and *Rejected*
   (`none considered` being the human's statement). A field that waits for the code or the world —
   a source, a verification, the parts, the links, each a line `- **<Field>:** …` with the indented
@@ -348,17 +351,17 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 
 A section with no projected entry reads the line and `none`.
 
-## Gate record
+## Approval record
 
-Until the gate the section reads `none`. It is written once the human approves the gate, in this
-form and order:
+Until the readiness approval the section reads `none`. It is written once the human gives the
+readiness approval, in this form and order:
 
 ```markdown
 - Approved by: <who>, YYYY-MM-DD
 - Definition fingerprint: <the fingerprint readiness_check.py --fingerprint prints>
 ```
 
-The fingerprint is that of the definition's text from `## Goal` up to `## Gate record`, as
+The fingerprint is that of the definition's text from `## Goal` up to `## Approval record`, as
 `relation-model/fingerprint.py` computes it. A definition whose text no longer gives its recorded
-fingerprint changed after the gate, and goes through the gate again
+fingerprint changed after its approval, and goes through the readiness approval again
 (WAY-118).

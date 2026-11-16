@@ -214,7 +214,7 @@ repeated or unexpected required second-level section, or required sections out o
 - **Part:** project-level
 - **Violated:** no
 
-## project-readiness-gate
+## project-readiness-check
 
 Before approval, the project readiness check rejects a definition with a missing or unresolved
 required section, an open question with no place of resolution, or an unfinished candidate search.
@@ -240,7 +240,7 @@ Before approval, the project readiness check rejects a definition whose Technolo
 The project plan check rejects a plan whose `Status:` line, sections, tables, change log or task
 states depart from the form the plan template gives, in which two tasks hold one number or one name
 or a task's state names the task itself, whose header names no definition the check can read or a
-fingerprint other than the one that definition's gate record holds and its text gives, or whose
+fingerprint other than the one that definition's approval record holds and its text gives, or whose
 definition holds an In scope that is neither `none` nor a list.
 
 - **Method:** test

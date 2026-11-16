@@ -17,8 +17,9 @@ The step "Start or resume" of the skill `settle-technology`, whose `SKILL.md` li
   held or projected, the first look finds silent on part of what the matter asks, with that entry
   nested under it. Where a look adds or changes an item, show the list again as the step "List the
   choices" does (`list.md` beside this file) before going on, with one sentence for each changed
-  item saying what the entry named leaves unsaid (WAY-121, WAY-165). A definition the gate has
-  approved does not come back to this step for these matters or for the failure matter. These
+  item saying what the entry named leaves unsaid (WAY-121, WAY-165). A definition
+  that has passed its readiness
+  approval does not come back to this step for these matters or for the failure matter. These
   matters are never struck from the list: a matter that a human to whom it does not apply answered
   like any choice is settled by that answer, and its item is read like any other.
 - Where it holds an item ending `— open`, look first under "Projected foundation changes" for a
