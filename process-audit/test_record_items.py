@@ -11,8 +11,10 @@ import record_items  # noqa: E402
 
 remarks_check = record_items.remarks_check
 
+NL = chr(10)
 SILENT = "the entry of a round does not say whether there was a contradiction"
-NO_MARKER = "holds no marker of its reason"
+NO_MARKER = "opens with no marker of its reason"
+SEVERAL_REASONS = "holds more than one reason in a form that is not read"
 
 
 def read(record: str):
@@ -78,13 +80,70 @@ class DiscardedAttemptReason(unittest.TestCase):
             with self.subTest(text[:50]):
                 self.assertIsNone(q1(text)[0])
 
-    def test_two_markers_in_the_text_give_unknown(self):
-        # A text that gives two reasons does not say which one it is.
+    def test_two_markers_in_the_text_give_unknown_with_a_reason_of_their_own(self):
+        # A text that gives two reasons does not say which one it is, and the reason says so and
+        # points to the form that holds two attempts; it is not the reason of a text with no marker.
         for text in ("reason: `size`; reason: `open design choice`",
                      "reason: `open design choice`; reason: `size`",
                      "reason: `size` " * 50_000):
             with self.subTest(text[:50]):
-                self.assertIsNone(q1(text)[0])
+                answer, why = q1(text)
+                self.assertIsNone(answer)
+                self.assertIn(SEVERAL_REASONS, why)
+                self.assertNotIn(NO_MARKER, why)
+
+    def test_one_entry_for_each_attempt_gives_yes_where_any_marker_is_an_open_design_choice(self):
+        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # A cycle that discarded an attempt for an open design choice and, after the spec, another
+        # for size writes one entry for each, in either order; the entries carry the details.
+        def read_entries(*texts):
+            body = "".join(f"{NL}  - {text}" for text in texts)
+            return read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
+
+        first = "reason: `open design choice`; 10:32, report reports/x.md; entries none"
+        second = "reason: `size`; 14:05, report reports/y.md"
+        reserved = "reason: `reserved choice`; the blocked request"
+        for texts, answer in (((first, second), "yes"), ((second, first), "yes"),
+                              ((first,), "yes"), ((reserved, second), "no"), ((second,), "no")):
+            with self.subTest(str(texts)[:50]):
+                self.assertEqual((answer, None), read_entries(*texts))
+
+    def test_an_entry_without_a_marker_gives_unknown_unless_another_entry_is_an_open_design_choice(
+            self):
+        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        def read_entries(*texts):
+            body = "".join(f"{NL}  - {text}" for text in texts)
+            return read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
+
+        for texts in (("reason: `size`", "a time overrun"), ("reason: `size`", "none"),
+                      ("reason: `size`", "no open design choice"),
+                      ("reason: `size`", "10:32; reason: `reserved choice`"),
+                      ("reason: `size`; reason: `reserved choice`",)):
+            with self.subTest(texts):
+                answer, why = read_entries(*texts)
+                self.assertIsNone(answer)
+                self.assertIn("opens with no marker of its reason", why)
+        self.assertEqual(("yes", None), read_entries("reason: `size`", "a time overrun",
+                                                      "reason: `open design choice`"))
+
+    def test_text_beside_the_entries_or_an_entry_deeper_or_fenced_is_not_a_second_attempt(self):
+        beside = ("- Discarded attempt: reason: `size`" + NL + "  - reason: `open design choice`" + NL
+                  + "- Review rounds: none" + NL)
+        answer, why = read(beside)
+        self.assertIsNone(answer)
+        self.assertIn(SEVERAL_REASONS, why)
+        deeper = ("- Discarded attempt:" + NL + "  - reason: `size`; details" + NL
+                  + "    - reason: `open design choice`" + NL + "- Review rounds: none" + NL)
+        self.assertEqual(("no", None), read(deeper))
+        fenced = ("- Discarded attempt:" + NL + "  - reason: `size`" + NL + "  ```" + NL
+                  + "  - reason: `open design choice`" + NL + "  ```" + NL
+                  + "- Review rounds: none" + NL)
+        self.assertEqual(("no", None), read(fenced))
+
+    def test_entries_of_discarded_attempts_leave_the_rounds_to_say_whether_there_was_a_contradiction(self):
+        entries = NL + "  - reason: `size`" + NL + "  - reason: `reserved choice`"
+        self.assertEqual(("no", None), q1(entries, findings("a", ", contradiction no")))
+        self.assertEqual((None, SILENT), q1(entries, findings("a")))
 
     def test_a_missing_or_doubled_item_gives_unknown_with_its_reason(self):
         # decision: WAY-344 "Each reading of a file that the rule covers has one test"

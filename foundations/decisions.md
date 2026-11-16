@@ -2874,8 +2874,13 @@ of the two columns of the cache writes in its detailed section, that command rea
 earlier form too, with no line `Error:`, giving the cost with the writes standing inside *Input* and
 priced as input, an approximation, and no value unknown for the missing columns, while a stage
 report that has one of the two columns and not the other has a missing field, with the line
-`Error:`. Where the locations file has no entry `repository` under `the-way`, no field is missing
-and that command takes the checkout in which its script lies.
+`Error:`. Where the command that counts the audit reads a cycle's record that lacks a line or an
+item it reads of it — the line `Process pin` or `Target branch and base`, or the item `Process
+remarks on the-way`, `Discarded attempt`, `Review rounds`, `Plan` or `Slices returned too large` — the
+record is of an earlier form and no field is missing: the command gives the values that need it as
+unknown, with a reason that names the line or the item, no line `Error:` and no change of the exit
+code. Where the locations file has no entry `repository` under `the-way`, no field is missing and
+that command takes the checkout in which its script lies.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -2893,7 +2898,10 @@ and that command takes the checkout in which its script lies.
   with neither column of the cache writes, with no line `Error:` and gives the values that need what
   that form never had as unknown, and the cost of a form with no columns of the cache writes with
   the writes priced as input; that it reads a report that has one time line or one of the two cache
-  write columns and not the other as a missing field; that a table of weights or of the costs of an
+  write columns and not the other as a missing field; that it reads a cycle's record that lacks the
+  line `Process pin` or `Target branch and base` or an item it reads of it, with no line `Error:` and
+  no change of the exit code, and gives the values that need it as unknown with a reason that names
+  the line or the item; that a table of weights or of the costs of an
   occurrence which lacks a level gives the result, unknown values and the line `Error:` that names
   the level; that a locations file with no entry `repository` under `the-way` gives the checkout in
   which the script lies and no line `Error:`; that the check of the foundation lists an invariant
@@ -2934,7 +2942,10 @@ leaves unknown what the file does not give and ends with the error that names th
 error is seen and the rest of the result is not lost. A field that an earlier form of a file never
 had is no loss of the file but the way that form was written, and the count of the audit reads the
 files of cycles of every form; read as missing, it would end every count in exit code 1 for as long
-as such files are counted, and an exit code that every run gives carries no signal. The rule covers
+as such files are counted, and an exit code that every run gives carries no signal. The record of a
+cycle is such a file: a record lacks an item that the template gained after it was written, and it
+carries no sign that names its form, so every line and item the count reads of it is read as one an
+earlier form may lack. The rule covers
 the whole reading of a file a change reworks, so that the old reads of that file, which a change of
 format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
 the cost of the check in proportion. The price: a change that reworks the reading of a file
@@ -7946,17 +7957,20 @@ the spec.
 
 The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
 `reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
-— and the item reads `none` where no attempt was discarded. The audit of the process takes from this
-item, for its answer whether a contradiction with the settlements came out only after the code was
-written, the marker alone and never the text of the item, so that an item with no marker, written in
-any earlier form, gives the answer unknown (WAY-403).
+— or, where the cycle discarded more than one attempt, at the start of each entry under the item, one
+entry for each attempt; the item reads `none` where no attempt was discarded. The audit of the
+process takes from this item, for its answer whether a contradiction with the settlements came out
+only after the code was written, the markers alone and never the text of the item, so that an item
+that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown
+(WAY-403).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-403
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
-  the start of the item and from nothing else: a text that names an open design choice, a reserved
-  choice or a size in other words, or denies one, gives unknown.
+  the start of the item, or of each entry under it, and from nothing else: a text that names an open
+  design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an
+  item of several entries gives yes where any of them has the marker `open design choice`.
 - **Origin:** none
 
 *Rationale:* a reading of the words of free text can never list every way to deny or to name a

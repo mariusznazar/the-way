@@ -373,14 +373,16 @@ Record the attempt's last commit — a historical name, not a link to follow —
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
 the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
 under *Discarded attempt* with the reason `open design choice`, as `task-cycle/record_template.md`
-gives it (WAY-404), and continue at step 6; after the spec's review, step 7 chooses the route again.
+gives it, an entry of its own where the cycle discarded an attempt before (WAY-404), and continue at
+step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
 report, record the attempt's last commit and files, discard the whole attempt and its foundation
 entries by resetting the branch to its base — to the commit that moved the pin where step 2 moved
 it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
 (WAY-136). Record it under *Discarded attempt* with the reason `size`, as
-`task-cycle/record_template.md` gives it (WAY-404).
+`task-cycle/record_template.md` gives it, an entry of its own where the cycle discarded an attempt
+before (WAY-404).
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices

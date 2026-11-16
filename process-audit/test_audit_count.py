@@ -409,6 +409,33 @@ class ProcessPin(AuditCountCase):
         self.assertEqual("unknown", pin)
         self.assertIn("no line `Process pin`", unknown[0][3])
 
+    def test_a_record_that_lacks_every_line_and_item_the_count_reads_is_of_an_earlier_form(self):
+        # decision: WAY-344 "Where the command that counts the audit reads a cycle's record that lacks"
+        # The record of a product with none of its items and no pin, and the record of a cycle of the
+        # way itself with neither the pin nor the target line: no `Error:` line, exit code 0 (asserted
+        # below), and for each line or item a reason that names it.
+        product = self.repository("product")
+        product.cycle("a-task", {"cycle.md": record(pin_line="", remarks="")})
+        way = self.repository("the-way")
+        bare = record(pin_line="", remarks="")
+        target = f"- Target branch and base: `main`, `{BASE}`" + chr(10)
+        self.assertIn(target, bare)
+        way.cycle("own-task", {"cycle.md": bare.replace(target, "")})
+        self.write_locations(self.places(**{"product": product, "the-way": way}))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        reasons = {(row[0], row[2]) for row in self.pair_rows()}
+        for field, words in (
+                ("Process pin", "the record holds no line `Process pin`"),
+                ("Process pin", "the line `Target branch and base` is missing"),
+                ("Remarks", "the record holds no item `Process remarks on the-way`"),
+                ("Discarded attempt", "the record holds no item `Discarded attempt`"),
+                ("Plan", "the record holds no item `Plan`"),
+                ("Slices returned too large", "the record holds no item `Slices returned too large`")):
+            with self.subTest(field + ": " + words):
+                self.assertTrue(any(f == field and words in why for f, why in reasons), reasons)
+
     def test_an_earlier_record_joining_the_pin_with_its_base_gives_the_commit(self):
         pin, _ = self.pin_of("- Process pin and target base: `main` at `1234567`")
         self.assertEqual("1234567", pin)
@@ -3244,6 +3271,9 @@ class Run(AuditCountCase):
         self.assertEqual([["the-way", "1", "yes"]], self.rows("Repositories"))
 
 
+NL = chr(10)
+
+
 def process_record(pin, discarded="none", plan="none on the one-author route", too_large="none",
                    rounds="none", extra="") -> str:
     """A cycle record whose items the questions of a process version read; `extra` adds lines
@@ -3693,8 +3723,10 @@ class ProcessVersions(AuditCountCase):
         rest = "; 10:32, report reports/x.md; foundation entries none; reset to abc1234"
         answers = self.q1_of_each_version([
             "reason: `open design choice`" + rest, "reason: `reserved choice`" + rest,
-            "reason: `size`" + rest, "none"])
-        self.assertEqual(["yes", "no", "no", "no"], answers)
+            "reason: `size`" + rest, "none",
+            NL + "  - reason: `open design choice`" + rest + NL + "  - reason: `size`; 14:05",
+            NL + "  - reason: `size`; 14:05" + NL + "  - reason: `reserved choice`" + rest])
+        self.assertEqual(["yes", "no", "no", "no", "yes", "no"], answers)
 
     def test_the_four_denials_of_review_100_leave_q1_unknown(self):
         # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
@@ -3713,7 +3745,7 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual("unknown", self.count_series(1)[0][3])
         [pair] = [row for row in self.pair_rows() if row[0] == "Discarded attempt"]
         self.assertEqual("4", pair[1])
-        self.assertIn("holds no marker of its reason", pair[2])
+        self.assertIn("opens with no marker of its reason", pair[2])
 
     def test_a_marker_that_is_not_at_the_start_or_not_in_its_form_is_not_read(self):
         # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"

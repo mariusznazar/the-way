@@ -39,7 +39,9 @@ not authorize running it.
   choice`, `reserved choice` and `size` — opening the text, and after it the time, report, last
   commit and changed files including foundation entries, reset base, discard confirmation and next
   route; after an open design choice, spec review and renewed judgment; after a reserved choice, the
-  blocked draft request; after size, planning>
+  blocked draft request; after size, planning. Where the cycle discarded more than one attempt,
+  nothing after the colon and, under this line, one entry for each attempt, each written as above
+  and opening with its own `reason: ` and reason>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
   reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
 - Agent waiting: <native completion notification or blocking tool; live-contract limit and any
