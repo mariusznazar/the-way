@@ -5,9 +5,11 @@ human's remarks.
 
 In the-way itself, before anything else, fetch, and bring what the session works in up to the remote
 target branch. Where the session works in a copy of the target branch, fast-forward it as step 4 of
-`implement-task` gives, or stop and say so; where it works in the request's worktree, merge the
-remote target branch into it and, where that merge changes code the cycle reviewed, have it reviewed
-and its affected checks run as the merge in the paragraph below is. In both cases, where
+`implement-task` gives, or stop and say so; where it works in the request's worktree, renumber the
+task's decisions where the target branch has taken their numbers, as step 12 of `implement-task`
+gives in "The renumbering of the task's decisions" (WAY-403), merge the remote target branch into it
+and, where that merge changes code the cycle reviewed, have it reviewed, the renumbering commit
+with it, and its affected checks run as the merge in the paragraph below is. In both cases, where
 something came in, start again from the entry point that started the cycle.
 
 Then read the field *Reserved choice* of the request's record, in the kept worktree or in the
@@ -24,13 +26,15 @@ choice:
   or that picks an option, is answered as above.
 
 Take a link to the request, or to a comment holding the human's remarks, as the input. Work on that
-request's branch and in its worktree. First merge, never rebase, the remote target branch, the
+request's branch and in its worktree. First, where the target branch has taken the numbers of the
+task's new decisions, renumber them as step 12 of `implement-task` gives in "The renumbering of the
+task's decisions" (WAY-403). Then merge, never rebase, the remote target branch, the
 the-way pin included, and verify that the pinned checkout matches the product's gitlink. Where that
 merge changes code the cycle reviewed, a fresh reviewer reviews the merge with `review-change` (`task-cycle/review/SKILL.md`), with
 a dispatch that asks whether the two sides still hold together and names the foundation entries the
 merge brought in that bear on the parts the change touches, as step 12 of `implement-task` gives
 (WAY-150), and the agents that own the checks the merge touches run them again. The reviewer's
-range is the commits of the merge the dispatch gives. A merge can bring in a rule or code that the
+range is the commits of the merge the dispatch gives, the renumbering commit among them. A merge can bring in a rule or code that the
 change goes against, or that meets the change at a seam neither side shows alone, which is why the
 dispatch asks whether the two sides still hold together. The remarks
 bind; record them as new events, and write them word for word, as the human gave them, into

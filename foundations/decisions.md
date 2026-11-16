@@ -6229,6 +6229,76 @@ in 4 of the 8 runs of the measurement, and a line that keeps a model out of the 
 be drawn somewhere all the same; a restriction of models on the human's whole account — the model
 leaves every session of the human, and each work on it would need a change of that restriction.
 
+### WAY-403 — How does a task's branch give new numbers to its decisions that the target branch has taken?
+
+Where the log of the target branch holds a number that a new decision of the task branch bears, the
+task branch, before it merges the target branch and in a commit of its own, renumbers all its new
+decisions in their order onto the next free numbers after the highest number that log holds, as an
+entry or as a withdrawn number, and never changes the number of a decision of the target branch. In
+that one pass it rewrites every reference to the renumbered decisions in the files of the branch and
+in the original of the cycle's record as the record stands before the reconciliation is entered in
+it; texts written afterwards, the rows that give the conversion of an earlier reconciliation and the
+human's remarks quoted word for word stay as they are. The rule holds for the reconciliation with
+the target branch before the request opens and for each merge of the target branch in a correction
+after review, on either route.
+
+The conversion of the old numbers into the new ones stands in the row of the cycle record's events
+that records the reconciliation with the target branch, and in no other note of the record; a
+reconciliation that renumbers again adds its own row beside the earlier ones.
+
+- **Scope:** decisions, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-19 · derives from WAY-02
+- **Verification:** an agent compares a cycle, its branch and its record with the decision:
+  - complies: the new decisions of a task branch bear the numbers 500 to 502, the target branch took
+    500 and 501 for its own, and the task branch gives its three the numbers 502 to 504 in a commit
+    of its own before the merge, in the log, the tests, the comments, the skills and the original of
+    the record, the spec, the plan, the handoffs, the reports and the process remarks among them; a
+    remark of the human quoted in the record keeps the number it was written with; the row of the
+    reconciliation reads 500 → 502, 501 → 503 and 502 → 504; a correction after review that
+    meets decisions taken by another merged request renumbers the same way before its merge, gives
+    a row of its own, 502 → 505, 503 → 506 and 504 → 507, and leaves the first row as it is;
+  - violates: the task branch merges first and renumbers afterwards, or in the merge commit; the
+    decisions of the target branch are renumbered; the numbers are replaced one decision at a time,
+    so that 502 becomes 504 after 500 became 502; the log is renumbered and the record keeps the old
+    numbers under a note of the conversion at its head; the human's quoted remark is rewritten; the
+    row of the reconciliation gives no conversion; the row of an earlier reconciliation is rewritten
+    with the map of a later one, so that it reads 500 → 505, 501 → 506 and 505 → 507; a correction
+    merges the target branch with no renumbering where the numbers clash.
+- **Origin:** none
+
+*Rationale:* a task's new decisions take the next free numbers of the log of the branch the task
+started from (WAY-19), and a task branch reaches the remote only when its request opens, so two
+tasks that run side by side take the same numbers and neither can see the other's; the clash shows
+at the merge, and the task that merges second gives way. The task branch renumbers rather than the
+target branch because the numbers of the target branch already stand in the references of requests,
+branches and commits that the task cannot reach, while its own numbers stand only in its own files
+and in its own record. The record is rewritten in the same pass because a reference names an entry
+the foundation holds by its number (WAY-02), and the request's description and the documents under
+its links must name the same entry by the same number, so that the human who reads them converts
+none by hand. The conversion of a reconciliation stands once, in the row where the cycle already says
+that it reconciled, so that an old commit or an earlier remark of the human that carries an old
+number can still be read; a row of an earlier reconciliation stays as it was written, since it was
+true then, and the rows are read one after the other. The price: a reader of an old number follows
+two rows after a second renumbering; the reports of the agents differ from what the agents wrote in
+their numbers; the rewrite of the record is checked by no reviewer of the merge since the record is
+no code; and a correction can renumber a second time when the request returns after another request
+that adds decisions has merged.
+*Rejected:* renumbering the decisions of the target branch; a temporary marker in place of a number
+until the merge; the old numbers left in the cycle record, with a note of the conversion at the head
+of the record — the mismatch the rule removes stays, and the reader converts each number by hand;
+the numbers rewritten only in the copy of the record that is published in the repository — that copy
+holds texts from before the merge and from after it, the later ones naming numbers of the target
+branch from the same range, so one rewrite would corrupt them, and telling the texts apart by date
+is fragile; looking at the numbers that other branches have taken while the numbers are given — the
+task branch reaches the remote only when the request opens, so those numbers cannot be seen; the
+rule in the reconciliation before the request opens alone — in a correction the agent goes on
+improvising, and the second renumbering falls there; a note of the conversion at the head of the
+record as well as in the row of events — a second copy of the same information, which a reader of
+the rewritten documents does not need; no conversion kept anywhere — an old commit or an earlier
+remark of the human that carries an old number becomes unreadable; the rule as a sentence of the
+skill alone, with no entry — the rejected ways would stand nowhere an agent reads.
+
 ## The work of a cycle's agents
 
 What an agent of the cycle checks of its own work and reports, how it waits for a long command, and

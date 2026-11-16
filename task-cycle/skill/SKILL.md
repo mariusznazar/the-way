@@ -586,8 +586,11 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 ## Request and handoff
 
 12. A request that a remaining blocking finding blocks follows "The end of a code review" instead.
-    Otherwise merge the remote target branch into the task branch; where that changes the reviewed
-    code, have a fresh reviewer review the merge with `review-change`, with a dispatch that asks
+    Otherwise fetch, and where the log of the remote target branch holds a number that a new
+    decision of the task branch bears, renumber the task's decisions first, as "The renumbering of
+    the task's decisions" below gives (WAY-403). Then merge the remote target branch into the task
+    branch; where that changes the reviewed code, have a fresh reviewer review the merge, and the
+    renumbering commit with it, with `review-change`, with a dispatch that asks
     whether the two sides still hold together and names the foundation entries the merge brought in
     that bear on the parts the change touches (WAY-150), and have the agents that own the affected
     checks run them. Where step 10 had the gate run on your own system and the final tree differs
@@ -679,6 +682,44 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     directory of an earlier task that the script of step 4 kept. The
     final report names any write to the task's backlog entry.
     The request is the human's first decision point.
+
+## The renumbering of the task's decisions
+
+Read at every merge of the remote target branch into the task branch: step 12, and the two merges
+of `correction.md`. A decision of the task is new where the log of the task branch holds it and its
+log at the merge base does not. The task gives way to the target branch because a number of the
+target branch already stands in references the task cannot reach, while the task's own numbers stand
+only in its branch and its record (WAY-403).
+
+After a fetch, compare the numbers of the new decisions with the log of the remote target branch.
+Where none of them stands there, nothing is renumbered and the merge goes on. Where one does, the
+numbers of the target branch are not touched, and the task's decisions are renumbered before the
+merge:
+
+1. Give all the new decisions, in the order of their present numbers, the next free numbers after the
+   highest number the log of the target branch holds, whether as an entry or on its list of withdrawn
+   numbers. Write the map of old numbers to new ones before you change a file, and count, for each
+   old number, its references in the texts that step 2 rewrites, those that stay as they are left
+   out.
+2. Apply the map once to every file of the branch that refers to a renumbered decision and to the
+   original of the record in `.runs/task-cycles/<task-slug>/`: the spec, the plan, the handoffs, the
+   reports and `cycle.md` with its process remarks, as they stand before you enter this
+   reconciliation. Apply it in one pass, never decision by decision, since a new number can be the
+   old number of another decision, and match a whole number, so that `35` is not found in `355`.
+   Leave as they are the texts written after the pass, the human's remarks as the record holds them
+   word for word and the rows of an earlier reconciliation's conversion: such a row is true as it was
+   written, and a reader follows the rows one after the other.
+3. Count again, in the same texts, each new number: it stands as many times as the old number that
+   became it stood before the pass. An old number that is no new number stands there no more. A
+   search for an old number that is also a new one finds correct references, so it proves nothing.
+   Run `elements/common/foundation_check.py` as step 4.3 of `elements/common/way_of_working.md`
+   gives, in a product from the pinned `.the-way/`, and fix what it reports.
+4. Commit the pass alone, by path, with a message that names the old and the new numbers, and only
+   then merge. The commit lies in the range of the merge's review, and the dispatch names the map, so
+   that the reviewer compares the pass with it.
+5. In the record's *Events*, the row that records this reconciliation gives the map, each old number
+   and the new one it now bears; the rows of earlier reconciliations stay beside it. The record holds
+   no other note of it.
 
 ## The process remarks check
 
