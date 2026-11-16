@@ -5,7 +5,7 @@ gives it the lines of a record it read from git history; the lines are untrusted
 read in one pass, with no pattern that tries a line again (WAY-48).
 
 Q1, whether a contradiction with the settlements came out only after the code was written, is read
-from two marks and never from the words of the record (WAY-403, WAY-404):
+from two marks and never from the words of the record (WAY-404, WAY-405):
 
 - the item `Discarded attempt` reads `none`, or opens with `reason: ` and one of the markers
   `open design choice`, `reserved choice` and `size` in backticks; a cycle that discarded more than

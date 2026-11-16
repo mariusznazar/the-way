@@ -3727,7 +3727,7 @@ class ProcessVersions(AuditCountCase):
         return [row[3] for row in self.count_series(1)]
 
     def test_the_marker_of_a_discarded_attempt_gives_q1(self):
-        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
         # The form of `task-cycle/record_template.md`: the marker first, in backticks, then the time,
         # the report and the rest, which holds `none` in its other parts.
         rest = "; 10:32, report reports/x.md; foundation entries none; reset to abc1234"
@@ -3741,7 +3741,7 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["yes", "no", "no", "no", "yes", "no", "unknown", "yes"], answers)
 
     def test_the_four_denials_of_review_100_leave_q1_unknown(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # The texts are the four examples of remark 6 of the review of the foundation of 2026-11-14:
         # each names an open design choice in words and none carries the marker, so none is a yes.
         texts = ("open design choice not found", "an open design choice did not apply",
@@ -3760,14 +3760,14 @@ class ProcessVersions(AuditCountCase):
         self.assertIn("opens with no marker of its reason", pair[2])
 
     def test_a_marker_that_is_not_at_the_start_or_not_in_its_form_is_not_read(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         texts = ["10:32; reason: `open design choice`", "reason: open design choice",
                  "none — reason: `size`", "reason: `size`; reason: `open design choice`"]
         self.assertEqual(["unknown"] * 4, self.q1_of_each_version(texts))
 
     def test_a_second_reason_in_a_detail_or_at_the_margin_is_not_read_and_gives_the_first_one(self):
-        # decision: WAY-404 "Where the lines are entries at one indent alone and nothing stands beside the colon"
-        # decision: WAY-404 "The item reads down to the next line at the left margin"
+        # decision: WAY-405 "Where the lines are entries at one indent alone and nothing stands beside the colon"
+        # decision: WAY-405 "The item reads down to the next line at the left margin"
         # The shapes the rule names as not read: a marker in a deeper line of an entry, a second
         # attempt in other words than the marker among the details of the first, and a line at the
         # left margin. Each gives the answer of the first attempt, `size`, which is no contradiction.
@@ -3808,7 +3808,7 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["yes"], [self.count_series(1)[0][3]])
 
     def test_a_round_marked_as_a_contradiction_gives_yes_and_an_unmarked_round_unknown(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         # Four cycles, each in a version of its own; the item *Discarded attempt* reads `none`. The
         # entry of the fourth is the form from before the mark, the third one has a mark that is
         # none of the two: both give the one reason.
@@ -3826,7 +3826,7 @@ class ProcessVersions(AuditCountCase):
                          pair[2])
 
     def test_crafted_entries_of_review_rounds_break_no_cell_and_give_no_answer_they_do_not_state(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         # An entry that is in neither form, a path with a control character, a bar or a `..`, a mark
         # that runs on, and forty thousand entries give Q1 unknown, or the answer the entries
         # state (the mark that runs on is none); no text of an entry reaches a cell of the result, which names only fixed reasons.

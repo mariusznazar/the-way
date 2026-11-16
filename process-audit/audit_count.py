@@ -144,7 +144,7 @@ Per version of a series of the cost: the median cost at constant prices of its c
 cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
 Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from two marks of the cycle's record, never from the
-words of a reviewer's remarks or from the text of an item (WAY-403, WAY-404). It is yes where an
+words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where an
 entry of *Review rounds* opens with the path of its findings file and `, contradiction yes`, or the
 item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
 any of its entries does, where a cycle that discarded more than one attempt writes one entry for each

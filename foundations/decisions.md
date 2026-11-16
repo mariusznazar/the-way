@@ -7839,7 +7839,7 @@ The record's item *Review rounds* also takes an entry for a review that passed w
 of its own that opens with the word `review` and holds the result `PASS` and the path of the review's
 report in `reports/`, with no findings file. Such an entry is no fix round for the cost of a cycle
 and for its share, and the audit of the process reads it as a round with no contradiction with the
-settlements (WAY-403).
+settlements (WAY-404).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
@@ -8058,7 +8058,7 @@ more chances of a fast run and looks better, and one lucky run sets the result; 
 runs, as for the other measures — at today's spread the comparison says mostly how loaded the
 machine was.
 
-### WAY-403 — Who marks a contradiction with the settlements, and where does the audit of the process read it from?
+### WAY-404 — Who marks a contradiction with the settlements, and where does the audit of the process read it from?
 
 A reviewer of a code review marks each blocking finding as a contradiction with the settlements or
 as none, and the mark is the reviewer's own. A finding is a contradiction where it says that the
@@ -8066,7 +8066,7 @@ change does something against an entry of the foundation, one the change itself 
 against a settlement of the task document — an answer under its *Questions to settle*, a row of its
 *Settlements to record* or a decision of its *Decisions in play* — and a point of *To do* left undone
 is none. The cycle writes the mark into the entry of the round in the record's item *Review rounds*,
-and the audit of the process takes from that mark, with the marker of a discarded attempt (WAY-404),
+and the audit of the process takes from that mark, with the marker of a discarded attempt (WAY-405),
 and never from the text of a reviewer's remarks, whether a contradiction with the settlements came
 out only after the code was written.
 
@@ -8105,7 +8105,7 @@ of an unmet requirement counting, a point of *To do* left undone included — th
 the unfinished work of the executor, which no spec would have caught, and a yes would say nothing of
 the spec.
 
-### WAY-404 — How does the audit of the process read the reason of a discarded attempt?
+### WAY-405 — How does the audit of the process read the reason of a discarded attempt?
 
 The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
 `reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
@@ -8117,7 +8117,7 @@ that reads neither `none` nor a marker, written in any earlier form, gives the a
 the lines under the item are not entries at one indent alone — the first line an entry at that indent
 and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
 text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
-one marker and holds no second `reason: ` followed by a backtick (WAY-403); its later lines are
+one marker and holds no second `reason: ` followed by a backtick (WAY-404); its later lines are
 details of that attempt, read for such a second `reason: ` alone, whatever word stands after the
 backtick, so that a second attempt written in them with no backtick after the `reason: ` or with its
 reason in other words is not read. Where the lines are entries at one indent alone and nothing stands beside the colon, an
@@ -8128,7 +8128,7 @@ line written there, a continuation of an entry included, is no part of the item 
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
-- **Relations:** derives from WAY-135 · derives from WAY-403
+- **Relations:** derives from WAY-135 · derives from WAY-404
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
   the start of the item, or of each entry under it, and from nothing else: a text that names an open
   design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an

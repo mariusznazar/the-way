@@ -159,7 +159,7 @@ under its *Questions to settle*, a row of its *Settlements to record* or a decis
 blocking finding, a point of *To do* left undone among them, since an unmet requirement is no
 contradiction. The mark gives the finding no other grade and no other scope, and it is yours to
 judge, as the grade is. The cycle carries it to its record, from which the audit of the process
-reads whether a contradiction came out only after the code was written (WAY-403).
+reads whether a contradiction came out only after the code was written (WAY-404).
 
 ## 4. Report
 

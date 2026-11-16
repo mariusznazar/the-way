@@ -45,7 +45,7 @@ class DiscardedAttemptReason(unittest.TestCase):
     """The reason is the marker at the start of the item, and nothing the text says."""
 
     def test_the_marker_at_the_start_gives_the_answer_whatever_follows(self):
-        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
         # Worked from the answers of the task, row 3 of its *To do*: the marker `open design choice`
         # is a yes; `none` and the markers `reserved choice` and `size` leave no contradiction.
         for text, answer in (
@@ -58,7 +58,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertEqual((answer, None), q1(text))
 
     def test_the_four_denials_of_review_100_give_unknown(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # The texts are the four examples of remark 6 of the review of the foundation of 2026-11-14.
         for text in ("open design choice not found", "an open design choice did not apply",
                      "no sign whatsoever that this was an open design choice",
@@ -70,7 +70,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertIn(NO_MARKER, why)
 
     def test_a_text_without_the_marker_at_its_start_or_in_its_form_gives_unknown(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         for text in ("", "a time overrun", "10:32; reason: `open design choice`",
                      "reason: open design choice", "reason:`size`", "Reason: `size`",
                      "reason: `Size`", "reason: `size and open design choice`",
@@ -94,7 +94,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertNotIn(NO_MARKER, why)
 
     def test_one_entry_for_each_attempt_gives_yes_where_any_marker_is_an_open_design_choice(self):
-        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
         # A cycle that discarded an attempt for an open design choice and, after the spec, another
         # for size writes one entry for each, in either order; the entries carry the details.
         def read_entries(*texts):
@@ -111,7 +111,7 @@ class DiscardedAttemptReason(unittest.TestCase):
 
     def test_an_entry_without_a_marker_gives_unknown_unless_another_entry_is_an_open_design_choice(
             self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         def read_entries(*texts):
             body = "".join(f"{NL}  - {text}" for text in texts)
             return read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
@@ -128,7 +128,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                                                       "reason: `open design choice`"))
 
     def test_a_plain_first_attempt_under_an_empty_item_beside_an_entry_gives_unknown(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # The record a leader writes for two discards when it only adds an entry: the first attempt
         # as plain text on the line under the empty item, the second as an entry. It holds the marker
         # `open design choice` and two reasons; it must give neither no nor a reason of "no marker".
@@ -140,7 +140,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertNotIn(NO_MARKER, why)
 
     def test_one_attempt_on_the_line_under_the_item_with_its_details_as_a_list_is_read(self):
-        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
         # The form the earlier reading accepted: the text of one attempt, its details as a list.
         for marker, answer in (("open design choice", "yes"), ("size", "no"),
                                ("reserved choice", "no")):
@@ -151,7 +151,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertEqual((answer, None), read(record))
 
     def test_a_plain_line_beside_the_entries_gives_unknown_with_its_reason(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         beside = "a plain line"
         for body in (NL + "  - reason: `open design choice`" + NL + "  " + beside,
                      NL + "  - reason: `open design choice`" + NL + "  - reason: `size`" + NL
@@ -169,7 +169,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertEqual(("yes", None), read(record))
 
     def test_an_entry_first_under_the_item_and_deeper_than_the_next_one_is_not_dropped(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # As Markdown the entries of such a list are two entries of one list; the first holds the
         # marker `open design choice` and must not give no. The list is not read as a list of
         # entries at one indent, so the answer is unknown, with the reason that names the indent.
@@ -195,7 +195,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertEqual(("no", None), read(record))
 
     def test_a_hundred_thousand_entries_with_a_plain_line_beside_them_are_read_at_once(self):
-        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         body = "".join(NL + "  - reason: `size`; x" for _ in range(100_000)) + NL + "  a plain line"
         answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
         self.assertIsNone(answer)
@@ -216,7 +216,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertEqual(("no", None), read(fenced))
 
     def test_a_marker_in_a_deeper_line_of_an_entry_is_a_detail_and_is_not_read(self):
-        # decision: WAY-404 "Where the lines are entries at one indent alone and nothing stands beside the colon"
+        # decision: WAY-405 "Where the lines are entries at one indent alone and nothing stands beside the colon"
         # In a list of entries only the first line of an entry is read; the second marker of a detail
         # gives no unknown there, while the same text as the details of one attempt gives unknown.
         odc = "reason: `open design choice`"
@@ -233,7 +233,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertIn(SEVERAL_REASONS, why)
 
     def test_a_later_line_is_a_detail_unless_it_holds_a_second_reason_opening_in_backticks(self):
-        # decision: WAY-404 "Where the lines under the item are not entries at one indent alone"
+        # decision: WAY-405 "Where the lines under the item are not entries at one indent alone"
         # The record of a leader that adds a second attempt to a first one written as plain text
         # under the empty item, with the reason of the second in no marker: the line is a detail of
         # the first attempt, whose reason is the only one read, so the answer is the first one's.
@@ -272,7 +272,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertIn(NO_MARKER, why)
 
     def test_text_beside_the_colon_makes_the_whole_one_attempt_whatever_stands_under_it(self):
-        # decision: WAY-404 "Where the lines under the item are not entries at one indent alone"
+        # decision: WAY-405 "Where the lines under the item are not entries at one indent alone"
         # The item's text on its own line with entries under it is the text of one attempt, even
         # where the lines under it are entries at one indent alone: the entries are its details.
         details = NL + "  - report reports/x.md" + NL + "  - reset to abc1234"
@@ -295,7 +295,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertIn(NO_MARKER, why)
 
     def test_a_line_at_the_margin_ends_the_item_and_a_continuation_written_there_is_not_read(self):
-        # decision: WAY-404 "The item reads down to the next line at the left margin"
+        # decision: WAY-405 "The item reads down to the next line at the left margin"
         # A bare CR cuts a line as a newline does, so a second line of an entry written after one
         # reaches the margin too. The line is no part of the item and is not read.
         odc = "reason: `open design choice`"
@@ -345,7 +345,7 @@ class RoundEntries(unittest.TestCase):
     """The mark of an entry of *Review rounds*, in either of its two forms."""
 
     def test_an_entry_marked_yes_gives_yes_whatever_the_other_item_says(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         marked = findings("a", ", contradiction yes")
         self.assertEqual(("yes", None), q1("none", marked))
         self.assertEqual(("yes", None), q1("reason: `size`", marked))
@@ -353,7 +353,7 @@ class RoundEntries(unittest.TestCase):
         self.assertEqual(("yes", None), q1("none", findings("b") + marked))
 
     def test_every_entry_marked_no_and_a_review_that_passed_give_no(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         passed = "\n  - review `reports/review_return_step.md`, PASS: the return step, range a..b"
         for rounds in (findings("a", ", contradiction no"), passed,
                        findings("a", ", contradiction no") + passed,
@@ -362,7 +362,7 @@ class RoundEntries(unittest.TestCase):
                 self.assertEqual(("no", None), q1("none", rounds))
 
     def test_an_entry_without_its_mark_gives_unknown_with_the_one_reason(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         # The first is the form from before the mark, the others are marks of a form it is not.
         for rounds in (findings("a"), findings("a", ", contradiction maybe"),
                        findings("a", ", contradiction no longer applies"),
@@ -390,7 +390,7 @@ class RoundEntries(unittest.TestCase):
                 self.assertIn("names no findings file", why)
 
     def test_each_yes_stands_over_the_unknown_of_the_other_item_but_an_unread_item_gives_no_yes(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         # The two yes of the rule meet the unknown of an unmarked round, of an item in no form read
         # and of a missing item: the yes wins in every pairing, and without a yes the unknown stays.
         # A doubled item *Discarded attempt* is the one unknown that its own marker does not stand
@@ -446,7 +446,7 @@ class RoundEntries(unittest.TestCase):
                          q1("reason: `open design choice`", "\n  - the return step: fix"))
 
     def test_only_the_entries_at_the_first_indent_and_outside_a_fence_are_read(self):
-        # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
         # A line that quotes an entry deeper in the item, in a code fence or in another item is no
         # entry of the item.
         deeper = findings("a", ", contradiction no") + (

@@ -232,7 +232,7 @@ fix's range runs from the reviewed head, and the review of the fix also gets the
 entry of the round in the record's *Review rounds* says whether the round had a contradiction, as
 `task-cycle/record_template.md` gives it: `yes` where any blocking finding of the round, one the
 review of the fix found new included, carries the mark `Contradiction: yes`, `no` where none does
-(WAY-403). The message that dispatches or resumes the agent of a fix, and the
+(WAY-404). The message that dispatches or resumes the agent of a fix, and the
 one of the review of that fix, names the findings file by its path in `reports/`, as
 `reports/<file>.md`, besides the handoff that names it, and no other message does: the audit of
 the process ties a turn to its fix round by that path (WAY-337). No handoff tells an agent to run
@@ -382,7 +382,7 @@ changed, then discard the attempt, its foundation entries included, by resetting
 the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
 under *Discarded attempt* with the reason `open design choice`, as `task-cycle/record_template.md`
 gives it, an entry of its own where the cycle discarded an attempt before, that attempt rewritten as an
-entry too, as the template gives it (WAY-404), and continue at
+entry too, as the template gives it (WAY-405), and continue at
 step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
@@ -391,7 +391,7 @@ entries by resetting the branch to its base — to the commit that moved the pin
 it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
 (WAY-136). Record it under *Discarded attempt* with the reason `size`, as
 `task-cycle/record_template.md` gives it, an entry of its own where the cycle discarded an attempt
-before, that attempt rewritten as an entry too, as the template gives it (WAY-404).
+before, that attempt rewritten as an entry too, as the template gives it (WAY-405).
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
