@@ -6237,12 +6237,14 @@ decisions in their order onto the next free numbers after the highest number tha
 entry or as a withdrawn number, and never changes the number of a decision of the target branch. In
 that one pass it rewrites every reference to the renumbered decisions in the files of the branch and
 in the original of the cycle's record as the record stands before the reconciliation is entered in
-it; texts written afterwards and the human's remarks quoted word for word stay as they are. The rule
-holds for the reconciliation with the target branch before the request opens and for each merge of
-the target branch in a correction after review, on either route.
+it; texts written afterwards, the rows that give the conversion of an earlier reconciliation and the
+human's remarks quoted word for word stay as they are. The rule holds for the reconciliation with
+the target branch before the request opens and for each merge of the target branch in a correction
+after review, on either route.
 
 The conversion of the old numbers into the new ones stands in the row of the cycle record's events
-that records the reconciliation with the target branch, and in no other note of the record.
+that records the reconciliation with the target branch, and in no other note of the record; a
+reconciliation that renumbers again adds its own row beside the earlier ones.
 
 - **Scope:** decisions, task-cycle
 - **Based on:** none
@@ -6254,13 +6256,15 @@ that records the reconciliation with the target branch, and in no other note of 
     the record, the spec, the plan, the handoffs, the reports and the process remarks among them; a
     remark of the human quoted in the record keeps the number it was written with; the row of the
     reconciliation reads 500 → 502, 501 → 503 and 502 → 504; a correction after review that
-    meets decisions taken by another merged request renumbers the same way before its merge;
+    meets decisions taken by another merged request renumbers the same way before its merge, gives
+    a row of its own, 502 → 505, 503 → 506 and 504 → 507, and leaves the first row as it is;
   - violates: the task branch merges first and renumbers afterwards, or in the merge commit; the
     decisions of the target branch are renumbered; the numbers are replaced one decision at a time,
     so that 502 becomes 504 after 500 became 502; the log is renumbered and the record keeps the old
     numbers under a note of the conversion at its head; the human's quoted remark is rewritten; the
-    row of the reconciliation gives no conversion; a correction merges the target branch with no
-    renumbering where the numbers clash.
+    row of the reconciliation gives no conversion; the row of an earlier reconciliation is rewritten
+    with the map of a later one, so that it reads 500 → 505, 501 → 506 and 505 → 507; a correction
+    merges the target branch with no renumbering where the numbers clash.
 - **Origin:** none
 
 *Rationale:* a task's new decisions take the next free numbers of the log of the branch the task
@@ -6272,11 +6276,13 @@ branches and commits that the task cannot reach, while its own numbers stand onl
 and in its own record. The record is rewritten in the same pass because a reference names an entry
 the foundation holds by its number (WAY-02), and the request's description and the documents under
 its links must name the same entry by the same number, so that the human who reads them converts
-none by hand. The conversion stands once, in the row where the cycle already says that it
-reconciled, so that an old commit or an earlier remark of the human that carries an old number can
-still be read. The price: the reports of the agents then differ from what the agents wrote in their
-numbers, the rewrite of the record is checked by no reviewer of the merge since the record is no
-code, and a correction can renumber a second time when the request returns after another request
+none by hand. The conversion of a reconciliation stands once, in the row where the cycle already says
+that it reconciled, so that an old commit or an earlier remark of the human that carries an old
+number can still be read; a row of an earlier reconciliation stays as it was written, since it was
+true then, and the rows are read one after the other. The price: a reader of an old number follows
+two rows after a second renumbering; the reports of the agents differ from what the agents wrote in
+their numbers; the rewrite of the record is checked by no reviewer of the merge since the record is
+no code; and a correction can renumber a second time when the request returns after another request
 that adds decisions has merged.
 *Rejected:* renumbering the decisions of the target branch; a temporary marker in place of a number
 until the merge; the old numbers left in the cycle record, with a note of the conversion at the head

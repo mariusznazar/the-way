@@ -698,24 +698,28 @@ merge:
 
 1. Give all the new decisions, in the order of their present numbers, the next free numbers after the
    highest number the log of the target branch holds, whether as an entry or on its list of withdrawn
-   numbers. Write the map of old numbers to new ones before you change a file.
+   numbers. Write the map of old numbers to new ones before you change a file, and count, for each
+   old number, its references in the texts that step 2 rewrites, those that stay as they are left
+   out.
 2. Apply the map once to every file of the branch that refers to a renumbered decision and to the
    original of the record in `.runs/task-cycles/<task-slug>/`: the spec, the plan, the handoffs, the
    reports and `cycle.md` with its process remarks, as they stand before you enter this
    reconciliation. Apply it in one pass, never decision by decision, since a new number can be the
-   old number of another decision, and match a whole number, so that `WAY-35` is not found in
-   `WAY-355`. Leave as they are the texts written after the pass, and the human's remarks as the
-   record holds them word for word. A row of an earlier reconciliation's conversion is rewritten with
-   the rest, so that it reads from the numbers the decisions first bore to the present ones.
-3. Search the files of the branch and the original of the record for each old number: it stands
-   nowhere but in what stays as it is. Run `elements/common/foundation_check.py` as step 4.3 of
-   `elements/common/way_of_working.md` gives, in a product from the pinned `.the-way/`, and fix what
-   it reports.
+   old number of another decision, and match a whole number, so that `35` is not found in `355`.
+   Leave as they are the texts written after the pass, the human's remarks as the record holds them
+   word for word and the rows of an earlier reconciliation's conversion: such a row is true as it was
+   written, and a reader follows the rows one after the other.
+3. Count again, in the same texts, each new number: it stands as many times as the old number that
+   became it stood before the pass. An old number that is no new number stands there no more. A
+   search for an old number that is also a new one finds correct references, so it proves nothing.
+   Run `elements/common/foundation_check.py` as step 4.3 of `elements/common/way_of_working.md`
+   gives, in a product from the pinned `.the-way/`, and fix what it reports.
 4. Commit the pass alone, by path, with a message that names the old and the new numbers, and only
    then merge. The commit lies in the range of the merge's review, and the dispatch names the map, so
    that the reviewer compares the pass with it.
 5. In the record's *Events*, the row that records this reconciliation gives the map, each old number
-   and the new one it now bears. The record holds no other note of it.
+   and the new one it now bears; the rows of earlier reconciliations stay beside it. The record holds
+   no other note of it.
 
 ## The process remarks check
 
