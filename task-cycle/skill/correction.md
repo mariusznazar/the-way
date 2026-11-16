@@ -44,7 +44,10 @@ Keep the recorded route for the affected work: dispatch the
 correction with `make-change` (`task-cycle/change/SKILL.md`), resuming the author where possible, and have it reviewed with
 `review-change`, the remarks in place of a findings file; the review ends as "The end of a code
 review" gives. A new open design choice, a reserved choice or an oversized attempt follows the
-recovery "Design and execution choice" gives, with its reset base recorded. Repeat only what the
+recovery "Design and execution choice" gives, with its reset base recorded and its reason written
+under *Discarded attempt* as `task-cycle/record_template.md` gives it, an entry beside the earlier
+ones where the cycle already discarded an attempt, the earlier attempt rewritten as an entry too, as the
+template gives it (WAY-405). Repeat only what the
 remarks touch — the return step included — run the gate on the corrected tree on your own system
 as step 10 gives its local run, where CI does not run on the request and so is not its final gate,
 and repeat the record's pair of commits from step 12, preparing the copy before it as `implement-task`

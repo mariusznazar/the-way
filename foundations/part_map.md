@@ -132,6 +132,7 @@ what only work on the audit needs stays out of what every agent of the cycle rea
 - **Files:** process-audit/**
 - **Depends on:** task-cycle · project-level · gate
 - **Trust boundary:** process-audit/audit_count.py
+  process-audit/record_items.py
 
 ## gate
 

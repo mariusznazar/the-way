@@ -409,6 +409,33 @@ class ProcessPin(AuditCountCase):
         self.assertEqual("unknown", pin)
         self.assertIn("no line `Process pin`", unknown[0][3])
 
+    def test_a_record_that_lacks_every_line_and_item_the_count_reads_is_of_an_earlier_form(self):
+        # decision: WAY-344 "Where the command that counts the audit reads a cycle's record that lacks"
+        # The record of a product with none of its items and no pin, and the record of a cycle of the
+        # way itself with neither the pin nor the target line: no `Error:` line, exit code 0 (asserted
+        # below), and for each line or item a reason that names it.
+        product = self.repository("product")
+        product.cycle("a-task", {"cycle.md": record(pin_line="", remarks="")})
+        way = self.repository("the-way")
+        bare = record(pin_line="", remarks="")
+        target = f"- Target branch and base: `main`, `{BASE}`" + chr(10)
+        self.assertIn(target, bare)
+        way.cycle("own-task", {"cycle.md": bare.replace(target, "")})
+        self.write_locations(self.places(**{"product": product, "the-way": way}))
+        done = self.run_count()
+        self.assertEqual(0, done.returncode, done.stderr)
+        self.assertNotIn(b"Error:", done.stderr)
+        reasons = {(row[0], row[2]) for row in self.pair_rows()}
+        for field, words in (
+                ("Process pin", "the record holds no line `Process pin`"),
+                ("Process pin", "the line `Target branch and base` is missing"),
+                ("Remarks", "the record holds no item `Process remarks on the-way`"),
+                ("Discarded attempt", "the record holds no item `Discarded attempt`"),
+                ("Plan", "the record holds no item `Plan`"),
+                ("Slices returned too large", "the record holds no item `Slices returned too large`")):
+            with self.subTest(field + ": " + words):
+                self.assertTrue(any(f == field and words in why for f, why in reasons), reasons)
+
     def test_an_earlier_record_joining_the_pin_with_its_base_gives_the_commit(self):
         pin, _ = self.pin_of("- Process pin and target base: `main` at `1234567`")
         self.assertEqual("1234567", pin)
@@ -1180,6 +1207,32 @@ class Cost(AuditCountCase):
         row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
         self.assertEqual(["unknown", "unknown"], row[4:6])
         self.assertTrue(any("names no findings file" in reason for reason in why), why)
+
+    def test_a_review_that_passed_with_no_fix_is_no_fix_round_and_a_mark_changes_no_share(self):
+        # decision: WAY-337 "The record's item *Review rounds* also takes an entry for a review"
+        # The same stages as the first test of the share: one round, 3250 of 11250, 28.9 %. The
+        # entries of reviews that passed add no round and no turn, and the mark of the round's
+        # entry is no part of the findings file's path.
+        passed = ("  - review `reports/review_return_step.md`, PASS: the return step\n"
+                  "  - review `reports/review_fix.md`, PASS: the fix\n")
+        marked = ONE_ROUND.replace(f"`{WHOLE}`:", f"`{WHOLE}`, contradiction yes:")
+        for label, rounds in (("reviews after the round", ONE_ROUND + passed),
+                              ("reviews before it", "- Review rounds:\n" + passed
+                               + ONE_ROUND.split("\n", 1)[1]),
+                              ("a mark on the round", marked)):
+            with self.subTest(label):
+                row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
+                self.assertEqual(["0.011250", "1", "28.9%"], row[3:6])
+                self.assertEqual([], why)
+
+    def test_reviews_that_passed_alone_say_the_cycle_had_no_fix_round(self):
+        # decision: WAY-337 "The record's item *Review rounds* also takes an entry for a review"
+        stages = one_fix_round(fix_files="reports/author_handoff.md",
+                               review_files="reports/review_handoff.md")
+        rounds = "- Review rounds:\n  - review `reports/review_whole.md`, PASS: the whole change\n"
+        row, why = self.share_of(stages, fix_record(rounds=rounds))
+        self.assertEqual(["0.011250", "0", "0.0%"], row[3:6])
+        self.assertEqual([], why)
 
     def test_review_rounds_that_contradict_themselves_leave_the_share_unknown(self):
         cases = {
@@ -3215,7 +3268,8 @@ class Run(AuditCountCase):
         # and a history that holds one cycle, so that the cycles it counts say whose history it read.
         checkout = self.repository("checkout")
         files = {}
-        for name in ("process-audit/audit_count.py", "process-audit/stage_pricing.py",
+        for name in ("process-audit/audit_count.py", "process-audit/record_items.py",
+                     "process-audit/stage_pricing.py",
                      "process-audit/price_list.md", "task-cycle/remarks_check.py"):
             files[name] = (HERE.parent / name).read_bytes()
             (checkout.root / name).parent.mkdir(parents=True, exist_ok=True)
@@ -3225,6 +3279,9 @@ class Run(AuditCountCase):
         done = self.run_count_of_the_copy("--repository", "the-way")
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertEqual([["the-way", "1", "yes"]], self.rows("Repositories"))
+
+
+NL = chr(10)
 
 
 def process_record(pin, discarded="none", plan="none on the one-author route", too_large="none",
@@ -3597,7 +3654,7 @@ class ProcessVersions(AuditCountCase):
         listed = "\n  - slice 2\n  - slice 4\n  - slice 7\n  - slice 8"
         self.add_cycles(product, [
             ("reading-a", process_record(
-                v1, discarded="open design choice at start: the spec left the field open",
+                v1, discarded="reason: `open design choice`; the spec left the field open",
                 plan="11 slices and 12 foundation entries", too_large=listed), 1_000_000),
             ("reading-b", process_record(v1, plan="3 slices", too_large="\n  - slice 1"), 1_000_000),
             ("reading-c", process_record(v1, plan="5 slices", extra="- Plan: 6 slices\n"), 1_000_000),
@@ -3645,68 +3702,93 @@ class ProcessVersions(AuditCountCase):
                           "`slices`"],
                          [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"])
 
-    def test_a_discarded_attempt_that_denies_a_design_choice_is_not_read_as_one(self):
+    def versions(self, way, count):
+        """`count` versions of the-way dated one day apart, the first of them FIRST: each commit
+        holds the base files, so they all stand in one series of the count of remarks."""
+        versions = []
+        for number in range(count):
+            versions.append(self.version_at(way, self.FIRST + number * 86_400,
+                                            parent=versions[-1] if versions else None))
+        return versions
+
+    def q1_of_each_version(self, texts, rounds="none"):
+        """Q1 of the series of the count of remarks, version by version, where the cycle of each
+        version has the text `texts[n]` as its item *Discarded attempt* and `rounds` as its item
+        *Review rounds*; `rounds` may be a list of one text for each version."""
+        way = self.the_way()
+        versions = self.versions(way, len(texts))
+        product = self.repository()
+        self.add_cycles(product, [
+            (f"cycle-{number}", process_record(
+                version, discarded=texts[number],
+                rounds=rounds[number] if isinstance(rounds, list) else rounds), 1_000)
+            for number, version in enumerate(versions)])
+        self.run_versions(way, product)
+        return [row[3] for row in self.count_series(1)]
+
+    def test_the_marker_of_a_discarded_attempt_gives_q1(self):
+        # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
+        # The form of `task-cycle/record_template.md`: the marker first, in backticks, then the time,
+        # the report and the rest, which holds `none` in its other parts.
+        rest = "; 10:32, report reports/x.md; foundation entries none; reset to abc1234"
+        answers = self.q1_of_each_version([
+            "reason: `open design choice`" + rest, "reason: `reserved choice`" + rest,
+            "reason: `size`" + rest, "none",
+            NL + "  - reason: `open design choice`" + rest + NL + "  - reason: `size`; 14:05",
+            NL + "  - reason: `size`; 14:05" + NL + "  - reason: `reserved choice`" + rest,
+            NL + "  reason: `open design choice`" + rest + NL + "  - reason: `size`; 14:05",
+            NL + "  reason: `open design choice`" + rest + NL + "  - report reports/x.md"])
+        self.assertEqual(["yes", "no", "no", "no", "yes", "no", "unknown", "yes"], answers)
+
+    def test_the_four_denials_of_review_100_leave_q1_unknown(self):
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
+        # The texts are the four examples of remark 6 of the review of the foundation of 2026-11-14:
+        # each names an open design choice in words and none carries the marker, so none is a yes.
+        texts = ("open design choice not found", "an open design choice did not apply",
+                 "no sign whatsoever that this was an open design choice",
+                 "No attempt was discarded for a reserved choice, an oversized change or an open "
+                 "design choice")
         way = self.the_way()
         v1 = self.version_at(way, self.FIRST)
         product = self.repository()
-        self.add_cycles(product, [
-            ("denies", process_record(v1, discarded="a time overrun; no open design choice"),
-             1_000_000)])
+        self.add_cycles(product, [(f"denial-{number}", process_record(v1, discarded=text), 1_000)
+                                  for number, text in enumerate(texts)])
         self.run_versions(way, product)
         self.assertEqual("unknown", self.count_series(1)[0][3])
+        [pair] = [row for row in self.pair_rows() if row[0] == "Discarded attempt"]
+        self.assertEqual("4", pair[1])
+        self.assertIn("opens with no marker of its reason", pair[2])
 
-    def test_the_templates_own_form_of_a_discarded_open_design_choice_reads_yes(self):
-        # The form `task-cycle/record_template.md` gives holds `none` and `report` in its other parts
-        # (`foundation entries none`); only the words just before the phrase can deny it.
-        way = self.the_way()
-        v1 = self.version_at(way, self.FIRST)
-        product = self.repository()
-        self.add_cycles(product, [
-            ("template", process_record(
-                v1, discarded="10:32, open design choice found in the auth flow; report "
-                              "reports/x.md; foundation entries none; reset to abc1234; next "
-                              "route: spec"), 1_000_000)])
-        self.run_versions(way, product)
-        self.assertEqual("yes", self.count_series(1)[0][3])
-        self.assertEqual([], [row for row in self.rows("Unknown values")
-                              if row[2] == "Discarded attempt"])
+    def test_a_marker_that_is_not_at_the_start_or_not_in_its_form_is_not_read(self):
+        # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
+        texts = ["10:32; reason: `open design choice`", "reason: open design choice",
+                 "none — reason: `size`", "reason: `size`; reason: `open design choice`"]
+        self.assertEqual(["unknown"] * 4, self.q1_of_each_version(texts))
 
-    def test_a_denial_stands_only_where_it_comes_just_before_the_phrase(self):
-        sys.path.insert(0, str(HERE))
-        import audit_count
-        remarks_check = audit_count.remarks_check
+    def test_a_second_reason_in_a_detail_or_at_the_margin_is_not_read_and_gives_the_first_one(self):
+        # decision: WAY-405 "Where the lines are entries at one indent alone and nothing stands beside the colon"
+        # decision: WAY-405 "The item reads down to the next line at the left margin"
+        # The shapes the rule names as not read: a marker in a deeper line of an entry, a second
+        # attempt in other words than the marker among the details of the first, and a line at the
+        # left margin. Each gives the answer of the first attempt, `size`, which is no contradiction.
+        odc = "reason: `open design choice`"
+        texts = [NL + "  - reason: `size`; 14:05" + NL + "    " + odc,
+                 NL + "  reason: `size`; 10:32" + NL + "  - reason: open design choice",
+                 " reason: `size`; 10:32" + NL + "  - report reports/x.md",
+                 NL + "  - reason: `size`; 14:05" + NL + odc]
+        self.assertEqual(["no"] * 4, self.q1_of_each_version(texts))
 
-        def read(discarded: str) -> str | None:
-            lines = remarks_check.split_lines(f"- Discarded attempt: {discarded}\n")
-            return audit_count.read_contradiction(lines, remarks_check.fenced_flags(lines))[0]
-
-        for text, answer in (
-                ("10:32, open design choice found in the auth flow; foundation entries none", "yes"),
-                ("a time overrun; open design choice at the start; no code was kept", "yes"),
-                ("not found, open design choice at the start", "yes"),
-                ("a time overrun; no open design choice", None),
-                ("it was not an open design choice", None),
-                ("discarded without an open design choice", None),
-                ("found no evidence of an open design choice", None),
-                ("NO OPEN DESIGN CHOICE", None),
-                ("never an open design choice", None),
-                ("neither a size problem nor an open design choice", None),
-                ("it wasn't an open design choice", None),
-                ("open design choice at the start; later no open design choice", None),
-                ("a time overrun", None)):
-            with self.subTest(text):
-                self.assertEqual(answer, read(text))
-
-    def test_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
+    def test_the_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
         sys.path.insert(0, str(HERE))
         import audit_count
         remarks_check = audit_count.remarks_check
         crafted = (
-            ("very long", "open design choice " * 20_000),
-            ("very long before", "no " * 200_000 + "open design choice"),
-            ("long without clause marks", "x" * 500_000 + " open design choice"),
-            ("control characters", "\x1b[2J open design choice \x00\x07 | no | open design choice"),
-            ("a bar", "a | b open design choice | c"))
+            ("very long", "reason: `open design choice` " + "x " * 100_000),
+            ("very long before", "no " * 200_000 + "reason: `open design choice`"),
+            ("long without clause marks", "x" * 500_000 + " reason: `open design choice`"),
+            ("control characters", "\x1b[2J reason: `open design choice` \x00\x07 | no | x"),
+            ("many markers", "reason: `size` " * 50_000),
+            ("a bar", "reason: `open design choice` a | b | c"))
         for label, text in crafted:
             with self.subTest(label):
                 lines = remarks_check.split_lines(f"- Discarded attempt: {text}\n")
@@ -3725,29 +3807,60 @@ class ProcessVersions(AuditCountCase):
                               if not char.isprintable() and char != "\n"])
         self.assertEqual(["yes"], [self.count_series(1)[0][3]])
 
-    def test_a_discarded_attempt_opening_with_none_is_not_read_as_a_design_choice(self):
-        # `none` with more words names the phrase, but it says nothing was discarded: unknown.
-        way = self.the_way()
-        v1 = self.version_at(way, self.FIRST)
-        product = self.repository()
-        self.add_cycles(product, [
-            ("opens", process_record(v1, discarded="none — no open design choice was discarded"),
-             1_000_000)])
-        self.run_versions(way, product)
-        self.assertEqual("unknown", self.count_series(1)[0][3])
-        self.assertIn("opens with none",
-                      self.reasons_of(self.rows("Unknown values"), "Discarded attempt"))
+    def test_a_round_marked_as_a_contradiction_gives_yes_and_an_unmarked_round_unknown(self):
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
+        # Four cycles, each in a version of its own; the item *Discarded attempt* reads `none`. The
+        # entry of the fourth is the form from before the mark, the third one has a mark that is
+        # none of the two: both give the one reason.
+        marked = "\n  - findings `reports/a_findings.md`, contradiction {}: the whole change"
+        rounds = [marked.format("yes"),
+                  marked.format("no") + "\n  - review `reports/r.md`, PASS: the return step",
+                  marked.format("maybe"),
+                  "\n  - findings `reports/a_findings.md`: the whole change, range a1b2c3d..e4f5a6b"]
+        self.assertEqual(["yes", "no", "unknown", "unknown"],
+                         self.q1_of_each_version(["none"] * 4, rounds))
+        [pair] = [row for row in self.pair_rows()
+                  if row[0] == "Discarded attempt"]
+        self.assertEqual("2", pair[1])
+        self.assertEqual("the entry of a round does not say whether there was a contradiction",
+                         pair[2])
 
-    def test_a_review_round_with_discarded_none_leaves_the_question_unknown(self):
-        # The findings of a round are not in the record, so `none` discarded is not `no`.
+    def test_crafted_entries_of_review_rounds_break_no_cell_and_give_no_answer_they_do_not_state(self):
+        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
+        # An entry that is in neither form, a path with a control character, a bar or a `..`, a mark
+        # that runs on, and forty thousand entries give Q1 unknown, or the answer the entries
+        # state (the mark that runs on is none); no text of an entry reaches a cell of the result, which names only fixed reasons.
+        many = "".join(f"\n  - findings `reports/f{number}.md`, contradiction no: x"
+                       for number in range(40_000))
+        rounds = ["\n  - findings `reports/a\x1b[2J.md`, contradiction yes: x",
+                  "\n  - findings `reports/a|b.md`, contradiction yes: x",
+                  "\n  - review `reports/../a.md`, PASS: x",
+                  "\n  - findings `reports/a.md`, contradiction yes | no: x" + "x" * 300_000,
+                  many]
+        answers = self.q1_of_each_version(["none"] * len(rounds), rounds)
+        self.assertEqual(["unknown", "unknown", "unknown", "unknown", "no"], answers)
+        self.assertEqual([], [char for char in self.latest()
+                              if not char.isprintable() and char != "\n"])
+
+    def test_a_record_without_the_item_discarded_attempt_or_review_rounds_gives_q1_unknown(self):
+        # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+        # A record of an earlier form lacks the items, as the records the count reads from history
+        # do: Q1 is unknown, the reason names the item, and the exit code stays 0 (run_versions
+        # asserts it), as for the other items of the record.
         way = self.the_way()
         v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1)
         product = self.repository()
-        self.add_cycles(product, [
-            ("rounds", process_record(v1, rounds="\n  - findings `reports/x_findings.md`: one"),
-             1_000_000)])
+        no_discarded = process_record(v1).replace("- Discarded attempt: none\n", "")
+        no_rounds = process_record(v2).replace("- Review rounds: none\n", "")
+        self.add_cycles(product, [("no-discarded", no_discarded, 1_000),
+                                  ("no-rounds", no_rounds, 1_000)])
         self.run_versions(way, product)
-        self.assertEqual("unknown", self.count_series(1)[0][3])
+        self.assertEqual(["unknown", "unknown"], [row[3] for row in self.count_series(1)])
+        reasons = {row[2] for row in self.pair_rows() if row[0] == "Discarded attempt"}
+        self.assertEqual({"the record holds no item `Discarded attempt`",
+                          "the item `Review rounds` does not give its entries, so whether a review "
+                          "round found a contradiction is not known"}, reasons)
 
     def test_a_third_is_not_above_a_third(self):
         # One slice too large of three planned is exactly a third, which is not above it: no.
