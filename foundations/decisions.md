@@ -4071,11 +4071,14 @@ critique as claims — with no source, every one would be struck; the risks in *
 facts with sources, and a risk read there passes for one; an entry of its own for each risk —
 assumptions as a kind of entry escape checking (WAY-04); tests on choices decisions of the
 foundation hold — they reopen what was settled; a risk taken recorded as a known limitation in a
-document of the product's infrastructure — left out of what the step takes from the lesson; the
-comparison of three alternatives in a table, which the lesson adds beside the three tests — left
-out of what the step takes from the lesson; the change of roles, in which a model weighs the choice
-as each of several people who will live with it, which the lesson adds beside the three tests — left
-out of what the step takes from the lesson.
+document of the product's infrastructure, left out of what the step takes from the lesson — such a
+document answers no question, and the decision of the choice carries it and its reasons; the
+comparison of three alternatives in a table, which the lesson adds beside the three tests, left out
+of what the step takes from the lesson — the step already compares the options of each choice, and
+its decision keeps those not chosen in *Rejected*; the change of roles, in which a model weighs the
+choice as each of several people who will live with it, which the lesson adds beside the three
+tests, left out of what the step takes from the lesson — no decision of the-way has several roles on
+its other side.
 
 ### WAY-267 — How does the step that settles technology run outside a project definition?
 
@@ -4209,9 +4212,11 @@ tools of the skills of guidelines sent to the step as well — one way for every
 skills and the decisions on their routes
 would have to change, and a task choosing several tools at once takes a longer way, with no recorded
 case of the present route failing; a search engine built for agents, which the lesson reaches
-through a tool server, as the way to the source — left out of what the rule takes from the lesson;
-the current documentation of a library put into the agent's context before the plan, as the lesson
-does with a tool for it — left out of what the rule takes from the lesson.
+through a tool server, as the way to the source, left out of what the rule takes from the lesson —
+it is a choice of a provider of search, not a step of the process; the current documentation of a
+library put into the agent's context before the plan, as the lesson does with a tool for it, left
+out of what the rule takes from the lesson — an agent fetches the documentation when it needs it,
+rather than all of it ahead.
 
 ### WAY-269 — How does a task leave a cycle that met a reserved choice, and how does it come back?
 
@@ -4359,9 +4364,11 @@ each change; the logs and the failure choice added to the step at a task that ch
 run — the question comes in the step with no extra stop, but WAY-267 gains an exception, rules are
 needed on an agent opening a decision and on waiting for the place to run, and a product still
 needs the human's note; a tool that collects failures set up ahead of the choice, as the lesson sets
-one up through its own path of a change — left out of what the step takes from the lesson; an agent
-reaching the failures through the tool's server instead of being given them — left out of what the
-step takes from the lesson.
+one up through its own path of a change, left out of what the step takes from the lesson — the step
+chooses the tool, with a deliberate absence among its options; an agent reaching the failures
+through the tool's server instead of being given them, left out of what the step takes from the
+lesson — how an agent reads the record of the running product is a matter the step already settles
+(WAY-121).
 
 ## The running product
 
@@ -4840,16 +4847,19 @@ definition through its gate (WAY-118); a stage of the project opened and closed 
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it; the columns named in this
-decision — each change of a column would take a change of the decision; the milestones, the
-estimates and the interview on the order of work of the practice of a roadmap of vertical slices —
-left out of what the step takes from it; the practice's scored check that the product's documents
-are ready before the breakdown — left out of what the step takes from it; the practice's stock of
-the code already in place, taken layer by layer by agents working side by side — left out of what
-the step takes from it; the practice's fields of each item from which its acceptance criteria are
-drawn, among them a sentence of why it stands where it does in the order — left out of what the step
-takes from it; the practice's list of parked items — left out of what the step takes from it; the
-practice's state of an item blocked by an unknown the human has to resolve — left out of what the
-step takes from it.
+decision — each change of a column would take a change of the decision; the milestones and the
+interview on the order of work of the practice of a roadmap of vertical slices — left out of what
+the step takes from it; the practice's scored check that the product's documents are ready before
+the breakdown, left out of what the step takes from it — the definition passes its stricter
+readiness gate before the breakdown (WAY-118); the practice's stock of the code already in place,
+taken layer by layer by agents working side by side — left out of what the step takes from it; the
+practice's fields of each item from which its acceptance criteria are drawn, among them a sentence
+of why it stands where it does in the order, left out of what the step takes from it — the
+refinement of each task writes its acceptance criteria from its own analysis, and the order stands
+in the dependencies; the practice's list of parked items, left out of what the step takes from it —
+it copies what the definition puts out of scope; the practice's state of an item blocked by an
+unknown the human has to resolve, left out of what the step takes from it — the plan has a state of
+waiting for the human and places each open question where it is resolved.
 
 ### WAY-143 — What does a task of a project plan end with?
 
@@ -4881,8 +4891,8 @@ nobody checks until it is needed, and is often built for a need that changes. Th
 the practice of vertical slices the cut by what can be checked in the running product, and from its
 enabling work the rule that such work names what it opens the way for. The practice is that of the
 skill of a roadmap of lesson m2l1 of the 10xDevs course (WAY-142), whose preparatory work, named
-foundations, stands only with the slice it unlocks; the lessons of the course are not open to a
-reader of this repository.
+foundations, stands only with what it unlocks — a slice, a blocking unknown it reduces or a way of
+verifying it enables; the lessons of the course are not open to a reader of this repository.
 *Rejected:* tasks cut by layers of the product — nothing can be checked until the last layer lands;
 preparatory work no task depends on — it grows into a layer of its own; a field of the preparatory
 task naming the task it opens the way for, as the practice's field of what a foundation unlocks —
