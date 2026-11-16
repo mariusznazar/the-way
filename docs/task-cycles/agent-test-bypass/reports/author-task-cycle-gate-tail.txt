@@ -1,6 +1,0 @@
-skipped: test_gate_times.PassThroughTest.test_a_command_killed_by_a_signal_gives_128_plus_the_signal_number: Windows gives a killed process no signal number
-----------------------------------------------------------------------
-Ran 534 tests in 79.138s
-
-OK (skipped=2)
-exit 0
