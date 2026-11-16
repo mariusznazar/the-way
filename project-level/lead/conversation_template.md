@@ -144,7 +144,8 @@ project orchestrator then changes only its `Status:` line to `ready for cycle`, 
 State/Document cells, moves the task's line in the backlog to ready and logs acceptance; it changes
 no task body. A requested correction returns
 to a fresh refiner and a changed document needs renewed complete-document acceptance. No task
-becomes ready while a definition gate is open or a required refinement check remains unmet.
+becomes ready while the readiness approval of a definition is open or a required refinement check
+remains unmet.
 
 Before removing this exact file, verify that all resolved answers and original sources, the ways
 the human did not choose, accepted candidate meanings and necessary task information live in the

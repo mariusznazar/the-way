@@ -4,10 +4,10 @@ whole plan passes.
 Run from the root of the-way:
     python -B gate/run_tests.py project-level
 
-Inputs are written out: a small definition approved at its readiness gate and a whole plan of it.
+Inputs are written out: a small definition approved at its readiness approval and a whole plan of it.
 The expected fingerprint is computed in this file apart from the code under test, by the definition
 of WAY-02 as `definition_template.md` applies it: SHA-256 of the UTF-8 text of the definition from
-the `## Goal` line up to the `## Gate record` line, that line left out, after every run of spaces
+the `## Goal` line up to the `## Approval record` line, that line left out, after every run of spaces
 and line breaks becomes one space and both ends are trimmed, its first eight hexadecimal characters.
 """
 
@@ -120,15 +120,15 @@ def definition_bodies(bodies=None):
 
 def fingerprint_of(bodies=None):
     """The fingerprint of the definition with these bodies: of its text from `## Goal` up to the
-    `## Gate record` line, which `definition` below joins to that text by a blank line."""
+    `## Approval record` line, which `definition` below joins to that text by a blank line."""
     return wording_fingerprint(body_text(definition_bodies(bodies), DEFINITION_SECTIONS))
 
 
-def definition(bodies=None, gate_fingerprint=None, status="Status: approved 2026-10-03"):
+def definition(bodies=None, approval_fingerprint=None, status="Status: approved 2026-10-03"):
     content = body_text(definition_bodies(bodies), DEFINITION_SECTIONS)
-    gate = ("- Approved by: Mariusz, 2026-10-03\n"
-            "- Definition fingerprint: %s" % (gate_fingerprint or wording_fingerprint(content)))
-    return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Gate record\n\n%s\n" % (status, content, gate)
+    approval = ("- Approved by: Mariusz, 2026-10-03\n"
+                "- Definition fingerprint: %s" % (approval_fingerprint or wording_fingerprint(content)))
+    return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Approval record\n\n%s\n" % (status, content, approval)
 
 
 DEFINITION = definition()
@@ -262,7 +262,7 @@ class Header(unittest.TestCase):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
 
-    def test_a_gate_record_without_its_fingerprint_line_is_reported(self):
+    def test_an_approval_record_without_its_fingerprint_line_is_reported(self):
         # invariant: project-plan-form
         line = "\n- Definition fingerprint: %s" % FINGERPRINT
         self.assertIn(line, DEFINITION)
@@ -331,21 +331,21 @@ class Header(unittest.TestCase):
         # invariant: project-plan-form
         self.assertEqual(set(conditions(PLAN, None)), {"form"})
 
-    def test_a_fingerprint_matching_the_gate_record_but_not_the_changed_definition_is_reported(self):
+    def test_a_fingerprint_matching_the_approval_record_but_not_the_changed_definition_is_reported(self):
         # invariant: project-plan-form
-        changed_after_gate = DEFINITION.replace("- edytor map", "- edytor map\n- tryb wieloosobowy")
-        self.assertNotEqual(changed_after_gate, DEFINITION)
-        self.assertIn("- Definition fingerprint: %s" % FINGERPRINT, changed_after_gate)
-        self.assertIn("form", conditions(PLAN, changed_after_gate))
+        changed_after_approval = DEFINITION.replace("- edytor map", "- edytor map\n- tryb wieloosobowy")
+        self.assertNotEqual(changed_after_approval, DEFINITION)
+        self.assertIn("- Definition fingerprint: %s" % FINGERPRINT, changed_after_approval)
+        self.assertIn("form", conditions(PLAN, changed_after_approval))
 
-    def test_a_fingerprint_other_than_the_one_the_gate_record_and_the_text_hold_is_reported(self):
+    def test_a_fingerprint_other_than_the_one_the_approval_record_and_the_text_hold_is_reported(self):
         # invariant: project-plan-form
         self.assertIn("form", conditions(plan(fingerprint=OTHER_FINGERPRINT)))
 
-    def test_a_fingerprint_matching_the_text_but_not_the_gate_record_is_reported(self):
+    def test_a_fingerprint_matching_the_text_but_not_the_approval_record_is_reported(self):
         # invariant: project-plan-form
-        stale_gate = definition(gate_fingerprint=OTHER_FINGERPRINT)
-        self.assertIn("form", conditions(PLAN, stale_gate))
+        stale_approval = definition(approval_fingerprint=OTHER_FINGERPRINT)
+        self.assertIn("form", conditions(PLAN, stale_approval))
 
     def test_a_change_of_spaces_in_the_definition_keeps_the_fingerprint(self):
         respaced = DEFINITION.replace("Gra istnieje tylko jako koncepcja;",

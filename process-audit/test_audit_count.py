@@ -821,7 +821,7 @@ class Locations(AuditCountCase):
         self.write_locations("{\"the-way\": {\"x\": " + "1" * 5000 + "}}")
         self.assert_refused(self.run_count(), "is not JSON")
 
-    def test_a_missing_key_or_entry(self):
+    def test_a_missing_key(self):
         product = self.product()
         self.write_locations({"product": {"repository": str(product.root)}})
         self.assert_refused(self.run_count(), "no key `the-way`")
@@ -829,7 +829,7 @@ class Locations(AuditCountCase):
             data = self.places(product=product)
             del data["the-way"][entry]
             self.write_locations(data)
-            self.assert_refused(self.run_count(), f"no entry `{entry}` under `the-way`")
+            self.assert_refused(self.run_count(), f"no key `{entry}` under `the-way`")
 
     def test_a_path_that_does_not_exist(self):
         product = self.product()
@@ -843,7 +843,7 @@ class Locations(AuditCountCase):
         self.write_locations(data)
         self.assert_refused(self.run_count(), "`repository` under `product`")
 
-    def test_an_entry_of_a_wrong_type(self):
+    def test_a_key_holding_a_value_of_a_wrong_type(self):
         product = self.product()
         data = self.places(product=product)
         data["product"]["repository"] = 42
@@ -877,11 +877,11 @@ class Locations(AuditCountCase):
         data["notes"] = {"tasks": str(self.home)}
         self.write_locations(data)
         self.assert_refused(self.run_count("--repository", "notes"),
-                            "no entry `repository` under `notes`")
+                            "no key `repository` under `notes`")
 
-    def test_the_way_with_no_repository_entry_is_the_checkout_the_script_lies_in(self):
-        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
-        # The entry `repository` under `the-way` is no missing field (WAY-344): the count takes
+    def test_the_way_with_no_repository_key_is_the_checkout_the_script_lies_in(self):
+        # decision: WAY-344 "Where the locations file has no key `repository` under `the-way`"
+        # The key `repository` under `the-way` is no missing field (WAY-344): the count takes
         # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
         own = subprocess.run(["git", "-C", str(HERE.parent), "rev-parse", "--verify", "HEAD"],
                              capture_output=True, env=GIT_ENV,
@@ -3262,8 +3262,8 @@ class Run(AuditCountCase):
         self.assertEqual([("product", added, "a-task")],
                          [(c["Repository"], c["Record"], c["Folder"]) for c in self.cycles()])
 
-    def test_the_way_without_a_repository_entry_is_this_checkout(self):
-        # decision: WAY-344 "Where the locations file has no entry `repository` under `the-way`"
+    def test_the_way_without_a_repository_key_is_this_checkout(self):
+        # decision: WAY-344 "Where the locations file has no key `repository` under `the-way`"
         # The script lies in a checkout built here: a copy of it with the files it reads beside it,
         # and a history that holds one cycle, so that the cycles it counts say whose history it read.
         checkout = self.repository("checkout")

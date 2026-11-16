@@ -2,19 +2,19 @@
 
 A project definition projects entries of the foundation before the project is broken into tasks.
 Projecting keeps a future rule visible in the definition without claiming that it already holds.
-The skill `find-foundation-entries`, or `define-project` at the readiness gate, hands an entry to
+The skill `find-foundation-entries`, or `define-project` at the readiness approval, hands an entry to
 the skill of its element in projected mode, naming the definition. The steps of `way_of_working.md` run with these
 differences, and each element's skill adds its own:
 
 - Step 1: select and read the product's foundation where it exists by "Reading the foundation" in `way_of_working.md`;
   ask about no file to start and write no part map first — nothing is written into `foundations/`.
 - Step 2: no search of the whole foundation runs for the entry: `define-project` searches it once
-  for the whole definition at the readiness gate (WAY-118). What the element's skill adds within its
+  for the whole definition at the readiness approval (WAY-118). What the element's skill adds within its
   own file — a search of that file for the same question, entry or part — still applies; what it
-  adds to the search of the whole foundation runs in the search at the gate.
+  adds to the search of the whole foundation runs in the search at the readiness approval.
 - Step 4.2: prepare the whole entry and one sentence of its meaning, but do not ask for acceptance
   before writing the proposal into the definition. Candidate selection accepts what is worth
-  projecting, not the proposal's meaning. The readiness gate shows each projected entry's meaning
+  projecting, not the proposal's meaning. The readiness approval shows each projected entry's meaning
   sentence with the entry beside it and approves the meaning (WAY-114).
 - Step 4.3: write the entry under "Projected foundation changes" of the definition, in the
   subsection of its kind and with the heading `project-level/definition_template.md` gives,

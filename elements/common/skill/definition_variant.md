@@ -28,7 +28,7 @@ values the caller gives and the lines for steps 1, 2, 4 and 5, which you carry o
   marked as the human's choice (`build_table.md`), and rows with no concrete next-reader consequence
   start `rejected`. Show the whole table, including the source and next-reader column, with a
   reason for each rejected row.
-- `define-project` makes the one search of the whole foundation at the readiness gate, once every
+- `define-project` makes the one search of the whole foundation at the readiness approval, once every
   entry is written (WAY-118).
 
 ## Step 4 — row by row

@@ -10,7 +10,7 @@ decisions that set the rules below are cited beside them.
 
 - It changes nothing in the foundation and nothing in the definition. The foundation gains each
   projected entry from the task that writes it (WAY-106, WAY-126); a change to the definition goes
-  through its readiness gate again (WAY-118).
+  through its readiness approval again (WAY-118).
 - It holds no second account of its tasks: no section repeating a task's fields, no table of its
   tasks for a tracker, no field naming the tasks a task can be worked on beside (WAY-142, WAY-144,
   WAY-147).
@@ -67,9 +67,9 @@ The headings stand once each, in this order, and no other second-level heading s
 - The `Status:` line reads `draft` until the plan is handed to the human, then
   `handed over YYYY-MM-DD` (WAY-142).
 - The `Definition:` line names the definition by its path relative to the plan, and the fingerprint
-  the definition's gate record holds. A definition whose text no longer gives that fingerprint has
-  changed after its gate, and the plan stands on nothing until the definition passes the gate again
-  and the plan is checked against it (WAY-142, WAY-118).
+  the definition's approval record holds. A definition whose text no longer gives that fingerprint has
+  changed after its approval, and the plan stands on nothing until the definition passes its readiness
+  approval again and the plan is checked against it (WAY-142, WAY-118).
 
 ## Tasks
 
@@ -111,7 +111,7 @@ needing task n's result, is logged with its reason, and is proposed again once n
 A `done — goal delivered in task <n>` dependency supplies completion only when delivery through
 the named task is established. `dropped — approved by human` does not establish delivery of its
 goal: reconcile the plan before treating it as a satisfied dependency. No task gains
-`ready for cycle` while a changed definition awaits its gate and subsequent plan recheck. Plan
+`ready for cycle` while a changed definition awaits its readiness approval and subsequent plan recheck. Plan
 states record progress, not permission for the project orchestrator to start cycles.
 
 ## Projected entries

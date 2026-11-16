@@ -133,7 +133,7 @@ none
 - 2026-11-01 — written from the definition at fingerprint 1a2b3c4d
 - 2026-11-02 — the state of task 2 moved to ready for cycle after the human accepted its document
 - 2026-11-03 — the state of task 2 moved to in cycle when its cycle started on the branch of its name
-- 2026-11-04 — the plan was checked again against the definition after it passed its gate again
+- 2026-11-04 — the plan was checked again against the definition after it passed its readiness approval again
 """
 
 ENGLISH_PLAN = """\

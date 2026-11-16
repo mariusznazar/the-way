@@ -37,8 +37,8 @@ A decision to change something, and a transitional state for which the human say
 exists and agrees to one, becomes a task in the backlog step 1 found, and the review makes the task
 and no change itself (WAY-14):
 
-- Create the task in the form the backlog gives: an entry, and where the backlog holds short
-  entries only, a task document in the task area, linked from the entry, with `Status: refining`
+- Create the task in the form the backlog gives: a line, and where the backlog holds short
+  lines only, a task document in the task area, linked from the line, with `Status: refining`
   and `Project relation: independent` as `project-level/task/template.md` gives, its *Need*
   taken from the proposal or the group and pointing at the section of the data file; the rest is
   left to `refine-task`, which refines the task before any cycle takes it.

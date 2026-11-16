@@ -74,7 +74,7 @@ The foundation step is the step of a task in which the task writes the change of
 
 The gate is the one command that runs all of a product's tests, the tests of its invariants among them.
 
-- **Not:** none
+- **Not:** the human's approval of a project definition, given once a script has checked it — "readiness approval"
 
 ## guidelines
 
@@ -217,5 +217,11 @@ A git test is a test that works on git repositories that it builds in a temporar
 ## repository test
 
 A repository test is a test that works on the real checkout of the-way and checks a property of the repository itself.
+
+- **Not:** none
+
+## projected entry
+
+A projected entry is the wording, under a project definition's "Projected foundation changes", of an entry of a product's foundation — a decision, an invariant, a glossary term, an environment fact or a change to the part map — or of a change to one, that the foundation is to hold once a task's code makes it true.
 
 - **Not:** none

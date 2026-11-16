@@ -80,7 +80,7 @@ directory of an element holds its template, its examples or a pointer to them, a
 
 ## project-level
 
-The part answers for the form and writing of a project definition, its readiness gate, the
+The part answers for the form and writing of a project definition, its readiness approval, the
 breakdown of an approved definition into a project plan and the check of that plan, the refinement
 of a task before its implementation cycle, whether the task belongs to a project, uses its
 settlements as a source, or stands on its own, the leading of a handed-over plan through refinement
@@ -266,7 +266,7 @@ sentence and its exit codes.
 | a product pinned to a commit | both | untrusted |
 | git | them → us | trusted |
 | a repository or a user's files an agent's instructions are read from — instruction files, tool configuration, session records | them → us | untrusted |
-| a user's places outside every repository — the locations file, the places its entries name, such as the register of problems and the results of the audit, and the registry of running gates that the script that runs the gate for the task cycle keeps | both | untrusted |
+| a user's places outside every repository — the locations file, the places its keys name, such as the register of problems and the results of the audit, and the registry of running gates that the script that runs the gate for the task cycle keeps | both | untrusted |
 
 ## Files left out on purpose
 

@@ -42,7 +42,7 @@ of `settle-technology`, which is the process of that change and whose result is 
 decision in this document (WAY-267).
 
 If the answer changes the approved project definition or a projected decision of it, route that
-change to the definition and its readiness gate (WAY-118); do not settle it inside the task.
+change to the definition and its readiness approval (WAY-118); do not settle it inside the task.
 
 Settle known product choices needed to state the task's outcome before the cycle. A choice of
 implementation method stays with the cycle's plan, or with the choices of its cycle record where

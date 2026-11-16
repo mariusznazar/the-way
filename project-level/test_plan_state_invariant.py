@@ -215,7 +215,7 @@ class PlanStateEvidence(unittest.TestCase):
         self.definition = self.docs / "definition.md"
         self.task = self.docs / "tasks/report-download.md"
         self.write(self.definition, "# Report download\n\nStatus: approved 2026-10-01\n\n" +
-                   DEFINITION_BODY + "## Gate record\n\n- Approved by: Fixture, 2026-10-01\n"
+                   DEFINITION_BODY + "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
                    "- Definition fingerprint: " + FINGERPRINT + "\n")
         self.write(self.task, TASK)
         self.set_state("ready for cycle")
@@ -489,7 +489,7 @@ class PlanStateEvidence(unittest.TestCase):
         # Break caught: proposing progress for a definition without approval.
         self.worktree()
         self.write(self.definition, self.definition.read_text(encoding="utf-8").replace(
-            "Status: approved 2026-10-01", "Status: ready for gate"))
+            "Status: approved 2026-10-01", "Status: awaiting approval"))
         self.assertEqual(self.run_reader(), 1, self.output)
         self.proposals_are()
 

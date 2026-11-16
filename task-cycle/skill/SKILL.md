@@ -86,7 +86,7 @@ that is not `none` word for word into those remarks, with the stage name and ful
 repeated items separate (WAY-260). The remarks stand in the one form `task-cycle/record_template.md`
 gives, and before every commit that adds the record, "The record before it is committed"
 below compares them with the reports (WAY-294) and cleans and checks the copy it commits (WAY-308,
-WAY-309, WAY-316). The account of its request is the cycle's own: in the task's entry in the backlog
+WAY-309, WAY-316). The account of its request is the cycle's own: in the task's line in the backlog
 the product names (WAY-107), found as `project-level/backlog_place.md` gives, the cycle may add the
 request link and set the task's state.
 
@@ -317,7 +317,7 @@ path or commit range against the worktree, recording the correction. An agent se
 you and returns at its boundary, never starting the next stage or seeking human approval. Each
 go-ahead you give a stage is provisional, never the human's approval; by merging the request, the
 human accepts the foundation entries the cycle writes that were not accepted with the task document
-or at the readiness gate, which the request puts before the human (WAY-114).
+or at the readiness approval, which the request puts before the human (WAY-114).
 
 ## Working copies
 
@@ -691,7 +691,7 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
 14. Before reporting completion, confirm that the record lists every dispatch, choice, check, fix,
     review round and skipped stage, every remainder of a working copy that a report names and every
     directory of an earlier task that the script of step 4 kept. The
-    final report names any write to the task's backlog entry.
+    final report names any write to the task's line in the backlog.
     The request is the human's first decision point.
 
 ## The renumbering of the task's decisions

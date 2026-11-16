@@ -57,7 +57,7 @@ template holds what is particular to a glossary entry (WAY-35).
 - The agent that meets such a word in its work — writing an entry, searching the foundation, in a
   task's return step — writes its entry; no search of every binding sentence looks for candidates
   (WAY-95, WAY-11). The human accepts the meaning of each entry at the merge of the change, of a
-  projected entry at the readiness gate, and of a term written whole from an accepted row of a
+  projected entry at the readiness approval, and of a term written whole from an accepted row of a
   task's *Settlements to record* with the task document (WAY-114).
 - Two uses of a word carry two meanings when a sentence the files hold is true in the meaning of one
   use and false in the meaning of the other, whichever of the two the sentence uses; only a sentence

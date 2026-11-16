@@ -1,4 +1,4 @@
-"""The readiness check of a project definition: the conditions of the readiness gate a script can
+"""The readiness check of a project definition: the conditions of the readiness approval a script can
 decide (WAY-118).
 
 Usage, from any directory:
@@ -19,7 +19,7 @@ The definition follows `project-level/definition_template.md`. The check reports
   gaps;
 - d — every item under "Open questions" ends with `— resolved in: breakdown` or
   `— resolved in: task: <name>`;
-- e — the gate record holds its two lines, and its fingerprint matches the definition;
+- e — the approval record holds its two lines, and its fingerprint matches the definition;
 - f — "Projected foundation changes" begins with `Candidates: <n> shown, <k> accepted —
   YYYY-MM-DD`, k is no more than n, and no working table `### Candidates in progress` stands in it;
 - g — "Technology" lists the choices the project needs, each item ending
@@ -27,11 +27,11 @@ The definition follows `project-level/definition_template.md`. The check reports
   `#### <identifier> — <question>` under "Projected foundation changes" holds; no item still
   reads `— open`, and the section never reads `none`.
 
-With --before-approval the check leaves out e and the gate record, since the human has not
-approved yet. --fingerprint prints the fingerprint the gate record is to carry, once the
+With --before-approval the check leaves out e and the approval record, since the human has not
+approved yet. --fingerprint prints the fingerprint the approval record is to carry, once the
 structure holds. Exit codes: 0 nothing found, 1 findings, 2 the call or the file is wrong. The
 check decides neither condition c (the one search of the whole foundation an agent makes at the
-gate) nor what the human approved; no projected entry carries a field of approval.
+readiness approval) nor what the human approved; no projected entry carries a field of approval.
 """
 
 import argparse
@@ -47,8 +47,8 @@ from fingerprint import fingerprint  # noqa: E402
 
 SECTIONS = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints",
             "Deliverables", "Success", "Risks", "Open questions", "Touched parts and decisions",
-            "Technology", "Projected foundation changes", "Gate record")
-GATE_RECORD = "Gate record"
+            "Technology", "Projected foundation changes", "Approval record")
+APPROVAL_RECORD = "Approval record"
 OPEN_QUESTIONS = "Open questions"
 PROJECTED = "Projected foundation changes"
 TECHNOLOGY = "Technology"
@@ -67,8 +67,8 @@ DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
 PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
 MEANING = re.compile(r"^>")
-STATUS = re.compile(r"^Status: (definition — open: \S.*|ready for gate|approved \d{4}-\d{2}-\d{2})$")
-GATE_LINES = (
+STATUS = re.compile(r"^Status: (definition — open: \S.*|awaiting approval|approved \d{4}-\d{2}-\d{2})$")
+APPROVAL_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
     ("Definition fingerprint", re.compile(r"^- Definition fingerprint: ([0-9a-f]{8})$")),
 )
@@ -116,7 +116,7 @@ def check_structure(preamble, sections):
         findings.append(Finding("structure", 1, "no `Status:` line above the first section"))
     elif not STATUS.match(status[0][1].rstrip()):
         findings.append(Finding("structure", status[0][0], "the status reads none of "
-                                "`definition — open: <sections>`, `ready for gate`, "
+                                "`definition — open: <sections>`, `awaiting approval`, "
                                 "`approved YYYY-MM-DD`"))
     names = [s.name for s in sections]
     for section in sections:
@@ -265,29 +265,29 @@ def check_technology(section, projected_section):
 
 def definition_fingerprint(text):
     """The fingerprint of the definition: of its text from the `## Goal` line up to the
-    `## Gate record` line, that line left out."""
+    `## Approval record` line, that line left out."""
     lines = text.splitlines()
     _, sections = split(text)
     start = next(s.heading_line for s in sections if s.name == SECTIONS[0])
-    end = next(s.heading_line for s in sections if s.name == GATE_RECORD)
+    end = next(s.heading_line for s in sections if s.name == APPROVAL_RECORD)
     return fingerprint("\n".join(lines[start - 1:end - 1]))
 
 
-def check_gate_record(section, text):
+def check_approval_record(section, text):
     findings = []
     lines = content(section)
-    if len(lines) != len(GATE_LINES):
-        return [Finding("e", section.heading_line, "the gate record holds %d lines, not the "
+    if len(lines) != len(APPROVAL_LINES):
+        return [Finding("e", section.heading_line, "the approval record holds %d lines, not the "
                         "two: Approved by, Definition fingerprint"
                         % len(lines))]
-    for (number, line), (name, form) in zip(lines, GATE_LINES):
+    for (number, line), (name, form) in zip(lines, APPROVAL_LINES):
         match = form.match(line.rstrip())
         if not match:
             findings.append(Finding("e", number, "the line is not `- %s: …` in its form" % name))
         elif name == "Definition fingerprint" and match.group(1) != definition_fingerprint(text):
             findings.append(Finding("e", number, "the fingerprint %s does not match the "
                                     "definition, whose fingerprint is %s — the definition "
-                                    "changed after the gate and goes through it again"
+                                    "changed after its approval and goes through the readiness approval again"
                                     % (match.group(1), definition_fingerprint(text))))
     return findings
 
@@ -298,13 +298,13 @@ def check(text, before_approval=False):
     if findings:
         return findings
     by_name = {s.name: s for s in sections}
-    checked = [s for s in sections if not (before_approval and s.name == GATE_RECORD)]
+    checked = [s for s in sections if not (before_approval and s.name == APPROVAL_RECORD)]
     findings += check_gaps(checked)
     findings += check_open_questions(by_name[OPEN_QUESTIONS])
     findings += check_candidates(by_name[PROJECTED])
     findings += check_technology(by_name[TECHNOLOGY], by_name[PROJECTED])
     if not before_approval:
-        findings += check_gate_record(by_name[GATE_RECORD], text)
+        findings += check_approval_record(by_name[APPROVAL_RECORD], text)
     return sorted(findings, key=lambda f: f.line)
 
 
@@ -322,13 +322,13 @@ def read(path):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check a project definition against the "
-                                     "conditions of the readiness gate a script decides.")
+                                     "conditions of the readiness approval a script decides.")
     parser.add_argument("definition", help="the project definition, a Markdown file")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--before-approval", action="store_true",
-                      help="leave out the gate record")
+                      help="leave out the approval record")
     mode.add_argument("--fingerprint", action="store_true",
-                      help="print the fingerprint the gate record is to carry")
+                      help="print the fingerprint the approval record is to carry")
     args = parser.parse_args(argv)
     text, error = read(args.definition)
     if error:
@@ -345,7 +345,7 @@ def main(argv=None):
     findings = check(text, before_approval=args.before_approval)
     for finding in findings:
         print(finding)
-    left_out = " (gate record left out: --before-approval)" \
+    left_out = " (approval record left out: --before-approval)" \
         if args.before_approval else ""
     print("readiness: %s%s" % ("%d finding(s)" % len(findings) if findings else "nothing found",
                                left_out))

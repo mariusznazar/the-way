@@ -14,7 +14,7 @@ When an agent has finished a set of proposals that the human will review togethe
 agent critiques the complete set before it is shown. This includes entries added as consequences
 of earlier proposals. The agent follows `elements/common/critique/SKILL.md` for the critique and for
 an independently requested critique (WAY-120). Foundation entries a change writes are no such set:
-the review of the change reads them, and the human accepts them at the readiness gate, with the task
+the review of the change reads them, and the human accepts them at the readiness approval, with the task
 document or at the merge (WAY-10, WAY-114).
 
 ## How a skill asks
@@ -179,7 +179,7 @@ looks for in its element. The search is not repeated before the merge and leaves
    human's language. Write it on your recommendation; ask before writing only where you have no
    recommendation or the entry would change the meaning of an approved decision beyond what the
    approved task document or plan carries (WAY-30). The human accepts the meaning at the readiness
-   gate for a projected entry, with the task document for an entry written whole from an accepted
+   approval for a projected entry, with the task document for an entry written whole from an accepted
    row of its *Settlements to record*, and at the merge for any other entry (WAY-114).
 3. Write the entry in its place in the file and run `elements/common/foundation_check.py` with
    `python -B` from the product's repository root, passing the switch `--skip-test-citations`: an

@@ -5,7 +5,7 @@ The original definition and plan remain authoritative, and every check runs on t
 project, though the reading of it is selected.
 
 - Before choosing work at start or resume, inspect the complete heading structure, status and
-  header, gate record and document revisions. Inventory every top-level In scope item in its
+  header, approval record and document revisions. Inventory every top-level In scope item in its
   original order and numbering, every projected-entry heading, and every open question with its
   exact wording and assigned place. For an existing plan, inventory every task's number, name,
   state and dependencies, every projected-entry realizing and writing assignment, every question

@@ -1,12 +1,12 @@
 ---
 name: define-project
-description: Use when a project of a product that uses the-way has to be defined before it is broken into tasks — an idea, a concept or a note to turn into a project definition, a definition to resume from its status line, or a definition to take through the readiness gate.
+description: Use when a project of a product that uses the-way has to be defined before it is broken into tasks — an idea, a concept or a note to turn into a project definition, a definition to resume from its status line, or a definition to take through the readiness approval.
 ---
 
 # Define a project
 
 Leads the first two steps of the project level: the definition, written with a human, and the
-readiness gate; the settling of the project's technology, between them, it hands to
+readiness approval; the settling of the project's technology, between them, it hands to
 `settle-technology`. A definition records what is settled about the product before the project is
 broken into tasks — as projected entries of the foundation — so that the breakdown and the tasks
 guess as little as they can. The form of a definition and the rule of each section stand in
@@ -23,7 +23,7 @@ this skill is the project skill of that name with the `the-way-` prefix.
 The project level reads the product's foundation and writes nothing in it
 (WAY-106).
 
-## Delegated definition change and gate
+## Delegated definition change and readiness approval
 
 When `lead-project` dispatches a definition edit or step 7 through a refinement conversation
 path, read `delegated_mode.md` beside this skill first: it holds what that path changes
@@ -35,7 +35,7 @@ in the workflow below, and the file of step 7 points back to it.
 - What the files can answer, read yourself instead of asking.
 - Once the definition is written (step 3), write each answer into it, with its status line, before
   the next question, so that a fresh agent reading only the file knows where the work stands.
-- A change of the definition after the readiness gate goes through the readiness gate again
+- A change of the definition after the readiness approval goes through the readiness approval again
   (WAY-118).
 
 ## 0. Start or resume
@@ -69,10 +69,10 @@ Read `find_entries.md` beside this skill.
 ## 6. Settle the technology
 
 Read `technology.md` beside this skill. Where the readiness check reports a finding at this step,
-in the run `technology.md` gives or handed back by `settle-technology`, read `readiness_gate.md`
+in the run `technology.md` gives or handed back by `settle-technology`, read `readiness_approval.md`
 beside this skill: the finding goes where its 7.1 sends it.
 
-## 7. The readiness gate
+## 7. The readiness approval
 
-Read `readiness_gate.md` beside this skill unless step 6 had you read it; in a turn dispatched
+Read `readiness_approval.md` beside this skill unless step 6 had you read it; in a turn dispatched
 through a refinement conversation path it points to `delegated_mode.md` for what changes.

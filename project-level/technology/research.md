@@ -25,9 +25,9 @@ that sets the rule beside it; you need not open it.
    it is compared with (WAY-270). Where the document already settles the choice in the human's words — a
    constraint under "Inputs and constraints" of a definition, or one a task document states — that
    settlement is the only option sought, and it is weighed like any other.
-2. **Weigh.** For each option the project's code is written in or against, read off its
+2. **Weigh.** For each option the project's code is written in or against, take from its
    documentation and its public record of use the properties the template's Technology section
-   lists, citing for each the page it was read from. An option lacking one stays in the comparison,
+   lists, citing for each the page it was taken from. An option lacking one stays in the comparison,
    each lack said as what it means for the product; an option with no documentation or with a
    project no longer maintained is left out with one line saying which, unless the human named it
    or the document holds it as a constraint — then it stays, with that line said as a lack

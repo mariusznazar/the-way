@@ -25,7 +25,7 @@ with `process-audit/` starts at that root, and the command runs from there.
 - **The register of problems.** The user's own tool fills it, from the template
   `process-audit/problem_register.md`, which the user copies to a place of their own and adapts to
   their needs. The audit gives no problem a class, a weight or a cost of an occurrence itself and
-  reads the register that an entry of the locations file names (WAY-330).
+  reads the register that a key of the locations file names (WAY-330).
 - **The counting.** `python -B process-audit/audit_count.py` asks nothing and reads nothing from
   stdin, so a system scheduler can start it with no one present. It runs on the night from Friday to
   Saturday, and the session finds its result ready.
@@ -84,26 +84,26 @@ These hold at every step.
   as `n`, and do not fill a value from another source. A `—` in *Days waiting* means the issue has no
   problem yet.
 - **The results lie outside every repository**. Write the audit's result nowhere else, and
-  write no path an entry of the locations file holds, nor its content, into a file of a repository
-  or a report: name the entry (WAY-320). The repository of the-way is public, and the results carry
+  write no path a key of the locations file holds, nor its content, into a file of a repository
+  or a report: name the key (WAY-320). The repository of the-way is public, and the results carry
   the names of products and the content of remarks from their cycles, which the history of a
   repository keeps after a later change removes them.
 
 ## 1. Find the places
 
-Read `project-level/backlog_place.md`, the section "Resolve an entry of the locations file", and
-resolve in `~/.the-way/locations.json` the entries the counting needs:
+Read `project-level/backlog_place.md`, the section "Resolve a key of the locations file", and
+resolve in `~/.the-way/locations.json` the keys the counting needs:
 
 - under `the-way`: `problem_register`, the file of the register, and `audit_results`, the directory
   where the results lie;
 - under the key of each product whose cycles the audit reads: `repository`, the path of that
-  product's checkout. Under `the-way` the entry `repository` is the checkout of the-way, which holds
+  product's checkout. Under `the-way` the key `repository` is the checkout of the-way, which holds
   the-way's own cycles and the history the process versions are read from.
 
-Where the file, a key, an entry or the path an entry holds is missing, ask the human where the place
+Where the file, a key or the path a key holds is missing, ask the human where the place
 is, in one question of decision, as "How a skill asks" gives it (WAY-113). The ways are usually to
 name the place, to create it, or, for the register, to copy the template to a place the human names.
-Offer to add the entry to the file, create the file or the key where they are missing, and write
+Offer to add the key to the file, create the file or the repository key where they are missing, and write
 only on the human's yes.
 
 ## 2. Get the latest count
@@ -121,7 +121,7 @@ scheduler and UTC fall). Tell the human, and offer to run it now. The command wr
 python -B process-audit/audit_count.py [--locations FILE] [--repository KEY ...] [--prices FILE] [--today YYYY-MM-DD]
 ```
 
-Without options it reads `~/.the-way/locations.json` and every key that holds an entry
+Without options it reads `~/.the-way/locations.json` and every key that holds a key
 `repository`; `--repository KEY`, repeated, names the repositories to read; `--prices` names another
 price list than `process-audit/price_list.md`; `--today` is the day of the run, which the days of
 waiting count to. Its exit code says:
@@ -134,7 +134,7 @@ waiting count to. Its exit code says:
   (`stages.md`, `mechanism_measures.md` or `gate_times.md`) and the field it lacks; *Unknown values*
   names the same file and field beside the values it leaves unknown. Put it before the human at
   step 3 as the first matter;
-- `2`: an `Error:` line on stderr and nothing written; the line names the file, key, entry or
+- `2`: an `Error:` line on stderr and nothing written; the line names the file, key or
   argument that is missing or wrong, never a path. A register that lacks a heading, a table or a
   column the count needs, such as a register kept in an earlier form of the template, ends here with
   the line naming each field missing: it is for the user's own tool to bring the register to the
@@ -257,7 +257,7 @@ problem is never given the nearest class instead. Read that row of the register,
 before the human a new class: its name, lower-case letters, digits and hyphens, the refused row's
 class where it is one; what it means; and the day of the session as the date it is added. On the
 human's yes, add the row `| <name> | <meaning> | <YYYY-MM-DD> | none |` to *Classes* in the register
-that the entry `problem_register` names, which lies in the user's place and never in a repository,
+that the key `problem_register` names, which lies in the user's place and never in a repository,
 and change nothing else of it. Adding a class gives no problem a class (WAY-330): a problem's class
 in *Problems* stays the user's tool's to write. The date starts a new series of the count of remarks,
 and of neither the cost nor any mechanism measure or gate time (WAY-339), and the next count reads

@@ -22,7 +22,7 @@ unclear, ask once and offer to record it as that file gives.
 
 Where the task has no line there yet, make it as `project-level/task_line.md` gives, which also
 says when. The rules of the task place come from the `## Backlog` section too, as
-`project-level/backlog_place.md` gives; a missing entry of them is asked about once, like a
+`project-level/backlog_place.md` gives; a missing key of them is asked about once, like a
 missing place.
 
 Check that this is one task. Keep one task by default: each split adds a full cycle. Identify a

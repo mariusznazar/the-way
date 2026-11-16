@@ -225,7 +225,7 @@ invariant covers it.
 - Description: <`request.md` beside this record, written by `task-cycle/skill/request_template.md`,
   with the form check's last command and exit code and the number of its runs; in a copy committed
   before the description was written or rewritten, `written and checked after this commit`>
-- Writes to the task's backlog entry: <request link and state, or none>
+- Writes to the task's line in the backlog: <request link and state, or none>
 - Working copies left: <`none`, or for each remainder of a working copy that a report or the
   orchestrator's own removal names: the agent, the path from the repository's root and the reason
   it stayed>
