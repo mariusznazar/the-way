@@ -220,9 +220,9 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   chosen* keeps the other ways, or, for a choice made outside *Questions to settle* — such as at a
   question against a choice while the candidates are cut — holds those ways itself, each with its
   cost or the human's reason; a decision's *Rejected* is taken from them (WAY-134). A row that
-  adopts a practice from outside the product names among those ways each part of the practice the
-  human turned down, the parts it leaves out (WAY-100); the cycle puts none there that the source
-  does not keep. Keep enough of
+  adopts a practice from outside the product and repeats a choice the human made among ways shown
+  names among those ways each part of the practice the human turned down, the parts it leaves out
+  (WAY-100); the cycle puts none there that the source does not keep. Keep enough of
   that answer, its provenance and its ways not chosen in this document to survive removal of a
   temporary conversation; no accepted row may rely only on a deleted file. In orchestrated mode the
   project orchestrator presents the candidates and required questions against choices through the
