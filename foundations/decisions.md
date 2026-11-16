@@ -6040,7 +6040,9 @@ in its report. The handoff names what the agent reads, as the
 orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
 it may carry a section of the plan, spec or task copied word for word, never restated in other
 words, with its file named as its address, so that a slice's executor gets its section of the plan
-and works without opening the plan; and since only the orchestrator reads the cycle record, an
+and works without opening the plan; and since only the orchestrator reads `cycle.md`, the
+handoff tells the agent that `cycle.md` and the other files of the cycle's record directory — other
+agents' handoffs, reports and findings — are not its to read unless its handoff names them, and an
 answer or choice that binds an agent goes into that agent's handoff or the message that resumes it.
 The orchestrator records the event and relevant choices before dependent dispatch and reads
 authoritative sources and relevant report evidence before deciding a question, settling a finding,
@@ -6064,12 +6066,16 @@ log, with no method of the cycle keeping a log of its own beside it.
     copied word for word and names the plan's path; an agent's questions stand in its report and
     its return says `questions`; the orchestrator reads the evidence of an unresolved question
     before deciding it; a missing report is repaired before the next dependent dispatch; routine
-    progression does not load the stage agent's sources and full report again;
+    progression does not load the stage agent's sources and full report again; a handoff tells its
+    agent that `cycle.md` and the other files of the cycle's record directory are not its to read
+    unless the handoff names them, and a reviewer reads the author's report because its handoff
+    names it;
   - violates: a full report exists only in conversation, a short return conceals a failed check,
     dependent work proceeds on a missing report or mismatched commit range, or a question is
     settled from the short return alone; a handoff restates a requirement or value of the task,
-    spec or plan in other words; an agent other than the orchestrator reads the cycle record to
-    learn an answer; a method keeps a log of the cycle's progress beside the record; the
+    spec or plan in other words; an agent other than the orchestrator reads `cycle.md` or another
+    file of the cycle's record directory that its handoff does not name; a handoff lacks the
+    sentence that tells its agent so; a method keeps a log of the cycle's progress beside the record; the
     orchestrator reloads completed stage material for routine progression.
 - **Origin:** none
 
@@ -6087,6 +6093,13 @@ takes from Open Mercato's prompt for the executor of one step of a plan, which p
 bullets from the plan and names the plan's path among the step's anchors, the handoff that carries
 its section of the plan word for word with the plan's file named as its address (WAY-100). The cycle
 record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
+It also holds the orchestrator's reasoning, and so do the handoffs and reports of the other agents,
+which carry the orchestrator's answers to their questions; an agent that learns that reasoning
+before it gives its own assessment assesses under its influence; a reviewer of a spec in a cycle of
+a game product read the log to see whether the orchestrator had already ruled on the designer's
+points, and found no ruling there, and no harm to the assessment was found. The handoff says it,
+because the handoff is the one text every stage agent reads in every harness, a stage dispatched
+without its type included, and the sentence then stands in one place.
 *Rejected:* the line of the check result dropped from the skill of the stage that plans — the
 orchestrator learns of a path left unchecked only from the full report, which routine progression
 does not read; the line asked only of a stage that checks the product — whether a stage gives it
@@ -6102,7 +6115,16 @@ spec or task in its own words — the restatement drifts from its source unseen;
 the whole task, spec, plan and record — each pays to read what only a part of its work needs; the
 executor's concise report of under three hundred words returned in its message, which Open
 Mercato's prompt for the executor of a step asks for — left out of what the decision takes from that
-prompt.
+prompt; the sentence that tells the agent what is not its to read placed in the definitions of the
+agent types of a task cycle — in Codex and in a session without the types the stage would not have
+it at all, and it would change what WAY-368 and WAY-370 say a definition and a stage without its
+type hold; the same sentence in the handoff and in those definitions — it costs two places to keep
+and the cost of the way through the definitions; a ban that covers only the cycle record and the
+reports of other agents — the handoffs of other agents stay open, and in them the orchestrator
+writes its answers to their questions, the same reasoning the ban keeps from the agent; a change
+of the orchestrator's skill alone, with no change to this decision — the rule would stand in one
+sentence of a skill with no reason written beside it, and a later rewrite of that skill could lose
+it.
 
 ### WAY-229 — On which class of model do the executor of a slice and the one author work?
 
