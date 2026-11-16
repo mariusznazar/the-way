@@ -3,12 +3,26 @@ item `Discarded attempt` and the item `Review rounds` (`task-cycle/record_templa
 helpers that cut an item out of the record's lines. `process-audit/audit_count.py` imports it and
 gives it the lines of a record it read from git history; the lines are untrusted input and are
 read in one pass, with no pattern that tries a line again (WAY-48).
+
+Q1, whether a contradiction with the settlements came out only after the code was written, is read
+from two marks and never from the words of the record (WAY-403, WAY-404):
+
+- the item `Discarded attempt` reads `none`, or opens with `reason: ` and one of the markers
+  `open design choice`, `reserved choice` and `size` in backticks; the marker `open design choice`
+  is a yes, `none` and the other two markers no contradiction, and any other text, with no marker at
+  its start, gives no answer;
+- each entry of the item `Review rounds` opens with ``findings `reports/<file>.md`, contradiction
+  yes`` or `no` (a round of fixes, marked by the reviewer's mark of contradiction), or with
+  ``review `reports/<file>.md`, PASS`` (a review that passed with no fix, a round with no
+  contradiction); an entry that says `yes` is a yes, and an entry of the first form with no such
+  mark gives no answer.
 """
 
 from __future__ import annotations
 
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "task-cycle"))
@@ -20,19 +34,20 @@ import remarks_check  # noqa: E402  the cutting of a record's lines, shared with
 # repetition is bounded and nothing follows it but the end, so no text makes it try again.
 REPORT_FILE = re.compile(r"reports/[A-Za-z0-9_][A-Za-z0-9_.-]{0,116}\.md")
 ROUNDS_LABEL = "Review rounds"
-ROUND_ENTRY = re.compile(r"findings `([^`\n]{1,200})`")
+# The two forms of an entry of the item `Review rounds` (`task-cycle/record_template.md`), each
+# read only at the start of the entry's text. The mark of a contradiction is `yes` or `no` and ends
+# at the colon or at the end of the text, so that `no longer` is no mark. Every repetition is
+# bounded, and nothing is tried again.
+ROUND_ENTRY = re.compile(r"findings `([^`\n]{1,200})`(?:, contradiction (yes|no)(?=:|$))?")
+REVIEW_ENTRY = re.compile(r"review `([^`\n]{1,200})`, PASS(?=:|$)")
+FINDINGS = "findings"
+REVIEW = "review"
 ITEM_DISCARDED = "Discarded attempt"
-DESIGN_CHOICE = "open design choice"
-# Words that deny what follows them, so that `no open design choice` is not read as one.
-NEGATIONS = frozenset({"no", "not", "none", "nor", "never", "without", "neither", "nothing"})
-WORDS = re.compile(r"[a-z]+")
-# A denial is looked for only among the last words just before the phrase, in the same clause: the
-# template's own form of a discarded attempt holds `none` and the like in its other parts. At most
-# this many characters before the phrase are read, so that the work per phrase is bounded.
-DENIAL_WORDS = 4
-DENIAL_REACH = 60
-CLAUSE_MARKS = frozenset(";:,.—–()[]!?\"")
-CONTRACTED_NOT = ("n't", "n’t")
+# The reason of a discarded attempt, read only at the start of the item's text.
+REASON_START = "reason: `"
+REASON_MARKER = re.compile(r"reason: `(open design choice|reserved choice|size)`")
+OPEN_DESIGN_CHOICE = "open design choice"
+NO_ATTEMPT = "none"
 
 
 def header_field(line: str) -> tuple[str, str] | None:
@@ -54,12 +69,21 @@ def is_report_file(path: str) -> bool:
     return REPORT_FILE.fullmatch(path) is not None and ".." not in path
 
 
-def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
-    """The findings files of the fix rounds that the record's item `Review rounds` names, in its
-    form: the item reading `none`, or nothing after its colon and one entry indented under it for
-    each round, opening with the word `findings` and `reports/<file>.md` between backticks. None
-    with the reason where the item is missing, doubled, or not in that form. Outside code fences
-    only; one pass over the lines."""
+@dataclass(frozen=True)
+class Round:
+    """An entry of the item `Review rounds`: its form (FINDINGS or REVIEW), the report it names and
+    its mark of a contradiction with the settlements, `yes` or `no`, or None where the entry gives
+    none."""
+    kind: str
+    path: str
+    contradiction: str | None
+
+
+def rounds_item(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
+    """The texts of the entries of the record's item `Review rounds`, the ones at its first indent,
+    or [] where the item reads `none`; None with the reason where the item is missing, doubled, or
+    holds neither `none` nor entries, or text beside its entries. Outside code fences only; one
+    pass over the lines."""
     openers = [index for index, line in enumerate(lines)
                if not fenced[index] and line.startswith("- ")
                and (header_field(line) or ("", ""))[0] == ROUNDS_LABEL]
@@ -87,16 +111,55 @@ def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | Non
     if rest:
         return None, "the item `Review rounds` holds text beside its entries"
     base = min(indent for indent, _ in markers)
-    found: list[str] = []
-    for _, text in (marker for marker in markers if marker[0] == base):
-        entry = ROUND_ENTRY.match(text)
-        if not entry or not is_report_file(entry.group(1)):
-            return None, ("an entry of the item `Review rounds` names no findings file: it does not "
-                          "open with the word findings and reports/<file>.md between backticks")
-        if entry.group(1) in found:
-            return None, "the item `Review rounds` names a findings file twice"
-        found.append(entry.group(1))
-    return found, None
+    return [text for indent, text in markers if indent == base], None
+
+
+def round_of(text: str) -> Round | None:
+    """The entry that `text` is, in one of the two forms, or None. The path stands in the form of a
+    file of `reports/`. An entry of the form of a review is a round with no contradiction."""
+    entry = ROUND_ENTRY.match(text)
+    if entry and is_report_file(entry.group(1)):
+        return Round(FINDINGS, entry.group(1), entry.group(2))
+    entry = REVIEW_ENTRY.match(text)
+    if entry and is_report_file(entry.group(1)):
+        return Round(REVIEW, entry.group(1), "no")
+    return None
+
+
+def read_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[Round] | None, str | None]:
+    """The entries of the record's item `Review rounds`, in their order, each in one of its two
+    forms; [] where the item reads `none`. None with the reason where the item is not in its form,
+    an entry is in neither form, or a findings file is named twice."""
+    texts, reason = rounds_item(lines, fenced)
+    if texts is None:
+        return None, reason
+    rounds: list[Round] = []
+    findings: set[str] = set()
+    for text in texts:
+        entry = round_of(text)
+        if entry is None:
+            return None, ("an entry of the item `Review rounds` names no findings file and is no "
+                          "review that passed: it opens with neither the word findings and "
+                          "reports/<file>.md between backticks nor the word review, "
+                          "reports/<file>.md between backticks and PASS")
+        if entry.kind == FINDINGS:
+            if entry.path in findings:
+                return None, "the item `Review rounds` names a findings file twice"
+            findings.add(entry.path)
+        rounds.append(entry)
+    return rounds, None
+
+
+def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None, str | None]:
+    """The findings files of the fix rounds that the record's item `Review rounds` names, in its
+    form: the item reading `none`, or nothing after its colon and one entry indented under it for
+    each round, opening with the word `findings` and `reports/<file>.md` between backticks. An
+    entry of a review that passed with no fix is no fix round and gives no file. None with the
+    reason where the item is missing, doubled, or not in that form."""
+    rounds, reason = read_rounds(lines, fenced)
+    if rounds is None:
+        return None, reason
+    return [entry.path for entry in rounds if entry.kind == FINDINGS], None
 
 
 def item_texts(lines: list[str], fenced: list[bool],
@@ -140,54 +203,41 @@ def reads_none_first(text: str) -> bool:
     return word.startswith("none") and not word[4:5].isalnum()
 
 
+def discarded_reason(text: str) -> str | None:
+    """The reason of a discarded attempt that the text of the item *Discarded attempt* gives:
+    NO_ATTEMPT where it reads `none`, the marker where the text opens with `reason: ` and a marker
+    in backticks and holds no other such opening, None otherwise: a text that names two reasons
+    does not say which one it is. Only the start of the text is read for the marker."""
+    if remarks_check.reads_none(text):
+        return NO_ATTEMPT
+    marker = REASON_MARKER.match(text)
+    if marker is None or text.count(REASON_START) != 1:
+        return None
+    return marker.group(1)
+
+
 def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None, str | None]:
     """Q1: whether a contradiction with the settlements came out only after code was written, as
-    the record's item *Discarded attempt* and its *Review rounds* give it: `yes`, `no`, or None with
-    the reason."""
+    the marks of the record's item *Review rounds* and of its item *Discarded attempt* give it:
+    `yes`, `no`, or None with the reason. It is yes where an entry of a round says
+    `contradiction yes` or the item gives the reason `open design choice`; no where every entry
+    gives its mark and the item reads `none` or gives the reason `reserved choice` or `size`."""
+    rounds, _ = read_rounds(lines, fenced)
+    if rounds and any(entry.contradiction == "yes" for entry in rounds):
+        return "yes", None
     items = item_texts(lines, fenced, ITEM_DISCARDED)
     if len(items) != 1:
         return None, item_count_reason(ITEM_DISCARDED, items)
-    text = item_words(items[0][0], items[0][1])
-    if remarks_check.reads_none(text):
-        findings, why = review_rounds(lines, fenced)
-        if findings is None:
-            return None, ("the item `Review rounds` does not give its findings files, so whether a "
-                          "review round found a contradiction is not known")
-        if findings:
-            return None, "a review round names findings, and their content is not in the record"
-        return "no", None
-    if reads_none_first(text):
-        # `none` followed by more words, such as `none — no open design choice`, is not read as a
-        # discarded open design choice either way.
-        return None, "the item `Discarded attempt` opens with none and holds more text"
-    folded = text.casefold()
-    if DESIGN_CHOICE in folded:
-        if any(denied_before(folded, at) for at in phrase_starts(folded)):
-            return None, ("the item `Discarded attempt` names an open design choice with a word "
-                          "just before it that may deny it")
+    reason = discarded_reason(item_words(items[0][0], items[0][1]))
+    if reason == OPEN_DESIGN_CHOICE:
         return "yes", None
-    return None, "the item `Discarded attempt` names neither none nor an open design choice"
-
-
-def phrase_starts(folded: str) -> list[int]:
-    """The place of each occurrence of the phrase in the case-folded text, one pass."""
-    found = []
-    at = folded.find(DESIGN_CHOICE)
-    while at != -1:
-        found.append(at)
-        at = folded.find(DESIGN_CHOICE, at + len(DESIGN_CHOICE))
-    return found
-
-
-def denied_before(folded: str, at: int) -> bool:
-    """Whether a denying word stands among the last words just before the phrase at `at`, in the
-    same clause: at most DENIAL_REACH characters are read, cut after the last clause mark, and the
-    last DENIAL_WORDS words of what remains are searched. Linear: no pattern is tried again."""
-    before = folded[max(0, at - DENIAL_REACH):at]
-    for index in range(len(before) - 1, -1, -1):
-        if before[index] in CLAUSE_MARKS:
-            before = before[index + 1:]
-            break
-    if any(mark in before for mark in CONTRACTED_NOT):
-        return True
-    return bool(NEGATIONS.intersection(WORDS.findall(before)[-DENIAL_WORDS:]))
+    if reason is None:
+        return None, ("the item `Discarded attempt` holds no marker of its reason: it reads neither "
+                      "`none` nor `reason: ` and one of open design choice, reserved choice and "
+                      "size in backticks")
+    if rounds is None:
+        return None, ("the item `Review rounds` does not give its entries, so whether a review "
+                      "round found a contradiction is not known")
+    if any(entry.contradiction is None for entry in rounds):
+        return None, "the entry of a round does not say whether there was a contradiction"
+    return "no", None

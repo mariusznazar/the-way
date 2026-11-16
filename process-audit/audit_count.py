@@ -88,7 +88,9 @@ ones noted, and its values are read from the last copy, the most complete. For e
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
   round by that path: one entry for each round under the item, opening with the word `findings`
-  and the path between backticks (`task-cycle/record_template.md`);
+  and the path between backticks (`task-cycle/record_template.md`). An entry of a review that passed
+  with no fix opens with the word `review` and holds the path of its report and the result `PASS`:
+  it is no fix round, and it is not counted (WAY-337);
 - the share of the cost spent in fix rounds (WAY-337): the cost of the subagent turns whose cell
   *Files named* in that section of `stages.md` names a findings file of a round the record names,
   each turn counted once, over the cycle's cost. It is `0.0%` only where the item reads `none` and
@@ -141,13 +143,18 @@ series that ends there.
 Per version of a series of the cost: the median cost at constant prices of its cycles with a known
 cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
 Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
-that came out only after code was written: from the item *Discarded attempt* of each cycle, `none`
-is no, text naming an open design choice with no word that denies it (`no`, `not`, `without`...)
-among the last four words just before the phrase, in the same clause, is yes (a denial elsewhere in
-the item, as in the template's `foundation entries none`, does not count), other text or a missing
-or doubled item is unknown; where the item reads `none` but
-*Review rounds* names a findings file, the answer is unknown, since the findings are not in the
-record. Q2, more than one third of the slices of the plans came back too large: from the item
+that came out only after code was written: from two marks of the cycle's record, never from the
+words of a reviewer's remarks or from the text of an item (WAY-403, WAY-404). It is yes where an
+entry of *Review rounds* opens with the path of its findings file and `, contradiction yes`, or the
+item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks (the
+markers are `open design choice`, `reserved choice` and `size`, and only the start of the item is
+read). It is no where every entry of *Review rounds* gives its mark, `contradiction no` or the form
+of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
+`reserved choice` or `size`. It is unknown, with the one reason `the entry of a round does not say
+whether there was a contradiction` for a round of any record, older or newer, where a fix round's
+entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
+not read `none`, where it is missing or doubled, or where *Review rounds* is missing, doubled or in
+neither form. Q2, more than one third of the slices of the plans came back too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
 before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
 and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times

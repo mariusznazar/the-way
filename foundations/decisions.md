@@ -7679,10 +7679,19 @@ and of the review of that fix do, and the cycle's record names each round by tha
 is `0.0%` only where the record says the cycle had no fix round, and unknown wherever the record and
 the stages cannot tie each round to the turns that served it.
 
+The record's item *Review rounds* also takes an entry for a review that passed with no fix, in a form
+of its own that opens with the word `review` and holds the result `PASS` and the path of the review's
+report in `reports/`, with no findings file. Such an entry is no fix round for the cost of a cycle
+and for its share, and the audit of the process reads it as a round with no contradiction with the
+settlements (WAY-403).
+
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares a change with the decision:
+- **Verification:** tests: that an entry of the item *Review rounds* that opens with the word
+  `review` and holds the result `PASS` is no fix round of the cost and of the share, and that a
+  record whose item holds such entries alone says the cycle had no fix round. For the rest, an agent
+  compares a change with the decision:
   - complies: the cost of a cycle is shown as an amount at the prices of one dated list and as the
     share of the fix rounds in it; the share counts once each turn whose message named a findings
     file of a round the record names; a record that tells its rounds in prose, without their
@@ -7700,14 +7709,24 @@ the task as well as from the process, and the measure of size would have to be c
 that sets an agent working is the one text that holds, at the moment the work starts, what the
 work is for; a findings file named there ties a turn to its round with no guess from names, which
 differ from one cycle to the next. A share given where the tie fails is a figure that looks
-measured; unknown says the measure is missing.
+measured; unknown says the measure is missing. A review that passed with no fix has no findings
+file and serves no fix round, so it takes a form of its own in the record: the one form of a fix
+round stays exact, and a cycle that sums up such reviews has a place for them that costs its
+record no unknown. The price: the item holds two forms, and a reader of it tells the entries of
+the fix rounds from the others by their first word.
 *Rejected:* a cost divided by a measure of the size of the task — the human settled that cost is
 measured by the two numbers alone, and the source keeps no reason beside it; a turn put in a fix
 round by the words `fix` and `review` in the names of reports and of stages — records name their
 fix reports in other words, and a cycle that had a fix round got a share of zero; a turn tied to a
 round by its time against the times of the record — the record and the report of a cycle's stages
 write times in different forms and zones; the share given only as zero or unknown until the report
-of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round.
+of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round;
+the item *Review rounds* forbidding the entry of a review that passed with no fix, which leaves its
+trace in the table of events — the cycle's leader wants those reviews summed up somewhere, so
+without another place they would be written there all the same, and each such record would give
+unknown; the count skipping with no word each entry not opened with `findings` — a fix round written
+with a slip in its opening would vanish without a trace, giving a false `no` for Q1 and a share of the
+fix rounds that is too low.
 
 ### WAY-339 — When do the measures of the audit stop being comparable?
 
@@ -7882,6 +7901,76 @@ and makes the version look faster; the shortest run of each version — a versio
 more chances of a fast run and looks better, and one lucky run sets the result; the median of all
 runs, as for the other measures — at today's spread the comparison says mostly how loaded the
 machine was.
+
+### WAY-403 — Who marks a contradiction with the settlements, and where does the audit of the process read it from?
+
+A reviewer of a code review marks each blocking finding as a contradiction with the settlements or
+as none, and the mark is the reviewer's own. A finding is a contradiction where it says that the
+change does something against an entry of the foundation, one the change itself writes included, or
+against a settlement of the task document — an answer under its *Questions to settle*, a row of its
+*Settlements to record* or a decision of its *Decisions in play* — and a point of *To do* left undone
+is none. The cycle writes the mark into the entry of the round in the record's item *Review rounds*,
+and the audit of the process takes from that mark, and never from the text of a reviewer's remarks,
+whether a contradiction with the settlements came out only after the code was written.
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-135 · derives from WAY-339
+- **Verification:** tests: that the count answers whether a contradiction with the settlements came
+  out only after the code was written from the mark of the entries of the item *Review rounds*: yes
+  where an entry carries the mark of a contradiction, no where every entry carries the mark of none
+  and the item *Discarded attempt* reads `none`, unknown where an entry carries no mark, and from no
+  text of a record.
+- **Origin:** none
+
+*Rationale:* the reviewer has read the entries of the foundation and the task document to find the
+finding, so the mark costs it a line, while the leader of the cycle would have to reach the sources
+to judge it at second hand, at the dearest place of the cycle. The answer to the question exists to
+say whether a spec written before the code would have caught the contradiction (WAY-135): a spec
+designs entries and settles what the task leaves open, so a mismatch with an entry or with a
+settlement of the task is its business, and a point of *To do* that the executor left undone is
+unfinished work that no spec would have caught, which would turn a yes into a measure of something
+other than the spec. The price: the mark is a judgment, and the judgments of reviewers differ from one
+cycle to the next; a round written before the mark gives the audit nothing to read; a change of the
+instructions of the reviewer begins a new series of the count of remarks (WAY-339).
+*Rejected:* the leader of the cycle marking the round when it writes the entry — it judges at second
+hand, with no reading of the foundation like the reviewer's, and a remark that a task's answer is not
+kept makes it reach for the sources, which adds context at the dearest place of the cycle; only an
+entry of the foundation counting as a contradiction — the answer would miss the mismatches with the
+settlements of the task, which a spec before the code would also have caught; every blocking finding
+of an unmet requirement counting, a point of *To do* left undone included — the answer would count
+the unfinished work of the executor, which no spec would have caught, and a yes would say nothing of
+the spec.
+
+### WAY-404 — How does the audit of the process read the reason of a discarded attempt?
+
+The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
+`reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
+— and the item reads `none` where no attempt was discarded. The audit of the process takes from this
+item, for its answer whether a contradiction with the settlements came out only after the code was
+written, the marker alone and never the text of the item, so that an item with no marker, written in
+any earlier form, gives the answer unknown (WAY-403).
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-135 · derives from WAY-403
+- **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
+  the start of the item and from nothing else: a text that names an open design choice, a reserved
+  choice or a size in other words, or denies one, gives unknown.
+- **Origin:** none
+
+*Rationale:* a reading of the words of free text can never list every way to deny or to name a
+choice, so each unforeseen wording gives a yes the reading cannot tell from a true one, and the
+answer to the question is the one on which the human weighs whether a cycle needed a spec; a marker
+the agent that discards the attempt writes in a fixed place leaves nothing to infer. The price: the
+leader of the cycle writes one more phrase, and a record written before the markers has an item the
+audit reads as unknown.
+*Rejected:* a wider detection of denials, with the denial after the phrase, farther than four words
+or governing a list after commas giving unknown — it changes only the script, but the next
+unforeseen wording gives a false yes again, and the answer stays an inference from text that the
+rounds are not read by; leaving the reading as it is and adding a test that keeps the present
+behaviour as a known limit — the cheapest way, but the first discarded cycle described by such a
+sentence gives the false yes on which the human weighs whether the cycle needed a spec.
 
 ## Product guidelines and their rules
 
