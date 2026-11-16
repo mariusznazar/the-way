@@ -6740,7 +6740,8 @@ fix, the findings that do not block go unfixed to the request's lists as WAY-161
     Minor finding of the review of the reconciliation with the target branch is listed in the
     request; the review of a one-author change returns two Minor findings only, one fix takes them
     in, the review of that fix finds an Important finding in the fix, and the cycle reverts the fix
-    with a revert commit, runs the gate on the code the revert leaves, and opens a request that is
+    with a revert commit, has the gate run on the code the revert leaves as WAY-160 gives, and
+    opens a request that is
     not blocked and lists the two Minor findings and the Important finding with its grade; a fix
     that ran for an Important finding and carried a Minor one ends with a blocked request when the
     review of the fix finds a new Important finding;
@@ -10008,8 +10009,8 @@ refuse to run in any other version, and by the files of requirements for the too
 `requirements-quality.in`, which holds `ruff==0.17.1` and allows wheels only, and
 `requirements-quality.txt`, which holds the SHA-256 sum of every wheel of that release and no source
 distribution. Ruff stands in the environment `.runs/quality-venv`, which the section "Running the
-tests" of `README.md` tells how to install from the requirements file, and the job of CI gains one step
-that installs it there, while the one command that runs the checks stays
+tests" of `README.md` tells how to install from the requirements file, and each job of CI gains one
+step that installs it there, while the one command that runs the checks stays
 `python -B gate/run_tests.py` (WAY-16).
 
 - **Scope:** repository, agent-instructions
@@ -10018,7 +10019,7 @@ that installs it there, while the one command that runs the checks stays
 - **Verification:** an agent compares the change with the decision:
   - complies: the configuration of Ruff holds `required-version`, the requirements file holds a sum
     for every wheel and no source distribution, the README tells how to create `.runs/quality-venv` and
-    install from the file, and the job of CI differs from before by one step that installs the
+    install from the file, and each job of CI differs from before by one step that installs the
     requirements;
   - violates: the version stands in one place only; the requirements file holds a source
     distribution or a wheel with no sum; CI runs a command of Ruff beside the one command that runs the
