@@ -99,7 +99,9 @@ class Command(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix="plan state ")
         self.addCleanup(temporary.cleanup)
-        self.root = Path(temporary.name)
+        # The script resolves the repository to its long path; a temporary directory given by a
+        # short one (`RUNNER~1`, on a Windows runner) is resolved here too, so both name it alike.
+        self.root = Path(temporary.name).resolve()
         self.repo = self.root / "product"
         self.remote = self.root / "remote.git"
         self.env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 import subprocess
 import sys
 import tempfile
@@ -157,6 +158,10 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.assertEqual(self.rows(output), ["| `thing` | 2 | 1 | -1 | type changed |"])
         self.assertIn("1 modified", self.summary(output))
 
+    # Git refuses a path with a bar on a Windows runner (the first run of the check `tests-windows`
+    # on the request), and a file of such a name cannot stand on Windows, so the escape of the bar
+    # is checked where the name can exist.
+    @unittest.skipIf(os.name == "nt", "a bar cannot stand in a file name on Windows")
     def test_a_bar_in_a_name_is_escaped_so_that_the_row_keeps_its_cells(self) -> None:
         self.stage_entry("a|b.txt", "x\n", "100644")
         base = self.commit_index()
