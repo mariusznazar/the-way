@@ -3884,10 +3884,11 @@ decision.
     with no decision of its log; the first task of the breakdown chooses the database; a definition
     reaches the gate with a store of data in its scope and no choice of it projected or found in the
     foundation; a project that brings a product's first screen leaves out how an agent operates it
-    because a browser on a local address adds nothing to run; the logs, the interface, the development data
-    and the place of the screenshots stand on the list as one choice; a project that brings a
-    product's first screen leaves out where the screenshots lie because nothing runs for them; a
-    product that keeps no data leaves its development data off the list for that reason.
+    because a browser on a local address adds nothing to run; the logs, the interface, the
+    development data and the place of the screenshots stand on the list as one choice; a project
+    that brings a product's first screen leaves out where the screenshots lie because nothing runs
+    for them; a product that keeps no data leaves its development data off the list for that
+    reason.
 - **Origin:** none
 
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
@@ -3939,12 +3940,12 @@ place for screenshots is settled (WAY-316), with the step unchanged — a produc
 no place only at its first request with a changed screen; the lesson's hard limit that keeps an
 agent away from the production database and from root access — left out of what the step takes from
 the lesson, since WAY-140 already leaves every effect outside the repository to a human, and reading
-stays with the agent; the answer to a matter in a skill of the product — the step would have to look
-in the skills as well, and a choice with a cost, such as one way to the product instead of another
-or a public place for screenshots, would lose its reasons and the ways not chosen, since a skill
-gives a rule one sentence of reason; the answer left to the product's decisions with nothing
-written here — the next product applies the first question of the template of decisions as the first
-did, and withdraws them again.
+stays with the agent; the answer to a matter in a skill of the product — the step would have to
+look in the skills as well, and a choice with a cost, such as one way to the product instead of
+another or a public place for screenshots, would lose its reasons and the ways not chosen, since a
+skill gives a rule one sentence of reason; the answer left to the product's decisions with nothing
+written here — the next product applies the first question of the template of decisions as the
+first did, and withdraws them again.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -6784,12 +6785,12 @@ error the tests let through. The author has the code and the task fresh and writ
 review reads, so the walk adds a part of one stage and no agent. The executor of a slice walks
 through its own slice because the executor of the last slice knows only its slice and has a limit of
 reading, so it would have to read the whole task, and the report shows the state between the slices
-to the review of the whole change. Where no way to the running product is settled, an agent can still draw up the cases,
-so the description carries a list and the steps for a check by hand, and stopping the cycle would
-punish the product for a gap the human sees in the request. The fix does not repeat the walk because
-it answers findings of the review that has read the walk. The return of the walk to a stage of its
-own waits for an error the audit shows, since such a stage costs one more agent at every change a
-user sees.
+to the review of the whole change. Where no way to the running product is settled, an agent can
+still draw up the cases, so the description carries a list and the steps for a check by hand, and
+stopping the cycle would punish the product for a gap the human sees in the request. The fix does
+not repeat the walk because it answers findings of the review that has read the walk. The return of
+the walk to a stage of its own waits for an error the audit shows, since such a stage costs one more
+agent at every change a user sees.
 The method takes from a practice of testing one task that a team of the human who owns this process
 uses, its skill `test-run`, which is in a team repository not open to a reader of this repository
 (WAY-27): the preparation (the task, the change, the way to the product and whether the product
@@ -6841,9 +6842,10 @@ into the task document.
 - **Relations:** derives from WAY-227 · derives from WAY-238
 - **Verification:** an agent compares the report of the author or the executor, the task document
   and the request with the decision:
-  - complies: the author or the executor draws the cases from the requirements of the task and starts the walk with
-    no one's approval, the plan stands in its report, and the request lists each case left
-    unchecked; the task document of a change a user sees holds no list of inputs to try;
+  - complies: the author or the executor draws the cases from the requirements of the task and
+    starts the walk with no one's approval, the plan stands in its report, and the request lists
+    each case left unchecked; the task document of a change a user sees holds no list of inputs to
+    try;
   - violates: the cycle stops to ask the human to approve the cases; the refinement of a task writes
     into the document the inputs a human gave to try, as the plan of the walk.
 - **Origin:** none
@@ -6851,15 +6853,16 @@ into the task document.
 *Rationale:* the first point of the human's review of a task's cycle is the request (WAY-227), and
 the plan of the walk stands in the report that the review reads, so a check of the cases before the
 walk would add a stop with no point of review to gain for it. The author or the executor draws the
-cases from the requirements of the task, which the review can read against the plan, and a list of inputs given by
-a human is a plan of tests in the task document, which the refinement keeps out (WAY-238).
+cases from the requirements of the task, which the review can read against the plan, and a list of
+inputs given by a human is a plan of tests in the task document, which the refinement keeps out
+(WAY-238).
 *Rejected:* the refinement of the task writing into the document the concrete inputs to try, given
 by a human — each refinement of a task a user sees would gain one question more, and WAY-238 would
 have to say that such a list is no plan of tests; it makes sense only once it shows that the agent
 loses variants known only to the human; the cycle stopping for the human's approval of the plan —
 against WAY-227, under which the human's first point of review is the request.
 
-### WAY-408 — What does the author do with a case of the walk that fell wrong?
+### WAY-408 — What does the author or the executor do with a case of the walk that fell wrong?
 
 The author of a change or the executor of a slice corrects each case that fell wrong before the
 review, and the correction gets a test at the lowest level that catches the error (WAY-239); each

@@ -247,8 +247,8 @@ the order of their kinds.
   in this request" runs the step or the check that was left out. Where the check an author reports
   as not done is one the human can do by hand, the item carries the steps for it that "What an item
   carries" gives as its fifth part.
-- **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
-  no fix made and each finding outside the task's scope, of the review of the whole change and of
+- **8.** *Unfixed findings the user or the human will feel, and errors the walk found outside the
+  task's scope* (WAY-289, WAY-408): read each Minor finding that no fix made and each finding outside the task's scope, of the review of the whole change and of
   every later review, and each Minor finding and new serious finding of a reverted fix, and judge
   from the whole record — the reports of the walk through the running product and the screenshots
   included — whether the product's user or the human working with the process will feel it. Restate
@@ -259,9 +259,9 @@ the order of their kinds.
   lower part, as anything else a correction left undone does. The finding stays in its list below,
   with its kind and grade; the judgment decides no fix and no block. Also in this item, with no
   judgment of what is felt, since WAY-408 prevails over WAY-289 here: each error outside the task's
-  scope that the walk through the running product found and its author reported instead of
-  correcting, restated in plain words with only the question "Make a task of it?", which the human
-  who makes none lets through by merging; it stands in *Findings outside the task's scope* below.
+  scope that the walk through the running product found and its author or executor reported
+  instead of correcting, restated in plain words with only the question "Make a task of it?",
+  which the human who makes none lets through by merging; it stands in *Findings outside the task's scope* below.
 - **9.** *Decisions of the task's own sections*: each item of those sections that waits on a yes,
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
 - **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
