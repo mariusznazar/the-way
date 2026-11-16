@@ -17,7 +17,8 @@ findings within the task of the review of the whole change, since out-of-scope f
 Minor findings are not fixed (WAY-161). For each finding in it, say whether it is **fixed** — the
 defect no longer exists on the new head; tried is not fixed — or **remains**, with evidence. For a
 finding the author contests with evidence, say whether you keep it. Inspect the fix diff for what
-the fix itself broke: a new Critical or Important finding there counts as one that remains. A
+the fix itself broke, code that passes a test without meeting the requirement among it (section 2 of
+`SKILL.md`): a new Critical or Important finding there counts as one that remains. A
 Minor finding that remains, or that you find new in the fix diff, blocks nothing; in a fix whose
 file holds Minor findings alone, only a new Critical or Important finding fails the review
 (WAY-162).

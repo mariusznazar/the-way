@@ -54,7 +54,9 @@ and repeat the record's pair of commits from step 12, preparing the copy before 
 ("The record before it is committed") gives, with every report of the cycle in the record, the
 correction's own among them. For a request a remaining blocking finding
 blocked, the human's decision is the input: make the fix it calls for, or keep the code the human
-accepted despite the finding, then run what has not run on that code. Rewrite
+accepted despite the finding, then run what has not run on that code. For a request a question about
+a test blocked (WAY-410), the human's answer is the input: resume the author with it, and run what
+has not run on the code it leads to. Rewrite
 `request.md` by `task-cycle/skill/request_template.md`, in its variant for a correction, for the
 state after the correction, with the link to the record's new commit and with the pairs of the
 correction in one sentence as the item of kind 17 in *You accept by merging* (WAY-287), check it
@@ -69,7 +71,8 @@ private paths included, pass before it is published (WAY-309), and into *Verific
 original record. A red result is a failed gate, handled as step 10 gives: a fix and its review, the
 record's pair of commits again and the wait again on the new head, save a check outside the task's
 scope that passes when run again, which WAY-261 governs (WAY-160). A request the correction leaves
-blocked for a reserved choice or a remaining blocking finding is not waited for: its description
+blocked for a reserved choice, a remaining blocking finding or a question about a test is not
+waited for: its description
 says that the result of the run stands on the request's page and was not waited for.
 
 Before the record's copy is prepared, add the correction's line to the record's item *Corrections

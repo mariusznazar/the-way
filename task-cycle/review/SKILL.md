@@ -83,6 +83,13 @@ scope are yours.
   that takes a reserved choice is a finding, Important by the general grade of section 3, a missed requirement.
 - The tests: do they fail when the behaviour they protect breaks, and pass for a reason other than
   the code computing its own expected value? A test that asserts nothing is a finding.
+- Code that passes a test without meeting the requirement the test stands for. Look in the code of
+  the product that the change touches for a branch or a returned value made for the very input a
+  test uses; the expected value of a test written into the product's code; a comment that names a
+  special case for a test; and a change to the outcome of a comparison that a test makes, with no
+  change to the test, such as an overloaded comparison operator. Only code whose branch, value or
+  comparison exists to make a test pass is the finding: a special case that the requirement itself
+  asks for is none. A finding of such code is graded as section 3 gives (WAY-409).
 - Where the dispatch or the part map names a trust boundary the change touches — network, keys,
   deployment, files from outside — check hostile input at it. Where the change holds an operation
   that cannot be undone, check that it only prepares it.
@@ -126,6 +133,8 @@ this criterion gives the orchestrator no authority to regrade or discard your fi
 teach useful ways without acquiring the force of approved rules, and a comparison with no concrete
 consequence turns taste into a blocker. Something the plan or the task
 mandates is still a finding when it is a defect; name it so.
+A finding of code that passes a test without meeting the requirement (section 2) is Important at
+the least, in every review, so that it blocks (WAY-409).
 A finding that a change departs from a foundation entry it writes or changes is
 Important when the change's files do what the entry forbids, fail to do what it
 requires, or restate it differently, including more broadly or without a
