@@ -7921,17 +7921,19 @@ change does something against an entry of the foundation, one the change itself 
 against a settlement of the task document — an answer under its *Questions to settle*, a row of its
 *Settlements to record* or a decision of its *Decisions in play* — and a point of *To do* left undone
 is none. The cycle writes the mark into the entry of the round in the record's item *Review rounds*,
-and the audit of the process takes from that mark, and never from the text of a reviewer's remarks,
-whether a contradiction with the settlements came out only after the code was written.
+and the audit of the process takes from that mark, with the marker of a discarded attempt (WAY-404),
+and never from the text of a reviewer's remarks, whether a contradiction with the settlements came
+out only after the code was written.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-339
 - **Verification:** tests: that the count answers whether a contradiction with the settlements came
-  out only after the code was written from the mark of the entries of the item *Review rounds*: yes
-  where an entry carries the mark of a contradiction, no where every entry carries the mark of none
-  and the item *Discarded attempt* reads `none`, unknown where an entry carries no mark, and from no
-  text of a record.
+  out only after the code was written from the mark of the entries of the item *Review rounds* and the
+  marker of the item *Discarded attempt*: yes where an entry carries the mark of a contradiction or
+  the item gives the marker `open design choice`, no where every entry carries the mark of none and
+  the item reads `none` or gives only the markers `reserved choice` and `size`, unknown where an
+  entry carries no mark, and from no text of a record.
 - **Origin:** none
 
 *Rationale:* the reviewer has read the entries of the foundation and the task document to find the
@@ -7961,8 +7963,9 @@ The reason of a discarded attempt stands at the start of the record's item *Disc
 entry for each attempt; the item reads `none` where no attempt was discarded. The audit of the
 process takes from this item, for its answer whether a contradiction with the settlements came out
 only after the code was written, the markers alone and never the text of the item, so that an item
-that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown
-(WAY-403).
+that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown, and so
+does an item that holds two markers outside a list of entries, or a plain line or an entry at another
+indent beside its entries (WAY-403).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
@@ -7970,7 +7973,9 @@ that reads neither `none` nor a marker, written in any earlier form, gives the a
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
   the start of the item, or of each entry under it, and from nothing else: a text that names an open
   design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an
-  item of several entries gives yes where any of them has the marker `open design choice`.
+  item of several entries gives yes where any of them has the marker `open design choice`; and that
+  an item with two markers in a text that is no list of entries, or with a plain line or an entry at
+  another indent beside its entries, gives unknown.
 - **Origin:** none
 
 *Rationale:* a reading of the words of free text can never list every way to deny or to name a

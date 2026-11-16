@@ -146,15 +146,20 @@ Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's 
 that came out only after code was written: from two marks of the cycle's record, never from the
 words of a reviewer's remarks or from the text of an item (WAY-403, WAY-404). It is yes where an
 entry of *Review rounds* opens with the path of its findings file and `, contradiction yes`, or the
-item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks (the
-markers are `open design choice`, `reserved choice` and `size`, and only the start of the item is
-read). It is no where every entry of *Review rounds* gives its mark, `contradiction no` or the form
+item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
+any of its entries does, where a cycle that discarded more than one attempt writes one entry for each
+(the markers are `open design choice`, `reserved choice` and `size`, and only the start of the item,
+or of each entry, is read; the entries are read only as a list: the first line under the item is an
+entry at the indent of the others and no plain line stands at that indent or less). It is no where
+every entry of *Review rounds* gives its mark, `contradiction no` or the form
 of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
 `reserved choice` or `size`. It is unknown, with the one reason `the entry of a round does not say
 whether there was a contradiction` for a round of any record, older or newer, where a fix round's
 entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
-not read `none`, where it is missing or doubled, or where *Review rounds* is missing, doubled or in
-neither form. Q2, more than one third of the slices of the plans came back too large: from the item
+not read `none`, where it holds two markers outside a list of entries or a plain line or an entry at
+another indent beside its entries, where it is missing or doubled, or where *Review rounds* is
+missing, doubled or in neither form. Q2, more than one third of the slices of the plans came back
+too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
 before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
 and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times

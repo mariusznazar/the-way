@@ -220,7 +220,8 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    kind of series is never set beside a number of the other. Q1 asks whether a contradiction with the
    settlements came out only after the code was written, and the count reads it from two marks of the
    cycle's record, never from the text of a reviewer's remarks: `yes` where an entry of *Review
-   rounds* says `contradiction yes` or *Discarded attempt* gives the reason `open design choice`;
+   rounds* says `contradiction yes` or *Discarded attempt* gives the reason `open design choice` (in
+   any of its entries, where it holds one for each discarded attempt);
    `no` where no entry says so and *Discarded attempt* reads `none` or gives the reason `reserved
    choice` or `size`; `unknown` where an entry of a round carries no mark or *Discarded attempt*
    gives no reason, which a record written before those marks stood in the template does wherever

@@ -9,7 +9,9 @@ from two marks and never from the words of the record (WAY-403, WAY-404):
 
 - the item `Discarded attempt` reads `none`, or opens with `reason: ` and one of the markers
   `open design choice`, `reserved choice` and `size` in backticks; a cycle that discarded more than
-  one attempt writes nothing beside the colon and one entry for each attempt, each opening so; the
+  one attempt writes nothing beside the colon and only list entries under it, at one indent, one for
+  each attempt, each opening so (a text of two markers, or a plain line or an entry at another indent
+  beside the entries, gives no answer); the
   marker `open design choice` in any of them is a yes, `none` and the other two markers no
   contradiction, and any other text, with no marker at its start, gives no answer;
 - each entry of the item `Review rounds` opens with ``findings `reports/<file>.md`, contradiction
@@ -243,8 +245,10 @@ def discarded_reasons(rest: str, below: list[tuple[str, bool]]
     item, on its line or on the lines under it, the details possibly as a list: one reason, or
     `none`. A cycle that discarded more writes nothing beside the colon and only list entries under
     it, one for each attempt, each opening with its marker; the reason of an entry that reads `none`
-    or holds two markers is None. Where a plain line stands beside the entries the whole is read as
-    the text of one attempt, which holds two markers and is not read."""
+    or holds two markers is None. Where a plain line or an entry at another indent stands beside the
+    entries, the whole is read as the text of one attempt: it gives that attempt's reason where the
+    text opens with one marker and holds no other (its details may be a list), and is not read
+    otherwise."""
     entries, alone = discarded_entries(below)
     if entries and alone and not rest.strip():
         return [None if reason in (NO_ATTEMPT, SEVERAL) else reason
