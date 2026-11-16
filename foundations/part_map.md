@@ -69,8 +69,9 @@ script that checks a whole foundation's identifiers, references and assignment o
 the references of a product's guidelines included, with the module that reads the files and git for
 it, the script that migrates a foundation from the earlier form of the-way, the script that writes
 the index of the decisions a reading selects from a product's decision log, the script that compares
-the entries of two copies of a decision log, the skill that finds entries in a source, and the
-critique skill, which reads a proposal critically before the human sees it.
+the entries of two copies of a decision log, the skill that finds entries in a source, the
+critique skill, which reads a proposal critically before the human sees it, and the test that every
+directory of an element holds its template, its examples or a pointer to them, and its skill.
 
 - **Files:** elements/common/**
 - **Depends on:** project-level · decisions · invariants · glossary · part-map · environment-facts ·
@@ -163,7 +164,8 @@ project skill entry points that make the-way's skills visible to sessions on it 
 generates them, for the copies of the cycle's agent type definitions that make those types available
 to sessions on it and the script that generates them, and for the hooks and the configuration of
 agents' tools and of CI that direct them, and for the guidelines of the-way's own code that those
-instructions point to.
+instructions point to, and for the tests of the rules every script of the-way keeps: the language it
+is written in, the version of Python it runs on and the modules it imports.
 
 - **Files:** /AGENTS.md
   /CLAUDE.md
