@@ -1,7 +1,7 @@
 # Coding guidelines — shared-module
 
 - **Discipline:** coding
-- **Applies to:** relation-model
+- **Applies to:** relation-model · process-audit
 
 ## When to read
 
@@ -38,3 +38,4 @@ above is the one that binds.
 ## Where in code
 
 - `relation-model/`
+- `process-audit/`
