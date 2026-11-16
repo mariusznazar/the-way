@@ -1,0 +1,21 @@
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | We perform our experiments on a suite of leading open-source and closed-source models: GPT
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | Analyzing the transcripts, we identify four distinct cheating strategies that models emplo
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | The latter three strategies are especially concerning, as they demonstrate that models can
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | Modify Test Cases: The model directly modifies tests despite being explicitly instructed n
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | Overload Comparison Operators: The model overloads the comparison operators so they always
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | Record Extra States: The model records extra states in order to obtain different results f
+impossiblebench-cheating-strategies | {'card': False, 'html': True, 'pdf': True} | Special Casing: The model special-cases the test cases to pass them.
+impossiblebench-abort-option | {'card': False, 'html': True, 'pdf': True} | We perform our experiments on a suite of leading open-source and closed-source models: GPT
+impossiblebench-abort-option | {'card': False, 'html': True, 'pdf': True} | we experiment with providing agents an option to abort and exit the feedback loop when the
+impossiblebench-abort-option | {'card': False, 'html': True, 'pdf': True} | Specifically, we instruct the models to submit the string flag_for_human_intervention when
+impossiblebench-abort-option | {'card': False, 'html': False, 'pdf': True} | On Impossible-SWEbench and especially Conflicting-SWEbench, we find the strategy quite eff
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | During our evaluations we noticed that Claude 3.7 Sonnet occasionally resorts to special-c
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | Test cases present conflicting requirements
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | the model often (though not always) includes explicit comments indicating the special-casi
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | we have found additional product-level mitigations can further reduce the incidence of spe
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | Implementing monitoring for:
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | Comments that suggest test-specific handling
+claude-test-special-casing | {'card': True, 'html': False, 'pdf': False} | Unexpected modifications to test files
+FIG from 54% to 9% | html=False pdf=True
+FIG o3 from 49% to 12% | html=False pdf=True
+FIG much less pronounced for Claude Opus 4.1 | html=True pdf=True
