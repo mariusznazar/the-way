@@ -21,8 +21,9 @@ from two marks and never from the words of the record (WAY-403, WAY-404):
 - each entry of the item `Review rounds` opens with ``findings `reports/<file>.md`, contradiction
   yes`` or `no` (a round of fixes, marked by the reviewer's mark of contradiction), or with
   ``review `reports/<file>.md`, PASS`` (a review that passed with no fix, a round with no
-  contradiction); an entry that says `yes` is a yes, and an entry of the first form with no such
-  mark gives no answer.
+  contradiction); an entry that says `yes` is a yes where the item is held once and in its form
+  (otherwise its entries are not read), and an entry of the first form with no such mark gives no
+  answer.
 """
 
 from __future__ import annotations
@@ -281,7 +282,8 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
     """Q1: whether a contradiction with the settlements came out only after code was written, as
     the marks of the record's item *Review rounds* and of its item *Discarded attempt* give it:
     `yes`, `no`, or None with the reason. It is yes where an entry of a round says
-    `contradiction yes` or any reason of the item, held once by the record, is `open design
+    `contradiction yes`, the item *Review rounds* being held once and in its form (`read_rounds`
+    gives its entries), or any reason of the item, held once by the record, is `open design
     choice`; no where every entry gives its mark and the item reads `none` or gives only the
     reasons `reserved choice` and `size`; unknown otherwise, with the reason."""
     rounds, _ = read_rounds(lines, fenced)

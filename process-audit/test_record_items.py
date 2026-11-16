@@ -389,7 +389,7 @@ class RoundEntries(unittest.TestCase):
                 self.assertIsNone(rounds)
                 self.assertIn("names no findings file", why)
 
-    def test_a_yes_stands_over_an_unknown_but_the_marker_not_over_a_doubled_item(self):
+    def test_each_yes_stands_over_the_unknown_of_the_other_item_but_an_unread_item_gives_no_yes(self):
         # decision: WAY-403 "The cycle writes the mark into the entry of the round in the record's item"
         # The two yes of the rule meet the unknown of an unmarked round, of an item in no form read
         # and of a missing item: the yes wins in every pairing, and without a yes the unknown stays.
@@ -413,6 +413,26 @@ class RoundEntries(unittest.TestCase):
                        f"- Discarded attempt: a time overrun\n- Review rounds:{unmarked}\n"):
             with self.subTest(record[:60]):
                 self.assertIsNone(read(record)[0])
+        # The mark of an entry is read only where *Review rounds* is held once and in its form: a
+        # doubled item, an entry in neither form, a findings file named twice and text beside the
+        # colon leave the item unread, so its mark gives no yes, whatever *Discarded attempt* says
+        # short of the marker, which does stand over it.
+        unread = {
+            "doubled": f"- Review rounds:{marked}\n- Review rounds: none\n",
+            "doubled, the copy with the mark second": f"- Review rounds: none\n- Review rounds:{marked}\n",
+            "an entry in neither form": f"- Review rounds:{marked}\n  - the return step: fix\n",
+            "a findings file named twice": f"- Review rounds:{marked}{findings('a', ', contradiction no')}\n",
+            "text beside the colon": f"- Review rounds: prose{marked}\n"}
+        for name, rounds_item in unread.items():
+            for discarded in ("none", "reason: `size`", "reason: `reserved choice`"):
+                with self.subTest(name, discarded=discarded):
+                    answer, why = read(f"- Discarded attempt: {discarded}\n{rounds_item}")
+                    self.assertIsNone(answer)
+                    self.assertIn("does not give its entries", why)
+            with self.subTest(name, discarded=odc):
+                self.assertEqual(("yes", None), read(f"- Discarded attempt: {odc}\n{rounds_item}"))
+        well_formed = f"- Discarded attempt: none\n- Review rounds:{marked}\n"
+        self.assertEqual(("yes", None), read(well_formed))
         for rounds in (" none", unmarked, findings("a", ", contradiction no")):
             with self.subTest(rounds[:40]):
                 record = (f"- Discarded attempt: {odc}\n- Discarded attempt: reason: `size`\n"

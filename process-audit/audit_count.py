@@ -152,18 +152,21 @@ any of its entries does, where a cycle that discarded more than one attempt writ
 or of the first line of each entry, is read; the entries are read only as a list: nothing stands
 beside the colon, the first line under the item is an entry at the indent of the others and no plain
 line stands at that indent or less; any other lines under the item are the details of one attempt,
-read for a second `reason: ` followed by a backtick alone, whatever word stands there; a line at the left margin ends the item). It is no where
+read for a second `reason: ` followed by a backtick alone, whatever word stands there; a line at
+the left margin ends the item). It is no where
 every entry of *Review rounds* gives its mark, `contradiction no` or the form
 of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
-`reserved choice` or `size` (each of its entries does, where it holds several). A yes of an entry of
-*Review rounds* stands over every unknown, that of the marker over every one but a doubled item
-*Discarded attempt*. It is unknown, with the one reason `the entry of a round does not say
-whether there was a contradiction` for a round of any record, older or newer, where a fix round's
-entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
+`reserved choice` or `size` (each of its entries does, where it holds several). Each yes stands over
+the unknown that the other item gives, but the mark of an entry is read only where *Review rounds*
+is held once and in its form (no entry in neither form, no findings file named twice, nothing
+beside its colon), and the marker only where *Discarded attempt* is held once. It is unknown,
+with the one reason `the entry of a round does not say whether there was a contradiction` for a
+round of any record, older or newer, where a fix round's entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
 not read `none`, where its lines are no entries at one indent alone or text stands beside its
 colon and the whole text, which does not read `none`, holds a second `reason: ` followed by a
-backtick or opens with no marker, where it is missing or doubled, or where *Review rounds* is missing, doubled or in neither form.
-Q2, more than one third of the slices of the plans came back too large: from the item
+backtick or opens with no marker, where it is missing or doubled, or where *Review rounds* is
+missing, doubled or in neither form. Q2, more than one third of the slices of the plans came
+back too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
 before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
 and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times

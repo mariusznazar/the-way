@@ -8075,12 +8075,15 @@ out only after the code was written.
 - **Relations:** derives from WAY-135 · derives from WAY-339
 - **Verification:** tests: that the count answers whether a contradiction with the settlements came
   out only after the code was written from the mark of the entries of the item *Review rounds* and the
-  marker of the item *Discarded attempt*: yes where an entry carries the mark of a contradiction or
-  the record holds the item once and it gives the marker `open design choice`, so that a yes stands
-  over an unknown of any other part of the record, save that the marker does not stand over a doubled
-  item, over which the mark of an entry alone stands, no where every entry carries the mark of none
-  and the item reads `none` or gives only the markers `reserved choice` and `size`, unknown where an
-  entry carries no mark or the item is doubled and no yes stands, and from no text of a record.
+  marker of the item *Discarded attempt*: yes where an entry of the item *Review rounds* carries the
+  mark of a contradiction, that item being held once and in its form (no entry in neither form, no
+  findings file named twice, nothing beside its colon), or the record holds the item *Discarded
+  attempt* once and it gives the marker `open design choice`, so that each yes stands over the
+  unknown that the other item gives and over that of an unmarked round, while a *Review rounds*
+  that is not read gives no yes, nor does a doubled *Discarded attempt*, no where every entry
+  carries the mark of none and the item reads `none` or gives only the markers `reserved choice` and
+  `size`, unknown where an entry carries no mark, or an item is missing, doubled or not read, and no
+  yes stands, and from no text of a record.
 - **Origin:** none
 
 *Rationale:* the reviewer has read the entries of the foundation and the task document to find the
