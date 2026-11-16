@@ -219,35 +219,42 @@ def discarded_reason(text: str) -> str | None:
     return marker.group(1) if text.count(REASON_START) == 1 else SEVERAL
 
 
-def discarded_entries(below: list[tuple[str, bool]]) -> list[str]:
+def discarded_entries(below: list[tuple[str, bool]]) -> tuple[list[str], bool]:
     """The texts of the list entries at the first indent among the lines under the item
-    *Discarded attempt*, outside code fences."""
-    markers = []
-    for text, inside in below:
-        marker = None if inside else remarks_check.MARKER.fullmatch(text)
-        if marker:
-            markers.append((remarks_check.indent_of(text), marker.group("text")))
+    *Discarded attempt*, outside code fences, and whether they stand alone: the first line is an
+    entry and no plain line stands at their indent or less. A plain line deeper than the entries
+    continues one of them."""
+    lines = [(remarks_check.indent_of(text), remarks_check.MARKER.fullmatch(text))
+             for text, inside in below if not inside]
+    markers = [(indent, marker.group("text")) for indent, marker in lines if marker]
     if not markers:
-        return []
+        return [], False
     base = min(indent for indent, _ in markers)
-    return [text for indent, text in markers if indent == base]
+    alone = lines[0][1] is not None and all(
+        marker is not None or indent > base for indent, marker in lines)
+    return [text for indent, text in markers if indent == base], alone
 
 
 def discarded_reasons(rest: str, below: list[tuple[str, bool]]
                       ) -> tuple[list[str | None] | None, str | None]:
     """The reasons of the attempts the item *Discarded attempt* gives, or None with the reason where
-    the item is not in a form read. A cycle that discarded one attempt writes it in the item's text:
-    one reason, or `none`. A cycle that discarded more writes nothing beside the colon and one entry
-    for each attempt, each opening with its marker; the reason of an entry that reads `none` or holds two markers is
-    None."""
-    entries = discarded_entries(below)
-    if entries and not rest.strip():
+    the item is not in a form read. A cycle that discarded one attempt writes it in the text of the
+    item, on its line or on the lines under it, the details possibly as a list: one reason, or
+    `none`. A cycle that discarded more writes nothing beside the colon and only list entries under
+    it, one for each attempt, each opening with its marker; the reason of an entry that reads `none`
+    or holds two markers is None. Where a plain line stands beside the entries the whole is read as
+    the text of one attempt, which holds two markers and is not read."""
+    entries, alone = discarded_entries(below)
+    if entries and alone and not rest.strip():
         return [None if reason in (NO_ATTEMPT, SEVERAL) else reason
                 for reason in map(discarded_reason, entries)], None
     reason = discarded_reason(item_words(rest, below))
     if reason == SEVERAL:
         return None, ("the item `Discarded attempt` holds more than one reason in a form that is "
                       "not read: write nothing beside its colon and one entry for each attempt")
+    if reason is None and entries and not rest.strip():
+        return None, ("a plain line stands beside the entries of the item `Discarded attempt`: "
+                      "write each attempt as an entry and nothing else at their indent")
     if reason is None:
         return None, ("the item `Discarded attempt` opens with no marker of its reason: it reads "
                       "neither `none` nor `reason: ` and one of open design choice, reserved choice "

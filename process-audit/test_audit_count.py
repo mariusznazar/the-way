@@ -3725,8 +3725,10 @@ class ProcessVersions(AuditCountCase):
             "reason: `open design choice`" + rest, "reason: `reserved choice`" + rest,
             "reason: `size`" + rest, "none",
             NL + "  - reason: `open design choice`" + rest + NL + "  - reason: `size`; 14:05",
-            NL + "  - reason: `size`; 14:05" + NL + "  - reason: `reserved choice`" + rest])
-        self.assertEqual(["yes", "no", "no", "no", "yes", "no"], answers)
+            NL + "  - reason: `size`; 14:05" + NL + "  - reason: `reserved choice`" + rest,
+            NL + "  reason: `open design choice`" + rest + NL + "  - reason: `size`; 14:05",
+            NL + "  reason: `open design choice`" + rest + NL + "  - report reports/x.md"])
+        self.assertEqual(["yes", "no", "no", "no", "yes", "no", "unknown", "yes"], answers)
 
     def test_the_four_denials_of_review_100_leave_q1_unknown(self):
         # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"

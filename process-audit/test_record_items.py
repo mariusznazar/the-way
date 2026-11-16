@@ -126,6 +126,54 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertEqual(("yes", None), read_entries("reason: `size`", "a time overrun",
                                                       "reason: `open design choice`"))
 
+    def test_a_plain_first_attempt_under_an_empty_item_beside_an_entry_gives_unknown(self):
+        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # The record a leader writes for two discards when it only adds an entry: the first attempt
+        # as plain text on the line under the empty item, the second as an entry. It holds the marker
+        # `open design choice` and two reasons; it must give neither no nor a reason of "no marker".
+        record = ("- Discarded attempt:" + NL + "  reason: `open design choice`; 10:32, report "
+                  "reports/x.md" + NL + "  - reason: `size`; 14:05" + NL + "- Review rounds: none" + NL)
+        answer, why = read(record)
+        self.assertIsNone(answer)
+        self.assertIn(SEVERAL_REASONS, why)
+        self.assertNotIn(NO_MARKER, why)
+
+    def test_one_attempt_on_the_line_under_the_item_with_its_details_as_a_list_is_read(self):
+        # decision: WAY-404 "The reason of a discarded attempt stands at the start of the record's item"
+        # The form the earlier reading accepted: the text of one attempt, its details as a list.
+        for marker, answer in (("open design choice", "yes"), ("size", "no"),
+                               ("reserved choice", "no")):
+            with self.subTest(marker):
+                record = ("- Discarded attempt:" + NL + f"  reason: `{marker}`; 10:32" + NL
+                          + "  - report reports/x.md" + NL + "  - reset to abc1234" + NL
+                          + "- Review rounds: none" + NL)
+                self.assertEqual((answer, None), read(record))
+
+    def test_a_plain_line_beside_the_entries_gives_unknown_with_its_reason(self):
+        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        beside = "a plain line"
+        for body in (NL + "  - reason: `open design choice`" + NL + "  " + beside,
+                     NL + "  - reason: `open design choice`" + NL + "  - reason: `size`" + NL
+                     + "  " + beside,
+                     NL + "  " + beside + NL + "  - reason: `open design choice`"):
+            with self.subTest(body[:40]):
+                answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
+                self.assertIsNone(answer)
+                self.assertIn("a plain line stands beside the entries", why)
+
+    def test_a_line_deeper_than_the_entries_continues_an_entry(self):
+        record = ("- Discarded attempt:" + NL + "  - reason: `open design choice`; 10:32" + NL
+                  + "    the report reports/x.md, no code kept" + NL + "  - reason: `size`; 14:05"
+                  + NL + "- Review rounds: none" + NL)
+        self.assertEqual(("yes", None), read(record))
+
+    def test_a_hundred_thousand_entries_with_a_plain_line_beside_them_are_read_at_once(self):
+        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        body = "".join(NL + "  - reason: `size`; x" for _ in range(100_000)) + NL + "  a plain line"
+        answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
+        self.assertIsNone(answer)
+        self.assertIn("a plain line stands beside the entries", why)
+
     def test_text_beside_the_entries_or_an_entry_deeper_or_fenced_is_not_a_second_attempt(self):
         beside = ("- Discarded attempt: reason: `size`" + NL + "  - reason: `open design choice`" + NL
                   + "- Review rounds: none" + NL)
