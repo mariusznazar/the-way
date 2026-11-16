@@ -183,8 +183,8 @@ here as images, each from the place the product's foundation settles for screens
 reports name; no file of the repository or of the record's copy is linked as an image (WAY-316).
 Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so.
 Of the artifacts of the check only screenshots reach the description: describe motion in words, and
-leave logs and outputs in the reports, the cases and verdicts of the author's walk through the
-running product among them. A screenshot is read at a glance in the description, while
+leave logs and outputs in the reports, the cases and verdicts of the walk of an author or of the
+executor of a slice through the running product among them. A screenshot is read at a glance in the description, while
 logs and outputs are read in the reports by the agents and the humans who check closely, where they
 already stand. *Underneath*: one or two sentences on what is under the change.
 
@@ -532,8 +532,8 @@ the code (WAY-162).
 
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
 each the same way, for the human to choose which become new tasks and to create them (WAY-161), and
-each error outside the task's scope that an author's walk through the running product reported,
-with the author's words and where it showed (WAY-408);
+each error outside the task's scope that the walk through the running product of an author or of the
+executor of a slice reported, with its words and where it showed (WAY-408);
 beside them, each check whose file belongs to a part outside the task's parts that failed in a cycle
 run and passed again, with its file path, its rerun's result and its counts, and the task that
 fixes it, or the proposal of one where none exists (WAY-261).
