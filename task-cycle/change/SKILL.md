@@ -152,8 +152,9 @@ Write the full report to the dispatch's report path:
   failed and passed when run again, both runs as command and exit code, since the passing rerun
   alone would hide the failure from the orchestrator, which relies on the report instead of
   rerunning focused checks;
-- for a change that alters behaviour a user sees in the running product, the walk of
-  `walkthrough.md`: the plan of cases with the verdict of each, where each was checked (the system,
+- as the one author or the executor of a slice, for a change that alters behaviour a user sees in
+  the running product, the walk of `walkthrough.md` (the fix and a correction report no walk): the
+  plan of cases with the verdict of each, where each was checked (the system,
   the browser, the address), what fell wrong, what you corrected and with which test, what you did
   not check and why, and each error outside the task's scope; or, where the change alters no such
   behaviour, that it alters none, with one sentence why;

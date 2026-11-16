@@ -249,10 +249,7 @@ the order of their kinds.
   carries" gives as its fifth part.
 - **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
   no fix made and each finding outside the task's scope, of the review of the whole change and of
-  every later review, each error outside the task's scope that the walk through the running product
-  found and its author reported instead of correcting (WAY-408; its item carries only "Make a task
-  of it?", the human who makes none letting it through by merging), and each Minor finding and new
-  serious finding of a reverted fix, and judge
+  every later review, and each Minor finding and new serious finding of a reverted fix, and judge
   from the whole record — the reports of the walk through the running product and the screenshots
   included — whether the product's user or the human working with the process will feel it. Restate
   each such finding in plain words, with the question whether to fix it in this request, make a task
@@ -260,7 +257,11 @@ the order of their kinds.
   correction with one fix and one review of that fix (`correction.md`). In the description after
   that correction, a finding it left unfixed carries only "Make a task of it?", or stays in the
   lower part, as anything else a correction left undone does. The finding stays in its list below,
-  with its kind and grade; the judgment decides no fix and no block.
+  with its kind and grade; the judgment decides no fix and no block. Also in this item, with no
+  judgment of what is felt, since WAY-408 prevails over WAY-289 here: each error outside the task's
+  scope that the walk through the running product found and its author reported instead of
+  correcting, restated in plain words with only the question "Make a task of it?", which the human
+  who makes none lets through by merging; it stands in *Findings outside the task's scope* below.
 - **9.** *Decisions of the task's own sections*: each item of those sections that waits on a yes,
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
 - **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
@@ -494,8 +495,7 @@ for a check that failed and passed when run again the number of cycle runs in wh
 passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
 of failing tests it took from the earlier cycle's final gate with the commit and the file it was
 taken from, or, where that gate ran in CI, the request it was taken from, and the result of the run of the failing tests on the base where step 4 of
-`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164) and, where an author walked through the running product,
-its cases with the verdict of each (WAY-406); where CI runs
+`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); where CI runs
 on the request, its run on the last head, with the link to the run and each check by name and its
 conclusion and, for a red run, the tests that failed, a run that did not report named as a check
 that did not run (step 12 of `SKILL.md`,
@@ -531,7 +531,9 @@ grade and as found by the review of the reverted fix, with the reviewer's words 
 the code (WAY-162).
 
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
-each the same way, for the human to choose which become new tasks and to create them (WAY-161);
+each the same way, for the human to choose which become new tasks and to create them (WAY-161), and
+each error outside the task's scope that an author's walk through the running product reported,
+with the author's words and where it showed (WAY-408);
 beside them, each check whose file belongs to a part outside the task's parts that failed in a cycle
 run and passed again, with its file path, its rerun's result and its counts, and the task that
 fixes it, or the proposal of one where none exists (WAY-261).

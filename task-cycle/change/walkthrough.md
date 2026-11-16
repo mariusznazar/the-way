@@ -18,7 +18,8 @@ gives the one sentence why.
   slice. The change: your diff.
 - The way to the running product, which the foundation of the product settles: its logs, its
   interface, its development data and the place of its screenshots. Read the decisions that settle
-  them, and the skill of the product that holds the steps of operation where the decision cites one.
+  them. A skill of the product may hold the steps of operation and cites the decision, so search the
+  product's skills for the identifier of each of those decisions and read each skill found.
 - Whether the product runs: start it, or probe it, by that way before anything is called
   unavailable. A product that does not start is a fact to report with its evidence, not a reason to
   skip the case.
@@ -44,8 +45,10 @@ A table, one row per case:
 
 | Case | By what | Verdict |
 |---|---|---|
-| what is checked and which result is right, by the requirement of the task | the way of the product that checks it: a screen in a browser, a call of an API, a command in a terminal, a reading of the data, a reading of the code | filled at the end |
+| what is checked and which result is right, by the requirement of the task | the way of the running product that checks it: a screen in a browser, a call of an API, a command in a terminal, a reading of the data the running product holds | filled at the end |
 
+- A reading of the code is no way to the running product and fills no row of that column: a case
+  that only the code could check stays unchecked, with that reason.
 - The cases follow the requirements of the task, not the code alone. No one approves them before the
   walk (WAY-407).
 - Order the cases by their conditions: first those whose state later cases need, in the order the
@@ -67,7 +70,7 @@ Case by case, by the way of the product that the row names.
   expected. A thought that one could also check an empty list is no signal.
 - The walk triggers no effect outside the product that costs or cannot be undone — a real mail, a
   payment, a call of a paid API — unless the product settles a stand-in for it. Without a stand-in
-  the case stays unchecked, with that reason (WAY-13).
+  the case stays unchecked, with that reason (WAY-406; WAY-13 for what cannot be undone).
 - Where a case can be checked by reading the state of the page or the answer of the API, the verdict
   rests on that reading, made in code or by a query; a screenshot serves the human, and your own
   reading of a screenshot is no measurement. A screenshot you show the human, the browser and the
