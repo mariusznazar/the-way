@@ -4140,6 +4140,8 @@ class MeasureVersions(AuditCountCase):
                       self.reasons_of(unknown, f"Mechanism measures of version {v2}"))
         self.assertIn("no run of this version gives a time",
                       self.reasons_of(unknown, f"Gate times of version {v2}"))
+        # The cause named for a version with no gate times is the task's row 6: a final gate that
+        # ran in CI; the mechanism measures, which no CI run leaves out, do not name it.
         self.assertIn("a final gate that ran in CI",
                       self.reasons_of(unknown, f"Gate times of version {v2}"))
         self.assertNotIn("a final gate that ran in CI",

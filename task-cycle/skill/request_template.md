@@ -484,10 +484,11 @@ and exit code; each check that failed or did not run by name, and
 for a check that failed and passed when run again the number of cycle runs in which it failed and
 passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
 of failing tests it took from the earlier cycle's final gate with the commit and the file it was
-taken from, and the result of the run of the failing tests on the base where step 4 of
+taken from, or, where that gate ran in CI, the request it was taken from, and the result of the run of the failing tests on the base where step 4 of
 `task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); where CI runs
 on the request, its run on the last head, with the link to the run and each check by name and its
-conclusion, a run that did not report named as a check that did not run (step 12 of `SKILL.md`,
+conclusion and, for a red run, the tests that failed, a run that did not report named as a check
+that did not run (step 12 of `SKILL.md`,
 WAY-160), and in a request left blocked for unfinished code, that the result of the run stands on
 the request's page and was not waited for; the user-interface states and the screenshot evidence, a
 screenshot unchecked for no settled way or the failure of a settled one included; the form check's

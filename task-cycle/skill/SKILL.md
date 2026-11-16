@@ -163,13 +163,18 @@ request link and set the task's state.
    history of git: the merged branch's own copy of its cycle record,
    `docs/task-cycles/<merged-task-slug>/cycle.md`, where `<merged-task-slug>` is the slug of the
    merged branch's task and not this cycle's, which that branch added to its history and removed
-   again, holds the final gate's result in its *Verification*, the CI run's result of step 12
-   included, with each check that failed named. Find the copy with `git log
+   again, holds the final gate's result in its *Verification*. Find the copy with `git log
    --diff-filter=A --name-only --format=%h <base>^1..<base>^2 -- docs/task-cycles`; where the branch
-   added the copy more than once, the last copy is the one. Write the list into *Verification* of
-   this cycle's record with the commit and the file it was taken from. If the base is no such
-   commit, or the merged branch holds no copy of a cycle record with the result of its final gate,
-   run the checks on the base as follows. Run those checks on the base alone: finish them before
+   added the copy more than once, the last copy is the one. Where that *Verification* says that
+   the final gate ran in CI, the copy holds no result of it, since the run on the last head comes
+   after the copy (step 12): take the list from the *Checks* of the merged request's description,
+   which step 12 gave the CI result and, for a red run, the tests that failed, reading the request
+   at the address in the copy's *Request URL and status* through the host's tool; a green run gives
+   an empty list. Write the list into *Verification* of
+   this cycle's record with the commit and the file it was taken from, or the request it was taken
+   from. If the base is no such commit, or the merged branch holds no copy of a cycle record with
+   the result of its final gate and no request whose *Checks* gives it, run the checks on the base
+   as follows. Run those checks on the base alone: finish them before
    anything changes a tracked file of the worktree, or run them in a separate checkout of the base
    commit in `.runs/base/` of the worktree, deleted when they end, as "Working copies" below gives.
    The gate's run on the base is a local run, since no request stands yet, and goes as step 10 gives
@@ -489,9 +494,13 @@ contradicts a decision.
     moved the pin (step 2), the run on the base where step 4 requires it, this run, and the reruns of
     steps 9 and 12 that this step governs. A time that a script reads from the run cannot be copied
     wrongly, and a change to the script shows in the files, where a change to an agent's habit leaves
-    no trace. A cycle whose final gate is the CI run records no such time for it, and its record's
-    *Verification* says that the final gate ran in CI, so that the audit tells that cycle from one
-    whose measuring script failed. The gate's output passes through unchanged. The script's exit code is
+    no trace. Where CI is the final gate, write into the record's *Verification* now, before the
+    copy of step 12 is made, a row that says that the final gate is the CI run on the request's last
+    head, that the cycle has no local time of it, and that its result stands in *Checks* of the
+    request's description and not in the copy, so that step 4 of a later cycle finds where to read
+    it and the audit tells this cycle from one whose measuring script failed; a local run that step
+    12 makes in place of a CI run that gave no result is recorded in the original record alone, and
+    its time reaches no copy. The gate's output passes through unchanged. The script's exit code is
     the gate's, and the orchestrator records it with the command as before; an exit code 2 that
     comes with an `Error: gate_times.py:` line on stderr is the script's own failure, not the
     gate's, and the orchestrator does as step 12 gives for a measuring script. Record its
@@ -614,11 +623,13 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     the cycle, its run on the head you pushed last is the final gate (step 10): wait for it, as the
     host's tool gives it (on GitHub, `gh pr checks <request> --watch`), for at most 30 minutes from
     the push of that head, and write its result — the link to the run, each check by name and its
-    conclusion — into *Checks* of the description, in an edit that the template's checks, the check
-    of private paths included, pass before it is published (WAY-309), and into *Verification* of
-    the original record, with the statement that the final gate ran in CI (WAY-160). The committed
-    copy of the record holds that row only for the runs before its own head: the run on the head that
-    removes the copy comes after it, and no pair of commits is repeated to bring that row in. A red
+    conclusion, and for a red run the tests that failed, read from its log — into *Checks* of the
+    description, in an edit that the template's checks, the check of private paths included, pass
+    before it is published (WAY-309), and into *Verification* of the original record (WAY-160).
+    The committed copy of the record holds the row that step 10 wrote, which says that the final
+    gate ran in CI and where its result stands, and the result's row only for the runs before its
+    own head: the run on the head that removes the copy comes after it, and no pair of commits is
+    repeated to bring that row in. A red
     result is a failed gate, handled as step 10 gives: its failures are fixed, the fix reviewed as
     "The end of a code review" gives, the record's pair of commits repeated with the reports of the
     fix, and the wait repeated on the new head, in which no gate runs on your own system, save a

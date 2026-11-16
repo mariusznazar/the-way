@@ -2689,9 +2689,10 @@ saying only to run the tests before a merge; a required check with no bypass for
 failure of the CI blocks every merge until the owner turns the rule off, which the owner can do
 anyway, so the difference is only more clicking; a result that is shown and requires nothing — a
 red request can be merged by oversight; CI on one system alone — the tests that need the other
-system run nowhere, and an error of the installer with junctions on Windows shows only in use; CI on
-Linux and, on the machine of the work, only the directories with Windows tests — the time of that
-run is unmeasured and part of the load of the machine stays.
+system run nowhere, and an error that shows only on that system shows only in use (in the-way, an
+error of the installer with junctions on Windows); CI on one system and, on the machine of the work,
+only the directories of tests that need the other system — the time of that run is unmeasured and
+part of the load of the machine stays.
 
 ### WAY-38 — In what are the scripts of the-way written?
 
@@ -2815,7 +2816,8 @@ open for review, or one that waits only for human actions in the cycle — the C
 pushed last is the final gate, and the orchestrator runs no full gate itself at the end of the cycle
 or after the merge with the target branch; the run on the base of the task branch and the run after
 the pin of the-way moves stay the orchestrator's own, since no request stands then, and where CI
-runs on no request the orchestrator runs the gate itself on the tree that goes into it.
+runs on no request, or the request is left blocked for unfinished code, the orchestrator runs the
+gate itself on the tree that goes into it, save where that tree is one already run.
 
 The orchestrator waits for the result of the CI run on each head it pushes to the request, a
 correction's included, treats a red result as a failed gate, handled as the cycle's gate gives — a
@@ -2825,7 +2827,9 @@ description. Where the run gives no result within 30 minutes of the push — it 
 stands in a queue or the host does not answer — the orchestrator runs the gate itself on the tree of
 that head, and the description says that CI did not answer and that the gate ran on the cycle's own
 system; a request the cycle leaves blocked for unfinished code is out of that wait, its description
-saying that the result of the CI run stands on the request's page and was not waited for.
+saying that the result of the CI run stands on the request's page and was not waited for. Where CI
+is the final gate, the cycle's record says so before it is copied, and names the request whose
+description gives the result, so that the next cycle takes the list of failing tests from there.
 
 - **Scope:** task-cycle
 - **Based on:** none
@@ -2842,7 +2846,8 @@ saying that the result of the CI run stands on the request's page and was not wa
     gate once on the tree the return step and its review leave, and again where the merge with the
     target branch changed it, and the request gives the command and its exit code; a request blocked
     for a remaining blocking finding says in its description that the result of the CI run was not
-    waited for;
+    waited for, and the orchestrator ran the gate on the code the request holds; the record copied
+    for a request whose final gate is CI says that it is, and where the result stands;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
