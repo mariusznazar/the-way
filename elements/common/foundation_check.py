@@ -38,17 +38,19 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   `<identifier>@<fingerprint>` in guidelines outside fenced code (an invariant). Old references
   are read too: `ID@<fingerprint>` and `ID/<version>` name `ID`, and in a decision's *Based on* a
   fact written `ID@<fingerprint>` anywhere in the field. In an invariant's *Rests on*
-  or *Derives from*, or a decision's *Based on*, the first item of the value (items joined by
-  ` · `, a ` · ` inside quotation marks joining nothing) that begins with the word `TODO`, and all
-  that follows it, is one description of something missing, read as `TODO — <the fact, with its
-  source>`, `TODO — <the decision, and where it is expected>` or `TODO — <what is missing, with its
-  source>`, split into no items or references, since it names no entry; the items before it are
-  read as before, so a known entry followed by it stays checked. A `TODO` item with no description
-  of what is missing, whether alone or after known entries, as in `clock-tick · TODO`, is an error
-  (WAY-71). A `TODO` after a comma or a line break instead of ` · ` begins such an item too: a bare
-  one is an error as above, and one with a description is an error saying the items are joined by
-  ` · `. A `TODO` inside quotation marks begins no item, the dash after `TODO` is not required,
-  and a value with no `TODO` item is read as before;
+  or *Derives from*, or a decision's *Based on* or *Relations*, the first item of the value (items
+  joined by ` · `, a ` · ` inside quotation marks joining nothing) that begins with the word
+  `TODO`, and all that follows it, is one description of something missing, read as `TODO — <the
+  fact, with its source>`, `TODO — <the decision, and where it is expected>` or `TODO — <what is
+  missing, with its source>`, split into no items or references, since it names no entry; the
+  items before it are read as before, so a known entry followed by it stays checked. A `TODO`
+  item with no description of what is missing, whether alone or after known entries, as in
+  `clock-tick · TODO`, is an error (WAY-71). A `TODO` after a comma or a line break instead of
+  ` · ` begins such an item too: a bare one is an error as above, and one with a description is
+  an error saying the items are joined by ` · `. In a decision's *Relations*, `TODO` behind a
+  relation type, as in `derives from TODO`, is an error too: the `TODO` item takes no type. A
+  `TODO` inside quotation marks begins no item, the dash after `TODO` is not required, and a value
+  with no `TODO` item is read as before;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,
@@ -56,7 +58,7 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   entry's *Not*; a part's *Files*, *Depends on* and *Trust boundary*, never `TODO`; and a
   surface's *Relied on by*, never `none` or `TODO`; a decision's *Scope* and an invariant's
   *Part* never read `none` or `TODO`, nor a decision's *Verification* `TODO`, nor a decision's
-  *Relations* or *Origin* a value that begins with `TODO`. An entry of the map
+  *Origin* a value that begins with `TODO`. An entry of the map
   is a part where it has *Files*, a surface where it has *Relied on by*, and an error with neither.
   An entry in the earlier form — a version in its heading, or a map entry with *Parts*,
   *Invariant*, *Criticality*, *Coverage* or *Declared at* — is an error, which
@@ -165,15 +167,16 @@ QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
-# The three fields that take `TODO — <description>`: what a bare `TODO` in each fails to say, and
-# the form the description takes.
+TYPED_TODO = re.compile(r"(?:derives from|narrows)[ \t]+(?=`?TODO(?![^\s`]))")
+# The fields that take `TODO — <description>`: what a bare `TODO` in each fails to say, and the
+# form the description takes.
 MISSING = {"Rests on": ("names no fact", "<the fact, with its source>"),
            "Derives from": ("names no decision", "<the decision, and where it is expected>"),
-           "Based on": ("says nothing of what is missing", "<what is missing, with its source>")}
+           "Based on": ("says nothing of what is missing", "<what is missing, with its source>"),
+           "Relations": ("names no decision", "<the decision, and where it is expected>")}
 ANY = lambda value: bool(value)
 DECISION_FIELDS = ("Scope", "Based on", "Relations", "Verification", "Origin")
 DECISION_WORDS = {"Scope": lambda value: value not in EMPTY,
-                  "Relations": lambda value: not TODO_VALUE.match(value),
                   "Verification": lambda value: value != "TODO",
                   "Origin": lambda value: not TODO_VALUE.match(value)}
 INVARIANT_FIELDS = {"Method": lambda value: value in ("test", "review"), "Rests on": ANY,
@@ -260,16 +263,16 @@ def based_on(found):
         start += len(item) + 1
 
 
-def todo_item(value):
-    """The index in a field's value where its first item that begins with the word `TODO` starts,
-    or None. The items are joined by ` · `, but a comma or a line break also ends a piece, so a
-    `TODO` after either begins one too; a separator inside quotation marks joins nothing, and a
-    `TODO` inside them begins no item."""
+def todo_item(value, typed=False):
+    """The index in a field's value where its first item that begins with the word `TODO` starts
+    (with `typed`, after a relation type too), or None. The items are joined by ` · `, but a comma
+    or a line break also ends a piece, so a `TODO` after either begins one too; a separator inside
+    quotation marks joins nothing, and a `TODO` inside them begins no item."""
     masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
     start = 0
     for piece in re.split(r"[·,\n]", masked):
         begin = start + len(piece) - len(piece.lstrip())
-        if TODO_VALUE.match(value, begin):
+        if TODO_VALUE.match(value, begin) or (typed and TYPED_TODO.match(value, begin)):
             return begin
         start += len(piece) + 1
     return None
@@ -377,6 +380,7 @@ class Foundation:
         self.withdrawn_lines = set()  # the lines of the log's list of withdrawn numbers
         self.derived_lines = set()  # the lines of the invariants' *Derives from*
         self.based_lines = set()  # the lines of the decisions' *Based on*
+        self.relation_lines = set()  # the lines of the decisions' *Relations*
         self.number = None  # a decision number with the log's prefix
         self.entries = {}    # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
@@ -525,9 +529,10 @@ class Foundation:
                                   % match.group(0))
 
     def check_decision_numbers(self, path, lines):
-        """Every line but the log's withdrawn numbers and the invariants' *Derives from*, which
-        `check_foundation_references` reads apart from the sources it quotes."""
-        skipped = {DECISIONS: self.withdrawn_lines | self.based_lines,
+        """Every line but the log's withdrawn numbers, its *Based on* and *Relations*, and the
+        invariants' *Derives from*, which `check_foundation_references` reads apart from the
+        description of what is missing and the sources it quotes."""
+        skipped = {DECISIONS: self.withdrawn_lines | self.based_lines | self.relation_lines,
                    INVARIANTS: self.derived_lines}.get(path, ())
         for number, line in enumerate(lines, start=1):
             if number not in skipped:
@@ -538,16 +543,21 @@ class Foundation:
         with the word `TODO`, which with all that follows is one description of a missing fact,
         decision or source, never a list or a reference. A `TODO` with no description is reported.
         A `TODO` that follows a comma or a line break instead of ` · ` is reported too: a bare one
-        as a bare one, one with a description as a list not joined by ` · `.
+        as a bare one, one with a description as a list not joined by ` · `; so is a `TODO`
+        behind a relation type in a decision's *Relations*.
         A value with no such item is returned as it is, to be read as its field is read."""
         value, lines = found.get(name, ("", [0]))
-        start = todo_item(value)
+        start = todo_item(value, typed=name == "Relations")
         if start is None:
             return found
         todo = TODO_VALUE.match(value, start)
         where = lines[value.count("\n", 0, start)]
         before = value[:start].rstrip(" \t\n")
-        if not value[todo.end():].strip(" \t\n`—–-"):
+        if todo is None:
+            self.report.error(path, where, "*%s* reads `TODO` after a relation type: the `TODO` "
+                              "item takes no `derives from` or `narrows`; write `TODO — %s`"
+                              % (name, MISSING[name][1]))
+        elif not value[todo.end():].strip(" \t\n`—–-"):
             what, form = MISSING[name]
             self.report.error(path, where,
                               "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form))
@@ -566,6 +576,11 @@ class Foundation:
             for word, line in based_on(known):
                 self.refer(DECISIONS, line, word, "fact")
             for line, text in unquoted(known, "Based on"):
+                self.refer_decisions(DECISIONS, line, text)
+            self.relation_lines.update(found.get("Relations", ("", []))[1])
+            value, lines = self.known_part(DECISIONS, found, "Relations").get("Relations",
+                                                                              ("", []))
+            for line, text in zip(lines, value.split("\n")):
                 self.refer_decisions(DECISIONS, line, text)
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")

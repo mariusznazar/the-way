@@ -603,7 +603,9 @@ holding a value, or `none` or `TODO` where the template gives it that word: `non
 there, `TODO` that something is missing. The main branch holds `TODO` only where an entry stands on
 something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
 `TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
-`TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
+`TODO — <the decision, and where it is expected>`; in a decision's *Relations*, in the same form,
+for any decision the entry derives from that the foundation does not hold yet, whether or not a
+project definition projects it; and in a decision's *Based on*, in the form
 `TODO — <what is missing, with its source>`; where an entry stands on several things and only some
 are missing, the missing one is the last item of the value and reads as the form of its field,
 after the known items; a change that leaves one there puts it before the human.
@@ -613,7 +615,10 @@ after the known items; a change that leaves one there puts it before the human.
   task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: that the script reports a bare `TODO` in a decision's *Relations*, a
+  `TODO` behind a relation type there and a `TODO` joined to the relations by a comma as errors,
+  and that it takes the descriptive form after known relations. An agent compares the change with
+  the part no test holds:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
@@ -625,29 +630,37 @@ after the known items; a change that leaves one there puts it before the human.
     `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
     after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
-    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
-    *Origin*.
+    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Origin*.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten; an undefined value misleads. An invariant
 with no test reads `review` as its method rather than `TODO` (WAY-61). An entry that stands on
 something the foundation does not hold yet — a fact for an invariant, the decision an invariant
-derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
-`none`, and the description keeps the gap from standing as a silent one: it names what is missing,
-and the human sees at the merge that it is left. Where only some of the things an entry stands on
-are missing, the known ones stay named items, because every link of the chain is written (WAY-17)
-and a named item stays checked as a reference, while a known one moved into the description would
-no longer be; the missing one closes the value. *Relations* and *Origin* are what an author states
-about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
-foundation lacks.
+or a decision derives from, a source for a decision — can expose it as `TODO — <…>`
+instead of falsely claiming `none`, and the description keeps the gap from standing as a silent
+one: it names what is missing, and the human sees at the merge that it is left. Where only some of
+the things an entry stands on are missing, the known ones stay named items, because every link of
+the chain is written (WAY-17) and a named item stays checked as a reference, while a known one
+moved into the description would no longer be; the missing one closes the value. *Origin* is what
+an author states about the entry itself when writing it, so a gap there is a field left unfilled,
+never a thing the foundation lacks; *Relations* may name a decision the foundation does not hold
+yet, and the gap is then that decision, as in an invariant's *Derives from*.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
 state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
 the main branch and having the script enforce it — a cycle would stop to write a fact outside its
 task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact; `TODO` only
-in *Rests on* — an author of a decision whose source is silent, or of an invariant whose decision
-is not written yet, would have to stop the cycle or write `none`, which is false.
+in *Rests on* — an author of a decision whose source is silent or whose higher decision is not
+written yet, or of an invariant whose decision is not written yet, would have to stop the cycle or
+write `none`, which is false; `TODO — projected: <the definition>, <the question of the entry>`
+in a decision's *Relations*, which a script checks against the definition — a dead reference would
+be caught, but the script that checks the form would have to read project definitions, and the
+field would hold a second form beside the one an invariant's *Derives from* has; a partial entry of
+a projected decision as the only way — it leaves the one case that remains, where the code makes no
+part of the projected decision true; a form for the decision an approved project definition
+projects alone — a narrower opening, but the rule of *Relations* would differ from that of
+*Derives from*, and nothing would check the limit.
 
 ## Decision entries and the decision log
 
@@ -3719,6 +3732,10 @@ step reads the projected entries of the task's sources as well as the foundation
 code makes true that the foundation step missed — an invariant with its test run on that code — and
 writes a new entry only for a rule none of them states.
 
+A change that writes a projected entry into the foundation replaces each descriptive `TODO` that
+points at it with a reference to it by its identifier: in a decision's *Relations* as
+`derives from <number>`, and in an invariant's *Derives from* as the number.
+
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
@@ -3730,9 +3747,13 @@ writes a new entry only for a rule none of them states.
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
     that sentence and puts its meaning before the human in the request's section for the human's
     decisions; a plan member whose code would make another item's entry true returns to the plan
-    first;
+    first; a task whose code makes a projected decision true writes it into the log and replaces
+    the `TODO` that names it with `derives from <its number>` in the *Relations* of a decision and
+    with its number in the *Derives from* of an invariant;
   - violates: the return step writes a new decision for a rule a projected entry of the
-    task's source states; a shortened projected entry is written as the gate approved it, its
+    task's source states; a task writes a projected decision into the log and leaves a decision's
+    *Relations* reading `TODO — <that decision, and where it is expected>`; a shortened projected
+    entry is written as the gate approved it, its
     meaning left out of the request's section for the human's decisions; the code a late-found
     projected invariant covers is set aside and rewritten.
 - **Origin:** none
@@ -6983,8 +7004,8 @@ actions, the changed invariant tests, surfaces and *Violated* marks, the additio
 a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
 error of the form check that the cycle holds wrong, the pairs that give the cause of a
 correction after the request opened, each descriptive `TODO` in an
-invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
-after the change (WAY-71), and the foundation entries the human did not see at the task document — in
+invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* that stands on
+the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document — in
 three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
 order: what the request cannot go on without, an answer or an action of the human; what the cycle did
 not do or did not fix and can still be done in this request, which the human has done there, makes a
@@ -7042,7 +7063,7 @@ template of a request's description lists every kind.
     reviewer did; the section reads `none` after a correction, or the sentence of the correction's
     pairs stands only in the lower part; the section reads `none` while an invariant's *Rests on*
     or *Derives from* or a
-    decision's *Based on* holds a descriptive `TODO` on the merged tree, or such a gap
+    decision's *Based on* or *Relations* holds a descriptive `TODO` on the merged tree, or such a gap
     stands under *Needed from you* or under *You accept by merging* with no way to answer it.
 - **Origin:** none
 
@@ -7059,8 +7080,8 @@ is the reading WAY-150 gives, so it asks for no yes, and the section keeps its `
 that can be merged. The cause of a correction stands here
 because the judgment whether the task required what the correction changed is the cycle's own, and
 the merge is where the human sees it. A descriptive `TODO` that stands in
-an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
-is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
+an invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* once the
+change is merged is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
 it names as missing, for the human to have the missing thing written in the request, make a task of
 it or let it through (WAY-71); while an old gap stands, every request carries it. In one list, what
 the request cannot go on without, what the human can still have done in it and what the merge

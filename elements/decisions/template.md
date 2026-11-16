@@ -33,7 +33,7 @@ such part; none where there is no such part>
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
-- **Relations:** derives from WAY-x · narrows WAY-y | none
+- **Relations:** derives from WAY-x · narrows WAY-y | TODO — <the decision, and where it is expected> | none
 - **Verification:** invariants: <identifier> · <identifier>. tests: <the parts of the sentences they
   hold, in words>. An agent compares a change with the part no invariant and no test holds:
   - complies: <…>
@@ -68,7 +68,13 @@ such part; none where there is no such part>
   silent on only some of what the decision rests on, the known facts and sources stay named and the
   missing one is the last item, `<fact> · TODO — <what is missing, with its source>`; its
   description runs to the end of the value, so a comma or a ` · ` inside it joins nothing
-  (WAY-71). *Relations* and *Origin* never read `TODO`: the script reports it (WAY-71).
+  (WAY-71). *Origin* never reads `TODO`. *Relations* takes it only as
+  `TODO — <the decision, and where it is expected>`, for a decision the entry derives from that the
+  foundation does not hold yet, whether or not a project definition projects it; it is the last
+  item after the known relations, `derives from WAY-x · TODO — <the decision, and where it is
+  expected>`, and its description runs to the end of the value as in *Based on*. The script reports
+  a bare `TODO` in *Relations*, a `TODO` behind a relation type (`derives from TODO`), and any
+  `TODO` in *Origin*, as an error (WAY-71).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than
@@ -213,7 +219,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
 - *Relations* use a closed list of two types: `derives from` — a higher decision this one serves;
   `narrows` — a decision this one deliberately goes against in a narrower area. The list is closed
   because a relation type each author reads differently tells a reader nothing, so each type is
-  defined once.
+  defined once. The `TODO` of *Relations* is no third type but the gap where the decision a relation
+  would name is not written yet.
 - A relation names the other decision by its number alone, as `derives from WAY-01` (WAY-02), and
   is written in the entry that depends on the other (WAY-18).
 - Where two decisions both apply and collide, the one that prevails names the other in
