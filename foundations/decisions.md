@@ -7004,8 +7004,8 @@ actions, the changed invariant tests, surfaces and *Violated* marks, the additio
 a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
 error of the form check that the cycle holds wrong, the pairs that give the cause of a
 correction after the request opened, each descriptive `TODO` in an
-invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
-after the change (WAY-71), and the foundation entries the human did not see at the task document — in
+invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* that stands on
+the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document — in
 three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
 order: what the request cannot go on without, an answer or an action of the human; what the cycle did
 not do or did not fix and can still be done in this request, which the human has done there, makes a
@@ -7063,7 +7063,7 @@ template of a request's description lists every kind.
     reviewer did; the section reads `none` after a correction, or the sentence of the correction's
     pairs stands only in the lower part; the section reads `none` while an invariant's *Rests on*
     or *Derives from* or a
-    decision's *Based on* holds a descriptive `TODO` on the merged tree, or such a gap
+    decision's *Based on* or *Relations* holds a descriptive `TODO` on the merged tree, or such a gap
     stands under *Needed from you* or under *You accept by merging* with no way to answer it.
 - **Origin:** none
 
@@ -7080,8 +7080,8 @@ is the reading WAY-150 gives, so it asks for no yes, and the section keeps its `
 that can be merged. The cause of a correction stands here
 because the judgment whether the task required what the correction changed is the cycle's own, and
 the merge is where the human sees it. A descriptive `TODO` that stands in
-an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
-is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
+an invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* once the
+change is merged is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
 it names as missing, for the human to have the missing thing written in the request, make a task of
 it or let it through (WAY-71); while an old gap stands, every request carries it. In one list, what
 the request cannot go on without, what the human can still have done in it and what the merge
