@@ -37,7 +37,7 @@ Where {merge-onto} exists, every file git tracks lies in `foundations/` or in a 
 
 Where {merge-onto} exists, every element directory holds a template, examples or a pointer to entries of the-way that serve as its examples, and a skill.
 
-- **Method:** review
+- **Method:** test
 - **Rests on:** none
 - **Derives from:** WAY-09
 - **Part:** decisions · part-map · invariants · glossary · environment-facts
@@ -117,7 +117,7 @@ No file git tracks under `elements/` holds the text "decision pending", every ru
 
 Every script git tracks is a Python file.
 
-- **Method:** review
+- **Method:** test
 - **Rests on:** none
 - **Derives from:** WAY-38
 - **Part:** every
@@ -127,7 +127,7 @@ Every script git tracks is a Python file.
 
 No script git tracks imports a module other than one of the standard library of Python 3.14 or a Python file git tracks.
 
-- **Method:** review
+- **Method:** test
 - **Rests on:** python-stdlib-modules
 - **Derives from:** WAY-38 · WAY-89
 - **Part:** every
@@ -197,7 +197,7 @@ No file generated for an agent holds an overview of the repository's directories
 
 The repository declares Python 3.14 in `.python-version`.
 
-- **Method:** review
+- **Method:** test
 - **Rests on:** none
 - **Derives from:** WAY-89
 - **Part:** repository
