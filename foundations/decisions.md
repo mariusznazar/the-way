@@ -6040,7 +6040,7 @@ in its report. The handoff names what the agent reads, as the
 orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
 it may carry a section of the plan, spec or task copied word for word, never restated in other
 words, with its file named as its address, so that a slice's executor gets its section of the plan
-and works without opening the plan; and since only the orchestrator reads the cycle record, the
+and works without opening the plan; and since only the orchestrator reads `cycle.md`, the
 handoff tells the agent that `cycle.md` and the other files of the cycle's record directory — other
 agents' handoffs, reports and findings — are not its to read unless its handoff names them, and an
 answer or choice that binds an agent goes into that agent's handoff or the message that resumes it.
@@ -6095,11 +6095,11 @@ its section of the plan word for word with the plan's file named as its address 
 record holds every agent's events; an agent that reads it pays for all of them to learn one answer.
 It also holds the orchestrator's reasoning, and so do the handoffs and reports of the other agents,
 which carry the orchestrator's answers to their questions; an agent that learns that reasoning
-before it gives its own assessment assesses under its influence, as a reviewer of a spec did in a
-cycle of a game product when it read the log to see whether the orchestrator had already ruled on
-the designer's points. The handoff says it, because the handoff is the one text every stage agent
-reads in every harness, a stage dispatched without its type included, and the orchestrator's skill
-gives the sentence once for all the handoffs.
+before it gives its own assessment assesses under its influence; a reviewer of a spec in a cycle of
+a game product read the log to see whether the orchestrator had already ruled on the designer's
+points, and found no ruling there, and no harm to the assessment was found. The handoff says it,
+because the handoff is the one text every stage agent reads in every harness, a stage dispatched
+without its type included, and the sentence then stands in one place.
 *Rejected:* the line of the check result dropped from the skill of the stage that plans — the
 orchestrator learns of a path left unchecked only from the full report, which routine progression
 does not read; the line asked only of a stage that checks the product — whether a stage gives it
