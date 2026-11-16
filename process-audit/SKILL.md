@@ -223,12 +223,17 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    kind of series is never set beside a number of the other. Q1 asks whether a contradiction with the
    settlements came out only after the code was written, and the count reads it from two marks of the
    cycle's record, never from the text of a reviewer's remarks: `yes` where an entry of *Review
-   rounds* says `contradiction yes` or *Discarded attempt* gives the reason `open design choice` (in
-   any of its entries, where it holds one for each discarded attempt);
-   `no` where no entry says so and *Discarded attempt* reads `none` or gives the reason `reserved
-   choice` or `size`; `unknown` where an entry of a round carries no mark or *Discarded attempt*
-   gives no reason, which a record written before those marks stood in the template does wherever
-   it holds such an entry or such a text. Quote
+   rounds* says `contradiction yes` or *Discarded attempt*, held once by the record, gives the
+   reason `open design choice` (in any of its entries, where it holds one for each discarded
+   attempt); a `yes` stands over the `unknown` of any other part of the record, save that the reason
+   does not stand over a doubled *Discarded attempt*, which only the mark of an entry does;
+   `no` where every entry of *Review rounds* says `contradiction no` or is a review that passed with
+   no fix, and *Discarded attempt* reads `none` or gives only the reasons `reserved choice` and
+   `size`; `unknown` otherwise: where an entry of a round carries no mark, where *Review rounds* is
+   missing, doubled or in neither form, or where *Discarded attempt* is missing, doubled or gives no
+   reason (a text or an entry with no reason at its start, or a text of one attempt that holds a
+   second `reason: ` followed by a backtick), which a record written before those marks stood in the
+   template does wherever it holds such an entry or such a text. Quote
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
    wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
    the cycles in *No version*, with the reasons *Unknown values* gives.

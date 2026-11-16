@@ -43,7 +43,7 @@ not authorize running it.
   nothing after the colon and, under this line, one entry for each attempt, all at one indent with
   no other line at that indent, each written as above and opening with its own `reason: ` and
   reason; every line of the item stands indented under this line, since a line at the left margin
-  ends the item>
+  ends the item, and the text of one attempt holds no other `reason: ` followed by a backtick>
 - Slices returned too large: <for each, the slice, its agent's report, its last commit and files,
   reset commit, earlier completed/reviewed slices retained, and slices it was split into | none>
 - Agent waiting: <native completion notification or blocking tool; live-contract limit and any

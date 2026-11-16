@@ -281,9 +281,9 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
     """Q1: whether a contradiction with the settlements came out only after code was written, as
     the marks of the record's item *Review rounds* and of its item *Discarded attempt* give it:
     `yes`, `no`, or None with the reason. It is yes where an entry of a round says
-    `contradiction yes` or any reason of the item is `open design choice`; no where every entry
-    gives its mark and the item reads `none` or gives only the reasons `reserved choice` and
-    `size`."""
+    `contradiction yes` or any reason of the item, held once by the record, is `open design
+    choice`; no where every entry gives its mark and the item reads `none` or gives only the
+    reasons `reserved choice` and `size`; unknown otherwise, with the reason."""
     rounds, _ = read_rounds(lines, fenced)
     if rounds and any(entry.contradiction == "yes" for entry in rounds):
         return "yes", None

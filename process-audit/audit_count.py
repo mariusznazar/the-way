@@ -155,7 +155,9 @@ line stands at that indent or less; any other lines under the item are the detai
 read for a second `reason: ` followed by a backtick alone, whatever word stands there; a line at the left margin ends the item). It is no where
 every entry of *Review rounds* gives its mark, `contradiction no` or the form
 of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
-`reserved choice` or `size`. It is unknown, with the one reason `the entry of a round does not say
+`reserved choice` or `size` (each of its entries does, where it holds several). A yes of an entry of
+*Review rounds* stands over every unknown, that of the marker over every one but a doubled item
+*Discarded attempt*. It is unknown, with the one reason `the entry of a round does not say
 whether there was a contradiction` for a round of any record, older or newer, where a fix round's
 entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
 not read `none`, where its lines are no entries at one indent alone or text stands beside its
