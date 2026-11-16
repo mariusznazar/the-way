@@ -6904,6 +6904,78 @@ human whatever that judgment says.
 *Rejected:* the author only reporting an error and the review deciding on the correction — an extra
 round of fix and a new review each time.
 
+### WAY-410 — What does an agent do when a test contradicts the requirement, or when it cannot pass the test by general code?
+
+An agent that makes a change and meets a test that expects what the requirement of the task rules
+out, or that it cannot make pass by code that meets the requirement for every input, writes no code
+for the input of the test and does not change the test: it commits what it has and returns to the
+orchestrator of the cycle a question that names the test, quotes the requirement and says what it
+tried. A test that checks behaviour the task expressly changes is no such contradiction, and the
+agent changes it, with its cause on the side of the requirement.
+
+The orchestrator answers such a question only from the task, the spec, a decision or the sentence of
+an invariant, quoting the passage that settles it, and where none of them settles it opens a blocked
+draft request that holds the question under *Needed from you* and picks no reading of its own.
+
+The executor of a slice that returns such a question gets no retry on a class higher, which narrows
+the retry of WAY-229; where no source settles the question, the blocked draft opens at once.
+
+- **Scope:** task-cycle
+- **Based on:** claude-test-special-casing · impossiblebench-test-modification ·
+  impossiblebench-abort-option
+- **Relations:** derives from WAY-227 · narrows WAY-229
+- **Verification:** an agent compares the agent's report, the cycle record and the request with the
+  decision:
+  - complies: an author whose test expects 180 for an input of 200, where the requirement says the
+    discount never exceeds 10 percent, writes no branch for 200, leaves the test as it is, commits its
+    work and returns a question that names the test, quotes the requirement and says what it tried;
+    the orchestrator finds in the task the sentence that settles it and resumes the author with that
+    sentence quoted, or, where the task, the spec, the decisions and the invariants say nothing,
+    opens a blocked draft request with the question under *Needed from you*; the executor of a
+    slice that returned such a question is not replaced by one of a higher class; a test that checks
+    behaviour the task expressly changes is changed by the author, who names the requirement as its
+    cause;
+  - violates: an author writes a branch or a returned value for the input of the test; an author
+    changes the expected value of a test to the code's output to turn it green; an author continues
+    after meeting a contradiction and notes it in its report; the orchestrator answers such a
+    question by the smallest reversible reading of the requirement; the cycle opens a blocked draft
+    request for a contradiction that a sentence of the task settles; the executor of a slice that
+    returned such a question gets a retry on a class higher.
+- **Origin:** none
+
+*Rationale:* the system card places the special-casing of a test where an agent has failed several
+times to find a general solution, particularly where test cases present conflicting requirements, so
+an agent that has no other way out adjusts the code or the test. The rule gives it the way out: a
+question to the orchestrator, with the work so far committed, and no code and no change of the test
+meanwhile. A test that contradicts the requirement is a question of what the task requires, not an
+open design choice, so no attempt is discarded and no spec is written (WAY-135); only the task, the
+spec, a decision or the sentence of an invariant settles what a task requires. The orchestrator
+answers the agents' questions under the owner's delegation (WAY-227) and answers this one from those
+four alone, since the smallest reversible reading would settle the requirement itself, which no
+agent of the cycle may do. Where none of the four settles it, the code cannot proceed without the
+human, so the cycle ends on a blocked draft request in which the human meets the question, as WAY-227
+gives for a decision reserved to the human. A slice's executor gets no retry on a class higher
+because a stronger model does not remove a contradiction in the requirement, while the retry resets
+the branch to the slice's base and deletes the work of the slice. An option for an agent to hand a
+task to a human lowered the cheating rate of two OpenAI models in ImpossibleBench and had a much less
+pronounced effect on Claude Opus 4.1 (`impossiblebench-abort-option`); the decision takes the
+quantified part of the finding across publishers, as WAY-85 gives, and its size is no promise for the
+process's agents, which run on Claude models. The reason for the way out stands without it: an
+agent that has none can only adjust the code or the test. The price: an orchestrator may read a
+source wrongly and send the author an answer that the review of the result then judges; a cycle that
+ends on a blocked draft leaves the work done so far unreviewed and the task waiting for the human; an
+author may ask too early, and an unneeded question costs a turn.
+*Rejected:* a third reason for returning without code, the attempt discarded — the work of the author
+goes, and the designer of a spec cannot settle the requirement either, since it asks the
+orchestrator and never the human: the same problem at a higher cost; a blocked request at once, with
+no orchestrator — every contradiction, also an obvious one that the task already settles, stops the
+cycle and costs the human a turn; leaving it as it is, the agent noting the contradiction in its
+report and working on — it costs nothing today, but an author with no way out adjusts the code or the
+test, and an option to hand the task to a human lowered the cheating of GPT-5 in ImpossibleBench
+(`impossiblebench-abort-option`); only an explicit contradiction — an author that is stuck with no
+contradiction in sight, and from whom code for one input comes, has no other way out than the
+workaround.
+
 ## Review of a change
 
 Who reviews a change, which findings are fixed or block, and how a reviewer grades a finding on the
@@ -7261,6 +7333,67 @@ in reviews after the review of the whole change is not repaired; a departure fro
 Important, that is, blocking — every departure from the form is a FAIL and a round of fixes, and a
 fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
 have reached 6 of 32 runs.
+
+### WAY-409 — What does a reviewer do about code of the product that passes a test without meeting the requirement?
+
+A reviewer looks, in every code review of a task's cycle — of a slice, of the whole change, of a fix,
+of the commits of the return step, of the reconciliation with the target branch and of a correction
+— in the code of the product that the change touches, for code that passes a test without meeting
+the requirement the test stands for: a branch or a returned value made for the very input a test
+uses, the expected value of a test written into the code of the product, a comment that names a
+special case for a test, and a change to the outcome of a comparison that a test makes, with no
+change to the test, such as an overloaded comparison operator. A reviewer grades such a finding
+Important at the least, so that it blocks (WAY-161), and only code whose branch, value or comparison
+exists to make a test pass is the finding; a special case that the requirement itself asks for is
+none.
+
+The rule stands in the skill of the review and in no product's guidelines, so that it holds in every
+cycle, whether or not the product has adopted the template of the testing discipline.
+
+- **Scope:** task-cycle
+- **Based on:** claude-test-special-casing · impossiblebench-test-modification ·
+  impossiblebench-cheating-strategies
+- **Relations:** derives from WAY-13 · derives from WAY-161
+- **Verification:** an agent compares a review with the decision:
+  - complies: a reviewer finds that a function of the product returns 180 for the input 200 that a
+    test uses, where the requirement gives a general rule that would not return it, grades the finding
+    Important and the review fails; the same for a branch under a comment that says "special case for
+    the test", and for a comparison operator overloaded so that the comparison a test makes comes out
+    true; a product whose guidelines hold no testing discipline gets the same look; a branch on a
+    value that the requirement itself names is no finding;
+  - violates: a reviewer reads the files of tests and leaves the code of the product unread for this;
+    a finding of such code is graded Minor and the change passes; a reviewer reports every special case
+    of the product's code, the ones the requirement asks for among them; a review of a fix or of a
+    correction leaves the look out.
+- **Origin:** none
+
+*Rationale:* an agent that a red test stands in the way of can turn it green in two ways, by changing
+the test or by making the code give the answer the test expects. What keeps a test as it was
+(WAY-233) closes the first; the second leaves the test whole and green while the requirement stays
+unmet, so only a reader of the product's code who did not write it finds it (WAY-13), and the human
+who merges on the green tests does not. The system card of Claude 3.7 Sonnet found that model
+returning the expected test values directly and often marking such cases with a comment, and
+ImpossibleBench found that making the tests read-only does not remove special-casing or operator
+overloading, three of its four strategies being ones that comply with an instruction not to modify
+tests, so a review that guards only the files of tests leaves most ways open. The signals are those
+the card and the paper name: a comment about handling for a test, a value or a branch for the input
+of a test, a comparison that returns what a test wants. Only code whose branch, value or comparison
+exists to make a test pass is the finding, since a reviewer asked to judge every special case of the
+product's code would report each rule the requirement asks for, and a finding that is often wrong
+costs a round of fix each time. It is graded Important at the least, as a missed requirement that
+the green tests hide. The rule is the reviewer's way of reading and no rule on the content of a test
+file, which is why it stands in the skill of the review and not in the template of the testing
+discipline (WAY-231), which binds only a product that has adopted it. The price: the reviewer judges
+intent from the code, so a workaround that no signal names, such as recording extra states to answer
+differently for the same input, may pass; a value that the code returns for the input of a test and
+that is also right may be reported and has to be contested; and the look costs the reviewer's time in
+every review.
+*Rejected:* the rule in the template of the testing discipline — it works only in a product that has
+adopted the template, and it is no rule on the content of a test file, since the test stays untouched
+while the code cheats; leaving things as they are — it costs nothing today, since no case is known
+from the 83 task cycles of the process's author counted in his register of problems of 2026-11-12
+(his own record, not open to a reader of this repository), but the first case passes the review
+unseen.
 
 ## The request and the human
 

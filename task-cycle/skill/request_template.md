@@ -1,8 +1,8 @@
 # The description of a request
 
 Read by the orchestrator of `implement-task` wherever it writes or rewrites a request's
-description — step 13, a slice failed twice at step 9.4, `blocked_finding.md`, `reserved_return.md`
-and `correction.md` — and by the agent leading a change to the-way that `agent-instructions/README.md`
+description — step 13, a slice failed twice at step 9.4, a question about a test that no source
+settles, `blocked_finding.md`, `reserved_return.md` and `correction.md` — and by the agent leading a change to the-way that `agent-instructions/README.md`
 sends here. Every request of a cycle, blocked, reserved or corrected, has this one skeleton
 (WAY-287). The skeleton puts the same thing in the same place in every request, so the human finds
 it without reading the rest.
@@ -221,10 +221,10 @@ the order of their kinds.
   reconciliation, the slices not made, the review of the whole change. They stand here, since they
   cannot be run until the human decides, and kind 4 does not list them again.
 - **2.** *Questions*: only those the foundation step allows, which
-  `task-cycle/skill/foundation_step.md` says, and a reserved choice, each put as "What an item
-  carries" gives for an item in which the human chooses, from the report of the agent that returned
-  `blocked` or `reserved`; the recommendation, with its weak point, stands where that report holds
-  one.
+  `task-cycle/skill/foundation_step.md` says, a reserved choice, and a question about a test that
+  no source settles (WAY-410), each put as "What an item carries" gives for an item in which the
+  human chooses, from the report of the agent that returned `blocked`, `reserved` or `questions`; the
+  recommendation, with its weak point, stands where that report holds one.
 - **3.** *Human actions*: each action the task document places in the cycle, as the document names
   it, and each effect outside the repository the cycle found that the document does not name, for
   the human to place (WAY-140); from the task's *Human actions*, the Events and the reports. The
@@ -567,6 +567,7 @@ reads `none` under its heading.
 | A reserved choice (`reserved_return.md`, WAY-269) | `**State: blocked** — the cycle met a technology choice only you make` | in *Needed from you*, the choice, by what the product needs it for; the ways seen, marked as not researched, with no recommendation; what happens next: close the request, and refinement takes the choice as its note | *Technical changes* `none`; *Foundation entries* `none`; *Checks*: the checks failing on the base, from its run or from the list step 4 took, and each stage not run with why, the gate among them; **Route**: where it showed (stage, task item), the limb of the rule, what was searched, the discarded attempt and its report; *How to merge*: do not merge, close |
 | Human actions in the cycle (WAY-140) | `**State: blocked** — waits for your actions outside the repository` | in *Needed from you*, each action as the task names it; each found effect, for the human to place | as an ordinary request |
 | A question from the foundation step | `**State: blocked** — needs your answer` | in *Needed from you*, the question as kind 2 gives it | as an ordinary request |
+| A question about a test that no source settles (`SKILL.md`, "An agent that returns `questions`", WAY-410) | `**State: blocked** — a test and the requirement contradict, and nothing the task settles says which holds` | in *Needed from you*, the question of the agent, in plain words: what the test expects, the sentence of the requirement it contradicts or, where the agent saw no contradiction, the requirement it could not meet by general code, and what the agent tried; the ways open — the requirement stands and the test changes, or the test stands and the requirement changes — each with its cost; the agent's recommendation with its weak point; the stages not run — the review of the whole change, the return step, the reconciliation, the slices not made | **Route**: where it showed (stage, slice), the test's name and place, the agent's report and its commits, which no review has judged; *Technical changes*: the code made so far; *Checks*: the gate's run on the cycle's own system and each stage not run with why; *How to merge*: do not merge, answer the question |
 | An impossible task | `**State: blocked** — <the smallest missing fact or permission>` | in *Needed from you*, that fact or permission; never partial work presented as complete | **Route**: the ways tried |
 | A correction (`correction.md`) | the state after the correction, with what started it in the why, named from the sources of the pairs that item 17 gives: "corrected for your remarks" only where a remark started it, "corrected for your answer to an item" where an answer did, "refreshed from the target branch at your request" where only that did, and with two sources each in its words | the items as they stand after the correction, each in its group, its new choices included, and the pairs of the correction as item 17 in *You accept by merging*; a remark is no item, since it binds; what a correction left unfixed or undone, whether it ran on an answer to item 8, 4, 9, 14 or 16, carries only "Make a task of it?" | *Course of the cycle*: each correction with the link to its remarks and its reset base; *Cost* across all sessions |
 | A correction met a reserved choice | `**State: blocked**`, as for a reserved choice | as for a reserved choice | *Foundation entries* as in the request's previous description |

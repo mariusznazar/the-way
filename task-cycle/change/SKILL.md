@@ -45,7 +45,8 @@ still changes what the work means after that reach, return with the status `ques
 guessing (section 6).
 
 When a value in the task, spec or plan does not pass your own reckoning — an example number, a
-boundary, a command — say so in your report instead of bending the code to it. When reading stops
+boundary, a command — say so in your report instead of bending the code to it; the expected value
+of a test that the requirement contradicts is the case of section 2. When reading stops
 yielding, make an exploratory edit where the change starts, follow what breaks, and revert the edit
 before you commit.
 
@@ -86,6 +87,16 @@ of this applies.
   left unprotected. Skip this for a part whose mutation tool the product's testing guidelines
   adopt: the reviewer of your change runs the tool there (WAY-253).
 - Never weaken an assertion, skip a test or relax a lint rule to make a check pass.
+- **A test the requirement contradicts, or one you cannot pass by general code.** Where a test
+  expects what the requirement of the task rules out, or you cannot make it pass by code that meets
+  the requirement for every input, write no code for the input of the test and change neither the
+  test nor its expected value: commit what you have and return the status `questions` (section 6),
+  with a question that names the test, quotes the requirement and says what you tried, and the
+  answer you recommend. A branch, a returned value or a comparison made for the test's input passes
+  the test and leaves the requirement unmet, and the review looks for it (WAY-409). A test that
+  checks behaviour the task expressly changes is no such contradiction: change it, and name the
+  cause, which lies in the requirement, in your report. The orchestrator answers from the task, the
+  spec, a decision or the sentence of an invariant, or the cycle stops for the human (WAY-410).
 
 ## 3. Check your own work
 
@@ -132,6 +143,9 @@ for the cycle to reset, when:
   settle is yours to make and to name in the report;
 - the change or your slice is more than you can hold — where the size lies (WAY-136).
 
+A test that the requirement contradicts, or that you cannot pass by general code, is no third such
+case: section 2 gives it, with the status `questions` and your commits left in place.
+
 Where the work cannot go on for a missing fact or permission, it is not returned: commit what you
 have made, set the status `blocked` and name the smallest fact or permission missing. The committed
 work stays for the cycle to resume or, for a slice's retry, to reset.
@@ -167,7 +181,7 @@ Write the full report to the dispatch's report path:
   unclear, wherever it arose — in the
   instructions, handoff, task, foundation or product code — or `none`;
 - with the status `questions`, every question you can already see, each with the answer you
-  recommend;
+  recommend, a question about a test as section 2 gives it;
 - every choice you made with the way rejected and its cost if wrong, every adaptation of section 4,
   and a changed invariant test, named;
 - problems as observed, with their evidence; a cause only where you verified it, and how; a guessed
