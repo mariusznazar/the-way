@@ -729,6 +729,7 @@ class FoundationCheckTest(unittest.TestCase):
                                                "  ABC-77, expected in the save task"))
 
     def test_relations_a_known_decision_then_a_missing_one_described_passes(self):
+        # decision: WAY-71 "The main branch holds `TODO` only where an entry stands on something the product's foundation does not hold yet:"
         for value in ("derives from ABC-01 · TODO — the decision on saves, expected in the task",
                       "narrows ABC-01 · TODO — the decision on saves · or its successor",
                       "derives from ABC-01 · TODO — ABC-77, expected next"):
@@ -782,6 +783,7 @@ class FoundationCheckTest(unittest.TestCase):
                          "1 error")
 
     def test_relations_a_described_todo_after_a_comma_is_no_joined_list(self):
+        # decision: WAY-71 "`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error."
         self.assertFails(self.mixed_relations("derives from ABC-01, TODO — the decision on saves"),
                          "*Relations* joins its items by ` · `: write ` · ` before `TODO`",
                          "1 error")
