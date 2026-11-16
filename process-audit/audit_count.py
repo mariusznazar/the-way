@@ -56,7 +56,7 @@ ones noted, and its values are read from the last copy, the most complete. For e
   the commit of its line `Target branch and base`; the agents of such a cycle read the process from
   the worktree the cycle changes, which begins at that commit, so that commit is the process the
   cycle started under;
-- *Remarks*: the number of entries under the record's item `Process remarks on the-way`, `0`
+- *Remarks*: the number of sub-items under the record's item `Process remarks on the-way`, `0`
   where the item reads `none`;
 - the agents' working time without waiting for tools, and the time they waited for tools, from the
   lines of the copy's `stages.md` that `task-cycle/cycle_stages.py` writes, as h:mm:ss;
@@ -87,8 +87,9 @@ ones noted, and its values are read from the last copy, the most complete. For e
 - *Fix rounds*: the number of findings files the record's item `Review rounds` names, `0` where it
   reads `none`. A fix round is the fix of a review's findings and the review of that fix; the
   orchestrator gives both the findings file, by its path in `reports/`, and the item names each
-  round by that path: one entry for each round under the item, opening with the word `findings`
-  and the path between backticks (`task-cycle/record_template.md`). An entry of a review that passed
+  round by that path: one sub-item for each round under the item, opening with the word `findings`
+  and the path between backticks (`task-cycle/record_template.md`). A
+  sub-item of a review that passed
   with no fix opens with the word `review` and holds the path of its report and the result `PASS`:
   it is no fix round, and it is not counted (WAY-337);
 - the share of the cost spent in fix rounds (WAY-337): the cost of the subagent turns whose cell
@@ -144,32 +145,36 @@ Per version of a series of the cost: the median cost at constant prices of its c
 cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
 Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
 that came out only after code was written: from two marks of the cycle's record, never from the
-words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where an
-entry of *Review rounds* opens with the path of its findings file and `, contradiction yes`, or the
+words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where a
+sub-item of *Review rounds* opens with the path of its findings file and
+`, contradiction yes`, or the
 item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
-any of its entries does, where a cycle that discarded more than one attempt writes one entry for each
+any of its sub-items does, where a cycle that discarded more than one attempt writes one sub-item for each
 (the markers are `open design choice`, `reserved choice` and `size`, and only the start of the item,
-or of the first line of each entry, is read; the entries are read only as a list: nothing stands
-beside the colon, the first line under the item is an entry at the indent of the others and no plain
+or of the first line of each sub-item, is read; the sub-items are read only
+as a list: nothing stands
+beside the colon, the first line under the item is a sub-item at the indent
+of the others and no plain
 line stands at that indent or less; any other lines under the item are the details of one attempt,
 read for a second `reason: ` followed by a backtick alone, whatever word stands there; a line at
 the left margin ends the item). It is no where
-every entry of *Review rounds* gives its mark, `contradiction no` or the form
+every sub-item of *Review rounds* gives its mark, `contradiction no` or the form
 of a review that passed with no fix, and *Discarded attempt* reads `none` or opens with the marker
-`reserved choice` or `size` (each of its entries does, where it holds several). Each yes stands over
-the unknown that the other item gives, but the mark of an entry is read only where *Review rounds*
-is held once and in its form (no entry in neither form, no findings file named twice, nothing
+`reserved choice` or `size` (each of its sub-items does, where it holds
+several). Each yes stands over
+the unknown that the other item gives, but the mark of a sub-item is read only where *Review rounds*
+is held once and in its form (no sub-item in neither form, no findings file named twice, nothing
 beside its colon), and the marker only where *Discarded attempt* is held once. It is unknown,
-with the one reason `the entry of a round does not say whether there was a contradiction` for a
-round of any record, older or newer, where a fix round's entry carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
-not read `none`, where its lines are no entries at one indent alone or text stands beside its
+with the one reason `the sub-item of a round does not say whether there was a contradiction` for a
+round of any record, older or newer, where a fix round's sub-item carries no mark; with its own reason where *Discarded attempt* opens with no marker and does
+not read `none`, where its lines are no sub-items at one indent alone or text stands beside its
 colon and the whole text, which does not read `none`, holds a second `reason: ` followed by a
 backtick or opens with no marker, where it is missing or doubled, or where *Review rounds* is
 missing, doubled or in neither form. Q2, more than one third of the slices of the plans came
 back too large: from the item
 *Plan* (`none` on the one-author route leaves the cycle out; otherwise the figure written just
 before the word `slices`, as in `8 slices`, and where there is none or more than one, unknown)
-and the entries of *Slices returned too large* (`none` is 0); the answer is yes where three times
+and the sub-items of *Slices returned too large* (`none` is 0); the answer is yes where three times
 the sum of too-large slices is above the sum of planned slices, and unknown where the plan of a
 cycle that has one is not read, since its slices could change the answer. Q3, the cost falls: the
 median against the previous version of the same series, yes where lower, unknown where there is
@@ -790,7 +795,7 @@ def process_pin(text_lines, fenced, own: bool) -> tuple[str | None, str | None]:
 
 
 def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
-    """The number of entries under the item `Process remarks on the-way`, or None with the
+    """The number of sub-items under the item `Process remarks on the-way`, or None with the
     reason."""
     openers = [index for index, line in enumerate(lines)
                if not fenced[index] and REMARKS_OPENER.fullmatch(line)]
@@ -814,7 +819,7 @@ def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str
         return markers.count(min(markers)), None
     if remarks_check.reads_none(opener.group("rest")):
         return 0, None
-    return None, ("the item `Process remarks on the-way` holds no entries under it and does not "
+    return None, ("the item `Process remarks on the-way` holds no sub-items under it and does not "
                   "read `none`: an earlier form")
 
 
@@ -1132,7 +1137,7 @@ def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, s
 
 
 def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
-    """The item *Slices returned too large*: 0 where it reads `none`, the number of its entries
+    """The item *Slices returned too large*: 0 where it reads `none`, the number of its sub-items
     where it lists them, or None with the reason."""
     items = item_texts(lines, fenced, ITEM_TOO_LARGE)
     if len(items) != 1:
@@ -1143,7 +1148,7 @@ def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, st
     markers = [remarks_check.indent_of(text) for text, inside in below
                if not inside and remarks_check.MARKER.fullmatch(text)]
     if rest.strip() or not markers:
-        return None, ("the item `Slices returned too large` reads neither none nor an entry "
+        return None, ("the item `Slices returned too large` reads neither none nor a sub-item "
                       "per slice")
     base = min(markers)
     return sum(1 for indent in markers if indent == base), None

@@ -40,7 +40,8 @@ not authorize running it.
   commit and changed files including foundation entries, reset base, discard confirmation and next
   route; after an open design choice, spec review and renewed judgment; after a reserved choice, the
   blocked draft request; after size, planning. Where the cycle discarded more than one attempt,
-  nothing after the colon and, under this line, one entry for each attempt, all at one indent with
+  nothing after the colon and, under this line, one sub-item for each
+  attempt, all at one indent with
   no other line at that indent, each written as above and opening with its own `reason: ` and
   reason; every line of the item stands indented under this line, since a line at the left margin
   ends the item, and the text of one attempt holds no other `reason: ` followed by a backtick>
@@ -54,13 +55,13 @@ not authorize running it.
   on the planned route, also the plan review's evidence, and for each blocking finding the slice
   it comes from, with that slice's class, or none — a gap of the plan, or the plan's *Foundation
   entries* with their writer's class>
-- Review rounds: <`none`, or nothing after the colon and, under this line, one entry for each fix
+- Review rounds: <`none`, or nothing after the colon and, under this line, one sub-item for each fix
   round of the cycle — a fix of a review's findings and the review of that fix, a slice's round
-  included — in the first form below, and one entry for each review that passed with no fix that
+  included — in the first form below, and one sub-item for each review that passed with no fix that
   the cycle lists, in the second>
   - findings `reports/<file>.md`, contradiction <yes | no>: <the findings file the fix and the
     review of that fix were given, by its path in `reports/`, and whether the round had a
-    contradiction, opening the entry as written here: `yes` where any blocking finding of the
+    contradiction, opening the sub-item as written here: `yes` where any blocking finding of the
     round, those the review of the fix found new included, carries the reviewer's mark of a
     contradiction with the settlements in the findings file or the report of that review, `no`
     where none does; then, for a code review whose findings blocked — of the whole change, of
@@ -71,7 +72,8 @@ not authorize running it.
     reverted it, the revert commit and the new finding; for a slice's round, the slice, whose row
     of Slices holds the rest>
   - review `reports/<file>.md`, PASS: <a review that passed with no fix and so has no findings
-    file, by the path of its report in `reports/`, opening the entry as written here; then what it
+    file, by the path of its report in `reports/`, opening the sub-item as
+    written here; then what it
     reviewed and its range. It is no fix round, and the audit reads it as a round with no
     contradiction with the settlements>
 - Weakest-point checks: <for the author and each executor: the requirement named, the check, what
@@ -235,7 +237,7 @@ invariant covers it.
 - Corrections after the request opened: <`none`, or the lines under this line>
   - correction <n>, remarks `reports/<file>.md`: <each pair `<source> · <kind>` of the correction
     once, joined by `, `>
-- Process remarks on the-way: <`none`, or the entries under this line>
+- Process remarks on the-way: <`none`, or the sub-items under this line>
   - <stage name>, <full report path from the repository's root>: <an item of that report's
     **Searches not found or unclear** other than `none`, copied word for word>
   - <the orchestrator>: <a remark of its own about the-way, such as a listing of
@@ -262,8 +264,9 @@ the cycle's only log and the place the nightly review of cycles reads, which the
 is not.
 
 The remarks stand in this form only: the item that opens with `Process remarks on the-way`, the
-entries indented under it, one for each item of each stage report, repeated items kept apart, and
-every line of an entry indented under the entry; not in a section or a file of their own. It is the
+sub-items indented under it, one for each item of each stage report, repeated items kept apart, and
+every line of a sub-item indented under the sub-item; not in a section or a
+file of their own. It is the
 last item of the record, and nothing at the level of its marker follows it. The nightly review of
 cycles and `task-cycle/remarks_check.py` cut the block as that item and the lines under it. Before
 the record is committed, `task-cycle/skill/SKILL.md` ("The record before it is committed") has the

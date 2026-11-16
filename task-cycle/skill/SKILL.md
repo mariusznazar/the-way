@@ -234,7 +234,7 @@ gives the findings file, which you write in the reviewer's words from the review
 findings, each with the reviewer's mark of contradiction with the settlements, and, after them, the
 Minor findings of the review of the whole change within the task ("The end of a code review"); the
 fix's range runs from the reviewed head, and the review of the fix also gets the fix report. The
-entry of the round in the record's *Review rounds* says whether the round had a contradiction, as
+sub-item of the round in the record's *Review rounds* says whether the round had a contradiction, as
 `task-cycle/record_template.md` gives it: `yes` where any blocking finding of the round, one the
 review of the fix found new included, carries the mark `Contradiction: yes`, `no` where none does
 (WAY-404). The message that dispatches or resumes the agent of a fix, and the
@@ -407,8 +407,8 @@ Record the attempt's last commit — a historical name, not a link to follow —
 changed, then discard the attempt, its foundation entries included, by resetting the task branch to
 the recorded base — to the commit that moved the pin where step 2 moved it. Record the discard
 under *Discarded attempt* with the reason `open design choice`, as `task-cycle/record_template.md`
-gives it, an entry of its own where the cycle discarded an attempt before, that attempt rewritten as an
-entry too, as the template gives it (WAY-405), and continue at
+gives it, a sub-item of its own where the cycle discarded an attempt before, that attempt rewritten as a
+sub-item too, as the template gives it (WAY-405), and continue at
 step 6; after the spec's review, step 7 chooses the route again.
 
 A one-author change that proves too large returns `returned` with where the size lies. Keep the
@@ -416,8 +416,8 @@ report, record the attempt's last commit and files, discard the whole attempt an
 entries by resetting the branch to its base — to the commit that moved the pin where step 2 moved
 it — and dispatch the planner at step 8 with the frozen task, any reviewed spec and the report
 (WAY-136). Record it under *Discarded attempt* with the reason `size`, as
-`task-cycle/record_template.md` gives it, an entry of its own where the cycle discarded an attempt
-before, that attempt rewritten as an entry too, as the template gives it (WAY-405).
+`task-cycle/record_template.md` gives it, a sub-item of its own where the cycle discarded an attempt
+before, that attempt rewritten as a sub-item too, as the template gives it (WAY-405).
 
 A slice that proves too large for its executor returns the same way. Record its last commit and
 files, reset the branch to the slice's base and have the planner split that slice; the slices
@@ -782,10 +782,10 @@ it, and lists each item other than `none` that the record's process remarks do n
 word, with the path of its report. It only lists, and it
 judges no content. On the original, exit 1 lists each item as `<report path>: <item>`:
 
-1. Append each listed item to the process remarks word for word, as an entry in the form
+1. Append each listed item to the process remarks word for word, as a sub-item in the form
    `task-cycle/record_template.md` gives, with the stage name from the Events and the full report
    path; never in other words, never with the item left out for being trivial, and with a repeated
-   item as an entry of its own for each report that gives it.
+   item as a sub-item of its own for each report that gives it.
 2. Run the script again, and go on until it exits 0 and lists nothing.
 3. Record the last run, its command and exit code, with the number of runs, under *Verification*.
 
@@ -796,7 +796,7 @@ evidence you can name — the line is text of the report that is no item, say �
 changed in this cycle and the archive is not held back (WAY-295):
 
 1. Do not append the listed line as an item of its stage.
-2. Enter the case in the process remarks as an entry of your own: the script, the line it listed,
+2. Enter the case in the process remarks as a sub-item of your own: the script, the line it listed,
    and why you hold it wrong. It is a matter of the-way's script, not of the product.
 3. Commit the record as usual. In the request's description, the group *You accept by merging* of
    *For you to decide* gets one item naming what the script listed, in plain words, and why the
@@ -877,7 +877,7 @@ the worktree's root (in a product, the path starts with `.the-way/`):
    again until it exits 0. Exit 2 is no listing: fix the call.
 6. Run the process remarks check on the cleaned copy. It lists nothing when step 3 was one
    rewriting. An item it lists has different words in a report and in the remarks of the copy:
-   make the two read the same in the copy, and append no second entry for it, since step 1 has
+   make the two read the same in the copy, and append no second sub-item for it, since step 1 has
    the remarks hold it already (WAY-309 gives this run its place beside WAY-294). After any
    correction of the copy, run the checks of steps 4 and 5 and this check again until all three
    exit 0.

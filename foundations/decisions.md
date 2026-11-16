@@ -8086,11 +8086,12 @@ a text stuck to such a sequence stay listed.
     adds the link to the record is checked again before it is published, its block in Polish
     included; the check of WAY-294 lists an item of a report on the cleaned copy because the report
     and the remarks were cleaned in different words, and the orchestrator makes the two read the
-    same and appends no entry;
+    same and appends no sub-item;
   - violates: a copy of the record is committed with no run of the script on it; a description is
     published after a run that came before the link to the record was added; the script is given a
     list of private words, or rewrites a file; the orchestrator stops after a run that listed
-    something; the orchestrator appends a second entry to the remarks for an item that the check of
+    something; the orchestrator appends a second sub-item to the remarks for
+    an item that the check of
     WAY-294 lists only on the cleaned copy.
   For what the script takes for an absolute path and for a note link, an agent compares the change
   with the decision:
@@ -8116,7 +8117,7 @@ a model reading a long record for what looks private misses an item without a tr
 the description, whose block in another language is the part a reader checking by eye covers least.
 The check of WAY-294 runs first on the original because the original holds the words the reports
 gave, so each item reaches the remarks once before any word changes; the cleaning is one rewriting
-so that a report's item and its entry in the remarks keep reading alike. The price taken: a private
+so that a report's item and its copy in the remarks keep reading alike. The price taken: a private
 name in plain words passes, and a list of such names can be added by a task of its own when one
 appears; the pattern lists some text that is neither a path nor a link, such as a code sample, which
 the orchestrator writes so that the pattern passes it; one more check in every cycle. The patterns
@@ -8343,18 +8344,19 @@ and of the review of that fix do, and the cycle's record names each round by tha
 is `0.0%` only where the record says the cycle had no fix round, and unknown wherever the record and
 the stages cannot tie each round to the turns that served it.
 
-The record's item *Review rounds* also takes an entry for a review that passed with no fix, in a form
+The record's item *Review rounds* also takes a sub-item for a review that passed with no fix, in a form
 of its own that opens with the word `review` and holds the result `PASS` and the path of the review's
-report in `reports/`, with no findings file. Such an entry is no fix round for the cost of a cycle
+report in `reports/`, with no findings file. Such a sub-item is no fix round for the cost of a cycle
 and for its share, and the audit of the process reads it as a round with no contradiction with the
 settlements (WAY-404).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** tests: that an entry of the item *Review rounds* that opens with the word
+- **Verification:** tests: that a sub-item of the item *Review rounds* that opens with the word
   `review` and holds the result `PASS` is no fix round of the cost and of the share, and that a
-  record whose item holds such entries alone says the cycle had no fix round. For the rest, an agent
+  record whose item holds such sub-items alone says the cycle had no fix
+  round. For the rest, an agent
   compares a change with the decision:
   - complies: the cost of a cycle is shown as an amount at the prices of one dated list and as the
     share of the fix rounds in it; the share counts once each turn whose message named a findings
@@ -8376,7 +8378,7 @@ differ from one cycle to the next. A share given where the tie fails is a figure
 measured; unknown says the measure is missing. A review that passed with no fix has no findings
 file and serves no fix round, so it takes a form of its own in the record: the one form of a fix
 round stays exact, and a cycle that sums up such reviews has a place for them that costs its
-record no unknown. The price: the item holds two forms, and a reader of it tells the entries of
+record no unknown. The price: the item holds two forms, and a reader of it tells the sub-items of
 the fix rounds from the others by their first word.
 *Rejected:* a cost divided by a measure of the size of the task — the human settled that cost is
 measured by the two numbers alone, and the source keeps no reason beside it; a turn put in a fix
@@ -8385,10 +8387,12 @@ fix reports in other words, and a cycle that had a fix round got a share of zero
 round by its time against the times of the record — the record and the report of a cycle's stages
 write times in different forms and zones; the share given only as zero or unknown until the report
 of a cycle's stages carries the tie — the measure stays empty in every cycle that has a fix round;
-the item *Review rounds* forbidding the entry of a review that passed with no fix, which leaves its
+the item *Review rounds* forbidding the sub-item of a review that passed
+with no fix, which leaves its
 trace in the table of events — the cycle's leader wants those reviews summed up somewhere, so
 without another place they would be written there all the same, and each such record would give
-unknown; the count skipping with no word each entry not opened with `findings` — a fix round written
+unknown; the count skipping with no word each sub-item not opened with
+`findings` — a fix round written
 with a slip in its opening would vanish without a trace, giving a false `no` for Q1 and a share of the
 fix rounds that is too low.
 
@@ -8573,7 +8577,8 @@ as none, and the mark is the reviewer's own. A finding is a contradiction where 
 change does something against an entry of the foundation, one the change itself writes included, or
 against a settlement of the task document — an answer under its *Questions to settle*, a row of its
 *Settlements to record* or a decision of its *Decisions in play* — and a point of *To do* left undone
-is none. The cycle writes the mark into the entry of the round in the record's item *Review rounds*,
+is none. The cycle writes the mark into the sub-item of the round in the
+record's item *Review rounds*,
 and the audit of the process takes from that mark, with the marker of a discarded attempt (WAY-405),
 and never from the text of a reviewer's remarks, whether a contradiction with the settlements came
 out only after the code was written.
@@ -8582,15 +8587,18 @@ out only after the code was written.
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-339
 - **Verification:** tests: that the count answers whether a contradiction with the settlements came
-  out only after the code was written from the mark of the entries of the item *Review rounds* and the
-  marker of the item *Discarded attempt*: yes where an entry of the item *Review rounds* carries the
-  mark of a contradiction, that item being held once and in its form (no entry in neither form, no
+  out only after the code was written from the mark of the sub-items of the item *Review rounds* and the
+  marker of the item *Discarded attempt*: yes where a sub-item of the item
+  *Review rounds* carries the
+  mark of a contradiction, that item being held once and in its form (no
+  sub-item in neither form, no
   findings file named twice, nothing beside its colon), or the record holds the item *Discarded
   attempt* once and it gives the marker `open design choice`, so that each yes stands over the
   unknown that the other item gives and over that of an unmarked round, while a *Review rounds*
-  that is not read gives no yes, nor does a doubled *Discarded attempt*, no where every entry
+  that is not read gives no yes, nor does a doubled *Discarded attempt*, no where every sub-item
   carries the mark of none and the item reads `none` or gives only the markers `reserved choice` and
-  `size`, unknown where an entry carries no mark, or an item is missing, doubled or not read, and no
+  `size`, unknown where a sub-item carries no mark, or an item is missing,
+  doubled or not read, and no
   yes stands, and from no text of a record.
 - **Origin:** none
 
@@ -8604,7 +8612,8 @@ unfinished work that no spec would have caught, which would turn a yes into a me
 other than the spec. The price: the mark is a judgment, and the judgments of reviewers differ from one
 cycle to the next; a round written before the mark gives the audit nothing to read; a change of the
 instructions of the reviewer begins a new series of the count of remarks (WAY-339).
-*Rejected:* the leader of the cycle marking the round when it writes the entry — it judges at second
+*Rejected:* the leader of the cycle marking the round when it writes the
+sub-item — it judges at second
 hand, with no reading of the foundation like the reviewer's, and a remark that a task's answer is not
 kept makes it reach for the sources, which adds context at the dearest place of the cycle; only an
 entry of the foundation counting as a contradiction — the answer would miss the mismatches with the
@@ -8617,36 +8626,39 @@ the spec.
 
 The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
 `reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
-— or, where the cycle discarded more than one attempt, at the start of each entry under the item, one
-entry for each attempt; the item reads `none` where no attempt was discarded. The audit of the
+— or, where the cycle discarded more than one attempt, at the start of each sub-item under the item, one
+sub-item for each attempt; the item reads `none` where no attempt was discarded. The audit of the
 process takes from this item, for its answer whether a contradiction with the settlements came out
 only after the code was written, the markers alone and never the text of the item, so that an item
 that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown. Where
-the lines under the item are not entries at one indent alone — the first line an entry at that indent
+the lines under the item are not sub-items at one indent alone — the first line a sub-item at that indent
 and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
 text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
 one marker and holds no second `reason: ` followed by a backtick (WAY-404); its later lines are
 details of that attempt, read for such a second `reason: ` alone, whatever word stands after the
 backtick, so that a second attempt written in them with no backtick after the `reason: ` or with its
-reason in other words is not read. Where the lines are entries at one indent alone and nothing stands beside the colon, an
-entry that opens with no marker gives the answer unknown unless another entry gives yes, and only the
-first line of each entry is read, so that a marker in a line deeper than the entry, or in an entry
+reason in other words is not read. Where the lines are sub-items at one indent alone and nothing stands beside the colon, a
+sub-item that opens with no marker gives the answer unknown unless another sub-item gives yes, and only the
+first line of each sub-item is read, so that a marker in a line deeper than the
+sub-item, or in a sub-item
 under it, is a detail and is not read. The item reads down to the next line at the left margin: a
-line written there, a continuation of an entry included, is no part of the item and is not read.
+line written there, a continuation of a sub-item included, is no part of the item and is not read.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-135 · derives from WAY-404
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
-  the start of the item, or of each entry under it, and from nothing else: a text that names an open
+  the start of the item, or of each sub-item under it, and from nothing else:
+  a text that names an open
   design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an
-  item of several entries gives yes where any of them has the marker `open design choice`; and that an
-  item whose lines under it are not entries at one indent alone, or with text beside its colon, is
+  item of several sub-items gives yes where any of them has the marker `open design choice`; and that an
+  item whose lines under it are not sub-items at one indent alone, or with text beside its colon, is
   read as the text of one attempt, which gives no attempt where it reads `none`, unknown where it
   holds a second `reason: ` followed by a backtick, a word that is no marker included, or opens with
   no marker, and gives its reason where it opens with one marker and holds no such second one, its
   later lines possibly a list of details, read for that second `reason: ` alone; that
-  in a list of entries an entry with no marker gives unknown and only the first line of each entry
+  in a list of sub-items a sub-item with no marker gives unknown and only the
+  first line of each sub-item
   is read; and that a line at the left margin ends the item.
 - **Origin:** none
 

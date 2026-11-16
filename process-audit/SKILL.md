@@ -223,20 +223,22 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    answers Q1 and Q2. Each answer is `yes`, `no` or `unknown` inside its series, and a number of one
    kind of series is never set beside a number of the other. Q1 asks whether a contradiction with the
    settlements came out only after the code was written, and the count reads it from two marks of the
-   cycle's record, never from the text of a reviewer's remarks: `yes` where an entry of *Review
+   cycle's record, never from the text of a reviewer's remarks: `yes` where a sub-item of *Review
    rounds*, held once and in its form, says `contradiction yes` or *Discarded attempt*, held once,
-   gives the reason `open design choice` (in any of its entries, where it holds one for each
+   gives the reason `open design choice` (in any of its sub-items, where it holds one for each
    discarded attempt); each `yes` stands over the `unknown` that the other item gives, but a *Review
-   rounds* that is not read (doubled, with an entry in neither form, with a findings file named
+   rounds* that is not read (doubled, with a sub-item in neither form, with a findings file named
    twice or with text beside its colon) gives no `yes` of its own, nor does a doubled *Discarded
    attempt*;
-   `no` where every entry of *Review rounds* says `contradiction no` or is a review that passed with
+   `no` where every sub-item of *Review rounds* says `contradiction no` or is
+   a review that passed with
    no fix, and *Discarded attempt* reads `none` or gives only the reasons `reserved choice` and
-   `size`; `unknown` otherwise: where an entry of a round carries no mark, where *Review rounds* is
+   `size`; `unknown` otherwise: where a sub-item of a round carries no
+   mark, where *Review rounds* is
    missing, doubled or in neither form, or where *Discarded attempt* is missing, doubled or gives no
-   reason (a text or an entry with no reason at its start, or a text of one attempt that holds a
+   reason (a text or a sub-item with no reason at its start, or a text of one attempt that holds a
    second `reason: ` followed by a backtick), which a record written before those marks stood in the
-   template does wherever it holds such an entry or such a text. Quote
+   template does wherever it holds such a sub-item or such a text. Quote
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
    wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
    the cycles in *No version*, with the reasons *Unknown values* gives.

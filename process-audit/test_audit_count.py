@@ -310,7 +310,7 @@ class CycleFound(AuditCountCase):
                    "  - author, docs/task-cycles/a-task/reports/author.md: the plan named a moved\n"
                    "    file\n"
                    "  - reviewer, docs/task-cycles/a-task/reports/review.md: the check was unclear\n"
-                   "    - a sub-item that belongs to the entry above\n"
+                   "    - a sub-item that belongs to the item above\n"
                    "  - the orchestrator: a remark of its own\n")
         added, _ = product.cycle("a-task", {"cycle.md": record(remarks=remarks)})
         self.write_locations(self.places(product=product))
@@ -488,7 +488,7 @@ class Remarks(AuditCountCase):
 
     def test_items_after_the_remarks_item_are_not_its_entries(self):
         self.assertEqual("0", self.remarks_of("- Process remarks on the-way: none\n"
-                                              "- Another item:\n  - its own entry\n")[0])
+                                              "- Another item:\n  - its own sub-item\n")[0])
 
 
 class Times(AuditCountCase):
@@ -1209,10 +1209,10 @@ class Cost(AuditCountCase):
         self.assertTrue(any("names no findings file" in reason for reason in why), why)
 
     def test_a_review_that_passed_with_no_fix_is_no_fix_round_and_a_mark_changes_no_share(self):
-        # decision: WAY-337 "The record's item *Review rounds* also takes an entry for a review"
+        # decision: WAY-337 "The record's item *Review rounds* also takes a sub-item for a review"
         # The same stages as the first test of the share: one round, 3250 of 11250, 28.9 %. The
-        # entries of reviews that passed add no round and no turn, and the mark of the round's
-        # entry is no part of the findings file's path.
+        # sub-items of reviews that passed add no round and no turn, and the mark of the round's
+        # sub-item is no part of the findings file's path.
         passed = ("  - review `reports/review_return_step.md`, PASS: the return step\n"
                   "  - review `reports/review_fix.md`, PASS: the fix\n")
         marked = ONE_ROUND.replace(f"`{WHOLE}`:", f"`{WHOLE}`, contradiction yes:")
@@ -1226,7 +1226,7 @@ class Cost(AuditCountCase):
                 self.assertEqual([], why)
 
     def test_reviews_that_passed_alone_say_the_cycle_had_no_fix_round(self):
-        # decision: WAY-337 "The record's item *Review rounds* also takes an entry for a review"
+        # decision: WAY-337 "The record's item *Review rounds* also takes a sub-item for a review"
         stages = one_fix_round(fix_files="reports/author_handoff.md",
                                review_files="reports/review_handoff.md")
         rounds = "- Review rounds:\n  - review `reports/review_whole.md`, PASS: the whole change\n"
@@ -1236,8 +1236,8 @@ class Cost(AuditCountCase):
 
     def test_review_rounds_that_contradict_themselves_leave_the_share_unknown(self):
         cases = {
-            "none beside entries": ("- Review rounds: none\n"
-                                    + ONE_ROUND.split("\n", 1)[1], "beside its entries"),
+            "none beside sub-items": ("- Review rounds: none\n"
+                                    + ONE_ROUND.split("\n", 1)[1], "beside its sub-items"),
             "a findings file twice": (ONE_ROUND + f"  - findings `{WHOLE}`: again\n", "twice"),
         }
         for label, (rounds, words) in cases.items():
@@ -3766,9 +3766,9 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["unknown"] * 4, self.q1_of_each_version(texts))
 
     def test_a_second_reason_in_a_detail_or_at_the_margin_is_not_read_and_gives_the_first_one(self):
-        # decision: WAY-405 "Where the lines are entries at one indent alone and nothing stands beside the colon"
+        # decision: WAY-405 "Where the lines are sub-items at one indent alone and nothing stands beside the colon"
         # decision: WAY-405 "The item reads down to the next line at the left margin"
-        # The shapes the rule names as not read: a marker in a deeper line of an entry, a second
+        # The shapes the rule names as not read: a marker in a deeper line of a sub-item, a second
         # attempt in other words than the marker among the details of the first, and a line at the
         # left margin. Each gives the answer of the first attempt, `size`, which is no contradiction.
         odc = "reason: `open design choice`"
@@ -3808,9 +3808,9 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["yes"], [self.count_series(1)[0][3]])
 
     def test_a_round_marked_as_a_contradiction_gives_yes_and_an_unmarked_round_unknown(self):
-        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
+        # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
         # Four cycles, each in a version of its own; the item *Discarded attempt* reads `none`. The
-        # entry of the fourth is the form from before the mark, the third one has a mark that is
+        # sub-item of the fourth is the form from before the mark, the third one has a mark that is
         # none of the two: both give the one reason.
         marked = "\n  - findings `reports/a_findings.md`, contradiction {}: the whole change"
         rounds = [marked.format("yes"),
@@ -3822,14 +3822,15 @@ class ProcessVersions(AuditCountCase):
         [pair] = [row for row in self.pair_rows()
                   if row[0] == "Discarded attempt"]
         self.assertEqual("2", pair[1])
-        self.assertEqual("the entry of a round does not say whether there was a contradiction",
+        self.assertEqual("the sub-item of a round does not say whether there was a contradiction",
                          pair[2])
 
     def test_crafted_entries_of_review_rounds_break_no_cell_and_give_no_answer_they_do_not_state(self):
-        # decision: WAY-404 "The cycle writes the mark into the entry of the round in the record's item"
-        # An entry that is in neither form, a path with a control character, a bar or a `..`, a mark
-        # that runs on, and forty thousand entries give Q1 unknown, or the answer the entries
-        # state (the mark that runs on is none); no text of an entry reaches a cell of the result, which names only fixed reasons.
+        # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
+        # A sub-item that is in neither form, a path with a control
+        # character, a bar or a `..`, a mark
+        # that runs on, and forty thousand sub-items give Q1 unknown, or the answer the sub-items
+        # state (the mark that runs on is none); no text of a sub-item reaches a cell of the result, which names only fixed reasons.
         many = "".join(f"\n  - findings `reports/f{number}.md`, contradiction no: x"
                        for number in range(40_000))
         rounds = ["\n  - findings `reports/a\x1b[2J.md`, contradiction yes: x",
@@ -3859,8 +3860,8 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(["unknown", "unknown"], [row[3] for row in self.count_series(1)])
         reasons = {row[2] for row in self.pair_rows() if row[0] == "Discarded attempt"}
         self.assertEqual({"the record holds no item `Discarded attempt`",
-                          "the item `Review rounds` does not give its entries, so whether a review "
-                          "round found a contradiction is not known"}, reasons)
+                          "the item `Review rounds` does not give its sub-items, so whether a "
+                          "review round found a contradiction is not known"}, reasons)
 
     def test_a_third_is_not_above_a_third(self):
         # One slice too large of three planned is exactly a third, which is not above it: no.
