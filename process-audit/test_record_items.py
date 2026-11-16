@@ -12,6 +12,7 @@ import record_items  # noqa: E402
 remarks_check = record_items.remarks_check
 
 NL = chr(10)
+BESIDE = "is no entry or stands at another indent than its entries"
 SILENT = "the entry of a round does not say whether there was a contradiction"
 NO_MARKER = "opens with no marker of its reason"
 SEVERAL_REASONS = "holds more than one reason in a form that is not read"
@@ -159,7 +160,7 @@ class DiscardedAttemptReason(unittest.TestCase):
             with self.subTest(body[:40]):
                 answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
                 self.assertIsNone(answer)
-                self.assertIn("a plain line stands beside the entries", why)
+                self.assertIn(BESIDE, why)
 
     def test_a_line_deeper_than_the_entries_continues_an_entry(self):
         record = ("- Discarded attempt:" + NL + "  - reason: `open design choice`; 10:32" + NL
@@ -167,12 +168,38 @@ class DiscardedAttemptReason(unittest.TestCase):
                   + NL + "- Review rounds: none" + NL)
         self.assertEqual(("yes", None), read(record))
 
+    def test_an_entry_first_under_the_item_and_deeper_than_the_next_one_is_not_dropped(self):
+        # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
+        # As Markdown the entries of such a list are two entries of one list; the first holds the
+        # marker `open design choice` and must not give no. The list is not read as a list of
+        # entries at one indent, so the answer is unknown, with the reason that names the indent.
+        for first, others in (("open design choice", ("size",)),
+                              ("open design choice", ("size", "reserved choice")),
+                              ("size", ("open design choice",)),
+                              ("open design choice", ("size", "reserved choice", "size"))):
+            body = NL + "      - reason: `" + first + "`"
+            body += "".join(NL + "    - reason: `" + other + "`" for other in others)
+            with self.subTest(first + str(others)):
+                answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
+                self.assertIsNone(answer)
+                self.assertIn(BESIDE, why)
+        # The same entries at one indent give the answers the entries give.
+        same = ("- Discarded attempt:" + NL + "    - reason: `open design choice`" + NL
+                + "    - reason: `size`" + NL + "- Review rounds: none" + NL)
+        self.assertEqual(("yes", None), read(same))
+
+    def test_a_sub_entry_under_the_first_entry_is_no_entry_of_the_list(self):
+        record = ("- Discarded attempt:" + NL + "  - reason: `size`; details" + NL
+                  + "      - reason: `open design choice`" + NL + "  - reason: `reserved choice`"
+                  + NL + "- Review rounds: none" + NL)
+        self.assertEqual(("no", None), read(record))
+
     def test_a_hundred_thousand_entries_with_a_plain_line_beside_them_are_read_at_once(self):
         # decision: WAY-404 "The audit of the process takes from this item, for its answer whether"
         body = "".join(NL + "  - reason: `size`; x" for _ in range(100_000)) + NL + "  a plain line"
         answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
         self.assertIsNone(answer)
-        self.assertIn("a plain line stands beside the entries", why)
+        self.assertIn(BESIDE, why)
 
     def test_text_beside_the_entries_or_an_entry_deeper_or_fenced_is_not_a_second_attempt(self):
         beside = ("- Discarded attempt: reason: `size`" + NL + "  - reason: `open design choice`" + NL

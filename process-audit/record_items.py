@@ -222,15 +222,16 @@ def discarded_reason(text: str) -> str | None:
 def discarded_entries(below: list[tuple[str, bool]]) -> tuple[list[str], bool]:
     """The texts of the list entries at the first indent among the lines under the item
     *Discarded attempt*, outside code fences, and whether they stand alone: the first line is an
-    entry and no plain line stands at their indent or less. A plain line deeper than the entries
-    continues one of them."""
+    entry at their indent and no plain line stands at their indent or less. A plain line deeper than
+    the entries, after the first one, continues one of them; a first line deeper than the entries
+    that come after it continues nothing, so the entries are not read as a list."""
     lines = [(remarks_check.indent_of(text), remarks_check.MARKER.fullmatch(text))
              for text, inside in below if not inside]
     markers = [(indent, marker.group("text")) for indent, marker in lines if marker]
     if not markers:
         return [], False
     base = min(indent for indent, _ in markers)
-    alone = lines[0][1] is not None and all(
+    alone = lines[0][1] is not None and lines[0][0] == base and all(
         marker is not None or indent > base for indent, marker in lines)
     return [text for indent, text in markers if indent == base], alone
 
@@ -253,8 +254,9 @@ def discarded_reasons(rest: str, below: list[tuple[str, bool]]
         return None, ("the item `Discarded attempt` holds more than one reason in a form that is "
                       "not read: write nothing beside its colon and one entry for each attempt")
     if reason is None and entries and not rest.strip():
-        return None, ("a plain line stands beside the entries of the item `Discarded attempt`: "
-                      "write each attempt as an entry and nothing else at their indent")
+        return None, ("a line of the item `Discarded attempt` is no entry or stands at another indent "
+                      "than its entries: write each attempt as an entry, all at one indent, and "
+                      "nothing else beside them")
     if reason is None:
         return None, ("the item `Discarded attempt` opens with no marker of its reason: it reads "
                       "neither `none` nor `reason: ` and one of open design choice, reserved choice "
