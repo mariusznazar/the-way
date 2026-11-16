@@ -3215,8 +3215,8 @@ class Run(AuditCountCase):
         # and a history that holds one cycle, so that the cycles it counts say whose history it read.
         checkout = self.repository("checkout")
         files = {}
-        for name in ("process-audit/audit_count.py", "process-audit/price_list.md",
-                     "task-cycle/remarks_check.py"):
+        for name in ("process-audit/audit_count.py", "process-audit/stage_pricing.py",
+                     "process-audit/price_list.md", "task-cycle/remarks_check.py"):
             files[name] = (HERE.parent / name).read_bytes()
             (checkout.root / name).parent.mkdir(parents=True, exist_ok=True)
             (checkout.root / name).write_bytes(files[name])
