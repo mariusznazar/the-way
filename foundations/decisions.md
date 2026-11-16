@@ -8076,10 +8076,11 @@ out only after the code was written.
 - **Verification:** tests: that the count answers whether a contradiction with the settlements came
   out only after the code was written from the mark of the entries of the item *Review rounds* and the
   marker of the item *Discarded attempt*: yes where an entry carries the mark of a contradiction or
-  the item gives the marker `open design choice`, whatever else the record holds, so that a yes
-  stands over an unknown, no where every entry carries the mark of none and the item reads `none` or
-  gives only the markers `reserved choice` and `size`, unknown where an entry carries no mark and no
-  yes stands, and from no text of a record.
+  the record holds the item once and it gives the marker `open design choice`, so that a yes stands
+  over an unknown of any other part of the record, save that the marker does not stand over a doubled
+  item, over which the mark of an entry alone stands, no where every entry carries the mark of none
+  and the item reads `none` or gives only the markers `reserved choice` and `size`, unknown where an
+  entry carries no mark or the item is doubled and no yes stands, and from no text of a record.
 - **Origin:** none
 
 *Rationale:* the reviewer has read the entries of the foundation and the task document to find the
@@ -8113,9 +8114,10 @@ that reads neither `none` nor a marker, written in any earlier form, gives the a
 the lines under the item are not entries at one indent alone — the first line an entry at that indent
 and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
 text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
-one marker and holds no other (WAY-403); its later lines are details of that attempt, read for a
-second `reason: ` alone, so that a second attempt written in them with its reason in other words is
-not read. Where the lines are entries at one indent alone and nothing stands beside the colon, an
+one marker and holds no second `reason: ` followed by a backtick (WAY-403); its later lines are
+details of that attempt, read for such a second `reason: ` alone, whatever word stands after the
+backtick, so that a second attempt written in them with no backtick after the `reason: ` or with its
+reason in other words is not read. Where the lines are entries at one indent alone and nothing stands beside the colon, an
 entry that opens with no marker gives the answer unknown unless another entry gives yes, and only the
 first line of each entry is read, so that a marker in a line deeper than the entry, or in an entry
 under it, is a detail and is not read. The item reads down to the next line at the left margin: a
@@ -8130,8 +8132,9 @@ line written there, a continuation of an entry included, is no part of the item 
   item of several entries gives yes where any of them has the marker `open design choice`; and that an
   item whose lines under it are not entries at one indent alone, or with text beside its colon, is
   read as the text of one attempt, which gives no attempt where it reads `none`, unknown where it
-  holds two markers or opens with no marker, and gives its reason where it opens with one marker and
-  holds no other, its later lines possibly a list of details, read for a second marker alone; that
+  holds a second `reason: ` followed by a backtick, a word that is no marker included, or opens with
+  no marker, and gives its reason where it opens with one marker and holds no such second one, its
+  later lines possibly a list of details, read for that second `reason: ` alone; that
   in a list of entries an entry with no marker gives unknown and only the first line of each entry
   is read; and that a line at the left margin ends the item.
 - **Origin:** none

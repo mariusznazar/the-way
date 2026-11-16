@@ -12,8 +12,9 @@ from two marks and never from the words of the record (WAY-403, WAY-404):
   one attempt writes nothing beside the colon and only list entries under it, at one indent, one for
   each attempt, each opening so (where the lines are no entries at one indent alone or text stands
   beside the colon, the whole is read as the text of one attempt, which gives no attempt where it
-  reads `none` and no answer where it holds two markers or opens with no marker, its later lines
-  being details read for a second marker alone); only the first line of an entry is read, and a line
+  reads `none` and no answer where it holds a second `reason: ` followed by a backtick, whatever
+  word stands there, or opens with no marker, its later lines being details read for that second
+  `reason: ` alone); only the first line of an entry is read, and a line
   at the left margin ends the item and is not read; the marker `open design choice` in any of them
   is a yes, `none` and the other two markers no contradiction, and any other text, with no marker at
   its start, gives no answer;
@@ -213,9 +214,10 @@ def reads_none_first(text: str) -> bool:
 
 def discarded_reason(text: str) -> str | None:
     """The reason of a discarded attempt that a text gives: NO_ATTEMPT where it reads `none`, the
-    marker where the text opens with `reason: ` and a marker in backticks and holds no other such
-    opening, SEVERAL where it opens with a marker and holds another one (a text that names two
-    reasons does not say which one it is), None otherwise. Only the start of the text is read for
+    marker where the text opens with `reason: ` and a marker in backticks and holds no other
+    `reason: ` followed by a backtick, SEVERAL where it opens with a marker and holds another such
+    opening, whatever word stands in its backticks (a text that names two reasons does not say which
+    one it is), None otherwise. Only the start of the text is read for
     the marker."""
     if remarks_check.reads_none(text):
         return NO_ATTEMPT
@@ -253,8 +255,9 @@ def discarded_reasons(rest: str, below: list[tuple[str, bool]]
     deeper line of the entry is a detail and gives nothing. Where a plain line or an entry at
     another indent stands beside the entries, or text stands beside the colon, the whole is read as
     the text of one attempt: it gives that attempt's reason where the text opens with one marker and
-    holds no other (its details may be a list, and a later line that names a reason in other words
-    than the marker is a detail, not a second attempt), and is not read otherwise."""
+    holds no other `reason: ` followed by a backtick (its details may be a list, and a later line
+    that names a reason with no backtick after the `reason: `, or in other words, is a detail, not a
+    second attempt), and is not read otherwise."""
     entries, alone = discarded_entries(below)
     if entries and alone and not rest.strip():
         return [None if reason in (NO_ATTEMPT, SEVERAL) else reason
