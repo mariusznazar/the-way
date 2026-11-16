@@ -603,7 +603,9 @@ holding a value, or `none` or `TODO` where the template gives it that word: `non
 there, `TODO` that something is missing. The main branch holds `TODO` only where an entry stands on
 something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
 `TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
-`TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
+`TODO — <the decision, and where it is expected>`; in a decision's *Relations*, in the same form,
+for any decision the entry derives from that the foundation does not hold yet, whether or not a
+project definition projects it; and in a decision's *Based on*, in the form
 `TODO — <what is missing, with its source>`; where an entry stands on several things and only some
 are missing, the missing one is the last item of the value and reads as the form of its field,
 after the known items; a change that leaves one there puts it before the human.
@@ -613,7 +615,10 @@ after the known items; a change that leaves one there puts it before the human.
   task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** tests: that the script reports a bare `TODO` in a decision's *Relations*, a
+  `TODO` behind a relation type there and a `TODO` joined to the relations by a comma as errors,
+  and that it takes the descriptive form after known relations. An agent compares the change with
+  the part no test holds:
   - complies: an invariant whose author searched the log and found no decision it derives from,
     and which was taken from no source outside the log, reads `Derives from: none`; a decision
     whose source is silent on what it rests on reads
@@ -625,29 +630,37 @@ after the known items; a change that leaves one there puts it before the human.
     `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
     after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
-    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
-    *Origin*.
+    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Origin*.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten; an undefined value misleads. An invariant
 with no test reads `review` as its method rather than `TODO` (WAY-61). An entry that stands on
 something the foundation does not hold yet — a fact for an invariant, the decision an invariant
-derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
-`none`, and the description keeps the gap from standing as a silent one: it names what is missing,
-and the human sees at the merge that it is left. Where only some of the things an entry stands on
-are missing, the known ones stay named items, because every link of the chain is written (WAY-17)
-and a named item stays checked as a reference, while a known one moved into the description would
-no longer be; the missing one closes the value. *Relations* and *Origin* are what an author states
-about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
-foundation lacks.
+or a decision derives from, a source for a decision — can expose it as `TODO — <…>`
+instead of falsely claiming `none`, and the description keeps the gap from standing as a silent
+one: it names what is missing, and the human sees at the merge that it is left. Where only some of
+the things an entry stands on are missing, the known ones stay named items, because every link of
+the chain is written (WAY-17) and a named item stays checked as a reference, while a known one
+moved into the description would no longer be; the missing one closes the value. *Origin* is what
+an author states about the entry itself when writing it, so a gap there is a field left unfilled,
+never a thing the foundation lacks; *Relations* may name a decision the foundation does not hold
+yet, and the gap is then that decision, as in an invariant's *Derives from*.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
 state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
 the main branch and having the script enforce it — a cycle would stop to write a fact outside its
 task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact; `TODO` only
-in *Rests on* — an author of a decision whose source is silent, or of an invariant whose decision
-is not written yet, would have to stop the cycle or write `none`, which is false.
+in *Rests on* — an author of a decision whose source is silent or whose higher decision is not
+written yet, or of an invariant whose decision is not written yet, would have to stop the cycle or
+write `none`, which is false; `TODO — projected: <the definition>, <the question of the entry>`
+in a decision's *Relations*, which a script checks against the definition — a dead reference would
+be caught, but the script that checks the form would have to read project definitions, and the
+field would hold a second form beside the one an invariant's *Derives from* has; a partial entry of
+a projected decision as the only way — it leaves the one case that remains, where the code makes no
+part of the projected decision true; a form for the decision an approved project definition
+projects alone — a narrower opening, but the rule of *Relations* would differ from that of
+*Derives from*, and nothing would check the limit.
 
 ## Decision entries and the decision log
 
@@ -3730,6 +3743,10 @@ step reads the projected entries of the task's sources as well as the foundation
 code makes true that the foundation step missed — an invariant with its test run on that code — and
 writes a new entry only for a rule none of them states.
 
+A change that writes a projected entry into the foundation replaces each descriptive `TODO` that
+points at it with a reference to it by its identifier: in a decision's *Relations* as
+`derives from <number>`, and in an invariant's *Derives from* as the number.
+
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
@@ -3741,9 +3758,13 @@ writes a new entry only for a rule none of them states.
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
     that sentence and puts its meaning before the human in the request's section for the human's
     decisions; a plan member whose code would make another item's entry true returns to the plan
-    first;
+    first; a task whose code makes a projected decision true writes it into the log and replaces
+    the `TODO` that names it with `derives from <its number>` in the *Relations* of a decision and
+    with its number in the *Derives from* of an invariant;
   - violates: the return step writes a new decision for a rule a projected entry of the
-    task's source states; a shortened projected entry is written as the gate approved it, its
+    task's source states; a task writes a projected decision into the log and leaves a decision's
+    *Relations* reading `TODO — <that decision, and where it is expected>`; a shortened projected
+    entry is written as the gate approved it, its
     meaning left out of the request's section for the human's decisions; the code a late-found
     projected invariant covers is set aside and rewritten.
 - **Origin:** none
@@ -6219,6 +6240,76 @@ in 4 of the 8 runs of the measurement, and a line that keeps a model out of the 
 be drawn somewhere all the same; a restriction of models on the human's whole account — the model
 leaves every session of the human, and each work on it would need a change of that restriction.
 
+### WAY-403 — How does a task's branch give new numbers to its decisions that the target branch has taken?
+
+Where the log of the target branch holds a number that a new decision of the task branch bears, the
+task branch, before it merges the target branch and in a commit of its own, renumbers all its new
+decisions in their order onto the next free numbers after the highest number that log holds, as an
+entry or as a withdrawn number, and never changes the number of a decision of the target branch. In
+that one pass it rewrites every reference to the renumbered decisions in the files of the branch and
+in the original of the cycle's record as the record stands before the reconciliation is entered in
+it; texts written afterwards, the rows that give the conversion of an earlier reconciliation and the
+human's remarks quoted word for word stay as they are. The rule holds for the reconciliation with
+the target branch before the request opens and for each merge of the target branch in a correction
+after review, on either route.
+
+The conversion of the old numbers into the new ones stands in the row of the cycle record's events
+that records the reconciliation with the target branch, and in no other note of the record; a
+reconciliation that renumbers again adds its own row beside the earlier ones.
+
+- **Scope:** decisions, task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-19 · derives from WAY-02
+- **Verification:** an agent compares a cycle, its branch and its record with the decision:
+  - complies: the new decisions of a task branch bear the numbers 500 to 502, the target branch took
+    500 and 501 for its own, and the task branch gives its three the numbers 502 to 504 in a commit
+    of its own before the merge, in the log, the tests, the comments, the skills and the original of
+    the record, the spec, the plan, the handoffs, the reports and the process remarks among them; a
+    remark of the human quoted in the record keeps the number it was written with; the row of the
+    reconciliation reads 500 → 502, 501 → 503 and 502 → 504; a correction after review that
+    meets decisions taken by another merged request renumbers the same way before its merge, gives
+    a row of its own, 502 → 505, 503 → 506 and 504 → 507, and leaves the first row as it is;
+  - violates: the task branch merges first and renumbers afterwards, or in the merge commit; the
+    decisions of the target branch are renumbered; the numbers are replaced one decision at a time,
+    so that 502 becomes 504 after 500 became 502; the log is renumbered and the record keeps the old
+    numbers under a note of the conversion at its head; the human's quoted remark is rewritten; the
+    row of the reconciliation gives no conversion; the row of an earlier reconciliation is rewritten
+    with the map of a later one, so that it reads 500 → 505, 501 → 506 and 505 → 507; a correction
+    merges the target branch with no renumbering where the numbers clash.
+- **Origin:** none
+
+*Rationale:* a task's new decisions take the next free numbers of the log of the branch the task
+started from (WAY-19), and a task branch reaches the remote only when its request opens, so two
+tasks that run side by side take the same numbers and neither can see the other's; the clash shows
+at the merge, and the task that merges second gives way. The task branch renumbers rather than the
+target branch because the numbers of the target branch already stand in the references of requests,
+branches and commits that the task cannot reach, while its own numbers stand only in its own files
+and in its own record. The record is rewritten in the same pass because a reference names an entry
+the foundation holds by its number (WAY-02), and the request's description and the documents under
+its links must name the same entry by the same number, so that the human who reads them converts
+none by hand. The conversion of a reconciliation stands once, in the row where the cycle already says
+that it reconciled, so that an old commit or an earlier remark of the human that carries an old
+number can still be read; a row of an earlier reconciliation stays as it was written, since it was
+true then, and the rows are read one after the other. The price: a reader of an old number follows
+two rows after a second renumbering; the reports of the agents differ from what the agents wrote in
+their numbers; the rewrite of the record is checked by no reviewer of the merge since the record is
+no code; and a correction can renumber a second time when the request returns after another request
+that adds decisions has merged.
+*Rejected:* renumbering the decisions of the target branch; a temporary marker in place of a number
+until the merge; the old numbers left in the cycle record, with a note of the conversion at the head
+of the record — the mismatch the rule removes stays, and the reader converts each number by hand;
+the numbers rewritten only in the copy of the record that is published in the repository — that copy
+holds texts from before the merge and from after it, the later ones naming numbers of the target
+branch from the same range, so one rewrite would corrupt them, and telling the texts apart by date
+is fragile; looking at the numbers that other branches have taken while the numbers are given — the
+task branch reaches the remote only when the request opens, so those numbers cannot be seen; the
+rule in the reconciliation before the request opens alone — in a correction the agent goes on
+improvising, and the second renumbering falls there; a note of the conversion at the head of the
+record as well as in the row of events — a second copy of the same information, which a reader of
+the rewritten documents does not need; no conversion kept anywhere — an old commit or an earlier
+remark of the human that carries an old number becomes unreadable; the rule as a sentence of the
+skill alone, with no entry — the rejected ways would stand nowhere an agent reads.
+
 ## The work of a cycle's agents
 
 What an agent of the cycle checks of its own work and reports, how it waits for a long command, and
@@ -6994,8 +7085,8 @@ actions, the changed invariant tests, surfaces and *Violated* marks, the additio
 a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
 error of the form check that the cycle holds wrong, the pairs that give the cause of a
 correction after the request opened, each descriptive `TODO` in an
-invariant's *Rests on* or *Derives from* or in a decision's *Based on* that stands on the main branch
-after the change (WAY-71), and the foundation entries the human did not see at the task document — in
+invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* that stands on
+the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document — in
 three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
 order: what the request cannot go on without, an answer or an action of the human; what the cycle did
 not do or did not fix and can still be done in this request, which the human has done there, makes a
@@ -7053,7 +7144,7 @@ template of a request's description lists every kind.
     reviewer did; the section reads `none` after a correction, or the sentence of the correction's
     pairs stands only in the lower part; the section reads `none` while an invariant's *Rests on*
     or *Derives from* or a
-    decision's *Based on* holds a descriptive `TODO` on the merged tree, or such a gap
+    decision's *Based on* or *Relations* holds a descriptive `TODO` on the merged tree, or such a gap
     stands under *Needed from you* or under *You accept by merging* with no way to answer it.
 - **Origin:** none
 
@@ -7070,8 +7161,8 @@ is the reading WAY-150 gives, so it asks for no yes, and the section keeps its `
 that can be merged. The cause of a correction stands here
 because the judgment whether the task required what the correction changed is the cycle's own, and
 the merge is where the human sees it. A descriptive `TODO` that stands in
-an invariant's *Rests on* or *Derives from* or in a decision's *Based on* once the change is merged
-is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
+an invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* once the
+change is merged is a gap on the main branch that the merge leaves, so it stands under *Fix or let through* with what
 it names as missing, for the human to have the missing thing written in the request, make a task of
 it or let it through (WAY-71); while an old gap stands, every request carries it. In one list, what
 the request cannot go on without, what the human can still have done in it and what the merge
