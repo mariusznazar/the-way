@@ -30,6 +30,12 @@ and no entry is written.
   A change of the part map is never a candidate.
 - Its settlement is in the human's words, and the last column names what the task's cycle would do
   or choose without it.
+- A candidate that adopts a practice from outside the product (WAY-100) is built `waiting` and not
+  as the human's choice unless the question that settled it showed the parts the practice leaves
+  out among its ways: its row's *Source* names a question whose *Not chosen* keeps those the human
+  turned down, or holds them itself. Where the source keeps none, the question of "How a skill asks"
+  in `way_of_working.md` shows them as ways before the row is accepted, so that the decision's
+  *Rejected* takes them (WAY-134).
 - Write the table under "Settlements to record" with a column *State* after the template's
   columns: proposed rows start `waiting`, a row that repeats a choice the human made between ways
   shown starts `accepted` and is marked as the human's choice (`build_table.md`), and rows with no

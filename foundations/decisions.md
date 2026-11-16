@@ -205,6 +205,10 @@ source in *Based on*, or, for a source a reader of the repository cannot open, d
 of what is taken from one source is no decision: each rule taken stands in the decision that
 carries it (WAY-19).
 
+A decision written from a row of a task's *Settlements to record* takes the ways in its *Rejected*
+from the row's source, which keeps the parts the practice leaves out where the human weighed them,
+as WAY-134 gives; there WAY-134 prevails over the paragraph above.
+
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
   project-level, product-guidelines, task-cycle
@@ -219,14 +223,18 @@ carries it (WAY-19).
     takes one practice from a course whose lessons a reader cannot open describes in its *Rationale*
     what the lesson showed and says that the lessons are not open to that reader; the rules taken
     from one outside source each stand in the decision that carries them, with no decision of its
-    own for the list of what is taken;
+    own for the list of what is taken; a decision written from a row of a task's settlements holds in
+    *Rejected* the parts of the practice that the row's source keeps as ways the human turned down,
+    and where it keeps none holds no left-out part there;
   - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
     without a decision adopting it; a decision adopts an outside practice and says nowhere what it
     takes from it; a decision answers the question "what do we take from this source" with a list
     of the rules taken, each of which a decision of its own would carry; a decision whose practice
     came from a course cites in *Based on* a public page found afterwards that describes the same
     practice; a decision that takes a practice from a lesson its reader cannot open describes the
-    lesson and leaves the reader to guess whether its address was forgotten.
+    lesson and leaves the reader to guess whether its address was forgotten; a decision written from
+    a row of a task's settlements puts in *Rejected* a part of the practice that the row's source
+    does not keep.
 - **Origin:** none
 
 *Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
@@ -239,7 +247,10 @@ describes the practice, found afterwards, would look as though the practice came
 it may have come from elsewhere and in another scope, what is left out would be weighed against a
 text nobody read when the decision was made, and a made-up source looks the same as a true one. A
 decision that says its source is not open to a reader lets a reviewer tell a closed source from a
-forgotten one, and the next decision that takes from the same closed source says it as well.
+forgotten one, and the next decision that takes from the same closed source says it as well. A part
+of a practice that the human never saw would read in the *Rejected* of a decision written from a
+row as a way the human refused, so for such a decision the parts left out come from the ways the
+row's source keeps (WAY-134).
 *Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
 treating recognition by an agent as adoption — recognition does not settle fit or scope; the
 sentence on the practice stated only in the skill that looks for candidates for entries — the rule
@@ -5290,10 +5301,18 @@ the entry's meaning is the one the human accepted with the row in the task docum
 kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
 becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
+Where a row adopts a practice from outside the product, the refinement shows the human, among the
+ways of the question that settles it, the parts the practice leaves out, so that the row's source
+keeps them as ways not chosen and the decision's rejected options take them; where the source keeps
+none, the decision names what it takes from the practice in its binding sentences or its *Rationale*
+as WAY-100 gives and puts no left-out part in its rejected options. In this area this decision
+prevails over WAY-100, which asks a decision that adopts a practice to put what it leaves out in
+*Rejected*.
+
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-33 · narrows WAY-114
+- **Relations:** derives from WAY-33 · narrows WAY-114 · narrows WAY-100
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
@@ -5305,6 +5324,10 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     one; a decision row whose question keeps two ways the human did not choose gives its decision
     those two as rejected options, and one whose source keeps none, or keeps only ways that answer
     another part of the question, gives `unknown` with no question to the human; the row that
+    adopts a practice from outside shows the human, as ways of its question, the parts the practice
+    leaves out, and its decision takes the ones the human did not choose as rejected options, while
+    a row of such a practice whose source keeps none gives a decision that names what it takes in
+    its *Rationale* and holds in *Rejected* only the ways the source keeps; the row that
     repeats the choice the human made between two ways shown stands in the table accepted and
     marked, while the rows the agent derived from the material wait for the human; a rule of how an
     agent works that only one skill holds stands in the table as a row that goes to that skill, the
@@ -5320,7 +5343,9 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     without the ways not chosen; the cycle fills a decision's rejected options with ways it derives
     from what the cycle would otherwise guess, or blocks the request to ask the human for them; a
     row that repeats the human's choice between ways shown waits for the human's acceptance like a
-    row the agent derived.
+    row the agent derived; the cycle puts in the rejected options of a decision written from a row
+    a part of an outside practice that the row's source does not keep, because WAY-100 asks for what
+    a practice leaves out.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
@@ -5347,7 +5372,13 @@ human. The ways the human saw and did not choose outlive the conversation that s
 the task document. A rejected option the writer of an entry derives reads as one the human weighed,
 and an agent that proposes it later has to say what has changed for a way nobody turned down, so a
 way kept from the refinement is written and a missing one is `unknown`, which tells the reader
-nobody knows what was weighed.
+nobody knows what was weighed. A practice adopted from outside leaves parts out, and a part the
+human never saw would read in *Rejected* as a way the human refused, so the refinement shows each
+part among the ways of the question and the row keeps those the human turned down; for a decision
+written from a row this decision therefore prevails over WAY-100, whose rule on what a decision
+leaves out of a practice holds for every other decision. The price: the refinement of a row that
+adopts a practice asks one question more, and a decision from a row whose source kept no left-out
+part says nothing in *Rejected* of what the practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
 a task has no gate to approve their wording, and refining a task would weigh as much as defining a
 project; noting a settlement only when the human states one — a settlement said in passing in the
@@ -5368,7 +5399,11 @@ this one has to be corrected anyway; every row accepted separately, as before �
 the same choice; rows that repeat a choice kept out of the table, the cycle writing the decision
 straight from the answer under the question — the sieve of choices that bind no longer after the
 merge goes (the column of what the cycle would otherwise guess), the cycle itself judges which
-choice to enter, and this decision needs a stronger rebuild.
+choice to enter, and this decision needs a stronger rebuild; the parts a practice leaves out taken into the rejected
+options by the cycle from the practice's source, WAY-100 prevailing — a part nobody turned down
+reads as one the human refused, and the human merging does not read the *Rejected* of an entry; the
+two rules left with no precedence — each cycle reads the collision as it can, and the next row that
+adopts a practice meets it again.
 
 ### WAY-140 — How does a task change something outside the product's repository?
 

@@ -90,7 +90,11 @@ such part; none where there is no such part>
   row's *Source* names, or in that *Source* itself — each with the cost or the reason kept beside
   it; `none considered` where the human said so; or `unknown`, written with no question to the
   human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
-  the way chosen, or from the foundation — never enters it (WAY-134).
+  the way chosen, or from the foundation — never enters it (WAY-134). Where the row adopts a
+  practice from outside the product, the parts the practice leaves out are among the ways the row's
+  source keeps when the human weighed them, and then stand in *Rejected*; where the source keeps
+  none, *Rejected* holds no left-out part, and the decision names what it takes from the practice in
+  its binding sentences or *Rationale* (WAY-100, which WAY-134 narrows here).
 - The *Rejected* of a decision marked `the cycle's` takes `unknown`, unless a statement of the human
   names the ways weighed — then those ways, or `none considered` where the human said so.
 - In the decision of a technology choice a project or a task settles, the lacks of the option chosen
