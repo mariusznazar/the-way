@@ -99,8 +99,9 @@ before dependent work, and record corrections to stale paths or commit ranges. R
 read for a question or finding in the questions table, rather than loading every stage's full
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
 During work this file, the frozen task, `stages.md` (step 12), `mechanism_measures.md` (step 12),
-`gate_times.md` (created by the first gate run: step 2's where the pin moved, else step 4's, and
-step 10's where step 4 skips its run; each later gate run appends to it), `spec.md`, `plan.md`,
+`gate_times.md` (created by the first gate run on the cycle's own system: step 2's where the pin
+moved, else step 4's, and step 10's where step 4 skips its run and CI is not the final gate; each
+later such run appends to it, and a cycle with no such run has none), `spec.md`, `plan.md`,
 `plan-size.md`, `request.md` and `reports/` live under the ignored `.runs/task-cycles/<task-slug>/`
 directory. At the request, copy
 that whole directory to `docs/task-cycles/<task-slug>/`, link the reports from these rows, clean
@@ -145,12 +146,17 @@ among those failing on the base: that is work the task carries. An executed
 check is its command and exit code, with its result in one line; a report missing either returns
 to its agent for repair, and a claim that tests passed does not replace them. A manual check
 records its method, actor, observed result and evidence, with `not applicable` for the command and
-exit code. Focused checks are not rerun merely to advance the cycle. The orchestrator runs the gate
-on the tree that goes into the request and records its command, exit code and the failures it
-names. Where CI runs on the request, the run on its last head is a row of its own in the original,
-its link in place of the command and its conclusion as the result (step 12 of
-`task-cycle/skill/SKILL.md`); the committed copy holds that row only for the runs before its own
-head, since the run on the head that removes the copy comes after it.
+exit code. Focused checks are not rerun merely to advance the cycle. The final gate is the CI run
+on the request's last head where CI runs on the request, and the orchestrator's own run of the
+gate on the tree that goes into the request where it does not (step 10 of
+`task-cycle/skill/SKILL.md`), and the row says which: where the final gate ran in CI, the row is
+the run on its last head, its link in place of the command and its conclusion as the result, with
+the statement that the final gate ran in CI and that the cycle has no local time of it, so that the
+audit of the process tells the cycle from one whose measuring script failed (step 12); where the
+run gave no result in 30 minutes, the row says that CI did not answer and the gate ran locally,
+with its command and exit code and the failures it names. The committed copy holds the row of the
+CI run only for the runs before its own head, since the run on the head that removes the copy
+comes after it.
 Name every check that failed or did not run, with the reason; an unrun check is unchecked,
 never passed. Each failing run of a check remains in the record with its command and result, even
 if the check passes when run again. A check that fails in a cycle run and passes when run again

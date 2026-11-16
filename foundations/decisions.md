@@ -2644,10 +2644,10 @@ rules the-way's own code keeps, and the one command that runs every test, with h
 One command runs all of a product's tests, the tests of its invariants among them — the
 same command for an agent, for a human and for whatever runs it when a change is merged —
 and no list of checks written by hand stands beside it. In CI that command runs on every merge
-request, with `.the-way` at the commit the product pins (WAY-34), from a file of CI configuration
-that the product writes itself by the description the-way gives, and the installer writes none. The
-result of that run is a check the repository requires before a merge, and the owner of the
-repository may bypass it.
+request and on every system the product runs on, with `.the-way` at the commit the product pins
+(WAY-34), from a file of CI configuration that the product writes itself by the description the-way
+gives, and the installer writes none. The result of each such run is a check the repository requires
+before a merge, and the owner of the repository may bypass it.
 
 - **Scope:** invariants, agent-instructions, task-cycle, gate, installation
 - **Based on:** github-required-status-checks · github-ruleset-bypass · foundations-branch-ruleset
@@ -2655,14 +2655,16 @@ repository may bypass it.
 - **Verification:** invariants: ci-checking-commands · gate-exit-code. For the same command for
   everyone and for its run in CI, an agent compares the change with the decision:
   - complies: the instructions for agents name that one command as the way to check a change; the
-    CI file of the-way runs `python -B gate/run_tests.py` on every pull request into `foundations`;
-    the description that the installer's README gives a product says that its CI file runs the one
-    command on every merge request with `.the-way` at the commit the product pins, and that the
-    result is set as a required check with a bypass for the owner;
+    CI file of the-way runs `python -B gate/run_tests.py` on every pull request into `foundations`,
+    on Linux and on Windows; the description that the installer's README gives a product says that
+    its CI file runs the one command on every merge request, on every system the product runs on,
+    with `.the-way` at the commit the product pins, and that the result of each run is set as a
+    required check with a bypass for the owner;
   - violates: the instructions for agents list test and lint commands of their own; the tests of
     the invariants run under a command of their own beside the product's tests; the installer writes
     a CI file into a product; a CI file runs a checking command beside the one command; the result
-    of the run shows on a merge request and nothing requires it before the merge.
+    of the run shows on a merge request and nothing requires it before the merge; the CI file of a
+    product runs on one system where the product runs on two.
 - **Origin:** none
 
 *Rationale:* a list of checks written by hand is a second copy of the tests that drifts: a new
@@ -2670,7 +2672,9 @@ test never runs, a removed one still does. One command for all leaves no doubt w
 running all of them leaves nothing to choose. The run in CI is the one that does not rest on the
 agent or the human who made the change having run the tests, and it is made on a system that may
 differ from theirs; a result the repository requires cannot be merged red by oversight, and the
-owner's bypass leaves the owner able to merge while the CI itself is broken. The product writes its
+owner's bypass leaves the owner able to merge while the CI itself is broken. The run is made on each
+system the product works on because its result is the final gate of the product's task cycle
+(WAY-160): a system left out is checked by no one at the end of the cycle. The product writes its
 own CI file because the installer knows nothing of the product's environment.
 *Rejected:* a gate taking its checks from the methods written in the entries and running those a
 change calls for — a second runner beside the product's tests, and a choice of tests that can
@@ -2684,7 +2688,10 @@ it alone — the rule lives in one product, the next starts from nothing, and th
 saying only to run the tests before a merge; a required check with no bypass for the owner — a
 failure of the CI blocks every merge until the owner turns the rule off, which the owner can do
 anyway, so the difference is only more clicking; a result that is shown and requires nothing — a
-red request can be merged by oversight.
+red request can be merged by oversight; CI on one system alone — the tests that need the other
+system run nowhere, and an error of the installer with junctions on Windows shows only in use; CI on
+Linux and, on the machine of the work, only the directories with Windows tests — the time of that
+run is unmeasured and part of the load of the machine stays.
 
 ### WAY-38 — In what are the scripts of the-way written?
 
@@ -2799,58 +2806,74 @@ security support — years without installers.
 
 ### WAY-160 — How does the task-cycle orchestrator run the finished change's gate?
 
-The task-cycle orchestrator itself runs the product's gate on the tree that goes into the request,
-and the request gives its command and exit code and names each check that failed or did not run; a
-check that did not run is unchecked, never passed. The gate's run is the orchestrator's alone: no
-author, executor or reviewer runs it, and neither a plan's *Checks* nor a handoff names a run of
-it. Where CI runs on a request whose code is finished — one open for review, or one that waits only
-for human actions in the cycle — the orchestrator waits for the result of the run on each head it
-pushes to it, a correction's included, treats a red result as a failed gate, handled as the cycle's
-gate gives — a fix and its review, save a check outside the task's scope that passes when run
-again, which WAY-261 governs — and puts the result into the request's description; a request the
-cycle leaves blocked for unfinished
-code is out of that wait, its description saying that the result of the run stands on the request's
-page and was not waited for.
+The final gate of a task cycle is the product's gate on the tree that goes into the request, and the
+request gives its command and exit code, or the CI run's, and names each check that failed or did
+not run; a check that did not run is unchecked, never passed. The gate's run on the cycle's own
+system is the orchestrator's alone: no author, executor or reviewer runs it, and neither a plan's
+*Checks* nor a handoff names a run of it. Where CI runs on a request whose code is finished — one
+open for review, or one that waits only for human actions in the cycle — the CI run on the head
+pushed last is the final gate, and the orchestrator runs no full gate itself at the end of the cycle
+or after the merge with the target branch; the run on the base of the task branch and the run after
+the pin of the-way moves stay the orchestrator's own, since no request stands then, and where CI
+runs on no request the orchestrator runs the gate itself on the tree that goes into it.
+
+The orchestrator waits for the result of the CI run on each head it pushes to the request, a
+correction's included, treats a red result as a failed gate, handled as the cycle's gate gives — a
+fix and its review and the wait for the run on the new head, save a check outside the task's scope
+that passes when run again, which WAY-261 governs — and puts the result into the request's
+description. Where the run gives no result within 30 minutes of the push — it does not start, it
+stands in a queue or the host does not answer — the orchestrator runs the gate itself on the tree of
+that head, and the description says that CI did not answer and that the gate ran on the cycle's own
+system; a request the cycle leaves blocked for unfinished code is out of that wait, its description
+saying that the result of the CI run stands on the request's page and was not waited for.
 
 - **Scope:** task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-16 · derives from WAY-63 · derives from WAY-148
 - **Verification:** an agent compares the gate's run and the request with the decision:
-  - complies: the orchestrator runs the gate once on the tree the return step and its review leave,
-    and again where the merge with the target branch changed it, and the request gives the command
-    and its exit code; the orchestrator, with CI running on the request, waits for the run on the
+  - complies: with CI running on the request, the orchestrator runs no gate of its own after the
+    return step and its review, nor after the merge with the target branch, waits for the run on the
     commit it pushed last, finds it red, has the failure fixed and the fix reviewed (a check outside
     the task's scope that passes when run again goes as WAY-261 gives), waits for the run on the
     fixed commit and writes that result into the description; after the human's remarks it
-    waits again for the run on the corrected head; a request blocked for a remaining blocking finding
-    says in its description that the result of the run was not waited for;
+    waits again for the run on the corrected head; the run gives no result 30 minutes after the push,
+    the orchestrator runs the gate on the tree of that head and the description says that CI did not
+    answer and that the gate ran on the cycle's own system; with no CI on the request it runs the
+    gate once on the tree the return step and its review leave, and again where the merge with the
+    target branch changed it, and the request gives the command and its exit code; a request blocked
+    for a remaining blocking finding says in its description that the result of the CI run was not
+    waited for;
   - violates: the focused-check reports replace the gate on the finished change; the request calls
     a check that did not run passed; the gate ran on a tree other than the one the request holds; a
     plan's *Checks* or a handoff tells an executor to run the gate after its slice; the gate fails,
     its fix changes code, and the return step does not compare the fix's range; the request is
     marked ready while the CI run on it still goes; a red CI result is left for the human to find;
     the description names no CI result where CI ran on a request whose code is finished; a
-    correction pushes a corrected head and the description keeps the result of the earlier head.
+    correction pushes a corrected head and the description keeps the result of the earlier head;
+    the orchestrator runs the full gate on the cycle's own system as well, where CI gives a result
+    within 30 minutes; the cycle waits beyond 30 minutes for a run that gives no result, or stops
+    for it, or the description keeps silent that CI did not answer.
 - **Origin:** none
 
 *Rationale:* the finished change needs verification across the work that made it, which no
-author's focused checks give, and the orchestrator owns that run. The command and its exit code
-tell the human what passed; the checks that failed or did not run, named, keep what stayed
-unchecked in view. A gate run after every slice repeats for each slice a run the finished change
-needs once and holds the next slice until it ends, while the focused checks of the code a slice
-reaches and of the invariants its change may make false find what it breaks there. The return
-step compares the foundation with
-the code and corrects what no longer matches, and it needs no result of the gate, so one run on the
-tree it and its review leave covers the finished change, where a run before it would be made again
-on the tree it changes; the merge with the target branch is the one change to the tree that can
-follow. The CI run on the request is a run on a system other than the cycle's own, so a failure that
-shows only there would reach the human, and come back as a round of corrections, were the request
-handed over before it; it adds to the cycle's gate and replaces nothing, so a failure that shows
-only on the cycle's own system stays caught there. Every push to a request with finished code
-starts a new run, so the wait follows each head, a correction's too; a request blocked for unfinished
-code gets no wait, since its code will change and a run on it settles nothing the human decides, and
-its page still shows the run. The price is that a failure of the gate comes
-after the return step, and that the human receives the request later, by the time CI takes.
+author's focused checks give. The command and its exit code, or the CI result, tell the human what
+passed; the checks that failed or did not run, named, keep what stayed unchecked in view. A gate run
+after every slice repeats for each slice a run the finished change needs once and holds the next
+slice until it ends, while the focused checks of the code a slice reaches and of the invariants its
+change may make false find what it breaks there. The return step compares the foundation with the
+code and corrects what no longer matches, and it needs no result of the gate, so one run on the tree
+it and its review leave covers the finished change, where a run before it would be made again on the
+tree it changes. The CI run on the request is the same command on the systems the product works on
+(WAY-16), so it replaces the cycle's own full run: a failure that shows only on a system other than
+the cycle's own is caught, and the cycle's own system is not occupied for the length of a run that CI
+repeats. Every push to a request with finished code starts a new run, so the wait follows each head,
+a correction's too; a request blocked for unfinished code gets no wait, since its code will change
+and a run on it settles nothing the human decides, and its page still shows the run. The cycle
+never stops for the host of the repository: a limit on the wait and the gate on the cycle's own
+system keep the work going where the host fails. The price is that a failure of the gate comes after
+the return step, that the human receives the request later, by the time CI takes, and that a product
+whose CI runs on fewer systems than the product works on leaves the others unchecked at the end of
+the cycle.
 *Rejected:* the gate's full output kept in a file of the cycle, with its failure lines brought into
 the orchestrator's context — the exit code and the failures named settle the same; executor checks
 in place of the gate on the finished change — the combined result is never checked; an exit code
@@ -2859,8 +2882,10 @@ gate's run by the number of slices and holds each slice for it; rerunning after 
 only the checks that read the foundation — the-way does not know which checks of a product read its
 foundation; a cycle that hands over the request and leaves the CI result to the human — an error
 visible only on the CI's system reaches the human and returns as a round of corrections; the CI
-result in place of the cycle's final gate — an error visible only on the cycle's own system is no
-longer caught, and the cycle stops where the host of the repository fails.
+run in place of the gate also on the base of the branch and after the pin moves — the cycle would
+push the branch and open a working request at its start, a larger change for two rare cases; a
+cycle that stops and leaves the request blocked until CI answers, for the human to resume — a
+failure of the host of the repository stops the work.
 
 ### WAY-344 — What does a script of the-way do when a file it reads lacks a field it needs?
 

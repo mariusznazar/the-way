@@ -5,7 +5,8 @@ review of its fix.
 
 When a blocking finding remains after the review of its fix — in any of the cycle's code reviews, a
 slice's included — the change is blocked: run no third round and do not rule on the finding. Run
-the gate on the change as step 10 gives, at once, since no return step runs on this code, and make
+the gate on the change on your own system as step 10 gives its local run, at once, since no return
+step runs on this code and the request is not waited for, and make
 no further slice, no return step and no reconciliation with the target branch on code its review
 has not accepted. The request names each of these that has not run on that code. Work done on
 code its review has not accepted is done again once the fix the human's decision calls for is made,
@@ -17,7 +18,8 @@ gives them, then write the description by `task-cycle/skill/request_template.md`
 step 13 gives, in its variant for a remaining blocking finding, linking the record by the SHA of the
 commit that adds it, and open the request from it as a draft marked `blocked`. The cycle does not
 wait for CI on this request, whose code is unfinished (WAY-160): where CI runs on it, *Checks* says
-that the result of the run stands on the request's page and was not waited for. The request does not
+that the result of the run stands on the request's page and was not waited for, and the gate that
+ran on your own system stands for the final gate. The request does not
 exist when the copy is committed, so *Request URL and status* in the copy reads, word for word and
 alone on its line, `blocked draft, opened on this commit`, the wording `project-level/plan_state.py`
 recognises to report the task as blocked. After the human's decision, the correction after review
