@@ -95,7 +95,10 @@ Name handoff and report paths and input and output commits, so work
 resumes from these files and commits without the conversation. Keep each complete handoff and
 report, with secrets and personal data removed, in `reports/`; a short return routes the work and
 names failed and unchecked checks and unresolved concerns. Repair an incomplete or missing report
-before dependent work, and record corrections to stale paths or commit ranges. Record the evidence
+before dependent work, and record corrections to stale paths or commit ranges. Where the task's
+decisions were renumbered, the row of the reconciliation with the target branch gives each old
+number and the new one it now bears, as `task-cycle/skill/SKILL.md` ("The renumbering of the task's
+decisions") gives. Record the evidence
 read for a question or finding in the questions table, rather than loading every stage's full
 report and sources again. This record is the cycle's only log; no method keeps one beside it.
 During work this file, the frozen task, `stages.md` (step 12), `mechanism_measures.md` (step 12),
