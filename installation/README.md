@@ -141,9 +141,10 @@ invariant and the test has no such check, and nothing in the product says so.
 The installer writes no CI file. It does not know the product's host, language or environment, and a
 file it wrote would be overwritten at each move of the pin, or the installer would have to stop
 managing it once the product edited it. The product writes its own CI file by this description, so
-that its one command of tests (WAY-16) runs on every merge request and a red result shows before
-the merge. `.github/workflows/tests.yml` in the-way is the-way's own file for GitHub; it checks out
-the-way itself, not a product with a submodule, and is no file to copy.
+that its one command of tests (WAY-16) runs on every merge request, on every system on which the
+product runs, and a red result shows before the merge. `.github/workflows/tests.yml` in the-way is
+the-way's own file for GitHub; it checks out the-way itself, not a product with a submodule, and is
+no file to copy.
 
 The CI file of a product:
 
@@ -165,11 +166,15 @@ The CI file of a product:
    `origin/HEAD`, it has nothing to compare with, skips the comparison and lists that it did, and
    the run passes without it. On GitHub: `fetch-depth: 0` on the checkout, then
    `git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/<main branch>`.
+6. Runs on every system on which the product runs, one job for each, because the result of the run
+   is the final gate of the product's task cycle (`task-cycle/skill/SKILL.md`, step 10, WAY-160): an
+   error that shows only on a system the CI file leaves out is then checked by no one, since the
+   cycle runs the command on its own system only where CI gives no result.
 
-The result is a required check. Set it in the branch rules of the main branch as required before a
-merge, with the repository's owner allowed to bypass. A check that only shows lets a red request be
-merged by oversight; the bypass lets the owner merge while the CI itself is broken. Give the job a
-name that stays: the rule names the check.
+The result of each job is a required check. Set each in the branch rules of the main branch as
+required before a merge, with the repository's owner allowed to bypass. A check that only shows lets
+a red request be merged by oversight; the bypass lets the owner merge while the CI itself is broken.
+Give each job a name that stays: the rule names the check.
 
 ## Moving the pin
 
