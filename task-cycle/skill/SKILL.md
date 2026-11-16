@@ -210,7 +210,9 @@ text. The handoff gives the user's delegation, the worktree, the method of the s
 its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths and commits of the
 frozen task and of the spec and plan where they exist, the answers of step 4, the name of the
 agent's directory for working copies, and the report path, and copies word for word the first
-paragraph of "Working copies" below (WAY-148). The agent reads that `SKILL.md` whole, and a file it
+paragraph of "Working copies" below (WAY-148). It tells the agent that `cycle.md` and the other
+files of the cycle's record directory — other agents' handoffs, reports and findings — are not its
+to read unless its handoff names them. The agent reads that `SKILL.md` whole, and a file it
 names, one beside it included, only when the step or variant that names the file comes (WAY-125);
 no handoff tells it to read at the start every file its method names. Where that `SKILL.md` opens
 with a table of variants, the handoff names the agent's variant in the words of its row: under
