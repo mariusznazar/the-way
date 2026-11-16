@@ -7391,8 +7391,8 @@ every review.
 *Rejected:* the rule in the template of the testing discipline — it works only in a product that has
 adopted the template, and it is no rule on the content of a test file, since the test stays untouched
 while the code cheats; leaving things as they are — it costs nothing today, since no case is known
-from the 83 task cycles of the process's author counted in his register of problems of 2026-11-12
-(his own record, not open to a reader of this repository), but the first case passes the review
+in the 83 task cycles of the process's author (his own record, not open to a reader of this
+repository), but the first case passes the review
 unseen.
 
 ## The request and the human

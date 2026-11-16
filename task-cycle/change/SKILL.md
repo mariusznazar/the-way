@@ -46,7 +46,8 @@ guessing (section 6).
 
 When a value in the task, spec or plan does not pass your own reckoning — an example number, a
 boundary, a command — say so in your report instead of bending the code to it; the expected value
-of a test that the requirement contradicts is the case of section 2. When reading stops
+of a test that the requirement contradicts, or a test you cannot pass by general code, is the case of
+section 2. When reading stops
 yielding, make an exploratory edit where the change starts, follow what breaks, and revert the edit
 before you commit.
 

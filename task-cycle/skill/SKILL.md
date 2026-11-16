@@ -17,9 +17,11 @@ The cycle has one ordinary human contact: the request. Do not pause for design, 
 implementation or review questions. Stop early only when the required outcome cannot be made under
 the available evidence, capabilities and binding rules, when a blocking finding survives the one
 fix a code review allows ("The end of a code review"), when a slice's executor fails after its
-one retry (step 9), or when an agent's question about a test that contradicts the requirement is
-settled by no source (WAY-410). A slow step, a failed test or an unclear way to make the change is
-work to resolve, within that one retry for a slice, not a reason to ask the human. Where a binding rule
+one retry (step 9), or when an agent's question about a test that contradicts the requirement, or
+that it cannot pass by code that meets the requirement for every input, is settled by no source
+(WAY-410). A slow step, a failed test or an unclear way to make the change is work to resolve,
+within that one retry for a slice, not a reason to ask the human, save the question about a test
+that no source settles. Where a binding rule
 reserves a decision to a human and the code cannot proceed without it, open a blocked draft request
 with the evidence and stop.
 
@@ -319,9 +321,11 @@ and its commits, the description, the draft marked `blocked` and no wait for CI 
 differences. The branch is not reset, so the agent's commits stand in the request, and no attempt is
 discarded, so *Discarded attempt* stays as it was. The record's copy reads, in *Request URL and
 status*, the wording `task-cycle/skill/blocked_finding.md` gives. The description takes the variant
-for a question about a test of `task-cycle/skill/request_template.md`. The review of the whole
-change, the return step and the reconciliation with the target branch have not run, and the request
-names them as not run.
+for a question about a test of `task-cycle/skill/request_template.md`. The stages that have not
+run on this code — of the review of the whole change, the return step and the reconciliation with
+the target branch — are named in the request as not run. Where the question comes in a correction,
+the request is already open: it returns to a draft marked `blocked`, and its description is
+rewritten as the template's variant for a question about a test gives.
 
 `blocked` is for a missing fact or
 permission, and for a question the foundation step leaves to the human: supply the fact or
@@ -465,10 +469,11 @@ contradicts a decision.
         its last commit, reset the branch to the slice's base and dispatch a fresh executor one
         class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
-        An executor that returns a question about a test, as the paragraph on an agent that
-        returns `questions` gives it — a test the requirement contradicts or one it cannot pass
-        by general code — gets no retry although a check of its slice fails: a stronger class
-        does not remove the contradiction and the reset discards the slice's work; where no
+        An executor that returns a question about a test, as the paragraph on a question about a
+        test gives it — a test the requirement contradicts or one it cannot pass by code that
+        meets the requirement for every input — gets no retry although a check of its slice
+        fails: a stronger class does not settle what the requirement is, and the reset discards
+        the slice's work; where no
         source settles the question, the blocked draft request opens at once, as that paragraph
         gives (WAY-410).
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
@@ -803,8 +808,8 @@ changed in this cycle and the archive is not held back (WAY-295):
 The record's copy stays in the repository's history, and the repository may be read by anyone.
 Before every commit that adds the record to `docs/task-cycles/<task-slug>/` — step 12, its
 repetition in a correction (`correction.md`), the stop of a slice failed twice at step 9 sub-step 4,
-the blocked request of a question about a test that no source settles (the paragraph on an agent
-that returns `questions`) and the blocked requests of `blocked_finding.md` and `reserved_return.md`
+the blocked request of a question about a test that no source settles (the paragraph on a question
+about a test) and the blocked requests of `blocked_finding.md` and `reserved_return.md`
 — the copy is cleaned of
 what only its author may see and checked, in every repository, public or private (WAY-308, WAY-309),
 and checked for image files, which no copy holds (WAY-316). The original in `.runs/` is never
