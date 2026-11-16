@@ -250,6 +250,67 @@ class InstallTest(unittest.TestCase):
         self.assertIn("Already installed; no changes", repeated.stdout)
         self.assertEqual(before, self.product_files())
 
+    def managed_files(self) -> list[Path]:
+        """The files the installer writes in the product that hold the text of a the-way skill or
+        of an agent type: the entry point of each skill under both skill directories, and each
+        definition of the agent types of the task cycle."""
+        found = [self.product / directory / "skills" / f"the-way-{name}" / "SKILL.md"
+                 for _, name in NAMES for directory in (".claude", ".agents")]
+        found += [self.product / ".claude" / "agents" / f"{name}.md"
+                  for name in ("the-way-stage", "the-way-author")]
+        for path in found:
+            self.assertTrue(path.is_file(), path)
+        return found
+
+    def test_crlf_files_with_the_same_text_are_kept_and_not_rewritten(self) -> None:
+        # The files as a checkout with core.autocrlf=true writes them: CRLF endings, the same text.
+        # Source: the task installer-preview-ignores-line-endings, To do item 1 (a human's
+        # judgement). Break caught: the comparison of raw bytes comes back, so each file shows
+        # REPLACE, a diff header and a rewrite with LF.
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        for path in self.managed_files():
+            path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+        before = self.product_files()
+        preview = self.install()
+        self.assertEqual(preview.returncode, 0, preview.stderr)
+        for path in self.managed_files():
+            self.assertIn(f"KEEP {path.relative_to(self.product).as_posix()}\n", preview.stdout)
+        self.assertNotIn("REPLACE", preview.stdout)
+        # A kept file shows no difference under it, so the preview has no diff header at all.
+        self.assertNotRegex(preview.stdout, r"(?m)^(---|\+\+\+) ")
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertIn("Already installed; no changes", applied.stdout)
+        self.assertEqual(before, self.product_files())
+        self.assertIn(b"\r\n", self.managed_files()[0].read_bytes())
+
+    def test_a_crlf_file_with_other_text_is_replaced_and_shows_only_the_real_change(self) -> None:
+        # Source: the task's To do item 1 and its Out of scope (a human's judgement). Break caught:
+        # a comparison that ignores line endings and the text together, which keeps this file.
+        # Also caught: a diff that shows the whole file, or an apply that keeps CRLF.
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        skill = self.product / ".claude/skills/the-way-record-decision/SKILL.md"
+        text = skill.read_bytes().decode("utf-8")
+        edited = text.replace("in full and follow it", "in full and follow it closely")
+        self.assertNotEqual(edited, text)
+        skill.write_bytes(edited.replace("\n", "\r\n").encode("utf-8"))
+        preview = self.install()
+        self.assertEqual(preview.returncode, 0, preview.stderr)
+        self.assertIn("REPLACE .claude/skills/the-way-record-decision/SKILL.md\n", preview.stdout)
+        changes = [line for line in preview.stdout.splitlines()
+                   if line[:1] in ("+", "-") and line[:3] not in ("---", "+++")]
+        self.assertEqual(len(changes), 2, preview.stdout)
+        removed, added = changes
+        self.assertIn("follow it closely", removed)
+        self.assertIn("follow it, and read", added)
+        self.assertNotIn("closely", added)
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertEqual(skill.read_bytes(), self.entry_point(
+            "elements/decisions/skill/SKILL.md", "record-decision").encode("utf-8"))
+
     def product_files(self) -> dict[str, bytes]:
         return {path.relative_to(self.product).as_posix(): path.read_bytes()
                 for path in self.product.rglob("*") if path.is_file() and
@@ -1008,6 +1069,84 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(initialized.returncode, 0, initialized.stderr)
         self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
                                  cwd=fresh).stdout.strip(), self.commit)
+
+
+class FileActionTest(unittest.TestCase):
+    """The installer's decision for one file it writes, taken from the bytes on disk and from the
+    new text, which the installer holds with LF endings only. The files are made in a temporary
+    directory and no git runs: a files test (WAY-393)."""
+
+    # The new text of a skill, made up for the cases: the expected values below follow from the
+    # task installer-preview-ignores-line-endings, To do item 1 (a human's judgement), which keeps a
+    # file that differs from the new text only in line endings, CRLF for LF, and no other file.
+    TEXT = "# Skill\n\nFirst line.\nSecond line.\n"
+
+    def setUp(self) -> None:
+        self.temporary = tempfile.TemporaryDirectory(prefix="the-way-file-action-test-")
+        self.addCleanup(self.temporary.cleanup)
+        self.path = Path(self.temporary.name) / "the-way-skill" / "SKILL.md"
+        self.path.parent.mkdir()
+
+    def action_for(self, data: bytes) -> str:
+        self.path.write_bytes(data)
+        return install.file_action(self.path, self.TEXT)
+
+    def test_a_missing_file_is_created(self) -> None:
+        self.assertEqual(install.file_action(self.path, self.TEXT), "CREATE")
+
+    def test_the_same_text_with_lf_endings_is_kept(self) -> None:
+        self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\nSecond line.\n"), "KEEP")
+
+    def test_the_same_text_with_crlf_endings_is_kept(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings, CRLF for LF with
+        # the same text (a human's judgement). Break caught: the comparison of raw bytes, which
+        # shows REPLACE for a CRLF file.
+        self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nSecond line.\r\n"), "KEEP")
+
+    def test_the_same_text_with_mixed_endings_is_kept(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the file differs from the new text only in CRLF for LF, on some lines and
+        # not others. Break caught: a normalisation that converts only the first line ending.
+        self.assertEqual(self.action_for(b"# Skill\r\n\nFirst line.\r\nSecond line.\n"), "KEEP")
+
+    def test_crlf_endings_with_other_text_are_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the text differs ("Changed line."), which is no difference in line endings
+        # alone, so the file is replaced. Break caught: a comparison that ignores the text, such
+        # as one of the line counts.
+        self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nChanged line.\r\n"),
+                         "REPLACE")
+
+    def test_a_lone_carriage_return_is_text_and_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): a lone carriage return is no CRLF, so the difference is in line endings
+        # plus text and the file is replaced. Break caught: normalising every carriage return
+        # (for example through universal newlines).
+        self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\rSecond line.\n"), "REPLACE")
+        self.assertEqual(self.action_for(b"# Skill\r\r\n\r\nFirst line.\r\nSecond line.\r\n"),
+                         "REPLACE")
+
+    # The two tests below guard the comparison alone. No run reaches file_action with an empty or a
+    # non-UTF-8 file at an entry point's or a definition's path: plan() refuses such a file first,
+    # since owned() is false for it, and the foundations branch keeps every foundation file before
+    # the comparison. The refusal itself is tested through the installer elsewhere.
+
+    def test_an_empty_file_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): an empty file is no CRLF-only difference from the new text.
+        self.assertEqual(self.action_for(b""), "REPLACE")
+
+    def test_a_file_that_is_not_utf8_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the bytes differ in more than line endings, so the file is replaced.
+        self.assertEqual(self.action_for(b"\xff\xfe\r\n"), "REPLACE")
+
+    def test_a_file_missing_its_last_line_ending_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): a line ending that is gone is no CRLF for an LF, so the file differs in
+        # more than line endings and is replaced.
+        self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\nSecond line."), "REPLACE")
+        self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nSecond line."), "REPLACE")
 
 
 if __name__ == "__main__":

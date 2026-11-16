@@ -512,7 +512,10 @@ def untracked_in_checkout(target: Path) -> list[str]:
 def file_action(path: Path, content: str) -> str:
     if not os.path.lexists(path):
         return "CREATE"
-    if path.parts[-2] == "foundations" or path.read_bytes() == content.encode("utf-8"):
+    # A checkout with core.autocrlf=true writes CRLF endings for the same text, so CRLF alone is
+    # folded to LF before the comparison. A lone carriage return is text, not a line ending.
+    if path.parts[-2] == "foundations" or \
+            path.read_bytes().replace(b"\r\n", b"\n") == content.encode("utf-8"):
         return "KEEP"
     return "REPLACE"
 

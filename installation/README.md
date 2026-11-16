@@ -57,7 +57,7 @@ installer allows Git's file protocol only when the URL is a local path or a `fil
 | `foundations/environment_facts.md` | Empty fact file with its required withdrawn identifiers table. |
 | `.claude/skills/the-way-*/SKILL.md` | Project skill entry points for Claude Code: the five foundation entry skills, `find-foundation-entries`, `define-project`, `plan-project`, `lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, `write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, `maintain-styleguide`, `maintain-coding-guidelines`, and `maintain-testing-guidelines`. Each checks that the gitlink and the `.the-way` checkout show the same commit, reads its source skill from `.the-way` and each file the skill names there when the step that names it comes, then sends work that skill hands to another the-way skill to the `the-way-` project skill of that name. It names no commit. The installer owns it and rewrites it when the pin moves; do not edit it by hand. |
 | `.agents/skills/the-way-*/SKILL.md` | The same entry points for Codex, byte for byte. |
-| `.claude/agents/the-way-stage.md`, `.claude/agents/the-way-author.md` | The definitions of the two agent types Claude Code dispatches the stages of a task cycle with: `the-way-stage` for every stage, and `the-way-author` for the one author, whose prompt cache lives an hour. Each gives its agent every tool of the session except the skill tool and a body of its own, so the agent starts without the list of skills and reads the method of its stage from a file. They are copies of `task-cycle/agent-types/` at the pinned commit, byte for byte, and name no commit. The installer owns them and rewrites them when the pin moves; do not edit them by hand. Codex has no such files. |
+| `.claude/agents/the-way-stage.md`, `.claude/agents/the-way-author.md` | The definitions of the two agent types Claude Code dispatches the stages of a task cycle with: `the-way-stage` for every stage, and `the-way-author` for the one author, whose prompt cache lives an hour. Each gives its agent every tool of the session except the skill tool and a body of its own, so the agent starts without the list of skills and reads the method of its stage from a file. They are copies of `task-cycle/agent-types/` at the pinned commit, byte for byte as git stores them, and name no commit; a checkout may write them with CRLF line endings, which the installer keeps as they are. The installer owns them and rewrites them when the pin moves; do not edit them by hand. Codex has no such files. |
 | `AGENTS.md` | The shared product guidance for Claude Code and Codex, between `<!-- the-way:begin -->` and `<!-- the-way:end -->`: initializing the submodule, using only the `the-way-*` skills, the-way's methods in a task cycle even where a plugin offers its own, running the-way's scripts as `.the-way/<path>`, the empty part map's report and the skill that writes the first map, and running the product's tests with its one command before a merge, `elements/common/foundation_check.py` and `instruction-files/check_instructions.py` among them, or either check on its own while the command does not run it, and, where the repository has a CI file, that CI runs the command on every merge request, with a pointer to the description in "Run the one command in CI" below. It names no commit. The installer owns the block and rewrites it in place when the pin moves; do not edit it by hand, and keep the product's own instructions outside the markers. |
 | `CLAUDE.md` | Created at the product root with the sole line `@AGENTS.md` when absent, so Claude Code receives the shared guidance and the product's other instructions in `AGENTS.md`. An existing file is preserved byte for byte. |
 | `.gitignore` | The line `.runs/`, under which the-way's skills keep their working files: a task cycle's record, the reports of research and the conversation of a project's refinement. |
@@ -230,7 +230,10 @@ counts as a symlink wherever the installer checks for one: a junction on the pat
 writes (`.claude`, `.claude/skills`, the folder of an entry point, `.agents/skills`, `foundations`
 and the rest) stops the run before anything is written, a junction at `.the-way` stops it, and a
 junction at the folder of a skill the commit lacks, or at the path of an agent type's file, is not
-followed, so nothing is deleted through it.
+followed, so nothing is deleted through it. A file at an entry point's path or a definition's path
+that holds the installer's text with CRLF line endings instead of LF, as a checkout with
+`core.autocrlf=true` writes it, is kept as it is and shows no difference; a file whose text differs
+in anything other than those line endings is rewritten with LF.
 An existing `AGENTS.md` without the markers gets the block appended after a blank line, and an
 existing `.gitignore` without the exact line `.runs/` gets that line appended on a line of its own;
 the existing content of both stays byte for byte, and the added lines use the file's own line
@@ -280,7 +283,9 @@ place, every entry point rewritten, one created for an added skill and one delet
 skill, with the product's own skill kept —, a preview of a move that changes nothing, a move
 refused for uncommitted changes in `.the-way` or for a commit its URL does not reach, a move back
 named as older than the pin, its own entry point rewritten and a file lacking a mark of one kept,
-the Codex limit counted on a rewritten `AGENTS.md`, each case of
+an entry point or a definition with the installer's text in CRLF kept with no diff, not rewritten and
+answered with "Already installed; no changes", a CRLF file with a real change replaced with that change
+alone and written with LF, the Codex limit counted on a rewritten `AGENTS.md`, each case of
 `AGENTS.md` and `.gitignore` above — created, appended with the lines the preview shows, kept,
 rewritten in place, or refused as a directory, as non-UTF-8 text or for its markers — the refusal
 of an ignored `.the-way`, the four warnings, creation and preservation of root `CLAUDE.md`, effective import detection,
