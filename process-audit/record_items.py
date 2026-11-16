@@ -10,8 +10,8 @@ from two marks and never from the words of the record (WAY-403, WAY-404):
 - the item `Discarded attempt` reads `none`, or opens with `reason: ` and one of the markers
   `open design choice`, `reserved choice` and `size` in backticks; a cycle that discarded more than
   one attempt writes nothing beside the colon and only list entries under it, at one indent, one for
-  each attempt, each opening so (a text of two markers, or a plain line or an entry at another indent
-  beside the entries, gives no answer); the
+  each attempt, each opening so (where the lines are no entries at one indent alone, the whole is read as
+  the text of one attempt, which gives no answer where it holds two markers or opens with no marker); the
   marker `open design choice` in any of them is a yes, `none` and the other two markers no
   contradiction, and any other text, with no marker at its start, gives no answer;
 - each entry of the item `Review rounds` opens with ``findings `reports/<file>.md`, contradiction

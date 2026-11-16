@@ -7963,9 +7963,10 @@ The reason of a discarded attempt stands at the start of the record's item *Disc
 entry for each attempt; the item reads `none` where no attempt was discarded. The audit of the
 process takes from this item, for its answer whether a contradiction with the settlements came out
 only after the code was written, the markers alone and never the text of the item, so that an item
-that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown, and so
-does an item that holds two markers outside a list of entries, or a plain line or an entry at another
-indent beside its entries (WAY-403).
+that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown. Where
+the lines under the item are not entries at one indent alone — the first line an entry at that indent
+and no plain line at that indent or less — the whole is read as the text of one attempt, and gives the
+answer unknown unless it opens with `reason: ` and one marker and holds no other (WAY-403).
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
@@ -7973,9 +7974,10 @@ indent beside its entries (WAY-403).
 - **Verification:** tests: that the count reads the reason of a discarded attempt from the marker at
   the start of the item, or of each entry under it, and from nothing else: a text that names an open
   design choice, a reserved choice or a size in other words, or denies one, gives unknown, and an
-  item of several entries gives yes where any of them has the marker `open design choice`; and that
-  an item with two markers in a text that is no list of entries, or with a plain line or an entry at
-  another indent beside its entries, gives unknown.
+  item of several entries gives yes where any of them has the marker `open design choice`; and that an
+  item whose lines under it are not entries at one indent alone is read as the text of one attempt,
+  which gives unknown where it holds two markers or opens with no marker, and gives its reason where it
+  opens with one marker and holds no other, its details possibly a list.
 - **Origin:** none
 
 *Rationale:* a reading of the words of free text can never list every way to deny or to name a
