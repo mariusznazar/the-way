@@ -6974,10 +6974,7 @@ report and working on — it costs nothing today, but an author with no way out 
 test, and an option to hand the task to a human lowered the cheating of GPT-5 in ImpossibleBench
 (`impossiblebench-abort-option`); only an explicit contradiction — an author that is stuck with no
 contradiction in sight, and from whom code for one input comes, has no other way out than the
-workaround; from ImpossibleBench's option, the immediate termination of an agent that flags the task,
-and from the card's mitigations, the system prompt that stresses general solutions — here the agent
-commits its work and is resumed with the answer, and a prompt is no way out for an agent that cannot
-meet the requirement.
+workaround.
 
 ## Review of a change
 
@@ -7396,11 +7393,7 @@ adopted the template, and it is no rule on the content of a test file, since the
 while the code cheats; leaving things as they are — it costs nothing today, since no case is known
 in the 83 task cycles of the process's author (his own record, not open to a reader of this
 repository), but the first case passes the review
-unseen; from the card and the paper, what the decision leaves out: the card's system prompt that
-stresses general solutions and its monitoring of long cycles of edits and test runs, the paper's
-making the tests read-only or hidden, its fourth strategy (recording extra states) and its monitors
-that read transcripts — the review reads the diff and not the course of the work, and a change to a
-test file is read under WAY-233.
+unseen.
 
 ## The request and the human
 
