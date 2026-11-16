@@ -183,7 +183,8 @@ here as images, each from the place the product's foundation settles for screens
 reports name; no file of the repository or of the record's copy is linked as an image (WAY-316).
 Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so.
 Of the artifacts of the check only screenshots reach the description: describe motion in words, and
-leave logs and outputs in the reports. A screenshot is read at a glance in the description, while
+leave logs and outputs in the reports, the cases and verdicts of the walk of an author or of the
+executor of a slice through the running product among them. A screenshot is read at a glance in the description, while
 logs and outputs are read in the reports by the agents and the humans who check closely, where they
 already stand. *Underneath*: one or two sentences on what is under the change.
 
@@ -237,14 +238,17 @@ the order of their kinds.
   check of the final gate run that failed or did not run, save one that fails on the base too — by
   the run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a
   check the change needed that an author reports as not done — a screenshot unchecked, a
-  missing state check or a missing own-work check (WAY-164). A check the skill does not call for
+  missing state check, a missing own-work check (WAY-164), or a walk through the running product
+  not performed or a case of it left unchecked, each with its reason (WAY-406). Where the foundation
+  settles no way to the running product, a screenshot unchecked and a walk not performed for that
+  reason stand as one item, not two. A check the skill does not call for
   this change is none, and a check that failed and passed again stays in *Checks* (WAY-261). The
   stages a blocked request did not run because it stopped are kind 1's, not these. The answer "do it
   in this request" runs the step or the check that was left out. Where the check an author reports
   as not done is one the human can do by hand, the item carries the steps for it that "What an item
   carries" gives as its fifth part.
-- **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
-  no fix made and each finding outside the task's scope, of the review of the whole change and of
+- **8.** *Unfixed findings the user or the human will feel, and errors the walk found outside the
+  task's scope* (WAY-289, WAY-408): read each Minor finding that no fix made and each finding outside the task's scope, of the review of the whole change and of
   every later review, and each Minor finding and new serious finding of a reverted fix, and judge
   from the whole record — the reports of the walk through the running product and the screenshots
   included — whether the product's user or the human working with the process will feel it. Restate
@@ -253,7 +257,11 @@ the order of their kinds.
   correction with one fix and one review of that fix (`correction.md`). In the description after
   that correction, a finding it left unfixed carries only "Make a task of it?", or stays in the
   lower part, as anything else a correction left undone does. The finding stays in its list below,
-  with its kind and grade; the judgment decides no fix and no block.
+  with its kind and grade; the judgment decides no fix and no block. Also in this item, with no
+  judgment of what is felt, since WAY-408 prevails over WAY-289 here: each error outside the task's
+  scope that the walk through the running product found and its author or executor reported
+  instead of correcting, restated in plain words with only the question "Make a task of it?",
+  which the human who makes none lets through by merging; it stands in *Findings outside the task's scope* below.
 - **9.** *Decisions of the task's own sections*: each item of those sections that waits on a yes,
   such as a proposal not applied. The answer "do it in this request" applies the proposal.
 - **14.** *An incomplete reading by the review of the whole change* (WAY-287), from the
@@ -336,7 +344,8 @@ the order of their kinds.
   shows, the author inspected a screenshot, and the product's foundation settles no place for
   screenshots, so the request shows none: in plain words that the screen was looked at and is not
   shown, and that the product has settled no place for screenshots. A screenshot left unchecked for
-  want of a settled way to the running product stands in item 4 and takes no item here.
+  want of a settled way to the running product stands in item 4, with the walk not performed for the
+  same reason, and takes no item here.
 - **15.** *A form error held wrong* ("An error you hold wrong", above): in plain words what the
   script reported and why the cycle holds it wrong.
 - **17.** *The cause of a correction* (WAY-287), in the description after a correction: one
@@ -522,7 +531,9 @@ grade and as found by the review of the reverted fix, with the reviewer's words 
 the code (WAY-162).
 
 **Findings outside the task's scope.** The findings the reviewers marked outside the task's scope,
-each the same way, for the human to choose which become new tasks and to create them (WAY-161);
+each the same way, for the human to choose which become new tasks and to create them (WAY-161), and
+each error outside the task's scope that the walk through the running product of an author or of the
+executor of a slice reported, with its words and where it showed (WAY-408);
 beside them, each check whose file belongs to a part outside the task's parts that failed in a cycle
 run and passed again, with its file path, its rerun's result and its counts, and the task that
 fixes it, or the proposal of one where none exists (WAY-261).

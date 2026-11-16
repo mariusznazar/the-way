@@ -38,7 +38,10 @@ that sets the rule beside it; you need not open it.
    interface, the development data or the place of the screenshots, the four matters the template's
    Technology section names — also say for each option whether an agent can use it, and an option an
    agent cannot use stays in the comparison with the lack "an agent does not check the running
-   product this way" (WAY-166).
+   product this way" (WAY-166). In a choice of the interface, also say for each option whether two
+   task cycles working in separate worktrees of the product can check at the same time without a
+   browser they share; an option that cannot stays in the comparison with the lack "two task cycles
+   cannot check the running product at once this way" (WAY-319).
    Write the comparison to
    `.runs/technology/<choice>.md`, the choice's name in lower case with hyphens for spaces, which
    the product's Git ignores, and end. In a run at a task the report opens with the line
