@@ -145,7 +145,9 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   to be. Where the human chose among ways a question of decision showed (WAY-113), *Not chosen*
   keeps under the answer each way shown and not chosen, one line each, with the cost the question
   gave it or the human's reason in the human's words; an answer transferred from a conversation
-  brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A question a
+  brings them with it, and an answer with no ways shown has no *Not chosen* (WAY-134). A question
+  that settles the adoption of a practice from outside the product shows the parts of the practice
+  it leaves out among its ways (WAY-134). A question a
   run of `settle-technology` settles holds, after these and only there, what the cycle needs to
   write its decision (WAY-267): *Based on*, the source of each difference claimed between the
   options — its address, the place in it, the passage word for word and the date read, the form the
@@ -217,7 +219,10 @@ and with it the plan's row and the task's line in the backlog (WAY-154).
   For a settlement the human chose among ways shown, *Source* names the question whose *Not
   chosen* keeps the other ways, or, for a choice made outside *Questions to settle* — such as at a
   question against a choice while the candidates are cut — holds those ways itself, each with its
-  cost or the human's reason; a decision's *Rejected* is taken from them (WAY-134). Keep enough of
+  cost or the human's reason; a decision's *Rejected* is taken from them (WAY-134). A row that
+  adopts a practice from outside the product and repeats a choice the human made among ways shown
+  names among those ways each part of the practice the human turned down, the parts it leaves out
+  (WAY-100); the cycle puts none there that the source does not keep. Keep enough of
   that answer, its provenance and its ways not chosen in this document to survive removal of a
   temporary conversation; no accepted row may rely only on a deleted file. In orchestrated mode the
   project orchestrator presents the candidates and required questions against choices through the

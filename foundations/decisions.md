@@ -205,6 +205,10 @@ source in *Based on*, or, for a source a reader of the repository cannot open, d
 of what is taken from one source is no decision: each rule taken stands in the decision that
 carries it (WAY-19).
 
+A decision written from a row of a task's *Settlements to record* takes the ways in its *Rejected*
+from the row's source, which keeps the parts the practice leaves out where the human weighed them,
+as WAY-134 gives; there WAY-134 prevails over the paragraph above.
+
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   relation-model, gate, installation, agent-instructions, instruction-files, repository,
   project-level, product-guidelines, task-cycle
@@ -219,14 +223,18 @@ carries it (WAY-19).
     takes one practice from a course whose lessons a reader cannot open describes in its *Rationale*
     what the lesson showed and says that the lessons are not open to that reader; the rules taken
     from one outside source each stand in the decision that carries them, with no decision of its
-    own for the list of what is taken;
+    own for the list of what is taken; a decision written from a row of a task's settlements holds in
+    *Rejected* the parts of the practice that the row's source keeps as ways the human turned down,
+    and where it keeps none holds no left-out part there;
   - violates: a skill makes an outside planning ritual mandatory because an agent recognizes it,
     without a decision adopting it; a decision adopts an outside practice and says nowhere what it
     takes from it; a decision answers the question "what do we take from this source" with a list
     of the rules taken, each of which a decision of its own would carry; a decision whose practice
     came from a course cites in *Based on* a public page found afterwards that describes the same
     practice; a decision that takes a practice from a lesson its reader cannot open describes the
-    lesson and leaves the reader to guess whether its address was forgotten.
+    lesson and leaves the reader to guess whether its address was forgotten; a decision written from
+    a row of a task's settlements puts in *Rejected* a part of the practice that the row's source
+    does not keep.
 - **Origin:** none
 
 *Rationale:* borrowing pieces without a conscious choice makes the product's boundaries hard to
@@ -239,7 +247,10 @@ describes the practice, found afterwards, would look as though the practice came
 it may have come from elsewhere and in another scope, what is left out would be weighed against a
 text nobody read when the decision was made, and a made-up source looks the same as a true one. A
 decision that says its source is not open to a reader lets a reviewer tell a closed source from a
-forgotten one, and the next decision that takes from the same closed source says it as well.
+forgotten one, and the next decision that takes from the same closed source says it as well. A part
+of a practice that the human never saw would read in the *Rejected* of a decision written from a
+row as a way the human refused, so for such a decision the parts left out come from the ways the
+row's source keeps (WAY-134).
 *Rejected:* importing a whole outside method by default — its unrelated steps become obligations;
 treating recognition by an agent as adoption — recognition does not settle fit or scope; the
 sentence on the practice stated only in the skill that looks for candidates for entries — the rule
@@ -5319,10 +5330,18 @@ the entry's meaning is the one the human accepted with the row in the task docum
 kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
 becomes no second entry, the cycle tying the row to that entry and naming both in the request.
 
+Where a row adopts a practice from outside the product, the refinement shows the human, among the
+ways of the question that settles it, the parts the practice leaves out, so that the row's source
+keeps them as ways not chosen and the decision's rejected options take them; where the source keeps
+none, the decision names what it takes from the practice in its binding sentences or its *Rationale*
+as WAY-100 gives and puts no left-out part in its rejected options. In this area this decision
+prevails over WAY-100, which asks a decision that adopts a practice to put what it leaves out in
+*Rejected*.
+
 - **Scope:** project-level, task-cycle, elements-common, decisions, invariants, glossary,
   environment-facts
 - **Based on:** none
-- **Relations:** derives from WAY-33 · narrows WAY-114
+- **Relations:** derives from WAY-33 · narrows WAY-114 · narrows WAY-100
 - **Verification:** an agent compares the task document, or the cycle, with the decision:
   - complies: a task whose human settled in refinement that an exported record keeps its owner
     carries that row, and its cycle writes a decision with that meaning in the same change as its
@@ -5334,6 +5353,10 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     one; a decision row whose question keeps two ways the human did not choose gives its decision
     those two as rejected options, and one whose source keeps none, or keeps only ways that answer
     another part of the question, gives `unknown` with no question to the human; the row that
+    adopts a practice from outside shows the human, as ways of its question, the parts the practice
+    leaves out, and its decision takes the ones the human did not choose as rejected options, while
+    a row of such a practice whose source keeps none gives a decision that names what it takes in
+    its *Rationale* and holds in *Rejected* only the ways the source keeps; the row that
     repeats the choice the human made between two ways shown stands in the table accepted and
     marked, while the rows the agent derived from the material wait for the human; a rule of how an
     agent works that only one skill holds stands in the table as a row that goes to that skill, the
@@ -5349,7 +5372,9 @@ becomes no second entry, the cycle tying the row to that entry and naming both i
     without the ways not chosen; the cycle fills a decision's rejected options with ways it derives
     from what the cycle would otherwise guess, or blocks the request to ask the human for them; a
     row that repeats the human's choice between ways shown waits for the human's acceptance like a
-    row the agent derived.
+    row the agent derived; the cycle puts in the rejected options of a decision written from a row
+    a part of an outside practice that the row's source does not keep, because WAY-100 asks for what
+    a practice leaves out.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
@@ -5376,7 +5401,13 @@ human. The ways the human saw and did not choose outlive the conversation that s
 the task document. A rejected option the writer of an entry derives reads as one the human weighed,
 and an agent that proposes it later has to say what has changed for a way nobody turned down, so a
 way kept from the refinement is written and a missing one is `unknown`, which tells the reader
-nobody knows what was weighed.
+nobody knows what was weighed. A practice adopted from outside leaves parts out, and a part the
+human never saw would read in *Rejected* as a way the human refused, so the refinement shows each
+part among the ways of the question and the row keeps those the human turned down; for a decision
+written from a row this decision therefore prevails over WAY-100, whose rule on what a decision
+leaves out of a practice holds for every other decision. The price: the refinement of a row that
+adopts a practice asks one question more, and a decision from a row whose source kept no left-out
+part says nothing in *Rejected* of what the practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
 a task has no readiness approval to approve their wording, and refining a task would
 weigh as much as defining a
@@ -5398,7 +5429,11 @@ this one has to be corrected anyway; every row accepted separately, as before �
 the same choice; rows that repeat a choice kept out of the table, the cycle writing the decision
 straight from the answer under the question — the sieve of choices that bind no longer after the
 merge goes (the column of what the cycle would otherwise guess), the cycle itself judges which
-choice to enter, and this decision needs a stronger rebuild.
+choice to enter, and this decision needs a stronger rebuild; the parts a practice leaves out taken into the rejected
+options by the cycle from the practice's source, WAY-100 prevailing — a part nobody turned down
+reads as one the human refused, and the human merging does not read the *Rejected* of an entry; the
+two rules left with no precedence — each cycle reads the collision as it can, and the next row that
+adopts a practice meets it again.
 
 ### WAY-140 — How does a task change something outside the product's repository?
 
@@ -6935,6 +6970,78 @@ human whatever that judgment says.
 *Rejected:* the author only reporting an error and the review deciding on the correction — an extra
 round of fix and a new review each time.
 
+### WAY-410 — What does an agent do when a test contradicts the requirement, or when it cannot pass the test by general code?
+
+An agent that makes a change and meets a test that expects what the requirement of the task rules
+out, or that it cannot make pass by code that meets the requirement for every input, writes no code
+for the input of the test and does not change the test: it commits what it has and returns to the
+orchestrator of the cycle a question that names the test, quotes the requirement and says what it
+tried. A test that checks behaviour the task expressly changes is no such contradiction, and the
+agent changes it, with its cause on the side of the requirement.
+
+The orchestrator answers such a question only from the task, the spec, a decision or the sentence of
+an invariant, quoting the passage that settles it, and where none of them settles it opens a blocked
+draft request that holds the question under *Needed from you* and picks no reading of its own.
+
+The executor of a slice that returns such a question gets no retry on a class higher, which narrows
+the retry of WAY-229; where no source settles the question, the blocked draft opens at once.
+
+- **Scope:** task-cycle
+- **Based on:** claude-test-special-casing · impossiblebench-test-modification ·
+  impossiblebench-abort-option
+- **Relations:** derives from WAY-227 · narrows WAY-229
+- **Verification:** an agent compares the agent's report, the cycle record and the request with the
+  decision:
+  - complies: an author whose test expects 180 for an input of 200, where the requirement says the
+    discount never exceeds 10 percent, writes no branch for 200, leaves the test as it is, commits its
+    work and returns a question that names the test, quotes the requirement and says what it tried;
+    the orchestrator finds in the task the sentence that settles it and resumes the author with that
+    sentence quoted, or, where the task, the spec, the decisions and the invariants say nothing,
+    opens a blocked draft request with the question under *Needed from you*; the executor of a
+    slice that returned such a question is not replaced by one of a higher class; a test that checks
+    behaviour the task expressly changes is changed by the author, who names the requirement as its
+    cause;
+  - violates: an author writes a branch or a returned value for the input of the test; an author
+    changes the expected value of a test to the code's output to turn it green; an author continues
+    after meeting a contradiction and notes it in its report; the orchestrator answers such a
+    question by the smallest reversible reading of the requirement; the cycle opens a blocked draft
+    request for a contradiction that a sentence of the task settles; the executor of a slice that
+    returned such a question gets a retry on a class higher.
+- **Origin:** none
+
+*Rationale:* the system card places the special-casing of a test where an agent has failed several
+times to find a general solution, particularly where test cases present conflicting requirements, so
+an agent that has no other way out adjusts the code or the test. The rule gives it the way out: a
+question to the orchestrator, with the work so far committed, and no code and no change of the test
+meanwhile. A test that contradicts the requirement is a question of what the task requires, not an
+open design choice, so no attempt is discarded and no spec is written (WAY-135); only the task, the
+spec, a decision or the sentence of an invariant settles what a task requires. The orchestrator
+answers the agents' questions under the owner's delegation (WAY-227) and answers this one from those
+four alone, since the smallest reversible reading would settle the requirement itself, which no
+agent of the cycle may do. Where none of the four settles it, the code cannot proceed without the
+human, so the cycle ends on a blocked draft request in which the human meets the question, as WAY-227
+gives for a decision reserved to the human. A slice's executor gets no retry on a class higher
+because a stronger model does not remove a contradiction in the requirement, while the retry resets
+the branch to the slice's base and deletes the work of the slice. An option for an agent to hand a
+task to a human lowered the cheating rate of two OpenAI models in ImpossibleBench and had a much less
+pronounced effect on Claude Opus 4.1 (`impossiblebench-abort-option`); the decision takes the
+quantified part of the finding across publishers, as WAY-85 gives, and its size is no promise for the
+process's agents, which run on Claude models. The reason for the way out stands without it: an
+agent that has none can only adjust the code or the test. The price: an orchestrator may read a
+source wrongly and send the author an answer that the review of the result then judges; a cycle that
+ends on a blocked draft leaves the work done so far unreviewed and the task waiting for the human; an
+author may ask too early, and an unneeded question costs a turn.
+*Rejected:* a third reason for returning without code, the attempt discarded — the work of the author
+goes, and the designer of a spec cannot settle the requirement either, since it asks the
+orchestrator and never the human: the same problem at a higher cost; a blocked request at once, with
+no orchestrator — every contradiction, also an obvious one that the task already settles, stops the
+cycle and costs the human a turn; leaving it as it is, the agent noting the contradiction in its
+report and working on — it costs nothing today, but an author with no way out adjusts the code or the
+test, and an option to hand the task to a human lowered the cheating of GPT-5 in ImpossibleBench
+(`impossiblebench-abort-option`); only an explicit contradiction — an author that is stuck with no
+contradiction in sight, and from whom code for one input comes, has no other way out than the
+workaround.
+
 ## Review of a change
 
 Who reviews a change, which findings are fixed or block, and how a reviewer grades a finding on the
@@ -7292,6 +7399,67 @@ in reviews after the review of the whole change is not repaired; a departure fro
 Important, that is, blocking — every departure from the form is a FAIL and a round of fixes, and a
 fix that fails leaves the request blocked for form alone (WAY-162), which in the experiment would
 have reached 6 of 32 runs.
+
+### WAY-409 — What does a reviewer do about code of the product that passes a test without meeting the requirement?
+
+A reviewer looks, in every code review of a task's cycle — of a slice, of the whole change, of a fix,
+of the commits of the return step, of the reconciliation with the target branch and of a correction
+— in the code of the product that the change touches, for code that passes a test without meeting
+the requirement the test stands for: a branch or a returned value made for the very input a test
+uses, the expected value of a test written into the code of the product, a comment that names a
+special case for a test, and a change to the outcome of a comparison that a test makes, with no
+change to the test, such as an overloaded comparison operator. A reviewer grades such a finding
+Important at the least, so that it blocks (WAY-161), and only code whose branch, value or comparison
+exists to make a test pass is the finding; a special case that the requirement itself asks for is
+none.
+
+The rule stands in the skill of the review and in no product's guidelines, so that it holds in every
+cycle, whether or not the product has adopted the template of the testing discipline.
+
+- **Scope:** task-cycle
+- **Based on:** claude-test-special-casing · impossiblebench-test-modification ·
+  impossiblebench-cheating-strategies
+- **Relations:** derives from WAY-13 · derives from WAY-161
+- **Verification:** an agent compares a review with the decision:
+  - complies: a reviewer finds that a function of the product returns 180 for the input 200 that a
+    test uses, where the requirement gives a general rule that would not return it, grades the finding
+    Important and the review fails; the same for a branch under a comment that says "special case for
+    the test", and for a comparison operator overloaded so that the comparison a test makes comes out
+    true; a product whose guidelines hold no testing discipline gets the same look; a branch on a
+    value that the requirement itself names is no finding;
+  - violates: a reviewer reads the files of tests and leaves the code of the product unread for this;
+    a finding of such code is graded Minor and the change passes; a reviewer reports every special case
+    of the product's code, the ones the requirement asks for among them; a review of a fix or of a
+    correction leaves the look out.
+- **Origin:** none
+
+*Rationale:* an agent that a red test stands in the way of can turn it green in two ways, by changing
+the test or by making the code give the answer the test expects. What keeps a test as it was
+(WAY-233) closes the first; the second leaves the test whole and green while the requirement stays
+unmet, so only a reader of the product's code who did not write it finds it (WAY-13), and the human
+who merges on the green tests does not. The system card of Claude 3.7 Sonnet found that model
+returning the expected test values directly and often marking such cases with a comment, and
+ImpossibleBench found that making the tests read-only does not remove special-casing or operator
+overloading, three of its four strategies being ones that comply with an instruction not to modify
+tests, so a review that guards only the files of tests leaves most ways open. The signals are those
+the card and the paper name: a comment about handling for a test, a value or a branch for the input
+of a test, a comparison that returns what a test wants. Only code whose branch, value or comparison
+exists to make a test pass is the finding, since a reviewer asked to judge every special case of the
+product's code would report each rule the requirement asks for, and a finding that is often wrong
+costs a round of fix each time. It is graded Important at the least, as a missed requirement that
+the green tests hide. The rule is the reviewer's way of reading and no rule on the content of a test
+file, which is why it stands in the skill of the review and not in the template of the testing
+discipline (WAY-231), which binds only a product that has adopted it. The price: the reviewer judges
+intent from the code, so a workaround that no signal names, such as recording extra states to answer
+differently for the same input, may pass; a value that the code returns for the input of a test and
+that is also right may be reported and has to be contested; and the look costs the reviewer's time in
+every review.
+*Rejected:* the rule in the template of the testing discipline — it works only in a product that has
+adopted the template, and it is no rule on the content of a test file, since the test stays untouched
+while the code cheats; leaving things as they are — it costs nothing today, since no case is known
+in the 83 task cycles of the process's author (his own record, not open to a reader of this
+repository), but the first case passes the review
+unseen.
 
 ## The request and the human
 
