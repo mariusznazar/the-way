@@ -17,12 +17,15 @@ At 7.3 request the independent critique through the conversation with full propo
 paths; the project orchestrator dispatches it and returns observations through files. Verify the
 observations and correct through the existing element skills in projected mode, returning conflicts
 and additional child-work requests instead of launching children. Missing independent critique
-blocks the readiness approval. Present the approval material through the project orchestrator and wait
-for its recorded human approval before writing the fingerprint, approval record and approved Status; a
+blocks the readiness approval. Present the approval material through the
+project orchestrator and wait
+for its recorded human approval before writing the fingerprint, approval
+record and approved Status; a
 provisional agent ruling is not approval.
 
 Keep the pending readiness approval and next actor visible in the conversation and the definition's
 actual Status. On completion return its checks, new source identity and next action through the
 file: a fresh plan-project subagent starts at step 0 against this newly approved definition. No task
-receives `ready for cycle` while that readiness approval or the subsequent plan recheck remains pending;
+receives `ready for cycle` while that readiness approval or the subsequent
+plan recheck remains pending;
 neither this agent nor the project orchestrator starts task implementation.

@@ -186,7 +186,8 @@ that settles it (WAY-121). The skill `settle-technology` writes it before the re
   outside the machine on which it is made, which holds unless the definition, or a decision of the
   foundation, keeps the product on that machine, and no decision of the foundation settles it, even
   where its answer adds nothing to run, pay for or back up. No definition has to hold it, the
-  readiness approval does not check it, and an approved definition does not come back to the step for
+  readiness approval does not check it, and an approved definition does not
+  come back to the step for
   it. It is no matter of an agent's way to the running product, so whether an agent can read an
   option is a consequence like any other. A deliberate absence always enters its comparison, though
   it has no page of documentation, and the comparison anchors its consequences in the definition and
@@ -335,9 +336,11 @@ Candidates: 3 shown, 2 accepted — 2026-01-01
 - A new projected decision needs no number and no prefix: the task that writes it into the
   foundation gives them. Other projected headings keep the identifier their element requires.
 - Below each entry stands one sentence of its meaning in the language of the definition, a line
-  beginning with `>`; the human approves the meaning at the readiness approval, not the wording. No entry
+  beginning with `>`; the human approves the meaning at the readiness approval,
+  not the wording. No entry
   carries a field of approval: the approval record approves them all.
-- At the readiness approval a projected entry holds whole what only the human gives at the project level: its
+- At the readiness approval a projected entry holds whole what only the human gives
+  at the project level: its
   binding sentence or definition and, for a decision, its *Rationale* and *Rejected*
   (`none considered` being the human's statement). A field that waits for the code or the world —
   a source, a verification, the parts, the links, each a line `- **<Field>:** …` with the indented

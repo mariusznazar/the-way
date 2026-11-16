@@ -8,4 +8,5 @@ The step "Close" of the skill `settle-technology`, whose `SKILL.md` lies beside 
   (`settle.md` beside this file), any other finding of condition g to the step "List the choices"
   (`list.md` beside this file); any other finding goes back to
   `define-project`, which names where.
-- Return to `define-project`, which sets the status line to `awaiting approval` and leads the readiness approval.
+- Return to `define-project`, which sets the status line to `awaiting approval` and
+  leads the readiness approval.

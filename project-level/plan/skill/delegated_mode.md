@@ -17,9 +17,13 @@ read all turns and the requested change, and follow this workflow with these rou
 - Request step 6's independent critique through the file, including the complete authoritative
   plan and source paths. The project orchestrator dispatches it and records its report for you;
   verify and settle its observations as step 6 requires. Missing critique remains a block.
-- After a definition's new readiness approval, start at step 0 and recheck the plan from its complete inventories
+- After a definition's new readiness approval, start at step 0 and recheck the plan
+  from its complete inventories
   against the newly approved definition, completing all affected steps and required critique and
-  human decisions. The old fingerprint mismatch shows the recheck needed; once the new readiness approval is
+  human decisions. The old fingerprint mismatch shows the recheck needed; once the
+  new readiness approval is
   verified, update the plan's fingerprint with its logged reason rather than demand another
-  readiness approval for that same approved change. Return check results, source identities, changes and next action
-  through the conversation. No task gains readiness while the readiness approval or recheck remains pending.
+  readiness approval for that same approved change. Return check results, source
+  identities, changes and next action
+  through the conversation. No task gains readiness while the readiness approval
+  or recheck remains pending.

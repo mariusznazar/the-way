@@ -245,7 +245,8 @@ class Command(unittest.TestCase):
         crafted = {
             "wording in prose": "The request is a blocked draft, opened on this commit.\n",
             "wording after another label":
-                "- Writes to the task's line in the backlog: blocked draft, opened on this commit\n",
+                "- Writes to the task's line in the backlog: blocked draft, "
+                "opened on this commit\n",
             "wording quoted after the label": "> " + self.BLOCKED_FIELD + "\n",
             "indented field": "  " + self.BLOCKED_FIELD + "\n",
             "only part of the wording":
@@ -421,7 +422,8 @@ class Command(unittest.TestCase):
         original_plan, original_definition = self.plan.read_bytes(), self.definition.read_bytes()
         for path, bad in ((self.plan, original_plan.replace(b"handed over 2026-10-02", b"draft")),
                           (self.plan, original_plan.replace(b"## Phases", b"## Invalid")),
-                          (self.definition, original_definition.replace(b"approved 2026-10-01", b"awaiting approval")),
+                          (self.definition, original_definition.replace(
+                              b"approved 2026-10-01", b"awaiting approval")),
                           (self.definition, original_definition.replace(b"Reports exist.", b"TODO"))):
             with self.subTest(path=path, bad=bad):
                 self.plan.write_bytes(original_plan)

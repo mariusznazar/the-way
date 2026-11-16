@@ -22,15 +22,15 @@ The places it needs are keys of the user's locations file (WAY-320), read as
   directory where the result is written;
 - under the key of each repository whose cycles it reads — the name of a product, as the
   register's *Repository* column gives it — the key `repository`, the path of that product's
-  checkout. Each `--repository KEY` names a repository to read; without one, it reads every key
-  that holds a key `repository`. The-way's own checkout is the key `repository` under
+  checkout. Each `--repository KEY` names a repository to read; without one, it reads every
+  repository key that holds a key `repository`. The-way's own checkout is the key `repository` under
   `the-way`, and where that key is missing, the checkout this script lies in.
   The command finds every place it needs by itself, since it runs with no human present, and the
   session that reads its result finds the same places by the same names.
 
 A path is absolute or starts with `~`. Where the file, a key or the path a key holds
-is missing, or a key's value is not a path, the command writes nothing and names it in an `Error:` line
-on stderr, so that the skill of the audit asks the human; it never asks itself.
+is missing, or a key's value is not a path, the command writes nothing and names it in an
+`Error:` line on stderr, so that the skill of the audit asks the human; it never asks itself.
 
 The price list is the file `price_list.md` beside this script (`--prices FILE` names another, as the
 tests do). It holds the line `- List date: <YYYY-MM-DD>`, the date its prices were read, and a table

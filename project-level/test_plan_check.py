@@ -4,11 +4,13 @@ whole plan passes.
 Run from the root of the-way:
     python -B gate/run_tests.py project-level
 
-Inputs are written out: a small definition approved at its readiness approval and a whole plan of it.
+Inputs are written out: a small definition approved at its readiness approval and a whole
+plan of it.
 The expected fingerprint is computed in this file apart from the code under test, by the definition
 of WAY-02 as `definition_template.md` applies it: SHA-256 of the UTF-8 text of the definition from
-the `## Goal` line up to the `## Approval record` line, that line left out, after every run of spaces
-and line breaks becomes one space and both ends are trimmed, its first eight hexadecimal characters.
+the `## Goal` line up to the `## Approval record` line, that line left out, after every
+run of spaces and line breaks becomes one space and both ends are trimmed, its first eight
+hexadecimal characters.
 """
 
 import contextlib
@@ -127,7 +129,8 @@ def fingerprint_of(bodies=None):
 def definition(bodies=None, approval_fingerprint=None, status="Status: approved 2026-10-03"):
     content = body_text(definition_bodies(bodies), DEFINITION_SECTIONS)
     approval = ("- Approved by: Mariusz, 2026-10-03\n"
-                "- Definition fingerprint: %s" % (approval_fingerprint or wording_fingerprint(content)))
+                "- Definition fingerprint: %s"
+                % (approval_fingerprint or wording_fingerprint(content)))
     return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Approval record\n\n%s\n" % (status, content, approval)
 
 

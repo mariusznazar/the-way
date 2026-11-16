@@ -1251,7 +1251,8 @@ the entry writer to choose which one governs.
 ### WAY-114 — What does a human accept of an entry, and when?
 
 A human accepts the meaning of a foundation entry while its wording is the agent's: the meaning of a
-projected entry at the readiness approval, shown as one sentence in the human's language with the entry
+projected entry at the readiness approval, shown as one sentence in the
+human's language with the entry
 beside it; that of an entry written whole from an accepted row of a task's *Settlements to record*
 with the task document, the row being the human's own settlement; and that of every other entry at
 the merge of the change that holds it, where the section of the request's description for the
@@ -1267,7 +1268,8 @@ entry would change the meaning of an approved decision; a translation never ente
 - **Based on:** none
 - **Relations:** none
 - **Verification:** an agent compares the work with the decision:
-  - complies: the readiness approval shows each projected entry's meaning as one sentence in Polish with
+  - complies: the readiness approval shows each projected entry's meaning as
+    one sentence in Polish with
     the entry beside it; the request's section for the human's decisions gives a plain sentence of
     the meaning of each entry the cycle wrote with no row or projected entry carrying it — from the
     spec, a correction the search of the foundation made, the part of a projected entry — repeated
@@ -1284,7 +1286,8 @@ entry would change the meaning of an approved decision; a translation never ente
 
 *Rationale:* the human judges what an entry settles, and its wording rarely changes that. A row is
 the human's own settlement, accepted with the task document, and a projected entry is wording the
-human approved at the readiness approval; asking again at the merge buries the entries the human has not seen among those
+human approved at the readiness approval; asking again at the merge buries the entries the
+human has not seen among those
 already accepted, and a list the human does not read accepts nothing. The price is that an entry
 whose wording drifts from its row reaches the merge unseen by the human, and the review of the whole
 change, which reads the entry against the row, is what catches it (WAY-134, WAY-10).
@@ -1545,7 +1548,8 @@ attention on what that reading covers; only a contradiction with the person's ow
 is both real and quotable, and only the person can resolve it. Where an entry is written outside
 such a refinement or a cycle runs, the answer is about to bind, so the question stays; the entries
 written during a refinement, such as the projected entries of a definition, wait for the person's
-acceptance of the whole document or at the readiness approval, so they follow the rule of the refinement. The
+acceptance of the whole document or at the readiness approval, so they follow the
+rule of the refinement. The
 price at refinement: an answer that contradicts the material, such as a product description or a
 note, and no sentence of the person, passes with no question. A project definition takes more than
 a task document, since it settles scope, success and risks, where a counter-argument after the
@@ -3689,7 +3693,8 @@ realizes or writes each projected entry.
 *Rationale:* the foundation describes what the product holds today; a project first settles what
 the product is to become. The task assignment follows the breakdown and changes with it, while
 the definition remains the source of what was settled.
-*Rejected:* putting projected entries into the foundation at the readiness approval — it would describe
+*Rejected:* putting projected entries into the foundation at the readiness
+approval — it would describe
 a future product as current; keeping the task assignment in the definition — it would duplicate
 the plan and change as the plan changes.
 
@@ -3701,7 +3706,8 @@ human-given part of a projected entry: its binding sentence or definition and a 
 rationale and rejected options; only projected fields awaiting code or the world may read `TODO`.
 Before approval an agent searches the whole current foundation once for what the definition and
 its projected entries touch, linked or not, the only search of the whole foundation on the way to
-the readiness approval, and the human approves the whole projected entries with permitted `TODO`; the approval
+the readiness approval, and the human approves the whole projected entries with
+permitted `TODO`; the approval
 record then names the approver and the fingerprint of the definition's sections from Goal through
 Projected foundation changes, and no projected entry carries a field of approval. A change to those
 sections after approval goes through the readiness approval again before breakdown relies on it.
@@ -3712,10 +3718,12 @@ sections after approval goes through the readiness approval again before breakdo
 - **Verification:** invariants: project-readiness-check. For the foundation search and human
   approval, an agent compares the work with the decision:
   - complies: the script stops an unfinished candidate table, the agent resolves a collision with
-    an existing decision found by the one search at the readiness approval, and the human approves the finished
+    an existing decision found by the one search at the readiness approval, and the
+    human approves the finished
     proposals;
   - violates: a warning-only review lets the breakdown begin with a missing decision reason, an
-    edit to a fingerprinted section after approval keeps the old approval record, or the foundation is
+    edit to a fingerprinted section after approval keeps the old approval
+    record, or the foundation is
     searched whole for each candidate or projected entry and again at the readiness approval.
 - **Origin:** none
 
@@ -3726,7 +3734,8 @@ and the definition's own text; the approval record approves them together.
 *Rejected:* a final checklist that only warns — it cannot prevent an unfinished search from
 passing; an approval without a content fingerprint — later edits would still look approved; a
 search of the whole foundation when the candidates are named and for each projected entry as well
-as at the readiness approval — it repeats that search on wording not yet settled; *Approved by* in each
+as at the readiness approval — it repeats that search on wording not yet
+settled; *Approved by* in each
 projected decision — it repeats the approval record.
 
 ### WAY-126 — How does a projected entry enter the foundation?
@@ -3734,8 +3743,10 @@ projected decision — it repeats the approval record.
 A projected entry of an approved project definition enters the product's foundation in the
 change of the first task whose code makes it true — the task the plan assigns, or a task
 that uses the definition as a source only, even where the plan assigns the entry to another task —
-whole, in the wording the human approved at the readiness approval, with the projected terms and environment facts
-it uses or rests on and with no record of approval copied from the approval record, since the merge of the
+whole, in the wording the human approved at the readiness approval, with the projected
+terms and environment facts
+it uses or rests on and with no record of approval copied from the approval
+record, since the merge of the
 task's request brings it in; where the code makes only part of it true, the agent writes that part
 and the human accepts its meaning at the merge (WAY-114). The task the plan assigns writes what of
 the entry the foundation does not yet hold, and a projected entry no code makes true. The return
@@ -3769,10 +3780,12 @@ points at it with a reference to it by its identifier: in a decision's *Relation
     projected invariant covers is set aside and rewritten.
 - **Origin:** none
 
-*Rationale:* a projected entry is wording a human already settled at the readiness approval, and the task
+*Rationale:* a projected entry is wording a human already settled at the
+readiness approval, and the task
 whose code first makes it true is the one that can show it holds; entering with that code keeps
 the foundation describing the present product and keeps one entry per rule. A part of an entry is
-wording the human did not approve at the readiness approval in that form, so its meaning reaches the human at the merge.
+wording the human did not approve at the readiness approval in that form, so its meaning
+reaches the human at the merge.
 *Rejected:* holding a projected entry back for the task the plan assigns — the foundation would
 lag behind the code it describes; a return step that searches only the current foundation — a
 rule settled in a definition comes back as a second entry under another name; carrying a
@@ -3782,7 +3795,8 @@ once and read by the review of the change, guards it without a second implementa
 
 ### WAY-145 — Who sets where an open question of an approved project definition is resolved?
 
-Once a project definition has passed its readiness approval, the place of resolution it gives an open
+Once a project definition has passed its readiness approval, the place of
+resolution it gives an open
 question is the question's first assignment, and the plan decides from then on where the question
 is resolved: in a task of the plan, or by an answer the human gives or the plan quotes, with its
 place, from the definition or the foundation. Work on the plan may move a question to another task,
@@ -3802,7 +3816,8 @@ the human before the plan is handed over.
     changes; the breakdown finds that nothing says whether the test server is public from the first
     account and asks the human before handing the plan over;
   - violates: a question lands in another task than the definition names with no entry in the log;
-    the definition is edited and put through the readiness approval again to move a question; a move that hands the writing of a
+    the definition is edited and put through the readiness approval again to move a question; a move
+    that hands the writing of a
     projected decision to another task is made without the human; the breakdown answers a question
     from its own reading of the code; a question found in the breakdown waits in a task as an
     unknown.
@@ -3810,7 +3825,8 @@ the human before the plan is handed over.
 
 *Rationale:* the place a definition gives a question is set before the tasks exist, so the
 breakdown is the first to see where the question meets the work; moving it changes the way to the
-approved scope, not the scope the human settled at the readiness approval. A move left unwritten looks like the
+approved scope, not the scope the human settled at the readiness approval. A move
+left unwritten looks like the
 plan's own reading of the definition, so the log makes it visible. Which task writes a projected
 entry sets when the foundation comes to hold it, so a move that shifts it reaches the human. A
 question the breakdown raises was settled by nobody, and the human answers it while the plan can
@@ -3820,7 +3836,8 @@ practice of a roadmap (WAY-142) the carrying of each open question of the source
 word for word, and a question that arises in the breakdown put before the human; the practice is that of the skill of a roadmap of lesson m2l1 of the
 10xDevs course, whose lessons are not open to a reader of this repository, and the move of a
 question written into the log of changes is the rule's own.
-*Rejected:* a move taken through the readiness approval again — the definition would be approved again for a
+*Rejected:* a move taken through the readiness approval again — the definition
+would be approved again for a
 change of route alone; a flag marking a task blocked by its unknowns, beside a list of deferred
 work, as the practice of a roadmap has them — the states of a task already hold waiting for the
 human, and the list repeats the definition's exclusions; a question moved without a word — a reader
@@ -3882,7 +3899,8 @@ decision.
     the game and the place of its screenshots;
   - violates: a product keeps the way to its game or the place of its screenshots only in a skill,
     with no decision of its log; the first task of the breakdown chooses the database; a definition
-    reaches the readiness approval with a store of data in its scope and no choice of it projected or found in the
+    reaches the readiness approval with a store of data in its scope and no choice of it
+    projected or found in the
     foundation; a project that brings a product's first screen leaves out how an agent operates it
     because a browser on a local address adds nothing to run; the logs, the interface, the
     development data and the place of the screenshots stand on the list as one choice; a project
@@ -3894,11 +3912,13 @@ decision.
 *Rationale:* whether a technology choice changes how the work is cut into tasks cannot be judged
 by someone who does not know the technologies, so the choice is settled before the cut; a step of
 its own keeps the comparison of technologies out of the talk about the project's goal and scope,
-while its agent still knows the whole project. Settled before the readiness approval, the choices are approved
+while its agent still knows the whole project. Settled before the readiness
+approval, the choices are approved
 with the rest of the definition, and an exit for a project whose choices the foundation already
 holds keeps the step from being an empty run. A choice a definition missed, or that no definition
 holds, still goes to the human through the step, and at a task document it changes no approved
-section, so no readiness approval returns. A task cycle checks behaviour a user sees in the running product as
+section, so no readiness approval returns. A task cycle checks behaviour a user sees
+in the running product as
 well, and an agent with no way to the running product either leaves that check undone or improvises
 its access in the middle of the cycle. The commonest answers — logs read from
 the output of the product's container, the product opened in a browser on a local address — add
@@ -3923,9 +3943,11 @@ decision.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness approval — each settled choice would change approved sections and send the
-definition through the readiness approval again (WAY-118); one step for every project with no exit — an empty
+definition through the readiness approval again (WAY-118); one step for every
+project with no exit — an empty
 run wherever nothing changes; the agent's way to the running product as items every definition
-holds, checked by the readiness approval — every project repeats what is settled once for the product;
+holds, checked by the readiness approval — every project repeats what is
+settled once for the product;
 a question about that way in the refinement of every task — every task records the same answers
 with no need of its own; the rule of belonging alone for those matters — their commonest answers
 would never be listed, and looking at them would settle nothing; a requirement of the step beside
@@ -4378,7 +4400,8 @@ definition or a decision of the foundation keeps the product on that machine, an
 foundation settles it, the step that settles technology lists how a human learns of a failure of
 the running product as a choice of its own, answered by a tool that collects failures, an alert or a
 deliberate absence, even where its answer adds nothing to run, pay for or back up; in a run at a task (WAY-267) it enters the list only where the note touches it. No
-definition has to hold this choice, the readiness approval does not check it and an approved definition
+definition has to hold this choice, the readiness approval does not check it
+and an approved definition
 does not come back to the step for it; it is no matter of an agent's way to the running product, so
 whether an agent can read an option is a consequence like any other, and a change to it does not
 open the decision on the logs. A deliberate absence always enters the comparison of this choice,
@@ -4405,7 +4428,8 @@ which leaves out an option with no documentation.
     passes the readiness approval;
   - violates: the choice is folded into the logs item; the comparison leaves out the deliberate
     absence for want of a page of documentation; the step passes over an option because an agent
-    cannot read its panel (WAY-166); the readiness approval rejects a definition for lacking the item,
+    cannot read its panel (WAY-166); the readiness approval rejects a
+    definition for lacking the item,
     or an approved definition is sent back to the step for it; a product kept on the developer's
     machine gets the item; a run at a task adds the item though its note does not touch it.
 - **Origin:** none
@@ -4934,7 +4958,8 @@ written in the language of the definition under headings, states and markers kep
 - **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
   compares the plan with the decision:
   - complies: the plan of a Polish definition gives each task's goal in Polish under English
-    headings, its header carries the fingerprint the approval record holds, and the projected decision
+    headings, its header carries the fingerprint the approval record holds,
+    and the projected decision
     `(new) — Who owns a document?` stands in the table of entries with tasks 3 and 5 realizing it
     and task 5 writing it;
   - violates: a task stands in the table and again under a heading of its own repeating its
@@ -4943,7 +4968,8 @@ written in the language of the definition under headings, states and markers kep
 - **Origin:** none
 
 *Rationale:* a plan changes with every move of a task, a definition rarely and only through its
-readiness approval, so the two stand apart, and the fingerprint in the plan's header shows when the definition
+readiness approval, so the two stand apart, and the fingerprint in the plan's header
+shows when the definition
 beneath it has changed. One row per task keeps each fact about a task in one place, where no copy
 can drift from it. A definition can project many entries, its decisions named only by their
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
@@ -4963,7 +4989,8 @@ to many long headings and needs keys made up for them; each task described again
 its own beside an index table and a table for a tracker, as the practice of a roadmap holds each of
 its items — three copies of one task drift apart; the
 plan inside the definition — every move of a task would change approved sections and send the
-definition through its readiness approval (WAY-118); a stage of the project opened and closed inside the plan —
+definition through its readiness approval (WAY-118); a stage of the project opened
+and closed inside the plan —
 the project already opens with its definition and ends once each of its tasks has a final state;
 the external
 deadline repeated in the plan — the definition holds it; the columns named in this
@@ -4971,7 +4998,8 @@ decision — each change of a column would take a change of the decision; the mi
 interview on the order of work of the practice of a roadmap of vertical slices — left out of what
 the step takes from it; the practice's scored check that the product's documents are ready before
 the breakdown, left out of what the step takes from it — the definition passes its stricter
-readiness approval before the breakdown (WAY-118); the practice's stock of the code already in place,
+readiness approval before the breakdown (WAY-118); the practice's stock of
+the code already in place,
 taken layer by layer by agents working side by side — left out of what the step takes from it; the
 practice's fields of each item from which its acceptance criteria are drawn, among them a sentence
 of why it stands where it does in the order, left out of what the step takes from it — the
@@ -5349,7 +5377,8 @@ and an agent that proposes it later has to say what has changed for a way nobody
 way kept from the refinement is written and a missing one is `unknown`, which tells the reader
 nobody knows what was weighed.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
-a task has no readiness approval to approve their wording, and refining a task would weigh as much as defining a
+a task has no readiness approval to approve their wording, and refining a task would
+weigh as much as defining a
 project; noting a settlement only when the human states one — a settlement said in passing in the
 request is missed, and the agent alone decides what binds; letting the cycle change or drop a
 settlement and show the difference in the request — the human's settlement could be reversed and
@@ -5375,7 +5404,8 @@ choice to enter, and this decision needs a stronger rebuild.
 A task's effect outside the product's repository — on a server, in DNS, on keys or on an external
 account — is made only by a human, through a human action the task document names and places before
 the cycle or in it, while reading outside the repository stays with the agent and the cycle's record
-of the request and of the task's state in the task's line in the backlog the product names (WAY-107) is no effect
+of the request and of the task's state in the task's line in the backlog the product
+names (WAY-107) is no effect
 of the task, nor is the removal of the repository's own working directories that stand outside its
 directory (WAY-375). For the human actions placed in the cycle, the cycle does what the repository
 allows and opens a blocked draft request listing them, and the human performs them at the request; a
@@ -9093,7 +9123,8 @@ skill for auditing observability, for these audits, and not the audit as a skill
 *Rationale:* the human who approves a product's guidelines judges neither its code nor its tests,
 and an audit that ended with places alone would leave that human to judge what is urgent and an
 agent planning the repairs with no ground for its order, and on a long list small things would come
-first while a serious one drowned in the middle. A weight taken from the effect says what a repair is
+first while a serious one drowned in the middle. A weight taken from the
+effect says what a repair is
 worth in terms anyone can judge, and one scale lets causes of different disciplines stand in one
 order. Many small breaks stay small and one open way to someone else's data stays open, so
 what is at stake sets the weight and the number of places does not. A weight is no grade of the

@@ -103,7 +103,8 @@ resolve in `~/.the-way/locations.json` the keys the counting needs:
 Where the file, a key or the path a key holds is missing, ask the human where the place
 is, in one question of decision, as "How a skill asks" gives it (WAY-113). The ways are usually to
 name the place, to create it, or, for the register, to copy the template to a place the human names.
-Offer to add the key to the file, create the file or the repository key where they are missing, and write
+Offer to add the key to the file, create the file or the repository key where
+they are missing, and write
 only on the human's yes.
 
 ## 2. Get the latest count
@@ -121,7 +122,7 @@ scheduler and UTC fall). Tell the human, and offer to run it now. The command wr
 python -B process-audit/audit_count.py [--locations FILE] [--repository KEY ...] [--prices FILE] [--today YYYY-MM-DD]
 ```
 
-Without options it reads `~/.the-way/locations.json` and every key that holds a key
+Without options it reads `~/.the-way/locations.json` and every repository key that holds a key
 `repository`; `--repository KEY`, repeated, names the repositories to read; `--prices` names another
 price list than `process-audit/price_list.md`; `--today` is the day of the run, which the days of
 waiting count to. Its exit code says:

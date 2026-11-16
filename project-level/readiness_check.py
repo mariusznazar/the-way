@@ -1,5 +1,5 @@
-"""The readiness check of a project definition: the conditions of the readiness approval a script can
-decide (WAY-118).
+"""The readiness check of a project definition: the conditions of the readiness approval a script
+can decide (WAY-118).
 
 Usage, from any directory:
 
@@ -67,7 +67,8 @@ DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
 PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
 MEANING = re.compile(r"^>")
-STATUS = re.compile(r"^Status: (definition — open: \S.*|awaiting approval|approved \d{4}-\d{2}-\d{2})$")
+STATUS = re.compile(r"^Status: (definition — open: \S.*|awaiting approval"
+                    r"|approved \d{4}-\d{2}-\d{2})$")
 APPROVAL_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
     ("Definition fingerprint", re.compile(r"^- Definition fingerprint: ([0-9a-f]{8})$")),
@@ -287,7 +288,8 @@ def check_approval_record(section, text):
         elif name == "Definition fingerprint" and match.group(1) != definition_fingerprint(text):
             findings.append(Finding("e", number, "the fingerprint %s does not match the "
                                     "definition, whose fingerprint is %s — the definition "
-                                    "changed after its approval and goes through the readiness approval again"
+                                    "changed after its approval and goes through the readiness "
+                                    "approval again"
                                     % (match.group(1), definition_fingerprint(text))))
     return findings
 

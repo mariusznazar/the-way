@@ -23,9 +23,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import readiness_check  # noqa: E402
 
 # The headings of the form in project-level/definition_template.md, in their order: the sections a
-# definition holds above its approval record, then the approval record. Written out here, not taken from
-# readiness_check.SECTIONS, so that a section the code drops does not vanish from the test data too;
-# the test of the template checks that these are the headings of the form.
+# definition holds above its approval record, then the approval record. Written out here, not
+# taken from readiness_check.SECTIONS, so that a section the code drops does not vanish from the
+# test data too; the test of the template checks that these are the headings of the form.
 FORM = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints", "Deliverables",
         "Success", "Risks", "Open questions", "Touched parts and decisions", "Technology",
         "Projected foundation changes", "Approval record")
@@ -168,6 +168,13 @@ class Structure(unittest.TestCase):
         found = conditions(definition(status="Status: almost done"))
         self.assertEqual([c for c, _ in found], ["structure"])
 
+    def test_the_status_value_before_the_rename_is_reported(self):
+        # invariant: project-definition-form
+        # Source: the human's answer to question 4 of the task, 2026-11-14: the value is
+        # `awaiting approval`, and `ready for gate` is no longer one.
+        found = conditions(definition(status="Status: ready for gate"))
+        self.assertEqual([c for c, _ in found], ["structure"])
+
     def test_a_missing_section_is_reported(self):
         # invariant: project-definition-form
         order = [n for n in FORM[:-1] if n != "Risks"]
@@ -184,6 +191,14 @@ class Structure(unittest.TestCase):
         # invariant: project-definition-form
         text = definition().replace("## Risks", "## Stakeholders\n\nMariusz\n\n## Risks")
         self.assertIn(("structure", "`## Stakeholders` is no section of the template"),
+                      conditions(text))
+
+    def test_the_heading_of_the_record_before_the_rename_is_reported(self):
+        # invariant: project-definition-form
+        # Source: the human's answer to question 1 of the task, 2026-11-14: the scripts take no
+        # `## Gate record` beside `## Approval record`.
+        text = definition().replace("## Approval record", "## Gate record")
+        self.assertIn(("structure", "`## Gate record` is no section of the template"),
                       conditions(text))
 
     def test_sections_out_of_order_are_reported(self):
@@ -531,8 +546,8 @@ class ApprovalRecord(unittest.TestCase):
                     "- Foundation searched at: 595f839\n"
                     "- Definition fingerprint: %s" % wording_fingerprint(content))
         found = conditions(definition(approval=approval))
-        self.assertEqual(found, [("e", "the approval record holds 3 lines, not the two: Approved by, "
-                                       "Definition fingerprint")])
+        self.assertEqual(found, [("e", "the approval record holds 3 lines, not the two: Approved "
+                                       "by, Definition fingerprint")])
 
     def test_a_definition_changed_after_its_approval_is_reported(self):
         stale = definition()

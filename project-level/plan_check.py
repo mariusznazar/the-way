@@ -11,9 +11,10 @@ reports:
 
 - form — a `Status:` line reading `draft` or `handed over YYYY-MM-DD`, a calendar date; a line
   `Definition: <path> — fingerprint <8 lower-case hex digits>` naming a definition that can be
-  read, whose In scope reads `none` or holds a top-level list item, and whose approval record and text
-  both give that fingerprint; the sections `## Tasks`, `## Projected entries`, `## Open questions`,
-  `## Phases`, `## Change log` once each, in this order, with no other second-level heading and
+  read, whose In scope reads `none` or holds a top-level list item, and whose approval
+  record and text both give that fingerprint; the sections `## Tasks`, `## Projected entries`,
+  `## Open questions`, `## Phases`, `## Change log` once each, in this order, with no other
+  second-level heading and
   none of them empty; the tasks table and the projected entries table with the template's header
   rows, a separator row of as many cells, and every cell in its form, numbers in ASCII digits and
   `\\|` standing for a literal `|`; no task number or name held twice; a state

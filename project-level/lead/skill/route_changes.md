@@ -14,8 +14,10 @@ Read from step 5 of `SKILL.md`. The edit of the definition and its readiness app
 - A scope change or changing which task writes a projected entry is the human's decision
   (WAY-145). Present the complete proposed change, its sources and its consequences, as a question
   of decision "How a skill asks" gives; record the answer before the owning agent applies it.
-  Moving a question within approved scope with its logged reason alone needs no readiness approval of the definition;
+  Moving a question within approved scope with its logged reason alone needs no readiness
+  approval of the definition;
   changing the definition does, by `definition_change.md`. A project can change direction while
   refinement proceeds, but its approved definition is the basis of every task, so a change of it keeps the full
-  readiness approval and a fresh plan check, which costs another review and prevents a task from becoming ready
+  readiness approval and a fresh plan check, which costs another review and prevents
+  a task from becoming ready
   against an obsolete basis. Do not let a refiner expand its task to conceal either mismatch.
