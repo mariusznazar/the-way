@@ -630,7 +630,8 @@ after the known items; a change that leaves one there puts it before the human.
     after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
     `TODO` in *Rests on*, *Derives from*, *Based on* or *Relations*; a decision reads `TODO` in
-    *Origin*; a decision joins `TODO — <the decision, and where it is expected>` to the relations
+    *Origin*; a decision reads `Relations: derives from TODO` with a relation type before the
+    word; a decision joins `TODO — <the decision, and where it is expected>` to the relations
     before it with a comma instead of ` · `.
 - **Origin:** none
 
@@ -3733,9 +3734,9 @@ step reads the projected entries of the task's sources as well as the foundation
 code makes true that the foundation step missed — an invariant with its test run on that code — and
 writes a new entry only for a rule none of them states.
 
-A change that writes a projected entry into the foundation replaces with its identifier each
-descriptive `TODO` that points at it, in a decision's *Relations* and in an invariant's
-*Derives from*.
+A change that writes a projected entry into the foundation replaces each descriptive `TODO` that
+points at it with a reference to it by its identifier: in a decision's *Relations* as
+`derives from <number>`, and in an invariant's *Derives from* as the number.
 
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
@@ -3749,8 +3750,8 @@ descriptive `TODO` that points at it, in a decision's *Relations* and in an inva
     that sentence and puts its meaning before the human in the request's section for the human's
     decisions; a plan member whose code would make another item's entry true returns to the plan
     first; a task whose code makes a projected decision true writes it into the log and replaces
-    with its number the `TODO` that names it in the *Relations* of a decision and in the
-    *Derives from* of an invariant;
+    the `TODO` that names it with `derives from <its number>` in the *Relations* of a decision and
+    with its number in the *Derives from* of an invariant;
   - violates: the return step writes a new decision for a rule a projected entry of the
     task's source states; a task writes a projected decision into the log and leaves a decision's
     *Relations* reading `TODO — <that decision, and where it is expected>`; a shortened projected

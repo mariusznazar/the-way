@@ -745,6 +745,35 @@ class FoundationCheckTest(unittest.TestCase):
                                  "names no decision: write `TODO — <the decision, and where it is "
                                  "expected>`", "1 error")
 
+    # A relation item begins with its type, so a `TODO` behind a type must not pass as a relation.
+    TYPED_TODO = ("foundations/decisions.md:22: *Relations* reads `TODO` after a relation type: "
+                  "the `TODO` item takes no `derives from` or `narrows`; write `TODO — <the "
+                  "decision, and where it is expected>`")
+
+    def test_relations_a_bare_todo_behind_a_type_is_an_error(self):
+        for value in ("narrows TODO", "narrows `TODO`", "derives from TODO —"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_relations(value), self.TYPED_TODO, "1 error")
+
+    def test_relations_derives_from_todo_is_an_error(self):
+        self.assertFails(self.mixed_relations("derives from TODO"), self.TYPED_TODO, "1 error")
+
+    def test_relations_a_known_relation_then_derives_from_todo_is_an_error(self):
+        self.assertFails(self.mixed_relations("derives from ABC-01 · derives from TODO"),
+                         self.TYPED_TODO, "1 error")
+
+    def test_relations_a_described_todo_behind_a_type_is_an_error_not_a_reference(self):
+        # the number inside the description is no reference, so the one error is the form
+        for value in ("derives from TODO — the decision on saves",
+                      "derives from ABC-01 · derives from TODO — ABC-77, expected later"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_relations(value), self.TYPED_TODO, "1 error")
+
+    def test_relations_a_decision_on_a_second_line_is_still_checked(self):
+        self.assertFails(self.mixed_relations("derives from ABC-01 ·\n  narrows ABC-77"),
+                         "foundations/decisions.md:23: `ABC-77` names no decision of the log",
+                         "1 error")
+
     def test_relations_a_decision_before_a_todo_is_still_checked(self):
         self.assertFails(self.mixed_relations("derives from ABC-77 · TODO — the decision on saves"),
                          "foundations/decisions.md:22: `ABC-77` names no decision of the log",

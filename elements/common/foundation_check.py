@@ -41,15 +41,16 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   or *Derives from*, or a decision's *Based on* or *Relations*, the first item of the value (items
   joined by ` · `, a ` · ` inside quotation marks joining nothing) that begins with the word
   `TODO`, and all that follows it, is one description of something missing, read as `TODO — <the
-  fact, with its source>`, `TODO — <the decision, and where it is expected>` (the form of an
-  invariant's *Derives from* and of a decision's *Relations*) or `TODO — <what is missing, with
-  its source>`, split into no items or references, since it names no entry; the items before it
-  are read as before, so a known entry followed by it stays checked. A `TODO` item with no
-  description of what is missing, whether alone or after known entries, as in `clock-tick · TODO`,
-  is an error (WAY-71). A `TODO` after a comma or a line break instead of ` · ` begins such an item too: a bare
-  one is an error as above, and one with a description is an error saying the items are joined by
-  ` · `. A `TODO` inside quotation marks begins no item, the dash after `TODO` is not required,
-  and a value with no `TODO` item is read as before;
+  fact, with its source>`, `TODO — <the decision, and where it is expected>` or `TODO — <what is
+  missing, with its source>`, split into no items or references, since it names no entry; the
+  items before it are read as before, so a known entry followed by it stays checked. A `TODO`
+  item with no description of what is missing, whether alone or after known entries, as in
+  `clock-tick · TODO`, is an error (WAY-71). A `TODO` after a comma or a line break instead of
+  ` · ` begins such an item too: a bare one is an error as above, and one with a description is
+  an error saying the items are joined by ` · `. In a decision's *Relations*, `TODO` behind a
+  relation type, as in `derives from TODO`, is an error too: the `TODO` item takes no type. A
+  `TODO` inside quotation marks begins no item, the dash after `TODO` is not required, and a value
+  with no `TODO` item is read as before;
 - a field the template of an entry's element gives and the entry lacks, and a word a field does
   not take: a decision's *Scope*, *Based on*, *Relations*, *Verification*, *Origin*, *Rationale*
   and *Rejected*; an invariant's *Method* (`test` or `review`), *Rests on*, *Derives from*,
@@ -166,6 +167,7 @@ QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
+TYPED_TODO = re.compile(r"(?:derives from|narrows)[ \t]+(?=`?TODO(?![^\s`]))")
 # The fields that take `TODO — <description>`: what a bare `TODO` in each fails to say, and the
 # form the description takes.
 MISSING = {"Rests on": ("names no fact", "<the fact, with its source>"),
@@ -261,16 +263,16 @@ def based_on(found):
         start += len(item) + 1
 
 
-def todo_item(value):
-    """The index in a field's value where its first item that begins with the word `TODO` starts,
-    or None. The items are joined by ` · `, but a comma or a line break also ends a piece, so a
-    `TODO` after either begins one too; a separator inside quotation marks joins nothing, and a
-    `TODO` inside them begins no item."""
+def todo_item(value, typed=False):
+    """The index in a field's value where its first item that begins with the word `TODO` starts
+    (with `typed`, after a relation type too), or None. The items are joined by ` · `, but a comma
+    or a line break also ends a piece, so a `TODO` after either begins one too; a separator inside
+    quotation marks joins nothing, and a `TODO` inside them begins no item."""
     masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), value)
     start = 0
     for piece in re.split(r"[·,\n]", masked):
         begin = start + len(piece) - len(piece.lstrip())
-        if TODO_VALUE.match(value, begin):
+        if TODO_VALUE.match(value, begin) or (typed and TYPED_TODO.match(value, begin)):
             return begin
         start += len(piece) + 1
     return None
@@ -541,16 +543,21 @@ class Foundation:
         with the word `TODO`, which with all that follows is one description of a missing fact,
         decision or source, never a list or a reference. A `TODO` with no description is reported.
         A `TODO` that follows a comma or a line break instead of ` · ` is reported too: a bare one
-        as a bare one, one with a description as a list not joined by ` · `.
+        as a bare one, one with a description as a list not joined by ` · `; so is a `TODO`
+        behind a relation type in a decision's *Relations*.
         A value with no such item is returned as it is, to be read as its field is read."""
         value, lines = found.get(name, ("", [0]))
-        start = todo_item(value)
+        start = todo_item(value, typed=name == "Relations")
         if start is None:
             return found
         todo = TODO_VALUE.match(value, start)
         where = lines[value.count("\n", 0, start)]
         before = value[:start].rstrip(" \t\n")
-        if not value[todo.end():].strip(" \t\n`—–-"):
+        if todo is None:
+            self.report.error(path, where, "*%s* reads `TODO` after a relation type: the `TODO` "
+                              "item takes no `derives from` or `narrows`; write `TODO — %s`"
+                              % (name, MISSING[name][1]))
+        elif not value[todo.end():].strip(" \t\n`—–-"):
             what, form = MISSING[name]
             self.report.error(path, where,
                               "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form))

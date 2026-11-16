@@ -73,7 +73,8 @@ such part; none where there is no such part>
   foundation does not hold yet, whether or not a project definition projects it; it is the last
   item after the known relations, `derives from WAY-x · TODO — <the decision, and where it is
   expected>`, and its description runs to the end of the value as in *Based on*. The script reports
-  a bare `TODO` in *Relations*, and any `TODO` in *Origin*, as an error (WAY-71).
+  a bare `TODO` in *Relations*, a `TODO` behind a relation type (`derives from TODO`), and any
+  `TODO` in *Origin*, as an error (WAY-71).
 - *Relations* and *Verification* follow "Relations and precedence" and "Verification" below;
   *Origin* follows "Origin" and "Recovered decisions".
 - *Rationale* and *Rejected* are prose which, where the entry's author writes it rather than
