@@ -10,11 +10,13 @@ from two marks and never from the words of the record (WAY-403, WAY-404):
 - the item `Discarded attempt` reads `none`, or opens with `reason: ` and one of the markers
   `open design choice`, `reserved choice` and `size` in backticks; a cycle that discarded more than
   one attempt writes nothing beside the colon and only list entries under it, at one indent, one for
-  each attempt, each opening so (where the lines are no entries at one indent alone, the whole is read as
-  the text of one attempt, which gives no attempt where it reads `none` and no answer where it holds
-  two markers or opens with no marker); the marker `open design choice` in any of them is a yes,
-  `none` and the other two markers no contradiction, and any other text, with no marker at its
-  start, gives no answer;
+  each attempt, each opening so (where the lines are no entries at one indent alone or text stands
+  beside the colon, the whole is read as the text of one attempt, which gives no attempt where it
+  reads `none` and no answer where it holds two markers or opens with no marker, its later lines
+  being details read for a second marker alone); only the first line of an entry is read, and a line
+  at the left margin ends the item and is not read; the marker `open design choice` in any of them
+  is a yes, `none` and the other two markers no contradiction, and any other text, with no marker at
+  its start, gives no answer;
 - each entry of the item `Review rounds` opens with ``findings `reports/<file>.md`, contradiction
   yes`` or `no` (a round of fixes, marked by the reviewer's mark of contradiction), or with
   ``review `reports/<file>.md`, PASS`` (a review that passed with no fix, a round with no
@@ -172,7 +174,8 @@ def item_texts(lines: list[str], fenced: list[bool],
     """The items `- <label>: ...` of a record outside code fences, each as its text on its line and
     the lines indented under it with their fence flags. The whole record is read, since the items
     of the spec and the plan sit below the header. One pass: each item reads down to the next line
-    that starts at the margin."""
+    that starts at the margin: a line written there, a continuation of an entry included, is no part
+    of the item and is not read."""
     found = []
     for index, line in enumerate(lines):
         if fenced[index] or not line.startswith("- "):
@@ -246,10 +249,12 @@ def discarded_reasons(rest: str, below: list[tuple[str, bool]]
     item, on its line or on the lines under it, the details possibly as a list: one reason, or
     `none`. A cycle that discarded more writes nothing beside the colon and only list entries under
     it, one for each attempt, each opening with its marker; the reason of an entry that reads `none`
-    or holds two markers is None. Where a plain line or an entry at another indent stands beside the
-    entries, the whole is read as the text of one attempt: it gives that attempt's reason where the
-    text opens with one marker and holds no other (its details may be a list), and is not read
-    otherwise."""
+    or holds two markers is None; only the first line of an entry is read, so that a marker in a
+    deeper line of the entry is a detail and gives nothing. Where a plain line or an entry at
+    another indent stands beside the entries, or text stands beside the colon, the whole is read as
+    the text of one attempt: it gives that attempt's reason where the text opens with one marker and
+    holds no other (its details may be a list, and a later line that names a reason in other words
+    than the marker is a detail, not a second attempt), and is not read otherwise."""
     entries, alone = discarded_entries(below)
     if entries and alone and not rest.strip():
         return [None if reason in (NO_ATTEMPT, SEVERAL) else reason

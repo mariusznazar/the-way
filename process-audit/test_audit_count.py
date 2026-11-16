@@ -3765,6 +3765,19 @@ class ProcessVersions(AuditCountCase):
                  "none — reason: `size`", "reason: `size`; reason: `open design choice`"]
         self.assertEqual(["unknown"] * 4, self.q1_of_each_version(texts))
 
+    def test_a_second_reason_in_a_detail_or_at_the_margin_is_not_read_and_gives_the_first_one(self):
+        # decision: WAY-404 "Where the lines are entries at one indent alone and nothing stands beside the colon"
+        # decision: WAY-404 "The item reads down to the next line at the left margin"
+        # The shapes the rule names as not read: a marker in a deeper line of an entry, a second
+        # attempt in other words than the marker among the details of the first, and a line at the
+        # left margin. Each gives the answer of the first attempt, `size`, which is no contradiction.
+        odc = "reason: `open design choice`"
+        texts = [NL + "  - reason: `size`; 14:05" + NL + "    " + odc,
+                 NL + "  reason: `size`; 10:32" + NL + "  - reason: open design choice",
+                 " reason: `size`; 10:32" + NL + "  - report reports/x.md",
+                 NL + "  - reason: `size`; 14:05" + NL + odc]
+        self.assertEqual(["no"] * 4, self.q1_of_each_version(texts))
+
     def test_the_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
         sys.path.insert(0, str(HERE))
         import audit_count
