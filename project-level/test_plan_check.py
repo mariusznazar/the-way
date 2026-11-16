@@ -336,7 +336,8 @@ class Header(unittest.TestCase):
 
     def test_a_fingerprint_matching_the_approval_record_but_not_the_changed_definition_is_reported(self):
         # invariant: project-plan-form
-        changed_after_approval = DEFINITION.replace("- edytor map", "- edytor map\n- tryb wieloosobowy")
+        changed_after_approval = DEFINITION.replace(
+            "- edytor map", "- edytor map\n- tryb wieloosobowy")
         self.assertNotEqual(changed_after_approval, DEFINITION)
         self.assertIn("- Definition fingerprint: %s" % FINGERPRINT, changed_after_approval)
         self.assertIn("form", conditions(PLAN, changed_after_approval))

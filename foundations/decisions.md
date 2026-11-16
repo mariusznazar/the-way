@@ -4233,7 +4233,8 @@ has no definition at all, so the step needs a place every such choice has: a tas
 the human accepts whole and which goes with the task if the work is dropped. Written into the log
 before its code, the choice would describe what the product does not hold (WAY-01); kept in the task
 document, it reaches the log as every settlement does (WAY-134), and an approved definition stays
-untouched, so no readiness approval returns (WAY-118). The price is that even a small choice takes a task document,
+untouched, so no readiness approval returns (WAY-118). The price is that even a small choice
+takes a task document,
 a choice with no code takes a full cycle, and the document has to hold the comparison and its
 sources, since what a run keeps elsewhere does not last with the task. Settling only what the note
 and the task name keeps a task about something else from growing by choices nobody asked for, at the
