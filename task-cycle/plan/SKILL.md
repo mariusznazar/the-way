@@ -173,8 +173,8 @@ Write the plan in this form; the script reads the slice headings and the fields 
   that changes behaviour names the test it starts from. They are the slice's focused checks — its
   tests, those of the code it reaches and those of the invariants the slice's change may make
   false, which the planner chooses among the invariants the slice reaches (WAY-62) and not all of
-  them — never the product's gate, which the orchestrator runs once on the finished change
-  (WAY-160). A slice that writes an invariant whose *Method* reads `test` while a later slice of the
+  them — never the product's gate, which the orchestrator runs once on the finished change, or
+  which CI runs on the request in its place (WAY-160). A slice that writes an invariant whose *Method* reads `test` while a later slice of the
   same change writes its test (WAY-61) runs in its *Checks* the check of the foundation,
   `elements/common/foundation_check.py` (in a product `.the-way/elements/common/foundation_check.py`),
   with the switch `--skip-test-citations`, as the run right after the entry is written that WAY-321

@@ -1,9 +1,13 @@
-# The one command of the-way's tests, on every pull request into `foundations` (WAY-16).
+# The one command of the-way's tests, on every pull request into `foundations` (WAY-16), on Linux
+# and on Windows.
 #
-# It runs on Linux, not on Windows: the tests that need POSIX (links, loops of links, a FIFO) cannot
-# run on the Windows machine the work is made on, and Windows is checked by the gate that the task
-# cycle runs on that machine before a request opens. The job's name, `tests`, stays as it is: the
-# branch rule that requires this check names it.
+# The result of this run is the final gate of the task cycle (WAY-160), so it runs on each system
+# the work is made on and checked on. Linux cannot run the tests that need Windows (junctions,
+# network paths) and Windows cannot run those that need POSIX (links, loops of links, a FIFO): each
+# job runs the tests of its own system and the other system's tests stay skipped there. The two
+# jobs are two checks, named `tests` (Linux) and `tests-windows`, and the branch rule that requires
+# them names each. A job's name stays as it is: renaming it makes a required check that never
+# reports. A matrix would name the checks `tests (<system>)` and so change the name `tests`.
 #
 # The trigger is `pull_request`, never `pull_request_target`: the code of a request runs with a
 # read-only token and no secret. No step uses the text of the request (its title, its branch name,
@@ -44,4 +48,31 @@ jobs:
       - run: |
           python -m venv .runs/quality-venv
           .runs/quality-venv/bin/python -m pip install --require-hashes -r requirements-quality.txt
+      - run: python -B gate/run_tests.py
+
+  tests-windows:
+    name: tests-windows
+    runs-on: windows-latest
+    # The time of a run on this system is not measured yet: a limit above the 40 minutes of the
+    # Linux job, so that the first run shows its time instead of ending at the limit.
+    timeout-minutes: 60
+    # The steps below are the ones of the job above and of the README of the-way ("Installing the
+    # linter"), which gives the commands for bash; the runner has Git Bash.
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/foundations
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .python-version
+      # On Windows the environment's program stands in `Scripts/`, where the tests look for it
+      # (`agent-instructions/test_linter_invariant.py`).
+      - run: |
+          python -m venv .runs/quality-venv
+          .runs/quality-venv/Scripts/python.exe -m pip install --require-hashes -r requirements-quality.txt
       - run: python -B gate/run_tests.py

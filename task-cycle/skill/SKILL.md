@@ -49,7 +49,8 @@ with the evidence and stop.
    dispatch and script of the cycle comes from it. The skills of the-way read `.the-way` from the
    directory their agent works in, so each handoff has the agent work from the worktree's root and
    names its stage's method by its path in the worktree's `.the-way`. Run the product's gate on that
-   commit as step 10 gives, through `task-cycle/gate_times.py`, at once; a check that fails there
+   commit on your own system, as step 10 gives its local run, through `task-cycle/gate_times.py`, at
+   once, since no request stands yet and CI cannot stand for it; a check that fails there
    and is not among the checks failing on the base is work the task carries, made under the new pin:
    step 4's judgment counts those checks, and steps 8 and 9 hand them on with the task and check
    their coverage as they check its items. Every reset of the task branch to its base stops at that
@@ -164,20 +165,27 @@ request link and set the task's state.
    merged branch's task and not this cycle's, which that branch added to its history and removed
    again, holds the final gate's result in its *Verification*. Find the copy with `git log
    --diff-filter=A --name-only --format=%h <base>^1..<base>^2 -- docs/task-cycles`; where the branch
-   added the copy more than once, the last copy is the one. Write the list into *Verification* of
-   this cycle's record with the commit and the file it was taken from. If the base is no such
-   commit, or the merged branch holds no copy of a cycle record with the result of its final gate,
-   run the checks on the base as follows. Run those checks on the base alone: finish them before
+   added the copy more than once, the last copy is the one. Where that *Verification* says that
+   the final gate ran in CI, the copy holds no result of it, since the run on the last head comes
+   after the copy (step 12): take the list from the *Checks* of the merged request's description,
+   which step 12 gave the CI result and, for a red run, the tests that failed, reading the request
+   at the address in the copy's *Request URL and status* through the host's tool; a green run gives
+   an empty list. Write the list into *Verification* of
+   this cycle's record with the commit and the file it was taken from, or the request it was taken
+   from. If the base is no such commit, or the merged branch holds no copy of a cycle record with
+   the result of its final gate and no request whose *Checks* gives it, run the checks on the base
+   as follows. Run those checks on the base alone: finish them before
    anything changes a tracked file of the worktree, or run them in a separate checkout of the base
    commit in `.runs/base/` of the worktree, deleted when they end, as "Working copies" below gives.
-   The gate's run on the base is one of the gate runs step 10 gives: it goes through
+   The gate's run on the base is a local run, since no request stands yet, and goes as step 10 gives
+   its local run: it goes through
    `task-cycle/gate_times.py` from that checkout, with
    `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the worktree's record
    directory from a checkout directly under its `.runs/`. In a product that
    checkout gets its dependencies installed, as the product's own rules give, and its `.the-way`
    populated before the checks run; otherwise they fail for that reason and not on the base. Where
-   the cycle took the list and did not run the gate on the base, and its final gate (step 10) fails
-   on a test outside the list, run the failing tests on the base in such a checkout to tell a fault
+   the cycle took the list and did not run the gate on the base, and its final gate (step 10, or
+   the CI run of step 12) fails on a test outside the list, run the failing tests on the base in such a checkout to tell a fault
    of the change from a fault already there, and write the result into *Verification*; the run
    serves that diagnosis only and never makes a gate run pass (WAY-243). Keep a frozen copy of the
    task document with its original path and its approval date or source commit. Where step 2 moved
@@ -224,7 +232,7 @@ fix also gets the fix report. The message that dispatches or resumes the agent o
 one of the review of that fix, names the findings file by its path in `reports/`, as
 `reports/<file>.md`, besides the handoff that names it, and no other message does: the audit of
 the process ties a turn to its fix round by that path (WAY-337). No handoff tells an agent to run
-the product's gate; its run is yours (step 10, WAY-160).
+the product's gate; its run is yours or CI's (step 10, WAY-160).
 
 In Claude Code, dispatch each stage agent as an agent of one of the pinned the-way's two types:
 `the-way-author` for the one author of a change without a plan, resumed or replaced on the same
@@ -428,7 +436,8 @@ contradicts a decision.
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.
         An executor of the strongest class that fails, or a retry that fails, stops the cycle:
         record its last commit and reset the branch to the slice's base, run the gate on the
-        change as step 10 gives (at once, since no return step runs), run
+        change on your own system as step 10 gives its local run (at once, since no return step
+        runs and the request is blocked), run
         `task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py` naming the same
         sessions, prepare the record's copy as
         "The record before it is committed" gives and commit it and its removal as step 12 gives,
@@ -467,23 +476,39 @@ contradicts a decision.
    reads the change for correctness, so repeating that read in coordination costs attention. The
    Minor findings of this review within the task are fixed before
    step 10, as "The end of a code review" gives (WAY-161).
-10. Run the product's gate yourself on the reviewed change (WAY-160), the fix for its Minor findings
-    included, or the code a revert of that fix leaves, through the script of the pinned the-way:
+10. The final gate is the product's gate on the reviewed change (WAY-160), the fix for its Minor
+    findings included, or the code a revert of that fix leaves. Where CI runs on the request that
+    step 12 opens, its run on the head pushed last is that gate: the product holds a file of CI
+    configuration that starts a run on a request into the target branch (on GitHub, a workflow on
+    the event `pull_request` for it). Then run no full gate on your own system here, nor after
+    step 12's merge with the target branch; take step 11 on the reviewed change, and step 12 waits
+    for the run. Where no CI runs on the request, run the gate yourself on the reviewed change. The
+    same local run is made where step 12 finds that CI gives no result within 30 minutes, for a
+    request left blocked for unfinished code (step 9.4 and "The end of a code review"), for the run
+    on the commit that moved the pin (step 2) and for the run on the base (step 4), none of which
+    has a CI run to stand for it. A local run goes through the script of the pinned the-way:
     `python -B task-cycle/gate_times.py --output .runs/task-cycles/<task-slug>/gate_times.md -- <the
     product's declared gate command>`, the command after `--` given as the product's rules declare
     it (the-way's is `python -B gate/run_tests.py`; in a product the script's path starts with
-    `.the-way/`). Every run of the gate goes this way: the run on the commit that moved the pin
-    (step 2), the run on the base where step 4 requires it, this run, and the reruns of steps 9 and
-    12 that this step governs. A time that a script reads from the run cannot be copied wrongly, and
-    a change to the script shows in the files, where a change to an agent's habit leaves no trace.
-    The gate's output passes through unchanged. The script's exit code is
+    `.the-way/`). Every run of the gate on your own system goes this way: the run on the commit that
+    moved the pin (step 2), the run on the base where step 4 requires it, this run, and the reruns of
+    steps 9 and 12 that this step governs. A time that a script reads from the run cannot be copied
+    wrongly, and a change to the script shows in the files, where a change to an agent's habit leaves
+    no trace. Where CI is the final gate, write into the record's *Verification* now, before the
+    copy of step 12 is made, a row that says that the final gate is the CI run on the request's last
+    head, that the cycle has no local time of it, and that its result stands in *Checks* of the
+    request's description and not in the copy, so that step 4 of a later cycle finds where to read
+    it and the audit tells this cycle from one whose measuring script failed; a local run that step
+    12 makes in place of a CI run that gave no result is recorded in the original record alone, and
+    its time reaches no copy. The gate's output passes through unchanged. The script's exit code is
     the gate's, and the orchestrator records it with the command as before; an exit code 2 that
     comes with an `Error: gate_times.py:` line on stderr is the script's own failure, not the
     gate's, and the orchestrator does as step 12 gives for a measuring script. Record its
     command, exit code and the failures it names under *Verification*, with each check that failed or
-    did not run by name; an unrun check is unchecked, never passed. Start it once step 11's return step and
-    any review of it are done, on the tree they leave: the return step needs no result of the gate,
-    so one run covers both. Where the gate then fails and its fix changes code, the return step
+    did not run by name; an unrun check is unchecked, never passed. Start a local run once step 11's
+    return step and any review of it are done, on the tree they leave: the return step needs no
+    result of the gate, so one run covers both, and the CI run on the head that step 12 pushes starts
+    after it as well. Where the gate then fails and its fix changes code, the return step
     compares that fix's range too. The authors' focused checks are not rerun merely to go on;
     a change, a failure or disputed evidence calls for the affected
     checks again, by the agent that owns them. Repeating a completed check for coordination spends
@@ -492,10 +517,10 @@ contradicts a decision.
     again follows the product's rule on flaky tests (the testing guidelines' *Flaky tests*,
     WAY-243): rerunning serves only to diagnose what makes it flaky, never to make a gate run pass.
     Apply this rule even when the product has no *Flaky tests* section in its guidelines. The red
-    result of the first run of the gate on the final tree stays the result of the gate, also where
-    the check that failed is a flaky test outside the task's scope that passes when run again: the
-    cycle does not stop for it, and the request names that test and the task that will fix it, or
-    proposes that task where none exists (WAY-261).
+    result of the first run of the gate on the final tree, a CI run's included, stays the result of
+    the gate, also where the check that failed is a flaky test outside the task's scope that passes
+    when run again: the cycle does not stop for it, and the request names that test and the task
+    that will fix it, or proposes that task where none exists (WAY-261).
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
@@ -565,8 +590,9 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     code, have a fresh reviewer review the merge with `review-change`, with a dispatch that asks
     whether the two sides still hold together and names the foundation entries the merge brought in
     that bear on the parts the change touches (WAY-150), and have the agents that own the affected
-    checks run them. Where the final tree differs from the one step 10 checked, run the
-    gate again on it as step 10 gives. Record how long each stage took, which models did it and how
+    checks run them. Where step 10 had the gate run on your own system and the final tree differs
+    from the one it checked, run the gate again on it as step 10 gives; where CI is the final gate,
+    run none, the merge included. Record how long each stage took, which models did it and how
     many tokens it used: run `task-cycle/cycle_stages.py` of the pinned the-way with `--output
     .runs/task-cycles/<task-slug>/stages.md`, naming every session of this cycle's orchestrator, a
     correction's included, by its transcript path or id; Claude Code holds the current session's id
@@ -594,19 +620,27 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     in the same edit fill in under *Checks* the runs of the three checks on the copy; check it again
     by the template's checks, which include the check of private paths, and edit the request with
     it. Where CI runs on the request, which is open for review or waits only for human actions in
-    the cycle, wait for the run on the head you pushed last, as the host's tool gives it (on GitHub,
-    `gh pr checks <request> --watch`), and write its result — the link to the run, each check by name
-    and its conclusion — into *Checks* of the description, in an edit that the template's checks,
-    the check of private paths included, pass before it is published (WAY-309), and into
-    *Verification* of the original record (WAY-160). The committed copy of the record holds that row
-    only for the runs before its own head: the run on the head that removes the copy comes after it,
-    and no pair of commits is repeated to bring that row in. A red result is a failed gate, handled
-    as step 10 gives: its failures are fixed, the fix reviewed as "The end of a code review" gives,
-    the gate run again on the tree, the record's pair of commits repeated with the reports of the
-    fix, and the wait repeated on the new head, save a check outside the task's scope that passes
-    when run again, which step 10 leaves to WAY-261: the cycle goes on, and the description names
-    that check and the task that fixes it, or proposes that task. A run that does not report is a check that did not run, named under
-    *Checks*, never read as passed. Mark the
+    the cycle, its run on the head you pushed last is the final gate (step 10): wait for it, as the
+    host's tool gives it (on GitHub, `gh pr checks <request> --watch`), for at most 30 minutes from
+    the push of that head, and write its result — the link to the run, each check by name and its
+    conclusion, and for a red run the tests that failed, read from its log — into *Checks* of the
+    description, in an edit that the template's checks, the check of private paths included, pass
+    before it is published (WAY-309), and into *Verification* of the original record (WAY-160).
+    The committed copy of the record holds the row that step 10 wrote, which says that the final
+    gate ran in CI and where its result stands, and the result's row only for the runs before its
+    own head: the run on the head that removes the copy comes after it, and no pair of commits is
+    repeated to bring that row in. A red
+    result is a failed gate, handled as step 10 gives: its failures are fixed, the fix reviewed as
+    "The end of a code review" gives, the record's pair of commits repeated with the reports of the
+    fix, and the wait repeated on the new head, in which no gate runs on your own system, save a
+    check outside the task's scope that passes when run again, which step 10 leaves to WAY-261: the
+    cycle goes on, and the description names that check and the task that fixes it, or proposes that
+    task. A run that gives no result within the 30 minutes — no check starts, a check stands in a
+    queue, or the host does not answer — is a check that did not run, named under *Checks* and never
+    read as passed: run the gate on your own system as step 10 gives its local run, on the tree of
+    the head you pushed last, record its command and exit code, and write into *Checks* that CI did
+    not answer and the gate ran on your own system. The cycle never stops for the host, and a red
+    local run is handled as a red CI result is. Mark the
     request ready for review unless the description's first line reads `blocked` or `draft`; a
     request waiting for human actions in the cycle stays a draft marked `blocked`. Do not merge.
     Keep the worktree for corrections; it stands until the task's branch is merged, and the script

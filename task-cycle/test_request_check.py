@@ -55,8 +55,9 @@ Project relation: independent
 
 ## Decisions in play
 
-- WAY-160: "The task-cycle orchestrator itself runs the product's gate on the tree that goes into
-  the request, and the request gives its command and exit code and names each check that failed."
+- WAY-160: "The final gate of a task cycle is the product's gate on the tree that goes into the
+  request, and the request gives its command and exit code, or the CI run's, and names each check
+  that failed or did not run."
 - WAY-148: "Every task-cycle stage passes its full handoff and report through files in the cycle's
   reports directory, while its messages carry routing, the stage's status, commits, a one-line
   check result naming what failed or did not run, and the report's path."

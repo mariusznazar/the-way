@@ -62,17 +62,23 @@ ends with a line counting the tests and naming each directory that failed. `--jo
 many directories run at once, and `--jobs 1` runs them one after another; `--slowest N` lists the N
 slowest tests of each directory. A new test file in a new directory runs only once it is added to
 git (`git add`). The whole run takes about 16 minutes with `--jobs 1`, and less by default. Run it
-on the change as it goes into the request. A run passes when its exit code is 0. While the change is
-made, `python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
+on the change as it goes into the request where no CI run stands for it, as the next paragraph
+gives. A run passes when its exit code is 0. While the change is made,
+`python -B gate/run_tests.py <directory>` runs the tests of one directory. A change to
 `gate/run_tests.py` is also checked with `python -B -m unittest discover -s gate -p "test_*.py"`,
 which does not rest on the runner it checks.
 
-The same command runs in CI, on Linux, on every pull request into `foundations`
-(`.github/workflows/tests.yml`; WAY-16). Its job is named `tests`; the owner of the repository sets
-that check as required before a merge in the branch rules of `foundations`, with a bypass for the
-owner, a setting of the host that no file of the repository holds. The tests that need POSIX —
-links, loops of links, a FIFO — run there and not on Windows, and Windows is checked by the run on the
-change as it goes into the request. CI runs no other checking command.
+The same command runs in CI, on Linux and on Windows, on every pull request into `foundations`
+(`.github/workflows/tests.yml`; WAY-16). The two jobs are two checks, `tests` for Linux and
+`tests-windows` for Windows; the owner of the repository sets both as required before a merge in the
+branch rules of `foundations`, with a bypass for the owner, a setting of the host that no file of
+the repository holds, and the host offers a check for that setting only once the check has run on a
+request. The tests that need POSIX — links, loops of links, a FIFO — run on Linux, and those that
+need Windows — junctions, network paths — run on Windows, so each system checks what the other
+cannot. The run of CI on the head of a request whose code is finished is the final gate of the task
+cycle (WAY-160), so a change that goes through a task cycle needs no full run of its own before the
+request; where CI does not answer within 30 minutes of a push, the cycle runs the command itself. CI
+runs no other checking command.
 
 The author of the change, or the agent that leads the work, asks an agent that did not make the
 change to review it (WAY-10). The reviewer receives the whole diff, the task or the plan's position
@@ -105,11 +111,14 @@ lists nothing, the block in the language of the task document included (WAY-308,
 python -B task-cycle/private_paths_check.py <description file>
 ```
 
-Once the request is open, and after each correction, wait for the CI run on its last head and put
-its result into the description under *Checks*; a red result is a failure of the gate, which the
-change fixes before the request goes to Mariusz, save a check outside the task's scope that passes
-when run again, which the description names with the task that fixes it (WAY-261). A request left blocked for unfinished code is not
-waited for (`task-cycle/skill/SKILL.md`, step 12, WAY-160).
+Once the request is open, and after each correction, wait for the CI run on its last head, as the
+final gate of the change, and put its result into the description under *Checks*; a red result is a
+failure of the gate, which the change fixes before the request goes to Mariusz, save a check outside
+the task's scope that passes when run again, which the description names with the task that fixes
+it (WAY-261). Where the run gives no result within 30 minutes of the push, run the command on the
+change yourself and say in the description that CI did not answer and that the gate ran on your
+own system. A request left blocked for unfinished code is not waited for
+(`task-cycle/skill/SKILL.md`, step 12, WAY-160).
 
 Where the description puts an item of *Fix or let through* before Mariusz and he answers to fix it
 in this request, the answer starts one fix by the author and one review of that fix by an agent

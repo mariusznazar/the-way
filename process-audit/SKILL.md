@@ -198,8 +198,11 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    an `Error:` line that names the field. The share of the cost in fix rounds is `unknown` where the
    record's *Review rounds* is not in the form `task-cycle/record_template.md` gives, and in forms
    (a) and (c), which have no column *Files named*. A copy with no `mechanism_measures.md` or
-   `gate_times.md` is an earlier cycle or one whose measuring script failed, and the record's
-   *Verification* says which. That is the state of those records, and no defect of the count.
+   `gate_times.md` is an earlier cycle or one whose measuring script failed, and a copy with no
+   `gate_times.md` is also a cycle whose final gate ran in CI, which no script of the cycle timed;
+   the record's *Verification* says which. That is the state of those records, and no defect of the
+   count. The gate times compare only the runs on the cycle's own system, which a cycle with its
+   final gate in CI has fewer of or none.
 2. **What came back after a fix.** Each issue of *Fixed issues*: its problems in the cycles whose
    *Process pin* holds the fix, apart from those in the cycles whose pin lacks it, and the columns for
    a pin that is unknown or a cycle that is not read. Beside each, quote its row of *Cost of an
