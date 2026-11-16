@@ -603,7 +603,9 @@ holding a value, or `none` or `TODO` where the template gives it that word: `non
 there, `TODO` that something is missing. The main branch holds `TODO` only where an entry stands on
 something the product's foundation does not hold yet: in an invariant's *Rests on*, in the form
 `TODO — <the fact, with its source>`; in an invariant's *Derives from*, in the form
-`TODO — <the decision, and where it is expected>`; and in a decision's *Based on*, in the form
+`TODO — <the decision, and where it is expected>`; in a decision's *Relations*, in the same form,
+for any decision the entry derives from that the foundation does not hold yet, whether or not a
+project definition projects it; and in a decision's *Based on*, in the form
 `TODO — <what is missing, with its source>`; where an entry stands on several things and only some
 are missing, the missing one is the last item of the value and reads as the form of its field,
 after the known items; a change that leaves one there puts it before the human.
@@ -620,34 +622,46 @@ after the known items; a change that leaves one there puts it before the human.
     `Based on: TODO — <what is missing, with its source>`; an invariant whose decision is not
     written yet reads `Derives from: TODO — <the decision, and where it is expected>`; an
     invariant that rests on a fact the foundation holds and on one it lacks reads
-    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`;
+    `Rests on: <the known fact> · TODO — <the missing fact, with its source>`; a decision that
+    derives from one decision the log holds and from one it does not hold yet reads
+    `Relations: derives from WAY-x · TODO — <the decision, and where it is expected>`;
   - violates: an invariant that rests on a known fact and on a missing one reads a whole-value
     `TODO — <both, the known fact in the description>`, or `<the known fact> · TODO` with nothing
     after the word; an invariant reads `Derives from: none` though nobody searched the log; a decision
     reads `Based on: none` where its source says nothing of what it rests on; an entry reads a bare
-    `TODO` in *Rests on*, *Derives from* or *Based on*; a decision reads `TODO` in *Relations* or
-    *Origin*.
+    `TODO` in *Rests on*, *Derives from*, *Based on* or *Relations*; a decision reads `TODO` in
+    *Origin*; a decision joins `TODO — <the decision, and where it is expected>` to the relations
+    before it with a comma instead of ` · `.
 - **Origin:** none
 
 *Rationale:* an omitted field looks forgotten; an undefined value misleads. An invariant
 with no test reads `review` as its method rather than `TODO` (WAY-61). An entry that stands on
 something the foundation does not hold yet — a fact for an invariant, the decision an invariant
-derives from, a source for a decision — can expose it as `TODO — <…>` instead of falsely claiming
-`none`, and the description keeps the gap from standing as a silent one: it names what is missing,
-and the human sees at the merge that it is left. Where only some of the things an entry stands on
-are missing, the known ones stay named items, because every link of the chain is written (WAY-17)
-and a named item stays checked as a reference, while a known one moved into the description would
-no longer be; the missing one closes the value. *Relations* and *Origin* are what an author states
-about the entry itself when writing it, so a gap there is a field left unfilled, never a thing the
-foundation lacks.
+or a decision derives from, a source for a decision — can expose it as `TODO — <…>`
+instead of falsely claiming `none`, and the description keeps the gap from standing as a silent
+one: it names what is missing, and the human sees at the merge that it is left. Where only some of
+the things an entry stands on are missing, the known ones stay named items, because every link of
+the chain is written (WAY-17) and a named item stays checked as a reference, while a known one
+moved into the description would no longer be; the missing one closes the value. *Origin* is what
+an author states about the entry itself when writing it, so a gap there is a field left unfilled,
+never a thing the foundation lacks; *Relations* may name a decision the foundation does not hold
+yet, and the gap is then that decision, as in an invariant's *Derives from*.
 *Rejected:* a decision for invariants alone — every element would need a copy; a wider scope for
 WAY-05 — it answers how a decision entry is written; both words in every field — a word with no
 meaning; optional fields left out when empty — intended and forgotten gaps look alike; for facts, a
 state field and a ratcheted list — three mechanisms where one serves; keeping the ban on `TODO` on
 the main branch and having the script enforce it — a cycle would stop to write a fact outside its
 task; letting a bare `TODO` pass — the main branch would hold a gap that names no fact; `TODO` only
-in *Rests on* — an author of a decision whose source is silent, or of an invariant whose decision
-is not written yet, would have to stop the cycle or write `none`, which is false.
+in *Rests on* — an author of a decision whose source is silent or whose higher decision is not
+written yet, or of an invariant whose decision is not written yet, would have to stop the cycle or
+write `none`, which is false; `TODO — projected: <the definition>, <the question of the entry>`
+in a decision's *Relations*, which a script checks against the definition — a dead reference would
+be caught, but the script that checks the form would have to read project definitions, and the
+field would hold a second form beside the one an invariant's *Derives from* has; a partial entry of
+a projected decision as the only way — it leaves the one case that remains, where the code makes no
+part of the projected decision true; a form for the decision an approved project definition
+projects alone — a narrower opening, but the rule of *Relations* would differ from that of
+*Derives from*, and nothing would check the limit.
 
 ## Decision entries and the decision log
 
@@ -3719,6 +3733,10 @@ step reads the projected entries of the task's sources as well as the foundation
 code makes true that the foundation step missed — an invariant with its test run on that code — and
 writes a new entry only for a rule none of them states.
 
+A change that writes a projected entry into the foundation replaces with its identifier each
+descriptive `TODO` that points at it, in a decision's *Relations* and in an invariant's
+*Derives from*.
+
 - **Scope:** project-level, task-cycle, decisions, invariants, glossary, environment-facts,
   part-map
 - **Based on:** none
@@ -3730,9 +3748,13 @@ writes a new entry only for a rule none of them states.
     writes nothing; a task whose code makes one of a projected decision's two sentences true writes
     that sentence and puts its meaning before the human in the request's section for the human's
     decisions; a plan member whose code would make another item's entry true returns to the plan
-    first;
+    first; a task whose code makes a projected decision true writes it into the log and replaces
+    with its number the `TODO` that names it in the *Relations* of a decision and in the
+    *Derives from* of an invariant;
   - violates: the return step writes a new decision for a rule a projected entry of the
-    task's source states; a shortened projected entry is written as the gate approved it, its
+    task's source states; a task writes a projected decision into the log and leaves a decision's
+    *Relations* reading `TODO — <that decision, and where it is expected>`; a shortened projected
+    entry is written as the gate approved it, its
     meaning left out of the request's section for the human's decisions; the code a late-found
     projected invariant covers is set aside and rewritten.
 - **Origin:** none

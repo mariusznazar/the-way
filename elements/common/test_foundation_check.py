@@ -707,14 +707,53 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
                          "foundations/invariants.md:9: `ABC-77` names no decision of the log")
 
-    def test_relations_and_origin_take_no_todo(self):
-        for field, old in (("Relations", "- **Relations:** none\n"),
-                           ("Origin", "- **Origin:** none\n")):
-            for value in ("TODO", "TODO — the reasoning"):
-                with self.subTest(field=field, value=value):
-                    decisions = self.edit(DECISIONS, old, "- **%s:** %s\n" % (field, value))
-                    self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                                     "*%s* does not take `%s`" % (field, value), "1 error")
+    def test_origin_takes_no_todo(self):
+        for value in ("TODO", "TODO — the reasoning"):
+            with self.subTest(value=value):
+                decisions = self.edit(DECISIONS, "- **Origin:** none\n",
+                                      "- **Origin:** %s\n" % value)
+                self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
+                                 "*Origin* does not take `%s`" % value, "1 error")
+
+    def test_relations_a_missing_decision_described_passes_whole(self):
+        # a description is read as one: its commas, ` · ` and the decision numbers in it name no entry
+        for value in ("TODO — the decision on where saves live",
+                      "TODO — the decision on where saves live, expected in the save task",
+                      "TODO — ABC-77, expected next · or ABC-78",
+                      "`TODO — the decision on where saves live, expected in the save task`"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_relations(value))
+
+    def test_relations_a_missing_decision_described_over_two_lines_passes(self):
+        self.assertPasses(self.mixed_relations("TODO — the decision on where saves live,\n"
+                                               "  ABC-77, expected in the save task"))
+
+    def test_relations_a_known_decision_then_a_missing_one_described_passes(self):
+        for value in ("derives from ABC-01 · TODO — the decision on saves, expected in the task",
+                      "narrows ABC-01 · TODO — the decision on saves · or its successor",
+                      "derives from ABC-01 · TODO — ABC-77, expected next"):
+            with self.subTest(value=value):
+                self.assertPasses(self.mixed_relations(value))
+
+    def test_relations_a_bare_todo_names_no_decision(self):
+        for value in ("TODO", "`TODO`", "TODO —", "TODO — ",
+                      "derives from ABC-01 · TODO", "derives from ABC-01 · `TODO`",
+                      "derives from ABC-01 · TODO —"):
+            with self.subTest(value=value):
+                self.assertFails(self.mixed_relations(value),
+                                 "foundations/decisions.md:22: *Relations* reads `TODO` and "
+                                 "names no decision: write `TODO — <the decision, and where it is "
+                                 "expected>`", "1 error")
+
+    def test_relations_a_decision_before_a_todo_is_still_checked(self):
+        self.assertFails(self.mixed_relations("derives from ABC-77 · TODO — the decision on saves"),
+                         "foundations/decisions.md:22: `ABC-77` names no decision of the log",
+                         "1 error")
+
+    def test_relations_a_described_todo_after_a_comma_is_no_joined_list(self):
+        self.assertFails(self.mixed_relations("derives from ABC-01, TODO — the decision on saves"),
+                         "*Relations* joins its items by ` · `: write ` · ` before `TODO`",
+                         "1 error")
 
     # --- a TODO after a comma or a line break, not after ` · ` -----------------------------------
 
@@ -776,6 +815,11 @@ class FoundationCheckTest(unittest.TestCase):
     def mixed_based_on(self, value):
         return self.run_on(foundations__decisions_dot_md=self.edit(
             DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"))
+
+    def mixed_relations(self, value):
+        return self.run_on(foundations__decisions_dot_md=self.edit(
+            DECISIONS, "- **Relations:** derives from ABC-01@0123abcd\n",
+            "- **Relations:** " + value + "\n"))
 
     def test_rests_on_a_known_fact_then_a_missing_one_described_passes(self):
         for value in ("clock-tick · TODO — a second fact, from the vendor",

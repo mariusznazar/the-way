@@ -22,10 +22,12 @@ which word each field takes, how its entries are named — stands in that elemen
 - The main branch holds `TODO` only where an entry stands on something the product's foundation
   does not hold yet: in an invariant's *Rests on*, in the form `TODO — <the fact, with its source>`;
   in an invariant's *Derives from*, in the form `TODO — <the decision, and where it is expected>`;
-  and in a decision's *Based on*, in the form `TODO — <what is missing, with its source>`; where an
-  entry stands on several things and only some are missing, the missing one is the last item of the
-  value and reads as the form of its field, after the known items; a change that leaves one there
-  puts it before the human (WAY-71).
+  in a decision's *Relations*, in the same form, for any decision the entry derives from that the
+  foundation does not hold yet, whether or not a project definition projects it; and in a
+  decision's *Based on*, in the form `TODO — <what is missing, with its source>`; where an entry
+  stands on several things and only some are missing, the missing one is the last item of the value
+  and reads as the form of its field, after the known items; a change that leaves one there puts it
+  before the human (WAY-71).
 - `elements/common/foundation_check.py` reports a missing field, or a word its template does not
   give that field, as an error (WAY-71).
 
