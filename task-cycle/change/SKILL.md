@@ -93,6 +93,10 @@ of this applies.
   task your dispatch gives — that your work most likely does not meet, write the check that would
   catch it, run it and report what it showed (WAY-164).
 - Before you finish a change that alters what a screen shows, read `ui_check.md`.
+- Before you finish a change that alters behaviour a user sees in the running product — a screen,
+  an answer of an API, a command in a terminal, data the product shows — read `walkthrough.md`. The
+  one author and the executor of a slice read it; the fix of a review's findings reads nothing of
+  it (WAY-406).
 - A working copy you make to check something — a worktree, a clone, a script, a prepared input —
   stands in your directory for working copies that the dispatch names, and goes before you return,
   as the dispatch's paragraph on working copies gives.
@@ -148,6 +152,11 @@ Write the full report to the dispatch's report path:
   failed and passed when run again, both runs as command and exit code, since the passing rerun
   alone would hide the failure from the orchestrator, which relies on the report instead of
   rerunning focused checks;
+- for a change that alters behaviour a user sees in the running product, the walk of
+  `walkthrough.md`: the plan of cases with the verdict of each, where each was checked (the system,
+  the browser, the address), what fell wrong, what you corrected and with which test, what you did
+  not check and why, and each error outside the task's scope; or, where the change alters no such
+  behaviour, that it alters none, with one sentence why;
 - each reach beyond the dispatch (section 1): what, where and why;
 - each working copy you made: where it stood and that you removed it, or the remainder with its
   full path and the reason it stayed;

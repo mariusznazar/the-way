@@ -183,7 +183,8 @@ here as images, each from the place the product's foundation settles for screens
 reports name; no file of the repository or of the record's copy is linked as an image (WAY-316).
 Where the foundation settles no such place, no screenshot is shown, and *For you to decide* says so.
 Of the artifacts of the check only screenshots reach the description: describe motion in words, and
-leave logs and outputs in the reports. A screenshot is read at a glance in the description, while
+leave logs and outputs in the reports, the cases and verdicts of the author's walk through the
+running product among them. A screenshot is read at a glance in the description, while
 logs and outputs are read in the reports by the agents and the humans who check closely, where they
 already stand. *Underneath*: one or two sentences on what is under the change.
 
@@ -237,7 +238,10 @@ the order of their kinds.
   check of the final gate run that failed or did not run, save one that fails on the base too — by
   the run on the base or by the list step 4 took from the earlier cycle — which stays in *Checks*; a
   check the change needed that an author reports as not done — a screenshot unchecked, a
-  missing state check or a missing own-work check (WAY-164). A check the skill does not call for
+  missing state check, a missing own-work check (WAY-164), or a walk through the running product
+  not performed or a case of it left unchecked, each with its reason (WAY-406). Where the foundation
+  settles no way to the running product, a screenshot unchecked and a walk not performed for that
+  reason stand as one item, not two. A check the skill does not call for
   this change is none, and a check that failed and passed again stays in *Checks* (WAY-261). The
   stages a blocked request did not run because it stopped are kind 1's, not these. The answer "do it
   in this request" runs the step or the check that was left out. Where the check an author reports
@@ -245,7 +249,10 @@ the order of their kinds.
   carries" gives as its fifth part.
 - **8.** *Unfixed findings the user or the human will feel* (WAY-289): read each Minor finding that
   no fix made and each finding outside the task's scope, of the review of the whole change and of
-  every later review, and each Minor finding and new serious finding of a reverted fix, and judge
+  every later review, each error outside the task's scope that the walk through the running product
+  found and its author reported instead of correcting (WAY-408; its item carries only "Make a task
+  of it?", the human who makes none letting it through by merging), and each Minor finding and new
+  serious finding of a reverted fix, and judge
   from the whole record — the reports of the walk through the running product and the screenshots
   included — whether the product's user or the human working with the process will feel it. Restate
   each such finding in plain words, with the question whether to fix it in this request, make a task
@@ -336,7 +343,8 @@ the order of their kinds.
   shows, the author inspected a screenshot, and the product's foundation settles no place for
   screenshots, so the request shows none: in plain words that the screen was looked at and is not
   shown, and that the product has settled no place for screenshots. A screenshot left unchecked for
-  want of a settled way to the running product stands in item 4 and takes no item here.
+  want of a settled way to the running product stands in item 4, with the walk not performed for the
+  same reason, and takes no item here.
 - **15.** *A form error held wrong* ("An error you hold wrong", above): in plain words what the
   script reported and why the cycle holds it wrong.
 - **17.** *The cause of a correction* (WAY-287), in the description after a correction: one
@@ -486,7 +494,8 @@ for a check that failed and passed when run again the number of cycle runs in wh
 passed and its rerun's result (WAY-160, WAY-261); where the cycle ran no gate on the base, the list
 of failing tests it took from the earlier cycle's final gate with the commit and the file it was
 taken from, or, where that gate ran in CI, the request it was taken from, and the result of the run of the failing tests on the base where step 4 of
-`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164); where CI runs
+`task-cycle/skill/SKILL.md` gave that run; what each own-work check showed (WAY-164) and, where an author walked through the running product,
+its cases with the verdict of each (WAY-406); where CI runs
 on the request, its run on the last head, with the link to the run and each check by name and its
 conclusion and, for a red run, the tests that failed, a run that did not report named as a check
 that did not run (step 12 of `SKILL.md`,

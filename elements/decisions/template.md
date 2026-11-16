@@ -152,7 +152,11 @@ A field stays in the template only while someone or something reads it (WAY-05).
   written, not to the log (WAY-36).
 - **Where it goes:** a settlement that passed the plan test goes through five questions, in this
   order. The first "yes" names its place; what passes all five is an entry of the log.
-  1. "Is it an instruction for how an agent works?" — it goes to a skill or an instruction file.
+  1. "Is it an instruction for how an agent works?" — it goes to a skill or an instruction file,
+     except the answer on a matter of an agent's way to the running product — its logs, its
+     interface, its development data or the place of its screenshots: that answer is a decision of
+     the product though it tells an agent how to work, and a skill of the product may hold the steps
+     of operation and cites the decision (WAY-121).
   2. "Is it a rule only for how to write code, tests or the look of the product?" — it goes to the
      guidelines of that discipline, as a rule with its reason in one sentence; a rule that carries a
      choice with a real cost stays a decision and the rule names it.

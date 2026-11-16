@@ -88,6 +88,10 @@ scope are yours.
   that cannot be undone, check that it only prepares it.
 - The author's own-work check: does the requirement it names fit where this change is weakest, and
   would its check catch that requirement unmet?
+- The author's walk through the running product, in its report: does its judgment that the change
+  alters, or does not alter, behaviour a user sees agree with the change; do its cases follow from
+  the requirements of the task and not from the code alone; does each case it left unchecked give a
+  reason?
 - For a user interface, the states the applicable styleguide requires and the author's screenshot
   evidence; a screenshot file among the commits of the range is a finding (WAY-316). A
   screenshot you take to show the human lies in the place the foundation settles for screenshots,

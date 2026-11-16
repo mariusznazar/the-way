@@ -3854,6 +3854,11 @@ where the product has none of what the matter names, whose answer then says what
 its place; how a human learns of a failure of the running product is no such matter and has an
 exception of its own (WAY-270).
 
+The answer to a matter of an agent's way to the running product — its logs, its interface, its
+development data or the place of its screenshots — is a decision of the product, although it tells
+an agent how to work; a skill of the product may hold the steps of operation and cites that
+decision.
+
 - **Scope:** project-level, decisions
 - **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-100
@@ -3872,8 +3877,12 @@ exception of its own (WAY-270).
     reaches and whose screenshots lie as those decisions say, lists none of the four; a command-line
     tool that keeps no data lists its development data, answered by sample input files kept with its
     code; a task of a plan needs a store of data its definition missed, and the human settles it in
-    a run at that task's document, the approved definition untouched;
-  - violates: the first task of the breakdown chooses the database; a definition reaches the gate
+    a run at that task's document, the approved definition untouched; a product whose skill for
+    playing its game holds the steps to start the game cites the decision that settles the way to
+    the game and the place of its screenshots;
+  - violates: a product keeps the way to its game or the place of its screenshots only in a skill,
+    with no decision of its log; the first task of the breakdown chooses the database; a definition
+    reaches the gate
     with a store of data in its scope and no choice of it projected or found in the foundation; a
     project that brings a product's first screen leaves out how an agent operates it because a
     browser on a local address adds nothing to run; the logs, the interface, the development data
@@ -3905,7 +3914,12 @@ that settles the place with the step learns of the gap before its first request 
 screen, not at it. The step takes from the lesson "Towards Autonomous Product Development" the
 question of how an agent sees the running product — through its logs, its interface and its
 development data; the place of the screenshots is no part of the lesson. The lesson is not open to
-a reader of this repository.
+a reader of this repository. The answer to a matter stands in the log, though it tells an agent how
+to work, because the step that looks for the answer to each matter looks in the log, and a choice
+with a cost — one way to the product instead of another, a place for screenshots outside the
+product's repository — keeps its reasons and the ways not chosen there, where a skill gives a rule
+one sentence of reason; the skill of the product keeps the steps of operation and cites the
+decision.
 *Rejected:* a round inside the conversation about goal and scope — no place to compare
 technologies; the first tasks of the breakdown — the cut itself may depend on the choice; the step
 after the readiness gate — each settled choice would change approved sections and send the
@@ -3926,7 +3940,12 @@ place for screenshots is settled (WAY-316), with the step unchanged — a produc
 no place only at its first request with a changed screen; the lesson's hard limit that keeps an
 agent away from the production database and from root access — left out of what the step takes from
 the lesson, since WAY-140 already leaves every effect outside the repository to a human, and reading
-stays with the agent.
+stays with the agent; the answer to a matter in a skill of the product — the step would have to look
+in the skills as well, and a choice with a cost, such as one way to the product instead of another
+or a public place for screenshots, would lose its reasons and the ways not chosen, since a skill
+gives a rule one sentence of reason; the answer left to the product's decisions with nothing
+written here — the next product applies the first question of the template of decisions as the first
+did, and withdraws them again.
 
 ### WAY-122 — How are the options of a technology choice found and checked before a human sees them?
 
@@ -4857,16 +4876,22 @@ transaction or an order stops the cycle for the human.
 
 The way to the running product that the foundation of a product settles for its interface lets two
 task cycles working in separate worktrees of the product check at the same time without a browser
-they share, and an agent closes the browser it opened when its check ends.
+they share, and an agent closes the browser it opened when its check ends. The condition reaches a
+product through the step that settles technology, which says for each option of the interface
+whether two task cycles working in separate worktrees of the product can check at the same time
+without a browser they share, and an option that cannot stays in the comparison with that lack.
 
 - **Scope:** task-cycle, project-level
 - **Based on:** none
 - **Relations:** derives from WAY-121
 - **Verification:** an agent compares the foundation of a product and a cycle with the decision:
   - complies: a product settles a way in which each worktree drives a browser of its own, two
-    cycles check at once, and each author closes its browser at the end of its check;
+    cycles check at once, and each author closes its browser at the end of its check; the step that
+    settles the interface of a product says of each option whether two cycles can check at once
+    without a shared browser, and an option that cannot stays in the comparison with that lack;
   - violates: a way in which the second session started in another worktree takes over the page of
-    the first; an author leaves its browser open at the end of its check.
+    the first; an author leaves its browser open at the end of its check; a comparison of the
+    options of an interface that does not say whether two cycles can check at once.
 - **Origin:** none
 
 *Rationale:* two cycles in separate worktrees of one product both look at the running product, and a
@@ -4874,11 +4899,14 @@ way that gives them one browser makes the second check fail or take over the fir
 author that leaves its browser open blocks the next check the same way. Between 20 and 31 October
 2026, before one of two products changed its way, 13 errors of a busy browser profile stood in 9
 conversation files of the sessions on those two products; the count is this product's own, and the
-conversation files are not open to a reader of this repository. Stated once for every way, the
-condition reaches a product before it meets the conflict.
+conversation files are not open to a reader of this repository. Stated once for every way and
+carried by the step that settles technology, which keeps an option that fails it in the comparison
+with that lack as WAY-166 does for an option an agent cannot use, the condition reaches a product
+before it meets the conflict.
 *Rejected:* the-way saying nothing, the matter staying with the product — each product finds the
 conflict itself, by its errors, and a product whose main way keeps one browser profile for a
-directory returns to the busy profile.
+directory returns to the busy profile; the condition reaching a product only at the check of the
+author — the product still learns of the conflict from the errors of its first two parallel cycles.
 
 ## Project plan
 
@@ -6707,6 +6735,158 @@ of the request — a new line that repeats in requests, and a removed file is go
 cycle stopping before the removal where the list is not empty — it reverses the removal without a
 word to the human that WAY-375 gives, and the cycle would wait at its start each time a tool leaves
 a folder of its own.
+
+### WAY-406 — Who walks through the running product the behaviour that a change's tests do not cover, and for which changes?
+
+The author of a change walks through the running product, after the code and before the review, the
+behaviour a user sees there that the change's tests do not cover, and states the walk in the report
+the review reads; in a change made from a plan, the executor of each slice that alters such
+behaviour walks through its slice, read against the passages of the task its handoff gives. The walk
+follows the method that the author's skill names, which takes its steps and the rules of the walk
+from the practices this decision's rationale names. Where the audit of the process shows an error
+that the author let through at the walk, the walk moves to a stage of its own with a new agent; the
+fix of a review's findings does not repeat the walk.
+
+The walk is required for every change of behaviour that the user sees in the running product — a
+screen, an answer of an API, a command in a terminal, data the product shows — and the author
+judges whether a change is one and says so in the report. Where the foundation of the product
+settles no way to the running product, the walk is not performed, with that reason in the report and
+in the description of the request, and the cycle does not stop; the author still draws up the cases
+from the requirements of the task and marks each as unchecked with that reason. A screenshot left
+unchecked for the same reason stands in the description with the walk as one item, not two.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-164 · derives from WAY-100
+- **Verification:** an agent compares the author's or executor's report, the review and the request
+  with the decision:
+  - complies: the author of a change that alters what an API answers walks through the running
+    product by the way its foundation settles, with cases drawn from the requirements of the task
+    and a last case for what it notices on the way, and reports the verdict of each case; where the
+    foundation settles no way, it reports the walk as not performed for that reason and keeps the
+    cases marked unchecked, and the description holds one item for the walk and the screenshot left
+    unchecked; the executor of a slice that alters a screen walks through its slice, and the
+    executor of a slice that only moves code reports that its slice alters no behaviour a user sees;
+  - violates: the author of a change that alters what a command prints reports only that its tests
+    pass; the executor of a slice leaves the walk to the executor of the last slice; the fix of a
+    review's findings walks through the product again; a cycle stops because the foundation settles
+    no way to the running product; the description shows the screenshot left unchecked and the walk
+    not performed as two items.
+- **Origin:** none
+
+*Rationale:* a user sees behaviour in the running product that the tests do not always cover, and
+no step of the cycle made an agent find what the tests leave out, plan the checking of it and give a
+verdict. The author has the code and the task fresh and writes the report the review reads, so the
+walk adds a part of one stage and no agent. The executor of a slice walks through its own slice
+because the executor of the last slice knows only its slice and has a limit of reading, so it would
+have to read the whole task, and the report shows the state between the slices to the review of the
+whole change. Where no way to the running product is settled, an agent can still draw up the cases,
+so the description carries a list and the steps for a check by hand, and stopping the cycle would
+punish the product for a gap the human sees in the request. The fix does not repeat the walk because
+it answers findings of the review that has read the walk. The return of the walk to a stage of its
+own waits for an error the audit shows, since such a stage costs one more agent at every change a
+user sees.
+The method takes from a practice of testing one task that a team of the author's uses, its skill
+`test-run`, which is in a team repository not open to a reader of this repository (WAY-27): the
+preparation (the task, the change, the way to the product and whether the product runs), what the
+change alters for the user and what shared code it touches, a scope of the requirements of the task
+set against what the tests cover, a plan of cases with a column of what checks each and a last row
+for what is noticed on the way, a widening of the plan only on a hard signal from the run, a
+verdict for each case that names the layer where it decides, a step of what was not checked, and
+the check that two measurements are comparable before a difference is called a regression. From the
+lessons of two courses, also not open to a reader of this repository, it takes a block of effects
+outside the product that cost or cannot be undone unless the product settles a stand-in, a sentence
+in the report of where behaviour that depends on a platform was checked, a measurement in code in
+place of the model's reading of a screenshot, the naming of the tool that was missing for a case
+that could not be checked, the record of a limitation and the evidence from the layer actually
+checked when the browser does not work, and the reading of everything the user sees on the screen —
+one lesson showed an agent that confirmed a server error and missed the message that a dialog of the
+browser covered. These practices bind the walk only through this decision, and only in the task
+cycle.
+*Rejected:* the reviewer of the whole change walking through the product as an added step of the
+review — the reviewer only reads, so it would have to start the product and build a state of data,
+the dearest stage grows, and each bad result is a round of fix and a new review; a stage of its own
+with a new agent and a new skill from the start — one more agent at every change a user sees and a
+new stage wherever the process counts and lists its stages, the largest change of the three; no
+walk — behaviour outside the tests stays unchecked in the running product, and the request does not
+say what was not checked; the walk only at a change of a screen — cheaper, but the gap the walk is
+for stays open: an API, a terminal, a flow; the walk at every change, an internal one too — a cost
+with no gain, since for a rebuild of code with no change of behaviour the walk finds nothing; only
+the executor of the last slice walking through the whole change — it knows only its slice and has a
+limit of reading, so it would have to read the whole task; no walk in a change made in parts — the
+largest changes stay without it; the whole `test-run` with its interactive mode, for use beyond the
+cycle — a skill of its own, against the author's step. Left out of the practices: the tools of that
+team, which the way the product settles replaces — its tracker, its client of an API, its browser
+server and its search of logs; the record of a run kept in a file in a user's directory, which the
+reports of the cycle replace; the column that names who executes a case and the interactive mode;
+the pause for the approval of the plan; the closers — a bug report, an update of end-to-end tests,
+the documents of the repository; the question to the human whether a symptom is known; the cleanup,
+which WAY-373 gives; and, of the courses, a limit on simultaneous instances of agents and a field of
+how to check in each part of the part map.
+
+### WAY-407 — Who approves the cases of the walk through the running product before it is made?
+
+No one approves the cases of the walk before it is made, and the cycle does not stop for them. The
+author draws the cases from the requirements of the task, not from the code alone, puts the plan and
+its results into the report the review reads, and the human sees in the request what was not
+checked. The refinement of a task writes no list of inputs to try into the task document.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-227 · derives from WAY-238
+- **Verification:** an agent compares the author's report, the task document and the request with
+  the decision:
+  - complies: the author draws the cases from the requirements of the task and starts the walk with
+    no one's approval, the plan stands in its report, and the request lists each case left
+    unchecked; the task document of a change a user sees holds no list of inputs to try;
+  - violates: the cycle stops to ask the human to approve the cases; the refinement of a task writes
+    into the document the inputs a human gave to try, as the plan of the walk.
+- **Origin:** none
+
+*Rationale:* the first point of the human's review of a task's cycle is the request (WAY-227), and
+the plan of the walk stands in the report that the review reads, so a check of the cases before the
+walk would add a stop with no point of review to gain for it. The author draws the cases from the
+requirements of the task, which the review can read against the plan, and a list of inputs given by
+a human is a plan of tests in the task document, which the refinement keeps out (WAY-238).
+*Rejected:* the refinement of the task writing into the document the concrete inputs to try, given
+by a human — each refinement of a task a user sees would gain one question more, and WAY-238 would
+have to say that such a list is no plan of tests; it makes sense only once it shows that the author
+loses variants known only to the human; the cycle stopping for the human's approval of the plan —
+against WAY-227, under which the human's first point of review is the request.
+
+### WAY-408 — What does the author do with a case of the walk that fell wrong?
+
+The author corrects each case that fell wrong before the review, and the correction gets a test at
+the lowest level that catches the error (WAY-239); each disagreement with the task is an error to
+correct, not a remark in the margin, and a case that fell wrong does not break off the walk. The
+report says what fell wrong, what was corrected and by which test.
+
+An error outside the task's scope that the walk finds the author reports and does not correct, and
+the description of the request puts it before the human as one to make a task of or to let through.
+
+- **Scope:** task-cycle
+- **Based on:** none
+- **Relations:** derives from WAY-239 · derives from WAY-289
+- **Verification:** an agent compares the author's report and the request with the decision:
+  - complies: a case of the walk falls wrong, the author finishes the walk, corrects the error with
+    a unit test that fails before the correction and passes after it, and reports the case, the
+    correction and the test; an error in a part of the product that the task does not touch is
+    reported, not corrected, and the description asks whether to make a task of it or let it
+    through;
+  - violates: the author notes in the report that a screen differs from the task and leaves it to
+    the review; a correction of a case has no test; the author corrects an error outside the scope
+    of the task in the same change; the description of the request does not mention such an error.
+- **Origin:** none
+
+*Rationale:* an error the walk finds is an error of the work against the task, and a note in the
+margin leaves it to the review, which costs a round of fix and a new review for what the author
+could correct before. The test at the lowest level keeps the error from returning at the cost of a
+walk, which is dear to repeat (WAY-239). A case that fell wrong often shares a cause with another,
+so the walk goes on and the diagnosis comes at its end, with the whole picture. An error outside the
+task is not the author's to correct, since the task does not ask for it and the review would read an
+addition nobody asked for; the human decides whether it is worth a task.
+*Rejected:* the author only reporting an error and the review deciding on the correction — an extra
+round of fix and a new review each time.
 
 ## Review of a change
 

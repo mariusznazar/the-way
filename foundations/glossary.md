@@ -6,7 +6,7 @@ A product takes these words from the-way at the commit it pins.
 
 ## agent's way to the running product
 
-An agent's way to the running product is the means through which an agent checks behaviour a user sees in a product while it runs.
+An agent's way to the running product is the means through which an agent checks behaviour a user sees in a product while it runs and shows the human what it saw.
 
 - **Not:** none
 
