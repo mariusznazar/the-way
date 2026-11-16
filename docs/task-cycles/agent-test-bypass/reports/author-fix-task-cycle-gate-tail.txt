@@ -1,4 +1,0 @@
-Ran 534 tests in 91.626s
-
-OK (skipped=2)
-exit 0
