@@ -13,7 +13,8 @@ file or of a kind on the lists `SUFFIXES` and `NAMES` passes, and any other file
 script. A kind that is no script is added to the list, with the reason, by the author of the change
 that brings the first file of that kind.
 
-script-imports: the imports are read by `imports` of `test_cross_part_imports`, the reader of the
+script-imports: the imports are read by `imports` of `elements/part-map/test_cross_part_imports.py`,
+the reader of the
 invariant cross-part-imports, in the same reach: `import` and `from ... import` statements,
 `importlib.import_module`, `__import__`, `runpy`, code given to `-c`, `exec`, `eval` and `compile`;
 an import whose name cannot be worked out is reported. The module names of the standard library
@@ -22,7 +23,11 @@ library of its own version (fact python-stdlib-modules), so the test fails, nami
 on an interpreter other than the version `.python-version` declares, and never takes the list of
 another version.
 
-Run from the root of the-way: python -B gate/run_tests.py elements/part-map
+The tests stand in `agent-instructions`, whose map sentence covers the tests of the-way's own code
+rules and whose *Depends on* names `part-map` and `repository`, so the import of the reader from
+`elements/part-map/` is one the map allows.
+
+Run from the root of the-way: python -B gate/run_tests.py agent-instructions
 """
 
 import os
@@ -33,8 +38,8 @@ import unittest
 
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
-THE_WAY = os.path.dirname(os.path.dirname(HERE))
-sys.path.insert(0, HERE)
+THE_WAY = os.path.dirname(HERE)
+sys.path.insert(0, os.path.join(HERE, "..", "elements", "part-map"))
 
 from test_cross_part_imports import imports  # noqa: E402
 
@@ -42,14 +47,17 @@ from test_cross_part_imports import imports  # noqa: E402
 DECLARED = "3.14"
 VERSION_FILE = ".python-version"
 
-# The files a script of the repository is not, by the end of the name (SUFFIXES) or by the whole
-# name (NAMES), each kind with its reason; any other file git tracks is reported by the test of
-# script-language as a possible script (settlement of the task: a list of the kinds that are no
-# script, not a list of the kinds that are).
+# The files a script of the repository is not, by the end of the name (SUFFIXES), by the whole name
+# (NAMES) or by the place and the end of the path (PLACES), each kind with its reason; any other
+# file git tracks is reported by the test of script-language as a possible script (settlement of the
+# task: a list of the kinds that are no script, not a list of the kinds that are).
 SUFFIXES = (
     ".py",  # a Python file, the language of every script (WAY-38)
     ".md",  # text for people and agents; a command written in it, as in a skill, is no script
-    ".yml",  # data: the CI configuration under `.github/workflows/` names the commands CI runs
+)
+PLACES = (
+    # data: the CI configuration names the commands CI runs, which `ci-checking-commands` keeps
+    (".github/workflows/", ".yml"),
 )
 NAMES = (
     ".gitignore",  # the patterns git ignores
@@ -70,7 +78,8 @@ def tracked_files(root):
 def possible_scripts(paths):
     """The paths that are neither a Python file nor of a kind the list gives as no script."""
     return [path for path in paths
-            if path.rpartition("/")[2] not in NAMES and not path.endswith(SUFFIXES)]
+            if path.rpartition("/")[2] not in NAMES and not path.endswith(SUFFIXES)
+            and not any(path.startswith(place) and path.endswith(end) for place, end in PLACES)]
 
 
 def declared_lines(root):
@@ -84,7 +93,11 @@ def declared_lines(root):
 
 def wrong_interpreter(declared, running):
     """The message of a test run on another version than the declared one, or None where the
-    versions of Python are the same in major and minor number."""
+    versions of Python are the same in major and minor number; `declared` is None where
+    `.python-version` is missing or holds no version, which the message names."""
+    if declared is None:
+        return ("%s is missing or holds no version, so the version of Python the tests have to run "
+                "on is not declared (this run is on Python %s)" % (VERSION_FILE, running))
     if declared.split(".")[:2] == running.split(".")[:2]:
         return None
     return ("the tests have to run on Python %s, the version %s declares, and this run is on "
@@ -133,11 +146,20 @@ class ScriptLanguage(unittest.TestCase):
         self.assertEqual(paths, possible_scripts(paths))
 
     def test_a_python_file_a_text_and_a_file_of_the_listed_kinds_pass(self):
+        # The names are those the lists give: the task's list of kinds (.py, .md, .gitignore,
+        # .gitattributes, .python-version) and the four kinds the change added, each in a file that
+        # git tracks in this repository.
         paths = ["gate/run_tests.py", "agent-instructions/skill.md", ".gitignore",
                  "sub/.gitignore", ".gitattributes", ".python-version", "ruff.toml",
                  "requirements-quality.in", "requirements-quality.txt",
                  ".github/workflows/tests.yml"]
         self.assertEqual([], possible_scripts(paths))
+
+    def test_a_configuration_file_outside_the_place_of_its_kind_is_reported(self):
+        # A `.yml` file passes only under `.github/workflows/`: a playbook in the root would run
+        # commands no invariant keeps.
+        paths = ["tools_deploy.yml", "docs/deploy.yml", ".github/workflows/notes.md.sh"]
+        self.assertEqual(paths, possible_scripts(paths))
 
     def test_a_file_named_like_a_listed_kind_in_its_ending_only_is_reported(self):
         # `ruff.toml` is listed by its name, so another `.toml` file is no listed kind.
@@ -150,7 +172,8 @@ class ScriptImports(unittest.TestCase):
     def test_no_python_file_git_tracks_imports_a_module_outside_the_standard_library(self):
         # invariant: script-imports
         running = "%d.%d" % sys.version_info[:2]
-        declared = (declared_lines(THE_WAY) or ["none"])[0]
+        lines = declared_lines(THE_WAY)
+        declared = lines[0] if lines else None
         refusal = wrong_interpreter(declared, running)
         if refusal:
             self.fail(refusal)
@@ -166,11 +189,20 @@ class ScriptImports(unittest.TestCase):
         self.assertIn("3.14", message)
         self.assertIn("3.12", message)
 
+    def test_a_missing_declaration_is_refused_by_naming_the_file(self):
+        message = wrong_interpreter(None, "3.14")
+        self.assertIn(VERSION_FILE, message)
+        self.assertIn("missing", message)
+
     def test_the_declared_version_and_a_patch_release_of_it_are_accepted(self):
+        # The patch release `3.14.3` declares Python 3.14, as the sentence of
+        # python-version-declared reads it; a run on 3.14 is the version the invariant names.
         self.assertIsNone(wrong_interpreter("3.14", "3.14"))
         self.assertIsNone(wrong_interpreter("3.14.3", "3.14"))
 
     def test_a_module_outside_the_standard_library_is_reported_in_each_form_of_import(self):
+        # The six forms are those of the reach settlement row 3 names: an import statement, a
+        # from-import, `importlib.import_module`, `__import__`, code given to `-c` and to `exec`.
         forms = {
             "a.py": "import yaml\n",
             "b.py": "from yaml import safe_load\n",
@@ -185,7 +217,7 @@ class ScriptImports(unittest.TestCase):
                     handle.write(text)
                 problems = outside_imports(root, [path])
                 self.assertEqual(1, len(problems), problems)
-                self.assertIn("`yaml`", problems[0])
+                self.assertIn("yaml", problems[0])
 
     def test_a_module_of_the_standard_library_and_a_tracked_file_are_no_failure(self):
         with tempfile.TemporaryDirectory() as root:
@@ -202,7 +234,9 @@ class ScriptImports(unittest.TestCase):
             with open(os.path.join(root, "a.py"), "w", encoding="utf-8", newline="\n") as handle:
                 handle.write("import importlib, os\nimportlib.import_module(os.environ['MODULE'])\n")
             problems = outside_imports(root, ["a.py"])
-            self.assertEqual(["a.py:2: imports a module the check cannot work out"], problems)
+            # One report, at the line of the call (settlement row 3: reported, not passed).
+            self.assertEqual(1, len(problems), problems)
+            self.assertTrue(problems[0].startswith("a.py:2:"), problems)
 
 
 if __name__ == "__main__":

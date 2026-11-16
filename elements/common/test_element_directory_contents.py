@@ -88,18 +88,18 @@ def pointer(root, base, known):
 
 
 def missing(root, tracked):
-    """One line for each thing an element directory lacks, in the order of the directories."""
+    """(directory, what it lacks) for each thing an element directory lacks, `what` being
+    "template", "examples" or "skill", in the order of the directories."""
     known = set(tracked)
     lacking = []
     for name in element_directories(tracked):
         base = "elements/%s" % name
         if base + "/template.md" not in known:
-            lacking.append("%s has no template.md" % base)
+            lacking.append((base, "template"))
         if base + "/examples.md" not in known and not pointer(root, base, known):
-            lacking.append("%s has no examples.md and its template points to no file of "
-                           "foundations/ as its examples" % base)
+            lacking.append((base, "examples"))
         if base + "/skill/SKILL.md" not in known:
-            lacking.append("%s has no skill/SKILL.md" % base)
+            lacking.append((base, "skill"))
     return lacking
 
 
@@ -113,11 +113,20 @@ class ElementDirectoryContents(unittest.TestCase):
         paths = tracked_files(THE_WAY)
         self.assertTrue(set(ELEMENTS) <= set(element_directories(paths)),
                         "git lists the directories of the five elements under elements/")
-        self.assertEqual([], missing(THE_WAY, paths))
+        self.assertEqual([], missing(THE_WAY, paths),
+                         "element directories that lack a template, examples or a pointer to "
+                         "examples (the section `## Examples` of the template naming a file of "
+                         "foundations/ in backticks), or a skill/SKILL.md")
 
 
 class Missing(unittest.TestCase):
-    """What an element directory lacks, on small directories made for each case."""
+    """What an element directory lacks, on small directories made for each case.
+
+    The data of each case, a directory with some of the three things the sentence of
+    element-directory-contents names (a template, examples or a pointer to examples, a skill), is
+    made of the names `template.md`, `examples.md` and `skill/SKILL.md` that the invariant's entry
+    and the elements' directories in this repository give; the pointer is the form of the section
+    `## Examples` of `elements/environment-facts/template.md`."""
 
     def directory(self, files):
         """A directory holding `files`, a text for each name, and the list of their names."""
@@ -148,32 +157,29 @@ class Missing(unittest.TestCase):
         template = "# T\n\n## Examples\n\nThe entries of `foundations/facts.md` serve.\n"
         root, paths = self.directory({"elements/facts/template.md": template,
                                       "elements/facts/skill/SKILL.md": "# S\n"})
-        self.assertEqual(["elements/facts has no examples.md and its template points to no "
-                          "file of foundations/ as its examples"], missing(root, paths))
+        self.assertEqual([("elements/facts", "examples")], missing(root, paths))
 
     def test_a_pointer_outside_the_section_of_examples_stands_for_no_examples(self):
         template = ("# T\n\n## Examples\n\nNone yet.\n\n## Links\n\nSee `foundations/facts.md`.\n")
         root, paths = self.directory({"elements/facts/template.md": template,
                                       "foundations/facts.md": "# Facts\n",
                                       "elements/facts/skill/SKILL.md": "# S\n"})
-        self.assertEqual(["elements/facts has no examples.md and its template points to no "
-                          "file of foundations/ as its examples"], missing(root, paths))
+        self.assertEqual([("elements/facts", "examples")], missing(root, paths))
 
     def test_a_directory_without_a_skill_is_reported(self):
         root, paths = self.directory({"elements/facts/template.md": "# T\n",
                                       "elements/facts/examples.md": "# E\n"})
-        self.assertEqual(["elements/facts has no skill/SKILL.md"], missing(root, paths))
+        self.assertEqual([("elements/facts", "skill")], missing(root, paths))
 
     def test_a_directory_without_a_template_is_reported(self):
         root, paths = self.directory({"elements/facts/examples.md": "# E\n",
                                       "elements/facts/skill/SKILL.md": "# S\n"})
-        self.assertEqual(["elements/facts has no template.md"], missing(root, paths))
+        self.assertEqual([("elements/facts", "template")], missing(root, paths))
 
     def test_a_new_directory_with_one_file_is_reported_for_the_other_two(self):
         root, paths = self.directory({"elements/new/template.md": "# T\n"})
-        self.assertEqual(["elements/new has no examples.md and its template points to no file of "
-                          "foundations/ as its examples",
-                          "elements/new has no skill/SKILL.md"], missing(root, paths))
+        self.assertEqual([("elements/new", "examples"), ("elements/new", "skill")],
+                         missing(root, paths))
 
     def test_the_directory_of_the_shared_part_is_no_element_directory(self):
         root, paths = self.directory({"elements/common/rules.md": "# R\n",
@@ -182,7 +188,12 @@ class Missing(unittest.TestCase):
 
 
 class MergeOntoExists(unittest.TestCase):
-    """The condition of the invariant, on repositories that each hold one state of the branches."""
+    """The condition of the invariant, on repositories that each hold one state of the branches.
+
+    The states are those of `elements/common/rules.md`, section `{fork-point}`: {merge-onto} is the
+    tip of the branch `refs/remotes/origin/HEAD` names, else of `main`, else of `master`, and
+    reads `none` where the main branch does not exist; the branch names `foundations` and `work`
+    are made up for the cases."""
 
     def repository(self, branch, remote_head=None):
         """A repository with one commit on `branch`, and where `remote_head` is given, the
