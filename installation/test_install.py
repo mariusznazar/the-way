@@ -1076,6 +1076,9 @@ class FileActionTest(unittest.TestCase):
     new text, which the installer holds with LF endings only. The files are made in a temporary
     directory and no git runs: a files test (WAY-393)."""
 
+    # The new text of a skill, made up for the cases: the expected values below follow from the
+    # task installer-preview-ignores-line-endings, To do item 1 (a human's judgement), which keeps a
+    # file that differs from the new text only in line endings, CRLF for LF, and no other file.
     TEXT = "# Skill\n\nFirst line.\nSecond line.\n"
 
     def setUp(self) -> None:
@@ -1095,34 +1098,53 @@ class FileActionTest(unittest.TestCase):
         self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\nSecond line.\n"), "KEEP")
 
     def test_the_same_text_with_crlf_endings_is_kept(self) -> None:
-        # Break caught: the comparison of raw bytes, which shows REPLACE for a CRLF file.
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings, CRLF for LF with
+        # the same text (a human's judgement). Break caught: the comparison of raw bytes, which
+        # shows REPLACE for a CRLF file.
         self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nSecond line.\r\n"), "KEEP")
 
     def test_the_same_text_with_mixed_endings_is_kept(self) -> None:
-        # Break caught: a normalisation that converts only the first line ending of the file.
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the file differs from the new text only in CRLF for LF, on some lines and
+        # not others. Break caught: a normalisation that converts only the first line ending.
         self.assertEqual(self.action_for(b"# Skill\r\n\nFirst line.\r\nSecond line.\n"), "KEEP")
 
     def test_crlf_endings_with_other_text_are_replaced(self) -> None:
-        # Break caught: a comparison that ignores the text, such as one of the line counts.
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the text differs ("Changed line."), which is no difference in line endings
+        # alone, so the file is replaced. Break caught: a comparison that ignores the text, such
+        # as one of the line counts.
         self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nChanged line.\r\n"),
                          "REPLACE")
 
     def test_a_lone_carriage_return_is_text_and_is_replaced(self) -> None:
-        # A carriage return that no line feed follows is no line ending of git's, so a
-        # normalisation that drops it too would keep a file whose text differs. Break caught:
-        # normalising every carriage return (for example through universal newlines).
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): a lone carriage return is no CRLF, so the difference is in line endings
+        # plus text and the file is replaced. Break caught: normalising every carriage return
+        # (for example through universal newlines).
         self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\rSecond line.\n"), "REPLACE")
         self.assertEqual(self.action_for(b"# Skill\r\r\n\r\nFirst line.\r\nSecond line.\r\n"),
                          "REPLACE")
 
+    # The two tests below guard the comparison alone. No run reaches file_action with an empty or a
+    # non-UTF-8 file at an entry point's or a definition's path: plan() refuses such a file first,
+    # since owned() is false for it, and the foundations branch keeps every foundation file before
+    # the comparison. The refusal itself is tested through the installer elsewhere.
+
     def test_an_empty_file_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): an empty file is no CRLF-only difference from the new text.
         self.assertEqual(self.action_for(b""), "REPLACE")
 
     def test_a_file_that_is_not_utf8_is_replaced(self) -> None:
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): the bytes differ in more than line endings, so the file is replaced.
         self.assertEqual(self.action_for(b"\xff\xfe\r\n"), "REPLACE")
 
     def test_a_file_missing_its_last_line_ending_is_replaced(self) -> None:
-        # A line ending that is gone is a difference in the text, not a CRLF for an LF.
+        # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
+        # judgement): a line ending that is gone is no CRLF for an LF, so the file differs in
+        # more than line endings and is replaced.
         self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\nSecond line."), "REPLACE")
         self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nSecond line."), "REPLACE")
 
