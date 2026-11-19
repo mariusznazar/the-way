@@ -379,9 +379,9 @@ def required_text(holder: object, key: str, name: str, where: str) -> str:
 def required_time(entry: dict, where: str) -> datetime:
     """The time of a line, in UTC; a naive time is taken as UTC."""
     value = required(entry, "timestamp", "timestamp", where)
+    if not isinstance(value, str):
+        raise MissingFieldError(f"{where}: field timestamp is not a time")
     try:
-        if not isinstance(value, str):
-            raise ValueError(value)
         at = parse_time(value)
         return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
     except (ValueError, OverflowError) as error:

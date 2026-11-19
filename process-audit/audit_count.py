@@ -2314,7 +2314,7 @@ class Analysis:
     held: list[tuple[str, str, str, str]]
 
 
-def analyse(reads: list["Read"], register: Register, ancestry: Ancestry, today: date) -> Analysis:
+def analyse(reads: list[Read], register: Register, ancestry: Ancestry, today: date) -> Analysis:
     """Count the register's problems against the cycles the reads found: per cycle by class and
     weight, per fixed issue by whether the pin of its cycles holds the fix, and
     per open issue the cycles it came back in and the days it has waited."""
@@ -2596,7 +2596,7 @@ class Versions:
     no_version: list[Cycle] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
     # Every version, in the order of their dates: the series of the measures are made of them.
-    ordered: list["Version"] = field(default_factory=list)
+    ordered: list[Version] = field(default_factory=list)
 
 
 SERIES_COST = "Cost"
@@ -2684,7 +2684,7 @@ def withdraw_values(cycle: Cycle, file: str, reason: str) -> None:
     cycle.unknown += [(name, reason) for name in names]
 
 
-def note_changed_tools(reads: list["Read"], ancestry: Ancestry) -> None:
+def note_changed_tools(reads: list[Read], ancestry: Ancestry) -> None:
     """For each cycle of the-way, give as unknown the values of each file of its copy whose tool
     the cycle's own change changed (WAY-339): the files of the tool differ between the version the
     cycle ran on and the commit of the last copy of its record in the-way's own history, by `git

@@ -355,8 +355,7 @@ def read_text(path, shown_as, findings):
             Finding("warn", "read", shown_as, 0, "not UTF-8 text; its content was not checked")
         )
         return None
-    if data.startswith(codecs.BOM_UTF8):
-        data = data[len(codecs.BOM_UTF8) :]
+    data = data.removeprefix(codecs.BOM_UTF8)
     try:
         return data.decode("utf-8")
     except UnicodeDecodeError as error:

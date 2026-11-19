@@ -86,8 +86,7 @@ def git(
         input=stdin,
         text=True,
         encoding="utf-8",
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         check=False,
     )
     if check and result.returncode:
@@ -526,7 +525,7 @@ def plan(
         if any(line.split(" ", 1)[-1] == SUBMODULE for line in registered.stdout.splitlines()):
             raise RuntimeError(f".gitmodules already registers {SUBMODULE}")
 
-    for path, expected in files.items():
+    for path in files:
         check_parents(target, path)
         if not os.path.lexists(path):
             continue
