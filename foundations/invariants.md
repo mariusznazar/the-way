@@ -173,6 +173,16 @@ Every invariant whose method is `test` is cited by a comment line `invariant: <i
 - **Part:** every
 - **Violated:** no
 
+## own-foundation-check-report
+
+`elements/common/foundation_check.py`, run with no switch on the repository of the-way as a commit leaves it, reports no error.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-09
+- **Part:** every
+- **Violated:** no
+
 ## generated-overview
 
 No file generated for an agent holds an overview of the repository's directories.
@@ -397,7 +407,7 @@ The wording that `project-level/plan_state.py` takes for the field *Request URL 
 
 ## audit-series-script-paths
 
-Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the cost of cycles, of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that measures the cost, `task-cycle/cycle_stages.py`, the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
+Each path of a script whose history `process-audit/audit_count.py` reads, to start a new series of the cost of cycles, of the measures of how a cycle's agents use context and the prompt cache or of the gate times — the script that measures the cost, `task-cycle/cycle_stages.py` with the module `task-cycle/stage_transcripts.py` that it imports, the script that counts those measures, the script that records the gate times and the test runner of the gate — is a file git tracks.
 
 - **Method:** test
 - **Rests on:** none
@@ -434,6 +444,16 @@ No file of a part named in the *Scope* of WAY-379 breaks a rule that WAY-380 giv
 - **Derives from:** WAY-380
 - **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines · repository
 - **Violated:** yes
+
+## formatter-layout
+
+Every `.py` file that git tracks in a part named in the *Scope* of WAY-379 stands as the formatter of the Ruff that WAY-381 pins leaves it when run with the configuration `ruff.toml`, with no part of it left out of the formatter by a comment `fmt: off`, `fmt: on` or `fmt: skip`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-382
+- **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines · repository
+- **Violated:** no
 
 ## function-and-file-size
 
@@ -517,7 +537,7 @@ The script that counts the measures of the agents of a cycle, given a transcript
 
 ## gate-times-refuses-impossible-entry
 
-The script that runs the gate for the task cycle deletes an entry of its registry whose end or start lies more than a minute after the present, or whose end lies before its start, and counts that entry as no other run.
+The script that runs the gate for the task cycle deletes a file of its registry whose end or start lies more than a minute after the present, or whose end lies before its start, and counts that file as no other run.
 
 - **Method:** test
 - **Rests on:** none
