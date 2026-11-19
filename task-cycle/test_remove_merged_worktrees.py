@@ -32,6 +32,14 @@ ENVIRONMENT = {
     **os.environ,
     "GIT_CONFIG_GLOBAL": os.devnull,
     "GIT_CONFIG_NOSYSTEM": "1",
+    # Git's automatic maintenance and automatic collection of garbage stay off in every git process
+    # of the tests, the bare origin.git included, so that no maintenance.lock appears or vanishes
+    # while a snapshot is taken (the first CI run of pull request #144 failed this way on Linux).
+    "GIT_CONFIG_COUNT": "2",
+    "GIT_CONFIG_KEY_0": "gc.auto",
+    "GIT_CONFIG_VALUE_0": "0",
+    "GIT_CONFIG_KEY_1": "maintenance.auto",
+    "GIT_CONFIG_VALUE_1": "false",
     "GIT_AUTHOR_NAME": "Test",
     "GIT_AUTHOR_EMAIL": "test@example.com",
     "GIT_COMMITTER_NAME": "Test",
@@ -438,6 +446,9 @@ class ApplyTest(unittest.TestCase):
 
     def test_a_dry_run_removes_nothing_and_apply_removes_only_what_is_marked(self) -> None:
         # invariant: repository-changer-acts-only-when-told
+        # The snapshot must not see git's maintenance.lock come or go: ENVIRONMENT turns git's
+        # automatic maintenance off. The first CI run of pull request #144 on Linux failed with
+        # FileNotFoundError on maintenance.lock, and the rerun passed.
         merged = self.fx.task("merged")
         unmerged = self.fx.add("unmerged", "task/unmerged")
         self.fx.commit(unmerged)
