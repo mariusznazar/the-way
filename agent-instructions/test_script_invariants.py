@@ -62,6 +62,7 @@ PLACES = (
 NAMES = (
     ".gitignore",  # the patterns git ignores
     ".gitattributes",  # the attributes git gives paths
+    ".git-blame-ignore-revs",  # the commits `git blame` passes over, one hash to a line
     ".python-version",  # the declared version of Python
     "ruff.toml",  # the configuration of the linter, data in TOML
     "requirements-quality.in",  # the packages the linter is installed from, one name to a line
