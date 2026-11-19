@@ -151,7 +151,9 @@ Write the plan in this form; the script reads the slice headings and the fields 
     followed by its identifier outside the backticks, such as `foundations/decisions.md:120-148`
     (WAY-12). The identifier is the entry's address and the range only its size at the plan's base;
     an entry the plan's *Foundation entries* writes is named by its row there, without backticks,
-    since it does not exist yet and a new entry gets its identifier only when written;
+    since it does not exist yet and a new entry gets its identifier only when written. An entry the
+    slice changes, and the section of the log a new entry of the slice goes into, is named in
+    *Read* by its range as well, so that its size is measured;
   - the guideline files of the parts it touches, each whole, as `product-guidelines/reading.md`
     selects them (WAY-213);
   - a file of code or tests the slice needs, whole or as a range.
