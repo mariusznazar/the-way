@@ -27,18 +27,18 @@ Read, and write nothing yet.
 - **The counts.** Count apart the rows `done`, the rows `done — goal delivered in task <n>` and the
   withdrawn rows.
 - **The scope not delivered.** Number the top-level list items of the definition's `In scope` from 1,
-  as `plan_check.py` numbers them. An item is delivered where a task whose row is `done` or
-  `done — goal delivered in task <n>` names its number in its `In scope` cell. List each other item
-  with its number and its text.
+  as `project-level/plan_check.py` numbers them. An item is delivered where a task whose row is
+  `done` or `done — goal delivered in task <n>` names its number in its `In scope` cell. List each
+  other item with its number and its text.
 - **What goes with a withdrawn task.** For each withdrawn task: its `Goal` cell word for word; each
   open question of the plan that ends `— plan: task <n>` for it, word for word with the place the
   definition gives it; and each projected entry that goes with it, which is one whose `Realized by`
   cell names withdrawn tasks only, and which goes with the task its `Written by` cell names.
 - **The foundation at a commit, for each such entry.** Take the commit from the line
-  `integration: <ref> <commit>` that `plan_state.py` printed at this session; where it printed none,
-  ask the human which commit of the product to search. Read the foundation files at that commit with
-  git, never in the working tree, and search them by the question or the identifier of the entry's
-  heading, which the plan keeps word for word: for a decision `(new) — <question>`, the decision
+  `integration: <ref> <commit>` that `project-level/plan_state.py` printed at this session; where it
+  printed none, ask the human which commit of the product to search. Read the foundation files at
+  that commit with git, never in the working tree, and search them by the question or the
+  identifier of the entry's heading, which the plan keeps word for word: for a decision `(new) — <question>`, the decision
   headings that hold the same question; for a change of a current decision, its number; for an
   invariant, a glossary term, an environment fact or a part of the part map, its identifier or term.
   The wording of the entry's sentences is no key to search by. The result is one of:

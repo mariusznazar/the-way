@@ -38,8 +38,8 @@ project skill with the `the-way-` prefix, never a personal copy.
   inventories before selection, whole relevant units and expansion; preserve every borrowed
   skill's mandatory whole reads.
 - Require a handed-over plan. A plan whose `Status:` line reads `closed YYYY-MM-DD` is a closed
-  project: tell the human so, with each finding `plan_check.py` gives it, and stop, with no round,
-  no state upkeep and no second closing. Run
+  project: tell the human so, with each finding `project-level/plan_check.py` gives it, and stop,
+  with no round, no state upkeep and no second closing. Run
   `python -B <the-way>/project-level/readiness_check.py <definition>`
   and `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole files and read
   their reports. A draft, finding, unreadable source or failed command is an obstacle, never
