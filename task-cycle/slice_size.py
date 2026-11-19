@@ -16,14 +16,16 @@ DIR, the repository the plan is for, which defaults to the current directory. A 
 that names nothing under DIR is a file the slice creates, with nothing to read. A path pattern in
 *Change* counts as one file and is not expanded against files under DIR.
 
-A slice reads every file of *Read* and every file of *Change* that exists, each counted once: a
-whole file where either field names it whole, otherwise the lines its ranges name. Its size to read
-is the number of characters of that text, and its tokens are estimated from them as the source
-below gives, never counted by a tokenizer: the estimate is rough, and how many steps an agent takes
-is not in it. A slice is too large when its estimated tokens exceed READ_LIMIT_TOKENS or it changes
-more than CHANGE_LIMIT files. A slice with neither field, a path that leaves DIR or names something
-other than a file there — in *Read*, anything but an existing file — a range in *Change*, or a
-range beyond its file leaves the slice unchecked: its size is not known.
+A slice reads every file of *Read* and every file of *Change* that exists, each counted once. A file
+of *Change* that *Read* names by ranges counts the lines those ranges name; any other file counts
+whole where either field names it whole, otherwise the lines its ranges name; a file that *Read*
+names whole counts whole, whatever ranges of it *Read* names beside. Its size to read is the number
+of characters of that text, and its tokens are estimated from them as the source below gives, never
+counted by a tokenizer: the estimate is rough, and how many steps an agent takes is not in it. A
+slice is too large when its estimated tokens exceed READ_LIMIT_TOKENS or it changes more than
+CHANGE_LIMIT files. A slice with neither field, a path that leaves DIR or names something other than
+a file there — in *Read*, anything but an existing file — a range in *Change*, or a range beyond its
+file leaves the slice unchecked: its size is not known.
 
 The limits are corrected as cycles bring data:
 
@@ -161,15 +163,16 @@ def measure(item: Slice, root: Path) -> Size:
     problems: list[str] = []
     if not item.fields:
         problems.append("the slice has neither *Change* nor *Read*")
-    whole: dict[Path, str] = {}
+    whole: set[Path] = set()
     ranges: dict[Path, list[tuple[int, int, str]]] = {}
+    existing: list[Path] = []
     changed = dict.fromkeys(item.change)
     for written in changed:
         found = locate(root, written)
         if RANGE.fullmatch(written):
             problems.append(f"`{written}` in *Change* names a range, not a file")
         elif found is not None:
-            whole[found] = written
+            existing.append(found)
         elif (root / written).resolve().is_relative_to(root) and not (root / written).exists():
             continue  # a file the slice creates has nothing to read
         else:
@@ -187,7 +190,10 @@ def measure(item: Slice, root: Path) -> Size:
             else:
                 ranges.setdefault(found, []).append((first, last, written))
         else:
-            whole[found] = written
+            whole.add(found)
+    for found in existing:
+        if found not in ranges:
+            whole.add(found)
     characters = 0
     for path in whole:
         characters += len(path.read_text(encoding="utf-8", errors="replace"))
