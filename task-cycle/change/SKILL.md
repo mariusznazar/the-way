@@ -34,7 +34,8 @@ Read what your dispatch names; the orchestrator has selected it for your work (W
   it names, each whole (WAY-213). Where you write a foundation entry by following an element's
   `SKILL.md`, as `task-cycle/skill/foundation_step.md` gives, that file selects the reading the entry
   needs.
-- Every file you change, whole, before you change it.
+- Every file you change, whole, before you change it — of a file of the foundation, the entries you
+  change and the section a new entry goes into, by the ranges your dispatch names.
 
 Where you need something the dispatch does not name — a decision, an invariant, a passage of the
 task, the guidelines of a part it did not cover — reach for it selectively: search for its
@@ -118,7 +119,8 @@ of this applies.
   where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
-  about four minutes, reading its output between them (WAY-255).
+  about four minutes, reading its output between them, and you end your turn only after it has
+  ended and you have read its result (WAY-255).
 
 ## 4. When the plan and the code disagree
 

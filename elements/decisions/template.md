@@ -88,8 +88,11 @@ such part; none where there is no such part>
 - The *Rejected* of a decision written from a row of a task's *Settlements to record* holds the
   ways not chosen that the row's source keeps — under the answer in *Questions to settle* that the
   row's *Source* names, or in that *Source* itself — each with the cost or the reason kept beside
-  it; `none considered` where the human said so; or `unknown`, written with no question to the
-  human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
+  it — or, where the source keeps none or keeps only a cost of the process (a gate to reopen, a
+  step to repeat), with `no cost to the product known`; a way that is itself a way of the process
+  rather than of the product, such as how or when an answer is recorded, is the one way kept by
+  the source that stays out; `none considered` where the human said so; or `unknown`, written with
+  no question to the human. A way the writer derives — from what the cycle would otherwise guess, from the cost of
   the way chosen, or from the foundation — never enters it (WAY-134). Where the row adopts a
   practice from outside the product, the parts the practice leaves out are among the ways the row's
   source keeps when the human weighed them, and then stand in *Rejected*; where the source keeps

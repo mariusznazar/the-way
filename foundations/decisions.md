@@ -5502,7 +5502,11 @@ cannot hold, or the entry needs any other value neither the row nor the cycle's 
 cycle asks the human through a blocked draft request rather than write another entry, and otherwise
 the entry's meaning is the one the human accepted with the row in the task document (WAY-114); a
 kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
-becomes no second entry, the cycle tying the row to that entry and naming both in the request.
+becomes no second entry, the cycle tying the row to that entry and naming both in the request; a
+way not chosen that the row's source keeps with no cost, or with only a cost of the process such as a
+gate to reopen or a step to repeat, stands in the rejected options with `no cost to the product
+known`, and a way that is itself a way of the process rather than of the product, such as how or
+when an answer is recorded, stays out of them.
 
 Where a row adopts a practice from outside the product, the refinement shows the human, among the
 ways of the question that settles it, the parts the practice leaves out, so that the row's source
@@ -5535,7 +5539,9 @@ prevails over WAY-100, which asks a decision that adopts a practice to put what 
     marked, while the rows the agent derived from the material wait for the human; a rule of how an
     agent works that only one skill holds stands in the table as a row that goes to that skill, the
     human accepts it with the other rows, and the cycle writes the line in the skill in the same
-    change as the code;
+    change as the code; a decision row whose source keeps a way with only the cost of a gate to
+    reopen gives that way `no cost to the product known` in the decision's rejected options, and
+    leaves out the way that only chose when the answer is recorded;
   - violates: the cycle writes the entry with another meaning, or leaves out a kept settlement
     because no code makes it true; a settlement that goes to a skill, to guidelines or to the
     product's code is left out of the table because it is no entry, or is written into the log as a
@@ -5548,7 +5554,9 @@ prevails over WAY-100, which asks a decision that adopts a practice to put what 
     row that repeats the human's choice between ways shown waits for the human's acceptance like a
     row the agent derived; the cycle puts in the rejected options of a decision written from a row
     a part of an outside practice that the row's source does not keep, because WAY-100 asks for what
-    a practice leaves out.
+    a practice leaves out; the cycle puts in the rejected options a way of the process, such as when
+    an answer is recorded, or leaves a way whose source keeps no cost without the words `no cost to
+    the product known`.
 - **Origin:** none
 
 *Rationale:* a settlement the human makes while a task is refined binds after the merge as much as
@@ -5579,9 +5587,12 @@ nobody knows what was weighed. A practice adopted from outside leaves parts out,
 human never saw would read in *Rejected* as a way the human refused, so the refinement shows each
 part among the ways of the question and the row keeps those the human turned down; for a decision
 written from a row this decision therefore prevails over WAY-100, whose rule on what a decision
-leaves out of a practice holds for every other decision. The price: the refinement of a row that
-adopts a practice asks one question more, and a decision from a row whose source kept no left-out
-part says nothing in *Rejected* of what the practice leaves out.
+leaves out of a practice holds for every other decision. Where the source of a row keeps a way
+with no cost or with only a cost of the process, or keeps a way of the process such as how or when
+an answer is recorded, agents settled the case one way in one cycle and another way in the next, so
+this decision settles it once. The price: the refinement of a row that adopts a practice asks one
+question more, and a decision from a row whose source kept no left-out part says nothing in
+*Rejected* of what the practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
 a task has no readiness approval to approve their wording, and refining a task would
 weigh as much as defining a
@@ -6245,7 +6256,10 @@ than one slice then gets one review of the whole change, which judges every slic
 review of its own and names, for each blocking finding, the slice it comes from or that it comes
 from none, while the review of a one-author change or of a plan's only slice is the review of the
 whole change; and that review also checks coverage of the task, every row of its *Settlements to
-record* and every projected entry it carries.
+record* and every projected entry it carries; where the slices that have no review of their own
+are more than one reviewer of the whole change can compare with their sources, the orchestrator
+may, by its own judgment and not by a measure, dispatch reviews of groups of them in the plan's
+order, as for a slice with a review of its own, and it records the grouping and its reason.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -6266,7 +6280,9 @@ record* and every projected entry it carries.
     judges those others and names the slice of each blocking finding, while a plan's only slice
     needs no duplicate review; an outgrown slice is discarded and split; a task that moves the pin
     has the checks the move breaks counted in the route judgment and handed to its author or
-    planner;
+    planner; a change that rewrites many entries of the foundation from many notes has the slices
+    without a review of their own reviewed in groups, in the plan's order, the grouping and its
+    reason recorded;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -6274,7 +6290,8 @@ record* and every projected entry it carries.
     code is kept; two slices are made at once; a slice holding an operation that cannot be undone
     goes without a review of its own; a blocking finding of the whole-change review leaves open
     whether it comes from a slice; the route of a task that moves the pin is judged before the
-    move, or without the checks it breaks.
+    move, or without the checks it breaks; reviews of groups of slices are dispatched with no
+    grouping and reason recorded, or by a measure in place of the orchestrator's judgment.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -6286,7 +6303,10 @@ keeps the later division from inheriting a failed shape. Slices made one after a
 from the work before them, in one worktree, with no shared state to settle between them. A review
 of every slice multiplies review by the number of slices; it pays where an early defect at a trust
 boundary or in an operation that cannot be undone costs more than the review, and the review of the
-whole change judges the rest. The price is that a defect of an early slice is found only after
+whole change judges the rest. Where the rest is more than one reviewer can compare with its sources,
+as when many entries of the foundation are rewritten from many notes, that one review cannot judge
+it, and reviews of groups of the slices give each reviewer a part it can compare, at the cost of the
+reviews added. The price is that a defect of an early slice is found only after
 later slices were built on it, and its fix may reach them; naming the slice of each blocking finding
 shows what that price is. The checks a move of the pin breaks are work of the task that its
 document cannot name in advance, so a judgment without them misjudges the change's size.
@@ -6299,10 +6319,14 @@ writes the code ahead — code written ahead still needs review; a whole-change 
 review of a plan's only slice — it reads the same range again; an outgrown attempt kept and
 completed — its division would be written around unfinished work; slices made side by side — each
 needs a worktree of its own and a ruling on their dependencies and shared state before it runs, a
-cost the change meets without gaining a check; a review of every slice — its cost grows with the
-number of slices, most of which carry settled matters into code, while the review of the whole
-change still reads every slice; a status by which the planner returns work it cannot divide into
-slices — the pin moved before the route keeps the installer's output out of every plan; a measure of
+cost the change meets without gaining a check; a review of every slice as a rule — its cost grows
+with the number of slices, most of which carry settled matters into code, while the review of the
+whole change still reads every slice that one reviewer can compare with its sources; a criterion
+for the reviews of groups of slices taken from a measure of the slices' size, such as the sum of
+the tokens estimated for reading the slices of a group within the limit of one slice — a sum of
+such estimates is off in two directions: a file read by several slices counts several times, the
+diff that a reviewer reads counts not at all, and a slice left unchecked has no size at all; a
+status by which the planner returns work it cannot divide into slices — the pin moved before the route keeps the installer's output out of every plan; a measure of
 the change's size, such as the number of files, deciding the route at the start of the cycle between
 one author and a plan — on changes of one game product of 1 500 to 3 000 lines, with five cycles on
 each route, a whole cycle with a plan cost 0.0182 USD per changed line (median cycle 39 USD) and a
@@ -6659,11 +6683,12 @@ in WAY-229).
 An agent the orchestrator dispatches waits for a command that may run longer than its harness keeps
 its prompt cache — a container build, a mutation run, a test suite a check names — by running it in
 the background and reading its output between waits each shorter than that lifetime, never in one
-wait past it; in Claude Code a subagent's cache lives five minutes by default, so each wait stays
-under about four. The one author's cache lives an hour, which the author's type sets (WAY-368), and
-its waits stay under about four minutes as well, since Claude Code falls back to five minutes where
-a subscription spends usage credits. Where the harness states no cache lifetime, the agent waits as
-the harness allows.
+wait past it, and ending its turn only after the command has ended and it has read its result; in
+Claude Code a subagent's cache lives five minutes by default, so each wait stays under about four.
+The one author's cache lives an hour, which the author's type sets (WAY-368), and its waits stay
+under about four minutes as well, since Claude Code falls back to five minutes where a subscription
+spends usage credits. Where the harness states no cache lifetime, the agent waits as the harness
+allows.
 
 - **Scope:** task-cycle
 - **Based on:** claude-code-prompt-cache-expiry · claude-code-prompt-cache-ttls ·
@@ -6673,12 +6698,14 @@ the harness allows.
 - **Verification:** an agent compares an agent's waits in the cycle's transcripts with the
   decision:
   - complies: a reviewer in Claude Code starts the mutation run its review needs in the background
-    and reads its output every four minutes until it ends; the one author, whose cache lives an
-    hour, reads the output of a build it started in the background every four minutes as well;
+    and reads its output every four minutes until it ends, and returns its report after reading the
+    result; the one author, whose cache lives an hour, reads the output of a build it started in the
+    background every four minutes as well;
   - violates: a subagent in Claude Code waits ten minutes in one command for a test suite to end; an
     agent's next step after a wait past its cache's lifetime writes its whole context to the cache
     again; the one author waits twenty minutes in one command on the strength of its hour; the type
-    of a reviewer or of an executor sets the hour.
+    of a reviewer or of an executor sets the hour; an agent ends its turn with a note that it still
+    waits for the tests it started in the background, in place of their result.
 - **Origin:** none
 
 *Rationale:* an agent whose cache has expired pays at its next step to write its whole context
@@ -6691,7 +6718,10 @@ a control with five minutes wrote its whole 4,786 anew. Where the session was st
 saved conversation resumed, the hour did not help: the agent wrote its whole context anew at 2.0
 times the price of input, where a write to a five-minute cache costs 1.25 times, in one try, twice;
 the account in *Rejected* does not cover a restart. The probes are this product's own, and their
-record is not open to a reader of this repository. The price: an hour that Claude Code ignores
+record is not open to a reader of this repository. A turn that ends while the command still runs
+hands the orchestrator a note that the agent waits in place of the result the command was run to
+give, so the check it stood for stays undone; the turn therefore ends once the result is read. The
+price: an hour that Claude Code ignores
 while a subscription spends usage credits leaves the author at five minutes, so its waits keep to
 four.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past

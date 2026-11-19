@@ -80,8 +80,10 @@ with the evidence and stop.
 The cycle writes only in the task's worktree, the working copies of its agents included ("Working
 copies" below), and changes nothing outside the product repository, except the fast-forward of the
 checkout and the removal of the directories of finished tasks, both in step 4, the account of the
-request named below and the registry of running gates that `task-cycle/gate_times.py` keeps in the
-user's `~/.the-way/`, a directory of empty files that holds no content of the cycle; reading
+request named below, the screenshot shown to the human, which goes to the place the product's
+foundation settles for screenshots ("Working copies" below), and the registry of running gates that
+`task-cycle/gate_times.py` keeps in the user's `~/.the-way/`, a directory of empty files that holds
+no content of the cycle; reading
 outside it stays with the agent (WAY-140). A remark about the-way,
 the user's agent instructions or another repository goes into the record's process remarks, never
 into the request. For each stage report, copy every item under **Searches not found or unclear**
@@ -209,7 +211,11 @@ names that file and only what routing needs (WAY-148). Begin each report file's 
 or the agent's role, the word `report` after it if at all (`author-report.md`, not
 `report-author.md`): Claude Code refuses a subagent's write of a file whose name starts with
 `report`, `summary`, `findings` or `analysis`, answering that subagents should return findings as
-text. The handoff gives the user's delegation, the worktree, the method of the stage by the path of
+text. The handoff therefore says that the report file is the input of the cycle's scripts
+(`task-cycle/remarks_check.py` reads it), the case that note leaves open. Where an agent refuses the
+write all the same, it returns its report whole as its answer; save it unchanged at the report path
+and record the refusal, with the agent's model, in the events table — never in the report, whose
+first line stays the agent's. The handoff gives the user's delegation, the worktree, the method of the stage by the path of
 its `SKILL.md` in the pinned the-way, the stage and its boundary, the paths and commits of the
 frozen task and of the spec and plan where they exist, the answers of step 4, the name of the
 agent's directory for working copies, and the report path, and copies word for word the first
@@ -358,7 +364,9 @@ themselves are no working copy of the agent and stay outside this rule. Before t
 each time it returns, it removes its copy — a worktree with `git worktree remove --force`, then
 `git worktree prune` — keeps in `reports/` beside its report what the report needs, and states in
 the report where each copy stood and that it was removed. Where a removal fails, the agent finishes
-all the same and names in the report the remainder, with its full path and the reason it stayed.
+all the same and names in the report the remainder, with its full path and the reason it stayed. It
+removes a copy, as any directory, by its path written out in full in the command, never through a
+shell variable: an empty variable turns the removal on the directory the shell stands in.
 
 The handoff gives the directory as `.runs/<name>/`, where `<name>` is the agent's stage or role and,
 where the cycle dispatches that stage more than once, a counter, such as `author`, `planner`,
@@ -495,7 +503,11 @@ contradicts a decision.
         executor's. A `FAIL` gets one fix and one review of the fix, as "The end of a code review"
         gives; keep its Minor and out-of-scope findings in its row for the review of the whole
         change. Every other slice goes on after its mechanical check, and the review of the whole
-        change judges it (WAY-136).
+        change judges it (WAY-136). Where the slices with no review of their own are more than one
+        reviewer of the whole change can compare with their sources — as in a change that rewrites
+        many entries of the foundation from many notes — the orchestrator may dispatch a fresh
+        reviewer with `review-change` on groups of them in the plan's order, as for a slice with a
+        review of its own, and records the grouping and its reason.
 
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
@@ -820,8 +832,9 @@ the worktree's root (in a product, the path starts with `.the-way/`):
    lists nothing. It runs on the original first, because the original holds the words the reports
    gave: each item reaches the remarks once, before any word is changed, and the cleaning below
    meets it in both places.
-2. Copy the whole record directory to `docs/task-cycles/<task-slug>/` on the task branch and
-   rewrite its links to the committed copies.
+2. Remove an earlier copy, by its path written out in full, then copy the whole record directory
+   to `docs/task-cycles/<task-slug>/` on the task branch and rewrite its links to the committed
+   copies.
 3. Clean the copy by one rewriting, applied to every text file of it — `cycle.md`, the handoffs
    and reports, the copy of the task document, `stages.md`, `mechanism_measures.md`, `gate_times.md`, `request.md` — so that a text standing
    in two files is replaced by the same words in both. An item of a report and the same item in

@@ -112,7 +112,8 @@ scope are yours.
   is unverified, and says why.
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
-  about four minutes, reading its output between them (WAY-255).
+  about four minutes, reading its output between them, and you end your turn only after it has
+  ended and you have read its result (WAY-255).
 - Do the whole review yourself. Never dispatch a subagent.
 
 ## 3. Grade
