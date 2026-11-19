@@ -480,16 +480,12 @@ def check_state(lines: list[Line], problems: list[tuple[int, str]]) -> None:
         )
 
 
-def check(description: str, task: str) -> Result:
-    """The problems of the form of `description`, a request's description for the task `task`."""
-    result = Result()
-    problems = result.problems
-    lines = scan_description(description)
-    end_line = len(lines) + 1
-    check_state(lines, problems)
-
-    # The `##` headings: those of the template once each and in order, the task's own in their slot.
-    sections = [heading for heading in headings(lines) if heading.level == 2]
+def check_sections(
+    sections: list[Heading], end_line: int, problems: list[tuple[int, str]]
+) -> tuple[dict[str, Heading], list[Heading]]:
+    """The `##` headings of a description, checked against the template: those of the template
+    once each and in order, the task's own in their slot. Returns the template's headings by name
+    and the headings kept, in their order."""
     seen: dict[str, Heading] = {}
     kept: list[Heading] = []
     last = -1
@@ -548,9 +544,14 @@ def check(description: str, task: str) -> Result:
                     f"`## {name}` is missing; write it here, with its content or `none`",
                 )
             )
-    result.sections = [heading.text for heading in kept]
+    return seen, kept
 
-    # The block: the one top-level `<details>` between `## How to merge` and `## Technical changes`.
+
+def check_block(
+    lines: list[Line], seen: dict[str, Heading], end_line: int, problems: list[tuple[int, str]]
+) -> tuple[Element | None, set[int]]:
+    """The one top-level `<details>` between `## How to merge` and `## Technical changes`, and the
+    numbers of the lines it covers, which the content of the sections leaves out."""
     after = seen[BLOCK_AFTER].number if BLOCK_AFTER in seen else 0
     before = seen[BLOCK_BEFORE].number if BLOCK_BEFORE in seen else end_line
     found = elements(lines)
@@ -586,8 +587,41 @@ def check(description: str, task: str) -> Result:
         if block is None
         else set(range(lines[block.start].number, lines[block.end].number + 1))
     )
+    return block, block_lines
 
-    # The content of each section, and of `### Underneath` in `## What you will see`.
+
+def check_underneath(
+    heading: Heading, body: list[Line], under: Heading, problems: list[tuple[int, str]]
+) -> None:
+    """The content of `## What you will see` before and after its `### Underneath`."""
+    name = display(heading.text)
+    if not has_content("\n".join(line.text for line in body if line.number < under.number)):
+        problems.append(
+            (
+                heading.number,
+                f"`## {name}` has no content before `### "
+                f"{UNDERNEATH}`; write what changes, or "
+                f"`none`",
+            )
+        )
+    if not has_content("\n".join(line.text for line in body if line.number > under.number)):
+        problems.append(
+            (
+                under.number,
+                f"`### {UNDERNEATH}` has no content; write what is under the change, or `none`",
+            )
+        )
+
+
+def check_contents(
+    lines: list[Line],
+    sections: list[Heading],
+    kept: list[Heading],
+    block_lines: set[int],
+    end_line: int,
+    problems: list[tuple[int, str]],
+) -> None:
+    """The content of each kept section, and of `### Underneath` in `## What you will see`."""
     bounds = [heading.number for heading in sections] + [end_line]
     for heading in kept:
         stop = min(number for number in bounds if number > heading.number)
@@ -614,65 +648,70 @@ def check(description: str, task: str) -> Result:
                     )
                 )
             else:
-                if not has_content(
-                    "\n".join(line.text for line in body if line.number < under.number)
-                ):
-                    problems.append(
-                        (
-                            heading.number,
-                            f"`## {name}` has no content before `### "
-                            f"{UNDERNEATH}`; write what changes, or "
-                            f"`none`",
-                        )
-                    )
-                if not has_content(
-                    "\n".join(line.text for line in body if line.number > under.number)
-                ):
-                    problems.append(
-                        (
-                            under.number,
-                            f"`### {UNDERNEATH}` has no content; write "
-                            f"what is under the change, or `none`",
-                        )
-                    )
+                check_underneath(heading, body, under, problems)
                 continue
         if not has_content("\n".join(line.text for line in body)):
             problems.append((heading.number, f"`## {name}` has no content; write it, or `none`"))
         elif heading.text == DECISIONS:
             check_decision_groups(lines, heading, stop, body, problems)
 
+
+def check_block_content(
+    lines: list[Line], block: Element, task_language: str, problems: list[tuple[int, str]]
+) -> tuple[str, int]:
+    """The content of the block, checked against the language of the task. Returns the language
+    of the block and its count of words."""
+    content = block_content(lines, block)
+    number = lines[block.start].number
+    block_language, block_words = language(content)
+    if not has_content(content):
+        problems.append(
+            (
+                number,
+                "the block has no content; write the top part in the task "
+                "document's language, or `none` where the task is in "
+                "English",
+            )
+        )
+    elif task_language == "English" and not reads_none(content):
+        problems.append((number, "the task document is in English; the block reads `none`"))
+    elif task_language == "not English" and reads_none(content):
+        problems.append(
+            (
+                number,
+                "the task document is not in English; write the top part "
+                "in its language in the block, instead of `none`",
+            )
+        )
+    elif task_language == "not English" and block_language == "English":
+        problems.append(
+            (
+                number,
+                "the block is in English; write the top part in the task document's language",
+            )
+        )
+    return block_language, block_words
+
+
+def check(description: str, task: str) -> Result:
+    """The problems of the form of `description`, a request's description for the task `task`."""
+    result = Result()
+    problems = result.problems
+    lines = scan_description(description)
+    end_line = len(lines) + 1
+    check_state(lines, problems)
+    sections = [heading for heading in headings(lines) if heading.level == 2]
+    seen, kept = check_sections(sections, end_line, problems)
+    result.sections = [heading.text for heading in kept]
+    block, block_lines = check_block(lines, seen, end_line, problems)
+    check_contents(lines, sections, kept, block_lines, end_line, problems)
+
     # The languages of the task and of the block.
     result.task_language, result.task_words = language(task_text(task))
     if block is not None and block.closed:
-        content = block_content(lines, block)
-        number = lines[block.start].number
-        result.block_language, result.block_words = language(content)
-        if not has_content(content):
-            problems.append(
-                (
-                    number,
-                    "the block has no content; write the top part in the task "
-                    "document's language, or `none` where the task is in "
-                    "English",
-                )
-            )
-        elif result.task_language == "English" and not reads_none(content):
-            problems.append((number, "the task document is in English; the block reads `none`"))
-        elif result.task_language == "not English" and reads_none(content):
-            problems.append(
-                (
-                    number,
-                    "the task document is not in English; write the top part "
-                    "in its language in the block, instead of `none`",
-                )
-            )
-        elif result.task_language == "not English" and result.block_language == "English":
-            problems.append(
-                (
-                    number,
-                    "the block is in English; write the top part in the task document's language",
-                )
-            )
+        result.block_language, result.block_words = check_block_content(
+            lines, block, result.task_language, problems
+        )
     problems.sort(key=lambda problem: problem[0])
     return result
 
