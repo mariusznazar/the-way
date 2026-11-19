@@ -23,7 +23,7 @@ named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_
 The other runs counted are those whose interval met this run's: an ended one that started before this
 run ended and ended after it started; a running one that started before this run ended and no more
 than six hours before it. Ended runs over a day old and running runs over six hours old are deleted at
-the start of a run. An entry whose time cannot be (an end or a start more than a minute after the
+the start of a run. A file whose time cannot be (an end or a start more than a minute after the
 present, or an end before its start) is deleted at the start of a run as well and counted for nothing,
 so that one damaged or hand-made file cannot count as another run for ever. A name of another form is
 left alone and counted for nothing. Where the registry cannot be made or listed, a `Warning:` goes to stderr and the count is `unknown`.
@@ -57,7 +57,9 @@ DAY_MS = 24 * HOUR_MS
 RUNNING_LIMIT_MS = 6 * HOUR_MS
 CLOCK_SLACK_MS = 60 * 1000  # a time this far after the present is still a clock's difference
 CHUNK = 65536
-LINE_LIMIT = 1 << 20  # a line is read for the times up to this many bytes, so that memory stays bounded
+LINE_LIMIT = (
+    1 << 20
+)  # a line is read for the times up to this many bytes, so that memory stays bounded
 MAX_DIRECTORIES = 50  # the audit lists no more directories of a run
 DIRECTORY_CAP = 200  # the audit keeps no more characters of a directory
 UNKNOWN = "unknown"
@@ -69,8 +71,10 @@ ENDED = re.compile(r"(\d+)_(\d+)_([A-Za-z0-9]+)\.run")
 
 HEADING = "# Gate runs of the cycle"
 NOTE = "Each row is one run by this script; times are seconds."
-TABLE_HEADER = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
-                "| Directory | Directory seconds |")
+TABLE_HEADER = (
+    "| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
+    "| Directory | Directory seconds |"
+)
 TABLE_RULE = "| --- | --- | --- | --- | --- | --- |"
 
 
@@ -90,7 +94,7 @@ def parse(argv: list[str]) -> tuple[Path, Path | None, list[str]]:
     command is started."""
     if "--" in argv:
         split = argv.index("--")
-        options, command = argv[:split], argv[split + 1:]
+        options, command = argv[:split], argv[split + 1 :]
     else:
         options, command = argv, []
     parser = Parser(prog="gate_times.py", description="Run the gate and record its times.")
@@ -133,7 +137,7 @@ def cell(text: str) -> str:
 
 def cut(text: str) -> str:
     """The text as it is, or cut to DIRECTORY_CAP characters ending in `…`."""
-    return text if len(text) <= DIRECTORY_CAP else text[:DIRECTORY_CAP - 1] + "…"
+    return text if len(text) <= DIRECTORY_CAP else text[: DIRECTORY_CAP - 1] + "…"
 
 
 class Times:
@@ -141,7 +145,9 @@ class Times:
 
     def __init__(self) -> None:
         self.blocks: list[list[str | None]] = []  # [directory, seconds as printed or None]
-        self.not_listed = 0  # blocks after the last one kept; their lines give no time to a kept one
+        self.not_listed = (
+            0  # blocks after the last one kept; their lines give no time to a kept one
+        )
 
     def line(self, raw: bytes) -> None:
         text = raw.rstrip(b"\r").decode("utf-8", errors="replace")
@@ -149,7 +155,7 @@ class Times:
             if len(self.blocks) >= MAX_DIRECTORIES:
                 self.not_listed += 1
             else:
-                self.blocks.append([cut(cell(text[len(BLOCK):])), None])
+                self.blocks.append([cut(cell(text[len(BLOCK) :])), None])
             return
         if not self.blocks or self.not_listed:
             return
@@ -180,7 +186,7 @@ def relay(stream, sink, on_line) -> None:
 
 
 def parse_name(name: str) -> tuple[int, int | None, str] | None:
-    """The start, the end (None while running) and the token of an entry; None for another form."""
+    """The start, the end (None while running) and the token of a file; None for another form."""
     running = RUNNING.fullmatch(name)
     if running:
         return int(running.group(1)), None, running.group(2)
@@ -191,7 +197,7 @@ def parse_name(name: str) -> tuple[int, int | None, str] | None:
 
 
 def malformed(start: int, end: int | None, now: int) -> bool:
-    """Whether an entry has a time that cannot be: a start or an end more than a minute after
+    """Whether a file has a time that cannot be: a start or an end more than a minute after
     `now`, or an end before its start."""
     if start > now + CLOCK_SLACK_MS:
         return True
@@ -199,15 +205,15 @@ def malformed(start: int, end: int | None, now: int) -> bool:
 
 
 def prepare(folder: Path, now: int) -> bool:
-    """Makes the registry and deletes the entries that are too old to count; False where it cannot be
+    """Makes the registry and deletes the files that are too old to count; False where it cannot be
     made or listed."""
     try:
         folder.mkdir(parents=True, exist_ok=True)
         for name in os.listdir(folder):
-            entry = parse_name(name)
-            if entry is None:
+            run = parse_name(name)
+            if run is None:
                 continue
-            start, end, _ = entry
+            start, end, _ = run
             stale = start < now - RUNNING_LIMIT_MS if end is None else end < now - DAY_MS
             if stale or malformed(start, end, now):
                 try:
@@ -230,10 +236,10 @@ def count_others(folder: Path, token: str, start: int, end: int) -> str:
         return UNKNOWN
     count = 0
     for name in names:
-        entry = parse_name(name)
-        if entry is None or entry[2] == token:
+        run = parse_name(name)
+        if run is None or run[2] == token:
             continue
-        begin, finish, _ = entry
+        begin, finish, _ = run
         if malformed(begin, finish, end):
             continue
         if finish is None:
@@ -314,7 +320,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             os.replace(own, folder / f"{start}_{end}_{token}.run")
         except OSError as error:
-            warn(f"cannot end this run's entry in the registry: {error}")
+            warn(f"cannot end this run's file in the registry: {error}")
     others = count_others(folder, token, start, end) if usable else UNKNOWN
 
     try:

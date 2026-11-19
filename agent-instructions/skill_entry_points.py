@@ -55,15 +55,16 @@ class MissingFieldError(GeneratorError):
 
 @dataclass(frozen=True)
 class Skill:
-    path: str          # from the repository root, with `/`, e.g. "task-cycle/skill/SKILL.md"
-    name: str          # e.g. "implement-task"
-    description: str   # the frontmatter's one-line description, as written
+    path: str  # from the repository root, with `/`, e.g. "task-cycle/skill/SKILL.md"
+    name: str  # e.g. "implement-task"
+    description: str  # the frontmatter's one-line description, as written
 
 
 def git(root: Path, *arguments: str) -> bytes:
     try:
-        completed = subprocess.run(["git", "-C", str(root), *arguments], capture_output=True,
-                                   check=False)
+        completed = subprocess.run(
+            ["git", "-C", str(root), *arguments], capture_output=True, check=False
+        )
     except OSError as error:
         raise GeneratorError(f"git cannot run: {error}") from error
     if completed.returncode != 0:
@@ -75,8 +76,16 @@ def git(root: Path, *arguments: str) -> bytes:
 def skill_paths(root: Path) -> list[str]:
     """Every skill's path, sorted, as git lists it: tracked or untracked and not ignored, outside
     `.claude/` and `.agents/`, and present on disk."""
-    listed = git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
-                 ":(glob)**/SKILL.md")
+    listed = git(
+        root,
+        "ls-files",
+        "-z",
+        "--cached",
+        "--others",
+        "--exclude-standard",
+        "--",
+        ":(glob)**/SKILL.md",
+    )
     paths = set()
     for raw in listed.split(b"\0"):
         if not raw:
@@ -127,8 +136,12 @@ def read_skill(root: Path, path: str) -> Skill:
         if BLOCK_SCALAR.fullmatch(value):
             raise GeneratorError(f"{path}: {field} is not on one line")
     description = fields["description"]
-    if (description[0] in UNSAFE_START or ": " in description or " #" in description
-            or description.endswith(":")):
+    if (
+        description[0] in UNSAFE_START
+        or ": " in description
+        or " #" in description
+        or description.endswith(":")
+    ):
         raise GeneratorError(f"{path}: description is not a safe plain YAML scalar")
     name = fields["name"]
     if not NAME.fullmatch(name):
@@ -145,8 +158,9 @@ def discover(root: Path) -> list[Skill]:
     for path in skill_paths(root):
         skill = read_skill(root, path)
         if skill.name in holders:
-            raise GeneratorError(f"name '{skill.name}' is held by both {holders[skill.name]} and "
-                                 f"{path}")
+            raise GeneratorError(
+                f"name '{skill.name}' is held by both {holders[skill.name]} and {path}"
+            )
         holders[skill.name] = path
         skills.append(skill)
     return skills
@@ -193,7 +207,8 @@ def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
         "\n"
         "Where this skill or a file it reads names another the-way skill — "
         f"{sibling_names(skills)} — use this repository's project skill of the same name with the "
-        "`the-way-` prefix, never an unprefixed one.\n")
+        "`the-way-` prefix, never an unprefixed one.\n"
+    )
 
 
 def produce(skills: list[Skill]) -> dict[str, str]:
@@ -222,9 +237,13 @@ def orphans(root: Path, skills: list[Skill]) -> list[str]:
 
 def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate the project skill entry points of the-way's own skills.")
-    parser.add_argument("--write", action="store_true",
-                        help="write the entry points; without it, print what would change")
+        description="Generate the project skill entry points of the-way's own skills."
+    )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="write the entry points; without it, print what would change",
+    )
     arguments = parser.parse_args(argv)
     try:
         skills = discover(root)
@@ -245,8 +264,9 @@ def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
             else:
                 print(f"would {kind} {relative}")
         for directory in left:
-            print(f"orphan {directory}: no skill produces it; remove it with "
-                  f"git rm -r -- {directory}")
+            print(
+                f"orphan {directory}: no skill produces it; remove it with git rm -r -- {directory}"
+            )
         if not changes and not left:
             print("entry points are current")
         return 0

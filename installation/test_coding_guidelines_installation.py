@@ -17,8 +17,15 @@ WRAPPERS = (f".claude/skills/{NAME}/SKILL.md", f".agents/skills/{NAME}/SKILL.md"
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None):
-    return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        capture_output=True,
+        check=False,
+    )
 
 
 class CodingGuidelinesInstallationTest(unittest.TestCase):
@@ -40,8 +47,9 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         # The installer under test is the one in the working tree, committed or not; the clone
         # supplies the source that is installed, whose commit the installer pins.
         shutil.copyfile(INSTALL, self.installer)
-        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}",
-                            cwd=self.source)
+        available = command(
+            "git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}", cwd=self.source
+        )
         self.assertEqual(available.returncode, 0, f"{SKILL_SOURCE} is not committed")
 
     def git(self, *args: str, cwd: Path | None = None):
@@ -50,24 +58,39 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str, answer: str = "y\n"):
-        return command(sys.executable, "-B", str(self.installer), str(self.product),
-                       "--url", str(self.source), *args, cwd=self.product, input_text=answer)
+        return command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(self.source),
+            *args,
+            cwd=self.product,
+            input_text=answer,
+        )
 
     def product_files(self):
-        return {path.relative_to(self.product).as_posix(): path.read_bytes()
-                for path in self.product.rglob("*")
-                if path.is_file() and path.relative_to(self.product).parts[0]
-                not in (".git", ".the-way")}
+        return {
+            path.relative_to(self.product).as_posix(): path.read_bytes()
+            for path in self.product.rglob("*")
+            if path.is_file()
+            and path.relative_to(self.product).parts[0] not in (".git", ".the-way")
+        }
 
     def product_tree(self):
         """Every path outside .git with the bytes of each file, so a created directory counts."""
-        return {path.relative_to(self.product).as_posix():
-                (path.read_bytes() if path.is_file() else None)
-                for path in self.product.rglob("*")
-                if path.relative_to(self.product).parts[0] != ".git"}
+        return {
+            path.relative_to(self.product).as_posix(): (
+                path.read_bytes() if path.is_file() else None
+            )
+            for path in self.product.rglob("*")
+            if path.relative_to(self.product).parts[0] != ".git"
+        }
 
     def test_preview_apply_repeat_exposes_the_coding_guidelines_skill_and_preserves_product(
-            self) -> None:
+        self,
+    ) -> None:
         # A product left without the wrapper cannot reach the skill; product files must survive.
         originals = {
             "foundations/decisions.md": b"# Product decisions\r\n",
@@ -97,39 +120,60 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
         wrapper = claude.read_text(encoding="utf-8")
         source = command("git", "show", f"{self.commit}:{SKILL_SOURCE}", cwd=self.source).stdout
         description = re.search(r"^description: (.+)$", source, re.M).group(1)
-        self.assertTrue(wrapper.startswith(
-            f"---\nname: {NAME}\ndescription: {description} "
-            "Use this product's pinned the-way commit.\n---\n"), wrapper)
+        self.assertTrue(
+            wrapper.startswith(
+                f"---\nname: {NAME}\ndescription: {description} "
+                "Use this product's pinned the-way commit.\n---\n"
+            ),
+            wrapper,
+        )
         self.assertNotIn(self.commit, wrapper)
-        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
-                      "inside `.the-way` when the step or variant that names it comes, not all "
-                      "of them at the start.", wrapper)
+        self.assertIn(
+            f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
+            "inside `.the-way` when the step or variant that names it comes, not all "
+            "of them at the start.",
+            wrapper,
+        )
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
-        siblings = [path for directory in (".claude", ".agents")
-                    for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")]
+        siblings = [
+            path
+            for directory in (".claude", ".agents")
+            for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")
+        ]
         self.assertEqual(len(siblings), 42)
         for sibling in siblings:
             text = sibling.read_text(encoding="utf-8")
-            self.assertRegex(text, r"names another the-way skill — [^\n]*"
-                                   r"`maintain-coding-guidelines`[^\n]* — use this product's "
-                                   r"project skill", sibling)
+            self.assertRegex(
+                text,
+                r"names another the-way skill — [^\n]*"
+                r"`maintain-coding-guidelines`[^\n]* — use this product's "
+                r"project skill",
+                sibling,
+            )
 
         agents = (self.product / "AGENTS.md").read_bytes()
         self.assertTrue(agents.startswith(originals["AGENTS.md"]))
-        block = agents[len(originals["AGENTS.md"]):].decode("utf-8").replace("\r\n", "\n")
-        self.assertRegex(block, r"Use the project skills [^\n]*`" + NAME + r"`[^\n]* for their "
-                                r"named work\.")
+        block = agents[len(originals["AGENTS.md"]) :].decode("utf-8").replace("\r\n", "\n")
+        self.assertRegex(
+            block,
+            r"Use the project skills [^\n]*`" + NAME + r"`[^\n]* for their "
+            r"named work\.",
+        )
         # The block holds the-way's own paths only, never one the product chose (WAY-107).
         for product_path in ("docs/backlog/", "guidelines/coding.md", "local-data/"):
             self.assertNotIn(product_path, block)
         for name in ("foundations/decisions.md", "guidelines/coding.md", "CLAUDE.md"):
             self.assertEqual((self.product / name).read_bytes(), originals[name])
-        self.assertTrue((self.product / ".gitignore").read_bytes().startswith(
-            originals[".gitignore"]))
-        self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(),
-                         self.commit)
-        self.assertEqual(set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
-                         {".gitmodules", ".the-way"})
+        self.assertTrue(
+            (self.product / ".gitignore").read_bytes().startswith(originals[".gitignore"])
+        )
+        self.assertEqual(
+            self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(), self.commit
+        )
+        self.assertEqual(
+            set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
+            {".gitmodules", ".the-way"},
+        )
 
         installed = self.product_files()
         repeated = self.install("--apply")
@@ -158,19 +202,18 @@ class CodingGuidelinesInstallationTest(unittest.TestCase):
                             make(path)
                             before = self.product_tree()
                             refused = self.install(*args)
-                            self.assertNotEqual(refused.returncode, 0,
-                                                refused.stdout + refused.stderr)
+                            self.assertNotEqual(
+                                refused.returncode, 0, refused.stdout + refused.stderr
+                            )
                             if kind != "non-UTF-8 file":
                                 # The non-UTF-8 case stops on an uncaught UnicodeDecodeError
                                 # (pre-existing, C37); only its exit and the untouched tree count.
-                                self.assertIn("Existing integration file differs",
-                                              refused.stderr)
+                                self.assertIn("Existing integration file differs", refused.stderr)
                                 self.assertIn(directory, refused.stderr)
                                 self.assertIn(NAME, refused.stderr)
                             self.assertNotIn("Installed.", refused.stdout)
                             self.assertEqual(before, self.product_tree())
-                            self.assertEqual(
-                                self.git("ls-files", "--stage").stdout, "")
+                            self.assertEqual(self.git("ls-files", "--stage").stdout, "")
 
 
 if __name__ == "__main__":

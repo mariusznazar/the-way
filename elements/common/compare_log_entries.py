@@ -58,7 +58,7 @@ def read_blocks(path):
     try:
         with open(path, "rb") as handle:
             text = handle.read().decode("utf-8")
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         raise Failure("%s cannot be read as UTF-8 text" % path)
     found, current = [], None
     for number, line in enumerate(text.split("\n"), start=1):
@@ -80,8 +80,9 @@ def read_blocks(path):
             lines.pop()
         blocks.append(Block(key, number, lines))
     if not any(block.key != WITHDRAWN for block in blocks):
-        raise Failure("%s holds no entry: no heading `### PREFIX-NN — question` opens a block"
-                      % path)
+        raise Failure(
+            "%s holds no entry: no heading `### PREFIX-NN — question` opens a block" % path
+        )
     return blocks
 
 
@@ -137,16 +138,29 @@ def compare(before, after, before_path, after_path):
             continue
         for path, blocks in ((before_path, first), (after_path, second)):
             if len(blocks) > 1:
-                reports.append("%s stands %d times in %s, at lines %s" % (
-                    key, len(blocks), path, listing([block.line for block in blocks])))
+                reports.append(
+                    "%s stands %d times in %s, at lines %s"
+                    % (key, len(blocks), path, listing([block.line for block in blocks]))
+                )
         index = first_difference(first[0].lines, second[0].lines)
         if index is not None:
             left_line = line_at(first[0], index)
             right_line = line_at(second[0], index)
-            reports.append("%s differs: the first line that differs is line %d in %s and line %d "
-                           "in %s\n  %s: %s\n  %s: %s" % (
-                               key, left_line[0], before_path, right_line[0], after_path,
-                               before_path, left_line[1], after_path, right_line[1]))
+            reports.append(
+                "%s differs: the first line that differs is line %d in %s and line %d "
+                "in %s\n  %s: %s\n  %s: %s"
+                % (
+                    key,
+                    left_line[0],
+                    before_path,
+                    right_line[0],
+                    after_path,
+                    before_path,
+                    left_line[1],
+                    after_path,
+                    right_line[1],
+                )
+            )
     return reports
 
 
@@ -159,14 +173,20 @@ def run(before_path, after_path):
         return reports + ["%d report%s." % (len(reports), "" if len(reports) == 1 else "s")], 1
     entries_before = sum(1 for block in before if block.key != WITHDRAWN)
     entries_after = sum(1 for block in after if block.key != WITHDRAWN)
-    return ["Compared %d entries of %s with %d of %s: all the same byte for byte."
-            % (entries_before, before_path, entries_after, after_path)], 0
+    return [
+        "Compared %d entries of %s with %d of %s: all the same byte for byte."
+        % (entries_before, before_path, entries_after, after_path)
+    ], 0
 
 
 def parser():
-    found = Parser(prog="compare_log_entries.py",
-                   description="Comparison of the entries of two copies of a decision log.")
-    found.add_argument("before", metavar="BEFORE", help="the copy of the log from before the change")
+    found = Parser(
+        prog="compare_log_entries.py",
+        description="Comparison of the entries of two copies of a decision log.",
+    )
+    found.add_argument(
+        "before", metavar="BEFORE", help="the copy of the log from before the change"
+    )
     found.add_argument("after", metavar="AFTER", help="the copy of the log from after the change")
     return found
 

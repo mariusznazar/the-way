@@ -36,13 +36,15 @@ def read(name: str) -> tuple[dict[str, str], list[str], str]:
             continue
         key, _, value = line.partition(":")
         fields[key] = value.strip()
-    return fields, indented, "\n".join(lines[end + 1:])
+    return fields, indented, "\n".join(lines[end + 1 :])
 
 
 class AgentTypeDefinitions(unittest.TestCase):
     def test_the_directory_holds_the_two_definitions_and_nothing_else(self) -> None:
-        self.assertEqual(sorted(path.name for path in DIRECTORY.iterdir()),
-                         ["the-way-author.md", "the-way-stage.md"])
+        self.assertEqual(
+            sorted(path.name for path in DIRECTORY.iterdir()),
+            ["the-way-author.md", "the-way-stage.md"],
+        )
 
     def test_each_definition_holds_its_fields_and_no_other(self) -> None:
         for name, expected in FIELDS.items():

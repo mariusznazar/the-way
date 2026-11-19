@@ -71,8 +71,16 @@ def missing_field(text: str) -> str | None:
 def definition_paths(root: Path) -> list[str]:
     """Every path git lists below the source directory, sorted: tracked or untracked and not
     ignored, and present on disk."""
-    listed = git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
-                 SOURCE_DIRECTORY + "/")
+    listed = git(
+        root,
+        "ls-files",
+        "-z",
+        "--cached",
+        "--others",
+        "--exclude-standard",
+        "--",
+        SOURCE_DIRECTORY + "/",
+    )
     paths = set()
     for raw in listed.split(b"\0"):
         if not raw:
@@ -90,8 +98,10 @@ def check_definition(path: str, data: bytes) -> None:
     """Stop with the first way the definition at `path` breaks the form."""
     stem = path.removeprefix(SOURCE_DIRECTORY + "/")
     if "/" in stem or not stem.endswith(".md") or not NAME.fullmatch(stem.removesuffix(".md")):
-        raise GeneratorError(f"{path}: not a definition; its name must be `{PREFIX}<words>.md` "
-                             f"directly in {SOURCE_DIRECTORY}/")
+        raise GeneratorError(
+            f"{path}: not a definition; its name must be `{PREFIX}<words>.md` "
+            f"directly in {SOURCE_DIRECTORY}/"
+        )
     try:
         text = data.decode("utf-8")
     except UnicodeDecodeError as error:
@@ -103,8 +113,10 @@ def check_definition(path: str, data: bytes) -> None:
         field = missing_field(text)
         if field is not None:
             raise MissingFieldError(f"{path}: the frontmatter has no line `{field}:`")
-        raise GeneratorError(f"{path}: the file must open with `---`, a `name:` line and a "
-                             "`description:` line, each on one line")
+        raise GeneratorError(
+            f"{path}: the file must open with `---`, a `name:` line and a "
+            "`description:` line, each on one line"
+        )
     name, description = head.groups()
     if name != stem.removesuffix(".md"):
         raise GeneratorError(f"{path}: name '{name}' is not the file's name without `.md`")
@@ -112,7 +124,7 @@ def check_definition(path: str, data: bytes) -> None:
         raise GeneratorError(f"{path}: the description does not end with `{OWN_MARK}`")
     if ": " in description or " #" in description or description[0] in "-?:,[]{}#&*!|>'\"%@`":
         raise GeneratorError(f"{path}: description is not a safe plain YAML scalar")
-    if "\n---\n" not in text[head.end() - 1:]:
+    if "\n---\n" not in text[head.end() - 1 :]:
         raise GeneratorError(f"{path}: the frontmatter is not closed by a `---` line")
 
 
@@ -132,16 +144,20 @@ def orphans(root: Path, produced: dict[str, bytes]) -> list[str]:
     base = root / COPY_DIRECTORY
     if not base.is_dir():
         return []
-    return [f"{COPY_DIRECTORY}/{child.name}"
-            for child in sorted(base.iterdir(), key=lambda entry: entry.name)
-            if child.name.startswith(PREFIX) and f"{COPY_DIRECTORY}/{child.name}" not in produced]
+    return [
+        f"{COPY_DIRECTORY}/{child.name}"
+        for child in sorted(base.iterdir(), key=lambda entry: entry.name)
+        if child.name.startswith(PREFIX) and f"{COPY_DIRECTORY}/{child.name}" not in produced
+    ]
 
 
 def main(argv: list[str] | None = None, root: Path = ROOT) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate the copies of the agent type definitions of the-way's task cycle.")
-    parser.add_argument("--write", action="store_true",
-                        help="write the copies; without it, print what would change")
+        description="Generate the copies of the agent type definitions of the-way's task cycle."
+    )
+    parser.add_argument(
+        "--write", action="store_true", help="write the copies; without it, print what would change"
+    )
     arguments = parser.parse_args(argv)
     try:
         produced = produce(root)

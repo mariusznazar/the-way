@@ -12,18 +12,29 @@ import unittest
 SOURCE = Path(__file__).resolve().parent.parent
 INSTALL = SOURCE / "installation/install.py"
 SKILL_SOURCE = "product-guidelines/styleguide/SKILL.md"
-WRAPPERS = (".claude/skills/the-way-maintain-styleguide/SKILL.md",
-            ".agents/skills/the-way-maintain-styleguide/SKILL.md")
+WRAPPERS = (
+    ".claude/skills/the-way-maintain-styleguide/SKILL.md",
+    ".agents/skills/the-way-maintain-styleguide/SKILL.md",
+)
 CHECK = "python -B .the-way/elements/common/foundation_check.py"
 # Before every merge: a reference of guidelines to an entry the change removed, or a moved pin,
 # breaks guidelines whatever files the change touches.
-SENTENCE = (f"Before a merge, run every test of this repository with its one command, which "
-            f"runs `{CHECK}` too,")
+SENTENCE = (
+    f"Before a merge, run every test of this repository with its one command, which "
+    f"runs `{CHECK}` too,"
+)
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None):
-    return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        capture_output=True,
+        check=False,
+    )
 
 
 class StyleguideInstallationTest(unittest.TestCase):
@@ -45,8 +56,9 @@ class StyleguideInstallationTest(unittest.TestCase):
         # The installer under test is the one in the working tree, committed or not; the clone
         # supplies the source that is installed, whose commit the installer pins.
         shutil.copyfile(INSTALL, self.installer)
-        available = command("git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}",
-                            cwd=self.source)
+        available = command(
+            "git", "cat-file", "-e", f"{self.commit}:{SKILL_SOURCE}", cwd=self.source
+        )
         self.assertEqual(available.returncode, 0, f"{SKILL_SOURCE} is not committed")
 
     def git(self, *args: str, cwd: Path | None = None):
@@ -55,14 +67,25 @@ class StyleguideInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str, answer: str = "y\n"):
-        return command(sys.executable, "-B", str(self.installer), str(self.product),
-                       "--url", str(self.source), *args, cwd=self.product, input_text=answer)
+        return command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(self.source),
+            *args,
+            cwd=self.product,
+            input_text=answer,
+        )
 
     def product_files(self):
-        return {path.relative_to(self.product).as_posix(): path.read_bytes()
-                for path in self.product.rglob("*")
-                if path.is_file() and path.relative_to(self.product).parts[0]
-                not in (".git", ".the-way")}
+        return {
+            path.relative_to(self.product).as_posix(): path.read_bytes()
+            for path in self.product.rglob("*")
+            if path.is_file()
+            and path.relative_to(self.product).parts[0] not in (".git", ".the-way")
+        }
 
     def test_preview_apply_repeat_exposes_the_styleguide_skill_and_preserves_product(self) -> None:
         # A product left without the wrapper cannot reach the skill; product files must survive.
@@ -95,21 +118,31 @@ class StyleguideInstallationTest(unittest.TestCase):
         wrapper = claude.read_text(encoding="utf-8")
         self.assertTrue(wrapper.startswith("---\nname: the-way-maintain-styleguide\n"), wrapper)
         self.assertNotIn(self.commit, wrapper)
-        self.assertIn(f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
-                      "inside `.the-way` when the step or variant that names it comes, not all "
-                      "of them at the start.", wrapper)
+        self.assertIn(
+            f"Read `.the-way/{SKILL_SOURCE}` in full and follow it, and read a file it names "
+            "inside `.the-way` when the step or variant that names it comes, not all "
+            "of them at the start.",
+            wrapper,
+        )
         self.assertIn(f"If `.the-way/{SKILL_SOURCE}` is absent", wrapper)
-        siblings = [path for directory in (".claude", ".agents")
-                    for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")]
+        siblings = [
+            path
+            for directory in (".claude", ".agents")
+            for path in (self.product / directory / "skills").glob("the-way-*/SKILL.md")
+        ]
         self.assertEqual(len(siblings), 42)
         for sibling in siblings:
             text = sibling.read_text(encoding="utf-8")
-            self.assertRegex(text, r"names another the-way skill — [^\n]*`maintain-styleguide`"
-                                   r"[^\n]* — use this product's project skill", sibling)
+            self.assertRegex(
+                text,
+                r"names another the-way skill — [^\n]*`maintain-styleguide`"
+                r"[^\n]* — use this product's project skill",
+                sibling,
+            )
 
         agents = (self.product / "AGENTS.md").read_bytes()
         self.assertTrue(agents.startswith(originals["AGENTS.md"]))
-        block = agents[len(originals["AGENTS.md"]):].decode("utf-8").replace("\r\n", "\n")
+        block = agents[len(originals["AGENTS.md"]) :].decode("utf-8").replace("\r\n", "\n")
         self.assertIn("`the-way-maintain-styleguide`", block)
         self.assertIn(SENTENCE, block)
         # The block holds the-way's own paths only, never one the product chose (WAY-107).
@@ -117,12 +150,16 @@ class StyleguideInstallationTest(unittest.TestCase):
             self.assertNotIn(product_path, block)
         for name in ("foundations/decisions.md", "guidelines/styleguide-web.md", "CLAUDE.md"):
             self.assertEqual((self.product / name).read_bytes(), originals[name])
-        self.assertTrue((self.product / ".gitignore").read_bytes().startswith(
-            originals[".gitignore"]))
-        self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(),
-                         self.commit)
-        self.assertEqual(set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
-                         {".gitmodules", ".the-way"})
+        self.assertTrue(
+            (self.product / ".gitignore").read_bytes().startswith(originals[".gitignore"])
+        )
+        self.assertEqual(
+            self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(), self.commit
+        )
+        self.assertEqual(
+            set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
+            {".gitmodules", ".the-way"},
+        )
 
         installed = self.product_files()
         repeated = self.install("--apply")

@@ -28,9 +28,20 @@ import plan_check  # noqa: E402
 
 # --- The definition the plan breaks down -------------------------------------------------------
 
-DEFINITION_SECTIONS = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints",
-                       "Deliverables", "Success", "Risks", "Open questions",
-                       "Touched parts and decisions", "Technology", "Projected foundation changes")
+DEFINITION_SECTIONS = (
+    "Goal",
+    "Background",
+    "In scope",
+    "Out of scope",
+    "Inputs and constraints",
+    "Deliverables",
+    "Success",
+    "Risks",
+    "Open questions",
+    "Touched parts and decisions",
+    "Technology",
+    "Projected foundation changes",
+)
 
 DECISION_HEADING = "(new) — Who can create a player account?"
 INVARIANT_HEADING = "player-save-isolation"
@@ -87,19 +98,19 @@ DEFINITION_BODIES = {
     "Goal": "Gracz przechodzi pierwszą mapę od początku do końca i wraca do zapisanego postępu.",
     "Background": "Gra istnieje tylko jako koncepcja; gracze nie mają jeszcze w co zagrać.",
     "In scope": "- pierwsza mapa na siatce heksagonalnej\n"
-                "- zapis postępu gracza\n"
-                "- konta graczy\n"
-                "- serwer testowy, na którym gra działa",
+    "- zapis postępu gracza\n"
+    "- konta graczy\n"
+    "- serwer testowy, na którym gra działa",
     "Out of scope": "- edytor map",
     "Inputs and constraints": "- koncepcja projektowa gry",
     "Deliverables": "- grywalna pierwsza mapa na serwerze testowym",
     "Success": "Gracz kończy mapę i wraca do niej po przerwie.\n"
-               "**OBALENIE:** jeśli żaden gracz testowy nie kończy mapy — rama jest fałszywa.",
+    "**OBALENIE:** jeśli żaden gracz testowy nie kończy mapy — rama jest fałszywa.",
     "Risks": "none",
     "Open questions": "- %s — resolved in: breakdown\n"
-                      "- %s — resolved in: task: edytor map\n"
-                      "- %s — resolved in: task: konta graczy"
-                      % (QUESTION_BREAKDOWN, QUESTION_EDITOR, QUESTION_SAVES),
+    "- %s — resolved in: task: edytor map\n"
+    "- %s — resolved in: task: konta graczy"
+    % (QUESTION_BREAKDOWN, QUESTION_EDITOR, QUESTION_SAVES),
     "Touched parts and decisions": "none",
     "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01",
     "Projected foundation changes": PROJECTED,
@@ -128,9 +139,9 @@ def fingerprint_of(bodies=None):
 
 def definition(bodies=None, approval_fingerprint=None, status="Status: approved 2026-10-03"):
     content = body_text(definition_bodies(bodies), DEFINITION_SECTIONS)
-    approval = ("- Approved by: Mariusz, 2026-10-03\n"
-                "- Definition fingerprint: %s"
-                % (approval_fingerprint or wording_fingerprint(content)))
+    approval = "- Approved by: Mariusz, 2026-10-03\n- Definition fingerprint: %s" % (
+        approval_fingerprint or wording_fingerprint(content)
+    )
     return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Approval record\n\n%s\n" % (status, content, approval)
 
 
@@ -146,12 +157,36 @@ TASK_COLUMNS = ("#", "Task", "Goal", "Depends on", "In scope", "Preparatory", "S
 ENTRY_COLUMNS = ("Entry", "Realized by", "Written by")
 
 TASKS = (
-    ("1", "test-server", "Serwer testowy przyjmuje wdrożenie gry.", "—", "4", "yes", "to refine",
-     "—"),
-    ("2", "first-map", "Gracz przechodzi pierwszą mapę na serwerze testowym.", "1", "1", "no",
-     "ready for cycle", "[first-map](tasks/first-map.md)"),
-    ("3", "player-accounts", "Gracz zakłada konto i po powrocie wczytuje swój postęp.", "1, 2",
-     "2, 3", "no", "to refine", "—"),
+    (
+        "1",
+        "test-server",
+        "Serwer testowy przyjmuje wdrożenie gry.",
+        "—",
+        "4",
+        "yes",
+        "to refine",
+        "—",
+    ),
+    (
+        "2",
+        "first-map",
+        "Gracz przechodzi pierwszą mapę na serwerze testowym.",
+        "1",
+        "1",
+        "no",
+        "ready for cycle",
+        "[first-map](tasks/first-map.md)",
+    ),
+    (
+        "3",
+        "player-accounts",
+        "Gracz zakłada konto i po powrocie wczytuje swój postęp.",
+        "1, 2",
+        "2, 3",
+        "no",
+        "to refine",
+        "—",
+    ),
 )
 
 ENTRIES = (
@@ -160,8 +195,10 @@ ENTRIES = (
     (TERM_HEADING, "2", "2"),
 )
 
-ANSWER_ITEM = ("- %s — definition: breakdown — answer: liczbą ukończonych map "
-               "(human, 2026-10-05)" % QUESTION_BREAKDOWN)
+ANSWER_ITEM = (
+    "- %s — definition: breakdown — answer: liczbą ukończonych map "
+    "(human, 2026-10-05)" % QUESTION_BREAKDOWN
+)
 EDITOR_ITEM = "- %s — definition: task: edytor map — plan: task 2" % QUESTION_EDITOR
 SAVES_ITEM = "- %s — definition: task: konta graczy — plan: task 3" % QUESTION_SAVES
 QUESTIONS = "\n".join((ANSWER_ITEM, EDITOR_ITEM, SAVES_ITEM))
@@ -180,8 +217,16 @@ def changed(rows, number, column, value, columns=TASK_COLUMNS):
     return [tuple(row) for row in result]
 
 
-def plan(status="Status: draft", definition_line=None, fingerprint=None, tasks=None, entries=None,
-         bodies=None, order=None, title="# Plan projektu: Pierwsza mapa"):
+def plan(
+    status="Status: draft",
+    definition_line=None,
+    fingerprint=None,
+    tasks=None,
+    entries=None,
+    bodies=None,
+    order=None,
+    title="# Plan projektu: Pierwsza mapa",
+):
     fingerprint = fingerprint or FINGERPRINT
     if definition_line is None:
         definition_line = "Definition: definition.md — fingerprint %s" % fingerprint
@@ -227,8 +272,10 @@ class Whole(unittest.TestCase):
         found = findings(plan(status="Status: almost done"))
         self.assertTrue(found)
         for finding in found:
-            self.assertEqual(str(finding), "fail: %s — line %d: %s"
-                             % (finding.condition, finding.line, finding.message))
+            self.assertEqual(
+                str(finding),
+                "fail: %s — line %d: %s" % (finding.condition, finding.line, finding.message),
+            )
 
 
 class Template(unittest.TestCase):
@@ -254,8 +301,12 @@ class Header(unittest.TestCase):
 
     def test_a_status_off_its_forms_is_reported(self):
         # invariant: project-plan-form
-        for status in ("Status: almost done", "Status: handed over", "Status: handed over 5.10.2026",
-                       "Status: Draft"):
+        for status in (
+            "Status: almost done",
+            "Status: handed over",
+            "Status: handed over 5.10.2026",
+            "Status: Draft",
+        ):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
 
@@ -277,23 +328,28 @@ class Header(unittest.TestCase):
 
     def test_a_definition_whose_in_scope_holds_no_list_item_is_reported(self):
         # invariant: project-plan-form
-        for body in ("Projekt dostarcza pierwszą mapę, zapis postępu, konta i serwer testowy.",
-                     "### Gra\n\nPierwsza mapa i zapis postępu."):
+        for body in (
+            "Projekt dostarcza pierwszą mapę, zapis postępu, konta i serwer testowy.",
+            "### Gra\n\nPierwsza mapa i zapis postępu.",
+        ):
             with self.subTest(body=body):
                 self.assertIn("form", self.in_scope(body))
 
     def test_in_scope_items_under_third_level_headings_pass(self):
-        body = ("### Gra\n\n"
-                "- pierwsza mapa na siatce heksagonalnej\n"
-                "- zapis postępu gracza\n"
-                "- konta graczy\n\n"
-                "### Infrastruktura\n\n"
-                "- serwer testowy, na którym gra działa")
+        body = (
+            "### Gra\n\n"
+            "- pierwsza mapa na siatce heksagonalnej\n"
+            "- zapis postępu gracza\n"
+            "- konta graczy\n\n"
+            "### Infrastruktura\n\n"
+            "- serwer testowy, na którym gra działa"
+        )
         self.assertEqual(self.in_scope(body), [])
 
     def test_in_scope_with_a_sentence_before_its_list_passes(self):
-        self.assertEqual(self.in_scope("Projekt dostarcza:\n\n" + DEFINITION_BODIES["In scope"]),
-                         [])
+        self.assertEqual(
+            self.in_scope("Projekt dostarcza:\n\n" + DEFINITION_BODIES["In scope"]), []
+        )
 
     def test_in_scope_items_written_with_a_star_or_a_plus_pass(self):
         for marker in ("* ", "+ "):
@@ -305,8 +361,9 @@ class Header(unittest.TestCase):
         for after in (". ", ") "):
             with self.subTest(after=after):
                 lines = DEFINITION_BODIES["In scope"].splitlines()
-                body = "\n".join("%d%s%s" % (n, after, line[2:])
-                                 for n, line in enumerate(lines, start=1))
+                body = "\n".join(
+                    "%d%s%s" % (n, after, line[2:]) for n, line in enumerate(lines, start=1)
+                )
                 self.assertEqual(self.in_scope(body), [])
 
     def test_a_plan_handed_over_on_a_date_passes(self):
@@ -318,10 +375,12 @@ class Header(unittest.TestCase):
 
     def test_a_definition_line_off_its_form_is_reported(self):
         # invariant: project-plan-form
-        for line in ("Definition: definition.md",
-                     "Definition: definition.md — fingerprint %s" % FINGERPRINT[:7],
-                     "Definition: definition.md — fingerprint %sz" % FINGERPRINT[:7],
-                     "Definition: — fingerprint %s" % FINGERPRINT):
+        for line in (
+            "Definition: definition.md",
+            "Definition: definition.md — fingerprint %s" % FINGERPRINT[:7],
+            "Definition: definition.md — fingerprint %sz" % FINGERPRINT[:7],
+            "Definition: — fingerprint %s" % FINGERPRINT,
+        ):
             with self.subTest(line=line):
                 self.assertIn("form", conditions(plan(definition_line=line)))
 
@@ -334,15 +393,20 @@ class Header(unittest.TestCase):
         # invariant: project-plan-form
         self.assertEqual(set(conditions(PLAN, None)), {"form"})
 
-    def test_a_fingerprint_matching_the_approval_record_but_not_the_changed_definition_is_reported(self):
+    def test_a_fingerprint_matching_the_approval_record_but_not_the_changed_definition_is_reported(
+        self,
+    ):
         # invariant: project-plan-form
         changed_after_approval = DEFINITION.replace(
-            "- edytor map", "- edytor map\n- tryb wieloosobowy")
+            "- edytor map", "- edytor map\n- tryb wieloosobowy"
+        )
         self.assertNotEqual(changed_after_approval, DEFINITION)
         self.assertIn("- Definition fingerprint: %s" % FINGERPRINT, changed_after_approval)
         self.assertIn("form", conditions(PLAN, changed_after_approval))
 
-    def test_a_fingerprint_other_than_the_one_the_approval_record_and_the_text_hold_is_reported(self):
+    def test_a_fingerprint_other_than_the_one_the_approval_record_and_the_text_hold_is_reported(
+        self,
+    ):
         # invariant: project-plan-form
         self.assertIn("form", conditions(plan(fingerprint=OTHER_FINGERPRINT)))
 
@@ -352,8 +416,9 @@ class Header(unittest.TestCase):
         self.assertIn("form", conditions(PLAN, stale_approval))
 
     def test_a_change_of_spaces_in_the_definition_keeps_the_fingerprint(self):
-        respaced = DEFINITION.replace("Gra istnieje tylko jako koncepcja;",
-                                      "Gra istnieje  tylko\njako koncepcja;")
+        respaced = DEFINITION.replace(
+            "Gra istnieje tylko jako koncepcja;", "Gra istnieje  tylko\njako koncepcja;"
+        )
         self.assertEqual(conditions(PLAN, respaced), [])
 
 
@@ -379,8 +444,10 @@ class Sections(unittest.TestCase):
         self.assertIn("form", conditions(plan(order=order)))
 
     def test_a_heading_inside_a_fenced_block_is_no_section(self):
-        phases = ("- Faza 1: zadania 1, 2 — zamyka ją wdrożenie mapy na serwer testowy\n\n"
-                  "```\n## Not a section\n```")
+        phases = (
+            "- Faza 1: zadania 1, 2 — zamyka ją wdrożenie mapy na serwer testowy\n\n"
+            "```\n## Not a section\n```"
+        )
         self.assertEqual(conditions(plan(bodies={"Phases": phases})), [])
 
     def test_an_empty_section_is_reported(self):
@@ -389,8 +456,11 @@ class Sections(unittest.TestCase):
 
     def test_a_change_log_without_a_dated_item_is_reported(self):
         # invariant: project-plan-form
-        for log in ("- written from the definition at fingerprint %s" % FINGERPRINT,
-                    "Plan napisany z definicji.", "none"):
+        for log in (
+            "- written from the definition at fingerprint %s" % FINGERPRINT,
+            "Plan napisany z definicji.",
+            "none",
+        ):
             with self.subTest(log=log):
                 self.assertIn("form", conditions(plan(bodies={"Change log": log})))
 
@@ -407,11 +477,13 @@ class Sections(unittest.TestCase):
         self.assertIn("form", conditions(plan(bodies={"Projected entries": "none"})))
 
     def test_a_definition_projecting_no_entry_lets_projected_entries_read_none(self):
-        bodies = {"Projected foundation changes": "Candidates: 2 shown, 0 accepted — 2026-10-02"
-                                                  "\n\nnone"}
+        bodies = {
+            "Projected foundation changes": "Candidates: 2 shown, 0 accepted — 2026-10-02\n\nnone"
+        }
         text = definition(bodies=bodies)
-        found = conditions(plan(fingerprint=fingerprint_of(bodies),
-                                bodies={"Projected entries": "none"}), text)
+        found = conditions(
+            plan(fingerprint=fingerprint_of(bodies), bodies={"Projected entries": "none"}), text
+        )
         self.assertEqual(found, [])
 
 
@@ -419,9 +491,11 @@ class TasksTable(unittest.TestCase):
     def test_a_tasks_header_off_the_template_is_reported(self):
         # invariant: project-plan-form
         header = table(TASK_COLUMNS, ()).splitlines()[0]
-        for other in (header.replace(" Depends on |", " Depends |"),
-                      header.replace(" Document |", ""),
-                      header.replace("| Goal | Depends on |", "| Depends on | Goal |")):
+        for other in (
+            header.replace(" Depends on |", " Depends |"),
+            header.replace(" Document |", ""),
+            header.replace("| Goal | Depends on |", "| Depends on | Goal |"),
+        ):
             with self.subTest(header=other):
                 self.assertIn("form", conditions(PLAN.replace(header, other)))
 
@@ -438,8 +512,15 @@ class TasksTable(unittest.TestCase):
 
     def test_a_task_name_off_its_form_is_reported(self):
         # invariant: project-plan-form
-        for value in ("Test-Server", "test_server", "test--server", "-test-server",
-                      "test-server-", "test server", ""):
+        for value in (
+            "Test-Server",
+            "test_server",
+            "test--server",
+            "-test-server",
+            "test-server-",
+            "test server",
+            "",
+        ):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 1, "Task", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
@@ -481,8 +562,13 @@ class TasksTable(unittest.TestCase):
 
     def test_states_off_the_list_are_reported(self):
         # invariant: project-plan-form
-        for value in ("To refine", "done — goal delivered in task", "dropped",
-                      "done — goal delivered in task x", ""):
+        for value in (
+            "To refine",
+            "done — goal delivered in task",
+            "dropped",
+            "done — goal delivered in task x",
+            "",
+        ):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 3, "State", value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
@@ -512,21 +598,36 @@ class TasksTable(unittest.TestCase):
 
     def test_a_number_in_digits_other_than_ascii_is_reported(self):
         # invariant: project-plan-form
-        for column, value in (("Depends on", "1, ２"), ("In scope", "2, ٣"),
-                              ("#", "３")):
+        for column, value in (("Depends on", "1, ２"), ("In scope", "2, ٣"), ("#", "３")):
             with self.subTest(column=column, value=value):
                 tasks = changed(TASKS, 3, column, value)
                 self.assertIn("form", conditions(plan(tasks=tasks)))
 
     # A task 23 the plan holds, so that a digit read as a number would name a task that exists.
-    TASK_23 = ("23", "map-tutorial", "Gracz przechodzi samouczek przed pierwszą mapą.", "2", "1",
-               "no", "to refine", "—")
+    TASK_23 = (
+        "23",
+        "map-tutorial",
+        "Gracz przechodzi samouczek przed pierwszą mapą.",
+        "2",
+        "1",
+        "no",
+        "to refine",
+        "—",
+    )
 
     def test_a_task_number_with_an_arabic_indic_digit_is_reported(self):
         # invariant: project-plan-form
         # Read as 33, `3٣` would be a fresh number and the plan would pass.
-        fourth = ("3٣", "map-tutorial", "Gracz przechodzi samouczek przed pierwszą mapą.",
-                  "2", "1", "no", "to refine", "—")
+        fourth = (
+            "3٣",
+            "map-tutorial",
+            "Gracz przechodzi samouczek przed pierwszą mapą.",
+            "2",
+            "1",
+            "no",
+            "to refine",
+            "—",
+        )
         self.assertIn("form", conditions(plan(tasks=list(TASKS) + [fourth])))
 
     def test_depends_on_with_an_arabic_indic_digit_is_reported(self):
@@ -540,8 +641,10 @@ class TasksTable(unittest.TestCase):
         # invariant: project-plan-form
         # Read as 23, `2٣` would name the task 23 the plan holds and the plan would pass.
         tasks = list(TASKS) + [self.TASK_23]
-        self.assertEqual(conditions(plan(tasks=changed(
-            tasks, 3, "State", "done — goal delivered in task 23"))), [])
+        self.assertEqual(
+            conditions(plan(tasks=changed(tasks, 3, "State", "done — goal delivered in task 23"))),
+            [],
+        )
         tasks = changed(tasks, 3, "State", "done — goal delivered in task 2٣")
         self.assertIn("form", conditions(plan(tasks=tasks)))
 
@@ -550,8 +653,15 @@ class TasksTable(unittest.TestCase):
         self.assertIn("form", conditions(plan(bodies={"Change log": log})))
 
     def test_every_state_of_the_list_passes(self):
-        for value in ("to refine", "waiting for human", "ready for cycle", "in cycle", "done",
-                      "done — goal delivered in task 2", "dropped — approved by human"):
+        for value in (
+            "to refine",
+            "waiting for human",
+            "ready for cycle",
+            "in cycle",
+            "done",
+            "done — goal delivered in task 2",
+            "dropped — approved by human",
+        ):
             with self.subTest(value=value):
                 tasks = changed(TASKS, 3, "State", value)
                 self.assertEqual(conditions(plan(tasks=tasks)), [])
@@ -573,8 +683,11 @@ class EntriesTable(unittest.TestCase):
     def test_an_entries_header_off_the_template_is_reported(self):
         # invariant: project-plan-form
         header = table(ENTRY_COLUMNS, ()).splitlines()[0]
-        for other in ("| Entry | Realized by |", "| Entry | Written by | Realized by |",
-                      "| Projected entry | Realized by | Written by |"):
+        for other in (
+            "| Entry | Realized by |",
+            "| Entry | Written by | Realized by |",
+            "| Projected entry | Realized by | Written by |",
+        ):
             with self.subTest(header=other):
                 self.assertIn("form", conditions(PLAN.replace(header, other)))
 
@@ -622,8 +735,9 @@ class Entries(unittest.TestCase):
 
     def test_a_row_naming_the_entry_with_one_word_changed_is_reported(self):
         # invariant: project-plan-check
-        entries = changed(ENTRIES, 1, "Entry", "(new) — Who may create a player account?",
-                          ENTRY_COLUMNS)
+        entries = changed(
+            ENTRIES, 1, "Entry", "(new) — Who may create a player account?", ENTRY_COLUMNS
+        )
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_a_row_naming_the_invariant_with_a_version_is_reported(self):
@@ -647,8 +761,11 @@ class Entries(unittest.TestCase):
         self.assertEqual(set(conditions(plan(entries=entries))), {"entries"})
 
     def test_a_projected_heading_holding_a_bar_written_escaped_in_its_cell_passes(self):
-        bodies = {"Projected foundation changes": PROJECTED.replace(
-            "#### mapa\n", "#### mapa | plansza\n")}
+        bodies = {
+            "Projected foundation changes": PROJECTED.replace(
+                "#### mapa\n", "#### mapa | plansza\n"
+            )
+        }
         text = definition(bodies=bodies)
         self.assertIn("#### mapa | plansza\n", text)
         entries = changed(ENTRIES, 3, "Entry", "mapa \\| plansza", ENTRY_COLUMNS)
@@ -656,8 +773,9 @@ class Entries(unittest.TestCase):
         self.assertEqual(found, [])
 
     def test_a_level_four_heading_outside_projected_changes_is_no_projected_entry(self):
-        bodies = {"Background": "Gra istnieje tylko jako koncepcja.\n\n"
-                                "#### (new) — Who keeps the map?"}
+        bodies = {
+            "Background": "Gra istnieje tylko jako koncepcja.\n\n#### (new) — Who keeps the map?"
+        }
         text = definition(bodies=bodies)
         self.assertEqual(conditions(plan(fingerprint=fingerprint_of(bodies)), text), [])
 
@@ -678,27 +796,34 @@ class Scope(unittest.TestCase):
         self.assertEqual(conditions(plan(tasks=tasks)), [])
 
     def test_a_nested_detail_under_an_in_scope_item_is_no_item(self):
-        bodies = {"In scope": DEFINITION_BODIES["In scope"].replace(
-            "- konta graczy", "- konta graczy\n  - logowanie adresem e-mail")}
+        bodies = {
+            "In scope": DEFINITION_BODIES["In scope"].replace(
+                "- konta graczy", "- konta graczy\n  - logowanie adresem e-mail"
+            )
+        }
         text = definition(bodies=bodies)
         self.assertEqual(conditions(plan(fingerprint=fingerprint_of(bodies)), text), [])
 
     def test_a_number_naming_a_nested_detail_is_above_the_count(self):
         # invariant: project-plan-check
-        bodies = {"In scope": DEFINITION_BODIES["In scope"].replace(
-            "- konta graczy", "- konta graczy\n  - logowanie adresem e-mail")}
+        bodies = {
+            "In scope": DEFINITION_BODIES["In scope"].replace(
+                "- konta graczy", "- konta graczy\n  - logowanie adresem e-mail"
+            )
+        }
         text = definition(bodies=bodies)
         tasks = changed(TASKS, 3, "In scope", "2, 3, 5")
-        self.assertEqual(set(conditions(plan(tasks=tasks, fingerprint=fingerprint_of(bodies)),
-                                        text)), {"scope"})
-
+        self.assertEqual(
+            set(conditions(plan(tasks=tasks, fingerprint=fingerprint_of(bodies)), text)), {"scope"}
+        )
 
     FENCED = DEFINITION_BODIES["In scope"] + "\n\n```\n- przykład\n```"
 
     def with_in_scope(self, body, tasks=None):
         bodies = {"In scope": body}
-        return conditions(plan(tasks=tasks, fingerprint=fingerprint_of(bodies)),
-                          definition(bodies=bodies))
+        return conditions(
+            plan(tasks=tasks, fingerprint=fingerprint_of(bodies)), definition(bodies=bodies)
+        )
 
     def test_a_number_naming_a_line_in_a_fenced_block_is_above_the_count(self):
         # invariant: project-plan-check
@@ -791,33 +916,40 @@ class Order(unittest.TestCase):
     def test_a_pair_the_change_log_lets_go_side_by_side_on_the_entry_passes(self):
         for pair in ("2, 3", "3, 2"):
             with self.subTest(pair=pair):
-                item = ('- 2026-10-06 — side by side: tasks %s on "%s" — zadanie 2 czyta tylko '
-                        'własne zapisy, zadanie 3 tylko zapisy kont' % (pair, INVARIANT_HEADING))
+                item = (
+                    '- 2026-10-06 — side by side: tasks %s on "%s" — zadanie 2 czyta tylko '
+                    "własne zapisy, zadanie 3 tylko zapisy kont" % (pair, INVARIANT_HEADING)
+                )
                 self.assertEqual(conditions(self.side_by_side(item)), [])
 
     def test_an_item_letting_the_pair_go_side_by_side_on_another_entry_is_reported(self):
         # invariant: project-plan-check
-        item = ('- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania wpisu'
-                % TERM_HEADING)
+        item = '- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania wpisu' % TERM_HEADING
         self.assertEqual(conditions(self.side_by_side(item)), ["order"])
 
     def test_an_item_naming_the_entry_with_one_word_changed_is_reported(self):
         # invariant: project-plan-check
-        item = ('- 2026-10-06 — side by side: tasks 2, 3 on "player-saves-isolation" — inne '
-                'zdania wpisu')
+        item = (
+            '- 2026-10-06 — side by side: tasks 2, 3 on "player-saves-isolation" — inne '
+            "zdania wpisu"
+        )
         self.assertEqual(conditions(self.side_by_side(item)), ["order"])
 
     def test_an_item_giving_no_reason_is_reported(self):
         # invariant: project-plan-check
-        for item in ('- 2026-10-06 — side by side: tasks 2, 3 on "%s"' % INVARIANT_HEADING,
-                     '- 2026-10-06 — side by side: tasks 2, 3 on "%s" — ' % INVARIANT_HEADING):
+        for item in (
+            '- 2026-10-06 — side by side: tasks 2, 3 on "%s"' % INVARIANT_HEADING,
+            '- 2026-10-06 — side by side: tasks 2, 3 on "%s" — ' % INVARIANT_HEADING,
+        ):
             with self.subTest(item=item):
                 self.assertEqual(conditions(self.side_by_side(item)), ["order"])
 
     def test_an_item_letting_another_pair_go_side_by_side_is_reported(self):
         # invariant: project-plan-check
-        item = ('- 2026-10-06 — side by side: tasks 1, 3 on "%s" — inne zdania wpisu'
-                % INVARIANT_HEADING)
+        item = (
+            '- 2026-10-06 — side by side: tasks 1, 3 on "%s" — inne zdania wpisu'
+            % INVARIANT_HEADING
+        )
         self.assertEqual(conditions(self.side_by_side(item)), ["order"])
 
     def test_a_pair_with_a_finished_task_passes(self):
@@ -835,29 +967,43 @@ class Order(unittest.TestCase):
         # invariant: project-plan-check
         entries = changed(ENTRIES, 1, "Realized by", "2, 3", ENTRY_COLUMNS)
         text = plan(tasks=self.TASKS, entries=entries)
-        rows = [line_of(text, "| %s |" % heading)
-                for heading in (DECISION_HEADING, INVARIANT_HEADING)]
-        self.assertEqual([(f.condition, f.line) for f in findings(text)],
-                         [("order", row) for row in rows])
+        rows = [
+            line_of(text, "| %s |" % heading) for heading in (DECISION_HEADING, INVARIANT_HEADING)
+        ]
+        self.assertEqual(
+            [(f.condition, f.line) for f in findings(text)], [("order", row) for row in rows]
+        )
 
     def test_a_heading_holding_a_quote_a_dash_and_a_bar_is_matched_whole(self):
         heading = 'mapa "A" — B | C'
-        bodies = {"Projected foundation changes": PROJECTED.replace(
-            "#### mapa\n", "#### %s\n" % heading)}
+        bodies = {
+            "Projected foundation changes": PROJECTED.replace("#### mapa\n", "#### %s\n" % heading)
+        }
         text = definition(bodies=bodies)
         self.assertIn("#### %s\n" % heading, text)
-        entries = changed(changed(ENTRIES, 3, "Entry", heading.replace("|", "\\|"),
-                                  ENTRY_COLUMNS), 3, "Realized by", "2, 3", ENTRY_COLUMNS)
+        entries = changed(
+            changed(ENTRIES, 3, "Entry", heading.replace("|", "\\|"), ENTRY_COLUMNS),
+            3,
+            "Realized by",
+            "2, 3",
+            ENTRY_COLUMNS,
+        )
         entries = changed(entries, 2, "Realized by", "3", ENTRY_COLUMNS)
         log = self.LOG.replace(FINGERPRINT, fingerprint_of(bodies))
         for item, expected in (
-                ('- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania' % heading, []),
-                ('- 2026-10-06 — side by side: tasks 2, 3 on "mapa "A" — B" — inne zdania',
-                 ["order"])):
+            ('- 2026-10-06 — side by side: tasks 2, 3 on "%s" — inne zdania' % heading, []),
+            ('- 2026-10-06 — side by side: tasks 2, 3 on "mapa "A" — B" — inne zdania', ["order"]),
+        ):
             with self.subTest(item=item):
-                found = conditions(plan(tasks=self.TASKS, entries=entries,
-                                        fingerprint=fingerprint_of(bodies),
-                                        bodies={"Change log": log + "\n" + item}), text)
+                found = conditions(
+                    plan(
+                        tasks=self.TASKS,
+                        entries=entries,
+                        fingerprint=fingerprint_of(bodies),
+                        bodies={"Change log": log + "\n" + item},
+                    ),
+                    text,
+                )
                 self.assertEqual(found, expected)
 
     def test_a_dependency_off_its_form_leaves_the_order_unchecked(self):
@@ -867,8 +1013,9 @@ class Order(unittest.TestCase):
 
 class Questions(unittest.TestCase):
     def questions(self, body, definition_text=DEFINITION, fingerprint=None):
-        return conditions(plan(bodies={"Open questions": body}, fingerprint=fingerprint),
-                          definition_text)
+        return conditions(
+            plan(bodies={"Open questions": body}, fingerprint=fingerprint), definition_text
+        )
 
     def test_an_open_question_missing_from_the_plan_is_reported(self):
         # invariant: project-plan-check
@@ -924,9 +1071,10 @@ class Questions(unittest.TestCase):
         self.assertEqual(set(self.questions("none")), {"questions"})
 
     def test_a_question_the_breakdown_raised_passes(self):
-        for raised in ("- Czy gra ma tryb nocny? — definition: none — plan: task 2",
-                       "- Czy gra ma tryb nocny? — definition: none — answer: nie "
-                       "(human, 2026-10-05)"):
+        for raised in (
+            "- Czy gra ma tryb nocny? — definition: none — plan: task 2",
+            "- Czy gra ma tryb nocny? — definition: none — answer: nie (human, 2026-10-05)",
+        ):
             with self.subTest(raised=raised):
                 body = "\n".join((ANSWER_ITEM, EDITOR_ITEM, SAVES_ITEM, raised))
                 self.assertEqual(self.questions(body), [])
@@ -943,8 +1091,10 @@ class Questions(unittest.TestCase):
         self.assertEqual(self.questions(body), [])
 
     def test_a_task_question_answered_in_the_plan_passes(self):
-        answered = ("- %s — definition: task: edytor map — answer: edytor jest poza zakresem "
-                    "(definition.md, Out of scope)" % QUESTION_EDITOR)
+        answered = (
+            "- %s — definition: task: edytor map — answer: edytor jest poza zakresem "
+            "(definition.md, Out of scope)" % QUESTION_EDITOR
+        )
         body = QUESTIONS.replace(EDITOR_ITEM, answered)
         self.assertEqual(self.questions(body), [])
 
@@ -964,9 +1114,15 @@ class Command(unittest.TestCase):
                 code = exit_.code
         return code, out.getvalue(), err.getvalue()
 
-    def run_main(self, plan_text, definition_text=DEFINITION, encoding="utf-8",
-                 definition_encoding="utf-8", plan_name="plan.md",
-                 definition_name="definition.md"):
+    def run_main(
+        self,
+        plan_text,
+        definition_text=DEFINITION,
+        encoding="utf-8",
+        definition_encoding="utf-8",
+        plan_name="plan.md",
+        definition_name="definition.md",
+    ):
         with tempfile.TemporaryDirectory() as directory:
             plan_path = os.path.join(directory, plan_name)
             os.makedirs(os.path.dirname(plan_path), exist_ok=True)
@@ -986,8 +1142,13 @@ class Command(unittest.TestCase):
         for line in fails:
             self.assertRegex(line, r"^fail: [a-z]+ — line \d+: \S")
         self.assertEqual(last, "plan: %d finding(s)" % len(fails))
-        return [(re.match(r"^fail: ([a-z]+) — line (\d+):", line).group(1),
-                 int(re.match(r"^fail: ([a-z]+) — line (\d+):", line).group(2))) for line in fails]
+        return [
+            (
+                re.match(r"^fail: ([a-z]+) — line (\d+):", line).group(1),
+                int(re.match(r"^fail: ([a-z]+) — line (\d+):", line).group(2)),
+            )
+            for line in fails
+        ]
 
     def test_a_whole_plan_exits_zero(self):
         code, out, _ = self.run_main(PLAN)
@@ -998,8 +1159,9 @@ class Command(unittest.TestCase):
         tasks = changed(TASKS, 2, "In scope", "1, 7")
         entries = list(ENTRIES) + [("(new) — Who keeps the map?", "2", "2")]
         extra = "- Czy gra ma tryb nocny? — definition: breakdown — plan: task 2"
-        text = plan(tasks=tasks, entries=entries,
-                    bodies={"Open questions": "\n".join((QUESTIONS, extra))})
+        text = plan(
+            tasks=tasks, entries=entries, bodies={"Open questions": "\n".join((QUESTIONS, extra))}
+        )
         code, out, _ = self.run_main(text)
         self.assertEqual(code, 1)
         printed = self.assert_findings_printed(out)

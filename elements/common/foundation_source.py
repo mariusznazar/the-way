@@ -18,8 +18,9 @@ MAIN_BRANCHES = ("refs/remotes/origin/HEAD", "refs/heads/main", "refs/heads/mast
 def git(root, *args, stdin=None):
     """(exit code, output) of git, or (None, why) where git cannot be started."""
     try:
-        result = subprocess.run(["git", *args], cwd=root, input=stdin, capture_output=True,
-                                text=True, encoding="utf-8")
+        result = subprocess.run(
+            ["git", *args], cwd=root, input=stdin, capture_output=True, text=True, encoding="utf-8"
+        )
     except OSError as error:
         return None, str(error)
     return result.returncode, result.stdout
@@ -40,10 +41,11 @@ def at_commit(root, commit, path):
     """The lines of a file as a commit holds it, or None where the commit holds no file of that
     name or git cannot give it as UTF-8 text. A file the commit lacks is no empty file."""
     try:
-        result = subprocess.run(["git", "show", "%s:%s" % (commit, path)], cwd=root,
-                                capture_output=True)
+        result = subprocess.run(
+            ["git", "show", "%s:%s" % (commit, path)], cwd=root, capture_output=True
+        )
         text = result.stdout.decode("utf-8")
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         return None
     return text.replace("\r\n", "\n").split("\n") if result.returncode == 0 else None
 
@@ -53,5 +55,5 @@ def read(root, path):
     try:
         with open(os.path.join(root, *path.split("/")), encoding="utf-8") as handle:
             return handle.read().split("\n")
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         return []

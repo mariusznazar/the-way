@@ -18,8 +18,8 @@ the cache writes and the part of the input read from a cache. The Anthropic page
 input "cache hits". A `—` in a write column means no price for that lifetime: a model so marked is
 priced while its row holds no writes of that lifetime, and a row that holds some has the cost
 `unknown`. A `—` in *Input*, *Cached input* or *Output* is a model with no price at all. The earlier
-forms of the stage report, with their cache writes inside *Input* (`task-cycle/cycle_stages.py` folds
-them in), are priced as input, an approximation.
+forms of the stage report, with their cache writes inside *Input* (`task-cycle/stage_transcripts.py`,
+which `task-cycle/cycle_stages.py` imports, folds them in), are priced as input, an approximation.
 
 The prices are the short-context rows of each page: Haiku 5.5 up to 100,000 input tokens, and the
 OpenAI models up to 272K input tokens. The command does not know a call's size, so a call above those

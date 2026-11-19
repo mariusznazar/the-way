@@ -176,8 +176,13 @@ class DecisionIndexTest(unittest.TestCase):
             handle.write(raw)
 
     def run_index(self, args, cwd=None):
-        return subprocess.run([sys.executable, "-B", SCRIPT] + args, cwd=cwd,
-                              capture_output=True, text=True, encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, "-B", SCRIPT] + args,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
 
     def index(self, *switches):
         return self.run_index(list(switches) + ["--output", self.out, self.root])
@@ -228,8 +233,11 @@ class DecisionIndexTest(unittest.TestCase):
         result = self.index("--part", "core", "--part", "core-engin", "--part", "sound")
         self.assertEqual(result.returncode, 0, result.stderr)
         text = read_text(self.out)
-        self.assertIn("Listed in full: 2. Listed by heading alone: 0.\n"
-                      "Parts that no Scope names: core-engin, sound.\n", text)
+        self.assertIn(
+            "Listed in full: 2. Listed by heading alone: 0.\n"
+            "Parts that no Scope names: core-engin, sound.\n",
+            text,
+        )
         result = self.index("--part", "core")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertNotIn("Parts that no Scope names", read_text(self.out))
@@ -259,7 +267,9 @@ class DecisionIndexTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         text = read_text(self.out)
         self.assertIn("Sections: 2.", text)
-        self.assertIn("## Saving\n\nHow a game is saved and what a save holds.\n\nEntries: 2.", text)
+        self.assertIn(
+            "## Saving\n\nHow a game is saved and what a save holds.\n\nEntries: 2.", text
+        )
         self.assertIn("## Play\n\nHow a level is played and won.\n\nEntries: 1.", text)
         self.assertNotIn("Withdrawn", text)
 
@@ -287,8 +297,9 @@ class DecisionIndexTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Listed in full: 2.", read_text(self.out))
         os.remove(self.out)
-        result = self.run_index(["--part", "core", "--output", self.out, self.root],
-                                cwd=self.tmp.name)
+        result = self.run_index(
+            ["--part", "core", "--output", self.out, self.root], cwd=self.tmp.name
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Listed in full: 2.", read_text(self.out))
 
@@ -318,16 +329,18 @@ class DecisionIndexTest(unittest.TestCase):
         self.assert_error(result, "foundations/decisions.md", "GAME-02", "Scope")
 
     def test_heading_of_the_wrong_form_is_an_error_naming_the_file_and_the_line(self):
-        broken = TWO_SECTIONS.replace("### GAME-02 — How is a save loaded?",
-                                      "### GAME-02 How is a save loaded?", 1)
+        broken = TWO_SECTIONS.replace(
+            "### GAME-02 — How is a save loaded?", "### GAME-02 How is a save loaded?", 1
+        )
         self.assertNotEqual(broken, TWO_SECTIONS)
         self.write_log(broken)
         result = self.index("--section", "Saving")
         self.assert_error(result, "foundations/decisions.md:", "GAME-02")
 
     def test_section_without_sentence_is_an_error_naming_the_section(self):
-        broken = TWO_SECTIONS.replace("## Play\n\nHow a level is played and won.\n\n", "## Play\n\n",
-                                      1)
+        broken = TWO_SECTIONS.replace(
+            "## Play\n\nHow a level is played and won.\n\n", "## Play\n\n", 1
+        )
         self.assertNotEqual(broken, TWO_SECTIONS)
         self.write_log(broken)
         result = self.index("--sections")

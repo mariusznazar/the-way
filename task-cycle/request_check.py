@@ -70,8 +70,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 TOP_HEADINGS = ("What you will see", "For you to decide", "Cost", "How to merge")
-LOWER_HEADINGS = ("Technical changes", "Checks", "Foundation entries", "Minor findings",
-                  "Findings outside the task's scope", "Course of the cycle")
+LOWER_HEADINGS = (
+    "Technical changes",
+    "Checks",
+    "Foundation entries",
+    "Minor findings",
+    "Findings outside the task's scope",
+    "Course of the cycle",
+)
 UNDERNEATH = "Underneath"
 # `## For you to decide` reads `none` alone, or holds these three `###` headings in this order.
 DECISIONS = TOP_HEADINGS[1]
@@ -87,14 +93,16 @@ STATES = ("ready", "draft", "blocked")
 
 # English function words, none of them also a common Polish word: `a`, `i`, `to`, `on`, `no`,
 # `do`, `by`, `we`, `my`, `me`, `was`, `same`, `most` and `mine` are left out.
-FUNCTION_WORDS = frozenset("""
+FUNCTION_WORDS = frozenset(
+    """
     the an of and or but nor if then than that this these those there here which what who whom
     whose when where why how is are were be been being am has have had having does did will would
     shall should can could may might must it its they them their theirs he him his she her hers
     you your yours our ours us in into onto at as for from with within without about after before
     under over between through during until since because while each every any some all both
     either neither such other another only also not so too very just more own again once
-""".split())
+""".split()
+)
 ENGLISH_THRESHOLD = 0.2
 MINIMUM_WORDS = 20
 
@@ -184,8 +192,12 @@ def scan(text: str, forced: frozenset[int] = frozenset()) -> list[Line]:
             depth = 0
         match = FENCE.match(raw)
         if fence:
-            if match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence) \
-                    and not raw.strip().strip(fence[0]):
+            if (
+                match
+                and match.group(1)[0] == fence[0]
+                and len(match.group(1)) >= len(fence)
+                and not raw.strip().strip(fence[0])
+            ):
                 fence = ""
             lines.append(Line(number, raw, True, depth, 0, 0, number in forced))
             continue
@@ -246,10 +258,14 @@ def scan_description(text: str) -> list[Line]:
         for element in elements(lines):
             if element.closed:
                 continue
-            for line in lines[element.start + 1:]:
+            for line in lines[element.start + 1 :]:
                 match = None if line.in_fence else HEADING.fullmatch(line.text)
-                if match and len(match.group(1)) == 2 and (match.group(2) or "").strip() in HEADINGS \
-                        and line.number not in forced:
+                if (
+                    match
+                    and len(match.group(1)) == 2
+                    and (match.group(2) or "").strip() in HEADINGS
+                    and line.number not in forced
+                ):
                     added.add(line.number)
                     break
         if not added:
@@ -271,69 +287,107 @@ def first_content_line(lines: list[Line]) -> int | None:
     return None
 
 
-def check_decision_groups(lines: list[Line], section: Heading, stop: int,
-                          body: list[Line], problems: list[tuple[int, str]]) -> None:
+def check_decision_groups(
+    lines: list[Line],
+    section: Heading,
+    stop: int,
+    body: list[Line],
+    problems: list[tuple[int, str]],
+) -> None:
     """The form of `## For you to decide`: `none` alone, or the three groups in order, each with
     content or `none`, with nothing before the first. `body` is the section without its heading
     and without the block; `stop` is the line that ends the section."""
     if reads_none("\n".join(line.text for line in body)):
         return
     names = " / ".join(f"`### {group}`" for group in DECISION_GROUPS)
-    found = [heading for heading in headings(lines)
-             if heading.level == 3 and section.number < heading.number < stop]
+    found = [
+        heading
+        for heading in headings(lines)
+        if heading.level == 3 and section.number < heading.number < stop
+    ]
     if not found:
-        problems.append((section.number, f"`## {section.text}` holds neither `none` alone nor the "
-                                         f"groups; write `none`, or {names}, each with its items "
-                                         f"or `none`"))
+        problems.append(
+            (
+                section.number,
+                f"`## {section.text}` holds neither `none` alone nor the "
+                f"groups; write `none`, or {names}, each with its items "
+                f"or `none`",
+            )
+        )
         return
     before = first_content_line([line for line in body if line.number < found[0].number])
     if before is not None:
-        problems.append((before, f"text before the first group of `## {section.text}`; write "
-                                 f"the items under a group, and `none` alone only where no "
-                                 f"group has an item"))
+        problems.append(
+            (
+                before,
+                f"text before the first group of `## {section.text}`; write "
+                f"the items under a group, and `none` alone only where no "
+                f"group has an item",
+            )
+        )
     seen: dict[str, Heading] = {}
     last = -1
     for heading in found:
         name = display(heading.text)
         if heading.text not in DECISION_GROUPS:
-            problems.append((heading.number, f"`### {name}` is no group of `## {section.text}`; "
-                                             f"the groups are {names}"))
+            problems.append(
+                (
+                    heading.number,
+                    f"`### {name}` is no group of `## {section.text}`; the groups are {names}",
+                )
+            )
             continue
         index = DECISION_GROUPS.index(heading.text)
         if heading.text in seen:
-            problems.append((heading.number, f"`### {name}` is repeated; it stands once, at line "
-                                             f"{seen[heading.text].number}"))
+            problems.append(
+                (
+                    heading.number,
+                    f"`### {name}` is repeated; it stands once, at line "
+                    f"{seen[heading.text].number}",
+                )
+            )
             continue
         if index < last:
-            problems.append((heading.number, f"`### {name}` is out of order; move it before "
-                                             f"`### {DECISION_GROUPS[last]}`"))
+            problems.append(
+                (
+                    heading.number,
+                    f"`### {name}` is out of order; move it before `### {DECISION_GROUPS[last]}`",
+                )
+            )
         else:
             last = index
         seen[heading.text] = heading
-        later = min((other.number for other in found if other.number > heading.number),
-                    default=stop)
+        later = min(
+            (other.number for other in found if other.number > heading.number), default=stop
+        )
         group_body = [line for line in body if heading.number < line.number < later]
         if not has_content("\n".join(line.text for line in group_body)):
-            problems.append((heading.number, f"`### {name}` has no content; write its items, or "
-                                             f"`none`"))
+            problems.append(
+                (heading.number, f"`### {name}` has no content; write its items, or `none`")
+            )
     for index, name in enumerate(DECISION_GROUPS):
         if name not in seen:
-            following = [seen[later].number for later in DECISION_GROUPS[index + 1:]
-                         if later in seen]
-            problems.append((min(following, default=stop),
-                             f"`### {name}` is missing from `## {section.text}`; write it there, "
-                             f"with its items or `none`"))
+            following = [
+                seen[later].number for later in DECISION_GROUPS[index + 1 :] if later in seen
+            ]
+            problems.append(
+                (
+                    min(following, default=stop),
+                    f"`### {name}` is missing from `## {section.text}`; write it there, "
+                    f"with its items or `none`",
+                )
+            )
 
 
 def block_content(lines: list[Line], element: Element) -> str:
-    text = "\n".join(line.text for line in lines[element.start:element.end + 1])
+    text = "\n".join(line.text for line in lines[element.start : element.end + 1])
     summary = SUMMARY_CLOSE.search(text)
     if summary:
-        text = text[summary.end():]
+        text = text[summary.end() :]
     else:
-        text = text[text.index(">", DETAILS_OPEN.search(text).start()) + 1:]
+        text = text[text.index(">", DETAILS_OPEN.search(text).start()) + 1 :]
     closes = list(DETAILS_CLOSE.finditer(text))
-    return text[:closes[-1].start()] if closes else text
+    return text[: closes[-1].start()] if closes else text
 
 
 def reads_none(text: str) -> bool:
@@ -366,7 +420,7 @@ def section_text(task: str, title: str) -> str | None:
     found = None
     for heading in headings(lines):
         if found is not None:
-            return "\n".join(line.text for line in lines[found:heading.number - 1])
+            return "\n".join(line.text for line in lines[found : heading.number - 1])
         if heading.text == title:
             found = heading.number
     return None if found is None else "\n".join(line.text for line in lines[found:])
@@ -375,8 +429,11 @@ def section_text(task: str, title: str) -> str | None:
 def plan_text(task: str) -> str:
     """The *Goal* cells of a plan's `## Tasks` and the questions of its `## Open questions`."""
     parts = []
-    rows = [line.strip() for line in (section_text(task, "Tasks") or "").splitlines()
-            if line.strip().startswith("|")]
+    rows = [
+        line.strip()
+        for line in (section_text(task, "Tasks") or "").splitlines()
+        if line.strip().startswith("|")
+    ]
     if rows:
         columns = [cell.strip() for cell in rows[0].strip("|").split("|")]
         if "Goal" in columns:
@@ -403,8 +460,7 @@ def task_text(task: str) -> str:
 
 def check_state(lines: list[Line], problems: list[tuple[int, str]]) -> None:
     first = next((line for line in lines if line.text.strip()), None)
-    expected = ("write `**State: ready|draft|blocked** — <why, in one sentence>` as the first "
-                "line")
+    expected = "write `**State: ready|draft|blocked** — <why, in one sentence>` as the first line"
     if first is None:
         problems.append((1, f"the description is empty; {expected}"))
         return
@@ -412,11 +468,229 @@ def check_state(lines: list[Line], problems: list[tuple[int, str]]) -> None:
     if not match:
         problems.append((first.number, f"the first line gives no state; {expected}"))
     elif match.group(1) not in STATES:
-        problems.append((first.number, f"`{display(match.group(1))}` is no state; the state is "
-                                       f"one of {', '.join(STATES)}"))
+        problems.append(
+            (
+                first.number,
+                f"`{display(match.group(1))}` is no state; the state is one of {', '.join(STATES)}",
+            )
+        )
     elif not match.group(2).strip():
-        problems.append((first.number, "the state gives no reason; write why after the dash, in "
-                                       "one sentence"))
+        problems.append(
+            (first.number, "the state gives no reason; write why after the dash, in one sentence")
+        )
+
+
+def check_sections(
+    sections: list[Heading], end_line: int, problems: list[tuple[int, str]]
+) -> tuple[dict[str, Heading], list[Heading]]:
+    """The `##` headings of a description, checked against the template: those of the template
+    once each and in order, the task's own in their slot. Returns the template's headings by name
+    and the headings kept, in their order."""
+    seen: dict[str, Heading] = {}
+    kept: list[Heading] = []
+    last = -1
+    for heading in sections:
+        name = display(heading.text)
+        if heading.text == OWN_SECTIONS_PLACEHOLDER:
+            problems.append(
+                (
+                    heading.number,
+                    f"`## {name}` is the template's placeholder for the "
+                    f"task's own sections; omit the heading where the "
+                    f"task has no sections of its own, or write in its "
+                    f"place the heading of the task's own section",
+                )
+            )
+            continue
+        if heading.text in HEADINGS:
+            index = HEADINGS.index(heading.text)
+            if heading.text in seen:
+                problems.append(
+                    (
+                        heading.number,
+                        f"`## {name}` is repeated; it stands once, at "
+                        f"line {seen[heading.text].number}",
+                    )
+                )
+                continue
+            if index < last:
+                problems.append(
+                    (
+                        heading.number,
+                        f"`## {name}` is out of order; move it before `## {HEADINGS[last]}`",
+                    )
+                )
+            else:
+                last = index
+            seen[heading.text] = heading
+            kept.append(heading)
+        elif last == HEADINGS.index(OWN_SECTIONS_AFTER):
+            kept.append(heading)
+        else:
+            problems.append(
+                (
+                    heading.number,
+                    f"`## {name}` is not a heading of the template; a "
+                    f"task's own section stands between `## "
+                    f"{OWN_SECTIONS_AFTER}` and `## {HEADINGS[-1]}`",
+                )
+            )
+    for index, name in enumerate(HEADINGS):
+        if name not in seen:
+            following = [seen[later].number for later in HEADINGS[index + 1 :] if later in seen]
+            problems.append(
+                (
+                    min(following, default=end_line),
+                    f"`## {name}` is missing; write it here, with its content or `none`",
+                )
+            )
+    return seen, kept
+
+
+def check_block(
+    lines: list[Line], seen: dict[str, Heading], end_line: int, problems: list[tuple[int, str]]
+) -> tuple[Element | None, set[int]]:
+    """The one top-level `<details>` between `## How to merge` and `## Technical changes`, and the
+    numbers of the lines it covers, which the content of the sections leaves out."""
+    after = seen[BLOCK_AFTER].number if BLOCK_AFTER in seen else 0
+    before = seen[BLOCK_BEFORE].number if BLOCK_BEFORE in seen else end_line
+    found = elements(lines)
+    for element in found:
+        if not element.closed:
+            problems.append(
+                (
+                    lines[element.start].number,
+                    "this `<details>` is not closed; write `</details>` after its content",
+                )
+            )
+    candidates = [element for element in found if after < lines[element.start].number < before]
+    if not candidates:
+        problems.append(
+            (
+                before,
+                "no block; write `<details>`, a `<summary>` and the top part in "
+                "the task document's language, or `none` where the task is in "
+                "English, directly after the content of `## How to merge`",
+            )
+        )
+    for extra in candidates[1:]:
+        problems.append(
+            (
+                lines[extra.start].number,
+                "a second block; the top part stands once in "
+                "the task's language, in one `<details>`",
+            )
+        )
+    block = candidates[0] if candidates else None
+    block_lines = (
+        set()
+        if block is None
+        else set(range(lines[block.start].number, lines[block.end].number + 1))
+    )
+    return block, block_lines
+
+
+def check_underneath(
+    heading: Heading, body: list[Line], under: Heading, problems: list[tuple[int, str]]
+) -> None:
+    """The content of `## What you will see` before and after its `### Underneath`."""
+    name = display(heading.text)
+    if not has_content("\n".join(line.text for line in body if line.number < under.number)):
+        problems.append(
+            (
+                heading.number,
+                f"`## {name}` has no content before `### "
+                f"{UNDERNEATH}`; write what changes, or "
+                f"`none`",
+            )
+        )
+    if not has_content("\n".join(line.text for line in body if line.number > under.number)):
+        problems.append(
+            (
+                under.number,
+                f"`### {UNDERNEATH}` has no content; write what is under the change, or `none`",
+            )
+        )
+
+
+def check_contents(
+    lines: list[Line],
+    sections: list[Heading],
+    kept: list[Heading],
+    block_lines: set[int],
+    end_line: int,
+    problems: list[tuple[int, str]],
+) -> None:
+    """The content of each kept section, and of `### Underneath` in `## What you will see`."""
+    bounds = [heading.number for heading in sections] + [end_line]
+    for heading in kept:
+        stop = min(number for number in bounds if number > heading.number)
+        body = [line for line in lines[heading.number : stop - 1] if line.number not in block_lines]
+        name = display(heading.text)
+        if heading.text == TOP_HEADINGS[0]:
+            under = next(
+                (
+                    sub
+                    for sub in headings(lines)
+                    if sub.level == 3
+                    and sub.text == UNDERNEATH
+                    and heading.number < sub.number < stop
+                ),
+                None,
+            )
+            if under is None:
+                problems.append(
+                    (
+                        heading.number,
+                        f"`### {UNDERNEATH}` is missing from `## "
+                        f"{name}`; write it there, with one or two "
+                        f"sentences on what is under the change",
+                    )
+                )
+            else:
+                check_underneath(heading, body, under, problems)
+                continue
+        if not has_content("\n".join(line.text for line in body)):
+            problems.append((heading.number, f"`## {name}` has no content; write it, or `none`"))
+        elif heading.text == DECISIONS:
+            check_decision_groups(lines, heading, stop, body, problems)
+
+
+def check_block_content(
+    lines: list[Line], block: Element, task_language: str, problems: list[tuple[int, str]]
+) -> tuple[str, int]:
+    """The content of the block, checked against the language of the task. Returns the language
+    of the block and its count of words."""
+    content = block_content(lines, block)
+    number = lines[block.start].number
+    block_language, block_words = language(content)
+    if not has_content(content):
+        problems.append(
+            (
+                number,
+                "the block has no content; write the top part in the task "
+                "document's language, or `none` where the task is in "
+                "English",
+            )
+        )
+    elif task_language == "English" and not reads_none(content):
+        problems.append((number, "the task document is in English; the block reads `none`"))
+    elif task_language == "not English" and reads_none(content):
+        problems.append(
+            (
+                number,
+                "the task document is not in English; write the top part "
+                "in its language in the block, instead of `none`",
+            )
+        )
+    elif task_language == "not English" and block_language == "English":
+        problems.append(
+            (
+                number,
+                "the block is in English; write the top part in the task document's language",
+            )
+        )
+    return block_language, block_words
 
 
 def check(description: str, task: str) -> Result:
@@ -426,130 +700,40 @@ def check(description: str, task: str) -> Result:
     lines = scan_description(description)
     end_line = len(lines) + 1
     check_state(lines, problems)
-
-    # The `##` headings: those of the template once each and in order, the task's own in their slot.
     sections = [heading for heading in headings(lines) if heading.level == 2]
-    seen: dict[str, Heading] = {}
-    kept: list[Heading] = []
-    last = -1
-    for heading in sections:
-        name = display(heading.text)
-        if heading.text == OWN_SECTIONS_PLACEHOLDER:
-            problems.append((heading.number, f"`## {name}` is the template's placeholder for the "
-                                             f"task's own sections; omit the heading where the "
-                                             f"task has no sections of its own, or write in its "
-                                             f"place the heading of the task's own section"))
-            continue
-        if heading.text in HEADINGS:
-            index = HEADINGS.index(heading.text)
-            if heading.text in seen:
-                problems.append((heading.number, f"`## {name}` is repeated; it stands once, at "
-                                                 f"line {seen[heading.text].number}"))
-                continue
-            if index < last:
-                problems.append((heading.number, f"`## {name}` is out of order; move it before "
-                                                 f"`## {HEADINGS[last]}`"))
-            else:
-                last = index
-            seen[heading.text] = heading
-            kept.append(heading)
-        elif last == HEADINGS.index(OWN_SECTIONS_AFTER):
-            kept.append(heading)
-        else:
-            problems.append((heading.number, f"`## {name}` is not a heading of the template; a "
-                                             f"task's own section stands between `## "
-                                             f"{OWN_SECTIONS_AFTER}` and `## {HEADINGS[-1]}`"))
-    for index, name in enumerate(HEADINGS):
-        if name not in seen:
-            following = [seen[later].number for later in HEADINGS[index + 1:] if later in seen]
-            problems.append((min(following, default=end_line),
-                             f"`## {name}` is missing; write it here, with its content or `none`"))
+    seen, kept = check_sections(sections, end_line, problems)
     result.sections = [heading.text for heading in kept]
-
-    # The block: the one top-level `<details>` between `## How to merge` and `## Technical changes`.
-    after = seen[BLOCK_AFTER].number if BLOCK_AFTER in seen else 0
-    before = seen[BLOCK_BEFORE].number if BLOCK_BEFORE in seen else end_line
-    found = elements(lines)
-    for element in found:
-        if not element.closed:
-            problems.append((lines[element.start].number, "this `<details>` is not closed; write "
-                                                          "`</details>` after its content"))
-    candidates = [element for element in found if after < lines[element.start].number < before]
-    if not candidates:
-        problems.append((before, "no block; write `<details>`, a `<summary>` and the top part in "
-                                 "the task document's language, or `none` where the task is in "
-                                 "English, directly after the content of `## How to merge`"))
-    for extra in candidates[1:]:
-        problems.append((lines[extra.start].number, "a second block; the top part stands once in "
-                                                    "the task's language, in one `<details>`"))
-    block = candidates[0] if candidates else None
-    block_lines = (set() if block is None else
-                   set(range(lines[block.start].number, lines[block.end].number + 1)))
-
-    # The content of each section, and of `### Underneath` in `## What you will see`.
-    bounds = [heading.number for heading in sections] + [end_line]
-    for heading in kept:
-        stop = min(number for number in bounds if number > heading.number)
-        body = [line for line in lines[heading.number:stop - 1] if line.number not in block_lines]
-        name = display(heading.text)
-        if heading.text == TOP_HEADINGS[0]:
-            under = next((sub for sub in headings(lines) if sub.level == 3
-                          and sub.text == UNDERNEATH and heading.number < sub.number < stop), None)
-            if under is None:
-                problems.append((heading.number, f"`### {UNDERNEATH}` is missing from `## "
-                                                 f"{name}`; write it there, with one or two "
-                                                 f"sentences on what is under the change"))
-            else:
-                if not has_content("\n".join(line.text for line in body
-                                             if line.number < under.number)):
-                    problems.append((heading.number, f"`## {name}` has no content before `### "
-                                                     f"{UNDERNEATH}`; write what changes, or "
-                                                     f"`none`"))
-                if not has_content("\n".join(line.text for line in body
-                                             if line.number > under.number)):
-                    problems.append((under.number, f"`### {UNDERNEATH}` has no content; write "
-                                                   f"what is under the change, or `none`"))
-                continue
-        if not has_content("\n".join(line.text for line in body)):
-            problems.append((heading.number, f"`## {name}` has no content; write it, or `none`"))
-        elif heading.text == DECISIONS:
-            check_decision_groups(lines, heading, stop, body, problems)
+    block, block_lines = check_block(lines, seen, end_line, problems)
+    check_contents(lines, sections, kept, block_lines, end_line, problems)
 
     # The languages of the task and of the block.
     result.task_language, result.task_words = language(task_text(task))
     if block is not None and block.closed:
-        content = block_content(lines, block)
-        number = lines[block.start].number
-        result.block_language, result.block_words = language(content)
-        if not has_content(content):
-            problems.append((number, "the block has no content; write the top part in the task "
-                                     "document's language, or `none` where the task is in "
-                                     "English"))
-        elif result.task_language == "English" and not reads_none(content):
-            problems.append((number, "the task document is in English; the block reads `none`"))
-        elif result.task_language == "not English" and reads_none(content):
-            problems.append((number, "the task document is not in English; write the top part "
-                                     "in its language in the block, instead of `none`"))
-        elif result.task_language == "not English" and result.block_language == "English":
-            problems.append((number, "the block is in English; write the top part in the task "
-                                     "document's language"))
+        result.block_language, result.block_words = check_block_content(
+            lines, block, result.task_language, problems
+        )
     problems.sort(key=lambda problem: problem[0])
     return result
 
 
 def summary(result: Result) -> str:
     found = ", ".join(display(name) for name in result.sections) or "none"
-    head = ("form holds" if not result.problems else
-            f"{len(result.problems)} problem{'s' if len(result.problems) != 1 else ''}")
+    head = (
+        "form holds"
+        if not result.problems
+        else f"{len(result.problems)} problem{'s' if len(result.problems) != 1 else ''}"
+    )
 
     def reading(name: str, value: str, words: int) -> str:
         if value == "not judged":
             return f"{name}: not judged, {words} words, fewer than {MINIMUM_WORDS}"
         return f"{name}: {value}, {words} words"
 
-    return (f"{head}; sections: {found}; "
-            f"{reading('task', result.task_language, result.task_words)}; "
-            f"{reading('block', result.block_language, result.block_words)}")
+    return (
+        f"{head}; sections: {found}; "
+        f"{reading('task', result.task_language, result.task_words)}; "
+        f"{reading('block', result.block_language, result.block_words)}"
+    )
 
 
 def read(path: Path) -> str:
@@ -557,7 +741,9 @@ def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8-sig")
     except (OSError, UnicodeDecodeError) as error:
-        raise RequestCheckError(f"cannot read {display(path)} as UTF-8: {display(error)}") from error
+        raise RequestCheckError(
+            f"cannot read {display(path)} as UTF-8: {display(error)}"
+        ) from error
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -60,8 +60,13 @@ class Parser(argparse.ArgumentParser):
 
 def git(directory: Path, *arguments: str) -> subprocess.CompletedProcess:
     try:
-        return subprocess.run(["git", "-C", str(directory), *arguments], capture_output=True,
-                              text=True, encoding="utf-8", check=False)
+        return subprocess.run(
+            ["git", "-C", str(directory), *arguments],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
     except OSError as error:
         raise ReminderError(f"git cannot run: {error}") from error
 
@@ -112,8 +117,10 @@ def main(argv: list[str] | None = None) -> int:
     except ReminderError as error:
         print(f"Error: {error}", file=sys.stderr)
         return 2
-    sys.stdout.write(f"tag: {tag or 'none'}\nmerges: {merges}\nthreshold: {THRESHOLD}\n"
-                     f"reminder: {'yes' if merges >= THRESHOLD else 'no'}\n")
+    sys.stdout.write(
+        f"tag: {tag or 'none'}\nmerges: {merges}\nthreshold: {THRESHOLD}\n"
+        f"reminder: {'yes' if merges >= THRESHOLD else 'no'}\n"
+    )
     return 0
 
 

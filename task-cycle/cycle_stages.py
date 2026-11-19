@@ -122,95 +122,21 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
-import json
 import os
-import re
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-
-class CycleStagesError(Exception):
-    """A session that cannot be found or read."""
-
-
-class MissingFieldError(CycleStagesError):
-    """A transcript or rollout that lacks a field the reading needs, or holds one of the wrong
-    kind."""
-
-
-@dataclass
-class Usage:
-    input: int = 0
-    cached: int = 0
-    output: int = 0
-    # The cache writes of each lifetime, parts of `input`; a Codex record gives none, so 0.
-    write_5m: int = 0
-    write_1h: int = 0
-
-    def add(self, other: Usage) -> None:
-        self.input += other.input
-        self.cached += other.cached
-        self.output += other.output
-        self.write_5m += other.write_5m
-        self.write_1h += other.write_1h
-
-    @property
-    def total(self) -> int:
-        return self.input + self.output
-
-
-@dataclass
-class Record:
-    at: datetime
-    usage: Usage
-    model: str | None
-
-
-@dataclass
-class Call:
-    """A tool call from its start to its result. `end` is None where no result was read; `known`
-    is False where the reader does not recognise the call's type."""
-    start: datetime
-    end: datetime | None
-    name: str
-    known: bool = True
-
-    @property
-    def readable(self) -> bool:
-        return self.end is not None and self.end >= self.start
-
-
-@dataclass
-class Agent:
-    key: str
-    name: str
-    parent: str | None
-    turns: list[tuple[datetime, datetime]] = field(default_factory=list)
-    # For each turn, the files of `reports/` the message that starts it names, or None where that
-    # message cannot be read.
-    turn_files: list[list[str] | None] = field(default_factory=list)
-    records: list[Record] = field(default_factory=list)
-    calls: list[Call] = field(default_factory=list)
-    notes: list[str] = field(default_factory=list)
-
-
-# Tool calls that start a subagent, send it a message or wait for it: their time is the subagent's
-# work, so they are no wait for a tool.
-CLAUDE_SUBAGENT_CALLS = frozenset({"Agent", "Task", "SendMessage"})
-CODEX_SUBAGENT_CALLS = frozenset({"spawn_agent", "wait_agent", "send_message", "followup_task"})
-CODEX_SUBAGENT_USE = re.compile(r"tools\.(?:" + "|".join(sorted(CODEX_SUBAGENT_CALLS)) + r")\b")
-CODEX_CALL_KINDS = frozenset({"function_call", "custom_tool_call"})
-
-
-@dataclass
-class Session:
-    tool: str
-    id: str
-    path: Path
-    orchestrator: Agent
-    subagents: list[Agent]
+from stage_transcripts import (
+    Agent,
+    Call,
+    CycleStagesError,
+    MissingFieldError,
+    Session,
+    Usage,
+    read_session,
+)
 
 
 @dataclass
@@ -230,555 +156,6 @@ class Row:
     usage_read: bool = True
 
 
-# A file of the cycle's `reports/` named in the message that starts a subagent turn: the folder
-# `reports` after a separator, and a name of letters, digits, `_`, `-` and `.` ending in `.md`.
-# The run of name characters is taken whole, so no crafted text makes the pattern try again.
-FILE_NAMED = re.compile(r"(?<![A-Za-z0-9_.-])reports[\\/]+([A-Za-z0-9_.-]+)")
-MAX_FILE_NAME = 120
-MAX_FILES_NAMED = 20
-
-
-def files_named(text: str) -> tuple[list[str], bool]:
-    """The files of `reports/` that `text` names, as `reports/<name>`, each once in the order
-    first named, and whether more than MAX_FILES_NAMED were named. The full stops that end a name
-    are cut. Text from a transcript is data: a name that starts with neither a letter, a digit nor
-    `_`, holds `..`, does not end in `.md` or is longer than MAX_FILE_NAME is left out, and no path
-    is followed."""
-    found: list[str] = []
-    for match in FILE_NAMED.finditer(text):
-        # A full stop after the name ends the sentence the name stands in; it is no part of it.
-        name = match.group(1).rstrip(".")
-        if (len(name) > MAX_FILE_NAME or not name.endswith(".md") or ".." in name
-                or not (name[0].isalnum() or name[0] == "_")):
-            continue
-        path = f"reports/{name}"
-        if path in found:
-            continue
-        if len(found) == MAX_FILES_NAMED:
-            return found, True
-        found.append(path)
-    return found, False
-
-
-def add_named_note(agent: Agent, over: int) -> None:
-    """A warning for the subagent turns that named more files than the column keeps; the
-    orchestrator's own messages fill no column."""
-    if over and agent.parent is not None:
-        agent.notes.append(f"{over} turn(s) name more than {MAX_FILES_NAMED} files of `reports/`; "
-                           "the rest are left out of *Files named*")
-
-
-def parse_time(text: str) -> datetime:
-    return datetime.fromisoformat(text)
-
-
-def numbered_lines(path: Path):
-    """Each non-blank line of a JSON Lines file as its number in the file and its value. A line that
-    is not JSON, is nested too deep or holds a number of too many digits ends the reading, as does
-    a file that cannot be read or is no UTF-8."""
-    try:
-        with path.open(encoding="utf-8") as handle:
-            for number, line in enumerate(handle, 1):
-                if line.strip():
-                    try:
-                        yield number, json.loads(line)
-                    except (ValueError, RecursionError, MemoryError) as error:
-                        raise CycleStagesError(f"{path}:{number}: not JSON: {error}") from error
-    except (OSError, UnicodeDecodeError) as error:
-        raise CycleStagesError(f"cannot read {path}: {error}") from error
-
-
-def read_lines(path: Path):
-    for _, entry in numbered_lines(path):
-        yield entry
-
-
-def first_line(path: Path) -> dict:
-    for entry in read_lines(path):
-        return entry
-    raise CycleStagesError(f"{path} is empty")
-
-
-def add_calls(agent: Agent, started: dict[str, tuple[datetime, str]],
-              ended: dict[str, datetime], tail: set[str]) -> None:
-    """The agent's calls, each with its result. A call with no result in `tail`, which no later
-    entry of the transcript follows, is cut off by the end of the transcript: it is no wait, so it
-    ends where it starts."""
-    for key, (start, call_name) in started.items():
-        end = ended.get(key)
-        if end is None and key in tail:
-            end = start
-        agent.calls.append(Call(start, end, call_name))
-
-
-def add_call_notes(agent: Agent) -> None:
-    """Warnings for the calls whose waits cannot be known: no readable result, or a type the reader
-    does not recognise."""
-    unpaired = sum(1 for call in agent.calls if call.known and not call.readable)
-    if unpaired:
-        agent.notes.append(f"{unpaired} tool call(s) with no readable result: their waits are "
-                           "unknown")
-    unrecognised = [call.name for call in agent.calls if not call.known]
-    if unrecognised:
-        agent.notes.append(f"{len(unrecognised)} call(s) of a type the reader does not recognise "
-                           f"({', '.join(sorted(set(unrecognised)))}): their waits are unknown")
-
-
-# Fields a reading needs
-
-
-def required(holder: object, key: str, name: str, where: str) -> object:
-    """The value of a needed field; a missing field, which a `null` is, ends the reading, naming
-    `where` and the field's `name`."""
-    value = holder.get(key) if isinstance(holder, dict) else None
-    if value is None:
-        raise MissingFieldError(f"{where}: no field {name}")
-    return value
-
-
-# A token count longer than this is not a count of tokens: no model's input comes near it. The audit
-# bounds the same counts alike (`TOKEN_DIGITS` of process-audit/audit_count.py), and a longer one
-# would end the report with a stack trace where the sums of it are written out.
-TOKEN_DIGITS = 15
-
-
-def required_count(holder: object, key: str, name: str, where: str) -> int:
-    value = required(holder, key, name, where)
-    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
-            or value >= 10 ** TOKEN_DIGITS):
-        raise MissingFieldError(f"{where}: field {name} is not a whole number")
-    return value
-
-
-def required_text(holder: object, key: str, name: str, where: str) -> str:
-    """The value of a needed field that has to be a text, not empty."""
-    value = required(holder, key, name, where)
-    if not isinstance(value, str) or not value:
-        raise MissingFieldError(f"{where}: field {name} is not a text")
-    return value
-
-
-def required_time(entry: dict, where: str) -> datetime:
-    """The time of a line, in UTC; a naive time is taken as UTC."""
-    value = required(entry, "timestamp", "timestamp", where)
-    try:
-        if not isinstance(value, str):
-            raise ValueError(value)
-        at = parse_time(value)
-        return (at if at.tzinfo else at.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
-    except (ValueError, OverflowError) as error:
-        raise MissingFieldError(f"{where}: field timestamp is not a time") from error
-
-
-# Codex
-
-
-def codex_meta(path: Path) -> dict | None:
-    """The `payload` of the first line of a rollout where that is its `session_meta`, which has to
-    give the `id` of the session as a text; None for a rollout that starts otherwise."""
-    for number, entry in numbered_lines(path):
-        break
-    else:
-        raise CycleStagesError(f"{path} is empty")
-    if entry.get("type") != "session_meta":
-        return None
-    meta = entry.get("payload") or {}
-    required_text(meta, "id", "payload.id", f"{path}:{number}")
-    return meta
-
-
-def codex_message_text(payload: dict, own_path: str | None) -> tuple[bool, str | None]:
-    """Whether a rollout item is a message sent to the agent — the user's message, or another
-    agent's message addressed to it — and its text, or None where a part of it is encrypted. The
-    parts Codex injects are left out, and a message of nothing else is none."""
-    item = payload.get("type")
-    if item == "message" and payload.get("role") == "user":
-        parts = payload.get("content")
-    elif item == "agent_message" and own_path and payload.get("recipient") == own_path:
-        parts = payload.get("content")
-    else:
-        return False, None
-    texts = []
-    injected = False
-    for part in parts if isinstance(parts, list) else []:
-        if not isinstance(part, dict):
-            continue
-        if part.get("type") == "encrypted_content":
-            return True, None
-        if isinstance(part.get("text"), str):
-            if is_injected(part["text"]):
-                injected = True
-            else:
-                texts.append(part["text"])
-    if injected and not texts:
-        # Only what Codex gives the turn first: no message that sets the agent working.
-        return False, None
-    return True, "\n".join(texts)
-
-
-# The texts Codex gives a turn first as user messages, before the message that sets it working:
-# the AGENTS.md text and the environment, each opening with its mark.
-CODEX_INJECTED = ("# AGENTS.md instructions", "<environment_context>", "<user_instructions>")
-
-
-def is_injected(text: str) -> bool:
-    return text.lstrip().startswith(CODEX_INJECTED)
-
-
-def codex_usage(payload: dict, where: str) -> Usage:
-    """The tokens of a record of tokens of a Codex rollout, which `where` names by its file and
-    line. The record's `usage` and each of its three counts are needed; one that is missing, or a
-    count that is no whole number, ends the reading."""
-    usage = required(payload, "usage", "payload.usage", where)
-    return Usage(
-        required_count(usage, "input_tokens", "payload.usage.input_tokens", where),
-        required_count(usage, "cached_input_tokens", "payload.usage.cached_input_tokens", where),
-        required_count(usage, "output_tokens", "payload.usage.output_tokens", where),
-    )
-
-
-def codex_tokens(payload: dict, own: str, where: str) -> tuple[str, Usage] | None:
-    """The turn and the tokens of a record of tokens that belongs to the thread `own`, or None for
-    a record of another thread. The record's `thread_id` is needed to tell the two apart, and
-    the `turn_id` of the agent's own."""
-    if required_text(payload, "thread_id", "payload.thread_id", where) != own:
-        return None
-    return required_text(payload, "turn_id", "payload.turn_id", where), codex_usage(payload, where)
-
-
-def read_codex_agent(path: Path, parent: str | None) -> Agent:
-    meta = codex_meta(path)
-    if meta is None:
-        raise CycleStagesError(f"{path} does not start with a Codex session_meta line")
-    own = meta["id"]
-    name = meta.get("agent_path") or meta.get("agent_nickname") or own
-    # The message that starts each turn, as its text, or None where it cannot be read; the turn a
-    # message belongs to is the one it names, or else the last turn started before it.
-    messages: dict[str, str | None] = {}
-    current: str | None = None
-    starts: dict[str, datetime] = {}
-    ends: dict[str, datetime] = {}
-    first_seen: dict[str, datetime] = {}
-    last_seen: dict[str, datetime] = {}
-    models: dict[str, str] = {}
-    own_turns: set[str] = set()
-    raw: list[tuple[datetime, str, Usage]] = []
-    started_calls: dict[str, tuple[datetime, str]] = {}
-    finished_calls: dict[str, datetime] = {}
-    # The calls started since the last entry that shows the agent went on: an output, a message,
-    # another item of a response, or a turn starting or ending.
-    tail: set[str] = set()
-    unrecognised: list[Call] = []
-    left_out = 0
-    for number, entry in numbered_lines(path):
-        if not isinstance(entry, dict):
-            raise MissingFieldError(f"{path}:{number}: the line is not a JSON object")
-        payload = entry.get("payload")
-        if not isinstance(payload, dict):
-            continue
-        where = f"{path}:{number}"
-        at = required_time(entry, where)
-        kind = entry.get("type")
-        # Before the `turn_id` of any line is used as a key, the one of a record of tokens is read.
-        record = codex_tokens(payload, own, where) if kind == "token_usage_record" else None
-        turn = payload.get("turn_id")
-        if turn:
-            first_seen.setdefault(turn, at)
-            last_seen[turn] = at
-        if kind == "event_msg":
-            event = payload.get("type")
-            if event in ("task_started", "user_message", "task_complete"):
-                tail.clear()
-            if event == "task_started":
-                starts.setdefault(turn, at)
-                current = turn or current
-            elif event == "user_message":
-                owner = turn or current
-                text = payload.get("message")
-                if owner and owner not in messages and not (
-                        isinstance(text, str) and is_injected(text)):
-                    messages[owner] = text if isinstance(text, str) else None
-            elif event == "task_complete":
-                ends[turn] = at
-            elif event == "item_completed" and payload.get("thread_id") == own:
-                own_turns.add(turn)
-        elif kind == "turn_context" and turn:
-            models[turn] = payload.get("model")
-        elif kind == "response_item":
-            item = str(payload.get("type") or "")
-            ident = payload.get("call_id")
-            if item not in CODEX_CALL_KINDS:
-                tail.clear()
-            is_message, text = codex_message_text(payload, meta.get("agent_path"))
-            if is_message:
-                passthrough = payload.get("internal_chat_message_metadata_passthrough")
-                owner = (passthrough.get("turn_id") if isinstance(passthrough, dict) else None) \
-                    or current
-                if owner and owner not in messages:
-                    messages[owner] = text
-            elif item in CODEX_CALL_KINDS:
-                call_name = str(payload.get("name") or item)
-                if call_name in CODEX_SUBAGENT_CALLS:
-                    continue
-                script = str(payload.get("input") or "")
-                if call_name == "exec" and CODEX_SUBAGENT_USE.search(script):
-                    left_out += 1
-                    continue
-                key = ident or f"no call id {len(started_calls)}"
-                started_calls.setdefault(key, (at, call_name))
-                tail.add(key)
-            elif item.endswith("_call_output"):
-                if ident:
-                    finished_calls.setdefault(ident, at)
-            elif item.endswith("_call"):
-                unrecognised.append(Call(at, None, item, known=False))
-        elif record:
-            own_turns.add(record[0])
-            raw.append((at, record[0], record[1]))
-    # A forked subagent's rollout repeats its parent's history; only turns that the subagent's
-    # own thread worked in are its turns.
-    agent = Agent(own, name, parent)
-    turns = []
-    over = 0
-    for turn in own_turns:
-        start = starts.get(turn) or first_seen[turn]
-        text = messages.get(turn)
-        named = None
-        if text is not None:
-            named, cut = files_named(text)
-            over += cut
-        turns.append((start, ends.get(turn) or last_seen[turn], named))
-    open_turns = len(own_turns - ends.keys())
-    if open_turns and parent is not None:
-        agent.notes.append(f"{open_turns} turn(s) without `task_complete`, each ending at its "
-                           "last entry")
-    add_named_note(agent, over)
-    turns.sort(key=lambda turn: turn[:2])
-    agent.turns = [(start, end) for start, end, _ in turns]
-    agent.turn_files = [named for _, _, named in turns]
-    add_calls(agent, started_calls, finished_calls, tail)
-    agent.calls.extend(unrecognised)
-    if parent is not None:
-        # A forked subagent's rollout repeats its parent's calls before its own turns.
-        agent.calls = [call for call in agent.calls
-                       if any(a <= call.start <= b for a, b in agent.turns)]
-    if left_out:
-        agent.notes.append(f"{left_out} exec call(s) that call a subagent tool: their time is "
-                           "left out of the waits")
-    add_call_notes(agent)
-    for at, turn, usage in raw:
-        agent.records.append(Record(at, usage, models.get(turn)))
-    return agent
-
-
-def codex_subagent_paths(home: Path, root: str,
-                         since: datetime | None) -> list[tuple[Path, str]]:
-    """Every rollout under `home/sessions` descending from `root`, with its parent's id. Where
-    `since`, the time of the orchestrator's first turn, is None, no rollout is left out by its
-    time."""
-    parents: dict[str, tuple[Path, str]] = {}
-    floor = None if since is None else since.timestamp() - 1
-    for path in (home / "sessions").rglob("rollout-*.jsonl"):
-        if floor is not None and path.stat().st_mtime < floor:
-            continue
-        meta = codex_meta(path)
-        if meta and meta.get("parent_thread_id"):
-            parents[meta["id"]] = (path, meta["parent_thread_id"])
-    found: dict[str, tuple[Path, str]] = {}
-    known = {root}
-    while True:
-        new = {i: v for i, v in parents.items() if v[1] in known and i not in found}
-        if not new:
-            break
-        found.update(new)
-        known.update(new)
-    return sorted(found.values())
-
-
-def read_codex_session(path: Path, codex_home: Path) -> Session:
-    orchestrator = read_codex_agent(path, None)
-    orchestrator.name = "orchestrator"
-    since = min((start for start, _ in orchestrator.turns), default=None)
-    subagents = [read_codex_agent(p, parent) for p, parent in
-                 codex_subagent_paths(codex_home, orchestrator.key, since)]
-    return Session("Codex", orchestrator.key, path, orchestrator, subagents)
-
-
-# Claude Code
-
-
-def text_of(value: object) -> str:
-    """`value` where it is a text, else the empty text: what a crafted transcript puts in a field
-    of another kind is no name, no identifier and no model."""
-    return value if isinstance(value, str) else ""
-
-
-COUNT_FIELDS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
-                "output_tokens")
-# The cache writes of each lifetime, in `message.usage.cache_creation`.
-LIFETIME_FIELDS = ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")
-
-
-def is_text(entry: dict) -> bool:
-    """A user line holding text rather than a tool's result."""
-    content = (entry.get("message") or {}).get("content")
-    if isinstance(content, str):
-        return True
-    # A content that is neither a text nor a list holds no text.
-    return (isinstance(content, list) and bool(content) and isinstance(content[0], dict)
-            and content[0].get("type") == "text")
-
-
-def content_blocks(entry: dict) -> list[dict]:
-    """The blocks of a message's content list; a text content gives none."""
-    content = (entry.get("message") or {}).get("content")
-    if not isinstance(content, list):
-        return []
-    return [block for block in content if isinstance(block, dict)]
-
-
-def message_text(entry: dict) -> str:
-    """The text of a user line: its content as a string, or its text blocks joined."""
-    content = (entry.get("message") or {}).get("content")
-    if isinstance(content, str):
-        return content
-    return "\n".join(block["text"] for block in content_blocks(entry)
-                     if block.get("type") == "text" and isinstance(block.get("text"), str))
-
-
-def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Agent:
-    responses: dict[str, tuple[datetime, dict[str, int], str | None]] = {}
-    # Each line that sets the agent working, with the files of `reports/` it names.
-    prompts: list[tuple[datetime, list[str]]] = []
-    over = 0
-    activity: list[datetime] = []
-    answered = True
-    started_calls: dict[str, tuple[datetime, str]] = {}
-    results: dict[str, datetime] = {}
-    # The calls of the last response, while no user line and no other response follows it.
-    tail: set[str] = set()
-    tail_response: object = None
-    unrecognised: list[Call] = []
-    for number, entry in numbered_lines(path):
-        if not isinstance(entry, dict) or "timestamp" not in entry:
-            continue
-        if entry.get("type") not in ("user", "assistant"):
-            continue
-        where = f"{path}:{number}"
-        at = required_time(entry, where)
-        required(required(entry, "message", "message", where), "content", "message.content", where)
-        if entry.get("type") == "user":
-            tail.clear()
-            for block in content_blocks(entry):
-                if block.get("type") == "tool_result" and text_of(block.get("tool_use_id")):
-                    results.setdefault(block["tool_use_id"], at)
-            # Text the human types, or a notice, sets the agent working; text the tool adds
-            # (a loaded skill, a message from the coordinator) does so only once the agent has
-            # answered, and is part of the running turn otherwise.
-            if is_text(entry) and (not entry.get("isMeta") or answered):
-                named, cut = files_named(message_text(entry))
-                over += cut
-                prompts.append((at, named))
-                answered = False
-            else:
-                activity.append(at)
-        else:
-            message = entry["message"]
-            model = message.get("model")
-            if model == "<synthetic>":
-                continue
-            usage = required(message, "usage", "message.usage", where)
-            counts = {key: required_count(usage, key, f"message.usage.{key}", where)
-                      for key in COUNT_FIELDS}
-            creation = required(usage, "cache_creation", "message.usage.cache_creation", where)
-            for lifetime in LIFETIME_FIELDS:
-                counts[lifetime] = required_count(creation, lifetime,
-                                                  f"message.usage.cache_creation.{lifetime}", where)
-            activity.append(at)
-            # Claude Code writes one response over several lines, which share its id.
-            ident = text_of(message.get("id")) or text_of(entry.get("uuid")) or None
-            if ident != tail_response:
-                tail.clear()
-                tail_response = ident
-            for block in content_blocks(entry):
-                kind = text_of(block.get("type"))
-                call_name = text_of(block.get("name"))
-                if kind == "tool_use" and call_name in CLAUDE_SUBAGENT_CALLS:
-                    continue
-                if kind == "tool_use" and text_of(block.get("id")):
-                    started_calls.setdefault(block["id"], (at, call_name or kind))
-                    tail.add(block["id"])
-                elif kind == "tool_use" or kind.endswith("_tool_use"):
-                    unrecognised.append(Call(at, None, call_name or kind, known=False))
-            if message.get("stop_reason"):
-                answered = message["stop_reason"] == "end_turn"
-            kept = responses.get(ident)
-            if kept is None or counts["output_tokens"] >= kept[1]["output_tokens"]:
-                responses[ident] = (at, counts, text_of(model) or None)
-    agent = Agent(key, name, parent)
-    add_calls(agent, started_calls, results, tail)
-    agent.calls.extend(unrecognised)
-    add_call_notes(agent)
-    prompts.sort(key=lambda prompt: prompt[0])
-    activity.sort()
-    for index, (start, named) in enumerate(prompts):
-        stop = prompts[index + 1][0] if index + 1 < len(prompts) else None
-        inside = [at for at in activity if at >= start and (stop is None or at < stop)]
-        if inside:
-            agent.turns.append((start, inside[-1]))
-            agent.turn_files.append(named)
-    add_named_note(agent, over)
-    split = sum(1 for _, usage, _ in responses.values()
-                if usage["ephemeral_5m_input_tokens"] + usage["ephemeral_1h_input_tokens"]
-                != usage["cache_creation_input_tokens"])
-    if split:
-        agent.notes.append(f"{split} response(s) whose cache writes by lifetime do not add up to "
-                           f"cache_creation_input_tokens in {path}")
-    for at, usage, model in responses.values():
-        agent.records.append(Record(at, Usage(
-            usage["input_tokens"] + usage["cache_creation_input_tokens"]
-            + usage["cache_read_input_tokens"],
-            usage["cache_read_input_tokens"],
-            usage["output_tokens"],
-            write_5m=usage["ephemeral_5m_input_tokens"],
-            write_1h=usage["ephemeral_1h_input_tokens"],
-        ), model))
-    agent.records.sort(key=lambda record: record.at)
-    return agent
-
-
-def read_claude_session(path: Path) -> Session:
-    session_id = path.stem
-    orchestrator = read_claude_agent(path, session_id, "orchestrator", None)
-    subagents: list[Agent] = []
-    folder = path.with_suffix("") / "subagents"
-    if folder.is_dir():
-        for transcript in sorted(folder.glob("agent-*.jsonl")):
-            agent_id = transcript.stem.removeprefix("agent-")
-            meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
-            meta: dict = {}
-            notes = []
-            if not meta_path.is_file():
-                notes.append(f"no `{meta_path.name}`, so it is named by its id")
-            else:
-                try:
-                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
-                except (OSError, json.JSONDecodeError) as error:
-                    raise CycleStagesError(f"cannot read {meta_path}: {error}") from error
-            description = meta.get("description") or agent_id
-            kind = meta.get("agentType")
-            name = f"{description} ({kind})" if kind else description
-            subagent = read_claude_agent(
-                transcript, agent_id, name, meta.get("parentAgentId") or session_id)
-            subagent.notes.extend(notes)
-            subagents.append(subagent)
-    known = {agent.key for agent in subagents}
-    for agent in subagents:
-        if agent.parent not in known:
-            agent.parent = session_id
-    return Session("Claude Code", session_id, path, orchestrator, subagents)
-
-
 # Finding and reading sessions
 
 
@@ -792,22 +169,9 @@ def resolve(name: str, codex_home: Path, claude_home: Path) -> Path:
         return found[0]
     if not found:
         raise CycleStagesError(f"no transcript of session {name!r}")
-    raise CycleStagesError(f"session {name!r} matches several transcripts: "
-                           + ", ".join(str(p) for p in found))
-
-
-def read_session(path: Path, codex_home: Path) -> Session:
-    entry = first_line(path)
-    if not isinstance(entry, dict):
-        raise CycleStagesError(f"{path} is neither a Codex rollout nor a Claude Code transcript")
-    if entry.get("type") == "session_meta":
-        meta = entry.get("payload") or {}
-        if meta.get("parent_thread_id"):
-            raise CycleStagesError(f"{path} is a subagent's rollout, not an orchestrator's")
-        return read_codex_session(path, codex_home)
-    if "sessionId" in entry or "type" in entry:
-        return read_claude_session(path)
-    raise CycleStagesError(f"{path} is neither a Codex rollout nor a Claude Code transcript")
+    raise CycleStagesError(
+        f"session {name!r} matches several transcripts: " + ", ".join(str(p) for p in found)
+    )
 
 
 # Stages
@@ -831,8 +195,9 @@ def merge(intervals: list[tuple[datetime, datetime]]) -> list[tuple[datetime, da
     return merged
 
 
-def overlap(intervals: list[tuple[datetime, datetime]], start: datetime | None,
-            end: datetime | None) -> timedelta:
+def overlap(
+    intervals: list[tuple[datetime, datetime]], start: datetime | None, end: datetime | None
+) -> timedelta:
     total = timedelta()
     for a, b in intervals:
         lo = a if start is None else max(a, start)
@@ -870,14 +235,25 @@ def build_rows(sessions: list[Session]) -> list[Row]:
             if agent.parent in roots:
                 count = len(agent.turns)
                 stages[agent.key] = [
-                    Row(start, agent.name + (f" — turn {n}" if count > 1 else ""), end - start,
-                        window=(start, end), named=named, usage_read=bool(agent.records))
-                    for n, ((start, end), named) in enumerate(
-                        zip(agent.turns, agent.turn_files), 1)
+                    Row(
+                        start,
+                        agent.name + (f" — turn {n}" if count > 1 else ""),
+                        end - start,
+                        window=(start, end),
+                        named=named,
+                        usage_read=bool(agent.records),
+                    )
+                    for n, ((start, end), named) in enumerate(zip(agent.turns, agent.turn_files), 1)
                 ]
-    owned = sorted(((record, top_level(agent, by_key, roots).key)
-                    for session in sessions for agent in session.subagents
-                    for record in agent.records), key=lambda pair: pair[0].at)
+    owned = sorted(
+        (
+            (record, top_level(agent, by_key, roots).key)
+            for session in sessions
+            for agent in session.subagents
+            for record in agent.records
+        ),
+        key=lambda pair: pair[0].at,
+    )
     for record, owner in owned:
         rows = stages.get(owner)
         if not rows:
@@ -901,28 +277,40 @@ def build_rows(sessions: list[Session]) -> list[Row]:
     stretches = []
     for index in range(0, len(edges), 2):
         start, end = edges[index], edges[index + 1]
-        stretches.append(Row(stretch_start(start, end, active), "orchestrator",
-                             overlap(active, start, end), window=(start, end),
-                             usage_read=orchestrator_read))
+        stretches.append(
+            Row(
+                stretch_start(start, end, active),
+                "orchestrator",
+                overlap(active, start, end),
+                window=(start, end),
+                usage_read=orchestrator_read,
+            )
+        )
     parallel: dict[frozenset[int], Row] = {}
 
     def orchestrator_row(at: datetime) -> Row:
         """The row the orchestrator's work at a moment is counted in: the stage running then, the
         row of the stages running together, or the orchestrator's stretch between stages."""
-        running = [i for i, row in enumerate(stage_rows)
-                   if row.window[0] <= at <= row.window[1]]
+        running = [i for i, row in enumerate(stage_rows) if row.window[0] <= at <= row.window[1]]
         if len(running) == 1:
             return stage_rows[running[0]]
         if running:
             group = frozenset(running)
             if group not in parallel:
                 names = ", ".join(stage_rows[i].name for i in sorted(running))
-                parallel[group] = Row(at, f"orchestrator while in parallel: {names}", None,
-                                      usage_read=orchestrator_read)
+                parallel[group] = Row(
+                    at,
+                    f"orchestrator while in parallel: {names}",
+                    None,
+                    usage_read=orchestrator_read,
+                )
             return parallel[group]
-        return next(r for r in stretches
-                    if (r.window[0] is None or r.window[0] < at)
-                    and (r.window[1] is None or at < r.window[1]))
+        return next(
+            r
+            for r in stretches
+            if (r.window[0] is None or r.window[0] < at)
+            and (r.window[1] is None or at < r.window[1])
+        )
 
     for session in sessions:
         for record in session.orchestrator.records:
@@ -938,8 +326,9 @@ def build_rows(sessions: list[Session]) -> list[Row]:
     return rows
 
 
-def stretch_start(start: datetime | None, end: datetime | None,
-                  active: list[tuple[datetime, datetime]]) -> datetime:
+def stretch_start(
+    start: datetime | None, end: datetime | None, active: list[tuple[datetime, datetime]]
+) -> datetime:
     """Where an orchestrator stretch stands in time order: its start, or for the stretch before
     the first subagent turn the orchestrator's first turn."""
     if start is not None:
@@ -1027,8 +416,10 @@ def number(value: int) -> str:
 def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str:
     lines = ["# Stages of the cycle run", ""]
     for session in sessions:
-        lines.append(f"- {session.tool} session `{session.id}`: {len(session.subagents)} "
-                     f"subagents — `{session.path.name}`")
+        lines.append(
+            f"- {session.tool} session `{session.id}`: {len(session.subagents)} "
+            f"subagents — `{session.path.name}`"
+        )
     lines += ["", "Warnings:" if warnings else "Warnings: none."]
     lines += [f"- {one_line(warning)}" for warning in warnings]
     lines += [
@@ -1057,15 +448,17 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
             f"| {cell(', '.join(row.subagent_models)) or '—'} "
             f"| {cell(', '.join(row.orchestrator_models)) or '—'} "
             f"| {number(row.subagent.total)} | {number(row.orchestrator.total)} "
-            f"| {number(both.total)} | {number(both.cached)} | {number(both.output)} |")
+            f"| {number(both.total)} | {number(both.cached)} | {number(both.output)} |"
+        )
     by_model: dict[str, Usage] = {}
     for session in sessions:
         for agent in [session.orchestrator, *session.subagents]:
             for record in agent.records:
                 by_model.setdefault(record.model or "unknown", Usage()).add(record.usage)
-    active = merge([turn for session in sessions for turn in session.orchestrator.turns]
-                   + [row.window for row in rows if row.duration is not None
-                      and row.name != "orchestrator"])
+    active = merge(
+        [turn for session in sessions for turn in session.orchestrator.turns]
+        + [row.window for row in rows if row.duration is not None and row.name != "orchestrator"]
+    )
     working = overlap(active, None, None)
     waiting, unknown = wait_totals(rows, active)
     if unknown:
@@ -1082,8 +475,7 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         ]
     lines += [
         "",
-        f"- Working time, orchestrator turns and subagent turns joined: "
-        f"{duration_text(working)}",
+        f"- Working time, orchestrator turns and subagent turns joined: {duration_text(working)}",
         *waiting_lines,
         f"- Tokens in all: {number(totals.total)} — cached input {number(totals.cached)}, "
         f"output {number(totals.output)}",
@@ -1092,8 +484,10 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "|---|---|---|---|---|",
     ]
     for model, usage in sorted(by_model.items(), key=lambda item: -item[1].total):
-        lines.append(f"| {cell(model)} | {number(usage.total)} | {number(usage.input)} "
-                     f"| {number(usage.cached)} | {number(usage.output)} |")
+        lines.append(
+            f"| {cell(model)} | {number(usage.total)} | {number(usage.input)} "
+            f"| {number(usage.cached)} | {number(usage.output)} |"
+        )
     lines += [
         "",
         "## Stages: start, waiting for tools and tokens by model",
@@ -1115,14 +509,17 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
-        models = (sorted(row.by_model.items(), key=lambda item: -item[1].total)
-                  or [("—" if row.usage_read else "unknown", Usage())])
+        models = sorted(row.by_model.items(), key=lambda item: -item[1].total) or [
+            ("—" if row.usage_read else "unknown", Usage())
+        ]
         named = "unknown" if row.named is None else cell(", ".join(row.named))
         for model, usage in models:
-            lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
-                         f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
-                         f"| {number(usage.cached)} | {number(usage.output)} | {named} "
-                         f"| {number(usage.write_5m)} | {number(usage.write_1h)} |")
+            lines.append(
+                f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
+                f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
+                f"| {number(usage.cached)} | {number(usage.output)} | {named} "
+                f"| {number(usage.write_5m)} | {number(usage.write_1h)} |"
+            )
     return "\n".join(lines) + "\n"
 
 
@@ -1140,11 +537,11 @@ def current_session() -> str:
     if len(found) == 1:
         return next(iter(found.values()))
     if not found:
-        raise CycleStagesError("name a session; neither " + " nor ".join(SESSION_VARIABLES)
-                               + " is set")
+        raise CycleStagesError(
+            "name a session; neither " + " nor ".join(SESSION_VARIABLES) + " is set"
+        )
     # A tool started from the other's terminal inherits its variable.
-    raise CycleStagesError("name a session; both " + " and ".join(SESSION_VARIABLES)
-                           + " are set")
+    raise CycleStagesError("name a session; both " + " and ".join(SESSION_VARIABLES) + " are set")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1152,13 +549,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("sessions", nargs="*", metavar="SESSION")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--codex-home", type=Path, default=default_home("CODEX_HOME", ".codex"))
-    parser.add_argument("--claude-home", type=Path,
-                        default=default_home("CLAUDE_CONFIG_DIR", ".claude"))
+    parser.add_argument(
+        "--claude-home", type=Path, default=default_home("CLAUDE_CONFIG_DIR", ".claude")
+    )
     args = parser.parse_args(argv)
     try:
         names = args.sessions or [current_session()]
-        paths = dict.fromkeys(resolve(name, args.codex_home, args.claude_home).resolve()
-                              for name in names)
+        paths = dict.fromkeys(
+            resolve(name, args.codex_home, args.claude_home).resolve() for name in names
+        )
         sessions = [read_session(path, args.codex_home) for path in paths]
         warnings = find_warnings(sessions)
         text = report(sessions, build_rows(sessions), warnings)

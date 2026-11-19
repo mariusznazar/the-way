@@ -15,8 +15,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import review_reminder  # noqa: E402
 
-IDENTITY = ["-c", "user.name=Test", "-c", "user.email=test@example.com",
-            "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false"]
+IDENTITY = [
+    "-c",
+    "user.name=Test",
+    "-c",
+    "user.email=test@example.com",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "tag.gpgsign=false",
+]
 
 
 class Repository:
@@ -28,8 +36,13 @@ class Repository:
         self.tree = self.git("mktree", stdin="").strip()
 
     def git(self, *arguments: str, stdin: str | None = None) -> str:
-        done = subprocess.run(["git", *IDENTITY, "-C", str(self.directory), *arguments],
-                              input=stdin, capture_output=True, text=True, check=True)
+        done = subprocess.run(
+            ["git", *IDENTITY, "-C", str(self.directory), *arguments],
+            input=stdin,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
         return done.stdout
 
     def commit(self, message: str, *parents: str) -> str:
@@ -59,16 +72,18 @@ def run(repository: Repository, *arguments: str) -> tuple[int, str, str]:
     return code, out.getvalue(), err.getvalue()
 
 
-def run_with_failing_git(repository: Repository, command: str,
-                         *arguments: str) -> tuple[int, str, str]:
+def run_with_failing_git(
+    repository: Repository, command: str, *arguments: str
+) -> tuple[int, str, str]:
     """Run the script on real git, except that each git command named `command` fails with a message
     in a language the script has no way to read, as a git with another locale would give it."""
     real_git = review_reminder.git
 
     def git(directory: Path, *git_arguments: str) -> subprocess.CompletedProcess:
         if git_arguments[0] == command:
-            return subprocess.CompletedProcess(["git", *git_arguments], 128, "",
-                                               "fatal: nie można odczytać obiektu\n")
+            return subprocess.CompletedProcess(
+                ["git", *git_arguments], 128, "", "fatal: nie można odczytać obiektu\n"
+            )
         return real_git(directory, *git_arguments)
 
     with mock.patch.object(review_reminder, "git", git):
@@ -123,11 +138,11 @@ class ReviewReminderTest(unittest.TestCase):
         self.repo.tag("foundation-review/2026-01-10", self.head)
         branch_point = self.head
         side = self.repo.commit("task work", branch_point)
-        self.merges(1, start=2)                       # main moves on: one merge counts
+        self.merges(1, start=2)  # main moves on: one merge counts
         main_tip = self.head
         side = self.repo.commit("main merged into the task branch", side, main_tip)
         self.head = self.repo.commit("Merge pull request #3", main_tip, side)
-        self.repo.move("main", self.head)             # the task branch itself merges: counts
+        self.repo.move("main", self.head)  # the task branch itself merges: counts
         _, out, _ = run(self.repo, "main")
         self.assertIn("merges: 2\n", out)
 

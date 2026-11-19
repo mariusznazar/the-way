@@ -41,7 +41,6 @@ The clock runs in the core.
 
 
 class CompareLogEntriesTest(unittest.TestCase):
-
     def write(self, name, text):
         """The path of a copy of a log, written in a temporary directory as its text is."""
         if not hasattr(self, "directory"):
@@ -54,8 +53,12 @@ class CompareLogEntriesTest(unittest.TestCase):
 
     def run_script(self, before, after):
         """(exit code, report) of the script run on two copies, each given by its path."""
-        result = subprocess.run([sys.executable, "-B", SCRIPT, before, after], capture_output=True,
-                                text=True, encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, before, after],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         return result.returncode, result.stdout + result.stderr
 
     def compare(self, before, after):
@@ -82,7 +85,7 @@ class CompareLogEntriesTest(unittest.TestCase):
         self.assertEqual(code, 1, report)
         self.assertIn("GAME-03 stands only in", report)
         self.assertIn("after.md", report)
-        code, report = self.compare(added, LOG[:LOG.index("### GAME-02")])
+        code, report = self.compare(added, LOG[: LOG.index("### GAME-02")])
         self.assertEqual(code, 1, report)
         self.assertIn("GAME-03 stands only in", report)
         self.assertIn("before.md", report)
@@ -96,8 +99,10 @@ class CompareLogEntriesTest(unittest.TestCase):
         self.assertNotIn("differs", report)
 
     def test_blank_lines_at_the_end_of_an_entry_are_no_difference(self):
-        after = LOG.replace("*Rationale:* one file is easy to copy.\n\n",
-                            "*Rationale:* one file is easy to copy.\n\n\n\n")
+        after = LOG.replace(
+            "*Rationale:* one file is easy to copy.\n\n",
+            "*Rationale:* one file is easy to copy.\n\n\n\n",
+        )
         self.assertEqual(self.compare(LOG, after)[0], 0)
 
     def test_section_heading_and_sentence_between_entries_are_no_difference(self):
@@ -134,12 +139,15 @@ class CompareLogEntriesTest(unittest.TestCase):
         self.assertIn("GAME-01 differs: the first line that differs is line 3 in", report)
 
     def test_withdrawn_block_is_compared_as_an_entry(self):
-        withdrawn = LOG + "\n## Withdrawn identifiers\n\n| Identifier | Why |\n|---|---|\n" \
-                          "| GAME-09 | merged |\n"
+        withdrawn = (
+            LOG + "\n## Withdrawn identifiers\n\n| Identifier | Why |\n|---|---|\n"
+            "| GAME-09 | merged |\n"
+        )
         code, report = self.compare(withdrawn, withdrawn.replace("| merged |", "| folded in |"))
         self.assertEqual(code, 1, report)
-        self.assertIn("## Withdrawn identifiers differs: the first line that differs is line 25 in",
-                      report)
+        self.assertIn(
+            "## Withdrawn identifiers differs: the first line that differs is line 25 in", report
+        )
         code, report = self.compare(LOG, withdrawn)
         self.assertEqual(code, 1, report)
         self.assertIn("## Withdrawn identifiers stands only in", report)
@@ -147,8 +155,10 @@ class CompareLogEntriesTest(unittest.TestCase):
     def test_copy_holding_no_entry_ends_with_an_error_naming_the_file(self):
         # WAY-344: the script reads the entry headings it needs, and a copy without one ends with
         # exit code 2 and a message that names the file
-        for text in ("# Decision log\n\nNo decision yet.\n",
-                     "## Withdrawn identifiers\n\n| Identifier | Why |\n|---|---|\n"):
+        for text in (
+            "# Decision log\n\nNo decision yet.\n",
+            "## Withdrawn identifiers\n\n| Identifier | Why |\n|---|---|\n",
+        ):
             with self.subTest(text=text):
                 code, report = self.compare(LOG, text)
                 self.assertEqual(code, 2, report)

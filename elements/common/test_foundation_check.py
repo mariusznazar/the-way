@@ -171,10 +171,12 @@ FILES = {
     "foundations/part_map.md": PART_MAP,
     "guidelines/coding.md": GUIDELINES,
     "src/game.py": "# The rules of the game (ABC-01/1).\n",
-    "tests/test_saving.py": ("def test_round_trip():\n"
-                             "    # invariant: save-round-trip/1\n"
-                             "    # fact: clock-tick/1\n"
-                             "    assert True\n"),
+    "tests/test_saving.py": (
+        "def test_round_trip():\n"
+        "    # invariant: save-round-trip/1\n"
+        "    # fact: clock-tick/1\n"
+        "    assert True\n"
+    ),
     "README.md": "# The game\n\nSaves follow ABC-01 and ABC-02.\n",
     "notes.txt": "loose notes\n",
 }
@@ -215,19 +217,34 @@ class Product:
 
     def commit(self):
         """Commit the index, the author given by options and no network anywhere."""
-        git(self.root, "-c", "user.name=Test", "-c", "user.email=test@example.org", "-c",
-            "commit.gpgsign=false", "commit", "-q", "--no-verify", "-m", "a commit")
+        git(
+            self.root,
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.org",
+            "-c",
+            "commit.gpgsign=false",
+            "commit",
+            "-q",
+            "--no-verify",
+            "-m",
+            "a commit",
+        )
 
     def check(self, *args, cwd=None):
         """(exit code, report) of the script run on the product."""
-        result = subprocess.run([sys.executable, "-B", SCRIPT, *args],
-                                cwd=cwd or self.root, capture_output=True, text=True,
-                                encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, *args],
+            cwd=cwd or self.root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         return result.returncode, result.stdout + result.stderr
 
 
 class FoundationCheckTest(unittest.TestCase):
-
     def run_on(self, **changes):
         """Run the script on the good product with some files replaced, added or (None) left out."""
         return self.run_with((), **changes)
@@ -235,8 +252,9 @@ class FoundationCheckTest(unittest.TestCase):
     def run_with(self, arguments, **changes):
         """The same, with the arguments given to the script."""
         files = dict(FILES)
-        files.update({path.replace("__", "/").replace("_dot_", "."): text
-                      for path, text in changes.items()})
+        files.update(
+            {path.replace("__", "/").replace("_dot_", "."): text for path, text in changes.items()}
+        )
         return Product(self, files).check(*arguments)
 
     def assertPasses(self, result):
@@ -265,80 +283,115 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_not_a_git_repository_cannot_run(self):
         with tempfile.TemporaryDirectory() as directory:
-            result = subprocess.run([sys.executable, "-B", SCRIPT, directory],
-                                    capture_output=True, text=True, encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, "-B", SCRIPT, directory],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
 
     def test_git_missing_cannot_run(self):
         product = Product(self, FILES)
         with tempfile.TemporaryDirectory() as empty:
             environment = {"PATH": empty, "SYSTEMROOT": os.environ.get("SYSTEMROOT", "")}
-            result = subprocess.run([sys.executable, "-B", SCRIPT, product.root], env=environment,
-                                    capture_output=True, text=True, encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, "-B", SCRIPT, product.root],
+                env=environment,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
         self.assertIn("git cannot run", result.stdout)
 
     def test_errors_counted(self):
         decisions = self.edit(DECISIONS, "- **Scope:** core\n", "- **Scope:** saves\n")
         readme = "# The game\n\nSee ABC-07.\n"
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions,
-                                     README_dot_md=readme), "2 errors")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions, README_dot_md=readme), "2 errors"
+        )
 
     # --- identifiers are unique ---------------------------------------------------------------
 
     def test_decision_number_twice(self):
         decisions = DECISIONS + "\n### ABC-02 — Where does the clock run again?\n\nText.\n"
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "`ABC-02` stands twice")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "`ABC-02` stands twice",
+        )
 
     def test_decision_version_is_the_earlier_form(self):
         decisions = DECISIONS.replace("### ABC-02 —", "### ABC-02/2 —")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:16: `ABC-02/2` stands in the earlier form",
-                         "migrate_foundation.py", "1 error")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:16: `ABC-02/2` stands in the earlier form",
+            "migrate_foundation.py",
+            "1 error",
+        )
 
     def test_decision_version_twice(self):
         decisions = DECISIONS.replace("### ABC-01 —", "### ABC-01/1 —") + (
-            "\n### ABC-01/1 — How is a game saved?\n\nTwo files.\n")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "`ABC-01/1` stands twice")
+            "\n### ABC-01/1 — How is a game saved?\n\nTwo files.\n"
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions), "`ABC-01/1` stands twice"
+        )
 
     def test_decision_number_with_and_without_version(self):
         decisions = DECISIONS + "\n### ABC-01 — How is a game saved?\n\nTwo files.\n"
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "`ABC-01` stands twice")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions), "`ABC-01` stands twice"
+        )
 
     def test_invariant_identifier_twice(self):
         invariants = self.edit(INVARIANTS, "## clock-steady\n", "## save-round-trip\n")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:", "`save-round-trip` stands twice")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:",
+            "`save-round-trip` stands twice",
+        )
 
     def test_fact_identifier_held_by_invariant(self):
         facts = self.edit(FACTS, "## clock-tick\n", "## clock-steady\n")
         invariants = INVARIANTS.replace("clock-tick@0123abcd", "none")
         decisions = DECISIONS.replace("clock-tick@0123abcd", "none")
         tests = FILES["tests/test_saving.py"].replace("    # fact: clock-tick/1\n", "")
-        self.assertFails(self.run_on(foundations__environment_facts_dot_md=facts,
-                                     foundations__invariants_dot_md=invariants,
-                                     foundations__decisions_dot_md=decisions,
-                                     tests__test_saving_dot_py=tests),
-                         "foundations/environment_facts.md:", "`clock-steady` stands twice")
+        self.assertFails(
+            self.run_on(
+                foundations__environment_facts_dot_md=facts,
+                foundations__invariants_dot_md=invariants,
+                foundations__decisions_dot_md=decisions,
+                tests__test_saving_dot_py=tests,
+            ),
+            "foundations/environment_facts.md:",
+            "`clock-steady` stands twice",
+        )
 
     def test_part_identifier_held_by_invariant(self):
-        part_map = PART_MAP + ("\n## clock-steady\n\nSomeone watches the clock.\n\n"
-                               "- **Parts:** core\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:", "`clock-steady` stands twice")
+        part_map = PART_MAP + (
+            "\n## clock-steady\n\nSomeone watches the clock.\n\n- **Parts:** core\n"
+        )
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:",
+            "`clock-steady` stands twice",
+        )
 
     def test_message_outside_ascii(self):
         glossary = GLOSSARY + "\n## żółw → tick\n\nOne.\n\n## żółw → tick\n\nTwo.\n"
-        self.assertFails(self.run_on(foundations__glossary_dot_md=glossary),
-                         "`żółw → tick` stands twice")
+        self.assertFails(
+            self.run_on(foundations__glossary_dot_md=glossary), "`żółw → tick` stands twice"
+        )
 
     def test_glossary_term_twice(self):
         glossary = GLOSSARY + "\n## tick\n\nA tick is a mark.\n"
-        self.assertFails(self.run_on(foundations__glossary_dot_md=glossary),
-                         "foundations/glossary.md:", "`tick` stands twice")
+        self.assertFails(
+            self.run_on(foundations__glossary_dot_md=glossary),
+            "foundations/glossary.md:",
+            "`tick` stands twice",
+        )
 
     # --- withdrawn identifiers are never used again -------------------------------------------
 
@@ -347,26 +400,38 @@ class FoundationCheckTest(unittest.TestCase):
         invariants = invariants.replace("save-round-trip · clock-steady", "save-round-trip")
         decisions = DECISIONS.replace("save-round-trip · clock-steady", "save-round-trip")
         guidelines = GUIDELINES.replace(" · clock-steady", "").replace(
-            "; see clock-steady@89abcdef", "")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants,
-                                     foundations__decisions_dot_md=decisions,
-                                     guidelines__coding_dot_md=guidelines),
-                         "`save-format` stands twice")
+            "; see clock-steady@89abcdef", ""
+        )
+        self.assertFails(
+            self.run_on(
+                foundations__invariants_dot_md=invariants,
+                foundations__decisions_dot_md=decisions,
+                guidelines__coding_dot_md=guidelines,
+            ),
+            "`save-format` stands twice",
+        )
 
     def test_withdrawn_part_names_a_part_again(self):
         part_map = self.edit(PART_MAP, "## shell\n", "## engine\n")
         part_map = part_map.replace("core · shell\n- **Invariant", "core · engine\n- **Invariant")
         decisions = DECISIONS.replace("core, shell", "core, engine")
         invariants = INVARIANTS.replace("core · shell", "core · engine")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map,
-                                     foundations__decisions_dot_md=decisions,
-                                     foundations__invariants_dot_md=invariants),
-                         "`engine` stands twice")
+        self.assertFails(
+            self.run_on(
+                foundations__part_map_dot_md=part_map,
+                foundations__decisions_dot_md=decisions,
+                foundations__invariants_dot_md=invariants,
+            ),
+            "`engine` stands twice",
+        )
 
     def test_successor_that_is_no_entry(self):
         invariants = self.edit(INVARIANTS, "| save-round-trip |", "| save-all |")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:", "`save-all`")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:",
+            "`save-all`",
+        )
 
     def test_successor_withdrawn_in_the_same_file_passes(self):
         invariants = self.edit(INVARIANTS, "| save-round-trip |", "| save-format |")
@@ -384,44 +449,62 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_decision_named_with_fingerprint_or_version_that_does_not_exist(self):
         code = "# ABC-03@0123abcd and ABC-04/1\n"
-        self.assertFails(self.run_on(src__game_dot_py=code), "src/game.py:1:", "`ABC-03`",
-                         "`ABC-04`")
+        self.assertFails(
+            self.run_on(src__game_dot_py=code), "src/game.py:1:", "`ABC-03`", "`ABC-04`"
+        )
 
     def test_decision_relation_that_does_not_exist(self):
-        decisions = self.edit(DECISIONS, "derives from ABC-01@0123abcd",
-                              "derives from ABC-11@0123abcd")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "`ABC-11`")
+        decisions = self.edit(
+            DECISIONS, "derives from ABC-01@0123abcd", "derives from ABC-11@0123abcd"
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "`ABC-11`",
+        )
 
     # A list of withdrawn decision numbers after the last entry of the log; line 25 is its row.
-    WITHDRAWN_DECISION = ("\n## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n"
-                          "|---|---|---|\n| ABC-03 | merged into ABC-02 | ABC-02 |\n")
+    WITHDRAWN_DECISION = (
+        "\n## Withdrawn identifiers\n\n| Identifier | Why | Successors |\n"
+        "|---|---|---|\n| ABC-03 | merged into ABC-02 | ABC-02 |\n"
+    )
 
     def test_withdrawn_decision_number_with_its_successor_passes(self):
-        self.assertPasses(self.run_on(
-            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION))
+        self.assertPasses(
+            self.run_on(foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION)
+        )
 
     def test_withdrawn_decision_number_named_anywhere(self):
-        self.assertFails(self.run_on(
-            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION,
-            README_dot_md="# The game\n\nSee ABC-03.\n"),
-            "README.md:3: `ABC-03` is withdrawn; name its successor", "1 error")
+        self.assertFails(
+            self.run_on(
+                foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION,
+                README_dot_md="# The game\n\nSee ABC-03.\n",
+            ),
+            "README.md:3: `ABC-03` is withdrawn; name its successor",
+            "1 error",
+        )
 
     def test_withdrawn_decision_number_names_an_entry_again(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-03 |", "| ABC-02 |")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:33: `ABC-02` stands twice")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:33: `ABC-02` stands twice",
+        )
 
     def test_withdrawn_decision_number_twice(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION + "| ABC-03 | again | none |\n"
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:34: `ABC-03` stands twice")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:34: `ABC-03` stands twice",
+        )
 
     def test_withdrawn_decision_successor_that_is_no_decision(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| ABC-09 |\n")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:33: withdrawn `ABC-03` names the successor "
-                         "`ABC-09`, which this file does not hold")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:33: withdrawn `ABC-03` names the successor "
+            "`ABC-09`, which this file does not hold",
+        )
 
     def test_withdrawn_decision_successor_none_passes(self):
         decisions = DECISIONS + self.WITHDRAWN_DECISION.replace("| ABC-02 |\n", "| none |\n")
@@ -435,60 +518,90 @@ class FoundationCheckTest(unittest.TestCase):
 
     # A source outside the log an invariant's *Derives from* quotes, its ticket's key and its
     # passage holding numbers of the log's prefix that the log does not hold.
-    TICKET = ("https://tracker.example.org/browse/ABC-45 § Acceptance criteria —\n"
-              "  \"the clock never runs backwards, as ABC-46 asked\"; read 2026-10-21")
+    TICKET = (
+        "https://tracker.example.org/browse/ABC-45 § Acceptance criteria —\n"
+        '  "the clock never runs backwards, as ABC-46 asked"; read 2026-10-21'
+    )
 
     def test_derives_from_quoted_source_is_no_reference(self):
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
-                               "- **Derives from:** ABC-02 · %s\n" % self.TICKET)
+        invariants = self.edit(
+            INVARIANTS,
+            "- **Derives from:** ABC-02\n",
+            "- **Derives from:** ABC-02 · %s\n" % self.TICKET,
+        )
         self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_derives_from_source_quoted_in_typographic_marks_is_no_reference(self):
-        ticket = self.TICKET.replace("\"the", "“the").replace("asked\"", "asked”")
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
-                               "- **Derives from:** ABC-02 · %s\n" % ticket)
+        ticket = self.TICKET.replace('"the', "“the").replace('asked"', "asked”")
+        invariants = self.edit(
+            INVARIANTS, "- **Derives from:** ABC-02\n", "- **Derives from:** ABC-02 · %s\n" % ticket
+        )
         self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_derives_from_decision_beside_quoted_source_that_does_not_exist(self):
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
-                               "- **Derives from:** ABC-09 · %s\n" % self.TICKET)
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:19: `ABC-09` names no decision of the log",
-                         "1 error")
+        invariants = self.edit(
+            INVARIANTS,
+            "- **Derives from:** ABC-02\n",
+            "- **Derives from:** ABC-09 · %s\n" % self.TICKET,
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:19: `ABC-09` names no decision of the log",
+            "1 error",
+        )
 
     def test_derives_from_decision_after_quoted_source_on_next_line(self):
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
-                               "- **Derives from:** %s ·\n  ABC-09\n" % self.TICKET)
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:21: `ABC-09` names no decision of the log",
-                         "1 error")
+        invariants = self.edit(
+            INVARIANTS,
+            "- **Derives from:** ABC-02\n",
+            "- **Derives from:** %s ·\n  ABC-09\n" % self.TICKET,
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:21: `ABC-09` names no decision of the log",
+            "1 error",
+        )
 
     def test_derives_from_text_quoting_nothing_is_read_for_decisions(self):
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-02\n",
-                               "- **Derives from:** recovered from code — src/game.py, after "
-                               "ABC-09\n")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:19: `ABC-09` names no decision of the log")
+        invariants = self.edit(
+            INVARIANTS,
+            "- **Derives from:** ABC-02\n",
+            "- **Derives from:** recovered from code — src/game.py, after ABC-09\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:19: `ABC-09` names no decision of the log",
+        )
 
     # --- references to invariants -------------------------------------------------------------
 
     def test_verification_names_no_invariant(self):
-        decisions = self.edit(DECISIONS, "invariants: save-round-trip. Level",
-                              "invariants: save-whole. Level")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "`save-whole`")
+        decisions = self.edit(
+            DECISIONS, "invariants: save-round-trip. Level", "invariants: save-whole. Level"
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "`save-whole`",
+        )
 
     def test_verification_names_withdrawn_invariant(self):
-        decisions = self.edit(DECISIONS, "invariants: save-round-trip · clock-steady",
-                              "invariants: save-round-trip · save-format")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "`save-format`", "withdrawn")
+        decisions = self.edit(
+            DECISIONS,
+            "invariants: save-round-trip · clock-steady",
+            "invariants: save-round-trip · save-format",
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions), "`save-format`", "withdrawn"
+        )
 
     def test_test_cites_no_invariant(self):
-        tests = self.edit(FILES["tests/test_saving.py"], "invariant: save-round-trip/1",
-                          "invariant: save-trip/1")
-        self.assertFails(self.run_on(tests__test_saving_dot_py=tests),
-                         "tests/test_saving.py:2:", "`save-trip`")
+        tests = self.edit(
+            FILES["tests/test_saving.py"], "invariant: save-round-trip/1", "invariant: save-trip/1"
+        )
+        self.assertFails(
+            self.run_on(tests__test_saving_dot_py=tests), "tests/test_saving.py:2:", "`save-trip`"
+        )
 
     def test_test_cites_invariant_in_other_comment_forms(self):
         tests = "// invariant: save-round-trip\n// invariant: clock-steady/2\n"
@@ -496,65 +609,101 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_test_cites_withdrawn_invariant(self):
         tests = "// invariant: save-format\n"
-        self.assertFails(self.run_on(tests__saving_dot_test_dot_js=tests),
-                         "tests/saving.test.js:1:", "`save-format`", "withdrawn")
+        self.assertFails(
+            self.run_on(tests__saving_dot_test_dot_js=tests),
+            "tests/saving.test.js:1:",
+            "`save-format`",
+            "withdrawn",
+        )
 
     def test_citation_of_more_than_one_word(self):
         tests = "# invariant: save-round-trip and more\n"
-        self.assertFails(self.run_on(tests__test_more_dot_py=tests),
-                         "tests/test_more.py:1:", "`invariant: save-round-trip and more`")
+        self.assertFails(
+            self.run_on(tests__test_more_dot_py=tests),
+            "tests/test_more.py:1:",
+            "`invariant: save-round-trip and more`",
+        )
 
     def test_citation_of_nothing(self):
-        self.assertFails(self.run_on(tests__test_more_dot_py="# invariant:\n"),
-                         "tests/test_more.py:1:", "`invariant: `")
+        self.assertFails(
+            self.run_on(tests__test_more_dot_py="# invariant:\n"),
+            "tests/test_more.py:1:",
+            "`invariant: `",
+        )
 
     def test_invariant_line_inside_a_string_is_no_citation(self):
         tests = 'TEXT = "# invariant: save-trip/1"\n'
         self.assertPasses(self.run_on(tests__test_text_dot_py=tests))
 
     def test_flow_names_no_invariant(self):
-        part_map = self.edit(PART_MAP, "## Files left out on purpose\n", FLOW.replace(
-            "- **Invariant:** save-round-trip", "- **Invariant:** save-trip") +
-            "## Files left out on purpose\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:", "`save-trip`")
+        part_map = self.edit(
+            PART_MAP,
+            "## Files left out on purpose\n",
+            FLOW.replace("- **Invariant:** save-round-trip", "- **Invariant:** save-trip")
+            + "## Files left out on purpose\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:",
+            "`save-trip`",
+        )
 
     def test_failure_mode_detected_by_on_next_line(self):
         part_map = self.edit(PART_MAP, "detected by save-round-trip", "detected by\n    save-trip")
         # the failure mode opens on line 10, so `save-trip` stands on line 11
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:11: `save-trip`")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:11: `save-trip`",
+        )
 
     def test_failure_mode_detected_by_no_invariant(self):
         part_map = self.edit(PART_MAP, "detected by save-round-trip", "detected by save-trip")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:", "`save-trip`")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:",
+            "`save-trip`",
+        )
 
     def test_guidelines_name_no_invariant(self):
         guidelines = self.edit(GUIDELINES, "· clock-steady\n", "· clock-even\n")
-        self.assertFails(self.run_on(guidelines__coding_dot_md=guidelines),
-                         "guidelines/coding.md:", "`clock-even`")
+        self.assertFails(
+            self.run_on(guidelines__coding_dot_md=guidelines),
+            "guidelines/coding.md:",
+            "`clock-even`",
+        )
 
     def test_guidelines_invariant_continued_on_next_line(self):
         guidelines = self.edit(GUIDELINES, " · clock-steady\n", " ·\n  clock-even\n")
-        self.assertFails(self.run_on(guidelines__coding_dot_md=guidelines),
-                         "guidelines/coding.md:12: `clock-even`")
+        self.assertFails(
+            self.run_on(guidelines__coding_dot_md=guidelines),
+            "guidelines/coding.md:12: `clock-even`",
+        )
 
     def test_guidelines_reference_with_fingerprint_to_no_invariant(self):
         guidelines = self.edit(GUIDELINES, "see clock-steady@89abcdef", "see clock-even@89abcdef")
-        self.assertFails(self.run_on(guidelines__coding_dot_md=guidelines),
-                         "guidelines/coding.md:", "`clock-even`")
+        self.assertFails(
+            self.run_on(guidelines__coding_dot_md=guidelines),
+            "guidelines/coding.md:",
+            "`clock-even`",
+        )
 
     def test_guidelines_fenced_code_holds_no_reference(self):
-        case = ("\n```good save-round-trip src/save.py\n"
-                "# made-up@0123abcd\n- **Invariant:** made-up\n```\n")
+        case = (
+            "\n```good save-round-trip src/save.py\n"
+            "# made-up@0123abcd\n- **Invariant:** made-up\n```\n"
+        )
         self.assertPasses(self.run_on(guidelines__coding_dot_md=GUIDELINES + case))
 
     def test_violated_list_names_no_invariant(self):
-        violated = ("## Violated invariants\n\n| Identifier | Version |\n|---|---|\n"
-                    "| clock-steady | 1 |\n| save-trip | 1 |\n")
-        self.assertFails(self.run_on(foundations__violated_invariants_dot_md=violated),
-                         "foundations/violated_invariants.md:6:", "`save-trip`")
+        violated = (
+            "## Violated invariants\n\n| Identifier | Version |\n|---|---|\n"
+            "| clock-steady | 1 |\n| save-trip | 1 |\n"
+        )
+        self.assertFails(
+            self.run_on(foundations__violated_invariants_dot_md=violated),
+            "foundations/violated_invariants.md:6:",
+            "`save-trip`",
+        )
 
     # --- references to parts ------------------------------------------------------------------
 
@@ -564,193 +713,270 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_scope_names_no_part(self):
         decisions = self.edit(DECISIONS, "- **Scope:** core, shell", "- **Scope:** core, saves")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "`saves`")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "`saves`",
+        )
 
     def test_scope_continued_on_next_line(self):
         decisions = self.edit(DECISIONS, "- **Scope:** core, shell", "- **Scope:** core,\n  saves")
         # *Scope* of ABC-02 opens on line 16, so `saves` stands on line 17
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:21: `saves`")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:21: `saves`",
+        )
 
     def test_scope_naming_a_flow_names_no_part(self):
         decisions = self.edit(DECISIONS, "- **Scope:** core, shell", "- **Scope:** saving-works")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "`saving-works`")
+        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions), "`saving-works`")
 
     def test_invariant_part_names_no_part(self):
         invariants = self.edit(INVARIANTS, "- **Part:** core · shell", "- **Part:** core · ui")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:", "`ui`")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:",
+            "`ui`",
+        )
 
     def test_dependency_on_no_part(self):
         part_map = self.edit(PART_MAP, "- **Depends on:** core\n", "- **Depends on:** engine\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:", "`engine`", "withdrawn")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:",
+            "`engine`",
+            "withdrawn",
+        )
 
     def test_flow_names_no_part(self):
-        part_map = self.edit(PART_MAP, "## Files left out on purpose\n", FLOW.replace(
-            "- **Parts:** core · shell", "- **Parts:** core · ui") +
-            "## Files left out on purpose\n")
+        part_map = self.edit(
+            PART_MAP,
+            "## Files left out on purpose\n",
+            FLOW.replace("- **Parts:** core · shell", "- **Parts:** core · ui")
+            + "## Files left out on purpose\n",
+        )
         self.assertFails(self.run_on(foundations__part_map_dot_md=part_map), "`ui`")
 
     def test_guidelines_apply_to_no_part(self):
         guidelines = self.edit(GUIDELINES, "- **Applies to:** core", "- **Applies to:** ui")
-        self.assertFails(self.run_on(guidelines__coding_dot_md=guidelines),
-                         "guidelines/coding.md:", "`ui`")
+        self.assertFails(
+            self.run_on(guidelines__coding_dot_md=guidelines), "guidelines/coding.md:", "`ui`"
+        )
 
     # --- references to environment facts ------------------------------------------------------
 
     def test_rests_on_no_fact(self):
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** clock-tock@0123abcd")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:", "`clock-tock`")
+        invariants = self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** clock-tock@0123abcd"
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:",
+            "`clock-tock`",
+        )
 
     def test_rests_on_an_invariant_names_no_fact(self):
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** clock-steady")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "`clock-steady`")
+        invariants = self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** clock-steady"
+        )
+        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants), "`clock-steady`")
 
     def test_rests_on_a_missing_fact_described_passes_whole(self):
         # a description is read as one: its commas and the words in it name no entry
-        for value in ("TODO — the store of documents",
-                      "TODO — the store of documents, once a task chooses it",
-                      "TODO — clock-tock, the clock the game runs on · its source",
-                      "`TODO — the store of documents, once a task chooses it`"):
+        for value in (
+            "TODO — the store of documents",
+            "TODO — the store of documents, once a task chooses it",
+            "TODO — clock-tock, the clock the game runs on · its source",
+            "`TODO — the store of documents, once a task chooses it`",
+        ):
             with self.subTest(value=value):
-                invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                                       "- **Rests on:** " + value)
+                invariants = self.edit(
+                    INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** " + value
+                )
                 self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_rests_on_a_missing_fact_described_over_two_lines_passes(self):
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** TODO — the store of documents,\n"
-                               "  once a task chooses it")
+        invariants = self.edit(
+            INVARIANTS,
+            "- **Rests on:** clock-tick@0123abcd",
+            "- **Rests on:** TODO — the store of documents,\n  once a task chooses it",
+        )
         self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_rests_on_a_bare_todo_names_no_fact(self):
         for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
             with self.subTest(value=value):
-                invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                                       "- **Rests on:** " + value)
-                self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                                 "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
-                                 "no fact: write `TODO — <the fact, with its source>`", "1 error")
+                invariants = self.edit(
+                    INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** " + value
+                )
+                self.assertFails(
+                    self.run_on(foundations__invariants_dot_md=invariants),
+                    "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
+                    "no fact: write `TODO — <the fact, with its source>`",
+                    "1 error",
+                )
 
     def test_rests_on_a_word_that_only_starts_with_todo_is_no_todo(self):
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** TODOs")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:8: `TODOs` is no identifier of a fact")
+        invariants = self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** TODOs"
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:8: `TODOs` is no identifier of a fact",
+        )
 
     def test_rests_on_none_and_a_fact_still_pass(self):
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** none")
+        invariants = self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** none"
+        )
         self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_based_on_a_missing_thing_described_passes_whole(self):
         # a description is read as one: its commas, ` · ` and the words in it name no entry
-        for value in ("TODO — the source of the save format",
-                      "TODO — the source of the save format, once the vendor answers",
-                      "TODO — clock-tock, ABC-77 · its source",
-                      "`TODO — the source of the save format, once the vendor answers`"):
+        for value in (
+            "TODO — the source of the save format",
+            "TODO — the source of the save format, once the vendor answers",
+            "TODO — clock-tock, ABC-77 · its source",
+            "`TODO — the source of the save format, once the vendor answers`",
+        ):
             with self.subTest(value=value):
-                decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                                      "- **Based on:** " + value + "\n")
+                decisions = self.edit(
+                    DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"
+                )
                 self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
 
     def test_based_on_a_missing_thing_described_over_two_lines_passes(self):
-        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                              "- **Based on:** TODO — the source of the save format,\n"
-                              "  once the vendor answers\n")
+        decisions = self.edit(
+            DECISIONS,
+            "- **Based on:** none\n",
+            "- **Based on:** TODO — the source of the save format,\n  once the vendor answers\n",
+        )
         self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
 
     def test_based_on_a_bare_todo_names_nothing_missing(self):
         for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
             with self.subTest(value=value):
-                decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                                      "- **Based on:** " + value + "\n")
-                self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                                 "foundations/decisions.md:21: *Based on* reads `TODO` and says "
-                                 "nothing of what is missing: write `TODO — <what is missing, "
-                                 "with its source>`", "1 error")
+                decisions = self.edit(
+                    DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"
+                )
+                self.assertFails(
+                    self.run_on(foundations__decisions_dot_md=decisions),
+                    "foundations/decisions.md:21: *Based on* reads `TODO` and says "
+                    "nothing of what is missing: write `TODO — <what is missing, "
+                    "with its source>`",
+                    "1 error",
+                )
 
     def test_based_on_a_word_that_only_starts_with_todo_is_read_as_before(self):
         decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** TODOs\n")
         self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
 
     def test_derives_from_a_missing_decision_described_passes_whole(self):
-        for value in ("TODO — the decision on where saves live",
-                      "TODO — the decision on where saves live, expected in the save task",
-                      "TODO — ABC-77, expected next · or ABC-78",
-                      "`TODO — the decision on where saves live, expected in the save task`"):
+        for value in (
+            "TODO — the decision on where saves live",
+            "TODO — the decision on where saves live, expected in the save task",
+            "TODO — ABC-77, expected next · or ABC-78",
+            "`TODO — the decision on where saves live, expected in the save task`",
+        ):
             with self.subTest(value=value):
-                invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
-                                       "- **Derives from:** " + value)
+                invariants = self.edit(
+                    INVARIANTS,
+                    "- **Derives from:** ABC-01@0123abcd",
+                    "- **Derives from:** " + value,
+                )
                 self.assertPasses(self.run_on(foundations__invariants_dot_md=invariants))
 
     def test_derives_from_a_bare_todo_names_no_decision(self):
         for value in ("TODO", "`TODO`", "TODO —", "TODO — "):
             with self.subTest(value=value):
-                invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
-                                       "- **Derives from:** " + value)
-                self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                                 "foundations/invariants.md:9: *Derives from* reads `TODO` and "
-                                 "names no decision: write `TODO — <the decision, and where it is "
-                                 "expected>`", "1 error")
+                invariants = self.edit(
+                    INVARIANTS,
+                    "- **Derives from:** ABC-01@0123abcd",
+                    "- **Derives from:** " + value,
+                )
+                self.assertFails(
+                    self.run_on(foundations__invariants_dot_md=invariants),
+                    "foundations/invariants.md:9: *Derives from* reads `TODO` and "
+                    "names no decision: write `TODO — <the decision, and where it is "
+                    "expected>`",
+                    "1 error",
+                )
 
     def test_derives_from_other_values_are_read_as_before(self):
-        invariants = self.edit(INVARIANTS, "- **Derives from:** ABC-01@0123abcd",
-                               "- **Derives from:** ABC-77")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:9: `ABC-77` names no decision of the log")
+        invariants = self.edit(
+            INVARIANTS, "- **Derives from:** ABC-01@0123abcd", "- **Derives from:** ABC-77"
+        )
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:9: `ABC-77` names no decision of the log",
+        )
 
     def test_origin_takes_no_todo(self):
         for value in ("TODO", "TODO — the reasoning"):
             with self.subTest(value=value):
-                decisions = self.edit(DECISIONS, "- **Origin:** none\n",
-                                      "- **Origin:** %s\n" % value)
-                self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                                 "*Origin* does not take `%s`" % value, "1 error")
+                decisions = self.edit(
+                    DECISIONS, "- **Origin:** none\n", "- **Origin:** %s\n" % value
+                )
+                self.assertFails(
+                    self.run_on(foundations__decisions_dot_md=decisions),
+                    "*Origin* does not take `%s`" % value,
+                    "1 error",
+                )
 
     def test_relations_a_missing_decision_described_passes_whole(self):
         # a description is read as one: its commas, ` · ` and the decision numbers in it name no entry
-        for value in ("TODO — the decision on where saves live",
-                      "TODO — the decision on where saves live, expected in the save task",
-                      "TODO — ABC-77, expected next · or ABC-78",
-                      "`TODO — the decision on where saves live, expected in the save task`"):
+        for value in (
+            "TODO — the decision on where saves live",
+            "TODO — the decision on where saves live, expected in the save task",
+            "TODO — ABC-77, expected next · or ABC-78",
+            "`TODO — the decision on where saves live, expected in the save task`",
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_relations(value))
 
     def test_relations_a_missing_decision_described_over_two_lines_passes(self):
-        self.assertPasses(self.mixed_relations("TODO — the decision on where saves live,\n"
-                                               "  ABC-77, expected in the save task"))
+        self.assertPasses(
+            self.mixed_relations(
+                "TODO — the decision on where saves live,\n  ABC-77, expected in the save task"
+            )
+        )
 
     def test_relations_a_known_decision_then_a_missing_one_described_passes(self):
         # decision: WAY-71 "The main branch holds `TODO` only where an entry stands on something the product's foundation does not hold yet:"
-        for value in ("derives from ABC-01 · TODO — the decision on saves, expected in the task",
-                      "narrows ABC-01 · TODO — the decision on saves · or its successor",
-                      "derives from ABC-01 · TODO — ABC-77, expected next"):
+        for value in (
+            "derives from ABC-01 · TODO — the decision on saves, expected in the task",
+            "narrows ABC-01 · TODO — the decision on saves · or its successor",
+            "derives from ABC-01 · TODO — ABC-77, expected next",
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_relations(value))
 
     def test_relations_a_bare_todo_names_no_decision(self):
         # decision: WAY-71 "`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error."
-        for value in ("TODO", "`TODO`", "TODO —", "TODO — ",
-                      "derives from ABC-01 · TODO", "derives from ABC-01 · `TODO`",
-                      "derives from ABC-01 · TODO —"):
+        for value in (
+            "TODO",
+            "`TODO`",
+            "TODO —",
+            "TODO — ",
+            "derives from ABC-01 · TODO",
+            "derives from ABC-01 · `TODO`",
+            "derives from ABC-01 · TODO —",
+        ):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_relations(value),
-                                 "foundations/decisions.md:22: *Relations* reads `TODO` and "
-                                 "names no decision: write `TODO — <the decision, and where it is "
-                                 "expected>`", "1 error")
+                self.assertFails(
+                    self.mixed_relations(value),
+                    "foundations/decisions.md:22: *Relations* reads `TODO` and "
+                    "names no decision: write `TODO — <the decision, and where it is "
+                    "expected>`",
+                    "1 error",
+                )
 
     # A relation item begins with its type, so a `TODO` behind a type must not pass as a relation.
-    TYPED_TODO = ("foundations/decisions.md:22: *Relations* reads `TODO` after a relation type: "
-                  "the `TODO` item takes no `derives from` or `narrows`; write `TODO — <the "
-                  "decision, and where it is expected>`")
+    TYPED_TODO = (
+        "foundations/decisions.md:22: *Relations* reads `TODO` after a relation type: "
+        "the `TODO` item takes no `derives from` or `narrows`; write `TODO — <the "
+        "decision, and where it is expected>`"
+    )
 
     def test_relations_a_bare_todo_behind_a_type_is_an_error(self):
         for value in ("narrows TODO", "narrows `TODO`", "derives from TODO —"):
@@ -762,74 +988,110 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertFails(self.mixed_relations("derives from TODO"), self.TYPED_TODO, "1 error")
 
     def test_relations_a_known_relation_then_derives_from_todo_is_an_error(self):
-        self.assertFails(self.mixed_relations("derives from ABC-01 · derives from TODO"),
-                         self.TYPED_TODO, "1 error")
+        self.assertFails(
+            self.mixed_relations("derives from ABC-01 · derives from TODO"),
+            self.TYPED_TODO,
+            "1 error",
+        )
 
     def test_relations_a_described_todo_behind_a_type_is_an_error_not_a_reference(self):
         # the number inside the description is no reference, so the one error is the form
-        for value in ("derives from TODO — the decision on saves",
-                      "derives from ABC-01 · derives from TODO — ABC-77, expected later"):
+        for value in (
+            "derives from TODO — the decision on saves",
+            "derives from ABC-01 · derives from TODO — ABC-77, expected later",
+        ):
             with self.subTest(value=value):
                 self.assertFails(self.mixed_relations(value), self.TYPED_TODO, "1 error")
 
     def test_relations_a_decision_on_a_second_line_is_still_checked(self):
-        self.assertFails(self.mixed_relations("derives from ABC-01 ·\n  narrows ABC-77"),
-                         "foundations/decisions.md:23: `ABC-77` names no decision of the log",
-                         "1 error")
+        self.assertFails(
+            self.mixed_relations("derives from ABC-01 ·\n  narrows ABC-77"),
+            "foundations/decisions.md:23: `ABC-77` names no decision of the log",
+            "1 error",
+        )
 
     def test_relations_a_decision_before_a_todo_is_still_checked(self):
-        self.assertFails(self.mixed_relations("derives from ABC-77 · TODO — the decision on saves"),
-                         "foundations/decisions.md:22: `ABC-77` names no decision of the log",
-                         "1 error")
+        self.assertFails(
+            self.mixed_relations("derives from ABC-77 · TODO — the decision on saves"),
+            "foundations/decisions.md:22: `ABC-77` names no decision of the log",
+            "1 error",
+        )
 
     def test_relations_a_described_todo_after_a_comma_is_no_joined_list(self):
         # decision: WAY-71 "`elements/common/foundation_check.py` reports a missing field, or a word not given it, as an error."
-        self.assertFails(self.mixed_relations("derives from ABC-01, TODO — the decision on saves"),
-                         "*Relations* joins its items by ` · `: write ` · ` before `TODO`",
-                         "1 error")
+        self.assertFails(
+            self.mixed_relations("derives from ABC-01, TODO — the decision on saves"),
+            "*Relations* joins its items by ` · `: write ` · ` before `TODO`",
+            "1 error",
+        )
 
     # --- a TODO after a comma or a line break, not after ` · ` -----------------------------------
 
     def test_rests_on_a_bare_todo_after_a_comma_or_a_line_break_names_no_fact(self):
-        for value, line in (("clock-tick, TODO", 8), ("clock-tick, `TODO`", 8),
-                            ("clock-tick, TODO —", 8), ("clock-tick\n  TODO", 9),
-                            ("clock-tick,\n  TODO", 9)):
+        for value, line in (
+            ("clock-tick, TODO", 8),
+            ("clock-tick, `TODO`", 8),
+            ("clock-tick, TODO —", 8),
+            ("clock-tick\n  TODO", 9),
+            ("clock-tick,\n  TODO", 9),
+        ):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_rests_on(value),
-                                 "foundations/invariants.md:%d: *Rests on* reads `TODO` and names "
-                                 "no fact: write `TODO — <the fact, with its source>`" % line,
-                                 "1 error")
+                self.assertFails(
+                    self.mixed_rests_on(value),
+                    "foundations/invariants.md:%d: *Rests on* reads `TODO` and names "
+                    "no fact: write `TODO — <the fact, with its source>`" % line,
+                    "1 error",
+                )
 
     def test_derives_from_a_bare_todo_after_a_comma_names_no_decision(self):
-        self.assertFails(self.mixed_derives_from("ABC-01, TODO"),
-                         "foundations/invariants.md:9: *Derives from* reads `TODO` and names no "
-                         "decision: write `TODO — <the decision, and where it is expected>`",
-                         "1 error")
+        self.assertFails(
+            self.mixed_derives_from("ABC-01, TODO"),
+            "foundations/invariants.md:9: *Derives from* reads `TODO` and names no "
+            "decision: write `TODO — <the decision, and where it is expected>`",
+            "1 error",
+        )
 
     def test_based_on_a_bare_todo_after_a_comma_names_nothing_missing(self):
-        self.assertFails(self.mixed_based_on("ABC-01, TODO"),
-                         "foundations/decisions.md:21: *Based on* reads `TODO` and says nothing "
-                         "of what is missing: write `TODO — <what is missing, with its source>`",
-                         "1 error")
+        self.assertFails(
+            self.mixed_based_on("ABC-01, TODO"),
+            "foundations/decisions.md:21: *Based on* reads `TODO` and says nothing "
+            "of what is missing: write `TODO — <what is missing, with its source>`",
+            "1 error",
+        )
 
     def test_a_described_todo_after_a_comma_or_a_line_break_is_no_joined_list(self):
-        for value in ("clock-tick, TODO — a second fact", "clock-tick,\n  TODO — a second fact",
-                      "clock-tick\n  TODO — a second fact"):
+        for value in (
+            "clock-tick, TODO — a second fact",
+            "clock-tick,\n  TODO — a second fact",
+            "clock-tick\n  TODO — a second fact",
+        ):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_rests_on(value),
-                                 "*Rests on* joins its items by ` · `: write ` · ` before `TODO`, "
-                                 "not a comma or a line break", "1 error")
+                self.assertFails(
+                    self.mixed_rests_on(value),
+                    "*Rests on* joins its items by ` · `: write ` · ` before `TODO`, "
+                    "not a comma or a line break",
+                    "1 error",
+                )
 
     def test_a_described_todo_after_a_comma_is_no_joined_list_in_the_other_fields(self):
-        self.assertFails(self.mixed_derives_from("ABC-01, TODO — the decision on saves"),
-                         "*Derives from* joins its items by ` · `", "1 error")
-        self.assertFails(self.mixed_based_on("ABC-01, TODO — the source of the save format"),
-                         "*Based on* joins its items by ` · `", "1 error")
+        self.assertFails(
+            self.mixed_derives_from("ABC-01, TODO — the decision on saves"),
+            "*Derives from* joins its items by ` · `",
+            "1 error",
+        )
+        self.assertFails(
+            self.mixed_based_on("ABC-01, TODO — the source of the save format"),
+            "*Based on* joins its items by ` · `",
+            "1 error",
+        )
 
     def test_a_comma_or_a_todo_inside_quotation_marks_joins_and_begins_nothing(self):
-        self.assertPasses(self.mixed_derives_from(
-            "https://example.org/clock — \"one, TODO tick\"; read 2026-10-01 · "
-            "TODO — the decision on ticks, once the clock task is made"))
+        self.assertPasses(
+            self.mixed_derives_from(
+                'https://example.org/clock — "one, TODO tick"; read 2026-10-01 · '
+                "TODO — the decision on ticks, once the clock task is made"
+            )
+        )
 
     def test_a_described_todo_first_or_after_a_dot_joined_item_stays_as_before(self):
         self.assertPasses(self.mixed_rests_on("TODO — a second fact, from the vendor"))
@@ -838,40 +1100,61 @@ class FoundationCheckTest(unittest.TestCase):
     # --- a missing thing as the last item of a value that names known ones ----------------------
 
     def mixed_rests_on(self, value):
-        return self.run_on(foundations__invariants_dot_md=self.edit(
-            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** " + value))
+        return self.run_on(
+            foundations__invariants_dot_md=self.edit(
+                INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** " + value
+            )
+        )
 
     def mixed_derives_from(self, value):
-        return self.run_on(foundations__invariants_dot_md=self.edit(
-            INVARIANTS, "- **Derives from:** ABC-01@0123abcd", "- **Derives from:** " + value))
+        return self.run_on(
+            foundations__invariants_dot_md=self.edit(
+                INVARIANTS, "- **Derives from:** ABC-01@0123abcd", "- **Derives from:** " + value
+            )
+        )
 
     def mixed_based_on(self, value):
-        return self.run_on(foundations__decisions_dot_md=self.edit(
-            DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"))
+        return self.run_on(
+            foundations__decisions_dot_md=self.edit(
+                DECISIONS, "- **Based on:** none\n", "- **Based on:** " + value + "\n"
+            )
+        )
 
     def mixed_relations(self, value):
-        return self.run_on(foundations__decisions_dot_md=self.edit(
-            DECISIONS, "- **Relations:** derives from ABC-01@0123abcd\n",
-            "- **Relations:** " + value + "\n"))
+        return self.run_on(
+            foundations__decisions_dot_md=self.edit(
+                DECISIONS,
+                "- **Relations:** derives from ABC-01@0123abcd\n",
+                "- **Relations:** " + value + "\n",
+            )
+        )
 
     def test_rests_on_a_known_fact_then_a_missing_one_described_passes(self):
-        for value in ("clock-tick · TODO — a second fact, from the vendor",
-                      "clock-tick · TODO — a second fact, from the vendor, read once",
-                      "clock-tick · TODO — a second fact · from the vendor",
-                      "clock-tick@0123abcd · TODO — a second fact"):
+        for value in (
+            "clock-tick · TODO — a second fact, from the vendor",
+            "clock-tick · TODO — a second fact, from the vendor, read once",
+            "clock-tick · TODO — a second fact · from the vendor",
+            "clock-tick@0123abcd · TODO — a second fact",
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_rests_on(value))
 
     def test_rests_on_a_known_fact_then_a_bare_todo_names_no_fact(self):
         for value in ("clock-tick · TODO", "clock-tick · `TODO`", "clock-tick · TODO —"):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_rests_on(value),
-                                 "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
-                                 "no fact: write `TODO — <the fact, with its source>`", "1 error")
+                self.assertFails(
+                    self.mixed_rests_on(value),
+                    "foundations/invariants.md:8: *Rests on* reads `TODO` and names "
+                    "no fact: write `TODO — <the fact, with its source>`",
+                    "1 error",
+                )
 
     def test_rests_on_a_known_fact_before_a_todo_is_still_checked(self):
-        self.assertFails(self.mixed_rests_on("clock-tock · TODO — a second fact"),
-                         "foundations/invariants.md:8: `clock-tock` names no fact", "1 error")
+        self.assertFails(
+            self.mixed_rests_on("clock-tock · TODO — a second fact"),
+            "foundations/invariants.md:8: `clock-tock` names no fact",
+            "1 error",
+        )
 
     def test_rests_on_a_todo_first_reads_the_rest_as_its_description(self):
         self.assertPasses(self.mixed_rests_on("TODO — a second fact · clock-tock, fact-x"))
@@ -880,99 +1163,144 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertPasses(self.mixed_rests_on("clock-tick · TODO — a second fact · clock-tock"))
 
     def test_derives_from_a_known_decision_then_a_missing_one_described_passes(self):
-        for value in ("ABC-01 · TODO — the decision on saves, expected in the save task",
-                      "ABC-01@0123abcd · TODO — the decision on saves · or its successor",
-                      "ABC-01 · TODO — ABC-77, expected next"):
+        for value in (
+            "ABC-01 · TODO — the decision on saves, expected in the save task",
+            "ABC-01@0123abcd · TODO — the decision on saves · or its successor",
+            "ABC-01 · TODO — ABC-77, expected next",
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_derives_from(value))
 
     def test_derives_from_a_known_decision_then_a_bare_todo_names_no_decision(self):
         for value in ("ABC-01 · TODO", "ABC-01 · `TODO`", "ABC-01 · TODO —"):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_derives_from(value),
-                                 "foundations/invariants.md:9: *Derives from* reads `TODO` and "
-                                 "names no decision: write `TODO — <the decision, and where it is "
-                                 "expected>`", "1 error")
+                self.assertFails(
+                    self.mixed_derives_from(value),
+                    "foundations/invariants.md:9: *Derives from* reads `TODO` and "
+                    "names no decision: write `TODO — <the decision, and where it is "
+                    "expected>`",
+                    "1 error",
+                )
 
     def test_derives_from_a_decision_before_a_todo_is_still_checked(self):
-        self.assertFails(self.mixed_derives_from("ABC-77 · TODO — the decision on saves"),
-                         "foundations/invariants.md:9: `ABC-77` names no decision of the log",
-                         "1 error")
+        self.assertFails(
+            self.mixed_derives_from("ABC-77 · TODO — the decision on saves"),
+            "foundations/invariants.md:9: `ABC-77` names no decision of the log",
+            "1 error",
+        )
 
     def test_derives_from_a_quoted_source_then_a_missing_decision_passes(self):
-        self.assertPasses(self.mixed_derives_from(
-            "https://example.org/clock § Ticks — \"one tick · a millisecond\"; read 2026-10-01 · "
-            "TODO — the decision on ticks, once the clock task is made"))
+        self.assertPasses(
+            self.mixed_derives_from(
+                'https://example.org/clock § Ticks — "one tick · a millisecond"; read 2026-10-01 · '
+                "TODO — the decision on ticks, once the clock task is made"
+            )
+        )
 
     def test_based_on_a_known_fact_then_a_missing_source_described_passes(self):
-        for value in ("clock-tick · TODO — the source of the save format, from the vendor",
-                      "clock-tick · TODO — the source of the save format · from the vendor",
-                      "clock-tick · TODO — the source named by ABC-77, once it is written",
-                      "https://example.org/clock — \"one tick, a millisecond\"; read 2026-10-01 · "
-                      "TODO — the source of the save format, once the vendor answers"):
+        for value in (
+            "clock-tick · TODO — the source of the save format, from the vendor",
+            "clock-tick · TODO — the source of the save format · from the vendor",
+            "clock-tick · TODO — the source named by ABC-77, once it is written",
+            'https://example.org/clock — "one tick, a millisecond"; read 2026-10-01 · '
+            "TODO — the source of the save format, once the vendor answers",
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_based_on(value))
 
     def test_based_on_a_known_fact_then_a_bare_todo_says_nothing_is_missing(self):
         for value in ("clock-tick · TODO", "clock-tick · `TODO`", "clock-tick · TODO —"):
             with self.subTest(value=value):
-                self.assertFails(self.mixed_based_on(value),
-                                 "foundations/decisions.md:21: *Based on* reads `TODO` and says "
-                                 "nothing of what is missing: write `TODO — <what is missing, "
-                                 "with its source>`", "1 error")
+                self.assertFails(
+                    self.mixed_based_on(value),
+                    "foundations/decisions.md:21: *Based on* reads `TODO` and says "
+                    "nothing of what is missing: write `TODO — <what is missing, "
+                    "with its source>`",
+                    "1 error",
+                )
 
     def test_based_on_a_fact_before_a_todo_is_still_checked(self):
-        self.assertFails(self.mixed_based_on("clock-tock · TODO — the source of the save format"),
-                         "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
+        self.assertFails(
+            self.mixed_based_on("clock-tock · TODO — the source of the save format"),
+            "foundations/decisions.md:21: `clock-tock` names no fact",
+            "1 error",
+        )
 
     def test_based_on_a_todo_inside_a_quoted_source_is_no_todo_item(self):
-        for value in ("https://example.org/clock — \"one · TODO tick\"; read 2026-10-01 · "
-                      "clock-tick",
-                      "https://example.org/clock — \"a TODO\"; read 2026-10-01",
-                      "clock-tick · https://example.org/clock — \"one · TODO\"; read 2026-10-01"):
+        for value in (
+            'https://example.org/clock — "one · TODO tick"; read 2026-10-01 · clock-tick',
+            'https://example.org/clock — "a TODO"; read 2026-10-01',
+            'clock-tick · https://example.org/clock — "one · TODO"; read 2026-10-01',
+        ):
             with self.subTest(value=value):
                 self.assertPasses(self.mixed_based_on(value))
 
     def test_based_on_a_quoted_source_with_a_todo_inside_still_has_its_references_checked(self):
-        self.assertFails(self.mixed_based_on(
-            "https://example.org/clock — \"one · TODO tick\"; read 2026-10-01 · clock-tock"),
-            "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
+        self.assertFails(
+            self.mixed_based_on(
+                'https://example.org/clock — "one · TODO tick"; read 2026-10-01 · clock-tock'
+            ),
+            "foundations/decisions.md:21: `clock-tock` names no fact",
+            "1 error",
+        )
 
     def test_based_on_no_fact(self):
         decisions = self.edit(DECISIONS, "state: clock-tick@0123abcd", "state: clock-tock@0123abcd")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "`clock-tock`")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "`clock-tock`",
+        )
 
     def test_based_on_names_by_identifier_alone_no_fact(self):
-        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                              "- **Based on:** clock-tock · https://example.org/clock, § Ticks — "
-                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:21: `clock-tock` names no fact", "1 error")
+        decisions = self.edit(
+            DECISIONS,
+            "- **Based on:** none\n",
+            "- **Based on:** clock-tock · https://example.org/clock, § Ticks — "
+            '"the clock, steady, ticks"; read 2026-10-01\n',
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:21: `clock-tock` names no fact",
+            "1 error",
+        )
 
     def test_based_on_fact_by_identifier_alone_and_quoted_source_pass(self):
-        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                              "- **Based on:** clock-tick · https://example.org/clock, § Ticks — "
-                              "\"the clock, steady, ticks\"; read 2026-10-01\n")
+        decisions = self.edit(
+            DECISIONS,
+            "- **Based on:** none\n",
+            "- **Based on:** clock-tick · https://example.org/clock, § Ticks — "
+            '"the clock, steady, ticks"; read 2026-10-01\n',
+        )
         self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
 
     def test_based_on_fact_by_identifier_alone_on_next_line(self):
-        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                              "- **Based on:** https://example.org/clock — \"one tick\"; read "
-                              "2026-10-01 ·\n  clock-tock\n")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:22: `clock-tock` names no fact")
+        decisions = self.edit(
+            DECISIONS,
+            "- **Based on:** none\n",
+            '- **Based on:** https://example.org/clock — "one tick"; read '
+            "2026-10-01 ·\n  clock-tock\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:22: `clock-tock` names no fact",
+        )
 
     def test_fact_in_the_form_without_version_is_named_by_identifier_alone(self):
         # the form the environment facts template gives: a heading with no version, the sentence
         # and *Source*
         facts = FACTS
-        invariants = self.edit(INVARIANTS, "- **Rests on:** clock-tick@0123abcd",
-                               "- **Rests on:** clock-tick")
+        invariants = self.edit(
+            INVARIANTS, "- **Rests on:** clock-tick@0123abcd", "- **Rests on:** clock-tick"
+        )
         decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** clock-tick\n")
-        self.assertPasses(self.run_on(foundations__environment_facts_dot_md=facts,
-                                      foundations__invariants_dot_md=invariants,
-                                      foundations__decisions_dot_md=decisions))
+        self.assertPasses(
+            self.run_on(
+                foundations__environment_facts_dot_md=facts,
+                foundations__invariants_dot_md=invariants,
+                foundations__decisions_dot_md=decisions,
+            )
+        )
 
     def test_fact_line_is_no_citation(self):
         tests = self.edit(FILES["tests/test_saving.py"], "fact: clock-tick/1", "fact: clock-tock/1")
@@ -982,35 +1310,49 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_decision_lacks_a_field(self):
         decisions = self.edit(DECISIONS, "- **Origin:** none\n", "")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "foundations/decisions.md:", "the entry lacks *Origin*")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "foundations/decisions.md:",
+            "the entry lacks *Origin*",
+        )
 
     def test_decision_lacks_its_rationale(self):
         decisions = self.edit(DECISIONS, "*Rationale:* the core holds time.\n", "")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "the entry lacks *Rationale*")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions), "the entry lacks *Rationale*"
+        )
 
     def test_invariant_lacks_violated(self):
         invariants = self.edit(INVARIANTS, "- **Violated:** no\n", "")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "foundations/invariants.md:", "the entry lacks *Violated*")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "foundations/invariants.md:",
+            "the entry lacks *Violated*",
+        )
 
     def test_invariant_method_of_the_earlier_form(self):
         invariants = self.edit(INVARIANTS, "- **Method:** review\n", "- **Method:** `TODO`\n")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "*Method* does not take ``TODO``")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "*Method* does not take ``TODO``",
+        )
 
     def test_invariant_violated_takes_yes_or_no(self):
         invariants = self.edit(INVARIANTS, "- **Violated:** no\n", "- **Violated:** maybe\n")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants),
-                         "*Violated* does not take `maybe`")
+        self.assertFails(
+            self.run_on(foundations__invariants_dot_md=invariants),
+            "*Violated* does not take `maybe`",
+        )
 
     def test_fact_source_takes_no_todo(self):
         facts = FACTS.replace(
             '- **Source:** https://example.org/clock — "one tick a millisecond"; read 2026-10-01',
-            "- **Source:** TODO")
-        self.assertFails(self.run_on(foundations__environment_facts_dot_md=facts),
-                         "*Source* does not take `TODO`")
+            "- **Source:** TODO",
+        )
+        self.assertFails(
+            self.run_on(foundations__environment_facts_dot_md=facts),
+            "*Source* does not take `TODO`",
+        )
 
     def test_fact_source_with_a_command_of_several_lines_in_a_code_block(self):
         # the form the template gives for a reading whose command has several lines, a code block
@@ -1019,61 +1361,93 @@ class FoundationCheckTest(unittest.TestCase):
         facts = FACTS + (
             "\n## clock-offset\n\nThe system clock is set by the host.\n\n"
             "- **Source:** reading: the command below on the host, ntpq 4.2.8 — "
-            "\"offset 0.001\"; run 2026-10-01\n\n"
+            '"offset 0.001"; run 2026-10-01\n\n'
             "  ```sh\n"
             "  # the offset of the clock\n"
             "  ntpq -p \\\n"
             "    | awk 'NR > 2 { print $9 }'\n"
             "  ## a line that looks like a heading\n"
             "  - **Source:** a line that looks like a field\n"
-            "  ```\n")
+            "  ```\n"
+        )
         self.assertPasses(self.run_on(foundations__environment_facts_dot_md=facts))
 
     def test_part_lacks_its_trust_boundary(self):
-        part_map = self.edit(PART_MAP, "- **Depends on:** core\n- **Trust boundary:** none\n",
-                             "- **Depends on:** core\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "foundations/part_map.md:", "the entry lacks *Trust boundary*")
+        part_map = self.edit(
+            PART_MAP,
+            "- **Depends on:** core\n- **Trust boundary:** none\n",
+            "- **Depends on:** core\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "foundations/part_map.md:",
+            "the entry lacks *Trust boundary*",
+        )
 
     def test_surface_names_who_relies_on_it(self):
         surface = "## save-promise\n\nA save of one release loads in the next.\n\n"
-        good = self.edit(PART_MAP, "## Files left out on purpose\n", surface +
-                         "- **Relied on by:** the players' saves\n\n## Files left out on purpose\n")
+        good = self.edit(
+            PART_MAP,
+            "## Files left out on purpose\n",
+            surface + "- **Relied on by:** the players' saves\n\n## Files left out on purpose\n",
+        )
         self.assertPasses(self.run_on(foundations__part_map_dot_md=good))
         bad = good.replace("- **Relied on by:** the players' saves", "- **Relied on by:** none")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=bad),
-                         "*Relied on by* does not take `none`")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=bad), "*Relied on by* does not take `none`"
+        )
 
     def test_map_entry_neither_part_nor_surface(self):
-        part_map = self.edit(PART_MAP, "## Files left out on purpose\n",
-                             "## save-promise\n\nA save loads.\n\n## Files left out on purpose\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "`save-promise` is neither a part")
+        part_map = self.edit(
+            PART_MAP,
+            "## Files left out on purpose\n",
+            "## save-promise\n\nA save loads.\n\n## Files left out on purpose\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map), "`save-promise` is neither a part"
+        )
 
     def test_glossary_entry_lacks_not(self):
-        glossary = self.edit(GLOSSARY, "A save is the file that holds a game.\n\n- **Not:** none\n",
-                             "A save is the file that holds a game.\n")
-        self.assertFails(self.run_on(foundations__glossary_dot_md=glossary),
-                         "foundations/glossary.md:", "the entry lacks *Not*")
+        glossary = self.edit(
+            GLOSSARY,
+            "A save is the file that holds a game.\n\n- **Not:** none\n",
+            "A save is the file that holds a game.\n",
+        )
+        self.assertFails(
+            self.run_on(foundations__glossary_dot_md=glossary),
+            "foundations/glossary.md:",
+            "the entry lacks *Not*",
+        )
 
     def test_entries_of_the_earlier_form_are_errors(self):
         invariants = self.edit(INVARIANTS, "## clock-steady\n", "## clock-steady/1\n")
         facts = self.edit(FACTS, "## clock-tick\n", "## clock-tick/1\n")
-        part_map = self.edit(PART_MAP, "- **Depends on:** core\n",
-                             "- **Depends on:** core\n- **Criticality:** high\n")
-        self.assertFails(self.run_on(foundations__invariants_dot_md=invariants,
-                                     foundations__environment_facts_dot_md=facts,
-                                     foundations__part_map_dot_md=part_map),
-                         "foundations/invariants.md:13: `clock-steady/1` stands in the earlier form",
-                         "foundations/environment_facts.md:3: `clock-tick/1` stands in the earlier",
-                         "foundations/part_map.md:13: `shell` stands in the earlier form",
-                         "3 errors")
+        part_map = self.edit(
+            PART_MAP,
+            "- **Depends on:** core\n",
+            "- **Depends on:** core\n- **Criticality:** high\n",
+        )
+        self.assertFails(
+            self.run_on(
+                foundations__invariants_dot_md=invariants,
+                foundations__environment_facts_dot_md=facts,
+                foundations__part_map_dot_md=part_map,
+            ),
+            "foundations/invariants.md:13: `clock-steady/1` stands in the earlier form",
+            "foundations/environment_facts.md:3: `clock-tick/1` stands in the earlier",
+            "foundations/part_map.md:13: `shell` stands in the earlier form",
+            "3 errors",
+        )
 
     def test_flow_is_the_earlier_form(self):
-        part_map = self.edit(PART_MAP, "## Files left out on purpose\n",
-                             FLOW + "## Files left out on purpose\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "`saving-works` stands in the earlier form", "1 error")
+        part_map = self.edit(
+            PART_MAP, "## Files left out on purpose\n", FLOW + "## Files left out on purpose\n"
+        )
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "`saving-works` stands in the earlier form",
+            "1 error",
+        )
 
     def test_part_and_scope_take_parts_only(self):
         for field, old in (("Part", "- **Part:** every\n"), ("Scope", "- **Scope:** core\n")):
@@ -1081,56 +1455,75 @@ class FoundationCheckTest(unittest.TestCase):
                 with self.subTest(field=field, word=word):
                     new = "- **%s:** %s\n" % (field, word)
                     if field == "Part":
-                        result = self.run_on(foundations__invariants_dot_md=self.edit(
-                            INVARIANTS, old, new))
+                        result = self.run_on(
+                            foundations__invariants_dot_md=self.edit(INVARIANTS, old, new)
+                        )
                     else:
-                        result = self.run_on(foundations__decisions_dot_md=self.edit(
-                            DECISIONS, old, new))
+                        result = self.run_on(
+                            foundations__decisions_dot_md=self.edit(DECISIONS, old, new)
+                        )
                     self.assertFails(result, "*%s* does not take `%s`" % (field, word))
 
     def test_pattern_of_the_map_matching_no_file(self):
         for field, old, new in (
-                ("Files", "  tests/**\n", "  tests/**\n  docs/**\n"),
-                ("Trust boundary", "- **Depends on:** core\n- **Trust boundary:** none\n",
-                 "- **Depends on:** core\n- **Trust boundary:** tests/net/*.py\n")):
+            ("Files", "  tests/**\n", "  tests/**\n  docs/**\n"),
+            (
+                "Trust boundary",
+                "- **Depends on:** core\n- **Trust boundary:** none\n",
+                "- **Depends on:** core\n- **Trust boundary:** tests/net/*.py\n",
+            ),
+        ):
             with self.subTest(field=field):
                 part_map = self.edit(PART_MAP, old, new)
-                self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                                 "foundations/part_map.md:", "in the *%s* of `shell` matches no "
-                                 "file git tracks" % field, "1 error")
+                self.assertFails(
+                    self.run_on(foundations__part_map_dot_md=part_map),
+                    "foundations/part_map.md:",
+                    "in the *%s* of `shell` matches no file git tracks" % field,
+                    "1 error",
+                )
 
     # --- a decision's Based on quoting a source --------------------------------------------------
 
     def test_number_in_a_source_based_on_quotes_is_no_reference(self):
-        decisions = self.edit(DECISIONS, "- **Based on:** none\n",
-                              '- **Based on:** https://example.org/log § 2 — "as ABC-07 says"; '
-                              "read 2026-10-01\n")
+        decisions = self.edit(
+            DECISIONS,
+            "- **Based on:** none\n",
+            '- **Based on:** https://example.org/log § 2 — "as ABC-07 says"; read 2026-10-01\n',
+        )
         self.assertPasses(self.run_on(foundations__decisions_dot_md=decisions))
 
     def test_number_in_based_on_outside_a_quotation_is_a_reference(self):
         decisions = self.edit(DECISIONS, "- **Based on:** none\n", "- **Based on:** ABC-07\n")
-        self.assertFails(self.run_on(foundations__decisions_dot_md=decisions),
-                         "`ABC-07` names no decision of the log")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=decisions),
+            "`ABC-07` names no decision of the log",
+        )
 
     # --- every file git tracks belongs to one part --------------------------------------------
 
     def test_file_no_part_claims(self):
-        self.assertFails(self.run_on(docs__guide_dot_md="A guide.\n"),
-                         "docs/guide.md", "no part")
+        self.assertFails(self.run_on(docs__guide_dot_md="A guide.\n"), "docs/guide.md", "no part")
 
     def test_file_two_parts_claim(self):
         part_map = self.edit(PART_MAP, "- **Files:** src/**\n", "- **Files:** src/**\n  tests/**\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "tests/test_saving.py", "`core`", "`shell`")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map),
+            "tests/test_saving.py",
+            "`core`",
+            "`shell`",
+        )
 
     def test_root_anchored_pattern_claims_only_the_root_file(self):
-        self.assertFails(self.run_on(src__README_dot_md="Inner.\n", docs__README_dot_md="Docs.\n"),
-                         "docs/README.md")
+        self.assertFails(
+            self.run_on(src__README_dot_md="Inner.\n", docs__README_dot_md="Docs.\n"),
+            "docs/README.md",
+        )
 
     def test_file_left_out_on_purpose_and_claimed(self):
         part_map = self.edit(PART_MAP, "  guidelines/**\n", "  guidelines/**\n  notes.txt\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "notes.txt", "left out on purpose")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map), "notes.txt", "left out on purpose"
+        )
 
     def test_file_left_out_on_purpose_needs_no_part(self):
         part_map = self.edit(PART_MAP, "| notes.txt |", "| `notes.txt` |")
@@ -1138,8 +1531,9 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_pattern_letter_case_counts(self):
         part_map = self.edit(PART_MAP, "- **Files:** src/**\n", "- **Files:** SRC/**\n")
-        self.assertFails(self.run_on(foundations__part_map_dot_md=part_map),
-                         "src/game.py", "no part")
+        self.assertFails(
+            self.run_on(foundations__part_map_dot_md=part_map), "src/game.py", "no part"
+        )
 
     # --- an invariant that reads `test` is cited by a test ------------------------------------
 
@@ -1152,31 +1546,44 @@ class FoundationCheckTest(unittest.TestCase):
         return self.edit(FILES["tests/test_saving.py"], "save-round-trip/1", "clock-steady")
 
     def test_invariant_reading_test_that_no_test_cites_is_reported(self):
-        self.assertFails(self.run_on(tests__test_saving_dot_py=self.other_citation()),
-                         self.UNCITED, "`save-round-trip`", "1 error")
+        self.assertFails(
+            self.run_on(tests__test_saving_dot_py=self.other_citation()),
+            self.UNCITED,
+            "`save-round-trip`",
+            "1 error",
+        )
 
     def test_invariant_reading_test_cited_in_another_file_passes(self):
         tests = "// invariant: save-round-trip\n"
-        self.assertPasses(self.run_on(tests__test_saving_dot_py=self.other_citation(),
-                                      tests__saving_dot_test_dot_js=tests))
+        self.assertPasses(
+            self.run_on(
+                tests__test_saving_dot_py=self.other_citation(), tests__saving_dot_test_dot_js=tests
+            )
+        )
 
     def test_citation_in_markdown_does_not_count(self):
         readme = "# The game\n\nSaves follow ABC-01.\n\n<!-- invariant: save-round-trip -->\n"
-        self.assertFails(self.run_on(tests__test_saving_dot_py=self.other_citation(),
-                                     README_dot_md=readme),
-                         self.UNCITED, "`save-round-trip`")
+        self.assertFails(
+            self.run_on(tests__test_saving_dot_py=self.other_citation(), README_dot_md=readme),
+            self.UNCITED,
+            "`save-round-trip`",
+        )
 
     def test_citation_in_a_file_git_does_not_track_does_not_count(self):
         files = dict(FILES, **{"tests/test_saving.py": self.other_citation()})
         product = Product(self, files)
-        with open(os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8",
-                  newline="\n") as handle:
+        with open(
+            os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8", newline="\n"
+        ) as handle:
             handle.write("// invariant: save-round-trip\n")
         self.assertFails(product.check(), self.UNCITED, "`save-round-trip`")
 
     def test_skip_switch_skips_the_report_of_an_uncited_test_invariant(self):
-        self.assertPasses(self.run_with(("--skip-test-citations",),
-                                        tests__test_saving_dot_py=self.other_citation()))
+        self.assertPasses(
+            self.run_with(
+                ("--skip-test-citations",), tests__test_saving_dot_py=self.other_citation()
+            )
+        )
 
     def test_skip_switch_before_or_after_the_root(self):
         files = dict(FILES, **{"tests/test_saving.py": self.other_citation()})
@@ -1186,10 +1593,15 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_skip_switch_skips_no_other_error(self):
         readme = "# The game\n\nSee ABC-07.\n"
-        self.assertFails(self.run_with(("--skip-test-citations",),
-                                       tests__test_saving_dot_py=self.other_citation(),
-                                       README_dot_md=readme),
-                         "`ABC-07` names no decision of the log", "1 error")
+        self.assertFails(
+            self.run_with(
+                ("--skip-test-citations",),
+                tests__test_saving_dot_py=self.other_citation(),
+                README_dot_md=readme,
+            ),
+            "`ABC-07` names no decision of the log",
+            "1 error",
+        )
 
     def test_unknown_switch_cannot_run(self):
         code, report = self.run_with(("--skip-everything",))
@@ -1200,8 +1612,11 @@ class FoundationCheckTest(unittest.TestCase):
 
     def decision_test(self, *lines, **changes):
         """The good product with a test file holding each line as a comment, under one test."""
-        text = "def test_saved():\n" + "".join("    # %s\n" % line for line in lines) + \
-            "    assert True\n"
+        text = (
+            "def test_saved():\n"
+            + "".join("    # %s\n" % line for line in lines)
+            + "    assert True\n"
+        )
         return self.run_on(tests__test_decision_dot_py=text, **changes)
 
     def test_decision_line_quoting_a_sentence_passes(self):
@@ -1209,19 +1624,25 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertPasses(self.decision_test('decision: ABC-01 "A game is saved to one file"'))
 
     def test_decision_line_quoting_no_sentence_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01 "A game is stored in a cloud"'),
-                         "tests/test_decision.py:2: the quotation stands in no binding sentence "
-                         "of `ABC-01`", "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01 "A game is stored in a cloud"'),
+            "tests/test_decision.py:2: the quotation stands in no binding sentence of `ABC-01`",
+            "1 error",
+        )
 
     def test_decision_line_quoting_only_rationale_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01 "one file is easy to copy"'),
-                         "tests/test_decision.py:2: the quotation stands in no binding sentence "
-                         "of `ABC-01`", "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01 "one file is easy to copy"'),
+            "tests/test_decision.py:2: the quotation stands in no binding sentence of `ABC-01`",
+            "1 error",
+        )
 
     def test_decision_line_quoting_inside_a_sentence_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01 "game is saved to one file"'),
-                         "tests/test_decision.py:2: the quotation does not begin a sentence of "
-                         "`ABC-01`", "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01 "game is saved to one file"'),
+            "tests/test_decision.py:2: the quotation does not begin a sentence of `ABC-01`",
+            "1 error",
+        )
 
     def test_a_full_stop_inside_a_quoted_string_ends_no_sentence(self):
         # Each entry has a real sentence after a string that holds a full stop and a space, in the
@@ -1231,81 +1652,118 @@ class FoundationCheckTest(unittest.TestCase):
         for opening, closing in (('"', '"'), ("“", "”"), ("„", "”")):
             with self.subTest(marks=opening):
                 decisions = self.edit(
-                    DECISIONS, "A game is saved to one file.",
+                    DECISIONS,
+                    "A game is saved to one file.",
                     "A game says %sSaved. Next game is ready%s when it is saved. A save shows its name."
-                    % (opening, closing))
-                inside = self.decision_test('decision: ABC-01 "Next game is ready"',
-                                            foundations__decisions_dot_md=decisions)
-                self.assertFails(inside, "tests/test_decision.py:2: the quotation does not begin a "
-                                         "sentence of `ABC-01`", "1 error")
-                after = self.decision_test('decision: ABC-01 "A save shows its name"',
-                                           foundations__decisions_dot_md=decisions)
+                    % (opening, closing),
+                )
+                inside = self.decision_test(
+                    'decision: ABC-01 "Next game is ready"', foundations__decisions_dot_md=decisions
+                )
+                self.assertFails(
+                    inside,
+                    "tests/test_decision.py:2: the quotation does not begin a sentence of `ABC-01`",
+                    "1 error",
+                )
+                after = self.decision_test(
+                    'decision: ABC-01 "A save shows its name"',
+                    foundations__decisions_dot_md=decisions,
+                )
                 self.assertPasses(after)
 
     def test_decision_line_quotation_wrapped_over_two_lines_passes(self):
-        decisions = self.edit(DECISIONS, "A game is saved to one file.",
-                              "A game is saved\nto one file.")
-        self.assertPasses(self.decision_test('decision: ABC-01 "A game is saved to one file"',
-                                             foundations__decisions_dot_md=decisions))
+        decisions = self.edit(
+            DECISIONS, "A game is saved to one file.", "A game is saved\nto one file."
+        )
+        self.assertPasses(
+            self.decision_test(
+                'decision: ABC-01 "A game is saved to one file"',
+                foundations__decisions_dot_md=decisions,
+            )
+        )
 
     def test_decision_line_quoting_fewer_than_three_words_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01 "A game"'),
-                         "tests/test_decision.py:2: the quotation has fewer than three words",
-                         "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01 "A game"'),
+            "tests/test_decision.py:2: the quotation has fewer than three words",
+            "1 error",
+        )
 
     def test_decision_line_without_quotation_fails(self):
-        self.assertFails(self.decision_test("decision: ABC-01"),
-                         "tests/test_decision.py:2: `decision:` gives no quotation of the sentence",
-                         "1 error")
+        self.assertFails(
+            self.decision_test("decision: ABC-01"),
+            "tests/test_decision.py:2: `decision:` gives no quotation of the sentence",
+            "1 error",
+        )
 
     def test_decision_line_with_text_after_quotation_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01 "A game is saved to one file" more'),
-                         "tests/test_decision.py:2: `decision:` has text after the quotation",
-                         "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01 "A game is saved to one file" more'),
+            "tests/test_decision.py:2: `decision:` has text after the quotation",
+            "1 error",
+        )
 
     def test_decision_line_naming_no_decision_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-07 "A game is saved to one file"'),
-                         "tests/test_decision.py:2: `ABC-07` names no decision of the log",
-                         "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-07 "A game is saved to one file"'),
+            "tests/test_decision.py:2: `ABC-07` names no decision of the log",
+            "1 error",
+        )
 
     def test_decision_line_naming_a_withdrawn_decision_fails(self):
-        self.assertFails(self.decision_test(
-            'decision: ABC-03 "A game is saved to one file"',
-            foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION),
-            "tests/test_decision.py:2: `ABC-03` is withdrawn; name its successor", "1 error")
+        self.assertFails(
+            self.decision_test(
+                'decision: ABC-03 "A game is saved to one file"',
+                foundations__decisions_dot_md=DECISIONS + self.WITHDRAWN_DECISION,
+            ),
+            "tests/test_decision.py:2: `ABC-03` is withdrawn; name its successor",
+            "1 error",
+        )
 
     def test_decision_line_without_number_fails(self):
-        self.assertFails(self.decision_test('decision: "A game is saved to one file"'),
-                         "tests/test_decision.py:2: `decision:` gives no decision number as the "
-                         "log writes it", "1 error")
+        self.assertFails(
+            self.decision_test('decision: "A game is saved to one file"'),
+            "tests/test_decision.py:2: `decision:` gives no decision number as the log writes it",
+            "1 error",
+        )
 
     def test_decision_line_number_with_a_suffix_fails(self):
-        self.assertFails(self.decision_test('decision: ABC-01/1 "A game is saved to one file"'),
-                         "tests/test_decision.py:2: `decision:` gives no decision number as the "
-                         "log writes it", "1 error")
+        self.assertFails(
+            self.decision_test('decision: ABC-01/1 "A game is saved to one file"'),
+            "tests/test_decision.py:2: `decision:` gives no decision number as the log writes it",
+            "1 error",
+        )
 
     def test_decision_line_in_markdown_counts_for_nothing(self):
-        readme = ("# The game\n\nSaves follow ABC-01 and ABC-02.\n\n"
-                  '<!-- decision: "stands nowhere" -->\n')
+        readme = (
+            '# The game\n\nSaves follow ABC-01 and ABC-02.\n\n<!-- decision: "stands nowhere" -->\n'
+        )
         self.assertPasses(self.run_on(README_dot_md=readme))
 
     def test_decision_line_in_untracked_file_counts_for_nothing(self):
         product = Product(self, FILES)
-        with open(os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8",
-                  newline="\n") as handle:
+        with open(
+            os.path.join(product.root, "tests", "untracked.js"), "w", encoding="utf-8", newline="\n"
+        ) as handle:
             handle.write('// decision: ABC-01 "stands nowhere in the entry"\n')
         self.assertPasses(product.check())
 
     # --- the commit the branch left, and the line written where it is not known ---------------
 
-    UNKNOWN_BASE = ("foundations/decisions.md: listed: the commit the branch left the main branch "
-                    "from is not known, so nothing was compared with it")
-    NO_DECISIONS_AT_BASE = ("foundations/decisions.md: listed: the commit the branch left the main "
-                            "branch from holds no readable foundations/decisions.md, so nothing "
-                            "of it was compared")
-    NO_INVARIANTS_AT_BASE = ("foundations/invariants.md: listed: the commit the branch left the "
-                             "main branch from holds no readable foundations/invariants.md, so "
-                             "nothing of it was compared")
+    UNKNOWN_BASE = (
+        "foundations/decisions.md: listed: the commit the branch left the main branch "
+        "from is not known, so nothing was compared with it"
+    )
+    NO_DECISIONS_AT_BASE = (
+        "foundations/decisions.md: listed: the commit the branch left the main "
+        "branch from holds no readable foundations/decisions.md, so nothing "
+        "of it was compared"
+    )
+    NO_INVARIANTS_AT_BASE = (
+        "foundations/invariants.md: listed: the commit the branch left the "
+        "main branch from holds no readable foundations/invariants.md, so "
+        "nothing of it was compared"
+    )
 
     def lines(self, result, code=0):
         """The lines of a report whose exit code is `code`."""
@@ -1315,8 +1773,9 @@ class FoundationCheckTest(unittest.TestCase):
     def committed(self, branch, **changes):
         """The good product with some files replaced or (None) left out, committed on a branch."""
         files = dict(FILES)
-        files.update({path.replace("__", "/").replace("_dot_", "."): text
-                      for path, text in changes.items()})
+        files.update(
+            {path.replace("__", "/").replace("_dot_", "."): text for path, text in changes.items()}
+        )
         product = Product(self, files)
         product.on_branch(branch)
         product.commit()
@@ -1327,9 +1786,10 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_listed_line_stands_after_the_errors_and_before_the_count(self):
         readme = "# The game\n\nSee ABC-07.\n"
-        self.assertEqual(self.lines(self.run_on(README_dot_md=readme), 1),
-                         ["README.md:3: `ABC-07` names no decision of the log",
-                          self.UNKNOWN_BASE, "1 error"])
+        self.assertEqual(
+            self.lines(self.run_on(README_dot_md=readme), 1),
+            ["README.md:3: `ABC-07` names no decision of the log", self.UNKNOWN_BASE, "1 error"],
+        )
 
     def test_no_commit_and_an_empty_log_writes_no_such_line(self):
         empty = self.run_on(foundations__decisions_dot_md="# Decision log\n")[1]
@@ -1384,14 +1844,17 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertEqual(self.lines(product.check()), [self.NO_INVARIANTS_AT_BASE, "0 errors"])
 
     def test_base_lacking_both_files_writes_a_line_for_each(self):
-        product = self.committed("main", foundations__decisions_dot_md=None,
-                                 foundations__invariants_dot_md=None)
+        product = self.committed(
+            "main", foundations__decisions_dot_md=None, foundations__invariants_dot_md=None
+        )
         git(product.root, "checkout", "-q", "-b", "topic")
         product.write("foundations/decisions.md", DECISIONS)
         product.write("foundations/invariants.md", INVARIANTS)
         product.commit()
-        self.assertEqual(self.lines(product.check()),
-                         [self.NO_DECISIONS_AT_BASE, self.NO_INVARIANTS_AT_BASE, "0 errors"])
+        self.assertEqual(
+            self.lines(product.check()),
+            [self.NO_DECISIONS_AT_BASE, self.NO_INVARIANTS_AT_BASE, "0 errors"],
+        )
 
     def test_base_holding_a_file_git_cannot_read_as_text_is_no_exit_2(self):
         product = self.committed("main", foundations__decisions_dot_md=b"\xff\xfe not text\n")
@@ -1401,8 +1864,9 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertEqual(self.lines(product.check()), [self.NO_DECISIONS_AT_BASE, "0 errors"])
 
     def test_base_lacking_the_files_and_an_empty_log_writes_no_line(self):
-        product = self.committed("main", foundations__decisions_dot_md=None,
-                                 foundations__invariants_dot_md=None)
+        product = self.committed(
+            "main", foundations__decisions_dot_md=None, foundations__invariants_dot_md=None
+        )
         git(product.root, "checkout", "-q", "-b", "topic")
         product.write("foundations/decisions.md", "# Decision log\n")
         product.write("foundations/invariants.md", INVARIANTS)
@@ -1416,20 +1880,30 @@ class FoundationCheckTest(unittest.TestCase):
     LISTED = "foundations/decisions.md:29: listed: `ABC-03`"
     NOTHING = "- **Verification:** an agent compares the change with the decision."
     BY_INVARIANT = "- **Verification:** invariants: clock-steady."
-    BY_PAIR = ("- **Verification:** an agent compares the change with the decision:\n"
-               "  - complies: a save sits in one folder;\n"
-               "  - violates: a save is sent to a server.")
-    STORE_TEST = ("def test_store():\n"
-                  "    # decision: ABC-03 \"A save is stored in one folder\"\n"
-                  "    assert True\n")
+    BY_PAIR = (
+        "- **Verification:** an agent compares the change with the decision:\n"
+        "  - complies: a save sits in one folder;\n"
+        "  - violates: a save is sent to a server."
+    )
+    STORE_TEST = (
+        "def test_store():\n"
+        '    # decision: ABC-03 "A save is stored in one folder"\n'
+        "    assert True\n"
+    )
 
-    def decision(self, verification, sentence="A save is stored in one folder.",
-                 rationale="a folder is known.", heading="ABC-03"):
+    def decision(
+        self,
+        verification,
+        sentence="A save is stored in one folder.",
+        rationale="a folder is known.",
+        heading="ABC-03",
+    ):
         """An entry ABC-03 of the log, its *Verification* given whole."""
-        return ("### %s — Where is a save stored?\n\n%s\n\n- **Scope:** core\n"
-                "- **Based on:** none\n- **Relations:** none\n%s\n- **Origin:** none\n\n"
-                "*Rationale:* %s\n*Rejected:* a cloud\n"
-                % (heading, sentence, verification, rationale))
+        return (
+            "### %s — Where is a save stored?\n\n%s\n\n- **Scope:** core\n"
+            "- **Based on:** none\n- **Relations:** none\n%s\n- **Origin:** none\n\n"
+            "*Rationale:* %s\n*Rejected:* a cloud\n" % (heading, sentence, verification, rationale)
+        )
 
     def on_topic(self, decisions, base=DECISIONS, **files):
         """The good product with the log `base` committed on `main`, then the log `decisions` and
@@ -1459,54 +1933,74 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_new_decision_held_by_a_line_decision_passes(self):
         # decision: WAY-12 "A decision is held when its"
-        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
-                                tests__test_store_dot_py=self.STORE_TEST)
+        product = self.on_topic(
+            DECISIONS + "\n" + self.decision(self.NOTHING), tests__test_store_dot_py=self.STORE_TEST
+        )
         self.assertEqual(self.lines(product.check()), ["0 errors"])
 
     def test_new_decision_held_by_a_stale_line_decision_is_reported_once(self):
         stale = self.STORE_TEST.replace("one folder", "two folders")
-        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
-                                tests__test_store_dot_py=stale)
-        self.assertEqual(self.lines(product.check(), 1),
-                         ["tests/test_store.py:2: the quotation stands in no binding sentence of "
-                          "`ABC-03`", "1 error"])
+        product = self.on_topic(
+            DECISIONS + "\n" + self.decision(self.NOTHING), tests__test_store_dot_py=stale
+        )
+        self.assertEqual(
+            self.lines(product.check(), 1),
+            [
+                "tests/test_store.py:2: the quotation stands in no binding sentence of `ABC-03`",
+                "1 error",
+            ],
+        )
 
     def test_new_decision_with_only_one_half_of_a_pair_is_not_held(self):
-        half = "- **Verification:** an agent compares the change with the decision:\n" \
-               "  - complies: a save sits in one folder."
+        half = (
+            "- **Verification:** an agent compares the change with the decision:\n"
+            "  - complies: a save sits in one folder."
+        )
         product = self.on_topic(DECISIONS + "\n" + self.decision(half))
         self.assertFails(product.check(), self.NOT_HELD, "1 error")
 
     def test_new_decision_naming_no_invariant_after_invariants_is_not_held(self):
-        product = self.on_topic(DECISIONS + "\n" + self.decision("- **Verification:** "
-                                                                "invariants: none."))
+        product = self.on_topic(
+            DECISIONS + "\n" + self.decision("- **Verification:** invariants: none.")
+        )
         self.assertFails(product.check(), self.NOT_HELD, "1 error")
 
     def test_line_decision_in_a_markdown_file_holds_nothing(self):
-        notes = "# The game\n\nSaves follow ABC-01.\n\n" \
-                "<!-- decision: ABC-03 \"A save is stored in one folder\" -->\n"
-        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING),
-                                README_dot_md=notes)
+        notes = (
+            "# The game\n\nSaves follow ABC-01.\n\n"
+            '<!-- decision: ABC-03 "A save is stored in one folder" -->\n'
+        )
+        product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING), README_dot_md=notes)
         self.assertFails(product.check(), self.NOT_HELD, "1 error")
 
     def test_decision_whose_binding_sentence_changed_and_none_held_is_an_error(self):
         # decision: WAY-12 "The check of the foundation reports as an error"
         base = DECISIONS + "\n" + self.decision(self.NOTHING)
-        product = self.on_topic(DECISIONS + "\n" + self.decision(
-            self.NOTHING, sentence="A save is stored in two folders."), base=base)
+        product = self.on_topic(
+            DECISIONS
+            + "\n"
+            + self.decision(self.NOTHING, sentence="A save is stored in two folders."),
+            base=base,
+        )
         self.assertFails(product.check(), self.NOT_HELD, "1 error")
 
     def test_decision_whose_binding_sentence_changed_and_held_passes(self):
         base = DECISIONS + "\n" + self.decision(self.NOTHING)
-        product = self.on_topic(DECISIONS + "\n" + self.decision(
-            self.BY_PAIR, sentence="A save is stored in two folders."), base=base)
+        product = self.on_topic(
+            DECISIONS
+            + "\n"
+            + self.decision(self.BY_PAIR, sentence="A save is stored in two folders."),
+            base=base,
+        )
         self.assertEqual(self.lines(product.check()), ["0 errors"])
 
     def test_decision_with_only_its_rationale_changed_is_listed(self):
         # decision: WAY-12 "Any other decision that nothing holds stands"
         base = DECISIONS + "\n" + self.decision(self.NOTHING)
-        product = self.on_topic(DECISIONS + "\n" + self.decision(
-            self.NOTHING, rationale="a folder is easy to find."), base=base)
+        product = self.on_topic(
+            DECISIONS + "\n" + self.decision(self.NOTHING, rationale="a folder is easy to find."),
+            base=base,
+        )
         code, report = product.check()
         self.assertEqual(code, 0, report)
         self.assertIn(self.LISTED, report)
@@ -1514,8 +2008,12 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_decision_with_only_its_spacing_changed_is_listed(self):
         base = DECISIONS + "\n" + self.decision(self.NOTHING)
-        product = self.on_topic(DECISIONS + "\n" + self.decision(
-            self.NOTHING, sentence="A save   is stored\nin one  folder."), base=base)
+        product = self.on_topic(
+            DECISIONS
+            + "\n"
+            + self.decision(self.NOTHING, sentence="A save   is stored\nin one  folder."),
+            base=base,
+        )
         code, report = product.check()
         self.assertEqual(code, 0, report)
         self.assertIn(self.LISTED, report)
@@ -1523,8 +2021,9 @@ class FoundationCheckTest(unittest.TestCase):
     def test_old_decision_that_nothing_holds_is_listed_after_the_errors(self):
         # decision: WAY-12 "Any other decision that nothing holds stands"
         base = DECISIONS + "\n" + self.decision(self.NOTHING)
-        product = self.on_topic(base + "\n" + self.decision(self.NOTHING, heading="ABC-04"),
-                                base=base)
+        product = self.on_topic(
+            base + "\n" + self.decision(self.NOTHING, heading="ABC-04"), base=base
+        )
         lines = self.lines(product.check(), 1)
         self.assertEqual(len(lines), 3, lines)
         self.assertTrue(lines[0].startswith("foundations/decisions.md:42: `ABC-04`"), lines)
@@ -1532,8 +2031,9 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertEqual(lines[2], "1 error")
 
     def test_decision_that_nothing_holds_is_listed_where_the_base_is_unknown(self):
-        code, report = self.run_on(foundations__decisions_dot_md=DECISIONS + "\n" +
-                                   self.decision(self.NOTHING))
+        code, report = self.run_on(
+            foundations__decisions_dot_md=DECISIONS + "\n" + self.decision(self.NOTHING)
+        )
         self.assertEqual(code, 0, report)
         self.assertIn(self.LISTED, report)
 
@@ -1548,9 +2048,10 @@ class FoundationCheckTest(unittest.TestCase):
     def test_entry_lacking_its_verification_is_left_to_the_check_of_fields(self):
         entry = self.decision(self.NOTHING).replace(self.NOTHING + "\n", "")
         product = self.on_topic(DECISIONS + "\n" + entry)
-        self.assertEqual(self.lines(product.check(), 1),
-                         ["foundations/decisions.md:29: the entry lacks *Verification*",
-                          "1 error"])
+        self.assertEqual(
+            self.lines(product.check(), 1),
+            ["foundations/decisions.md:29: the entry lacks *Verification*", "1 error"],
+        )
 
     def test_entry_of_the_earlier_form_is_left_to_the_check_of_fields(self):
         entry = self.decision(self.NOTHING, heading="ABC-03/1")
@@ -1616,21 +2117,26 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_reworded_sentence_in_spacing_only_is_not_listed(self):
         # decision: WAY-03 "The check of the foundation lists an invariant whose method"
-        invariants = self.edit(INVARIANTS, self.OLD_SENTENCE,
-                               "A saved   game loads\nback unchanged.")
+        invariants = self.edit(
+            INVARIANTS, self.OLD_SENTENCE, "A saved   game loads\nback unchanged."
+        )
         self.assertEqual(self.lines(self.reworded(invariants).check()), ["0 errors"])
 
     def test_reworded_sentence_whose_method_reads_review_is_not_listed(self):
         # decision: WAY-03 "The check of the foundation lists an invariant whose method"
-        invariants = self.edit(self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED),
-                               "- **Method:** test", "- **Method:** review")
+        invariants = self.edit(
+            self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED),
+            "- **Method:** test",
+            "- **Method:** review",
+        )
         self.assertEqual(self.lines(self.reworded(invariants).check()), ["0 errors"])
 
     def test_invariant_added_with_its_citing_file_is_not_listed(self):
         # decision: WAY-03 "The check of the foundation lists an invariant whose method"
-        base = {"foundations__invariants_dot_md":
-                INVARIANTS[:INVARIANTS.index("## save-round-trip")]
-                + INVARIANTS[INVARIANTS.index("## clock-steady"):]}
+        base = {
+            "foundations__invariants_dot_md": INVARIANTS[: INVARIANTS.index("## save-round-trip")]
+            + INVARIANTS[INVARIANTS.index("## clock-steady") :]
+        }
         self.assertEqual(self.lines(self.reworded(base=base).check()), ["0 errors"])
 
     def test_reworded_invariant_with_no_citing_file_is_not_listed(self):
@@ -1644,8 +2150,10 @@ class FoundationCheckTest(unittest.TestCase):
     def test_reworded_invariant_lacking_method_or_part_now_adds_no_listing(self):
         # decision: WAY-03 "The listing stops no change"
         reworded = self.edit(INVARIANTS, self.OLD_SENTENCE, self.REWORDED)
-        cases = {"method": self.edit(reworded, "- **Method:** test\n", ""),
-                 "part": self.edit(reworded, "- **Part:** core · shell\n", "")}
+        cases = {
+            "method": self.edit(reworded, "- **Method:** test\n", ""),
+            "part": self.edit(reworded, "- **Part:** core · shell\n", ""),
+        }
         for field, invariants in cases.items():
             with self.subTest(field=field):
                 code, report = self.reworded(invariants).check()
@@ -1661,8 +2169,10 @@ class FoundationCheckTest(unittest.TestCase):
 
     def test_reworded_invariant_lacking_method_or_part_at_base_is_listed_with_the_field(self):
         # decision: WAY-344 "Where a script whose purpose is to check the form of a file reads a copy"
-        cases = {"Method": self.edit(INVARIANTS, "- **Method:** test\n", ""),
-                 "Part": self.edit(INVARIANTS, "- **Part:** core · shell\n", "")}
+        cases = {
+            "Method": self.edit(INVARIANTS, "- **Method:** test\n", ""),
+            "Part": self.edit(INVARIANTS, "- **Part:** core · shell\n", ""),
+        }
         for field, text in cases.items():
             with self.subTest(field=field):
                 base = {"foundations__invariants_dot_md": text}
@@ -1672,20 +2182,24 @@ class FoundationCheckTest(unittest.TestCase):
                 self.assertIn("*%s*" % field, listed[0])
 
     def test_reworded_invariant_lacking_both_fields_at_base_is_listed_in_one_line(self):
-        text = self.edit(self.edit(INVARIANTS, "- **Method:** test\n", ""),
-                         "- **Part:** core · shell\n", "")
+        text = self.edit(
+            self.edit(INVARIANTS, "- **Method:** test\n", ""), "- **Part:** core · shell\n", ""
+        )
         listed = self.listed_lines(self.reworded(base={"foundations__invariants_dot_md": text}))
         self.assertEqual(len(listed), 1, listed)
         self.assertTrue(listed[0].startswith(self.LISTED_INVARIANT), listed)
         self.assertIn("*Method*", listed[0])
         self.assertIn("*Part*", listed[0])
 
-    def test_reworded_invariant_lacking_a_field_at_base_is_listed_though_its_citing_file_changed(self):
+    def test_reworded_invariant_lacking_a_field_at_base_is_listed_though_its_citing_file_changed(
+        self,
+    ):
         # decision: WAY-344 "Where a script whose purpose is to check the form of a file reads a copy"
         text = self.edit(INVARIANTS, "- **Method:** test\n", "")
         touched = FILES["tests/test_saving.py"] + "# touched\n"
-        product = self.reworded(base={"foundations__invariants_dot_md": text},
-                                tests__test_saving_dot_py=touched)
+        product = self.reworded(
+            base={"foundations__invariants_dot_md": text}, tests__test_saving_dot_py=touched
+        )
         listed = self.listed_lines(product)
         self.assertEqual(len(listed), 1, listed)
         self.assertIn("*Method*", listed[0])
@@ -1699,8 +2213,9 @@ class FoundationCheckTest(unittest.TestCase):
 
     def sectioned(self, text):
         """The decision log divided into two topical sections, each with its heading and sentence."""
-        text = text.replace("### ABC-01 —", "## Saving\n\nHow a game is saved and loaded.\n\n"
-                                            "### ABC-01 —", 1)
+        text = text.replace(
+            "### ABC-01 —", "## Saving\n\nHow a game is saved and loaded.\n\n### ABC-01 —", 1
+        )
         return text.replace("### ABC-02 —", "## Clock\n\nWhere the clock runs.\n\n### ABC-02 —", 1)
 
     def test_log_divided_into_sections_passes_as_the_undivided_one_does(self):
@@ -1709,8 +2224,11 @@ class FoundationCheckTest(unittest.TestCase):
     def test_error_in_an_entry_of_the_second_section_is_reported_at_its_own_line(self):
         head, _, tail = self.sectioned(DECISIONS).rpartition("- **Origin:** none\n")
         # ABC-02 stands at line 24 of the divided log, after the two sections' headings
-        self.assertFails(self.run_on(foundations__decisions_dot_md=head + tail),
-                         "foundations/decisions.md:24: the entry lacks *Origin*", "1 error")
+        self.assertFails(
+            self.run_on(foundations__decisions_dot_md=head + tail),
+            "foundations/decisions.md:24: the entry lacks *Origin*",
+            "1 error",
+        )
 
     # --- the-way's own foundation -------------------------------------------------------------
 
@@ -1719,11 +2237,15 @@ class FoundationCheckTest(unittest.TestCase):
     # cites (test-method-citation). A withdrawn part is a finding by the message "`<name>` is
     # withdrawn; name its successor" where <name> is a row of the part map's *Withdrawn
     # identifiers*: the check gives the same message for a decision number, an invariant or a
-    # fact, which these two invariants do not cover. The check's other findings depend on the
-    # branch a clone calls its main one, or on the foundation beyond these two, so they are left
-    # out (WAY-08; causes 5 and 23).
-    OWN_FINDINGS = ("names no part", "is no identifier of a part",
-                    "reads `test` and no test cites it")
+    # fact, which these two invariants do not cover. The check's other findings concern the
+    # foundation beyond these two, so this test leaves them out and the whole check stands in
+    # `test_the_way_foundation_check_reports_no_error` below, which cites its own invariant (WAY-08;
+    # cause 23).
+    OWN_FINDINGS = (
+        "names no part",
+        "is no identifier of a part",
+        "reads `test` and no test cites it",
+    )
 
     @staticmethod
     def withdrawn_part_findings():
@@ -1738,14 +2260,34 @@ class FoundationCheckTest(unittest.TestCase):
     def test_the_way_foundation_passes(self):
         # invariant: map-reference-target
         # invariant: test-method-citation
-        result = subprocess.run([sys.executable, "-B", SCRIPT, THE_WAY], capture_output=True,
-                                text=True, encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, THE_WAY],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         report = result.stdout + result.stderr
         self.assertNotEqual(result.returncode, 2, report)
         own = self.OWN_FINDINGS + self.withdrawn_part_findings()
-        findings = [line for line in result.stdout.splitlines()
-                    if ": listed: " not in line and any(text in line for text in own)]
+        findings = [
+            line
+            for line in result.stdout.splitlines()
+            if ": listed: " not in line and any(text in line for text in own)
+        ]
         self.assertEqual(findings, [], report)
+
+    def test_the_way_foundation_check_reports_no_error(self):
+        # invariant: own-foundation-check-report
+        # The whole check, with no switch and with the base the script finds in git, on the
+        # repository as it stands; the test above keeps its two invariants apart from it.
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, THE_WAY],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        # exit code 0 is "without errors" by the head of foundation_check.py ("Exit code:")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

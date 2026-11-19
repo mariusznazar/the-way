@@ -21,8 +21,20 @@ sys.path.insert(0, str(HERE))
 import image_files_check  # noqa: E402
 
 SCRIPT = HERE / "image_files_check.py"
-EXTENSIONS = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tif", ".tiff", ".ico", ".svg",
-              ".avif", ".heic"]
+EXTENSIONS = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".bmp",
+    ".tif",
+    ".tiff",
+    ".ico",
+    ".svg",
+    ".avif",
+    ".heic",
+]
 
 
 def run_main(arguments: list[str]) -> tuple[int, str, str]:
@@ -76,8 +88,15 @@ class ImageFilesCheckTest(unittest.TestCase):
                     path.unlink()
 
     def test_files_that_only_look_like_an_image_name_are_no_image(self) -> None:
-        for name in ("notes.png.md", "png", "a.pngx", "photo.jpg.txt", "image", "x.svgz.md",
-                     "report-png.md"):
+        for name in (
+            "notes.png.md",
+            "png",
+            "a.pngx",
+            "photo.jpg.txt",
+            "image",
+            "x.svgz.md",
+            "report-png.md",
+        ):
             self.write(f"record/{name}", b"text\n")
         code, out, _ = run_main([str(self.root / "record")])
         self.assertEqual((code, out), (0, "checked: 7 files, 0 listed\n"))
@@ -94,18 +113,24 @@ class ImageFilesCheckTest(unittest.TestCase):
         self.write("record/reports/a/note.md", b"text\n")
         _, out, _ = run_main([str(self.root / "record")])
         base = (self.root / "record").as_posix()
-        self.assertEqual(self.listing(out), [
-            f"{base}/reports/a/deep/one.jpg: image file",
-            f"{base}/reports/b/two.png: image file",
-            f"{base}/zz.gif: image file"])
+        self.assertEqual(
+            self.listing(out),
+            [
+                f"{base}/reports/a/deep/one.jpg: image file",
+                f"{base}/reports/b/two.png: image file",
+                f"{base}/zz.gif: image file",
+            ],
+        )
         self.assertEqual(out.splitlines()[-1], "checked: 4 files, 3 listed")
 
     def test_a_single_file_is_checked_alone(self) -> None:
         self.write("other.png")
         image = self.write("one.webp")
         text = self.write("one.md", b"text\n")
-        self.assertEqual(run_main([str(image)])[:2],
-                         (1, f"{image.as_posix()}: image file\nchecked: 1 files, 1 listed\n"))
+        self.assertEqual(
+            run_main([str(image)])[:2],
+            (1, f"{image.as_posix()}: image file\nchecked: 1 files, 1 listed\n"),
+        )
         self.assertEqual(run_main([str(text)])[:2], (0, "checked: 1 files, 0 listed\n"))
 
     def test_the_content_of_a_file_is_never_read(self) -> None:
@@ -114,11 +139,15 @@ class ImageFilesCheckTest(unittest.TestCase):
         self.write("record/shot.png", "plain text".encode("utf-8"))
         code, out, err = run_main([str(self.root / "record")])
         self.assertEqual((code, err), (1, ""))
-        self.assertEqual(self.listing(out), [f"{(self.root / 'record').as_posix()}/shot.png: image file"])
+        self.assertEqual(
+            self.listing(out), [f"{(self.root / 'record').as_posix()}/shot.png: image file"]
+        )
 
     def test_an_empty_directory_lists_nothing(self) -> None:
         (self.root / "empty").mkdir()
-        self.assertEqual(run_main([str(self.root / "empty")])[:2], (0, "checked: 0 files, 0 listed\n"))
+        self.assertEqual(
+            run_main([str(self.root / "empty")])[:2], (0, "checked: 0 files, 0 listed\n")
+        )
 
     def test_a_missing_path_or_a_wrong_argument_exits_two_with_nothing_listed(self) -> None:
         path = self.write("one.md", b"x\n")
@@ -140,19 +169,29 @@ class ImageFilesCheckTest(unittest.TestCase):
     def test_a_control_character_in_a_file_name_is_shown_escaped(self) -> None:
         self.write("record/a" + chr(0x85) + "b.png")
         _, out, _ = run_main([str(self.root / "record")])
-        self.assertEqual(self.listing(out),
-                         [f"{(self.root / 'record').as_posix()}/a" + chr(92) + "x85b.png: image file"])
+        self.assertEqual(
+            self.listing(out),
+            [f"{(self.root / 'record').as_posix()}/a" + chr(92) + "x85b.png: image file"],
+        )
 
     # invariant: record-copy-image-check
     def test_the_command_ends_with_the_exit_code_of_the_check(self) -> None:
         self.write("record/shot.png")
-        listed = subprocess.run([sys.executable, "-B", str(SCRIPT), str(self.root / "record")],
-                                capture_output=True, text=True, encoding="utf-8")
+        listed = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), str(self.root / "record")],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         self.assertEqual(listed.returncode, 1)
         self.assertEqual(listed.stdout.splitlines()[-1], "checked: 1 files, 1 listed")
         self.write("clean/cycle.md", b"# Record\n")
-        clean = subprocess.run([sys.executable, "-B", str(SCRIPT), str(self.root / "clean")],
-                               capture_output=True, text=True, encoding="utf-8")
+        clean = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), str(self.root / "clean")],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         self.assertEqual((clean.returncode, clean.stdout), (0, "checked: 1 files, 0 listed\n"))
 
 

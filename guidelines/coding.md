@@ -42,7 +42,17 @@ beside the one command of the gate (WAY-16).
 
 ### Formatter
 
-none — WAY-382
+- **Decision:** WAY-382 · WAY-381
+- **Invariant:** formatter-layout
+- **Good:** a file laid out by the formatter at the width the decision names, with no comment that switches the formatter off
+- **Bad:** a file laid out by hand against the formatter, or a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable` in one
+
+The formatter is the one of Ruff that WAY-381 pins, run with the configuration `ruff.toml`, at a
+line width of 100 and every other setting at its default. It covers the `.py` files of the parts
+named above and no Python example in a Markdown file. Every such file stands as the formatter
+leaves it, and a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable` in
+one is no way out: the test of the invariant fails on it. No command of the formatter stands beside
+the one command of the gate (WAY-16).
 
 ### Dependency audit
 

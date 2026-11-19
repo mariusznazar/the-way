@@ -22,10 +22,14 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 import skill_entry_points as generator  # noqa: E402
 
-CRITIQUE = ("---\nname: critique\ndescription: Use when a proposal needs a second reader.\n---\n\n"
-            "# Critique\n")
-DECISION = ("---\nname: record-decision\ndescription: Use when a decision has to be written.\n"
-            "---\n\n# Record a decision\n")
+CRITIQUE = (
+    "---\nname: critique\ndescription: Use when a proposal needs a second reader.\n---\n\n"
+    "# Critique\n"
+)
+DECISION = (
+    "---\nname: record-decision\ndescription: Use when a decision has to be written.\n"
+    "---\n\n# Record a decision\n"
+)
 
 # The entry point of `record-decision` beside `critique`, written out in full.
 DECISION_ENTRY = (
@@ -58,7 +62,8 @@ DECISION_ENTRY = (
     "\n"
     "Where this skill or a file it reads names another the-way skill — `critique` or "
     "`record-decision` — use this repository's project skill of the same name with the "
-    "`the-way-` prefix, never an unprefixed one.\n")
+    "`the-way-` prefix, never an unprefixed one.\n"
+)
 
 
 class Repository:
@@ -82,33 +87,47 @@ class Repository:
         return code, out.getvalue(), err.getvalue()
 
     def files(self) -> dict[str, bytes]:
-        return {path.relative_to(self.root).as_posix(): path.read_bytes()
-                for path in self.root.rglob("*")
-                if path.is_file() and ".git" not in path.relative_to(self.root).parts}
+        return {
+            path.relative_to(self.root).as_posix(): path.read_bytes()
+            for path in self.root.rglob("*")
+            if path.is_file() and ".git" not in path.relative_to(self.root).parts
+        }
 
 
 class EntryPointText(unittest.TestCase):
     def test_text_is_the_written_out_form(self) -> None:
-        skills = [generator.Skill("elements/common/critique/SKILL.md", "critique",
-                                  "Use when a proposal needs a second reader."),
-                  generator.Skill("elements/decisions/skill/SKILL.md", "record-decision",
-                                  "Use when a decision has to be written.")]
+        skills = [
+            generator.Skill(
+                "elements/common/critique/SKILL.md",
+                "critique",
+                "Use when a proposal needs a second reader.",
+            ),
+            generator.Skill(
+                "elements/decisions/skill/SKILL.md",
+                "record-decision",
+                "Use when a decision has to be written.",
+            ),
+        ]
         self.assertEqual(generator.entry_point_text(skills[1], skills), DECISION_ENTRY)
 
     def test_one_skill_names_itself_alone(self) -> None:
         skill = generator.Skill("a/SKILL.md", "alpha", "Use for alpha.")
-        self.assertIn("another the-way skill — `alpha` — use", generator.entry_point_text(
-            skill, [skill]))
+        self.assertIn(
+            "another the-way skill — `alpha` — use", generator.entry_point_text(skill, [skill])
+        )
 
     def test_siblings_follow_the_order_of_paths_with_or_before_the_last(self) -> None:
         repository = Repository(self)
         repository.write("zeta/SKILL.md", "---\nname: alpha\ndescription: Use for alpha.\n---\n")
         repository.write("beta/SKILL.md", "---\nname: zulu\ndescription: Use for zulu.\n---\n")
-        repository.write("dir with space/SKILL.md",
-                         "---\nname: mike\ndescription: Use for mike.\n---\n")
+        repository.write(
+            "dir with space/SKILL.md", "---\nname: mike\ndescription: Use for mike.\n---\n"
+        )
         skills = generator.discover(repository.root)
-        self.assertEqual([skill.path for skill in skills],
-                         ["beta/SKILL.md", "dir with space/SKILL.md", "zeta/SKILL.md"])
+        self.assertEqual(
+            [skill.path for skill in skills],
+            ["beta/SKILL.md", "dir with space/SKILL.md", "zeta/SKILL.md"],
+        )
         self.assertEqual(generator.sibling_names(skills), "`zulu`, `mike` or `alpha`")
 
 
@@ -120,53 +139,100 @@ class Discovery(unittest.TestCase):
         repository.write(".agents/skills/own/SKILL.md", CRITIQUE)
         repository.write(".gitignore", ".runs/\n")
         repository.write(".runs/copy/SKILL.md", CRITIQUE)
-        self.assertEqual([skill.path for skill in generator.discover(repository.root)],
-                         ["elements/decisions/skill/SKILL.md"])
+        self.assertEqual(
+            [skill.path for skill in generator.discover(repository.root)],
+            ["elements/decisions/skill/SKILL.md"],
+        )
 
     def test_a_tracked_skill_deleted_on_disk_is_not_a_skill(self) -> None:
         repository = Repository(self)
         repository.write("gone/SKILL.md", CRITIQUE)
-        subprocess.run(["git", "-C", str(repository.root), "add", "gone/SKILL.md"], check=True,
-                       capture_output=True)
+        subprocess.run(
+            ["git", "-C", str(repository.root), "add", "gone/SKILL.md"],
+            check=True,
+            capture_output=True,
+        )
         (repository.root / "gone" / "SKILL.md").unlink()
         self.assertEqual(generator.discover(repository.root), [])
 
     def test_a_non_ascii_path_and_crlf_frontmatter_are_read(self) -> None:
         repository = Repository(self)
-        repository.write("zażółć/SKILL.md",
-                         "---\r\nname: alpha\r\ndescription: Use for alpha.\r\n---\r\n")
-        self.assertEqual(generator.discover(repository.root),
-                         [generator.Skill("zażółć/SKILL.md", "alpha", "Use for alpha.")])
+        repository.write(
+            "zażółć/SKILL.md", "---\r\nname: alpha\r\ndescription: Use for alpha.\r\n---\r\n"
+        )
+        self.assertEqual(
+            generator.discover(repository.root),
+            [generator.Skill("zażółć/SKILL.md", "alpha", "Use for alpha.")],
+        )
 
 
 class FrontmatterErrors(unittest.TestCase):
     CASES = (
-        ("no frontmatter", "# A skill\n",
-         "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
-        ("unclosed frontmatter", "---\nname: alpha\ndescription: Use for alpha.\n",
-         "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
-        ("byte order mark", "﻿---\nname: alpha\ndescription: Use for alpha.\n---\n",
-         "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n"),
-        ("empty name", "---\nname:\ndescription: Use for alpha.\n---\n",
-         "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n"),
-        ("folded description", "---\nname: alpha\ndescription: >\n  Use for alpha.\n---\n",
-         "Error: a/SKILL.md: description is not on one line\n"),
-        ("name off the form", "---\nname: Record_Decision\ndescription: Use for it.\n---\n",
-         "Error: a/SKILL.md: name 'Record_Decision' is not lowercase words joined by hyphens\n"),
-        ("name with the prefix", "---\nname: the-way-alpha\ndescription: Use for it.\n---\n",
-         "Error: a/SKILL.md: name 'the-way-alpha' already starts with 'the-way-'\n"),
-        ("double-quoted description", '---\nname: alpha\ndescription: "Use for alpha."\n---\n',
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
-        ("single-quoted description", "---\nname: alpha\ndescription: 'Use for alpha.'\n---\n",
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
-        ("colon and space inside", "---\nname: alpha\ndescription: Use for alpha: always.\n---\n",
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
-        ("space and hash inside", "---\nname: alpha\ndescription: Use for alpha #1.\n---\n",
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
-        ("ending with a colon", "---\nname: alpha\ndescription: Use for alpha:\n---\n",
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
-        ("starting with a backtick", "---\nname: alpha\ndescription: `alpha` is used.\n---\n",
-         "Error: a/SKILL.md: description is not a safe plain YAML scalar\n"),
+        (
+            "no frontmatter",
+            "# A skill\n",
+            "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n",
+        ),
+        (
+            "unclosed frontmatter",
+            "---\nname: alpha\ndescription: Use for alpha.\n",
+            "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n",
+        ),
+        (
+            "byte order mark",
+            "﻿---\nname: alpha\ndescription: Use for alpha.\n---\n",
+            "Error: a/SKILL.md: no frontmatter between the first two '---' lines\n",
+        ),
+        (
+            "empty name",
+            "---\nname:\ndescription: Use for alpha.\n---\n",
+            "Error: a/SKILL.md: frontmatter has no 'name:' with a value\n",
+        ),
+        (
+            "folded description",
+            "---\nname: alpha\ndescription: >\n  Use for alpha.\n---\n",
+            "Error: a/SKILL.md: description is not on one line\n",
+        ),
+        (
+            "name off the form",
+            "---\nname: Record_Decision\ndescription: Use for it.\n---\n",
+            "Error: a/SKILL.md: name 'Record_Decision' is not lowercase words joined by hyphens\n",
+        ),
+        (
+            "name with the prefix",
+            "---\nname: the-way-alpha\ndescription: Use for it.\n---\n",
+            "Error: a/SKILL.md: name 'the-way-alpha' already starts with 'the-way-'\n",
+        ),
+        (
+            "double-quoted description",
+            '---\nname: alpha\ndescription: "Use for alpha."\n---\n',
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
+        (
+            "single-quoted description",
+            "---\nname: alpha\ndescription: 'Use for alpha.'\n---\n",
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
+        (
+            "colon and space inside",
+            "---\nname: alpha\ndescription: Use for alpha: always.\n---\n",
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
+        (
+            "space and hash inside",
+            "---\nname: alpha\ndescription: Use for alpha #1.\n---\n",
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
+        (
+            "ending with a colon",
+            "---\nname: alpha\ndescription: Use for alpha:\n---\n",
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
+        (
+            "starting with a backtick",
+            "---\nname: alpha\ndescription: `alpha` is used.\n---\n",
+            "Error: a/SKILL.md: description is not a safe plain YAML scalar\n",
+        ),
     )
 
     def test_each_error_stops_with_its_message_and_writes_nothing(self) -> None:
@@ -182,16 +248,20 @@ class FrontmatterErrors(unittest.TestCase):
     def test_a_colon_not_followed_by_a_space_is_accepted(self) -> None:
         repository = Repository(self)
         repository.write("a/SKILL.md", "---\nname: alpha\ndescription: Use at 10:30.\n---\n")
-        self.assertEqual(generator.discover(repository.root),
-                         [generator.Skill("a/SKILL.md", "alpha", "Use at 10:30.")])
+        self.assertEqual(
+            generator.discover(repository.root),
+            [generator.Skill("a/SKILL.md", "alpha", "Use at 10:30.")],
+        )
 
     def test_a_name_two_skills_hold_stops_and_writes_nothing(self) -> None:
         repository = Repository(self)
         repository.write("a/SKILL.md", DECISION)
         repository.write("b/SKILL.md", DECISION)
         before = repository.files()
-        self.assertEqual(repository.run("--write"), (
-            1, "", "Error: name 'record-decision' is held by both a/SKILL.md and b/SKILL.md\n"))
+        self.assertEqual(
+            repository.run("--write"),
+            (1, "", "Error: name 'record-decision' is held by both a/SKILL.md and b/SKILL.md\n"),
+        )
         self.assertEqual(repository.files(), before)
 
 
@@ -203,8 +273,10 @@ class MissingField(unittest.TestCase):
         repository.write("a/SKILL.md", "---\ndescription: Use for alpha.\n---\n")
         repository.write("b/SKILL.md", DECISION)
         before = repository.files()
-        self.assertEqual(repository.run("--write"), (
-            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(
+            repository.run("--write"),
+            (2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"),
+        )
         self.assertEqual(repository.files(), before)
 
     def test_a_skill_with_the_name_in_another_form_stops_with_exit_2_naming_the_field(self) -> None:
@@ -214,8 +286,10 @@ class MissingField(unittest.TestCase):
         repository.write("a/SKILL.md", "---\nName: alpha\ndescription: Use for alpha.\n---\n")
         repository.write("b/SKILL.md", DECISION)
         before = repository.files()
-        self.assertEqual(repository.run("--write"), (
-            2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"))
+        self.assertEqual(
+            repository.run("--write"),
+            (2, "", "Error: a/SKILL.md: the frontmatter has no line `name:`\n"),
+        )
         self.assertEqual(repository.files(), before)
 
     def test_a_skill_without_description_stops_with_exit_2_naming_the_field(self) -> None:
@@ -225,8 +299,10 @@ class MissingField(unittest.TestCase):
         repository.write("a/SKILL.md", "---\nname: alpha\n---\n")
         repository.write("b/SKILL.md", DECISION)
         before = repository.files()
-        self.assertEqual(repository.run("--write"), (
-            2, "", "Error: a/SKILL.md: the frontmatter has no line `description:`\n"))
+        self.assertEqual(
+            repository.run("--write"),
+            (2, "", "Error: a/SKILL.md: the frontmatter has no line `description:`\n"),
+        )
         self.assertEqual(repository.files(), before)
 
 
@@ -238,21 +314,35 @@ class Writing(unittest.TestCase):
         sources = repository.files()
         code, out, err = repository.run("--write")
         self.assertEqual((code, err), (0, ""))
-        self.assertEqual(out, "created .claude/skills/the-way-critique/SKILL.md\n"
-                              "created .agents/skills/the-way-critique/SKILL.md\n"
-                              "created .claude/skills/the-way-record-decision/SKILL.md\n"
-                              "created .agents/skills/the-way-record-decision/SKILL.md\n")
+        self.assertEqual(
+            out,
+            "created .claude/skills/the-way-critique/SKILL.md\n"
+            "created .agents/skills/the-way-critique/SKILL.md\n"
+            "created .claude/skills/the-way-record-decision/SKILL.md\n"
+            "created .agents/skills/the-way-record-decision/SKILL.md\n",
+        )
         written = {path: data for path, data in repository.files().items() if path not in sources}
-        self.assertEqual(set(written), {".claude/skills/the-way-critique/SKILL.md",
-                                        ".agents/skills/the-way-critique/SKILL.md",
-                                        ".claude/skills/the-way-record-decision/SKILL.md",
-                                        ".agents/skills/the-way-record-decision/SKILL.md"})
-        self.assertEqual(written[".claude/skills/the-way-record-decision/SKILL.md"],
-                         DECISION_ENTRY.encode("utf-8"))
-        self.assertEqual(written[".agents/skills/the-way-record-decision/SKILL.md"],
-                         DECISION_ENTRY.encode("utf-8"))
-        self.assertEqual(written[".claude/skills/the-way-critique/SKILL.md"],
-                         written[".agents/skills/the-way-critique/SKILL.md"])
+        self.assertEqual(
+            set(written),
+            {
+                ".claude/skills/the-way-critique/SKILL.md",
+                ".agents/skills/the-way-critique/SKILL.md",
+                ".claude/skills/the-way-record-decision/SKILL.md",
+                ".agents/skills/the-way-record-decision/SKILL.md",
+            },
+        )
+        self.assertEqual(
+            written[".claude/skills/the-way-record-decision/SKILL.md"],
+            DECISION_ENTRY.encode("utf-8"),
+        )
+        self.assertEqual(
+            written[".agents/skills/the-way-record-decision/SKILL.md"],
+            DECISION_ENTRY.encode("utf-8"),
+        )
+        self.assertEqual(
+            written[".claude/skills/the-way-critique/SKILL.md"],
+            written[".agents/skills/the-way-critique/SKILL.md"],
+        )
         self.assertEqual(repository.run("--write"), (0, "entry points are current\n", ""))
 
     def test_without_write_it_lists_the_plan_and_writes_nothing(self) -> None:
@@ -262,11 +352,17 @@ class Writing(unittest.TestCase):
         repository.write(".claude/skills/the-way-record-decision/SKILL.md", "stale\n")
         repository.write(".agents/skills/the-way-renamed/SKILL.md", "old\n")
         before = repository.files()
-        self.assertEqual(repository.run(), (
-            0, "would change .claude/skills/the-way-record-decision/SKILL.md\n"
-               "would create .agents/skills/the-way-record-decision/SKILL.md\n"
-               "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
-               "git rm -r -- .agents/skills/the-way-renamed\n", ""))
+        self.assertEqual(
+            repository.run(),
+            (
+                0,
+                "would change .claude/skills/the-way-record-decision/SKILL.md\n"
+                "would create .agents/skills/the-way-record-decision/SKILL.md\n"
+                "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
+                "git rm -r -- .agents/skills/the-way-renamed\n",
+                "",
+            ),
+        )
         self.assertEqual(repository.files(), before)
 
     def test_an_orphan_directory_is_listed_and_kept(self) -> None:
@@ -275,24 +371,37 @@ class Writing(unittest.TestCase):
         repository.run("--write")
         repository.write(".agents/skills/the-way-renamed/SKILL.md", "old\n")
         repository.write(".claude/skills/someone-elses/SKILL.md", "theirs\n")
-        self.assertEqual(repository.run("--write"), (
-            0, "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
-               "git rm -r -- .agents/skills/the-way-renamed\n", ""))
-        self.assertEqual((repository.root / ".agents/skills/the-way-renamed/SKILL.md").read_bytes(),
-                         b"old\n")
+        self.assertEqual(
+            repository.run("--write"),
+            (
+                0,
+                "orphan .agents/skills/the-way-renamed: no skill produces it; remove it with "
+                "git rm -r -- .agents/skills/the-way-renamed\n",
+                "",
+            ),
+        )
+        self.assertEqual(
+            (repository.root / ".agents/skills/the-way-renamed/SKILL.md").read_bytes(), b"old\n"
+        )
 
 
 class TrackedEntryPoints(unittest.TestCase):
     def test_the_tracked_entry_points_are_what_the_generator_produces(self) -> None:
         skills = generator.discover(ROOT)
         produced = generator.produce(skills)
-        listed = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z", "--", ".claude/skills",
-                                 ".agents/skills"], check=True, capture_output=True).stdout
+        listed = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "-z", "--", ".claude/skills", ".agents/skills"],
+            check=True,
+            capture_output=True,
+        ).stdout
         tracked = sorted(path for path in listed.decode("utf-8").split("\0") if path)
         # invariant: derived-file-content
-        self.assertEqual(tracked, sorted(produced),
-                         "run python -B agent-instructions/skill_entry_points.py --write and "
-                         "commit what it writes")
+        self.assertEqual(
+            tracked,
+            sorted(produced),
+            "run python -B agent-instructions/skill_entry_points.py --write and "
+            "commit what it writes",
+        )
         for path, text in produced.items():
             self.assertEqual((ROOT / path).read_bytes(), text.encode("utf-8"), path)
         self.assertEqual(generator.orphans(ROOT, skills), [])

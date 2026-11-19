@@ -198,10 +198,16 @@ class PlanStateEvidence(unittest.TestCase):
         self.root = Path(self.temporary.name).resolve()
         self.remote = self.root / "remote.git"
         self.repo = self.root / "product repository"
-        self.env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
-                        GIT_TERMINAL_PROMPT="0", GIT_AUTHOR_NAME="Evidence fixture",
-                        GIT_AUTHOR_EMAIL="fixture@example.invalid", GIT_COMMITTER_NAME="Evidence fixture",
-                        GIT_COMMITTER_EMAIL="fixture@example.invalid")
+        self.env = dict(
+            os.environ,
+            GIT_CONFIG_NOSYSTEM="1",
+            GIT_CONFIG_GLOBAL=os.devnull,
+            GIT_TERMINAL_PROMPT="0",
+            GIT_AUTHOR_NAME="Evidence fixture",
+            GIT_AUTHOR_EMAIL="fixture@example.invalid",
+            GIT_COMMITTER_NAME="Evidence fixture",
+            GIT_COMMITTER_EMAIL="fixture@example.invalid",
+        )
         self.git(self.root, "init", "--bare", "--initial-branch=delivery", str(self.remote))
         self.git(self.root, "clone", str(self.remote), str(self.repo))
         self.write(self.repo / "README.md", "Fixture product\n")
@@ -214,15 +220,25 @@ class PlanStateEvidence(unittest.TestCase):
         self.plan = self.docs / "plan.md"
         self.definition = self.docs / "definition.md"
         self.task = self.docs / "tasks/report-download.md"
-        self.write(self.definition, "# Report download\n\nStatus: approved 2026-10-01\n\n" +
-                   DEFINITION_BODY + "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
-                   "- Definition fingerprint: " + FINGERPRINT + "\n")
+        self.write(
+            self.definition,
+            "# Report download\n\nStatus: approved 2026-10-01\n\n"
+            + DEFINITION_BODY
+            + "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
+            "- Definition fingerprint: " + FINGERPRINT + "\n",
+        )
         self.write(self.task, TASK)
         self.set_state("ready for cycle")
 
     def git(self, directory, *arguments):
-        result = subprocess.run(["git", "-C", str(directory), *arguments], env=self.env,
-                                capture_output=True, text=True, encoding="utf-8", timeout=30)
+        result = subprocess.run(
+            ["git", "-C", str(directory), *arguments],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=30,
+        )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         return result.stdout.strip()
 
@@ -236,8 +252,10 @@ class PlanStateEvidence(unittest.TestCase):
 
     def cycle(self, directory, source=None, frozen_text=TASK, basename="record.md"):
         source = self.task if source is None else source
-        self.write(directory / basename, CYCLE_RECORD.format(
-            source=source, repository=self.repo, frozen="accepted-task.md"))
+        self.write(
+            directory / basename,
+            CYCLE_RECORD.format(source=source, repository=self.repo, frozen="accepted-task.md"),
+        )
         self.write(directory / "accepted-task.md", frozen_text)
 
     def archive(self, slug="report-download", source=None, basename="record.md"):
@@ -249,7 +267,9 @@ class PlanStateEvidence(unittest.TestCase):
 
     def worktree(self, source=None, provenance=True):
         path = self.root / "cycle worktree"
-        self.git(self.repo, "worktree", "add", "--no-track", "-b", "task/report-download", str(path))
+        self.git(
+            self.repo, "worktree", "add", "--no-track", "-b", "task/report-download", str(path)
+        )
         directory = path / ".runs/task-cycles/report-download"
         directory.mkdir(parents=True)
         if provenance:
@@ -258,7 +278,9 @@ class PlanStateEvidence(unittest.TestCase):
 
     def other_plan(self):
         directory = self.root / "another project"
-        self.write(directory / "plan.md", PLAN.format(fingerprint=FINGERPRINT, state="ready for cycle"))
+        self.write(
+            directory / "plan.md", PLAN.format(fingerprint=FINGERPRINT, state="ready for cycle")
+        )
         self.write(directory / "definition.md", self.definition.read_text(encoding="utf-8"))
         self.write(directory / "tasks/report-download.md", TASK)
         return directory / "tasks/report-download.md"
@@ -269,46 +291,69 @@ class PlanStateEvidence(unittest.TestCase):
         self.git(self.repo, "push", "origin", "delivery")
 
     def task_unchecked(self):
-        rows = [line for line in self.output.splitlines()
-                if line.startswith("unchecked 1 report-download:")]
+        rows = [
+            line
+            for line in self.output.splitlines()
+            if line.startswith("unchecked 1 report-download:")
+        ]
         self.assertTrue(rows, self.output)
         self.assertTrue(all(line.split(":", 1)[1].strip() for line in rows), self.output)
 
     def task_conflict(self):
-        rows = [line for line in self.output.splitlines()
-                if line.startswith("conflict 1 report-download:")]
+        rows = [
+            line
+            for line in self.output.splitlines()
+            if line.startswith("conflict 1 report-download:")
+        ]
         self.assertTrue(rows, self.output)
         self.assertTrue(all(line.split(":", 1)[1].strip() for line in rows), self.output)
 
     def run_reader(self):
         before = {path: path.read_bytes() for path in (self.plan, self.definition, self.task)}
-        result = subprocess.run([sys.executable, "-B", str(READER), str(self.plan), str(self.repo)],
-                                env=self.env, capture_output=True, text=True, encoding="utf-8",
-                                errors="replace", timeout=60)
+        result = subprocess.run(
+            [sys.executable, "-B", str(READER), str(self.plan), str(self.repo)],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
         for path, original in before.items():
             self.assertEqual(path.read_bytes(), original, "Reader modified " + str(path))
         self.output = result.stdout + result.stderr
         self.assertNotIn("can't open file", self.output, "Missing reader: " + self.output)
-        self.proposals = [line for line in result.stdout.splitlines() if line.startswith("propose ")]
+        self.proposals = [
+            line for line in result.stdout.splitlines() if line.startswith("propose ")
+        ]
         return result.returncode
 
     def proposals_are(self, *expected):
         self.assertCountEqual(self.proposals, expected, self.output)
 
     def evidence_has(self, *facts):
-        rows = "\n".join(line for line in self.output.splitlines()
-                         if line.startswith("evidence 1 report-download:"))
+        rows = "\n".join(
+            line
+            for line in self.output.splitlines()
+            if line.startswith("evidence 1 report-download:")
+        )
         self.assertTrue(rows, self.output)
         for fact in facts:
             self.assertIn(fact.replace(chr(92), "/"), rows.replace(chr(92), "/"), self.output)
 
     def unresolved(self, *reasons):
-        rows = "\n".join(line for line in self.output.splitlines()
-                         if line.startswith(("unchecked", "error:", "conflict")))
+        rows = "\n".join(
+            line
+            for line in self.output.splitlines()
+            if line.startswith(("unchecked", "error:", "conflict"))
+        )
         self.assertTrue(rows, self.output)
         for reason in reasons:
-            self.assertIn(reason.replace(chr(92), "/").lower(),
-                          rows.replace(chr(92), "/").lower(), self.output)
+            self.assertIn(
+                reason.replace(chr(92), "/").lower(),
+                rows.replace(chr(92), "/").lower(),
+                self.output,
+            )
 
     def test_git_listed_worktree_proves_start_without_completion(self):
         # invariant: project-plan-state-evidence
@@ -340,10 +385,14 @@ class PlanStateEvidence(unittest.TestCase):
         self.git(producer, "push", "origin", "delivery")
         self.assertNotEqual(self.git(self.repo, "rev-parse", "origin/delivery"), commit)
         self.assertEqual(self.run_reader(), 0, self.output)
-        self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
-                           "propose 1 report-download: in cycle -> done")
+        self.proposals_are(
+            "propose 1 report-download: ready for cycle -> in cycle",
+            "propose 1 report-download: in cycle -> done",
+        )
         self.evidence_has("docs/task-cycles/report-download/", commit, "origin/delivery")
-        self.assertIn("integration: refs/remotes/origin/delivery " + commit, self.output.splitlines())
+        self.assertIn(
+            "integration: refs/remotes/origin/delivery " + commit, self.output.splitlines()
+        )
 
     def test_deleted_merged_branch_still_proves_done(self):
         # invariant: project-plan-state-evidence
@@ -408,7 +457,9 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertEqual(self.run_reader(), 0, self.output)
         self.proposals_are()
         self.unresolved()
-        self.assertFalse(any(line.startswith("integration:") for line in self.output.splitlines()), self.output)
+        self.assertFalse(
+            any(line.startswith("integration:") for line in self.output.splitlines()), self.output
+        )
 
     def test_missing_remote_head_does_not_guess_delivery(self):
         # invariant: project-plan-state-evidence
@@ -441,7 +492,9 @@ class PlanStateEvidence(unittest.TestCase):
         self.assertEqual(self.run_reader(), 0, self.output)
         self.proposals_are("propose 1 report-download: in cycle -> done")
         self.evidence_has(commit, "origin/delivery")
-        self.assertIn("integration: refs/remotes/origin/delivery " + commit, self.output.splitlines())
+        self.assertIn(
+            "integration: refs/remotes/origin/delivery " + commit, self.output.splitlines()
+        )
 
     def test_unavailable_listed_worktree_is_visible(self):
         # invariant: project-plan-state-evidence
@@ -472,15 +525,23 @@ class PlanStateEvidence(unittest.TestCase):
         self.set_state("done")
         self.assertEqual(self.run_reader(), 1, self.output)
         self.proposals_are()
-        self.assertTrue(any(line.startswith("conflict 1 report-download:")
-                            for line in self.output.splitlines()), self.output)
+        self.assertTrue(
+            any(
+                line.startswith("conflict 1 report-download:") for line in self.output.splitlines()
+            ),
+            self.output,
+        )
 
     def test_draft_plan_gives_no_progress_proposal(self):
         # invariant: project-plan-state-evidence
         # Break caught: proposing cycle progress before a plan has been handed over.
         self.worktree()
-        self.write(self.plan, self.plan.read_text(encoding="utf-8").replace(
-            "Status: handed over 2026-10-02", "Status: draft"))
+        self.write(
+            self.plan,
+            self.plan.read_text(encoding="utf-8").replace(
+                "Status: handed over 2026-10-02", "Status: draft"
+            ),
+        )
         self.assertEqual(self.run_reader(), 1, self.output)
         self.proposals_are()
 
@@ -488,8 +549,12 @@ class PlanStateEvidence(unittest.TestCase):
         # invariant: project-plan-state-evidence
         # Break caught: proposing progress for a definition without approval.
         self.worktree()
-        self.write(self.definition, self.definition.read_text(encoding="utf-8").replace(
-            "Status: approved 2026-10-01", "Status: awaiting approval"))
+        self.write(
+            self.definition,
+            self.definition.read_text(encoding="utf-8").replace(
+                "Status: approved 2026-10-01", "Status: awaiting approval"
+            ),
+        )
         self.assertEqual(self.run_reader(), 1, self.output)
         self.proposals_are()
 
@@ -497,7 +562,9 @@ class PlanStateEvidence(unittest.TestCase):
         # invariant: project-plan-state-evidence
         # Break caught: proposing progress despite an unreadable task table structure.
         self.worktree()
-        self.write(self.plan, self.plan.read_text(encoding="utf-8").replace("## Tasks", "## Missing tasks"))
+        self.write(
+            self.plan, self.plan.read_text(encoding="utf-8").replace("## Tasks", "## Missing tasks")
+        )
         self.assertEqual(self.run_reader(), 1, self.output)
         self.proposals_are()
 
@@ -508,9 +575,15 @@ class PlanStateEvidence(unittest.TestCase):
         self.definition.unlink()
         # Preserve all inputs that remain readable; the missing source is intentional.
         before = (self.plan.read_bytes(), self.task.read_bytes())
-        result = subprocess.run([sys.executable, "-B", str(READER), str(self.plan), str(self.repo)],
-                                env=self.env, capture_output=True, text=True, encoding="utf-8",
-                                errors="replace", timeout=60)
+        result = subprocess.run(
+            [sys.executable, "-B", str(READER), str(self.plan), str(self.repo)],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
         self.assertNotIn("can't open file", result.stderr, "Missing reader: " + result.stderr)
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
         self.assertFalse(any(line.startswith("propose ") for line in result.stdout.splitlines()))
@@ -522,8 +595,10 @@ class PlanStateEvidence(unittest.TestCase):
         commit = self.archive(basename="delivery-notes.md")
         self.git(self.repo, "push", "origin", "delivery")
         self.assertEqual(self.run_reader(), 0, self.output)
-        self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
-                           "propose 1 report-download: in cycle -> done")
+        self.proposals_are(
+            "propose 1 report-download: ready for cycle -> in cycle",
+            "propose 1 report-download: in cycle -> done",
+        )
         self.evidence_has(commit, "docs/task-cycles/report-download/", "origin/delivery")
 
     def test_other_plans_integrated_same_name_cannot_start_current_task(self):
@@ -541,11 +616,18 @@ class PlanStateEvidence(unittest.TestCase):
         # Break caught: discarding an owned historical cycle after a source-only editorial change.
         commit = self.archive()
         self.git(self.repo, "push", "origin", "delivery")
-        self.write(self.task, TASK.replace("Readers need a copy of their saved report.",
-                                           "Readers need a downloadable copy of their saved report."))
+        self.write(
+            self.task,
+            TASK.replace(
+                "Readers need a copy of their saved report.",
+                "Readers need a downloadable copy of their saved report.",
+            ),
+        )
         self.assertEqual(self.run_reader(), 0, self.output)
-        self.proposals_are("propose 1 report-download: ready for cycle -> in cycle",
-                           "propose 1 report-download: in cycle -> done")
+        self.proposals_are(
+            "propose 1 report-download: ready for cycle -> in cycle",
+            "propose 1 report-download: in cycle -> done",
+        )
         self.evidence_has(commit, "origin/delivery")
 
     def test_other_plans_integrated_same_name_cannot_complete_current_task(self):
@@ -578,8 +660,10 @@ class PlanStateEvidence(unittest.TestCase):
     def test_archived_header_alone_cannot_prove_task_ownership(self):
         # invariant: project-plan-state-evidence
         # Break caught: accepting a cycle title and task slug without recorded provenance.
-        self.write(self.repo / "docs/task-cycles/report-download/delivery-notes.md",
-                   "# Cycle record — Download a report\n\n- Status: complete\n")
+        self.write(
+            self.repo / "docs/task-cycles/report-download/delivery-notes.md",
+            "# Cycle record — Download a report\n\n- Status: complete\n",
+        )
         self.commit_archive_files()
         self.assertEqual(self.run_reader(), 0, self.output)
         self.proposals_are()
@@ -588,7 +672,9 @@ class PlanStateEvidence(unittest.TestCase):
     def test_archived_content_without_provenance_cannot_complete_task(self):
         # invariant: project-plan-state-evidence
         # Break caught: treating any integrated file in the exact directory as an owned cycle.
-        self.write(self.repo / "docs/task-cycles/report-download/notes.txt", "Delivered report-download.\n")
+        self.write(
+            self.repo / "docs/task-cycles/report-download/notes.txt", "Delivered report-download.\n"
+        )
         self.commit_archive_files()
         self.set_state("in cycle")
         self.assertEqual(self.run_reader(), 0, self.output)
@@ -599,7 +685,9 @@ class PlanStateEvidence(unittest.TestCase):
         # invariant: project-plan-state-evidence
         # Break caught: resolving ambiguous task/plan basenames by choosing a same-named project.
         self.other_plan()
-        self.cycle(self.repo / "docs/task-cycles/report-download", source="tasks/report-download.md")
+        self.cycle(
+            self.repo / "docs/task-cycles/report-download", source="tasks/report-download.md"
+        )
         self.commit_archive_files()
         self.assertEqual(self.run_reader(), 0, self.output)
         self.proposals_are()

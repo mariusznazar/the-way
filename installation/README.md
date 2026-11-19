@@ -118,8 +118,12 @@ the check:
    class TrackedFilesTest(unittest.TestCase):
        # invariant: tracked-file-private-paths
        def test_no_tracked_file_holds_a_private_path(self) -> None:
-           run = subprocess.run([sys.executable, "-B", str(COMMAND), "tracked-file-private-paths"],
-                                cwd=ROOT, capture_output=True, encoding="utf-8")
+           run = subprocess.run(
+               [sys.executable, "-B", str(COMMAND), "tracked-file-private-paths"],
+               cwd=ROOT,
+               capture_output=True,
+               encoding="utf-8",
+           )
            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
    ```
 

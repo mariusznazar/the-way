@@ -28,7 +28,8 @@ entries; any other directory what the sentence of its part in the part map names
   project-level, product-guidelines, foundation-review, process-audit, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** invariants: repository-file-location · element-directory-contents. For what
+- **Verification:** invariants: repository-file-location · element-directory-contents ·
+  own-foundation-check-report. For what
   `elements/common/`, `installation/`, `agent-instructions/`, `instruction-files/`,
   `project-level/`, `product-guidelines/`, `foundation-review/`, `process-audit/` and
   `task-cycle/` hold and for what
@@ -3811,7 +3812,7 @@ resolution it gives an open
 question is the question's first assignment, and the plan decides from then on where the question
 is resolved: in a task of the plan, or by an answer the human gives or the plan quotes, with its
 place, from the definition or the foundation. Work on the plan may move a question to another task,
-with an entry in the plan's log of changes giving the reason and without taking the definition
+with a line in the plan's log of changes giving the reason and without taking the definition
 through its readiness approval again, while a move that changes which task writes a projected entry
 into the foundation is the human's to decide. A question that arises only in the breakdown goes to
 the human before the plan is handed over.
@@ -3826,7 +3827,7 @@ the human before the plan is handed over.
     server to the task of accounts, where sessions first exist, and writes why in the log of
     changes; the breakdown finds that nothing says whether the test server is public from the first
     account and asks the human before handing the plan over;
-  - violates: a question lands in another task than the definition names with no entry in the log;
+  - violates: a question lands in another task than the definition names with no line in the log;
     the definition is edited and put through the readiness approval again to move a question; a move
     that hands the writing of a
     projected decision to another task is made without the human; the breakdown answers a question
@@ -8399,9 +8400,10 @@ fix rounds that is too low.
 ### WAY-339 — When do the measures of the audit stop being comparable?
 
 A new series of the cost of cycles, the two numbers of WAY-337, starts only with a new price list or
-with a change of the script that measures the cost, `task-cycle/cycle_stages.py`; a new series of
-the count of remarks starts wherever a series of the cost starts and also with a change of the form
-of a stage report, of the list of classes or of the instructions of the reviewer. The measures of
+with a change of the script that measures the cost, `task-cycle/cycle_stages.py` with the module
+`task-cycle/stage_transcripts.py` that it imports; a new series of the count of remarks starts
+wherever a series of the cost starts and also with a change of the form of a stage report, of the list
+of classes or of the instructions of the reviewer. The measures of
 how a cycle's agents use context and the prompt cache and the times of the gate form series of
 their own: a new series of those starts only with a change of the script that counts them or of the
 script that records them, and, for the times of the gate, also with a change of the test runner of
@@ -8539,7 +8541,7 @@ The script that runs the gate records, at each run, how many other gate runs by 
 at the same time on the machine, from a registry that the script keeps in the user's own directory,
 outside every repository: an empty file for each run, made when the run starts and marked as ended
 when it ends, a run that has not ended counting for at most six hours, an ended one kept for a day
-and an entry whose times cannot be, such as an end in the far future, deleted and counted for
+and a file whose times cannot be, such as an end in the far future, deleted and counted for
 nothing. The audit compares the times of the gate between versions of the process — the median of each
 version and whether it falls against the previous version of the same series — only over the runs
 that passed and during which no other such run was going, and shows the other runs apart.
@@ -10590,7 +10592,8 @@ part to this decision's *Scope*.
 - **Relations:** derives from WAY-173 · derives from WAY-202
 - **Verification:** an agent compares the guidelines and a change with the decision:
   - complies: the rule of the linter in `guidelines/coding.md` names the decision that adopts the
-    linter, the rule of the formatter reads `none —` with the decision that departs from it, and a
+    linter, the rule of the formatter names the decision that adopts the formatter and its invariant,
+    the rule of the dependency audit reads `none —` with the decision that departs from it, and a
     change that gives a part its first Python file adds that part to this *Scope* in the same change;
   - violates: a rule of the-way's coding guidelines that executes a choice with a real cost names no
     decision of this log; the template of the coding discipline is edited to fit a departure of the-way
@@ -10685,30 +10688,45 @@ and nothing for the alerts of the repository's host to read.
 
 ### WAY-382 — Does the-way's code get an automatic formatter?
 
-The-way's code has no automatic formatter, so `### Formatter` of its coding guidelines reads
-`none — WAY-382`. A formatter enters the-way only by a decision of this log that adopts it and by one
-reformatting of the whole of its code in the task that brings it (WAY-205).
+The-way's code has an automatic formatter: the formatter of Ruff, in the version that WAY-381 pins, run
+with the configuration `ruff.toml` at a line width of 100 and every other setting at its default, so
+that `### Formatter` of its coding guidelines names this decision and the invariant
+`formatter-layout`. The code of the parts that WAY-379 names stands in the layout the formatter
+leaves, the formatter having entered the-way by one reformatting of the whole of that code (WAY-205).
+
+The formatter and its invariant cover `.py` files only, never a Python example in a Markdown file, and
+a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable` in a file that the
+rule covers is forbidden: the test of the formatter fails on it.
 
 - **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
-  agent-instructions, instruction-files, installation, process-audit, product-guidelines
+  agent-instructions, instruction-files, installation, process-audit, product-guidelines, repository
 - **Based on:** none
 - **Relations:** derives from WAY-379 · derives from WAY-173
-- **Verification:** an agent compares the change with the decision:
-  - complies: `### Formatter` of `guidelines/coding.md` reads `none — WAY-382`, no configuration of a
-    formatter stands in the repository and CI runs none;
-  - violates: a task configures a formatter or reformats files of the code with no decision that
-    adopts one; `### Formatter` names an invariant.
+- **Verification:** invariants: formatter-layout.
 - **Origin:** none
 
-*Rationale:* reformatting the whole of the code would move every line to which the documents of the
-tasks waiting in the backlog point by its place in a file, and so give a conflict to every branch open
-at the merge, while `git blame` would then name the one commit of the reformatting for each line. The
-formatter is a choice that the-way and the other product of its owner can make together, in a decision
-of its own, and the way back is that decision and the one reformatting that WAY-205 gives, with no
-task opened for it now.
-*Rejected:* a formatter with one reformatting of the whole of the code in the task that writes these
-guidelines — a single commit across the code, `git blame` pointing at it and a conflict in every
-branch open at the merge, for the gain of ending disputes over layout.
+*Rationale:* where no tool sets the layout of a file, it follows the agent that wrote it, and a layout
+that only review keeps drifts back with the next change. One formatter with one configuration gives
+every file one layout, and the invariant holds it on every change. The line width is 100: on a copy of
+the code formatted with Ruff 0.17.1, widths of 88, 100 and 120 added 13 454, 8 597 and 4 185 lines net
+and left 22, 20 and 16 functions over 80 lines and 6, 4 and 4 files over 1000 lines;
+88, the default of Ruff, adds the most, and 120 the least but sets lines longer than those of
+the rest of the repository. That measurement is the product's own, and its record is not open to a
+reader of the repository. Python examples in Markdown files stand outside the rule because a rule over
+them would reach every Markdown file of the repository, and an example in a skill or a README that is
+not laid out as the formatter lays it out would turn the gate red. A comment that turns the formatter
+off lets a file stand in another layout with the gate green, as a comment that turns a rule of the
+linter off does (WAY-380). The price: `git blame` names the commit of the reformatting for each line it
+moved until a reader skips that commit, and a function or a file is longer after the formatter than
+before, so the thresholds of WAY-385 count the code after it.
+*Rejected:* no formatter — the layout of each file goes on depending on the agent that wrote it; the
+default width of Ruff, 88 — it adds the most lines and leaves the most functions and files over the
+thresholds; a width of 120 — it changes the fewest lines, but sets lines longer than those of the rest
+of the repository; the formatter over the Python examples in Markdown files, as Ruff does by default —
+the invariant would reach the examples of every Markdown file, and an example in a skill or a README
+not laid out as the formatter lays it out would turn the gate red; no ban on a comment that turns the
+formatter off — only the review of a change catches such a comment, and the gate passes a file in
+another layout.
 
 ### WAY-383 — Does the-way's code get an audit of its dependencies?
 
@@ -10765,16 +10783,17 @@ five — that rule speaks of a line in the logs, which the-way has none of.
 
 ### WAY-385 — How large may a function and a file of a script of the-way be?
 
-A function of a script of the-way has at most 80 lines, counted with the functions nested in it, and a
-file of a script has at most 1000 lines, in each part that WAY-379 names; a test file stands outside
-the rule, and no function and no file is kept whole over a threshold as an exception. A test of the
-suite counts the lines with the `ast` module of the standard library, runs apart from the run of the
-linter and, where it fails, names every function and file over a threshold with its size (WAY-361).
+A function of a script of the-way has at most 110 lines, counted with the functions nested in it, and a
+file of a script has at most 1200 lines, in each part that WAY-379 names, both counted on the code as
+the formatter of WAY-382 leaves it; a test file stands outside the rule, and no function and no file is
+kept whole over a threshold as an exception. A test of the suite counts the lines with the `ast`
+module of the standard library, runs apart from the run of the linter and, where it fails, names every
+function and file over a threshold with its size (WAY-361).
 
 - **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
   agent-instructions, instruction-files, installation, process-audit, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361
+- **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361 · derives from WAY-382
 - **Verification:** invariants: function-and-file-size. tests: that a function is counted with the
   functions nested in it and that a method is a function. For what the invariant and the test leave,
   an agent compares a change with the decision:
@@ -10787,21 +10806,28 @@ linter and, where it fails, names every function and file over a threshold with 
 - **Origin:** none
 
 *Rationale:* the thresholds come from a trial run of sizes on the-way's own code, since only that shows
-what a threshold stops and what already stands over it (WAY-360); the run counted, at the commit of
-the review of the foundation, how many functions and files of scripts stand over each pair of
-thresholds, and 80 and 1000 leave 11 functions and 2 files over. That run is the product's own
-measurement, and its record is not open to a reader of the repository. Tests stand outside the rule
-because their rules stand in the testing guidelines (WAY-231). No exception stands: the invariant
-of the rule is marked violated until the functions and files over a threshold are divided (WAY-51),
-and until then only review keeps a cleaned or a new file from growing over it. The price: tasks that
-change the largest scripts begin with a move of a part out (WAY-365), one move does not bring the
-largest script under its threshold, a count of lines says nothing of whether a function is well made,
-and a function can be divided only to stand under a threshold.
-*Rejected:* 60 lines and 800 lines — 19 functions and 4 files over in the same run; 100 lines and 1500
-lines — 7 functions and 1 file over; a departure from the rule — every remark of a reviewer on the
-structure of code stays Minor (WAY-363); the rule covering test files, with a rule of the testing
-guidelines — 5 test files over 1000 lines in the same run and more invariants marked violated;
-exceptions pointed out one by one by the human, with a reason each.
+what a threshold stops and what already stands over it (WAY-360); a run on the code before the formatter
+counted, at the commit of the review of the foundation, how many functions and files of scripts stand
+over each pair of thresholds, and 80 and 1000 left 11 functions and 2 files over. The formatter of
+WAY-382 lays each argument of a call that stood aligned under its bracket on a line of its own, so it
+makes functions and files longer with no change of what they do; the thresholds are therefore counted on
+the code after it and set so that they stop as much as 80 and 1000 stopped before it, and a run on the
+code formatted at width 100 left 11 functions and 2 files over 110 lines and 1200 lines. Both runs are
+the product's own measurement, and their records are not open to a reader of the repository. Tests stand
+outside the rule because their rules stand in the testing guidelines (WAY-231). No exception stands: a
+function or a file over a threshold is divided. The price: tasks that change the largest scripts begin
+with a move of a part out (WAY-365), one move does not bring the largest script under its threshold, a
+count of lines says nothing of whether a function is well made, and a function can be divided only to
+stand under a threshold.
+*Rejected:* 60 lines and 800 lines — 19 functions and 4 files over in the run before the formatter; 100
+lines and 1500 lines — 7 functions and 1 file over in that run, and after the formatter there is still
+code to divide; the thresholds of 80 lines and 1000 lines kept on the code after the formatter —
+functions divided only because the formatter made them longer; the rule for files alone, the test of
+functions staying an expected failure — the rule splits in two, and functions grow with no red gate; a
+departure from the rule — every remark of a reviewer on the structure of code stays Minor (WAY-363); the
+rule covering test files, with a rule of the testing guidelines — 5 test files over 1000 lines in the
+run before the formatter and more invariants marked violated; exceptions pointed out one by one by the
+human, with a reason each.
 
 ### WAY-386 — Which file is the exemplar of the kind `check` in the-way's code?
 

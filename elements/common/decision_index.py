@@ -72,7 +72,7 @@ def read_log(root):
     try:
         with open(os.path.join(root, *DECISIONS.split("/")), encoding="utf-8-sig") as handle:
             return handle.read().split("\n")
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         raise Failure("%s is missing or cannot be read as UTF-8 text" % DECISIONS)
 
 
@@ -80,8 +80,11 @@ def parse_log(lines):
     """(sections, decisions) of the log. A section is every `## ` heading but the withdrawn one,
     with its sentence; a decision is every `### ` heading, with the line of the section it stands
     in, read from its heading and the lines of its body."""
-    headings = [(number, line[3:].strip()) for number, line in enumerate(lines, start=1)
-                if line.startswith("## ")]
+    headings = [
+        (number, line[3:].strip())
+        for number, line in enumerate(lines, start=1)
+        if line.startswith("## ")
+    ]
     sections = []
     for start, heading, body in blocks(lines, "## "):
         name = heading[3:].strip()
@@ -91,8 +94,10 @@ def parse_log(lines):
     for start, heading, body in blocks(lines, "### "):
         match = HEADING.match(heading)
         if not match:
-            raise Failure('%s:%d: the heading "%s" is not of the form "### NUMBER — question"'
-                          % (DECISIONS, start, heading))
+            raise Failure(
+                '%s:%d: the heading "%s" is not of the form "### NUMBER — question"'
+                % (DECISIONS, start, heading)
+            )
         section = max((number for number, _ in headings if number < start), default=None)
         decisions.append(Decision(match.group(1), match.group(2), start, body, section))
     return sections, decisions
@@ -139,8 +144,12 @@ def unnamed_parts(decisions, parts):
 
 
 def selection_text(full, alone, unnamed):
-    text = [TITLE, "", "Log: %s" % DECISIONS,
-            "Listed in full: %d. Listed by heading alone: %d." % (len(full), len(alone))]
+    text = [
+        TITLE,
+        "",
+        "Log: %s" % DECISIONS,
+        "Listed in full: %d. Listed by heading alone: %d." % (len(full), len(alone)),
+    ]
     if unnamed:
         text.append("Parts that no Scope names: %s." % ", ".join(unnamed))
     text += ["", "## Listed in full", ""]
@@ -181,18 +190,33 @@ def run(args):
 
 def parser():
     found = Parser(prog="decision_index.py", description="Index of a product's decisions.")
-    found.add_argument("root", nargs="?", default=".",
-                       help="directory of the product; the working directory by default")
-    found.add_argument("--output", required=True, metavar="PATH",
-                       help="file to write, in UTF-8")
-    found.add_argument("--part", action="append", default=[], metavar="ID",
-                       help="take the decisions whose Scope names the part ID")
-    found.add_argument("--section", action="append", default=[], metavar="HEADING",
-                       help="take the decisions of the topical section HEADING")
-    found.add_argument("--decision", action="append", default=[], metavar="NUMBER",
-                       help="take the decision NUMBER")
-    found.add_argument("--sections", action="store_true",
-                       help="write the list of the log's sections instead")
+    found.add_argument(
+        "root",
+        nargs="?",
+        default=".",
+        help="directory of the product; the working directory by default",
+    )
+    found.add_argument("--output", required=True, metavar="PATH", help="file to write, in UTF-8")
+    found.add_argument(
+        "--part",
+        action="append",
+        default=[],
+        metavar="ID",
+        help="take the decisions whose Scope names the part ID",
+    )
+    found.add_argument(
+        "--section",
+        action="append",
+        default=[],
+        metavar="HEADING",
+        help="take the decisions of the topical section HEADING",
+    )
+    found.add_argument(
+        "--decision", action="append", default=[], metavar="NUMBER", help="take the decision NUMBER"
+    )
+    found.add_argument(
+        "--sections", action="store_true", help="write the list of the log's sections instead"
+    )
     return found
 
 

@@ -54,17 +54,28 @@ def discover(root):
     stands untracked and not ignored, outside the `.claude/` and `.agents/` directories at the
     root."""
     result = subprocess.run(
-        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
-         ":(glob)**/SKILL.md"],
-        cwd=root, capture_output=True, check=True)
+        [
+            "git",
+            "ls-files",
+            "-z",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            ":(glob)**/SKILL.md",
+        ],
+        cwd=root,
+        capture_output=True,
+        check=True,
+    )
     paths = sorted({path for path in result.stdout.decode("utf-8").split("\0") if path})
-    return [path for path in paths
-            if not (path.startswith(".claude/") or path.startswith(".agents/"))]
+    return [path for path in paths if not path.startswith((".claude/", ".agents/"))]
 
 
 def _unquote_double(value):
-    return re.sub(r'\\(.)', lambda match: {"n": "\n", "t": "\t"}.get(match.group(1),
-                                                                      match.group(1)), value)
+    return re.sub(
+        r"\\(.)", lambda match: {"n": "\n", "t": "\t"}.get(match.group(1), match.group(1)), value
+    )
 
 
 def frontmatter(text):
@@ -126,11 +137,13 @@ def entry_problems(copy, data, skill_path, name, description, names):
     if fields is None:
         return [copy + ": opens with no frontmatter"]
     if collapse(fields.get("name", "")) != PREFIX + name:
-        found.append("%s: its frontmatter names %r, not `%s%s`"
-                     % (copy, fields.get("name"), PREFIX, name))
+        found.append(
+            "%s: its frontmatter names %r, not `%s%s`" % (copy, fields.get("name"), PREFIX, name)
+        )
     if not collapse(fields.get("description", "")).startswith(collapse(description)):
-        found.append("%s: its description does not start with the description of %s"
-                     % (copy, skill_path))
+        found.append(
+            "%s: its description does not start with the description of %s" % (copy, skill_path)
+        )
     if "`" + skill_path + "`" not in text:
         found.append("%s: its text does not contain `%s` in backticks" % (copy, skill_path))
     collapsed = collapse(text)
@@ -141,15 +154,16 @@ def entry_problems(copy, data, skill_path, name, description, names):
     holding = [sentence for sentence in sentences(text) if collapse(PREFIX_WORDS) in sentence]
     if not any(all(each in sentence for each in wanted) for sentence in holding):
         if not holding:
-            found.append('%s: no sentence of its text holds the words "%s"'
-                         % (copy, PREFIX_WORDS))
+            found.append('%s: no sentence of its text holds the words "%s"' % (copy, PREFIX_WORDS))
         else:
-            missing = sorted({each for each in wanted
-                              if not any(each in sentence for sentence in holding)})
-            found.append('%s: no sentence holding the words "%s" names, in backticks, every '
-                         "skill of the-way%s"
-                         % (copy, PREFIX_WORDS,
-                            "; none names " + ", ".join(missing) if missing else ""))
+            missing = sorted(
+                {each for each in wanted if not any(each in sentence for sentence in holding)}
+            )
+            found.append(
+                '%s: no sentence holding the words "%s" names, in backticks, every '
+                "skill of the-way%s"
+                % (copy, PREFIX_WORDS, "; none names " + ", ".join(missing) if missing else "")
+            )
     return found
 
 
@@ -198,10 +212,14 @@ def problems(root):
         if not os.path.isdir(full):
             continue
         for entry in sorted(os.listdir(full)):
-            if (entry.startswith(PREFIX) and os.path.isdir(os.path.join(full, entry))
-                    and entry not in expected):
-                found.append("%s/%s: no skill of the-way is named %s"
-                             % (base, entry, entry[len(PREFIX):]))
+            if (
+                entry.startswith(PREFIX)
+                and os.path.isdir(os.path.join(full, entry))
+                and entry not in expected
+            ):
+                found.append(
+                    "%s/%s: no skill of the-way is named %s" % (base, entry, entry[len(PREFIX) :])
+                )
     return found
 
 
@@ -212,9 +230,15 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         for path in CONTROL:
             self.assertIn(path, discovered)
         found = problems(ROOT)
-        self.assertEqual(found, [], "a skill of the-way a session would not find under its "
-                         "`the-way-` name; write the entry points with `" + GENERATOR + "`:\n"
-                         + "\n".join(found))
+        self.assertEqual(
+            found,
+            [],
+            "a skill of the-way a session would not find under its "
+            "`the-way-` name; write the entry points with `"
+            + GENERATOR
+            + "`:\n"
+            + "\n".join(found),
+        )
 
     def test_problems_reports_a_skill_the_session_does_not_see(self):
         """On a repository with no commit, where every file stands untracked: `alpha` has no
@@ -223,18 +247,22 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         names = ("alpha", "beta", "gamma", "delta")
 
         def skill(name):
-            return ("---\nname: %s\ndescription: Use when the %s of a product changes.\n---\n\n"
-                    "# %s\n" % (name, name, name))
+            return (
+                "---\nname: %s\ndescription: Use when the %s of a product changes.\n---\n\n"
+                "# %s\n" % (name, name, name)
+            )
 
         def entry(name):
-            return ("---\nname: the-way-%s\ndescription: Use when the %s of a product changes. "
-                    "Found in the-way.\n---\n\n"
-                    "Read `%s/skill/SKILL.md` in the-way. Find the-way with "
-                    "`git rev-parse --show-superproject-working-tree`, "
-                    "`git ls-files --stage -- ':/.the-way'` and `git rev-parse --show-toplevel`. "
-                    "If the skill tells you to resolve a link to find the-way, skip that.\n\n"
-                    "Call the skills %s with the `the-way-` prefix, never an unprefixed one.\n"
-                    % (name, name, name, ", ".join("`" + each + "`" for each in names)))
+            return (
+                "---\nname: the-way-%s\ndescription: Use when the %s of a product changes. "
+                "Found in the-way.\n---\n\n"
+                "Read `%s/skill/SKILL.md` in the-way. Find the-way with "
+                "`git rev-parse --show-superproject-working-tree`, "
+                "`git ls-files --stage -- ':/.the-way'` and `git rev-parse --show-toplevel`. "
+                "If the skill tells you to resolve a link to find the-way, skip that.\n\n"
+                "Call the skills %s with the `the-way-` prefix, never an unprefixed one.\n"
+                % (name, name, name, ", ".join("`" + each + "`" for each in names))
+            )
 
         files = {name + "/skill/SKILL.md": skill(name) for name in names}
         files[".claude/skills/the-way-beta/SKILL.md"] = entry("beta")
@@ -244,31 +272,42 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         files[".agents/skills/the-way-delta/SKILL.md"] = entry("delta")
         files[".claude/skills/the-way-orphan/SKILL.md"] = entry("orphan")
         clean = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-        with tempfile.TemporaryDirectory() as directory, \
-                mock.patch.dict(os.environ, clean, clear=True):
-            subprocess.run(["git", "init", "-q"], cwd=directory, check=True,
-                           capture_output=True)
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            mock.patch.dict(os.environ, clean, clear=True),
+        ):
+            subprocess.run(["git", "init", "-q"], cwd=directory, check=True, capture_output=True)
             for path, text in files.items():
                 full = os.path.join(directory, *path.split("/"))
                 os.makedirs(os.path.dirname(full), exist_ok=True)
                 with open(full, "wb") as handle:
                     handle.write(text.encode("utf-8"))
-            self.assertEqual(discover(directory), sorted(name + "/skill/SKILL.md"
-                                                         for name in names))
+            self.assertEqual(
+                discover(directory), sorted(name + "/skill/SKILL.md" for name in names)
+            )
             found = problems(directory)
         report = "\n".join(found)
-        self.assertIn("alpha/skill/SKILL.md: no file .claude/skills/the-way-alpha/SKILL.md",
-                      found, report)
-        self.assertIn("alpha/skill/SKILL.md: no file .agents/skills/the-way-alpha/SKILL.md",
-                      found, report)
-        self.assertIn("beta/skill/SKILL.md: no file .agents/skills/the-way-beta/SKILL.md",
-                      found, report)
-        self.assertNotIn("beta/skill/SKILL.md: no file .claude/skills/the-way-beta/SKILL.md",
-                         found, report)
-        self.assertIn(".claude/skills/the-way-gamma/SKILL.md and "
-                      ".agents/skills/the-way-gamma/SKILL.md: not byte-identical", found, report)
-        self.assertIn(".claude/skills/the-way-orphan: no skill of the-way is named orphan",
-                      found, report)
+        self.assertIn(
+            "alpha/skill/SKILL.md: no file .claude/skills/the-way-alpha/SKILL.md", found, report
+        )
+        self.assertIn(
+            "alpha/skill/SKILL.md: no file .agents/skills/the-way-alpha/SKILL.md", found, report
+        )
+        self.assertIn(
+            "beta/skill/SKILL.md: no file .agents/skills/the-way-beta/SKILL.md", found, report
+        )
+        self.assertNotIn(
+            "beta/skill/SKILL.md: no file .claude/skills/the-way-beta/SKILL.md", found, report
+        )
+        self.assertIn(
+            ".claude/skills/the-way-gamma/SKILL.md and "
+            ".agents/skills/the-way-gamma/SKILL.md: not byte-identical",
+            found,
+            report,
+        )
+        self.assertIn(
+            ".claude/skills/the-way-orphan: no skill of the-way is named orphan", found, report
+        )
         self.assertEqual([line for line in found if "delta" in line], [], report)
         self.assertEqual(len(found), 5, report)
 

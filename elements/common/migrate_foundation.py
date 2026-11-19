@@ -78,16 +78,21 @@ VIOLATED = "foundations/violated_invariants.md"
 VERDICTS = "foundations/human_verdicts.md"
 KNOWN_VIOLATIONS = "foundations/known_violations.md"
 FOUNDATION = (DECISIONS, INVARIANTS, FACTS, GLOSSARY, PART_MAP)
-REMOVED = {VIOLATED: "Violated invariants", VERDICTS: "Human verdicts",
-           KNOWN_VIOLATIONS: "Known violations"}
+REMOVED = {
+    VIOLATED: "Violated invariants",
+    VERDICTS: "Human verdicts",
+    KNOWN_VIOLATIONS: "Known violations",
+}
 DEFAULT_REPORT = ".runs/foundation_migration.md"
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 ENTRY = re.compile(r"^## (%s)(?:/([0-9]+))?\s*$" % WORDS)
-FINGERPRINT = re.compile(r"(?<![\w.@/-])([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)@[0-9a-f]{8}"
-                         r"(?![0-9A-Za-z]|\.[0-9A-Za-z])")
+FINGERPRINT = re.compile(
+    r"(?<![\w.@/-])([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)@[0-9a-f]{8}"
+    r"(?![0-9A-Za-z]|\.[0-9A-Za-z])"
+)
 CITED = re.compile(r"\b(invariant|fact):(\s*)(%s)/[0-9]+(?![\w/])" % WORDS)
 CITATION = re.compile(r"\binvariant:\s*(%s)\b" % WORDS)
 COMMENT_LINE = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)")
@@ -118,8 +123,9 @@ class Text:
 def git(root, *args):
     """(exit code, output) of git, or (None, why) where git cannot be started."""
     try:
-        result = subprocess.run(["git", *args], cwd=root, capture_output=True, text=True,
-                                encoding="utf-8")
+        result = subprocess.run(
+            ["git", *args], cwd=root, capture_output=True, text=True, encoding="utf-8"
+        )
     except OSError as error:
         return None, str(error)
     return result.returncode, result.stdout
@@ -174,7 +180,7 @@ def value(lines, span):
     """A field's value, its lines joined by one space."""
     _, first, end = span
     head = FIELD.match(lines[first]).group(2) or ""
-    return " ".join([head.strip()] + [line.strip() for line in lines[first + 1:end]]).strip()
+    return " ".join([head.strip()] + [line.strip() for line in lines[first + 1 : end]]).strip()
 
 
 def field(lines, name):
@@ -211,9 +217,9 @@ def items(text):
     masked = QUOTED.sub(lambda match: "\0" * len(match.group(0)), text)
     found, start = [], 0
     for piece in masked.split("·"):
-        item = text[start:start + len(piece)].strip()
+        item = text[start : start + len(piece)].strip()
         start += len(piece) + 1
-        if found and item[:1] in ("§", '"', chr(0x201c)):
+        if found and item[:1] in ("§", '"', chr(0x201C)):
             found[-1] += " · " + item
         elif item:
             found.append(item)
@@ -229,11 +235,15 @@ class References:
     identifier of the invariants, the facts or the part map with `/<version>`."""
 
     def __init__(self, prefix, names):
-        self.decision = re.compile(r"(?<![\w/-])(%s-[0-9]+)/[0-9]+(?![\w/]|\.\w)"
-                                   % re.escape(prefix)) if prefix else None
+        self.decision = (
+            re.compile(r"(?<![\w/-])(%s-[0-9]+)/[0-9]+(?![\w/]|\.\w)" % re.escape(prefix))
+            if prefix
+            else None
+        )
         alternatives = "|".join(re.escape(name) for name in sorted(names, key=len, reverse=True))
-        self.named = re.compile(r"(?<![\w./-])(%s)/[0-9]+(?![\w/]|\.\w)"
-                                % alternatives) if names else None
+        self.named = (
+            re.compile(r"(?<![\w./-])(%s)/[0-9]+(?![\w/]|\.\w)" % alternatives) if names else None
+        )
 
     def fix(self, text, counts, path, citations=False):
         if citations:
@@ -248,16 +258,18 @@ class References:
         return text
 
     def found(self, text):
-        return any(pattern and pattern.search(text)
-                   for pattern in (FINGERPRINT, CITED, self.decision, self.named))
+        return any(
+            pattern and pattern.search(text)
+            for pattern in (FINGERPRINT, CITED, self.decision, self.named)
+        )
 
 
 class Migration:
     def __init__(self, root, tracked):
         self.root, self.tracked = root, tracked
-        self.counts = Counter()           # (path, kind) -> number
-        self.findings = {}                # section -> [(where, text)]
-        self.samples = []                 # (path, title, before, after)
+        self.counts = Counter()  # (path, kind) -> number
+        self.findings = {}  # section -> [(where, text)]
+        self.samples = []  # (path, title, before, after)
         self.writes, self.removals = {}, []
         self.texts = {}
         for path in FOUNDATION + tuple(REMOVED):
@@ -266,8 +278,8 @@ class Migration:
                 self.texts[path] = Text(raw)
         self.prefix, self.padded = None, False
         self.names = set()
-        self.citations = {}               # invariant -> [path of a file of code citing it]
-        self.methods = {}                 # invariant -> its *Method* before the migration
+        self.citations = {}  # invariant -> [path of a file of code citing it]
+        self.methods = {}  # invariant -> its *Method* before the migration
 
     def lines(self, path):
         return self.texts[path].lines if path in self.texts else []
@@ -297,8 +309,9 @@ class Migration:
                 continue
             if fenced is not None:
                 if self.refs.found(line):
-                    self.find("Old references left inside code or quotation marks", where,
-                              line.strip())
+                    self.find(
+                        "Old references left inside code or quotation marks", where, line.strip()
+                    )
                 fixed.append(line)
                 continue
             fixed.append(self.fix_outside(line, path, where, SPAN_OR_QUOTE))
@@ -319,9 +332,14 @@ class Migration:
     # --- reading before changing ---------------------------------------------------------------
 
     def read_names(self):
-        first = next((re.match(r"^### ([A-Z][A-Z0-9]*)-[0-9]", line)
-                      for line in self.lines(DECISIONS)
-                      if re.match(r"^### [A-Z][A-Z0-9]*-[0-9]", line)), None)
+        first = next(
+            (
+                re.match(r"^### ([A-Z][A-Z0-9]*)-[0-9]", line)
+                for line in self.lines(DECISIONS)
+                if re.match(r"^### [A-Z][A-Z0-9]*-[0-9]", line)
+            ),
+            None,
+        )
         self.prefix = first.group(1) if first else None
         for path in (INVARIANTS, FACTS, PART_MAP):
             for line in self.lines(path):
@@ -340,8 +358,7 @@ class Migration:
             if path not in self.texts:
                 continue
             for _, cells in table(self.lines(path))[1]:
-                self.find("Rows of %s (`%s`, removed)" % (title.lower(), path), path,
-                          row(cells))
+                self.find("Rows of %s (`%s`, removed)" % (title.lower(), path), path, row(cells))
                 if path == VIOLATED:
                     self.violated.add(cells[0].strip("`"))
             self.removals.append(path)
@@ -378,15 +395,21 @@ class Migration:
             label = self.label(number)
             numbered = [version for version, _ in chain]
             if len(chain) > 1 and None in numbered:
-                self.find("Decisions left as they are", label,
-                          "the number stands both with and without a version")
+                self.find(
+                    "Decisions left as they are",
+                    label,
+                    "the number stands both with and without a version",
+                )
                 kept.update(index for _, index in chain)
                 continue
             last = max(chain, key=lambda pair: pair[0] or 0)
             change = field(pieces[last[1]], "Change")
             if change and value(pieces[last[1]], change).startswith("repeal"):
-                self.find("Decisions left as they are", label,
-                          "its last version repeals it: withdraw the number by hand")
+                self.find(
+                    "Decisions left as they are",
+                    label,
+                    "its last version repeals it: withdraw the number by hand",
+                )
                 kept.update(index for _, index in chain)
         removed = False
         for index, piece in enumerate(pieces):
@@ -395,15 +418,20 @@ class Migration:
                 out += self.fix_markdown(piece, DECISIONS, where)
             elif index in first:
                 chain = versions[first[index]]
-                last_version, last = max(chain, key=lambda pair: pair[0] or 0)
+                _last_version, last = max(chain, key=lambda pair: pair[0] or 0)
                 before = pieces[last]
                 after = self.decision(before, len(chain) > 1, chain, pieces)
                 if len(chain) > 1:
-                    self.counts[(DECISIONS, "older version of a decision removed")] += len(
-                        chain) - 1
+                    self.counts[(DECISIONS, "older version of a decision removed")] += (
+                        len(chain) - 1
+                    )
                     removed = True
-                self.sample(DECISIONS, after[0], "\n".join(
-                    line for _, i in chain for line in pieces[i]), "\n".join(after))
+                self.sample(
+                    DECISIONS,
+                    after[0],
+                    "\n".join(line for _, i in chain for line in pieces[i]),
+                    "\n".join(after),
+                )
                 out += after
             elif index and heading.match(piece[0]):
                 continue
@@ -427,8 +455,10 @@ class Migration:
             kinds = []
             for version, index in sorted(chain, key=lambda pair: pair[0] or 0):
                 span = field(pieces[index], "Change")
-                kinds.append("%s/%s: %s" % (label, version, value(pieces[index], span)
-                                            if span else "no Change"))
+                kinds.append(
+                    "%s/%s: %s"
+                    % (label, version, value(pieces[index], span) if span else "no Change")
+                )
             self.find("Decisions kept from their last version", label, "; ".join(kinds))
         for name in ("Change", "Approved by", "Review when"):
             span = field(lines, name)
@@ -436,43 +466,66 @@ class Migration:
                 continue
             text = value(lines, span)
             if name == "Review when" and text != "none":
-                self.find("Review when (to the task of the periodic review of the foundation)",
-                          label, text)
-            del lines[span[1]:span[2]]
+                self.find(
+                    "Review when (to the task of the periodic review of the foundation)",
+                    label,
+                    text,
+                )
+            del lines[span[1] : span[2]]
             self.counts[(DECISIONS, "field removed: %s" % name)] += 1
         lines = self.fix_markdown(lines, DECISIONS, label)
         span = field(lines, "Verification")
         if span:
-            new = verification(lines[span[1]:span[2]])
+            new = verification(lines[span[1] : span[2]])
             if new is None:
-                self.find("Verification left as it is", label, "\n".join(lines[span[1]:span[2]]))
-            elif new != lines[span[1]:span[2]]:
-                lines[span[1]:span[2]] = new
+                self.find("Verification left as it is", label, "\n".join(lines[span[1] : span[2]]))
+            elif new != lines[span[1] : span[2]]:
+                lines[span[1] : span[2]] = new
                 self.counts[(DECISIONS, "level removed from Verification")] += 1
         span = field(lines, "Origin")
         if span and value(lines, span).startswith("inherited"):
-            self.find("Origin of an inherited decision, left as it is", label,
-                      value(lines, span))
+            self.find("Origin of an inherited decision, left as it is", label, value(lines, span))
         for index, line in enumerate(lines):
             if line.startswith("*Rationale for change:*"):
-                lines[index] = "*Rationale:*" + line[len("*Rationale for change:*"):]
+                lines[index] = "*Rationale:*" + line[len("*Rationale for change:*") :]
                 self.counts[(DECISIONS, "Rationale for change renamed Rationale")] += 1
                 first = pieces[min(chain, key=lambda pair: pair[0] or 0)[1]]
-                self.find("Rationale for change, now the Rationale: rewrite it to describe the "
-                          "decision, not the change", label, "\n".join(
-                              paragraph(lines, index) + ["", "The first version's:"] +
-                              paragraph(first, next((number for number, text in enumerate(first)
-                                                     if text.startswith("*Rationale:*")), None))))
+                self.find(
+                    "Rationale for change, now the Rationale: rewrite it to describe the "
+                    "decision, not the change",
+                    label,
+                    "\n".join(
+                        paragraph(lines, index)
+                        + ["", "The first version's:"]
+                        + paragraph(
+                            first,
+                            next(
+                                (
+                                    number
+                                    for number, text in enumerate(first)
+                                    if text.startswith("*Rationale:*")
+                                ),
+                                None,
+                            ),
+                        )
+                    ),
+                )
         span = field(lines, "Based on")
-        if span and any(item != "none" and not re.fullmatch(WORDS, item) and not
-                        quoted_source(item) for item in items(value(lines, span))):
-            self.find("Based on of a form not recognised: a fact by its identifier alone, or a "
-                      "source with its address, a passage quoted and the date read", label,
-                      value(lines, span))
+        if span and any(
+            item != "none" and not re.fullmatch(WORDS, item) and not quoted_source(item)
+            for item in items(value(lines, span))
+        ):
+            self.find(
+                "Based on of a form not recognised: a fact by its identifier alone, or a "
+                "source with its address, a passage quoted and the date read",
+                label,
+                value(lines, span),
+            )
         span = field(lines, "Relations")
         for item in items(value(lines, span)) if span else []:
-            if item != "none" and not re.fullmatch(r"(derives from|narrows) %s-[0-9]+"
-                                                   % re.escape(self.prefix), item):
+            if item != "none" and not re.fullmatch(
+                r"(derives from|narrows) %s-[0-9]+" % re.escape(self.prefix), item
+            ):
                 self.find("Relations of a form not recognised", label, item)
         return lines
 
@@ -482,11 +535,17 @@ class Migration:
             match = re.fullmatch(r"%s-([0-9]+)" % re.escape(self.prefix), cells[0].strip("`"))
             if match:
                 withdrawn.add(int(match.group(1)))
-        missing = [number for number in range(1, max(versions, default=0))
-                   if number not in versions and number not in withdrawn]
+        missing = [
+            number
+            for number in range(1, max(versions, default=0))
+            if number not in versions and number not in withdrawn
+        ]
         if missing:
-            self.find("Decision numbers neither in the log nor on its list of withdrawn numbers",
-                      DECISIONS, ", ".join(self.label(number) for number in missing))
+            self.find(
+                "Decision numbers neither in the log nor on its list of withdrawn numbers",
+                DECISIONS,
+                ", ".join(self.label(number) for number in missing),
+            )
 
     def label(self, number):
         """A decision number as the log writes its numbers, with a leading zero or without."""
@@ -511,10 +570,12 @@ class Migration:
             self.sample(INVARIANTS, match.group(1), "\n".join(piece), "\n".join(after))
             out += after
         for name in self.recovered:
-            if not any(ENTRY.match(line) and ENTRY.match(line).group(1) == name
-                       for line in lines):
-                self.find("Recovered invariants (list removed)", name,
-                          "the list names it, the file holds no such entry")
+            if not any(ENTRY.match(line) and ENTRY.match(line).group(1) == name for line in lines):
+                self.find(
+                    "Recovered invariants (list removed)",
+                    name,
+                    "the list names it, the file holds no such entry",
+                )
         return tail(out, lines) if removed else out
 
     def invariant(self, piece, name):
@@ -530,9 +591,10 @@ class Migration:
             if new is None and (re.fullmatch(r"`[^`]+`", method) or method in self.tracked):
                 new = "test"
             if new:
-                lines[span[1]:span[2]] = ["- **Method:** " + new]
-                kind = ("TODO" if new == "review" else "path" if method in self.tracked
-                        else "command")
+                lines[span[1] : span[2]] = ["- **Method:** " + new]
+                kind = (
+                    "TODO" if new == "review" else "path" if method in self.tracked else "command"
+                )
                 self.counts[(INVARIANTS, "Method %s -> %s" % (kind, new))] += 1
             elif method not in ("test", "review"):
                 self.find("Method left as it is: `test` or `review`?", name, method)
@@ -540,7 +602,7 @@ class Migration:
         if span:
             if value(lines, span) != "none":
                 self.find("Correction removed", name, value(lines, span))
-            del lines[span[1]:span[2]]
+            del lines[span[1] : span[2]]
             self.counts[(INVARIANTS, "field removed: Correction")] += 1
         if not field(lines, "Violated"):
             found = spans(lines)
@@ -555,13 +617,16 @@ class Migration:
             place = code_place(cells.get("Found", ""), self.tracked)
             text = " | ".join("%s: %s" % pair for pair in cells.items())
             if span and value(lines, span) == "none" and place:
-                lines[span[1]:span[2]] = ["- **Derives from:** recovered from code — " + place]
+                lines[span[1] : span[2]] = ["- **Derives from:** recovered from code — " + place]
                 self.counts[(INVARIANTS, "recovered: Derives from filled")] += 1
                 self.find("Recovered invariants (list removed): Derives from filled", name, text)
             else:
-                self.find("Recovered invariants (list removed): Derives from not filled — no "
-                          "place in tracked code, or it derives from something already", name,
-                          text)
+                self.find(
+                    "Recovered invariants (list removed): Derives from not filled — no "
+                    "place in tracked code, or it derives from something already",
+                    name,
+                    text,
+                )
         return self.fix_markdown(lines, INVARIANTS, name)
 
     # --- environment facts and the glossary ----------------------------------------------------
@@ -582,13 +647,17 @@ class Migration:
                 if span:
                     if removed == "Holds for":
                         self.find("Holds for removed", name, value(lines, span))
-                    del lines[span[1]:span[2]]
+                    del lines[span[1] : span[2]]
                     self.counts[(FACTS, "field removed: %s" % removed)] += 1
             lines = self.fix_markdown(lines, FACTS, name)
             span = field(lines, "Source")
             if not span or not all(quoted_source(item) for item in items(value(lines, span))):
-                self.find("Source of a form not recognised: an address, a passage quoted and the "
-                          "date read", name, value(lines, span) if span else "no Source")
+                self.find(
+                    "Source of a form not recognised: an address, a passage quoted and the "
+                    "date read",
+                    name,
+                    value(lines, span) if span else "no Source",
+                )
             self.sample(FACTS, name, "\n".join(piece), "\n".join(lines))
             out += lines
         return out
@@ -601,7 +670,7 @@ class Migration:
             if span:
                 if value(lines, span) != "none":
                     self.find("Avoid removed", lines[0][3:].strip(), value(lines, span))
-                del lines[span[1]:span[2]]
+                del lines[span[1] : span[2]]
                 self.counts[(GLOSSARY, "field removed: Avoid")] += 1
             lines = self.fix_markdown(lines, GLOSSARY, lines[0].strip() if index else GLOSSARY)
             if index:
@@ -628,16 +697,26 @@ class Migration:
                 out += self.fix_markdown(self.external_context(piece), PART_MAP, where)
                 continue
             names = [span[0] for span in spans(piece)] if index else []
-            if "Criticality" in names or "Coverage" in names or (
-                    "Parts" in names and "Invariant" in names):
-                self.find("Critical flows (removed; the invariant's Part names the parts the "
-                          "flow runs through)", title, "\n".join(piece).strip())
+            if (
+                "Criticality" in names
+                or "Coverage" in names
+                or ("Parts" in names and "Invariant" in names)
+            ):
+                self.find(
+                    "Critical flows (removed; the invariant's Part names the parts the "
+                    "flow runs through)",
+                    title,
+                    "\n".join(piece).strip(),
+                )
                 self.counts[(PART_MAP, "critical flow removed")] += 1
                 removed = True
                 continue
             if "Declared at" in names:
-                self.find("Surfaces left as they are: Relied on by in place of Declared at",
-                          title, "\n".join(piece).strip())
+                self.find(
+                    "Surfaces left as they are: Relied on by in place of Declared at",
+                    title,
+                    "\n".join(piece).strip(),
+                )
                 out += self.fix_markdown(piece, PART_MAP, where)
                 continue
             after = self.part(piece, title) if "Files" in names else piece
@@ -651,32 +730,36 @@ class Migration:
         lines = list(piece)
         span = field(lines, "Failure modes")
         if span:
-            del lines[span[1]:span[2]]
+            del lines[span[1] : span[2]]
             self.counts[(PART_MAP, "field removed: Failure modes")] += 1
         span = field(lines, "Depends on")
         if span:
-            text = "\n".join(lines[span[1]:span[2]])
+            text = "\n".join(lines[span[1] : span[2]])
             new = re.sub(r"\s*\(separated — [^)]*\)", "", text)
             if new != text:
                 self.find("Separation of a dependency removed", title, text)
-                lines[span[1]:span[2]] = new.split("\n")
+                lines[span[1] : span[2]] = new.split("\n")
                 self.counts[(PART_MAP, "separation of a dependency removed")] += 1
         span = field(lines, "Files")
         if span:
             patterns = [FIELD.match(lines[span[1]]).group(2) or ""] + [
-                line.strip() for line in lines[span[1] + 1:span[2]]]
-            kept = [pattern for pattern in patterns
-                    if pattern.strip().lstrip("/") not in self.removals]
+                line.strip() for line in lines[span[1] + 1 : span[2]]
+            ]
+            kept = [
+                pattern for pattern in patterns if pattern.strip().lstrip("/") not in self.removals
+            ]
             if len(kept) != len(patterns):
-                self.counts[(PART_MAP, "pattern of a removed file removed")] += len(
-                    patterns) - len(kept)
+                self.counts[(PART_MAP, "pattern of a removed file removed")] += len(patterns) - len(
+                    kept
+                )
                 kept = kept or ["none"]
-                lines[span[1]:span[2]] = ["- **Files:** " + kept[0]] + [
-                    "  " + pattern for pattern in kept[1:]]
+                lines[span[1] : span[2]] = ["- **Files:** " + kept[0]] + [
+                    "  " + pattern for pattern in kept[1:]
+                ]
         return lines
 
     def external_context(self, piece):
-        header, rows = table(piece)
+        header, _rows = table(piece)
         if "Updates with the product" not in header:
             return piece
         column = header.index("Updates with the product")
@@ -689,8 +772,11 @@ class Migration:
             if len(cells) <= column:
                 continue
             if seen > 2:
-                self.find("External context: column `Updates with the product` removed",
-                          cells[0], cells[column])
+                self.find(
+                    "External context: column `Updates with the product` removed",
+                    cells[0],
+                    cells[column],
+                )
             del cells[column]
             lines[index] = "|" + "|".join(["---"] * len(cells)) + "|" if seen == 2 else row(cells)
         self.counts[(PART_MAP, "external context column removed")] += 1
@@ -715,13 +801,20 @@ class Migration:
                 if new != guide.lines:
                     self.writes[path] = guide.dump(new)
                     changed = [(old, line) for old, line in zip(guide.lines, new) if old != line]
-                    self.sample(path, "the lines it changes", "\n".join(
-                        old for old, _ in changed), "\n".join(line for _, line in changed))
+                    self.sample(
+                        path,
+                        "the lines it changes",
+                        "\n".join(old for old, _ in changed),
+                        "\n".join(line for _, line in changed),
+                    )
             elif path.endswith(".md"):
                 count = sum(1 for line in text.split("\n") if self.refs.found(line))
                 if count:
-                    self.find("Files holding old references that the migration does not reach",
-                              path, "%d line%s" % (count, "" if count == 1 else "s"))
+                    self.find(
+                        "Files holding old references that the migration does not reach",
+                        path,
+                        "%d line%s" % (count, "" if count == 1 else "s"),
+                    )
             else:
                 new = self.code(path, text)
                 if new != text:
@@ -739,10 +832,15 @@ class Migration:
             try:
                 for node in ast.walk(ast.parse(text)):
                     body = getattr(node, "body", None)
-                    if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
-                                         ast.AsyncFunctionDef)) and body and isinstance(
-                            body[0], ast.Expr) and isinstance(body[0].value, ast.Constant) and \
-                            isinstance(body[0].value.value, str):
+                    if (
+                        isinstance(
+                            node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)
+                        )
+                        and body
+                        and isinstance(body[0], ast.Expr)
+                        and isinstance(body[0].value, ast.Constant)
+                        and isinstance(body[0].value.value, str)
+                    ):
                         docstrings.update(range(body[0].lineno - 1, body[0].end_lineno))
                 comments = []
                 plain = io.StringIO(text.replace("\r\n", "\n"))
@@ -750,39 +848,51 @@ class Migration:
                 for token in tokens:
                     if token.type == tokenize.COMMENT:
                         comments.append((token.start[0] - 1, token.start[1], token.string))
-                    elif token.type in (tokenize.STRING, getattr(tokenize, "FSTRING_MIDDLE", -1),
-                                        getattr(tokenize, "TSTRING_MIDDLE", -1)) and \
-                            token.start[0] - 1 not in docstrings:
+                    elif (
+                        token.type
+                        in (
+                            tokenize.STRING,
+                            getattr(tokenize, "FSTRING_MIDDLE", -1),
+                            getattr(tokenize, "TSTRING_MIDDLE", -1),
+                        )
+                        and token.start[0] - 1 not in docstrings
+                    ):
                         for offset, line in enumerate(token.string.split("\n")):
                             if self.refs.found(line):
                                 strings.add(token.start[0] + offset)
-            except (tokenize.TokenError, SyntaxError, ValueError):
+            except tokenize.TokenError, SyntaxError, ValueError:
                 comments, strings, docstrings = None, set(), set()
         before, cited = list(contents), []
         if comments is not None:
             for number, column, comment in comments:
-                fixed = self.fix_outside(comment, path, "%s:%d" % (path, number + 1),
-                                         SPAN_OR_QUOTE, citations=True)
+                fixed = self.fix_outside(
+                    comment, path, "%s:%d" % (path, number + 1), SPAN_OR_QUOTE, citations=True
+                )
                 line = contents[number]
-                contents[number] = line[:column] + fixed + line[column + len(comment):]
+                contents[number] = line[:column] + fixed + line[column + len(comment) :]
                 cited.append(fixed)
             for number in sorted(docstrings):
-                contents[number] = self.fix_outside(contents[number], path, "%s:%d" % (
-                    path, number + 1), SPAN)
+                contents[number] = self.fix_outside(
+                    contents[number], path, "%s:%d" % (path, number + 1), SPAN
+                )
             left = sorted(strings)
         else:
             left = []
             for number, line in enumerate(contents):
                 if COMMENT_LINE.match(line):
-                    contents[number] = self.fix_outside(line, path, "%s:%d" % (
-                        path, number + 1), SPAN_OR_QUOTE, citations=True)
+                    contents[number] = self.fix_outside(
+                        line, path, "%s:%d" % (path, number + 1), SPAN_OR_QUOTE, citations=True
+                    )
                     cited.append(contents[number])
                 elif self.refs.found(line):
                     left.append(number + 1)
         if left:
-            self.find("Old references left in code outside comments and docstrings", path,
-                      "line%s %s" % ("" if len(left) == 1 else "s",
-                                     ", ".join(str(number) for number in left)))
+            self.find(
+                "Old references left in code outside comments and docstrings",
+                path,
+                "line%s %s"
+                % ("" if len(left) == 1 else "s", ", ".join(str(number) for number in left)),
+            )
         for comment in cited:
             for match in CITATION.finditer(comment):
                 self.citations.setdefault(match.group(1), []).append(path)
@@ -796,45 +906,65 @@ class Migration:
 
     def check_methods(self):
         for name, method in self.methods.items():
-            if method == "`TODO`" or not (re.fullmatch(r"`[^`]+`", method) or
-                                          method in self.tracked):
+            if method == "`TODO`" or not (
+                re.fullmatch(r"`[^`]+`", method) or method in self.tracked
+            ):
                 continue
             citing = sorted(set(self.citations.get(name, [])))
             if OLD_CHECK.search(method):
-                self.find("Invariants whose method ran a format guard, a form check or a probe",
-                          name, method)
+                self.find(
+                    "Invariants whose method ran a format guard, a form check or a probe",
+                    name,
+                    method,
+                )
             elif not citing:
-                self.find("Invariants now `test` that no test of code cites "
-                          "(`invariant: <id>`)", name, method)
+                self.find(
+                    "Invariants now `test` that no test of code cites (`invariant: <id>`)",
+                    name,
+                    method,
+                )
             elif all(OLD_CHECK.search(path) for path in citing):
-                self.find("Invariants now `test` cited only by format guards, form checks or "
-                          "probes", name, ", ".join(citing))
+                self.find(
+                    "Invariants now `test` cited only by format guards, form checks or probes",
+                    name,
+                    ", ".join(citing),
+                )
 
     def violated_tests(self):
         for name in sorted(self.violated):
             citing = sorted(set(self.citations.get(name, [])))
-            self.find("Violated: yes — mark each test citing it as an expected failure", name,
-                      ", ".join(citing) if citing else "no test of code cites it")
+            self.find(
+                "Violated: yes — mark each test citing it as an expected failure",
+                name,
+                ", ".join(citing) if citing else "no test of code cites it",
+            )
 
     def opening_texts(self):
         for path in FOUNDATION:
             if path in self.writes:
                 lines = self.lines(path)
-                end = next((index for index, line in enumerate(lines)
-                            if re.match(r"^#{2,3} ", line)), len(lines))
+                end = next(
+                    (index for index, line in enumerate(lines) if re.match(r"^#{2,3} ", line)),
+                    len(lines),
+                )
                 text = "\n".join(lines[:end]).strip()
                 if text:
-                    self.find("Opening text of each file the run changes (read whether it still "
-                              "holds)", path, text)
+                    self.find(
+                        "Opening text of each file the run changes (read whether it still holds)",
+                        path,
+                        text,
+                    )
 
 
 def verification(lines):
     """The lines of a decision's *Verification* without the level of the earlier form, the same
     lines where it names none, or None where a level stays that this does not recognise."""
-    end = next((index for index in range(1, len(lines))
-                if re.match(r"^\s+- ", lines[index])), len(lines))
-    head = " ".join([FIELD.match(lines[0]).group(2) or ""] +
-                    [line.strip() for line in lines[1:end]]).strip()
+    end = next(
+        (index for index in range(1, len(lines)) if re.match(r"^\s+- ", lines[index])), len(lines)
+    )
+    head = " ".join(
+        [FIELD.match(lines[0]).group(2) or ""] + [line.strip() for line in lines[1:end]]
+    ).strip()
     new = re.sub(r"^level [12] — ", "", head)
     new = re.sub(r"\.\s+Level [12] for (.+?) — (?=an agent\b)", r". For \1, ", new)
     new = re.sub(r"\.\s+Level [12] — an agent\b", ". An agent", new)
@@ -842,8 +972,13 @@ def verification(lines):
         return None
     if new == head:
         return lines
-    wrapped = textwrap.wrap("- **Verification:** " + new, width=WIDTH, subsequent_indent="  ",
-                            break_long_words=False, break_on_hyphens=False)
+    wrapped = textwrap.wrap(
+        "- **Verification:** " + new,
+        width=WIDTH,
+        subsequent_indent="  ",
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
     return wrapped + lines[end:]
 
 
@@ -887,8 +1022,12 @@ def render(migration, apply):
         if number:
             kinds[kind] += number
             files.setdefault(path, Counter())[kind] += number
-    out = ["# Foundation migration — %s" % ("applied" if apply else "trial run, nothing written"),
-           "", "Repository: `%s`" % migration.root, ""]
+    out = [
+        "# Foundation migration — %s" % ("applied" if apply else "trial run, nothing written"),
+        "",
+        "Repository: `%s`" % migration.root,
+        "",
+    ]
     out += ["## Changes by kind", "", "| Kind | Number |", "|---|---|"]
     out += ["| %s | %d |" % (kind, number) for kind, number in sorted(kinds.items())]
     out += ["", "## Changes by file", "", "| File | Kind | Number |", "|---|---|---|"]
@@ -902,8 +1041,11 @@ def render(migration, apply):
         out += ["### %s (%d)" % (section, len(found)), ""]
         for where, text in found:
             if "\n" in text or len(text) > 300:
-                out += ["- **%s**" % where, "", "  ~~~~text"] + [
-                    "  " + line for line in text.split("\n")] + ["  ~~~~", ""]
+                out += (
+                    ["- **%s**" % where, "", "  ~~~~text"]
+                    + ["  " + line for line in text.split("\n")]
+                    + ["  ~~~~", ""]
+                )
             else:
                 out.append("- **%s** — %s" % (where, text))
         out.append("")
@@ -913,8 +1055,22 @@ def render(migration, apply):
         chosen = [found[0], max(found, key=lambda sample: len(sample[2]) - len(sample[3]))]
         chosen += [sample for sample in found if "\n### " in sample[2]][:1]
         for _, title, before, after in dict.fromkeys(chosen):
-            out += ["### `%s` — %s" % (path, title), "", "Before:", "", "~~~~text", before,
-                    "~~~~", "", "After:", "", "~~~~text", after, "~~~~", ""]
+            out += [
+                "### `%s` — %s" % (path, title),
+                "",
+                "Before:",
+                "",
+                "~~~~text",
+                before,
+                "~~~~",
+                "",
+                "After:",
+                "",
+                "~~~~text",
+                after,
+                "~~~~",
+                "",
+            ]
     return "\n".join(out) + "\n"
 
 
@@ -935,9 +1091,13 @@ def run(root, apply=False, report=None):
         return ["%s holds no foundation: no file of foundations/ to migrate" % root], 2
     migration.read_names()
     migration.read_lists()
-    new = {DECISIONS: migration.migrate_decisions(), INVARIANTS: migration.migrate_invariants(),
-           FACTS: migration.migrate_facts(), GLOSSARY: migration.migrate_glossary(),
-           PART_MAP: migration.migrate_part_map()}
+    new = {
+        DECISIONS: migration.migrate_decisions(),
+        INVARIANTS: migration.migrate_invariants(),
+        FACTS: migration.migrate_facts(),
+        GLOSSARY: migration.migrate_glossary(),
+        PART_MAP: migration.migrate_part_map(),
+    }
     migration.migrate_tracked()
     migration.check_methods()
     migration.violated_tests()
@@ -957,11 +1117,21 @@ def run(root, apply=False, report=None):
             os.remove(os.path.join(root, *path.split("/")))
     changes = sum(migration.counts.values())
     places = sum(len(found) for found in migration.findings.values())
-    lines = ["%s: %d change%s in %d file%s, %d file%s removed; %d place%s for a human" % (
-        "applied" if apply else "trial run, nothing written", changes, "" if changes == 1 else "s",
-        len(migration.writes), "" if len(migration.writes) == 1 else "s",
-        len(migration.removals), "" if len(migration.removals) == 1 else "s",
-        places, "" if places == 1 else "s"), "report: %s" % report]
+    lines = [
+        "%s: %d change%s in %d file%s, %d file%s removed; %d place%s for a human"
+        % (
+            "applied" if apply else "trial run, nothing written",
+            changes,
+            "" if changes == 1 else "s",
+            len(migration.writes),
+            "" if len(migration.writes) == 1 else "s",
+            len(migration.removals),
+            "" if len(migration.removals) == 1 else "s",
+            places,
+            "" if places == 1 else "s",
+        ),
+        "report: %s" % report,
+    ]
     return lines, 1 if places else 0
 
 

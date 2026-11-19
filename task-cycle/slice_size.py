@@ -219,8 +219,10 @@ def report(sizes: list[Size]) -> str:
         verdict, reasons = size.verdict
         characters = "unknown" if size.characters is None else str(size.characters)
         tokens = "unknown" if size.tokens is None else str(size.tokens)
-        lines.append(f"| {size.ident} | {size.changed} | {characters} | {tokens} | {verdict} | "
-                     f"{'; '.join(reasons) or '—'} |")
+        lines.append(
+            f"| {size.ident} | {size.changed} | {characters} | {tokens} | {verdict} | "
+            f"{'; '.join(reasons) or '—'} |"
+        )
     return "\n".join(lines) + "\n"
 
 

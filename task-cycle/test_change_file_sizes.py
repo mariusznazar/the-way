@@ -18,8 +18,14 @@ import change_file_sizes  # noqa: E402
 
 SCRIPT = HERE / "change_file_sizes.py"
 
-IDENTITY = ["-c", "user.name=Test", "-c", "user.email=test@example.invalid",
-            "-c", "commit.gpgsign=false"]
+IDENTITY = [
+    "-c",
+    "user.name=Test",
+    "-c",
+    "user.email=test@example.invalid",
+    "-c",
+    "commit.gpgsign=false",
+]
 
 
 class ChangeFileSizesTest(unittest.TestCase):
@@ -31,8 +37,9 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.git("init", "-q")
 
     def git(self, *arguments: str) -> str:
-        run = subprocess.run(["git", *IDENTITY, *arguments], cwd=self.root, check=True,
-                             capture_output=True)
+        run = subprocess.run(
+            ["git", *IDENTITY, *arguments], cwd=self.root, check=True, capture_output=True
+        )
         return run.stdout.decode("utf-8").strip()
 
     def write(self, name: str, content: bytes | str) -> None:
@@ -65,9 +72,12 @@ class ChangeFileSizesTest(unittest.TestCase):
         code, output, _ = self.run_command(base, head)
         self.assertEqual(code, 0)
         self.assertEqual(self.rows(output), ["| `src/app.py` | 3 | 5 | +2 | modified |"])
-        self.assertEqual(self.summary(output), "Summary: 1 files changed (0 added, 0 deleted, "
-                         "0 renamed, 1 modified, 0 not measured); lines before 3, after 5, "
-                         "change +2.")
+        self.assertEqual(
+            self.summary(output),
+            "Summary: 1 files changed (0 added, 0 deleted, "
+            "0 renamed, 1 modified, 0 not measured); lines before 3, after 5, "
+            "change +2.",
+        )
 
     def test_an_added_and_a_deleted_file_have_no_number_on_the_side_they_lack(self) -> None:
         self.write("old.py", "1\n2\n3\n4\n")
@@ -77,11 +87,16 @@ class ChangeFileSizesTest(unittest.TestCase):
         head = self.commit()
         code, output, _ = self.run_command(base, head)
         self.assertEqual(code, 0)
-        self.assertEqual(self.rows(output), ["| `new.py` | — | 2 | +2 | added |",
-                                             "| `old.py` | 4 | — | -4 | deleted |"])
-        self.assertEqual(self.summary(output), "Summary: 2 files changed (1 added, 1 deleted, "
-                         "0 renamed, 0 modified, 0 not measured); lines before 4, after 2, "
-                         "change -2.")
+        self.assertEqual(
+            self.rows(output),
+            ["| `new.py` | — | 2 | +2 | added |", "| `old.py` | 4 | — | -4 | deleted |"],
+        )
+        self.assertEqual(
+            self.summary(output),
+            "Summary: 2 files changed (1 added, 1 deleted, "
+            "0 renamed, 0 modified, 0 not measured); lines before 4, after 2, "
+            "change -2.",
+        )
 
     def test_a_last_line_without_a_line_feed_counts_and_an_empty_file_has_none(self) -> None:
         self.write("a.txt", "one")
@@ -93,9 +108,14 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.write("c.txt", "one\r\ntwo\r\nthree")
         head = self.commit()
         _, output, _ = self.run_command(base, head)
-        self.assertEqual(self.rows(output), ["| `a.txt` | 1 | 2 | +1 | modified |",
-                                             "| `b.txt` | 0 | 1 | +1 | modified |",
-                                             "| `c.txt` | 2 | 3 | +1 | modified |"])
+        self.assertEqual(
+            self.rows(output),
+            [
+                "| `a.txt` | 1 | 2 | +1 | modified |",
+                "| `b.txt` | 0 | 1 | +1 | modified |",
+                "| `c.txt` | 2 | 3 | +1 | modified |",
+            ],
+        )
 
     def test_a_renamed_file_is_measured_at_its_old_path_before_the_change(self) -> None:
         text = "".join(f"line {number}\n" for number in range(20))
@@ -106,8 +126,9 @@ class ChangeFileSizesTest(unittest.TestCase):
         head = self.commit()
         code, output, _ = self.run_command(base, head)
         self.assertEqual(code, 0)
-        self.assertEqual(self.rows(output), [
-            "| `pkg/new_name.py` | 20 | 21 | +1 | renamed from `old_name.py` |"])
+        self.assertEqual(
+            self.rows(output), ["| `pkg/new_name.py` | 20 | 21 | +1 | renamed from `old_name.py` |"]
+        )
         self.assertIn("1 renamed", self.summary(output))
         self.assertIn("lines before 20, after 21, change +1.", self.summary(output))
 
@@ -119,17 +140,24 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.write("a.py", "x\ny\n")
         head = self.commit()
         _, output, _ = self.run_command(base, head)
-        self.assertEqual(self.rows(output), ["| `a.py` | 1 | 2 | +1 | modified |",
-                                             "| `shot.png` | binary | binary | — | modified |"])
-        self.assertEqual(self.summary(output), "Summary: 2 files changed (0 added, 0 deleted, "
-                         "0 renamed, 1 modified, 1 not measured); lines before 1, after 2, "
-                         "change +1.")
+        self.assertEqual(
+            self.rows(output),
+            [
+                "| `a.py` | 1 | 2 | +1 | modified |",
+                "| `shot.png` | binary | binary | — | modified |",
+            ],
+        )
+        self.assertEqual(
+            self.summary(output),
+            "Summary: 2 files changed (0 added, 0 deleted, "
+            "0 renamed, 1 modified, 1 not measured); lines before 1, after 2, "
+            "change +1.",
+        )
 
     def test_a_submodule_is_listed_with_no_lines(self) -> None:
         self.write("a.py", "x\n")
         base = self.commit()
-        self.git("update-index", "--add", "--cacheinfo",
-                 f"160000,{base},vendor/lib")
+        self.git("update-index", "--add", "--cacheinfo", f"160000,{base},vendor/lib")
         self.git("commit", "-q", "-m", "add a submodule entry")
         head = self.git("rev-parse", "HEAD")
         code, output, _ = self.run_command(base, head)
@@ -148,7 +176,9 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.git("commit", "-q", "-m", "change")
         return self.git("rev-parse", "HEAD")
 
-    def test_a_file_that_becomes_a_symbolic_link_is_a_type_change_measured_on_both_sides(self) -> None:
+    def test_a_file_that_becomes_a_symbolic_link_is_a_type_change_measured_on_both_sides(
+        self,
+    ) -> None:
         self.stage_entry("thing", "one\ntwo\n", "100644")
         base = self.commit_index()
         self.stage_entry("thing", "target", "120000")
@@ -178,8 +208,13 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.stage_entry("`lead.md", "x\ny\n", "100644")
         head = self.commit_index()
         _, output, _ = self.run_command(base, head)
-        self.assertEqual(self.rows(output), ["| `` `lead.md `` | 1 | 2 | +1 | modified |",
-                                             "| ``back`tick.md`` | 1 | 2 | +1 | modified |"])
+        self.assertEqual(
+            self.rows(output),
+            [
+                "| `` `lead.md `` | 1 | 2 | +1 | modified |",
+                "| ``back`tick.md`` | 1 | 2 | +1 | modified |",
+            ],
+        )
 
     def test_a_name_with_a_space_and_a_letter_outside_ascii_is_read_as_it_is(self) -> None:
         self.write("notes ł/zażółć gęślą.md", "a\nb\n")
@@ -188,7 +223,9 @@ class ChangeFileSizesTest(unittest.TestCase):
         head = self.commit()
         code, output, _ = self.run_command(base, head)
         self.assertEqual(code, 0)
-        self.assertEqual(self.rows(output), ["| `notes ł/zażółć gęślą.md` | 2 | 3 | +1 | modified |"])
+        self.assertEqual(
+            self.rows(output), ["| `notes ł/zażółć gęślą.md` | 2 | 3 | +1 | modified |"]
+        )
 
     def test_the_range_is_between_the_two_commits_given_and_unchanged_files_stay_out(self) -> None:
         self.write("kept.py", "k\n")
@@ -200,11 +237,15 @@ class ChangeFileSizesTest(unittest.TestCase):
         self.write("later.py", "l\n")
         last = self.commit()
         _, output, _ = self.run_command(first, last)
-        self.assertEqual(self.rows(output), ["| `grows.py` | 1 | 3 | +2 | modified |",
-                                             "| `later.py` | — | 1 | +1 | added |"])
+        self.assertEqual(
+            self.rows(output),
+            ["| `grows.py` | 1 | 3 | +2 | modified |", "| `later.py` | — | 1 | +1 | added |"],
+        )
         _, output, _ = self.run_command("HEAD~1", "HEAD")
-        self.assertEqual(self.rows(output), ["| `grows.py` | 2 | 3 | +1 | modified |",
-                                             "| `later.py` | — | 1 | +1 | added |"])
+        self.assertEqual(
+            self.rows(output),
+            ["| `grows.py` | 2 | 3 | +1 | modified |", "| `later.py` | — | 1 | +1 | added |"],
+        )
 
     def test_the_same_commit_twice_gives_an_empty_table_and_a_summary_of_nothing(self) -> None:
         self.write("a.py", "x\n")
@@ -212,9 +253,12 @@ class ChangeFileSizesTest(unittest.TestCase):
         code, output, _ = self.run_command(head, head)
         self.assertEqual(code, 0)
         self.assertEqual(self.rows(output), [])
-        self.assertEqual(self.summary(output), "Summary: 0 files changed (0 added, 0 deleted, "
-                         "0 renamed, 0 modified, 0 not measured); lines before 0, after 0, "
-                         "change +0.")
+        self.assertEqual(
+            self.summary(output),
+            "Summary: 0 files changed (0 added, 0 deleted, "
+            "0 renamed, 0 modified, 0 not measured); lines before 0, after 0, "
+            "change +0.",
+        )
 
     def test_a_name_that_is_no_commit_ends_with_exit_two_and_an_error_line_naming_it(self) -> None:
         self.write("a.py", "x\n")
@@ -252,12 +296,16 @@ class ChangeFileSizesTest(unittest.TestCase):
         base = self.commit()
         self.write("zażółć.md", "a\nb\n")
         head = self.commit()
-        run = subprocess.run([sys.executable, "-B", str(SCRIPT), base, head, "--root",
-                              str(self.root)], capture_output=True)
+        run = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), base, head, "--root", str(self.root)],
+            capture_output=True,
+        )
         self.assertEqual(run.returncode, 0, run.stderr)
         self.assertIn("| `zażółć.md` | 1 | 2 | +1 | modified |", run.stdout.decode("utf-8"))
-        failed = subprocess.run([sys.executable, "-B", str(SCRIPT), "absent", head, "--root",
-                                 str(self.root)], capture_output=True)
+        failed = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), "absent", head, "--root", str(self.root)],
+            capture_output=True,
+        )
         self.assertEqual(failed.returncode, 2)
         self.assertEqual(failed.stdout, b"")
         self.assertTrue(failed.stderr.decode("utf-8").startswith("Error: `absent` names no commit"))

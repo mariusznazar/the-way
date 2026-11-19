@@ -108,6 +108,7 @@ them and for the definitions of the agent types that run those steps in Claude C
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation · foundation-review
 - **Trust boundary:** task-cycle/cycle_stages.py
+  task-cycle/stage_transcripts.py
   task-cycle/cycle_measures.py
   task-cycle/gate_times.py
 
@@ -134,6 +135,9 @@ what only work on the audit needs stays out of what every agent of the cycle rea
 - **Depends on:** task-cycle · project-level · gate
 - **Trust boundary:** process-audit/audit_count.py
   process-audit/record_items.py
+  process-audit/problem_register.py
+  process-audit/record_reading.py
+  process-audit/audit_shared.py
 
 ## gate
 
@@ -148,7 +152,8 @@ of critical flows.
 
 The part answers for the files that configure the repository itself rather than any one part.
 
-- **Files:** /.gitattributes
+- **Files:** /.git-blame-ignore-revs
+  /.gitattributes
   /.gitignore
   /.python-version
   /requirements-quality.in

@@ -47,14 +47,16 @@ class SliceSizeTest(unittest.TestCase):
         code, output, _ = self.run_plan(
             "# Plan\n\n## Slices\n\n### Slice 1 — Add the flag\n\n- **Goal:** the flag works\n"
             "- **Change:** `src/app.py` · `src/new.py`\n- **Read:** `docs/guide.md`\n"
-            "- **Checks:** `python -B -m unittest`\n")
+            "- **Checks:** `python -B -m unittest`\n"
+        )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1"), ["1", "2", "150", "60", "fits", "—"])
 
     def test_changed_file_named_again_in_read_counts_once(self) -> None:
         self.file("a.md", "x" * 10)
         code, output, _ = self.run_plan(
-            "### Slice 1\n- **Change:** `a.md`\n- **Read:** `a.md` · `a.md:1-1`\n")
+            "### Slice 1\n- **Change:** `a.md`\n- **Read:** `a.md` · `a.md:1-1`\n"
+        )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[1:4], ["1", "10", "4"])
 
@@ -62,7 +64,8 @@ class SliceSizeTest(unittest.TestCase):
         self.file("log.md", "one\ntwo\nthree\nfour\n")
         code, output, _ = self.run_plan(
             "### Slice 2a — Read part of a log\n- **Change:** none\n"
-            "- **Read:** `log.md:2-3` · `log.md:3-3`\n")
+            "- **Read:** `log.md:2-3` · `log.md:3-3`\n"
+        )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "2a")[1:5], ["0", "10", "4", "fits"])
 
@@ -70,7 +73,8 @@ class SliceSizeTest(unittest.TestCase):
         self.file("a.txt", "1234")
         self.file("b.txt", "56")
         code, output, _ = self.run_plan(
-            "### Slice 1\n- **Read:** `a.txt` ·\n  `b.txt`\n- **Checks:** `c.txt`\n")
+            "### Slice 1\n- **Read:** `a.txt` ·\n  `b.txt`\n- **Checks:** `c.txt`\n"
+        )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[2], "6")
 
@@ -78,20 +82,25 @@ class SliceSizeTest(unittest.TestCase):
         self.file("at.txt", "a" * 375_000)
         self.file("over.txt", "a" * 375_001)
         code, output, _ = self.run_plan(
-            "### Slice 1\n- **Read:** `at.txt`\n\n### Slice 2\n- **Read:** `over.txt`\n")
+            "### Slice 1\n- **Read:** `at.txt`\n\n### Slice 2\n- **Read:** `over.txt`\n"
+        )
         self.assertEqual(code, 1)
         self.assertEqual(self.row(output, "1")[3:5], ["150000", "fits"])
-        self.assertEqual(self.row(output, "2")[3:6], [
-            "150001", "too large", "reads about 150001 tokens, more than 150000"])
+        self.assertEqual(
+            self.row(output, "2")[3:6],
+            ["150001", "too large", "reads about 150001 tokens, more than 150000"],
+        )
 
     def test_more_than_ten_files_to_change_is_too_large(self) -> None:
         ten = " · ".join(f"`f{number}.py`" for number in range(10))
         code, output, _ = self.run_plan(
-            f"### Slice 1\n- **Change:** {ten}\n\n### Slice 2\n- **Change:** {ten} · `g.py`\n")
+            f"### Slice 1\n- **Change:** {ten}\n\n### Slice 2\n- **Change:** {ten} · `g.py`\n"
+        )
         self.assertEqual(code, 1)
         self.assertEqual(self.row(output, "1")[1:5], ["10", "0", "0", "fits"])
-        self.assertEqual(self.row(output, "2")[4:6], [
-            "too large", "changes 11 files, more than 10"])
+        self.assertEqual(
+            self.row(output, "2")[4:6], ["too large", "changes 11 files, more than 10"]
+        )
 
     def test_change_patterns_each_count_as_one_file(self) -> None:
         self.file("agent-instructions/skill_entry_points.py", "x")
@@ -102,7 +111,8 @@ class SliceSizeTest(unittest.TestCase):
             "### Slice 1 — Update generated skill entries\n"
             "- **Change:** `agent-instructions/skill_entry_points.py` · "
             "`.claude/skills/the-way-*/SKILL.md` · "
-            "`.agents/skills/the-way-*/SKILL.md`\n")
+            "`.agents/skills/the-way-*/SKILL.md`\n"
+        )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[1], "3")
         self.assertEqual(self.row(output, "1")[4], "fits")
@@ -110,13 +120,16 @@ class SliceSizeTest(unittest.TestCase):
     def test_missing_read_file_leaves_the_slice_unchecked(self) -> None:
         code, output, _ = self.run_plan("### Slice 1\n- **Read:** `absent.md`\n")
         self.assertEqual(code, 1)
-        self.assertEqual(self.row(output, "1")[2:6], [
-            "unknown", "unknown", "unchecked", "`absent.md` names no file under the root"])
+        self.assertEqual(
+            self.row(output, "1")[2:6],
+            ["unknown", "unknown", "unchecked", "`absent.md` names no file under the root"],
+        )
 
     def test_path_outside_the_root_leaves_the_slice_unchecked(self) -> None:
         (self.root.parent / "secret.txt").write_text("x", encoding="utf-8")
         code, output, _ = self.run_plan(
-            "### Slice 1\n- **Read:** `../secret.txt`\n- **Change:** `../elsewhere.py`\n")
+            "### Slice 1\n- **Read:** `../secret.txt`\n- **Change:** `../elsewhere.py`\n"
+        )
         self.assertEqual(code, 1)
         self.assertEqual(self.row(output, "1")[4], "unchecked")
         self.assertIn("`../secret.txt` names no file under the root", output)
@@ -126,14 +139,17 @@ class SliceSizeTest(unittest.TestCase):
         self.file("short.md", "one\ntwo\n")
         code, output, _ = self.run_plan("### Slice 1\n- **Read:** `short.md:2-5`\n")
         self.assertEqual(code, 1)
-        self.assertEqual(self.row(output, "1")[4:6], [
-            "unchecked", "`short.md:2-5` goes beyond the file's 2 lines"])
+        self.assertEqual(
+            self.row(output, "1")[4:6],
+            ["unchecked", "`short.md:2-5` goes beyond the file's 2 lines"],
+        )
 
     def test_slice_with_neither_field_is_unchecked(self) -> None:
         code, output, _ = self.run_plan("### Slice 1 — Think\n- **Goal:** none\n")
         self.assertEqual(code, 1)
-        self.assertEqual(self.row(output, "1")[4:6], [
-            "unchecked", "the slice has neither *Change* nor *Read*"])
+        self.assertEqual(
+            self.row(output, "1")[4:6], ["unchecked", "the slice has neither *Change* nor *Read*"]
+        )
 
     def test_none_in_backticks_names_no_file(self) -> None:
         code, output, _ = self.run_plan("### Slice 1\n- **Change:** `none`\n- **Read:** `none`\n")
@@ -144,16 +160,20 @@ class SliceSizeTest(unittest.TestCase):
         self.file("a.py", "x\n")
         code, output, _ = self.run_plan("### Slice 1\n- **Change:** `a.py:1-1`\n")
         self.assertEqual(code, 1)
-        self.assertEqual(self.row(output, "1")[4:6], [
-            "unchecked", "`a.py:1-1` in *Change* names a range, not a file"])
+        self.assertEqual(
+            self.row(output, "1")[4:6],
+            ["unchecked", "`a.py:1-1` in *Change* names a range, not a file"],
+        )
 
     def test_slice_heading_in_another_form_is_an_error(self) -> None:
         code, output, error = self.run_plan(
-            "### Slice 1 — fine\n- **Read:** none\n\n### Slice 2 - hyphen\n- **Read:** none\n")
+            "### Slice 1 — fine\n- **Read:** none\n\n### Slice 2 - hyphen\n- **Read:** none\n"
+        )
         self.assertEqual(code, 2)
         self.assertEqual(output, "")
-        self.assertEqual(error, "Error: a slice heading is not `### Slice <id> — <goal>`: "
-                                "### Slice 2 - hyphen\n")
+        self.assertEqual(
+            error, "Error: a slice heading is not `### Slice <id> — <goal>`: ### Slice 2 - hyphen\n"
+        )
 
     def test_plan_without_a_slice_is_an_error(self) -> None:
         code, output, error = self.run_plan("# Plan\n\n- **Change:** `a.py`\n")

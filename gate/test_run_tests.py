@@ -27,14 +27,21 @@ def module(*tests):
 
 
 PASSING = module("self.assertTrue(True)")
-SKIPPING = "\n".join((
-    "import unittest", "", "",
-    "class Checks(unittest.TestCase):",
-    "    def test_passing(self):",
-    "        self.assertTrue(True)", "",
-    "    @unittest.skip('no network here')",
-    "    def test_skipped(self):",
-    "        self.fail('a skipped test ran')", ""))
+SKIPPING = "\n".join(
+    (
+        "import unittest",
+        "",
+        "",
+        "class Checks(unittest.TestCase):",
+        "    def test_passing(self):",
+        "        self.assertTrue(True)",
+        "",
+        "    @unittest.skip('no network here')",
+        "    def test_skipped(self):",
+        "        self.fail('a skipped test ran')",
+        "",
+    )
+)
 
 
 def log_event(log, text):
@@ -63,35 +70,46 @@ def timed_module(log, name, wait_for=(), pause=0.0, lines=0, fail=False, after_a
     `log` holds each event of `wait_for` (up to 120 seconds, a failure after that), sleeps `pause`
     seconds and records `end <name>`. With `after_an_end` it fails unless `log` already holds an
     `end` event when it starts. With `fail` it fails after the wait."""
-    return "\n".join((
-        "import os, sys, time, unittest", "",
-        "LOG = %r" % log, "",
-        inspect.getsource(log_event), "",
-        inspect.getsource(logged_events), "",
-        "def logged():",
-        "    return logged_events(LOG)", "",
-        "def append(text):",
-        "    log_event(LOG, text)", "",
-        "def say(first, last):",
-        "    for number in range(first, last):",
-        "        print(%r + '-line-' + str(number), file=sys.stderr)" % name, "",
-        "class Checks(unittest.TestCase):",
-        "    def test_it(self):",
-        "        append('start %s')" % name,
-        "        if %r:" % after_an_end,
-        "            self.assertTrue(any(line.startswith('end ') for line in logged()), "
-        "'started before another directory ended')",
-        "        say(0, %d)" % (lines // 2),
-        "        deadline = time.time() + 120",
-        "        while time.time() < deadline and not all(line in logged() for line in %r):"
-        % list(wait_for),
-        "            time.sleep(0.02)",
-        "        self.assertTrue(all(line in logged() for line in %r), 'did not meet the others')"
-        % list(wait_for),
-        "        time.sleep(%r)" % pause,
-        "        say(%d, %d)" % (lines // 2, lines),
-        "        append('end %s')" % name,
-        "        self.assertFalse(%r, 'broken')" % fail, ""))
+    return "\n".join(
+        (
+            "import os, sys, time, unittest",
+            "",
+            "LOG = %r" % log,
+            "",
+            inspect.getsource(log_event),
+            "",
+            inspect.getsource(logged_events),
+            "",
+            "def logged():",
+            "    return logged_events(LOG)",
+            "",
+            "def append(text):",
+            "    log_event(LOG, text)",
+            "",
+            "def say(first, last):",
+            "    for number in range(first, last):",
+            "        print(%r + '-line-' + str(number), file=sys.stderr)" % name,
+            "",
+            "class Checks(unittest.TestCase):",
+            "    def test_it(self):",
+            "        append('start %s')" % name,
+            "        if %r:" % after_an_end,
+            "            self.assertTrue(any(line.startswith('end ') for line in logged()), "
+            "'started before another directory ended')",
+            "        say(0, %d)" % (lines // 2),
+            "        deadline = time.time() + 120",
+            "        while time.time() < deadline and not all(line in logged() for line in %r):"
+            % list(wait_for),
+            "            time.sleep(0.02)",
+            "        self.assertTrue(all(line in logged() for line in %r), 'did not meet the others')"
+            % list(wait_for),
+            "        time.sleep(%r)" % pause,
+            "        say(%d, %d)" % (lines // 2, lines),
+            "        append('end %s')" % name,
+            "        self.assertFalse(%r, 'broken')" % fail,
+            "",
+        )
+    )
 
 
 def blocks(output):
@@ -125,14 +143,24 @@ class RunnerTestCase(unittest.TestCase):
     def runner(self, *arguments, cwd=None):
         """Runs the runner from the root, or from `cwd` below it; returns its exit code and all
         it printed."""
-        done = subprocess.run([sys.executable, "-B", RUNNER] + list(arguments),
-                              cwd=os.path.join(self.root, cwd or ""), capture_output=True,
-                              text=True, encoding="utf-8", errors="replace")
+        done = subprocess.run(
+            [sys.executable, "-B", RUNNER] + list(arguments),
+            cwd=os.path.join(self.root, cwd or ""),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
         return done.returncode, done.stdout + done.stderr
 
     def git(self, *arguments):
-        subprocess.run(["git", "-c", "user.name=Runner", "-c", "user.email=runner@example.com"]
-                       + list(arguments), cwd=self.root, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "-c", "user.name=Runner", "-c", "user.email=runner@example.com"]
+            + list(arguments),
+            cwd=self.root,
+            check=True,
+            capture_output=True,
+        )
 
     def track(self, *paths):
         """Makes the root a git repository tracking the files given."""
@@ -142,16 +170,18 @@ class RunnerTestCase(unittest.TestCase):
 
 class OneDirectory(RunnerTestCase):
     def test_passing_tests_exit_zero(self):
-        self.write("tests/test_sample.py",
-                   module("self.assertTrue(True)", "self.assertEqual(2, 2)"))
+        self.write(
+            "tests/test_sample.py", module("self.assertTrue(True)", "self.assertEqual(2, 2)")
+        )
         code, output = self.runner("tests")
         self.assertEqual(code, 0, output)
         self.assertIn("Ran 2 tests", output)
 
     def test_a_failing_test_exits_one(self):
         # invariant: gate-exit-code
-        self.write("tests/test_sample.py",
-                   module("self.assertTrue(True)", "self.assertEqual(2, 3)"))
+        self.write(
+            "tests/test_sample.py", module("self.assertTrue(True)", "self.assertEqual(2, 3)")
+        )
         code, output = self.runner("tests")
         self.assertEqual(code, 1, output)
         self.assertIn("FAILED (failures=1)", output)
@@ -172,12 +202,21 @@ class OneDirectory(RunnerTestCase):
 
     def test_an_unexpected_success_exits_one(self):
         # invariant: gate-exit-code
-        self.write("tests/test_sample.py", "\n".join((
-            "import unittest", "", "",
-            "class Checks(unittest.TestCase):",
-            "    @unittest.expectedFailure",
-            "    def test_known_to_break(self):",
-            "        self.assertTrue(True)", "")))
+        self.write(
+            "tests/test_sample.py",
+            "\n".join(
+                (
+                    "import unittest",
+                    "",
+                    "",
+                    "class Checks(unittest.TestCase):",
+                    "    @unittest.expectedFailure",
+                    "    def test_known_to_break(self):",
+                    "        self.assertTrue(True)",
+                    "",
+                )
+            ),
+        )
         code, output = self.runner("tests")
         self.assertEqual(code, 1, output)
         self.assertIn("unexpected successes=1", output)
@@ -199,17 +238,24 @@ class OneDirectory(RunnerTestCase):
         code, output = self.runner("tests")
         self.assertEqual(code, 0, output)
         lines = [line for line in output.splitlines() if line.strip()]
-        self.assertEqual(lines[-4:], [
-            "skipped: test_sample.Checks.test_skipped: no network here",
-            "-" * 70,
-            lines[-2],
-            "OK (skipped=1)"], output)
+        self.assertEqual(
+            lines[-4:],
+            [
+                "skipped: test_sample.Checks.test_skipped: no network here",
+                "-" * 70,
+                lines[-2],
+                "OK (skipped=1)",
+            ],
+            output,
+        )
         self.assertTrue(lines[-2].startswith("Ran 2 tests in "), output)
 
     def test_tests_import_from_the_working_directory(self):
         self.write("helper_at_root.py", "VALUE = 7\n")
-        self.write("tests/test_sample.py", "import helper_at_root\n"
-                   + module("self.assertEqual(helper_at_root.VALUE, 7)"))
+        self.write(
+            "tests/test_sample.py",
+            "import helper_at_root\n" + module("self.assertEqual(helper_at_root.VALUE, 7)"),
+        )
         code, output = self.runner("tests")
         self.assertEqual(code, 0, output)
 
@@ -229,8 +275,9 @@ class EveryDirectory(RunnerTestCase):
         self.assertIn("== a\n", output)
         self.assertIn("== b/c\n", output)
         self.assertNotIn("untracked", output)
-        self.assertTrue(output.rstrip().endswith("3 tests in 2 directories; every directory "
-                                                 "passed"), output)
+        self.assertTrue(
+            output.rstrip().endswith("3 tests in 2 directories; every directory passed"), output
+        )
 
     def test_a_failing_directory_fails_the_run_and_the_rest_still_run(self):
         # invariant: gate-exit-code
@@ -240,8 +287,9 @@ class EveryDirectory(RunnerTestCase):
         code, output = self.runner()
         self.assertEqual(code, 1, output)
         self.assertIn("== b\n", output)
-        self.assertTrue(output.rstrip().endswith("2 tests in 2 directories; failed: a (exit "
-                                                 "code 1)"), output)
+        self.assertTrue(
+            output.rstrip().endswith("2 tests in 2 directories; failed: a (exit code 1)"), output
+        )
 
     def test_a_directory_whose_tracked_test_file_is_gone_does_not_run(self):
         # invariant: gate-exit-code
@@ -260,19 +308,29 @@ class EveryDirectory(RunnerTestCase):
         self.track("a/test_one.py", "b/test_two.py")
         code, output = self.runner()
         self.assertEqual(code, 1, output)
-        self.assertTrue(output.rstrip().endswith("1 tests in 2 directories; failed: a (exit "
-                                                 "code 0 without unittest's OK)"), output)
+        self.assertTrue(
+            output.rstrip().endswith(
+                "1 tests in 2 directories; failed: a (exit code 0 without unittest's OK)"
+            ),
+            output,
+        )
 
     def test_a_report_that_does_not_end_with_ok_fails_the_run(self):
         # invariant: gate-exit-code
-        self.write("a/test_one.py", "import atexit\n"
-                   "atexit.register(print, 'printed after the report')\n" + PASSING)
+        self.write(
+            "a/test_one.py",
+            "import atexit\natexit.register(print, 'printed after the report')\n" + PASSING,
+        )
         self.track("a/test_one.py")
         code, output = self.runner()
         self.assertEqual(code, 1, output)
         self.assertIn("printed after the report", output)
-        self.assertTrue(output.rstrip().endswith("1 tests in 1 directories; failed: a (exit "
-                                                 "code 0 without unittest's OK)"), output)
+        self.assertTrue(
+            output.rstrip().endswith(
+                "1 tests in 1 directories; failed: a (exit code 0 without unittest's OK)"
+            ),
+            output,
+        )
 
     def test_a_directory_with_a_skipped_test_still_passes_and_the_report_names_it(self):
         # invariant: gate-exit-code
@@ -283,8 +341,9 @@ class EveryDirectory(RunnerTestCase):
         self.assertEqual(code, 0, output)
         self.assertIn("skipped: test_sample.Checks.test_skipped: no network here\n", output)
         self.assertLess(output.index("skipped: test_sample"), output.index("OK (skipped=1)"))
-        self.assertTrue(output.rstrip().endswith("3 tests in 2 directories; every directory "
-                                                 "passed"), output)
+        self.assertTrue(
+            output.rstrip().endswith("3 tests in 2 directories; every directory passed"), output
+        )
 
     def test_a_repository_without_a_tracked_test_file_exits_one(self):
         # invariant: gate-exit-code
@@ -306,10 +365,13 @@ class EveryDirectory(RunnerTestCase):
     def test_outside_a_git_repository_it_exits_two(self):
         outside = tempfile.TemporaryDirectory()
         self.addCleanup(outside.cleanup)
-        done = subprocess.run([sys.executable, "-B", RUNNER], cwd=outside.name,
-                              capture_output=True, text=True,
-                              env=dict(os.environ, GIT_CEILING_DIRECTORIES=os.path.dirname(
-                                  outside.name)))
+        done = subprocess.run(
+            [sys.executable, "-B", RUNNER],
+            cwd=outside.name,
+            capture_output=True,
+            text=True,
+            env=dict(os.environ, GIT_CEILING_DIRECTORIES=os.path.dirname(outside.name)),
+        )
         self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
         self.assertIn("git cannot list the files of the repository", done.stdout)
 
@@ -345,8 +407,14 @@ try:
 except KeyboardInterrupt:
     print('interrupted')
 """
-        done = subprocess.run([sys.executable, "-B", "-c", interrupting, RUNNER], cwd=self.root,
-                              capture_output=True, text=True, encoding="utf-8", errors="replace")
+        done = subprocess.run(
+            [sys.executable, "-B", "-c", interrupting, RUNNER],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
         self.assertIn("interrupted", done.stdout, done.stdout + done.stderr)
         self.assertEqual(self.logged(), ["start a", "end a"], done.stdout + done.stderr)
 
@@ -359,8 +427,9 @@ except KeyboardInterrupt:
         self.track("a/test_one.py", "b/test_one.py", "c/test_one.py")
         code, output = self.runner()
         self.assertEqual(code, 0, output)
-        self.assertTrue(output.rstrip().endswith("3 tests in 3 directories; every directory "
-                                                 "passed"), output)
+        self.assertTrue(
+            output.rstrip().endswith("3 tests in 3 directories; every directory passed"), output
+        )
 
     def test_one_job_runs_the_directories_one_after_another(self):
         log = self.log()
@@ -369,8 +438,9 @@ except KeyboardInterrupt:
         self.track("a/test_one.py", "b/test_one.py", "c/test_one.py")
         code, output = self.runner("--jobs", "1")
         self.assertEqual(code, 0, output)
-        self.assertEqual(self.logged(), ["start a", "end a", "start b", "end b", "start c",
-                                         "end c"], output)
+        self.assertEqual(
+            self.logged(), ["start a", "end a", "start b", "end b", "start c", "end c"], output
+        )
 
     def test_a_number_of_jobs_limits_the_directories_that_run_at_once(self):
         # a and b wait for each other, so both run at once; c fails unless one of them ended before
@@ -403,9 +473,15 @@ except KeyboardInterrupt:
         """Runs the runner from the root; when it has printed the line `line` it records `note` in
         the log, so that a test that waits for the note waits for what the runner printed. Returns
         its exit code and all it printed."""
-        process = subprocess.Popen([sys.executable, "-B", RUNNER], cwd=self.root,
-                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-                                   encoding="utf-8", errors="replace")
+        process = subprocess.Popen(
+            [sys.executable, "-B", RUNNER],
+            cwd=self.root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
         printed = []
         for text in process.stdout:
             printed.append(text)
@@ -429,10 +505,14 @@ except KeyboardInterrupt:
         found, last = blocks(output)
         self.assertEqual([name for name, _ in found], ["b", "a"], output)
         for name, body in found:
-            self.assertEqual([line for line in body if "-line-" in line],
-                             ["%s-line-%d" % (name, number) for number in range(4)], output)
-            self.assertEqual(sum(1 for line in body if line.startswith("Ran 1 test in ")), 1,
-                             output)
+            self.assertEqual(
+                [line for line in body if "-line-" in line],
+                ["%s-line-%d" % (name, number) for number in range(4)],
+                output,
+            )
+            self.assertEqual(
+                sum(1 for line in body if line.startswith("Ran 1 test in ")), 1, output
+            )
             self.assertEqual(body[-1], "OK", output)
         self.assertEqual(last, "2 tests in 2 directories; every directory passed")
 
@@ -447,13 +527,14 @@ except KeyboardInterrupt:
         self.assertEqual(code, 1, output)
         found, last = blocks(output)
         self.assertEqual(sorted(name for name, _ in found), ["a", "b", "c"], output)
-        self.assertEqual(last, "3 tests in 3 directories; failed: a (exit code 1), b (exit code "
-                               "1)")
+        self.assertEqual(last, "3 tests in 3 directories; failed: a (exit code 1), b (exit code 1)")
 
     def test_a_report_with_no_line_end_at_its_end_does_not_run_into_the_next_line(self):
         # invariant: gate-exit-code
-        self.write("a/test_one.py", "import atexit, sys\n"
-                   "atexit.register(sys.stderr.write, 'cut off')\n" + PASSING)
+        self.write(
+            "a/test_one.py",
+            "import atexit, sys\natexit.register(sys.stderr.write, 'cut off')\n" + PASSING,
+        )
         self.write("b/test_two.py", PASSING)
         self.track("a/test_one.py", "b/test_two.py")
         code, output = self.runner()
@@ -461,8 +542,12 @@ except KeyboardInterrupt:
         lines = output.splitlines()
         self.assertIn("cut off", lines, output)
         self.assertIn("== b", lines, output)
-        self.assertTrue(output.rstrip().endswith("2 tests in 2 directories; failed: a (exit "
-                                                 "code 0 without unittest's OK)"), output)
+        self.assertTrue(
+            output.rstrip().endswith(
+                "2 tests in 2 directories; failed: a (exit code 0 without unittest's OK)"
+            ),
+            output,
+        )
 
     def test_a_directory_that_prints_nothing_leaves_no_blank_line_under_its_name(self):
         # invariant: gate-exit-code
@@ -470,8 +555,11 @@ except KeyboardInterrupt:
         self.track("a/test_one.py")
         code, output = self.runner()
         self.assertEqual(code, 1, output)
-        self.assertEqual(output.splitlines(), ["== a", "0 tests in 1 directories; failed: a (exit "
-                                                      "code 0 without unittest's OK)"], output)
+        self.assertEqual(
+            output.splitlines(),
+            ["== a", "0 tests in 1 directories; failed: a (exit code 0 without unittest's OK)"],
+            output,
+        )
 
     def test_a_run_of_one_directory_in_the_default_form_keeps_the_report_unittest_prints(self):
         self.write("a/test_one.py", PASSING)
@@ -481,17 +569,25 @@ except KeyboardInterrupt:
         lines = output.splitlines()
         self.assertEqual(lines[:3], ["== a", ".", "-" * 70], output)
         self.assertRegex(lines[3], r"^Ran 1 test in \d+\.\d{3}s$")
-        self.assertEqual(lines[4:], ["", "OK", "1 tests in 1 directories; every directory "
-                                               "passed"], output)
+        self.assertEqual(
+            lines[4:], ["", "OK", "1 tests in 1 directories; every directory passed"], output
+        )
 
 
-SLOW_AND_FAST = "\n".join((
-    "import time, unittest", "", "",
-    "class Checks(unittest.TestCase):",
-    "    def test_fast(self):",
-    "        self.assertTrue(True)", "",
-    "    def test_slow(self):",
-    "        time.sleep(0.3)", ""))
+SLOW_AND_FAST = "\n".join(
+    (
+        "import time, unittest",
+        "",
+        "",
+        "class Checks(unittest.TestCase):",
+        "    def test_fast(self):",
+        "        self.assertTrue(True)",
+        "",
+        "    def test_slow(self):",
+        "        time.sleep(0.3)",
+        "",
+    )
+)
 
 
 class SlowestTests(RunnerTestCase):
@@ -501,7 +597,7 @@ class SlowestTests(RunnerTestCase):
         self.assertEqual(code, 0, output)
         lines = output.splitlines()
         header = lines.index("Slowest test durations")
-        listed = lines[header + 2:lines.index("", header)]
+        listed = lines[header + 2 : lines.index("", header)]
         self.assertEqual(len(listed), 1, output)
         self.assertRegex(listed[0], r"^\d+\.\d{3}s +test_slow ")
         # The test sleeps 0.3 seconds, so its time is at least that; the bound lies 0.05 seconds
@@ -516,12 +612,14 @@ class SlowestTests(RunnerTestCase):
         code, output = self.runner("--slowest", "1")
         self.assertEqual(code, 0, output)
         found, last = blocks(output)
-        slowest = {name: any(line == "Slowest test durations" for line in body)
-                   for name, body in found}
+        slowest = {
+            name: any(line == "Slowest test durations" for line in body) for name, body in found
+        }
         self.assertEqual(slowest, {"a": True, "b": True}, output)
         body = dict(found)["a"]
-        self.assertTrue(any(line.endswith("test_slow (test_sample.Checks.test_slow)")
-                            for line in body), output)
+        self.assertTrue(
+            any(line.endswith("test_slow (test_sample.Checks.test_slow)") for line in body), output
+        )
         self.assertEqual(last, "3 tests in 2 directories; every directory passed")
 
     def test_without_the_option_no_list_of_slowest_tests_is_printed(self):
@@ -556,8 +654,14 @@ script = sys.argv[1]
 sys.argv = [script, 'tests', '--slowest', '1']
 runpy.run_path(script, run_name='__main__')
 """
-        done = subprocess.run([sys.executable, "-B", "-c", patched, RUNNER], cwd=self.root,
-                              capture_output=True, text=True, encoding="utf-8", errors="replace")
+        done = subprocess.run(
+            [sys.executable, "-B", "-c", patched, RUNNER],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
         self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
         self.assertIn("--slowest", done.stderr)
         self.assertNotIn("Traceback", done.stderr)

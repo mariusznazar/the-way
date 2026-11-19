@@ -24,10 +24,17 @@ INVARIANT = "tracked-file-private-paths"
 class TrackedFilesOfThisRepositoryTest(unittest.TestCase):
     # invariant: tracked-file-private-paths
     def test_no_tracked_file_holds_an_absolute_path_or_a_note_link(self) -> None:
-        run = subprocess.run([sys.executable, "-B", str(COMMAND), INVARIANT], cwd=ROOT,
-                             capture_output=True, encoding="utf-8")
-        self.assertEqual(run.returncode, 0,
-                         "absolute paths or note links in tracked files:\n" + run.stdout + run.stderr)
+        run = subprocess.run(
+            [sys.executable, "-B", str(COMMAND), INVARIANT],
+            cwd=ROOT,
+            capture_output=True,
+            encoding="utf-8",
+        )
+        self.assertEqual(
+            run.returncode,
+            0,
+            "absolute paths or note links in tracked files:\n" + run.stdout + run.stderr,
+        )
 
 
 if __name__ == "__main__":

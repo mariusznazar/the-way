@@ -85,9 +85,10 @@ BLOCK = (
     "runs the one command on every merge request, with `.the-way` at the commit this repository "
     "pins, and its result is a check this repository requires before a merge, which the "
     "repository's owner may bypass. While it has none, nothing but you runs the tests before a "
-    "merge, and you say so when you report. `.the-way/installation/README.md`, section \"Run the "
-    "one command in CI\", says what the CI file of this repository holds.\n"
-    "<!-- the-way:end -->\n")
+    'merge, and you say so when you report. `.the-way/installation/README.md`, section "Run the '
+    'one command in CI", says what the CI file of this repository holds.\n'
+    "<!-- the-way:end -->\n"
+)
 # The names of the skills in the sentence of an entry point about the other skills, joined as the
 # sentence reads: the skills of the five foundation files in the order of their rows, then the
 # others in the order of the row `.claude/skills/the-way-*/SKILL.md`, both in the section "Files in
@@ -97,7 +98,8 @@ SIBLINGS = (
     "`record-environment-fact`, `find-foundation-entries`, `define-project`, `plan-project`, "
     "`lead-project`, `settle-technology`, `refine-task`, `implement-task`, `plan-task`, "
     "`write-spec`, `make-change`, `review-change`, `critique`, `review-foundation`, "
-    "`maintain-styleguide`, `maintain-coding-guidelines` or `maintain-testing-guidelines`")
+    "`maintain-styleguide`, `maintain-coding-guidelines` or `maintain-testing-guidelines`"
+)
 # The entry point of a skill, as the row `.claude/skills/the-way-*/SKILL.md` of the section "Files in
 # the product" of installation/README.md describes it: the name, path and description are filled in
 # per skill, the description from the skill's own file.
@@ -118,12 +120,22 @@ ENTRY_POINT = (
     "substitute a global skill.\n\n"
     "Where this skill or a file it reads names another the-way skill — {siblings} — use "
     "this product's project skill of the same name with the `the-way-` prefix, never an "
-    "unprefixed one.\n")
+    "unprefixed one.\n"
+)
 
 
-def command(*args: str, cwd: Path, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          capture_output=True, check=False)
+def command(
+    *args: str, cwd: Path, input_text: str | None = None
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        capture_output=True,
+        check=False,
+    )
 
 
 def make_writable(function, path, error) -> None:
@@ -149,8 +161,11 @@ def tree(root: Path) -> dict[str, bytes | None]:
 
 def changed(before: dict[str, bytes | None], after: dict[str, bytes | None]) -> list[str]:
     """The paths that appeared, vanished or changed between two states of `tree`."""
-    return sorted(path for path in before.keys() | after.keys()
-                  if path not in before or path not in after or before[path] != after[path])
+    return sorted(
+        path
+        for path in before.keys() | after.keys()
+        if path not in before or path not in after or before[path] != after[path]
+    )
 
 
 class InstallTest(unittest.TestCase):
@@ -160,10 +175,15 @@ class InstallTest(unittest.TestCase):
         self.product = Path(self.temporary.name) / "product"
         self.product.mkdir()
         self.assertEqual(command("git", "init", "-q", str(self.product), cwd=SOURCE).returncode, 0)
-        self.assertEqual(command("git", "config", "user.email", "test@example.invalid",
-                                 cwd=self.product).returncode, 0)
-        self.assertEqual(command("git", "config", "user.name", "Install Test",
-                                 cwd=self.product).returncode, 0)
+        self.assertEqual(
+            command(
+                "git", "config", "user.email", "test@example.invalid", cwd=self.product
+            ).returncode,
+            0,
+        )
+        self.assertEqual(
+            command("git", "config", "user.name", "Install Test", cwd=self.product).returncode, 0
+        )
         # The tests install from this clone, not from the live repository: a commit made to the-way
         # while the run goes on cannot change the commit the installer pins or the one expected.
         self.source = Path(self.temporary.name) / "source"
@@ -175,9 +195,20 @@ class InstallTest(unittest.TestCase):
         # supplies the source that is installed, whose commit the installer pins.
         shutil.copyfile(SOURCE / "installation" / "install.py", self.installer)
 
-    def install(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-        return command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
-                       str(self.source), *args, cwd=self.product, input_text=input_text)
+    def install(
+        self, *args: str, input_text: str | None = None
+    ) -> subprocess.CompletedProcess[str]:
+        return command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(self.source),
+            *args,
+            cwd=self.product,
+            input_text=input_text,
+        )
 
     def entry_point(self, path: str, name: str) -> str:
         """The entry point of one skill as the installer writes it: ENTRY_POINT with the
@@ -185,8 +216,9 @@ class InstallTest(unittest.TestCase):
         shown = command("git", "show", f"{self.commit}:{path}", cwd=self.source).stdout
         description = re.search(r"^description: (.+)$", shown, re.M)
         self.assertIsNotNone(description, path)
-        return ENTRY_POINT.format(name=name, path=path, description=description.group(1),
-                                  siblings=SIBLINGS)
+        return ENTRY_POINT.format(
+            name=name, path=path, description=description.group(1), siblings=SIBLINGS
+        )
 
     def test_preview_apply_rerun_and_preserve_foundation(self) -> None:
         foundations = self.product / "foundations"
@@ -208,10 +240,14 @@ class InstallTest(unittest.TestCase):
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
         self.assertEqual(existing.read_bytes(), b"# Existing decisions\r\n")
-        self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
-                                 cwd=self.product).stdout.strip(), self.commit)
-        self.assertEqual((self.product / ".the-way" / "README.md").read_text(encoding="utf-8"),
-                         command("git", "show", f"{self.commit}:README.md", cwd=self.source).stdout)
+        self.assertEqual(
+            command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=self.product).stdout.strip(),
+            self.commit,
+        )
+        self.assertEqual(
+            (self.product / ".the-way" / "README.md").read_text(encoding="utf-8"),
+            command("git", "show", f"{self.commit}:README.md", cwd=self.source).stdout,
+        )
         staged = command("git", "ls-files", "--stage", "--", ".the-way", cwd=self.product)
         self.assertIn("160000 " + self.commit, staged.stdout)
         for path, name in NAMES:
@@ -225,15 +261,20 @@ class InstallTest(unittest.TestCase):
             # The gitlink records the commit; an entry point that named it would change with
             # every move of the pin.
             self.assertIsNone(re.search(r"\b[0-9a-f]{7,40}\b", text), text)
-            sentence = (f"Read `.the-way/{path}` in full and follow it, and read a file it names "
-                        "inside `.the-way` when the step or variant that names it comes, not all "
-                        "of them at the start.")
+            sentence = (
+                f"Read `.the-way/{path}` in full and follow it, and read a file it names "
+                "inside `.the-way` when the step or variant that names it comes, not all "
+                "of them at the start."
+            )
             self.assertIn(sentence, text)
             self.assertNotIn("Read the files it references", text)
             self.assertIn("git ls-files --stage -- .the-way", text)
             self.assertIn("git -C .the-way rev-parse HEAD", text)
-            self.assertIn("use this product's project skill of the same name with the "
-                          "`the-way-` prefix, never an unprefixed one", text)
+            self.assertIn(
+                "use this product's project skill of the same name with the "
+                "`the-way-` prefix, never an unprefixed one",
+                text,
+            )
             for _, sibling in NAMES:
                 self.assertIn(f"`{sibling}`", text)
         # invariant: installation-claude-guidance
@@ -254,10 +295,15 @@ class InstallTest(unittest.TestCase):
         """The files the installer writes in the product that hold the text of a the-way skill or
         of an agent type: the entry point of each skill under both skill directories, and each
         definition of the agent types of the task cycle."""
-        found = [self.product / directory / "skills" / f"the-way-{name}" / "SKILL.md"
-                 for _, name in NAMES for directory in (".claude", ".agents")]
-        found += [self.product / ".claude" / "agents" / f"{name}.md"
-                  for name in ("the-way-stage", "the-way-author")]
+        found = [
+            self.product / directory / "skills" / f"the-way-{name}" / "SKILL.md"
+            for _, name in NAMES
+            for directory in (".claude", ".agents")
+        ]
+        found += [
+            self.product / ".claude" / "agents" / f"{name}.md"
+            for name in ("the-way-stage", "the-way-author")
+        ]
         for path in found:
             self.assertTrue(path.is_file(), path)
         return found
@@ -299,8 +345,11 @@ class InstallTest(unittest.TestCase):
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
         self.assertIn("REPLACE .claude/skills/the-way-record-decision/SKILL.md\n", preview.stdout)
-        changes = [line for line in preview.stdout.splitlines()
-                   if line[:1] in ("+", "-") and line[:3] not in ("---", "+++")]
+        changes = [
+            line
+            for line in preview.stdout.splitlines()
+            if line[:1] in ("+", "-") and line[:3] not in ("---", "+++")
+        ]
         self.assertEqual(len(changes), 2, preview.stdout)
         removed, added = changes
         self.assertIn("follow it closely", removed)
@@ -308,13 +357,20 @@ class InstallTest(unittest.TestCase):
         self.assertNotIn("closely", added)
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
-        self.assertEqual(skill.read_bytes(), self.entry_point(
-            "elements/decisions/skill/SKILL.md", "record-decision").encode("utf-8"))
+        self.assertEqual(
+            skill.read_bytes(),
+            self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").encode(
+                "utf-8"
+            ),
+        )
 
     def product_files(self) -> dict[str, bytes]:
-        return {path.relative_to(self.product).as_posix(): path.read_bytes()
-                for path in self.product.rglob("*") if path.is_file() and
-                not {".git", ".the-way"} & set(path.relative_to(self.product).parts)}
+        return {
+            path.relative_to(self.product).as_posix(): path.read_bytes()
+            for path in self.product.rglob("*")
+            if path.is_file()
+            and not {".git", ".the-way"} & set(path.relative_to(self.product).parts)
+        }
 
     def test_wrapper_sends_the_skill_to_the_product_case_of_where_the_way_lies(self) -> None:
         for path, name in NAMES:
@@ -326,20 +382,25 @@ class InstallTest(unittest.TestCase):
         guidance = install.product_guidance()
         self.assertIsNone(re.search(r"\b[0-9a-f]{7,40}\b", guidance), guidance)
         self.assertNotIn(self.commit, guidance)
-        for fragment in ("git submodule update --init -- .the-way",
-                         "git -C .the-way rev-parse HEAD", "git ls-files --stage -- .the-way",
-                         "which runs `python -B .the-way/elements/common/foundation_check.py` "
-                         "too", ".runs/",
-                         "`python -B .the-way/instruction-files/check_instructions.py` too; "
-                         "an error that script reports stops the tests, and a warning does not",
-                         "Where this repository has a CI file, CI runs the one command on every "
-                         "merge request, with `.the-way` at the commit this repository pins, and "
-                         "its result is a check this repository requires before a merge, which "
-                         "the repository's owner may bypass",
-                         "While it has none, nothing but you runs the tests before a merge, and "
-                         "you say so when you report",
-                         "claimed by no part", "`the-way-update-part-map`", "never a pass",
-                         "even where an installed plugin offers methods of its own"):
+        for fragment in (
+            "git submodule update --init -- .the-way",
+            "git -C .the-way rev-parse HEAD",
+            "git ls-files --stage -- .the-way",
+            "which runs `python -B .the-way/elements/common/foundation_check.py` too",
+            ".runs/",
+            "`python -B .the-way/instruction-files/check_instructions.py` too; "
+            "an error that script reports stops the tests, and a warning does not",
+            "Where this repository has a CI file, CI runs the one command on every "
+            "merge request, with `.the-way` at the commit this repository pins, and "
+            "its result is a check this repository requires before a merge, which "
+            "the repository's owner may bypass",
+            "While it has none, nothing but you runs the tests before a merge, and "
+            "you say so when you report",
+            "claimed by no part",
+            "`the-way-update-part-map`",
+            "never a pass",
+            "even where an installed plugin offers methods of its own",
+        ):
             self.assertIn(fragment, guidance)
         for _, name in NAMES:
             self.assertIn(f"`the-way-{name}`", guidance)
@@ -364,30 +425,53 @@ class InstallTest(unittest.TestCase):
         for path, section in files:
             shown = command("git", "show", f"{self.commit}:{path}", cwd=self.source)
             self.assertEqual(shown.returncode, 0, f"{path} is not in {self.commit}")
-            self.assertIn(f"\n## {section}\n",
-                          shown.stdout.replace("\r\n", "\n"),
-                          f"{path} holds no section {section}")
+            self.assertIn(
+                f"\n## {section}\n",
+                shown.stdout.replace("\r\n", "\n"),
+                f"{path} holds no section {section}",
+            )
 
     def installed_from_a_remote(self) -> Path:
         """Install from a bare remote of the-way, commit the product and return the remote."""
         remote = Path(self.temporary.name) / "remote.git"
-        cloned = command("git", "clone", "-q", "--bare", str(self.source), str(remote),
-                         cwd=self.source)
+        cloned = command(
+            "git", "clone", "-q", "--bare", str(self.source), str(remote), cwd=self.source
+        )
         self.assertEqual(cloned.returncode, 0, cloned.stderr)
         agents = self.product / "AGENTS.md"
         agents.write_bytes(b"# Product rules\r\n")
         mine = self.product / ".claude/skills/the-way-mine/SKILL.md"
         mine.parent.mkdir(parents=True)
         mine.write_bytes(b"---\nname: the-way-mine\n---\n\nThe product's own skill.\n")
-        applied = command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
-                          str(remote), "--apply", cwd=self.product, input_text="y\n")
+        applied = command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(remote),
+            "--apply",
+            cwd=self.product,
+            input_text="y\n",
+        )
         self.assertEqual(applied.returncode, 0, applied.stdout + applied.stderr)
         agents.write_bytes(agents.read_bytes() + b"\r\nMore rules.\r\n")
-        added = command("git", "add", "--", "AGENTS.md", "CLAUDE.md", ".gitignore", ".claude",
-                        ".agents", "foundations", cwd=self.product)
+        added = command(
+            "git",
+            "add",
+            "--",
+            "AGENTS.md",
+            "CLAUDE.md",
+            ".gitignore",
+            ".claude",
+            ".agents",
+            "foundations",
+            cwd=self.product,
+        )
         self.assertEqual(added.returncode, 0, added.stderr)
-        self.assertEqual(command("git", "commit", "-q", "-m", "install",
-                                 cwd=self.product).returncode, 0)
+        self.assertEqual(
+            command("git", "commit", "-q", "-m", "install", cwd=self.product).returncode, 0
+        )
         return remote
 
     def later_process(self, remote: Path, change, publish: bool = True) -> tuple[Path, str]:
@@ -398,10 +482,21 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(cloned.returncode, 0, cloned.stderr)
         shutil.copyfile(self.installer, later / "installation" / "install.py")
         change(later)
-        for args in (("add", "-A"),
-                     ("-c", "user.email=test@example.invalid", "-c", "user.name=Later", "commit",
-                      "-q", "--allow-empty", "-m", "Later process"),
-                     ("push", "-q", "origin", "HEAD:refs/heads/later")):
+        for args in (
+            ("add", "-A"),
+            (
+                "-c",
+                "user.email=test@example.invalid",
+                "-c",
+                "user.name=Later",
+                "commit",
+                "-q",
+                "--allow-empty",
+                "-m",
+                "Later process",
+            ),
+            ("push", "-q", "origin", "HEAD:refs/heads/later"),
+        ):
             if args[0] == "push" and not publish:
                 continue
             step = command("git", *args, cwd=later)
@@ -419,21 +514,35 @@ class InstallTest(unittest.TestCase):
         # The preview moves nothing: the gitlink, the checkout and every product file stay.
         self.assertEqual(before, self.state())
         self.preview = preview.stdout
-        return command(sys.executable, "-B", script, str(self.product), "--apply",
-                       cwd=self.product, input_text="y\n")
+        return command(
+            sys.executable,
+            "-B",
+            script,
+            str(self.product),
+            "--apply",
+            cwd=self.product,
+            input_text="y\n",
+        )
 
     def state(self) -> tuple:
-        return (command("git", "status", "--porcelain", "--untracked-files=all",
-                        cwd=self.product).stdout,
-                command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=self.product).stdout,
-                command("git", "-C", ".the-way", "status", "--porcelain", cwd=self.product).stdout,
-                self.product_files())
+        return (
+            command(
+                "git", "status", "--porcelain", "--untracked-files=all", cwd=self.product
+            ).stdout,
+            command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=self.product).stdout,
+            command("git", "-C", ".the-way", "status", "--porcelain", cwd=self.product).stdout,
+            self.product_files(),
+        )
 
     def assert_pinned(self, commit: str) -> None:
-        self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
-                                 cwd=self.product).stdout.strip(), commit)
-        self.assertIn(f"160000 {commit}", command("git", "ls-files", "--stage", "--", ".the-way",
-                                                   cwd=self.product).stdout)
+        self.assertEqual(
+            command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=self.product).stdout.strip(),
+            commit,
+        )
+        self.assertIn(
+            f"160000 {commit}",
+            command("git", "ls-files", "--stage", "--", ".the-way", cwd=self.product).stdout,
+        )
 
     def test_moving_the_pin_to_the_same_process_changes_only_the_gitlink(self) -> None:
         remote = self.installed_from_a_remote()
@@ -445,15 +554,24 @@ class InstallTest(unittest.TestCase):
         self.assert_pinned(moved)
         status = command("git", "status", "--porcelain", cwd=self.product).stdout
         self.assertEqual(status.splitlines(), ["M  .the-way"])
-        self.assertEqual(command("git", "commit", "-q", "-m", "move",
-                                 cwd=self.product).returncode, 0)
+        self.assertEqual(
+            command("git", "commit", "-q", "-m", "move", cwd=self.product).returncode, 0
+        )
 
         # Back to the earlier commit: the preview says the pin goes back.
-        back = command(sys.executable, "-B", str(self.installer), str(self.product), "--url",
-                       str(remote), cwd=self.product)
+        back = command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(remote),
+            cwd=self.product,
+        )
         self.assertEqual(back.returncode, 0, back.stdout + back.stderr)
-        self.assertIn(f"MOVE .the-way from {moved} to {self.commit} (older than the pin)",
-                      back.stdout)
+        self.assertIn(
+            f"MOVE .the-way from {moved} to {self.commit} (older than the pin)", back.stdout
+        )
 
     def test_a_commit_the_url_does_not_reach_is_not_pinned(self) -> None:
         remote = self.installed_from_a_remote()
@@ -474,8 +592,15 @@ class InstallTest(unittest.TestCase):
         before = self.state()
         script = str(later / "installation" / "install.py")
         for args in ((), ("--apply",)):
-            refused = command(sys.executable, "-B", script, str(self.product), *args,
-                              cwd=self.product, input_text="y\n")
+            refused = command(
+                sys.executable,
+                "-B",
+                script,
+                str(self.product),
+                *args,
+                cwd=self.product,
+                input_text="y\n",
+            )
             self.assertNotEqual(refused.returncode, 0, refused.stdout)
             self.assertIn(".the-way has uncommitted changes", refused.stderr)
             self.assertIn("agent-instructions/README.md", refused.stderr)
@@ -485,8 +610,7 @@ class InstallTest(unittest.TestCase):
         changed.write_bytes(original)
         result = self.move_pin(later)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("WARNING: .the-way holds files git does not track: LOCAL_NOTE",
-                      self.preview)
+        self.assertIn("WARNING: .the-way holds files git does not track: LOCAL_NOTE", self.preview)
         self.assert_pinned(moved)
         self.assertTrue((self.product / ".the-way" / "LOCAL_NOTE").is_file())
 
@@ -499,21 +623,30 @@ class InstallTest(unittest.TestCase):
             # A skill's description changes, a skill comes, a skill goes, the guidance changes.
             installer = later / "installation" / "install.py"
             text = installer.read_text(encoding="utf-8")
-            for old, new in (('    "critique": "elements/common/critique/SKILL.md",\n',
-                              '    "extra-skill": "task-cycle/extra/SKILL.md",\n'),
-                             ('"# Pinned the-way process\\n\\n"',
-                              '"# Pinned the-way process, later\\n\\n"')):
+            for old, new in (
+                (
+                    '    "critique": "elements/common/critique/SKILL.md",\n',
+                    '    "extra-skill": "task-cycle/extra/SKILL.md",\n',
+                ),
+                ('"# Pinned the-way process\\n\\n"', '"# Pinned the-way process, later\\n\\n"'),
+            ):
                 self.assertEqual(text.count(old), 1, old)
                 text = text.replace(old, new)
             installer.write_text(text, encoding="utf-8", newline="\n")
             skill = later / "task-cycle" / "change" / "SKILL.md"
             text = skill.read_text(encoding="utf-8")
-            skill.write_text(re.sub(r"^(description: .+)$", r"\1 Changed later.", text, count=1,
-                                    flags=re.M), encoding="utf-8", newline="\n")
+            skill.write_text(
+                re.sub(r"^(description: .+)$", r"\1 Changed later.", text, count=1, flags=re.M),
+                encoding="utf-8",
+                newline="\n",
+            )
             extra = later / "task-cycle" / "extra" / "SKILL.md"
             extra.parent.mkdir()
-            extra.write_text("---\nname: extra-skill\ndescription: Use for extra work.\n---\n",
-                             encoding="utf-8", newline="\n")
+            extra.write_text(
+                "---\nname: extra-skill\ndescription: Use for extra work.\n---\n",
+                encoding="utf-8",
+                newline="\n",
+            )
 
         later, moved = self.later_process(remote, change)
         result = self.move_pin(later)
@@ -525,23 +658,42 @@ class InstallTest(unittest.TestCase):
             self.assertIn("Changed later. Use this product's pinned the-way commit.", changed)
             self.assertIn("`extra-skill`", changed)
             self.assertNotIn("`critique`", changed)
-            self.assertIn("Use for extra work.",
-                          (skills / "the-way-extra-skill" / "SKILL.md").read_text(encoding="utf-8"))
+            self.assertIn(
+                "Use for extra work.",
+                (skills / "the-way-extra-skill" / "SKILL.md").read_text(encoding="utf-8"),
+            )
             self.assertFalse((skills / "the-way-critique").exists())
         self.assertEqual(mine.read_bytes(), own)
         agents = (self.product / "AGENTS.md").read_bytes()
-        self.assertTrue(agents.startswith(b"# Product rules\r\n\r\n<!-- the-way:begin -->\r\n"
-                                          b"# Pinned the-way process, later\r\n"), agents)
+        self.assertTrue(
+            agents.startswith(
+                b"# Product rules\r\n\r\n<!-- the-way:begin -->\r\n"
+                b"# Pinned the-way process, later\r\n"
+            ),
+            agents,
+        )
         self.assertTrue(agents.endswith(b"<!-- the-way:end -->\r\n\r\nMore rules.\r\n"), agents)
         self.assertEqual(agents.count(b"<!-- the-way:begin -->"), 1)
-        status = command("git", "status", "--porcelain", "--untracked-files=all",
-                         cwd=self.product).stdout.splitlines()
+        status = command(
+            "git", "status", "--porcelain", "--untracked-files=all", cwd=self.product
+        ).stdout.splitlines()
         self.assertIn("M  .the-way", status)
         for line in status:
-            self.assertRegex(line[3:], r"^(\.the-way|AGENTS\.md|\.(claude|agents)/skills/"
-                                       r"the-way-(?!mine/)[a-z-]+/SKILL\.md)$", status)
-        repeated = command(sys.executable, "-B", str(later / "installation" / "install.py"),
-                           str(self.product), "--apply", cwd=self.product, input_text="y\n")
+            self.assertRegex(
+                line[3:],
+                r"^(\.the-way|AGENTS\.md|\.(claude|agents)/skills/"
+                r"the-way-(?!mine/)[a-z-]+/SKILL\.md)$",
+                status,
+            )
+        repeated = command(
+            sys.executable,
+            "-B",
+            str(later / "installation" / "install.py"),
+            str(self.product),
+            "--apply",
+            cwd=self.product,
+            input_text="y\n",
+        )
         self.assertEqual(repeated.returncode, 0, repeated.stdout + repeated.stderr)
         self.assertIn("Already installed; no changes", repeated.stdout)
 
@@ -565,8 +717,10 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(agents.read_bytes(), added)
         # The preview shows the added lines: a blank one, then the block; the first newline
         # appended only ends the existing last line.
-        self.assertEqual("\n".join(shown) + "\n",
-                         added[len(original):].decode("utf-8").replace("\r\n", "\n")[1:])
+        self.assertEqual(
+            "\n".join(shown) + "\n",
+            added[len(original) :].decode("utf-8").replace("\r\n", "\n")[1:],
+        )
         repeated = self.install("--apply", input_text="y\n")
         self.assertEqual(repeated.returncode, 0, repeated.stderr)
         self.assertIn("KEEP AGENTS.md", repeated.stdout)
@@ -591,8 +745,9 @@ class InstallTest(unittest.TestCase):
         self.assertIn("-# Old the-way process\n+# Pinned the-way process\n", preview.stdout)
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
-        self.assertEqual(agents.read_bytes(),
-                         ("# Rules\n\n" + BLOCK + "\nMore rules.\n").encode("utf-8"))
+        self.assertEqual(
+            agents.read_bytes(), ("# Rules\n\n" + BLOCK + "\nMore rules.\n").encode("utf-8")
+        )
 
     def test_a_rewritten_block_counts_the_new_file_only_against_the_codex_limit(self) -> None:
         agents = self.product / "AGENTS.md"
@@ -608,12 +763,11 @@ class InstallTest(unittest.TestCase):
     def test_rejects_agents_file_with_broken_block_before_writing(self) -> None:
         agents = self.product / "AGENTS.md"
         for content, message in (
-                ("# Rules\n\n<!-- the-way:begin -->\nNo end.\n",
-                 "1 <!-- the-way:begin --> and 0"),
-                ("<!-- the-way:end -->\n" + BLOCK, "1 <!-- the-way:begin --> and 2"),
-                (BLOCK + "\n" + BLOCK, "2 <!-- the-way:begin --> and 2"),
-                ("<!-- the-way:end -->\n<!-- the-way:begin -->\n",
-                 "1 <!-- the-way:begin --> and 1")):
+            ("# Rules\n\n<!-- the-way:begin -->\nNo end.\n", "1 <!-- the-way:begin --> and 0"),
+            ("<!-- the-way:end -->\n" + BLOCK, "1 <!-- the-way:begin --> and 2"),
+            (BLOCK + "\n" + BLOCK, "2 <!-- the-way:begin --> and 2"),
+            ("<!-- the-way:end -->\n<!-- the-way:begin -->\n", "1 <!-- the-way:begin --> and 1"),
+        ):
             with self.subTest(message=message):
                 agents.write_text(content, encoding="utf-8", newline="\n")
                 for args in ((), ("--apply",)):
@@ -621,8 +775,9 @@ class InstallTest(unittest.TestCase):
                     self.assertNotEqual(result.returncode, 0, result.stdout)
                     self.assertIn(message, result.stderr)
                 self.assertEqual(agents.read_text(encoding="utf-8", newline=""), content)
-                self.assertEqual(sorted(path.name for path in self.product.iterdir()),
-                                 [".git", "AGENTS.md"])
+                self.assertEqual(
+                    sorted(path.name for path in self.product.iterdir()), [".git", "AGENTS.md"]
+                )
 
     def test_adds_runs_line_to_gitignore_only_where_missing(self) -> None:
         ignore = self.product / ".gitignore"
@@ -635,8 +790,11 @@ class InstallTest(unittest.TestCase):
         ignore.write_bytes(b"")
         emptied = self.install("--apply", input_text="y\n")
         self.assertEqual(emptied.returncode, 0, emptied.stderr)
-        self.assertIn("APPEND .gitignore\n(added at the end; the existing content stays byte for "
-                      "byte)\n+.runs/\n", emptied.stdout)
+        self.assertIn(
+            "APPEND .gitignore\n(added at the end; the existing content stays byte for "
+            "byte)\n+.runs/\n",
+            emptied.stdout,
+        )
         self.assertEqual(ignore.read_bytes(), b".runs/\n")
 
         ignore.write_bytes(b"build/\r\n")
@@ -654,7 +812,8 @@ class InstallTest(unittest.TestCase):
     def test_rewrites_an_entry_point_of_its_own(self) -> None:
         # An entry point that points to .the-way is the installer's, whatever commit wrote it.
         earlier = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
-            "at the commit its gitlink records.", "at an earlier commit.")
+            "at the commit its gitlink records.", "at an earlier commit."
+        )
         for directory in (".claude", ".agents"):
             wrapper = self.product / directory / "skills/the-way-record-decision/SKILL.md"
             wrapper.parent.mkdir(parents=True)
@@ -664,18 +823,22 @@ class InstallTest(unittest.TestCase):
         self.assertIn("REPLACE .claude/skills/the-way-record-decision/SKILL.md", applied.stdout)
         for directory in (".claude", ".agents"):
             wrapper = self.product / directory / "skills/the-way-record-decision/SKILL.md"
-            self.assertEqual(wrapper.read_text(encoding="utf-8"),
-                             self.entry_point("elements/decisions/skill/SKILL.md",
-                                              "record-decision"))
+            self.assertEqual(
+                wrapper.read_text(encoding="utf-8"),
+                self.entry_point("elements/decisions/skill/SKILL.md", "record-decision"),
+            )
 
     def test_a_file_without_every_mark_of_an_entry_point_is_the_products(self) -> None:
         # Only a file with the entry point's name, description and sentence is the installer's.
         own = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
-            "at the commit its gitlink records.", "at an earlier commit.")
+            "at the commit its gitlink records.", "at an earlier commit."
+        )
         wrapper = self.product / ".claude/skills/the-way-record-decision/SKILL.md"
         wrapper.parent.mkdir(parents=True)
-        for content in (own.replace("name: the-way-record-decision", "name: the-way-other"),
-                        own.replace(" Use this product's pinned the-way commit.", "")):
+        for content in (
+            own.replace("name: the-way-record-decision", "name: the-way-other"),
+            own.replace(" Use this product's pinned the-way commit.", ""),
+        ):
             wrapper.write_text(content, encoding="utf-8", newline="\n")
             result = self.install("--apply", input_text="y\n")
             self.assertNotEqual(result.returncode, 0, result.stdout)
@@ -701,15 +864,19 @@ class InstallTest(unittest.TestCase):
                 self.assertIn("Existing integration file differs", result.stderr)
                 self.assertIn(directory, result.stderr)
                 self.assertEqual(wrapper.read_text(encoding="utf-8"), "user's skill\n")
-                self.assertEqual(sorted(path.name for path in self.product.iterdir()),
-                                 sorted([".git", directory]))
+                self.assertEqual(
+                    sorted(path.name for path in self.product.iterdir()),
+                    sorted([".git", directory]),
+                )
                 shutil.rmtree(self.product / directory)
 
     def test_rejects_agents_or_ignore_file_that_is_no_regular_utf8_file(self) -> None:
         for name in ("AGENTS.md", ".gitignore"):
             path = self.product / name
-            for kind, message in (("directory", "is not a regular file"),
-                                  ("bytes", "is not UTF-8 text")):
+            for kind, message in (
+                ("directory", "is not a regular file"),
+                ("bytes", "is not UTF-8 text"),
+            ):
                 with self.subTest(name=name, kind=kind):
                     if kind == "directory":
                         path.mkdir()
@@ -719,8 +886,10 @@ class InstallTest(unittest.TestCase):
                         result = self.install(*args, input_text="y\n")
                         self.assertNotEqual(result.returncode, 0, result.stdout)
                         self.assertIn(f"Existing {name} {message}", result.stderr)
-                    self.assertEqual(sorted(entry.name for entry in self.product.iterdir()),
-                                     sorted([".git", name]))
+                    self.assertEqual(
+                        sorted(entry.name for entry in self.product.iterdir()),
+                        sorted([".git", name]),
+                    )
                     if kind == "directory":
                         self.assertEqual(list(path.iterdir()), [])
                         path.rmdir()
@@ -732,24 +901,32 @@ class InstallTest(unittest.TestCase):
         (self.product / "AGENTS.override.md").write_text("# Override\n", encoding="utf-8")
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
-        self.assertIn("WARNING: AGENTS.override.md exists; Codex reads it instead of AGENTS.md",
-                      preview.stdout)
+        self.assertIn(
+            "WARNING: AGENTS.override.md exists; Codex reads it instead of AGENTS.md",
+            preview.stdout,
+        )
         self.assertNotIn("bytes; Codex reads at most", preview.stdout)
         (self.product / "AGENTS.override.md").unlink()
 
         (self.product / "AGENTS.md").write_bytes(b"x" * 32000 + b"\n")
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
-        self.assertIn(f"WARNING: AGENTS.md will hold {32001 + 1 + len(BLOCK.encode('utf-8'))} bytes; Codex reads "
-                      "at most 32768 bytes", preview.stdout)
+        self.assertIn(
+            f"WARNING: AGENTS.md will hold {32001 + 1 + len(BLOCK.encode('utf-8'))} bytes; Codex reads "
+            "at most 32768 bytes",
+            preview.stdout,
+        )
         self.assertNotIn("AGENTS.override.md", preview.stdout)
 
     def test_warns_before_writing_paths_git_ignores(self) -> None:
         (self.product / ".gitignore").write_text(".claude/\n.agents/\n", encoding="utf-8")
         preview = self.install()
         self.assertEqual(preview.returncode, 0, preview.stderr)
-        warning = [line for line in preview.stdout.splitlines()
-                   if line.startswith("WARNING: git ignores these paths")]
+        warning = [
+            line
+            for line in preview.stdout.splitlines()
+            if line.startswith("WARNING: git ignores these paths")
+        ]
         self.assertEqual(len(warning), 1, preview.stdout)
         for _, name in NAMES:
             self.assertIn(f".claude/skills/the-way-{name}/SKILL.md", warning[0])
@@ -760,16 +937,22 @@ class InstallTest(unittest.TestCase):
         # A warning, not a refusal: the run goes on and shows it before asking.
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
-        self.assertLess(applied.stdout.index("WARNING: git ignores these paths"),
-                        applied.stdout.index("Apply these changes?"))
-        self.assertTrue((self.product / ".agents/skills/the-way-record-decision/SKILL.md").is_file())
+        self.assertLess(
+            applied.stdout.index("WARNING: git ignores these paths"),
+            applied.stdout.index("Apply these changes?"),
+        )
+        self.assertTrue(
+            (self.product / ".agents/skills/the-way-record-decision/SKILL.md").is_file()
+        )
 
         (self.product / "AGENTS.md").unlink()
         (self.product / ".gitignore").write_text("AGENTS.md\n.runs/\n", encoding="utf-8")
         preview = self.install()
-        self.assertIn("WARNING: git ignores these paths in this repository, so they cannot be "
-                      "committed and other clones and cloud sessions will not get them: AGENTS.md\n",
-                      preview.stdout)
+        self.assertIn(
+            "WARNING: git ignores these paths in this repository, so they cannot be "
+            "committed and other clones and cloud sessions will not get them: AGENTS.md\n",
+            preview.stdout,
+        )
 
     def test_rejects_an_ignored_submodule_path_before_writing(self) -> None:
         # git submodule add refuses an ignored path, so the run is refused, not warned about.
@@ -780,8 +963,9 @@ class InstallTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn("Git ignores .the-way in this repository", result.stderr)
         self.assertEqual(ignore.read_bytes(), b".*\n!.gitignore\n")
-        self.assertEqual(sorted(path.name for path in self.product.iterdir()),
-                         [".git", ".gitignore"])
+        self.assertEqual(
+            sorted(path.name for path in self.product.iterdir()), [".git", ".gitignore"]
+        )
 
     def test_declined_apply_writes_nothing(self) -> None:
         result = self.install("--apply", input_text="n\n")
@@ -842,8 +1026,10 @@ class InstallTest(unittest.TestCase):
                         self.assertIn("@AGENTS.md", result.stdout)
                 self.assertIn("Cancelled; no changes", cancelled.stdout)
                 if warns:
-                    self.assertLess(cancelled.stdout.index("WARNING:"),
-                                    cancelled.stdout.index("Apply these changes?"))
+                    self.assertLess(
+                        cancelled.stdout.index("WARNING:"),
+                        cancelled.stdout.index("Apply these changes?"),
+                    )
                 self.assertEqual(before, self.product_files())
                 self.assertEqual(claude.read_bytes(), original)
 
@@ -856,7 +1042,9 @@ class InstallTest(unittest.TestCase):
         self.assertIn("CLAUDE.md", preview.stdout.split("WARNING:")[1])
         applied = self.install("--apply", input_text="y\n")
         self.assertEqual(applied.returncode, 0, applied.stderr)
-        self.assertLess(applied.stdout.index("WARNING:"), applied.stdout.index("Apply these changes?"))
+        self.assertLess(
+            applied.stdout.index("WARNING:"), applied.stdout.index("Apply these changes?")
+        )
         self.assertEqual((self.product / "CLAUDE.md").read_bytes(), b"@AGENTS.md\n")
 
     def test_rejects_claude_directory_before_writing(self) -> None:
@@ -868,7 +1056,9 @@ class InstallTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Existing CLAUDE.md is not a regular file", result.stderr)
         self.assertEqual(list(claude.iterdir()), [])
-        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+        self.assertEqual(
+            sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"]
+        )
 
     def test_rejects_claude_invalid_utf8_before_writing(self) -> None:
         # invariant: installation-claude-guidance
@@ -879,7 +1069,9 @@ class InstallTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Existing CLAUDE.md is not UTF-8 text", result.stderr)
         self.assertEqual(claude.read_bytes(), b"\xff\xfe rules")
-        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+        self.assertEqual(
+            sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"]
+        )
 
     def test_rejects_symlink_at_claude_without_touching_target(self) -> None:
         # invariant: installation-claude-guidance
@@ -896,7 +1088,9 @@ class InstallTest(unittest.TestCase):
             self.assertIn("Existing CLAUDE.md is not a regular file", result.stderr)
         self.assertTrue(claude.is_symlink())
         self.assertEqual(outside.read_bytes(), b"@AGENTS.md\n")
-        self.assertEqual(sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"])
+        self.assertEqual(
+            sorted(path.name for path in self.product.iterdir()), [".git", "CLAUDE.md"]
+        )
 
     def junction(self, relative: str, target: Path) -> None:
         """A Windows junction at `relative` in the product that leads to `target`. The standard
@@ -909,6 +1103,7 @@ class InstallTest(unittest.TestCase):
         link.parent.mkdir(parents=True, exist_ok=True)
         try:
             import _winapi
+
             _winapi.CreateJunction(str(target), str(link))
         except (ImportError, AttributeError, OSError) as error:
             self.skipTest(f"Junctions unavailable: {error}")
@@ -926,18 +1121,28 @@ class InstallTest(unittest.TestCase):
     def tree_of(root: Path) -> dict[str, bytes | None]:
         """Every path below `root` outside `.git` with the bytes of each file, so that a created
         directory counts and a path below a junction is listed through it."""
-        return {path.relative_to(root).as_posix(): path.read_bytes() if path.is_file() else None
-                for path in sorted(root.rglob("*")) if ".git" not in path.relative_to(root).parts}
+        return {
+            path.relative_to(root).as_posix(): path.read_bytes() if path.is_file() else None
+            for path in sorted(root.rglob("*"))
+            if ".git" not in path.relative_to(root).parts
+        }
 
     def test_rejects_a_junction_on_the_path_of_a_file_it_writes_without_touching_the_target(
-            self) -> None:
+        self,
+    ) -> None:
         # invariant: installation-paths-through-links
         outside = Path(self.temporary.name) / "outside"
         outside.mkdir()
         (outside / "kept.md").write_bytes(b"outside\n")
-        for relative in (".claude", ".claude/agents", ".claude/skills",
-                         ".claude/skills/the-way-make-change", ".agents", ".agents/skills",
-                         "foundations"):
+        for relative in (
+            ".claude",
+            ".claude/agents",
+            ".claude/skills",
+            ".claude/skills/the-way-make-change",
+            ".agents",
+            ".agents/skills",
+            "foundations",
+        ):
             for args in ((), ("--apply",)):
                 with self.subTest(junction=relative, args=args):
                     self.empty_product()
@@ -954,7 +1159,8 @@ class InstallTest(unittest.TestCase):
     def test_deletes_nothing_through_a_junction_at_the_folder_of_a_stale_entry_point(self) -> None:
         # invariant: installation-paths-through-links
         own = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
-            "the-way-record-decision", "the-way-gone")
+            "the-way-record-decision", "the-way-gone"
+        )
         for directory in (".claude", ".agents"):
             with self.subTest(directory=directory):
                 self.empty_product()
@@ -967,16 +1173,21 @@ class InstallTest(unittest.TestCase):
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
                     self.assertNotIn("DELETE", result.stdout)
                     self.assertEqual((outside / "SKILL.md").read_text(encoding="utf-8"), own)
-                    self.assertTrue((self.product / directory / "skills/the-way-gone").is_junction())
+                    self.assertTrue(
+                        (self.product / directory / "skills/the-way-gone").is_junction()
+                    )
 
     def test_the_scan_for_stale_files_does_not_enter_a_junction_at_their_directory(self) -> None:
         # invariant: installation-paths-through-links
         # `plan` refuses these junctions before it scans, so the scans are called directly: they
         # are the protection of the deletion if `plan` is ever reordered.
         entry = self.entry_point("elements/decisions/skill/SKILL.md", "record-decision").replace(
-            "the-way-record-decision", "the-way-gone")
-        definition = ("---\nname: the-way-gone\ndescription: An earlier type. "
-                      f"{install.OWN_AGENT_MARK}\n---\n")
+            "the-way-record-decision", "the-way-gone"
+        )
+        definition = (
+            "---\nname: the-way-gone\ndescription: An earlier type. "
+            f"{install.OWN_AGENT_MARK}\n---\n"
+        )
         agents, skills = install.stale_agent_definitions, install.stale_entry_points
         # (the junction, or None for real directories; the file's path below the junction or the
         # product; its text; the scan)
@@ -1014,8 +1225,10 @@ class InstallTest(unittest.TestCase):
         # as the submodule if it went through the junction.
         shutil.rmtree(self.product / ".the-way", onexc=make_writable)
         self.junction(".the-way", self.source)
-        self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
-                                 cwd=self.product).stdout.strip(), self.commit)
+        self.assertEqual(
+            command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=self.product).stdout.strip(),
+            self.commit,
+        )
         before = self.tree_of(self.source)
         for args in ((), ("--apply",)):
             with self.subTest(args=args):
@@ -1033,10 +1246,14 @@ class InstallTest(unittest.TestCase):
         # as claimed by no part; it reports nothing about the form of the empty foundation files.
         errors = result.stdout.splitlines()[:-1]
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn(".gitmodules: no part claims it: give it to a part or list it as left out "
-                      "on purpose", errors)
-        self.assertIn(".the-way: no part claims it: give it to a part or list it as left out on "
-                      "purpose", errors)
+        self.assertIn(
+            ".gitmodules: no part claims it: give it to a part or list it as left out on purpose",
+            errors,
+        )
+        self.assertIn(
+            ".the-way: no part claims it: give it to a part or list it as left out on purpose",
+            errors,
+        )
         for line in errors:
             self.assertIn(": no part claims it:", line)
 
@@ -1047,11 +1264,21 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(applied.returncode, 0, applied.stderr)
         migrate = self.product / ".the-way" / "elements" / "common" / "migrate_foundation.py"
         report = Path(self.temporary.name) / "migration.md"
-        result = command(sys.executable, "-B", str(migrate), str(self.product), "--report",
-                         str(report), cwd=self.product)
+        result = command(
+            sys.executable,
+            "-B",
+            str(migrate),
+            str(self.product),
+            "--report",
+            str(report),
+            cwd=self.product,
+        )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("trial run, nothing written: 0 changes in 0 files, 0 files removed; "
-                      "0 places for a human", result.stdout)
+        self.assertIn(
+            "trial run, nothing written: 0 changes in 0 files, 0 files removed; "
+            "0 places for a human",
+            result.stdout,
+        )
 
     def test_pinned_submodule_initializes_in_a_fresh_checkout(self) -> None:
         applied = self.install("--apply", input_text="y\n")
@@ -1061,14 +1288,33 @@ class InstallTest(unittest.TestCase):
         self.assertEqual(command("git", "init", "-q", str(fresh), cwd=SOURCE).returncode, 0)
         shutil.copyfile(self.product / ".gitmodules", fresh / ".gitmodules")
         self.assertEqual(command("git", "add", "--", ".gitmodules", cwd=fresh).returncode, 0)
-        indexed = command("git", "update-index", "--add", "--cacheinfo", "160000",
-                          self.commit, ".the-way", cwd=fresh)
+        indexed = command(
+            "git",
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            "160000",
+            self.commit,
+            ".the-way",
+            cwd=fresh,
+        )
         self.assertEqual(indexed.returncode, 0, indexed.stderr)
-        initialized = command("git", "-c", "protocol.file.allow=always", "submodule", "update",
-                              "--init", "--", ".the-way", cwd=fresh)
+        initialized = command(
+            "git",
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "update",
+            "--init",
+            "--",
+            ".the-way",
+            cwd=fresh,
+        )
         self.assertEqual(initialized.returncode, 0, initialized.stderr)
-        self.assertEqual(command("git", "-C", ".the-way", "rev-parse", "HEAD",
-                                 cwd=fresh).stdout.strip(), self.commit)
+        self.assertEqual(
+            command("git", "-C", ".the-way", "rev-parse", "HEAD", cwd=fresh).stdout.strip(),
+            self.commit,
+        )
 
 
 class FileActionTest(unittest.TestCase):
@@ -1114,8 +1360,9 @@ class FileActionTest(unittest.TestCase):
         # judgement): the text differs ("Changed line."), which is no difference in line endings
         # alone, so the file is replaced. Break caught: a comparison that ignores the text, such
         # as one of the line counts.
-        self.assertEqual(self.action_for(b"# Skill\r\n\r\nFirst line.\r\nChanged line.\r\n"),
-                         "REPLACE")
+        self.assertEqual(
+            self.action_for(b"# Skill\r\n\r\nFirst line.\r\nChanged line.\r\n"), "REPLACE"
+        )
 
     def test_a_lone_carriage_return_is_text_and_is_replaced(self) -> None:
         # Source: To do item 1 of the task installer-preview-ignores-line-endings (a human's
@@ -1123,8 +1370,9 @@ class FileActionTest(unittest.TestCase):
         # plus text and the file is replaced. Break caught: normalising every carriage return
         # (for example through universal newlines).
         self.assertEqual(self.action_for(b"# Skill\n\nFirst line.\rSecond line.\n"), "REPLACE")
-        self.assertEqual(self.action_for(b"# Skill\r\r\n\r\nFirst line.\r\nSecond line.\r\n"),
-                         "REPLACE")
+        self.assertEqual(
+            self.action_for(b"# Skill\r\r\n\r\nFirst line.\r\nSecond line.\r\n"), "REPLACE"
+        )
 
     # The two tests below guard the comparison alone. No run reaches file_action with an empty or a
     # non-UTF-8 file at an entry point's or a definition's path: plan() refuses such a file first,

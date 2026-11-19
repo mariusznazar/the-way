@@ -484,37 +484,41 @@ ABC-02@0123abcd
 """
 
 # A test file of the product, its lines joined so that no line of this file is a citation.
-SAVING = "\n".join([
-    '"""Tests of saving, as save-round-trip/1 has it."""',
-    "import unittest",
-    "",
-    'FIXTURE = "invariant: save-round-trip/1"',
-    "",
-    "",
-    "class Saving(unittest.TestCase):",
-    "    def test_round_trip(self):",
-    "        # invariant: save-round-trip/1",
-    "        # The rule of ABC-01@0123abcd and of `clock-tick/1`.",
-    '        # An example: "ABC-01@0123abcd".',
-    "        self.assertTrue(True)",
-    "",
-])
+SAVING = "\n".join(
+    [
+        '"""Tests of saving, as save-round-trip/1 has it."""',
+        "import unittest",
+        "",
+        'FIXTURE = "invariant: save-round-trip/1"',
+        "",
+        "",
+        "class Saving(unittest.TestCase):",
+        "    def test_round_trip(self):",
+        "        # invariant: save-round-trip/1",
+        "        # The rule of ABC-01@0123abcd and of `clock-tick/1`.",
+        '        # An example: "ABC-01@0123abcd".',
+        "        self.assertTrue(True)",
+        "",
+    ]
+)
 
-SAVING_AFTER = "\n".join([
-    '"""Tests of saving, as save-round-trip has it."""',
-    "import unittest",
-    "",
-    'FIXTURE = "invariant: save-round-trip/1"',
-    "",
-    "",
-    "class Saving(unittest.TestCase):",
-    "    def test_round_trip(self):",
-    "        # invariant: save-round-trip",
-    "        # The rule of ABC-01 and of `clock-tick/1`.",
-    '        # An example: "ABC-01@0123abcd".',
-    "        self.assertTrue(True)",
-    "",
-])
+SAVING_AFTER = "\n".join(
+    [
+        '"""Tests of saving, as save-round-trip has it."""',
+        "import unittest",
+        "",
+        'FIXTURE = "invariant: save-round-trip/1"',
+        "",
+        "",
+        "class Saving(unittest.TestCase):",
+        "    def test_round_trip(self):",
+        "        # invariant: save-round-trip",
+        "        # The rule of ABC-01 and of `clock-tick/1`.",
+        '        # An example: "ABC-01@0123abcd".',
+        "        self.assertTrue(True)",
+        "",
+    ]
+)
 
 # A test in another language, with Windows line endings but for its last line.
 CLOCK = "// " + "invariant: clock-steady/2\r\nconst name = 'clock-steady/2';\r\n// done\n"
@@ -545,8 +549,12 @@ def build(files, raw=None):
     for path, data in (raw or {}).items():
         write(root, path, data)
     for command in (["init", "-q"], ["add", "-A"]):
-        subprocess.run(["git", "-c", "core.autocrlf=false", *command], cwd=root, check=True,
-                       capture_output=True)
+        subprocess.run(
+            ["git", "-c", "core.autocrlf=false", *command],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
     return root
 
 
@@ -578,14 +586,21 @@ def tree(root):
 
 def changed(before, after):
     """The paths that appeared, vanished or changed between two states of `tree`."""
-    return sorted(path for path in before.keys() | after.keys()
-                  if path not in before or path not in after or before[path] != after[path])
+    return sorted(
+        path
+        for path in before.keys() | after.keys()
+        if path not in before or path not in after or before[path] != after[path]
+    )
 
 
 def run(root, *arguments):
     report = os.path.join(tempfile.mkdtemp(), "report.md")
-    result = subprocess.run([sys.executable, "-B", SCRIPT, root, "--report", report, *arguments],
-                            capture_output=True, text=True, encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, "-B", SCRIPT, root, "--report", report, *arguments],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
     with open(report, encoding="utf-8") as handle:
         return result.returncode, result.stdout, handle.read()
 
@@ -655,33 +670,45 @@ class Applied(unittest.TestCase):
             "- **guidelines/coding.md** — `ABC-01@0123abcd`",
             "- **guidelines/coding.md** — ABC-02@0123abcd",
             "- **tests/test_saving.py:10** — `clock-tick/1`",
-            "- **tests/test_saving.py:11** — \"ABC-01@0123abcd\"",
-            "- **guidelines/coding.md** — \"ABC-02@0123abcd\"",
+            '- **tests/test_saving.py:11** — "ABC-01@0123abcd"',
+            '- **guidelines/coding.md** — "ABC-02@0123abcd"',
             "- **tests/test_saving.py** — line 4",
             "- **tests/clock.test.mjs** — line 2",
             "- **README.md** — 1 line",
         ]:
             self.assertIn(line, self.report.split("\n"), line)
-        for text in ["condition met, decision kept — the shell still ticks",
-                     "- **Verification:** level 3 — the human at the merge assesses the release.",
-                     "## save-flow", "## save-file", "1. low — a player retries"]:
+        for text in [
+            "condition met, decision kept — the shell still ticks",
+            "- **Verification:** level 3 — the human at the merge assesses the release.",
+            "## save-flow",
+            "## save-file",
+            "1. low — a player retries",
+        ]:
             self.assertIn(text, self.report)
         self.assertNotIn("**clock-tick** — https", self.report)
-        self.assertNotIn("- **save-name** — Identifier: save-name", self.report.split(
-            "### Recovered invariants (list removed): Derives from not filled")[1])
+        self.assertNotIn(
+            "- **save-name** — Identifier: save-name",
+            self.report.split("### Recovered invariants (list removed): Derives from not filled")[
+                1
+            ],
+        )
 
     def test_exit_code_says_a_human_has_work(self):
         self.assertEqual(self.code, 1, self.output)
         self.assertTrue(self.output.startswith("applied: "), self.output)
 
     def test_a_second_run_changes_nothing(self):
-        before = {path: read(self.root, path) for path in FILES
-                  if os.path.exists(os.path.join(self.root, *path.split("/")))}
-        code, output, _ = run(self.root, "--apply")
+        before = {
+            path: read(self.root, path)
+            for path in FILES
+            if os.path.exists(os.path.join(self.root, *path.split("/")))
+        }
+        _code, output, _ = run(self.root, "--apply")
         after = {path: read(self.root, path) for path in before}
         self.assertEqual(after, before)
-        self.assertTrue(output.startswith("applied: 0 changes in 0 files, 0 files removed;"),
-                        output)
+        self.assertTrue(
+            output.startswith("applied: 0 changes in 0 files, 0 files removed;"), output
+        )
 
 
 class Trial(unittest.TestCase):
@@ -695,13 +722,15 @@ class Trial(unittest.TestCase):
             self.assertEqual(read(root, path), text.encode("utf-8"), path)
         self.assertEqual(code, 1, output)
         self.assertTrue(output.startswith("trial run, nothing written: "), output)
-        self.assertIn("| `foundations/decisions.md` | older version of a decision removed | 1 |",
-                      report)
+        self.assertIn(
+            "| `foundations/decisions.md` | older version of a decision removed | 1 |", report
+        )
 
     def test_the_default_report_goes_to_runs(self):
         root = build({"foundations/glossary.md": GLOSSARY})
-        result = subprocess.run([sys.executable, "-B", SCRIPT, root], capture_output=True,
-                                text=True, encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, root], capture_output=True, text=True, encoding="utf-8"
+        )
         self.assertEqual(result.returncode, 1, result.stdout)
         with open(os.path.join(root, ".runs", "foundation_migration.md"), encoding="utf-8") as f:
             self.assertIn("| `foundations/glossary.md` | field removed: Avoid | 1 |", f.read())
@@ -712,20 +741,25 @@ class LineEndings(unittest.TestCase):
         glossary = codecs.BOM_UTF8 + GLOSSARY.replace("\n", "\r\n").encode("utf-8")
         root = build({}, {"foundations/glossary.md": glossary})
         run(root, "--apply")
-        self.assertEqual(read(root, "foundations/glossary.md"),
-                         codecs.BOM_UTF8 + GLOSSARY_AFTER.replace("\n", "\r\n").encode("utf-8"))
+        self.assertEqual(
+            read(root, "foundations/glossary.md"),
+            codecs.BOM_UTF8 + GLOSSARY_AFTER.replace("\n", "\r\n").encode("utf-8"),
+        )
 
 
 class Current(unittest.TestCase):
     def test_a_foundation_in_the_current_form_gives_nothing_to_do(self):
-        files = {"foundations/decisions.md": DECISIONS_AFTER.replace(
-                     "- **Based on:** observation of the release page on 2026-10-01 using `curl`",
-                     "- **Based on:** none").replace(
-                     "level 3 — the human at the merge assesses the release.", "none").replace(
-                     "inherited — searched: README.md; found: README.md", "none").replace(
-                     "### ABC-04", "### ABC-03"),
-                 "foundations/glossary.md": GLOSSARY_AFTER,
-                 "src/save.py": "def save():\n    return 'game.sav'\n"}
+        files = {
+            "foundations/decisions.md": DECISIONS_AFTER.replace(
+                "- **Based on:** observation of the release page on 2026-10-01 using `curl`",
+                "- **Based on:** none",
+            )
+            .replace("level 3 — the human at the merge assesses the release.", "none")
+            .replace("inherited — searched: README.md; found: README.md", "none")
+            .replace("### ABC-04", "### ABC-03"),
+            "foundations/glossary.md": GLOSSARY_AFTER,
+            "src/save.py": "def save():\n    return 'game.sav'\n",
+        }
         root = build(files)
         code, output, report = run(root, "--apply")
         self.assertEqual(code, 0, report)
@@ -736,14 +770,19 @@ class Current(unittest.TestCase):
 
 class CannotRun(unittest.TestCase):
     def test_outside_a_git_repository(self):
-        result = subprocess.run([sys.executable, "-B", SCRIPT, tempfile.mkdtemp()],
-                                capture_output=True, text=True, encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, tempfile.mkdtemp()],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
         self.assertEqual(result.returncode, 2, result.stdout)
 
     def test_a_repository_without_a_foundation(self):
         root = build({"src/save.py": "def save():\n    return 'game.sav'\n"})
-        result = subprocess.run([sys.executable, "-B", SCRIPT, root], capture_output=True,
-                                text=True, encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, root], capture_output=True, text=True, encoding="utf-8"
+        )
         self.assertEqual(result.returncode, 2, result.stdout)
         self.assertIn("holds no foundation", result.stdout)
 
