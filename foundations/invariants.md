@@ -268,13 +268,16 @@ preparatory task has no task depending on it; two tasks, neither done, delivered
 or dropped, realize the same projected entry while neither depends on the other, directly or
 through other tasks, and no item of the change log lets the two go side by side on that entry with
 a reason; an open question of the definition does not stand in the plan exactly once, word for
-word with the place its definition gives it, with a task of the plan or an answer; or a cell or an
+word with the place its definition gives it, with a task of the plan or an answer; a cell or an
 item of the open questions names a task, an entry, an item or a question that the plan or its
-definition does not hold.
+definition does not hold; or, in a plan whose `Status:` line reads closed, a task is in a state
+other than done, delivered by another task or dropped, or a task's goal is delivered in another
+task and following the deliveries from task to task never reaches a task that is done, because they
+end in a dropped task or run in a loop.
 
 - **Method:** test
 - **Rests on:** none
-- **Derives from:** WAY-143 · WAY-145 · WAY-146 · WAY-230
+- **Derives from:** WAY-142 · WAY-143 · WAY-145 · WAY-146 · WAY-230
 - **Part:** project-level
 - **Violated:** no
 

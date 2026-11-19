@@ -495,6 +495,50 @@ class Command(unittest.TestCase):
                 path.write_bytes(bad)
                 self.assertNotIn("propose ", self.run_reader(1))
 
+    def close(self, state="done", status="Status: closed 2026-11-19"):
+        text = PLAN.format(fingerprint=FINGERPRINT, state=state)
+        self.write(self.plan, text.replace("Status: handed over 2026-10-02", status))
+
+    def test_a_closed_plan_is_reported_closed_and_proposes_nothing(self):
+        # Break caught: a closed plan answered with the missing handed-over error, or read as one
+        # with task states left to move, or one whose Git evidence is read all the same. The exit
+        # code 0 is the one the script's description gives to a closed plan, for which it reads no
+        # Git evidence.
+        self.archive()
+        self.git(self.repo, "push", "origin", "release")
+        for status in ("Status: closed 2026-11-19", "Status: closed 2026-11-19 \t"):
+            with self.subTest(status=status):
+                self.close(status=status)
+                output = self.run_reader()
+                self.assertRegex(output, r"closed.*2026-11-19")
+                self.assertNotIn("fail:", output)
+                self.assertNotIn("propose ", output)
+                self.assertNotIn("repository:", output)
+
+    def test_a_closed_plan_with_a_task_in_another_state_is_a_finding(self):
+        # Break caught: a plan closed over a task still ready for its cycle passes as closed.
+        for state in ("ready for cycle", "in cycle", "to refine"):
+            with self.subTest(state=state):
+                self.close(state=state)
+                output = self.run_reader(1)
+                self.assertIn("fail: closed — line", output)
+                self.assertNotIn("propose ", output)
+
+    def test_a_closed_line_off_its_form_or_doubled_is_no_closed_plan(self):
+        # Break caught: a crafted Status line reads as closed to the reader that skips the
+        # Git evidence.
+        for status in (
+            "Status: closed",
+            "Status: closed 2026-13-45",
+            "Status: closed 2026-11-19 early",
+            "Status: Closed 2026-11-19",
+            "Status: closed 2026-11-19\nStatus: handed over 2026-10-02",
+            "Status: handed over 2026-10-02\nStatus: closed 2026-11-19",
+        ):
+            with self.subTest(status=status):
+                self.close(status=status)
+                self.assertIn("fail: ", self.run_reader(1))
+
     def test_crafted_non_ascii_repository_paths_are_data(self):
         # Break caught: shell expansion or lossy path decoding on repository/worktree names.
         moved = self.root / "product zażółć & $(echo injected)"

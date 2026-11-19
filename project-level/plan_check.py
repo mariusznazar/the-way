@@ -9,7 +9,8 @@ The plan follows `project-level/plan/template.md`; the definition it names on it
 line, by a path relative to the plan, follows `project-level/definition_template.md`. The check
 reports:
 
-- form — a `Status:` line reading `draft` or `handed over YYYY-MM-DD`, a calendar date; a line
+- form — one `Status:` line reading `draft`, `handed over YYYY-MM-DD` or `closed YYYY-MM-DD`, each
+  date a calendar date; a line
   `Definition: <path> — fingerprint <8 lower-case hex digits>` naming a definition that can be
   read, whose In scope reads `none` or holds a top-level list item, and whose approval
   record and text both give that fingerprint; the sections `## Tasks`, `## Projected entries`,
@@ -33,6 +34,11 @@ reports:
   other tasks, or an item of the change log `- YYYY-MM-DD — side by side: tasks <n>, <m> on
   "<entry>" — <why>` lets the two go side by side on that entry (WAY-230). Each other pair is
   reported at the entry's row, once for each entry the two share;
+- closed — only in a plan whose `Status:` line reads `closed YYYY-MM-DD`: each task whose state is
+  none of `done`, `done — goal delivered in task <n>` and `dropped — approved by human`, and each
+  task whose `done — goal delivered in task <n>` deliveries, followed from task to task, never reach
+  a task that is `done` because they end in a dropped task or run in a loop, each reported at the
+  task's own row;
 - questions — every open question of the definition stands once, word for word, with the place
   the definition gives it, followed by a task of the plan or a non-empty answer; every item is in
   one of these forms, and an item naming a place of the definition belongs to a question it holds.
@@ -72,7 +78,10 @@ SECTIONS = (TASKS, ENTRIES, QUESTIONS, PHASES, CHANGE_LOG)
 TASK_COLUMNS = ("#", "Task", "Goal", "Depends on", "In scope", "Preparatory", "State", "Document")
 ENTRY_COLUMNS = ("Entry", "Realized by", "Written by")
 
-STATUS = re.compile(r"^Status: (draft|handed over (?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2}))$")
+STATUS = re.compile(
+    r"^Status: (draft|handed over (?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2})"
+    r"|closed (?P<closed>[0-9]{4}-[0-9]{2}-[0-9]{2}))$"
+)
 DEFINITION_LINE = re.compile(
     r"^Definition: (?P<path>\S.*?) — fingerprint "
     r"(?P<fingerprint>[0-9a-f]{8})$"
@@ -84,15 +93,16 @@ NUMBER = re.compile(r"^[1-9][0-9]*$")  # ASCII digits only: `\d` takes every Uni
 NUMBERS = re.compile(r"^[1-9][0-9]*(, [1-9][0-9]*)*$")
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 DELIVERED_IN = re.compile(r"^done — goal delivered in task (?P<task>[1-9][0-9]*)$")
+DROPPED = "dropped — approved by human"
 STATES = (
     "to refine",
     "waiting for human",
     "ready for cycle",
     "in cycle",
     "done",
-    "dropped — approved by human",
+    DROPPED,
 )
-FINISHED = ("done", "dropped — approved by human")  # and a goal delivered in another task
+FINISHED = ("done", DROPPED)  # and a goal delivered in another task
 SIDE_BY_SIDE = re.compile(
     r"^[0-9]{4}-[0-9]{2}-[0-9]{2} — side by side: tasks "
     r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) on "(?P<rest>.*)$'
@@ -199,18 +209,36 @@ def check_status(preamble):
             Finding(
                 "form",
                 status[0][0],
-                "the status reads neither `draft` nor `handed over YYYY-MM-DD`",
+                "the status reads none of `draft`, `handed over YYYY-MM-DD` and "
+                "`closed YYYY-MM-DD`",
             )
         )
-    elif match.group("date") and not calendar_date(match.group("date")):
+    else:
+        for group, did in (("date", "handed over"), ("closed", "closed")):
+            if match.group(group) and not calendar_date(match.group(group)):
+                findings.append(
+                    Finding(
+                        "form",
+                        status[0][0],
+                        "the plan was %s on %s, which is no calendar date"
+                        % (did, match.group(group)),
+                    )
+                )
+    if len(status) > 1:
         findings.append(
-            Finding(
-                "form",
-                status[0][0],
-                "the plan was handed over on %s, which is no calendar date" % match.group("date"),
-            )
+            Finding("form", status[1][0], "a second `Status:` line stands above the first section")
         )
     return findings
+
+
+def closed_date(preamble):
+    """The date in the first `Status:` line of the header where it reads `closed YYYY-MM-DD`, else
+    None."""
+    for _, line in preamble:
+        if line.startswith("Status:"):
+            match = STATUS.match(line.rstrip())
+            return match.group("closed") if match else None
+    return None
 
 
 def check_fingerprints(number, held, definition_text, by_name):
@@ -848,6 +876,71 @@ def check_order(plan):
     return findings
 
 
+LOOP = "loop"
+
+
+def delivery_ends(by_number):
+    """How following `done — goal delivered in task <n>` ends, for each task number: the state of
+    the task whose row is no delivery, `LOOP` where the deliveries run in a loop, None where they
+    meet a task the plan does not hold or a task delivered in itself (a finding of form). Each task
+    is settled once and nothing recurses, so crafted rows cannot make it run long or deep."""
+    ends = {}
+    for start in by_number:
+        walked, current = {}, start
+        while current not in ends and current not in walked:
+            task = by_number.get(current)
+            if task is None or task.delivered_in == current:
+                ends[current] = None
+            elif task.delivered_in is None:
+                ends[current] = task.state
+            else:
+                walked[current] = None
+                current = task.delivered_in
+        ends.update(dict.fromkeys(walked, ends.get(current, LOOP)))
+    return ends
+
+
+def check_closed(tasks):
+    """Report each row of a closed plan that is none of `done`, `done — goal delivered in task <n>`
+    and `dropped — approved by human`, and each row whose deliveries, followed from task to task,
+    never reach a task that is `done`: where the task it names is dropped, or where they end in a
+    dropped task or run in a loop."""
+    findings = []
+    by_number = {task.number: task for task in tasks if task.number is not None}
+    ends = delivery_ends(by_number)
+    for task in tasks:
+        target = by_number.get(task.delivered_in)
+        if task.delivered_in is None and task.state not in FINISHED:
+            findings.append(
+                Finding(
+                    "closed",
+                    task.line,
+                    "the plan is closed, while the task is `%s`, not done, delivered in another "
+                    "task or dropped" % task.state,
+                )
+            )
+        elif target is not None and target.state == DROPPED:
+            findings.append(
+                Finding(
+                    "closed",
+                    task.line,
+                    "the plan is closed, while the goal is delivered in task %d, which is dropped"
+                    % task.delivered_in,
+                )
+            )
+        elif task.delivered_in is not None and ends.get(task.number) in (LOOP, DROPPED):
+            findings.append(
+                Finding(
+                    "closed",
+                    task.line,
+                    "the plan is closed, while the deliveries from this task never reach a task "
+                    "that is done: they %s"
+                    % ("run in a loop" if ends[task.number] == LOOP else "end in a dropped task"),
+                )
+            )
+    return findings
+
+
 def check_questions(section, definition, tasks, numbers_known):
     findings = []
     held = {task.number for task in tasks} if tasks is not None and numbers_known else None
@@ -942,6 +1035,8 @@ def check(plan_text, definition_text, definition_error=None):
         findings += check_preparatory(plan.tasks)
         if plan.entries is not None:
             findings += check_order(plan)
+        if closed_date(preamble):
+            findings += check_closed(plan.tasks)
     if QUESTIONS in once and content(once[QUESTIONS]):
         findings += check_questions(once[QUESTIONS], definition, plan.tasks, plan.numbers_known)
     return sorted(findings, key=lambda f: f.line)

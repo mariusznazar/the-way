@@ -1,7 +1,8 @@
 # Write a task's line in the backlog
 
 Read by `refine-task` where it makes a task's line or moves it to ready, and by `lead-project` where
-it moves a line to ready or brings the dependencies of lines in step with the plan (WAY-154). How a
+it moves a line to ready, brings the dependencies of lines in step with the plan (WAY-154) or, at the
+closing of a project, makes the line of a dropped task that becomes a task of its own. How a
 line is handled — the status of a new line, the move to ready, the form of the dependencies and of
 the identifier a dependency names, how a line is found, which fields may change, what to do where
 an identifier is already carried — is the rules of the task place, never the-way's and never text
@@ -25,6 +26,10 @@ rule; the files that name it point here.
   document is in refinement.
 - A task of a project plan carries its identifier and its dependencies, as the two sections below
   give.
+- At the closing of a project (`project-level/lead/skill/closure.md`), the project orchestrator makes
+  the line of a dropped task that becomes a task of its own and has none, by this file. That task is
+  `source only` and leaves the plan, so its line carries no identifier derived from the plan and no
+  dependencies, as the line of a task that belongs to no plan does.
 
 ## The identifier
 

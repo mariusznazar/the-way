@@ -4956,7 +4956,8 @@ side, how the plan is checked, and how a task's state in it is proven.
 
 The breakdown of a project writes its plan as one document beside the approved definition, whose
 header names the definition and the fingerprint the definition's approval record holds, and whose
-`Status:` line says whether the plan is still a draft or has been handed to the human. Each task
+`Status:` line says whether the plan is still a draft, has been handed to the human or has been
+closed once each of its tasks is done, delivered in another task or dropped. Each task
 stands in one row of one table of tasks, with the columns and states the plan template gives, while
 the tasks that realize each projected entry and the one task that writes it into the foundation
 stand in a table of their own, a row for each entry under the heading the definition gives it. The
@@ -4968,8 +4969,8 @@ written in the language of the definition under headings, states and markers kep
 - **Based on:** none
 - **Relations:** derives from WAY-106 · derives from WAY-118 · derives from
   WAY-100
-- **Verification:** invariants: project-plan-form. For what the plan holds beyond its form, an agent
-  compares the plan with the decision:
+- **Verification:** invariants: project-plan-form · project-plan-check. For what the plan holds
+  beyond its form, an agent compares the plan with the decision:
   - complies: the plan of a Polish definition gives each task's goal in Polish under English
     headings, its header carries the fingerprint the approval record holds,
     and the projected decision
@@ -4988,7 +4989,9 @@ can drift from it. A definition can project many entries, its decisions named on
 question; listed in the row of every task that realizes them, they would fill a cell no one reads
 and need short keys made up for them, while a row per entry under its own heading is matched to the
 definition word for word and shows in one cell the single task that writes it. The columns and the
-states stand in the template, so that a change to them needs no change of this decision. The
+states stand in the template, so that a change to them needs no change of this decision. The header
+says that a project is closed, so that a reader who comes back to the plan finds it from one line and
+does not have to recognize it by the text of an item of the log. The
 step takes from the practice of a roadmap of vertical slices the breaking of a project into tasks
 before any task is planned. The practice is that of lesson m2l1 of the 10xDevs course, on the
 roadmap of a first version of a product, and of the skill of a roadmap the lesson brings, which
@@ -5020,7 +5023,10 @@ refinement of each task writes its acceptance criteria from its own analysis, an
 in the dependencies; the practice's list of parked items, left out of what the step takes from it —
 it copies what the definition puts out of scope; the practice's state of an item blocked by an
 unknown the human has to resolve, left out of what the step takes from it — the plan has a state of
-waiting for the human and places each open question where it is resolved.
+waiting for the human and places each open question where it is resolved; no new state of the
+header for a closed plan, the closing marked only by an item of the log — the header goes on
+looking open, and a reader that returns to the plan has to tell the closing by the text of an item,
+which is fragile.
 
 ### WAY-143 — What does a task of a project plan end with?
 
@@ -5248,6 +5254,173 @@ alone — a second entry the two tasks come to share later would pass unreported
 a remark that does not fail the check — the plan would reach leading with the pair unsettled, and a
 remark repeated at every run stops being read; judging collisions by the files two tasks change — a
 plan names no files before its tasks are refined.
+
+### WAY-411 — Where does the closing of a project stand in the process?
+
+The closing of a project is a step of the skill that leads the project's plan, described in a file
+beside that skill that the skill's `SKILL.md` names at the step with the condition under which it is
+read, and the closing has no skill of its own.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-153 · derives from WAY-256 · derives from WAY-265
+- **Verification:** an agent compares a change with the decision:
+  - complies: the skill that leads the plan names, at the step that reconciles progress, the file
+    that describes the closing and says when it is read, and that file holds the whole closing;
+  - violates: the closing is given a skill of its own, with an entry point and a description, while
+    it only reads the plan, writes an item of its log and moves the dropped tasks.
+- **Origin:** none
+
+*Rationale:* the skill that leads the plan already holds the evidence of each task's state and
+finds the last task done itself, so a step of it needs no second entry point, no description to
+keep and no copy to bring into step with the products, and a step in a file beside the skill is
+cheap to reverse.
+*Rejected:* a skill of its own for the closing — a new entry point, a description and a copy to keep
+in step with the products, while the skill that leads the plan would still have to point to it; it
+comes back when the closing grows by a review of the foundation or a retrospective of the project;
+only a new state of the plan and an item in its log — neither the completion of the states nor the
+dropped tasks are seen to; no change — projects stay formally open and dropped tasks stand only
+in the log.
+
+### WAY-412 — Where can a task dropped from a project go when the project is closed?
+
+At the closing of a project the human chooses, for each task of its plan that stands `dropped —
+approved by human`, one of three places: the note of the next project in the product's place for
+projects, a task of its own in the product's place for tasks, or given up for good with a reason the
+human gives. The closing itself writes the move together with the task's goal, the plan's questions
+that name the task and the entry of the foundation that the task was to write and did not; it adds a
+section about the task to the note of the next project where that note exists, and makes a new file
+only where no such note exists.
+
+The section or the document at the new place gives those things and refers to the closing item in
+the log of the closed plan, which records where each dropped task went and, for a task given up
+for good, the reason.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-107 · derives from WAY-126 · derives from WAY-145 · derives from
+  WAY-411
+- **Verification:** an agent compares a change with the decision:
+  - complies: a task dropped from the project goes, by the human's choice, into a section of the
+    note of the next project that already stands, with its goal, its questions of the plan and the
+    entry it was to write, and the closing item says where it went; another goes to a task of its
+    own; a third is given up for good with the human's reason in the closing item;
+  - violates: the closing writes in the plan only where a task went and leaves the move of its
+    questions and its entry to the human; the closing makes a new file for the next project while a
+    note of it already stands; a dropped task is left in the log with no place.
+- **Origin:** none
+
+*Rationale:* a task dropped at the end of a project is the last place where its goal, its
+questions and the entry it was to write can be carried to whoever takes the work next; left to the
+human's memory, they go with the task. The human chooses the place because only the human knows
+where the work goes next, and the closing writes the move so that it does not rest on remembering. A
+note of the next project that already stands takes a section, since a second file for one project
+splits what its definition has to read.
+*Rejected:* the same three places, the closing writing in the plan only where the task went and the
+human moving the content — the move of the question and of the entry again rests on the human's
+memory; only two places, a task of its own or given up for good — it departs from how projects were closed by
+hand before, and the definition of the next project would have to look for such tasks in the place
+for tasks itself, or a duplicate arises; as before, only an item in the log with no place required
+— a dropped task can be lost.
+
+### WAY-413 — When does the closing of a project write anything?
+
+The closing of a project first shows the human the whole of what it writes — the text of the
+closing item, the change of the plan's `Status:` line to `closed YYYY-MM-DD` and the full text of
+each move of a dropped task — and writes anything only after the human has accepted it. The
+human's choice of a place for a dropped task is no such acceptance.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-411 · derives from WAY-412
+- **Verification:** an agent compares a change with the decision:
+  - complies: the closing shows the closing item, the new `Status:` line and the full text of a
+    section for the note of the next project and of a task document, the human accepts them, and
+    only then does the closing write;
+  - violates: the closing writes a section into the note of the next project as soon as the human
+    has named the note; the closing shows the closing item and not the text of the moves.
+- **Origin:** none
+
+*Rationale:* the closing writes into notes the human keeps by hand, so text that arrives there
+unseen is corrected by hand in two places, while the further turn is usually a single yes.
+*Rejected:* the choice of places taken as the consent, the closing writing at once — text added to
+the note of the next project or a new task document reaches it unreviewed, and a wrong one is
+corrected by hand in two places.
+
+### WAY-414 — How does the closing of a project learn whether the entry a dropped task was to write is in the foundation?
+
+The closing searches the product's foundation, at a commit it names, for the projected entry of a
+dropped task, by the question the heading of a new decision holds, by the number of the current
+decision it changes, or by the identifier or term of any other entry, as the plan keeps the heading
+word for word, and compares the text of what it finds with the projected change. It writes that the entry is absent from the foundation at that commit, or the
+entry it found, a part of it included, that another task wrote (WAY-126), or that an entry stands
+under that identifier or term without the change. A hit the closing cannot tell to be the same
+entry, or to hold the change, is put to the human as a question in the preview, before anything is
+written.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-126 · derives from WAY-412 · derives from WAY-413
+- **Verification:** an agent compares a change with the decision:
+  - complies: the closing finds at the commit it names a decision whose heading holds the question
+    of a dropped task's entry, written by another task for part of the entry, names it and says
+    it is partial; for an entry it finds nowhere it writes that the entry is absent at that commit;
+    for a change to a current decision whose number stands without the change it writes that the
+    decision stands without it;
+  - violates: the closing writes that an entry is absent because the task that was to write it was
+    dropped, without a search; the closing takes a decision whose sentence resembles the entry's
+    for the entry and writes nothing for the human to see; the closing writes an entry as found
+    because an entry stands under its identifier, without comparing the text with the projected
+    change.
+- **Origin:** none
+
+*Rationale:* the table of the plan says only that a dropped task was to write an entry, while
+another task can have written the entry or a part of it as WAY-126 gives, so an absence read from
+the table can be false. The heading of a decision is a question and the plan holds the heading of a
+projected entry word for word, so a search by it is surer than one by the wording of a sentence; an
+entry that stands under the identifier of a change to a current entry stands whether or not the
+change was made, so the text found is compared with the projected change.
+*Rejected:* reading the table of the plan alone, a dropped task having been the one to write the
+entry so the entry is absent — it costs nothing, but it can announce the absence of an entry that
+another task wrote (WAY-126).
+
+### WAY-415 — What does a dropped task become when the closing of a project makes it a task of its own?
+
+A dropped task that the closing makes a task of its own gets a task document in the state
+`refining`, in the full layout of the task template, with `Project relation: source only:` and the
+definition of the project. The line the task already has in the place for tasks stays, the closing
+changing in it only what the rules of the task place allow, and a new line is made only for a task
+that has none; a section about the task that already stands in the note of the next project is
+completed, and no second one is added.
+
+Where the project orchestrator writes the body of that first document and the line the task lacks,
+this decision prevails over WAY-154, which gives the body of a task document to a refiner, for the
+first body only; once a refiner has taken the document up, its body is the refiner's.
+
+- **Scope:** project-level
+- **Based on:** none
+- **Relations:** derives from WAY-107 · derives from WAY-412 · narrows WAY-154
+- **Verification:** an agent compares a change with the decision:
+  - complies: the closing makes for a dropped task a document in the state `refining` with the
+    full layout of the template and `Project relation: source only: <the definition>`, leaves the
+    line the task already has, and completes the section about it that the note of the next project
+    holds; where the plan links a task document for the task, it shows that document to the human
+    and asks which stands, and the new document and the section refer to the old one, which holds
+    the answers given while the task was refined;
+  - violates: the closing makes the document `Project relation: independent`; the closing adds a
+    second line for a task that has one, or a second section for a task whose section the note of
+    the next project already holds; the closing rewrites the body of a document a refiner has
+    taken up; the closing makes a second document for a task whose plan row links one, without
+    showing the existing document to the human.
+- **Origin:** none
+
+*Rationale:* a task that leaves the project keeps its tie to the definition as a source, so that its
+question and its entry reach the new task as settlements taken from the definition rather than as
+plain text, and the line and the section it already has are the task's own place, so a second one
+leaves two records of one task for a reader to reconcile. The project orchestrator writes the first
+body because the closing is the one point that holds the goal, the questions and the entry together.
+*Rejected:* `Project relation: independent` — the task breaks its tie with the definition, and its
+question and its entry enter as plain text, not as settlements taken over from the definition.
 
 ## Task refinement and readiness
 
