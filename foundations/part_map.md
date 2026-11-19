@@ -108,6 +108,7 @@ them and for the definitions of the agent types that run those steps in Claude C
 - **Depends on:** decisions · invariants · glossary · part-map · environment-facts ·
   elements-common · project-level · gate · product-guidelines · installation · foundation-review
 - **Trust boundary:** task-cycle/cycle_stages.py
+  task-cycle/stage_transcripts.py
   task-cycle/cycle_measures.py
   task-cycle/gate_times.py
 

@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cycle_measures  # noqa: E402
 import cycle_stages  # noqa: E402
+import stage_transcripts  # noqa: E402
 
 DAY = "2026-10-06T"
 
@@ -173,7 +174,7 @@ class CodexTest(unittest.TestCase):
         self.folder.cleanup()
 
     def rows(self) -> list[cycle_stages.Row]:
-        session = cycle_stages.read_session(self.orchestrator, self.home)
+        session = stage_transcripts.read_session(self.orchestrator, self.home)
         return cycle_stages.build_rows([session])
 
     def test_each_subagent_turn_is_a_stage_with_its_own_tokens_and_model(self) -> None:
@@ -240,7 +241,7 @@ class CodexTest(unittest.TestCase):
         self.assertEqual(counted, 1100 + 2200 + 3300 + 5500 + 110 + 220 + 330 + 440)
 
     def test_transcripts_read_as_written_give_no_warning(self) -> None:
-        session = cycle_stages.read_session(self.orchestrator, self.home)
+        session = stage_transcripts.read_session(self.orchestrator, self.home)
         self.assertEqual(cycle_stages.find_warnings([session]), [])
 
     def test_a_subagent_turn_without_its_end_is_reported(self) -> None:
@@ -254,7 +255,7 @@ class CodexTest(unittest.TestCase):
                 tokens("10:14:00", "stuck", "s1", 10, 0, 1),
             ],
         )
-        session = cycle_stages.read_session(self.orchestrator, self.home)
+        session = stage_transcripts.read_session(self.orchestrator, self.home)
         self.assertEqual(
             cycle_stages.find_warnings([session]),
             [
@@ -273,7 +274,7 @@ class CodexTest(unittest.TestCase):
                 {"timestamp": at("10:14:00"), "type": "usage", "payload": {"thread_id": "renamed"}},
             ],
         )
-        session = cycle_stages.read_session(self.orchestrator, self.home)
+        session = stage_transcripts.read_session(self.orchestrator, self.home)
         self.assertEqual(
             cycle_stages.find_warnings([session]),
             [
@@ -288,8 +289,8 @@ class CodexTest(unittest.TestCase):
 
     def test_a_subagent_rollout_is_refused_as_the_orchestrator(self) -> None:
         path = cycle_stages.resolve("design", self.home, Path(self.folder.name) / "claude")
-        with self.assertRaisesRegex(cycle_stages.CycleStagesError, "subagent"):
-            cycle_stages.read_session(path, self.home)
+        with self.assertRaisesRegex(stage_transcripts.CycleStagesError, "subagent"):
+            stage_transcripts.read_session(path, self.home)
 
     def test_an_orchestrator_with_no_turn_finds_its_subagents_where_the_epoch_is_refused(
         self,
@@ -316,8 +317,8 @@ class CodexTest(unittest.TestCase):
                     raise OSError(22, "Invalid argument")
                 return super().fromtimestamp(timestamp, tz)
 
-        with mock.patch.object(cycle_stages, "datetime", WindowsEpoch):
-            session = cycle_stages.read_codex_session(idle, self.home)
+        with mock.patch.object(stage_transcripts, "datetime", WindowsEpoch):
+            session = stage_transcripts.read_codex_session(idle, self.home)
         self.assertEqual(["idle-sub"], [agent.key for agent in session.subagents])
         self.assertEqual(1, len(session.subagents[0].turns))
 
@@ -442,7 +443,7 @@ class ClaudeCodeTest(unittest.TestCase):
 
     def rows(self) -> list[cycle_stages.Row]:
         path = cycle_stages.resolve("sess", Path(self.folder.name) / "codex", self.home)
-        session = cycle_stages.read_session(path, Path(self.folder.name) / "codex")
+        session = stage_transcripts.read_session(path, Path(self.folder.name) / "codex")
         return cycle_stages.build_rows([session])
 
     def test_a_response_written_over_several_lines_counts_once(self) -> None:
@@ -497,7 +498,7 @@ class ClaudeCodeTest(unittest.TestCase):
     def test_a_subagent_without_its_meta_file_is_reported(self) -> None:
         (self.home / "projects" / "C--repo" / "sess" / "subagents" / "agent-a2.meta.json").unlink()
         path = cycle_stages.resolve("sess", Path(self.folder.name) / "codex", self.home)
-        session = cycle_stages.read_session(path, Path(self.folder.name) / "codex")
+        session = stage_transcripts.read_session(path, Path(self.folder.name) / "codex")
         self.assertEqual(
             cycle_stages.find_warnings([session]),
             ["Claude Code session `sess`, a2: no `agent-a2.meta.json`, so it is named by its id"],
@@ -999,9 +1000,9 @@ class ClaudeFilesNamedTest(unittest.TestCase):
     def tearDown(self) -> None:
         self.folder.cleanup()
 
-    def session(self, name: str = "named") -> cycle_stages.Session:
+    def session(self, name: str = "named") -> stage_transcripts.Session:
         path = cycle_stages.resolve(name, Path(self.folder.name) / "codex", self.home)
-        return cycle_stages.read_session(path, Path(self.folder.name) / "codex")
+        return stage_transcripts.read_session(path, Path(self.folder.name) / "codex")
 
     def test_each_turn_holds_the_files_its_starting_message_names_once_each(self) -> None:
         rows = cycle_stages.build_rows([self.session()])
@@ -1109,17 +1110,20 @@ class ClaudeFilesNamedTest(unittest.TestCase):
         ):
             with self.subTest(text=text):
                 self.assertEqual(
-                    (["reports/review_slice4_findings.md"], False), cycle_stages.files_named(text)
+                    (["reports/review_slice4_findings.md"], False),
+                    stage_transcripts.files_named(text),
                 )
         # A full stop is cut only at the end: a name that is no file of `reports/` without it
         # stays out.
         self.assertEqual(
             ([], False),
-            cycle_stages.files_named("See reports/.md. and reports/x.md.bak. and reports/notes."),
+            stage_transcripts.files_named(
+                "See reports/.md. and reports/x.md.bak. and reports/notes."
+            ),
         )
 
     def test_more_files_than_the_cap_are_cut_with_a_warning(self) -> None:
-        many = " ".join(f"reports/r{n:02}.md" for n in range(cycle_stages.MAX_FILES_NAMED + 5))
+        many = " ".join(f"reports/r{n:02}.md" for n in range(stage_transcripts.MAX_FILES_NAMED + 5))
         write_lines(
             self.home / "projects" / "C--repo" / "named" / "subagents" / "agent-e4.jsonl",
             [
@@ -1130,11 +1134,11 @@ class ClaudeFilesNamedTest(unittest.TestCase):
         session = self.session()
         [row] = [row for row in cycle_stages.build_rows([session]) if row.name == "e4"]
         self.assertEqual(
-            row.named, [f"reports/r{n:02}.md" for n in range(cycle_stages.MAX_FILES_NAMED)]
+            row.named, [f"reports/r{n:02}.md" for n in range(stage_transcripts.MAX_FILES_NAMED)]
         )
         self.assertIn(
             "Claude Code session `named`, e4: 1 turn(s) name more than "
-            f"{cycle_stages.MAX_FILES_NAMED} files of `reports/`; the rest are left "
+            f"{stage_transcripts.MAX_FILES_NAMED} files of `reports/`; the rest are left "
             "out of *Files named*",
             cycle_stages.find_warnings([session]),
         )
@@ -1231,7 +1235,9 @@ class CodexFilesNamedTest(unittest.TestCase):
         self.folder.cleanup()
 
     def rows(self) -> list[cycle_stages.Row]:
-        return cycle_stages.build_rows([cycle_stages.read_session(self.orchestrator, self.home)])
+        return cycle_stages.build_rows(
+            [stage_transcripts.read_session(self.orchestrator, self.home)]
+        )
 
     def test_each_turn_holds_the_files_its_starting_message_names(self) -> None:
         rows = self.rows()
@@ -2381,11 +2387,11 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(self.current(CLAUDE_CODE_SESSION_ID="claude-id"), "claude-id")
 
     def test_without_a_session_and_without_a_variable_it_fails(self) -> None:
-        with self.assertRaisesRegex(cycle_stages.CycleStagesError, "name a session; neither"):
+        with self.assertRaisesRegex(stage_transcripts.CycleStagesError, "name a session; neither"):
             self.current()
 
     def test_without_a_session_and_with_both_variables_it_fails(self) -> None:
-        with self.assertRaisesRegex(cycle_stages.CycleStagesError, "name a session; both"):
+        with self.assertRaisesRegex(stage_transcripts.CycleStagesError, "name a session; both"):
             self.current(CODEX_SESSION_ID="codex-id", CLAUDE_CODE_SESSION_ID="claude-id")
 
 
