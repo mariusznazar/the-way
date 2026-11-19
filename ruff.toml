@@ -1,10 +1,17 @@
-# The linter of the Python code of the-way (WAY-380, WAY-381).
+# The linter and the formatter of the Python code of the-way (WAY-380, WAY-381, WAY-382).
 # Ruff 0.17.1 refuses to run in any other version (required-version).
 required-version = "==0.17.1"
 target-version = "py314"
+# The formatter's line width (WAY-382); every other formatter setting stays at Ruff's default.
+line-length = 100
 
 # What git ignores and a working copy may hold is not checked.
 extend-exclude = [".runs", "__pycache__"]
+
+[format]
+# The formatter covers Python files only: it stays off Markdown, whose Python examples
+# it would otherwise lay out (WAY-382).
+exclude = ["*.md"]
 
 [lint]
 # Preview rules are off (WAY-380).
