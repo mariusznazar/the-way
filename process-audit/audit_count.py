@@ -73,7 +73,8 @@ ones noted, and its values are read from the last copy, the most complete. For e
   same way.
   The older form is the form most cycles have, so a count that passed it over would leave most
   cycles with no cost.
-  The cache writes are inside *Input* (`task-cycle/cycle_stages.py` folds them in). In the form
+  The cache writes are inside *Input* (`task-cycle/stage_transcripts.py`, which
+  `task-cycle/cycle_stages.py` imports, folds them in). In the form
   with the two columns of the writes they are priced each at its own price; in the earlier forms of
   the section and in the older table, which have no such columns, they are priced as input: an
   approximation. A Codex row has `0` in both columns and is priced as a row with no writes. A model
