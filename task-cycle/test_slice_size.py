@@ -61,8 +61,9 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(self.row(output, "1")[1:4], ["1", "10", "4"])
 
     def test_changed_file_that_read_names_by_ranges_counts_only_those_lines(self) -> None:
-        # A decision log of 400 010 characters in its first line is over the limit if counted whole
-        # (160 004 tokens); the slice reads lines 2-3 of it, "one\n" and "two\n", 8 characters.
+        # A decision log of 400 009 characters, 400 000 of them in its first line, is over the limit
+        # if counted whole (160 004 tokens); the slice reads lines 2-3 of it, "one\n" and "two\n",
+        # 8 characters.
         self.file("foundations/decisions.md", "x" * 400_000 + "\none\ntwo\n")
         code, output, _ = self.run_plan(
             "### Slice 1 — Add a decision\n"
