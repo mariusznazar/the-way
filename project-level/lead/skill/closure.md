@@ -32,8 +32,11 @@ Read, and write nothing yet.
   other item with its number and its text.
 - **What goes with a withdrawn task.** For each withdrawn task: its `Goal` cell word for word; each
   open question of the plan that ends `— plan: task <n>` for it, word for word with the place the
-  definition gives it; and each projected entry that goes with it, which is one whose `Realized by`
-  cell names withdrawn tasks only, and which goes with the task its `Written by` cell names.
+  definition gives it; and each projected entry that goes with it. A projected entry goes with a
+  withdrawn task in one of two cases: its `Written by` cell names a withdrawn task, and the entry
+  goes with that task, even where a finished task also realizes it; or every task its `Realized by`
+  cell names is withdrawn and its `Written by` cell names no withdrawn task, and the entry goes
+  with the withdrawn tasks of `Realized by`.
 - **The foundation at a commit, for each such entry.** Take the commit from the line
   `integration: <ref> <commit>` that `project-level/plan_state.py` printed at this session; where it
   printed none, ask the human which commit of the product to search. Read the foundation files at
