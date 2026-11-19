@@ -389,28 +389,16 @@ from record_reading import (  # noqa: E402  the reading of a cycle's record, in 
 )
 from problem_register import (  # noqa: E402  the register of problems, in the directory of this file
     DATE_TEXT,
-    Register,
     read_register,
 )
 from version_analysis import (  # noqa: E402  the analysis of the versions, in the directory of this file
-    COST_SCRIPT,
-    COST_SCRIPTS,
-    COUNT_PATHS,
-    GATE_SCRIPT,
-    GATE_TEST_RUNNER,
-    MEASURES_SCRIPT,
     STAGES_FILE,
     STAGES_VALUES,
-    TOOL_GROUPS,
     WAITING_NAME,
     WORKING_NAME,
     Ancestry,
-    Version,
     analyse,
     committed_date,
-    cost_boundary,
-    count_boundary,
-    instrument_series,
     measure_versions,
     note_changed_tools,
     process_versions,
@@ -423,26 +411,6 @@ from audit_report import (  # noqa: E402  the writing of the result, in the dire
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "task-cycle"))
 import remarks_check  # noqa: E402  the cutting of a record's lines, shared with its check
-from record_items import read_contradiction  # noqa: E402  the reading of the items of a record
-
-# The names below are no longer used in this file; they are imported so that the tests reach them as
-# `audit_count.<name>`.
-__all__ = [
-    "COST_SCRIPT",
-    "COST_SCRIPTS",
-    "COUNT_PATHS",
-    "GATE_SCRIPT",
-    "GATE_TEST_RUNNER",
-    "MEASURES_SCRIPT",
-    "TOOL_GROUPS",
-    "Ancestry",
-    "Register",
-    "Version",
-    "cost_boundary",
-    "count_boundary",
-    "instrument_series",
-    "read_contradiction",
-]
 
 display = remarks_check.display
 
