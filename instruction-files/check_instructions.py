@@ -535,15 +535,9 @@ def resolve(token, bases):
     )
 
 
-def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
-    """The per-file checks of one instruction file; returns its text, or None when it was not
-    read."""
-    text = read_text(path, shown_as, findings)
-    if text is None:
-        return None
-    name = os.path.basename(path)
-    file_dir = os.path.dirname(path)
-    bases = [file_dir, root] if in_repo else [file_dir, root, os.path.expanduser("~")]
+def check_dead_paths(text, shown_as, bases, in_repo, findings):
+    """The paths in backticks of TEXT that name nothing, as findings. A network path is only
+    noted, and a sentence that says the path does not load lowers the level."""
     for paragraph in paragraphs(text):
         not_loaded = None
         for number, line in paragraph:
@@ -598,7 +592,11 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
                             f"`{shown(token)}` does not exist",
                         )
                     )
-    emphasised = []
+
+
+def check_at_imports(text, shown_as, name, file_dir, agents_beside, findings):
+    """The `@path` imports of TEXT that Claude Code loads into every session or skips, as
+    findings."""
     for number, line in prose_lines(text):
         bare = CODE_SPAN.sub("", line)
         for match in AT_IMPORT.finditer(bare):
@@ -649,8 +647,11 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
                         "reads it as plain text; a pointer is a path in backticks",
                     )
                 )
-        if EMPHASIS.search(line):
-            emphasised.append(number)
+
+
+def check_emphasis(text, shown_as, findings):
+    """A finding when more than one line of TEXT carries an emphasis word."""
+    emphasised = [number for number, line in prose_lines(text) if EMPHASIS.search(line)]
     if len(emphasised) > 1:
         findings.append(
             Finding(
@@ -661,6 +662,20 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
                 f"{len(emphasised)} emphasised lines — emphasis on one rule at most",
             )
         )
+
+
+def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
+    """The per-file checks of one instruction file; returns its text, or None when it was not
+    read."""
+    text = read_text(path, shown_as, findings)
+    if text is None:
+        return None
+    name = os.path.basename(path)
+    file_dir = os.path.dirname(path)
+    bases = [file_dir, root] if in_repo else [file_dir, root, os.path.expanduser("~")]
+    check_dead_paths(text, shown_as, bases, in_repo, findings)
+    check_at_imports(text, shown_as, name, file_dir, agents_beside, findings)
+    check_emphasis(text, shown_as, findings)
     if name != "SKILL.md":
         findings.append(
             Finding(
