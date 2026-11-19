@@ -647,29 +647,15 @@ def warnings_for(
     return warnings
 
 
-def run() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("repo", type=Path, help="root of the product Git repository")
-    parser.add_argument("--url", help="Git URL for the submodule (default: the-way's origin)")
-    parser.add_argument(
-        "--apply", action="store_true", help="write after showing the plan and confirming"
-    )
-    args = parser.parse_args()
-    target = args.repo.resolve()
-    if not target.is_dir():
-        raise RuntimeError(f"Not a directory: {target}")
-    inside_repo(target)
-    commit = git("rev-parse", "--verify", "HEAD^{commit}", cwd=SOURCE).stdout.strip()
-    url = args.url or git("remote", "get-url", "origin", cwd=SOURCE).stdout.strip()
-    parsed_url = urlsplit(url)
-    if parsed_url.password or (parsed_url.username and parsed_url.scheme in ("http", "https")):
-        raise RuntimeError("Submodule URL contains credentials; use a credential-free URL")
-    if is_local(url):
-        FILE_PROTOCOL[:] = ["-c", "protocol.file.allow=always"]
-    files, shared, stale, add_submodule, initialize_submodule, moved_from = plan(
-        target, commit, url
-    )
-
+def print_submodule_actions(
+    target: Path,
+    commit: str,
+    url: str,
+    add_submodule: bool,
+    initialize_submodule: bool,
+    moved_from: str | None,
+) -> None:
+    """Print what the run does to the submodule and to `.gitmodules`."""
     print(f"Product: {target}\nProcess commit: {commit}\nSubmodule URL: {url}")
     if moved_from:
         older = " (older than the pin)" if going_back(target, moved_from, commit) else ""
@@ -685,7 +671,10 @@ def run() -> int:
         print("STAGE .gitmodules and .the-way (git submodule add stages these paths)")
     if initialize_submodule:
         print(f"INITIALIZE {SUBMODULE} from its pinned commit")
-    actions = {path: file_action(path, content) for path, content in files.items()}
+
+
+def print_file_actions(target: Path, files: dict[Path, str], actions: dict[Path, str]) -> None:
+    """Print the action on each file the installer owns, with the diff of a new or changed one."""
     for path, content in files.items():
         name = path.relative_to(target).as_posix()
         print(f"{actions[path]} {name}")
@@ -699,9 +688,17 @@ def run() -> int:
             )
         elif actions[path] == "REPLACE":
             print(shown_diff(name, path.read_bytes().decode("utf-8"), content))
+
+
+def print_stale_deletions(target: Path, stale: list[Path]) -> None:
+    """Print the deletion of each entry point and agent definition the commit no longer has."""
     for path in stale:
         gone = "agent type" if is_agent_definition(path) else "skill"
         print(f"DELETE {path.relative_to(target).as_posix()} (its {gone} is no longer in the-way)")
+
+
+def print_shared_actions(target: Path, shared: dict[Path, tuple[str, str]]) -> None:
+    """Print the action on each shared file, with what is added or rewritten in it."""
     for path, (action, text) in shared.items():
         name = path.relative_to(target).as_posix()
         print(f"{action} {name}")
@@ -729,6 +726,95 @@ def run() -> int:
                     text.replace("\r\n", "\n"),
                 )
             )
+
+
+def apply_submodule(
+    target: Path,
+    url: str,
+    commit: str,
+    add_submodule: bool,
+    initialize_submodule: bool,
+    moved_from: str | None,
+) -> None:
+    """Add, initialize or move the submodule, after the remote is shown to hold the commit."""
+    if add_submodule or moved_from:
+        verify_remote(url, commit)
+    if add_submodule:
+        git("submodule", "add", "--", url, SUBMODULE, cwd=target)
+        if git(
+            "-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target, check=False
+        ).returncode:
+            git("-C", SUBMODULE, "fetch", "--quiet", "origin", commit, cwd=target)
+        git("-C", SUBMODULE, "checkout", "--quiet", "--detach", commit, cwd=target)
+        git("add", "--", SUBMODULE, cwd=target)
+    elif initialize_submodule:
+        git("submodule", "update", "--init", "--", SUBMODULE, cwd=target)
+    if moved_from:
+        if git(
+            "-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target, check=False
+        ).returncode:
+            git("-C", SUBMODULE, "fetch", "--quiet", "origin", commit, cwd=target)
+        git("-C", SUBMODULE, "checkout", "--quiet", "--detach", commit, cwd=target)
+        git("add", "--", SUBMODULE, cwd=target)
+
+
+def write_files(
+    files: dict[Path, str],
+    actions: dict[Path, str],
+    stale: list[Path],
+    shared: dict[Path, tuple[str, str]],
+) -> None:
+    """Write the files the installer owns, delete the stale ones and write the shared files."""
+    for path, content in files.items():
+        if actions[path] == "CREATE":
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("x", encoding="utf-8", newline="\n") as handle:
+                handle.write(content)
+        elif actions[path] == "REPLACE":
+            path.write_bytes(content.encode("utf-8"))
+    for path in stale:
+        path.unlink()
+        if not is_agent_definition(path) and not any(path.parent.iterdir()):
+            path.parent.rmdir()
+    for path, (action, text) in shared.items():
+        if action == "CREATE":
+            with path.open("x", encoding="utf-8", newline="\n") as handle:
+                handle.write(text)
+        elif action == "APPEND":
+            with path.open("ab") as handle:
+                handle.write(text.encode("utf-8"))
+        elif action == "REPLACE":
+            path.write_bytes(text.encode("utf-8"))
+
+
+def run() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("repo", type=Path, help="root of the product Git repository")
+    parser.add_argument("--url", help="Git URL for the submodule (default: the-way's origin)")
+    parser.add_argument(
+        "--apply", action="store_true", help="write after showing the plan and confirming"
+    )
+    args = parser.parse_args()
+    target = args.repo.resolve()
+    if not target.is_dir():
+        raise RuntimeError(f"Not a directory: {target}")
+    inside_repo(target)
+    commit = git("rev-parse", "--verify", "HEAD^{commit}", cwd=SOURCE).stdout.strip()
+    url = args.url or git("remote", "get-url", "origin", cwd=SOURCE).stdout.strip()
+    parsed_url = urlsplit(url)
+    if parsed_url.password or (parsed_url.username and parsed_url.scheme in ("http", "https")):
+        raise RuntimeError("Submodule URL contains credentials; use a credential-free URL")
+    if is_local(url):
+        FILE_PROTOCOL[:] = ["-c", "protocol.file.allow=always"]
+    files, shared, stale, add_submodule, initialize_submodule, moved_from = plan(
+        target, commit, url
+    )
+
+    print_submodule_actions(target, commit, url, add_submodule, initialize_submodule, moved_from)
+    actions = {path: file_action(path, content) for path, content in files.items()}
+    print_file_actions(target, files, actions)
+    print_stale_deletions(target, stale)
+    print_shared_actions(target, shared)
     warnings = warnings_for(target, files, shared)
     untracked = untracked_in_checkout(target) if moved_from else []
     if untracked:
@@ -755,45 +841,8 @@ def run() -> int:
         print("Cancelled; no changes.")
         return 0
 
-    if add_submodule or moved_from:
-        verify_remote(url, commit)
-    if add_submodule:
-        git("submodule", "add", "--", url, SUBMODULE, cwd=target)
-        if git(
-            "-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target, check=False
-        ).returncode:
-            git("-C", SUBMODULE, "fetch", "--quiet", "origin", commit, cwd=target)
-        git("-C", SUBMODULE, "checkout", "--quiet", "--detach", commit, cwd=target)
-        git("add", "--", SUBMODULE, cwd=target)
-    elif initialize_submodule:
-        git("submodule", "update", "--init", "--", SUBMODULE, cwd=target)
-    if moved_from:
-        if git(
-            "-C", SUBMODULE, "cat-file", "-e", f"{commit}^{{commit}}", cwd=target, check=False
-        ).returncode:
-            git("-C", SUBMODULE, "fetch", "--quiet", "origin", commit, cwd=target)
-        git("-C", SUBMODULE, "checkout", "--quiet", "--detach", commit, cwd=target)
-        git("add", "--", SUBMODULE, cwd=target)
-    for path, content in files.items():
-        if actions[path] == "CREATE":
-            path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open("x", encoding="utf-8", newline="\n") as handle:
-                handle.write(content)
-        elif actions[path] == "REPLACE":
-            path.write_bytes(content.encode("utf-8"))
-    for path in stale:
-        path.unlink()
-        if not is_agent_definition(path) and not any(path.parent.iterdir()):
-            path.parent.rmdir()
-    for path, (action, text) in shared.items():
-        if action == "CREATE":
-            with path.open("x", encoding="utf-8", newline="\n") as handle:
-                handle.write(text)
-        elif action == "APPEND":
-            with path.open("ab") as handle:
-                handle.write(text.encode("utf-8"))
-        elif action == "REPLACE":
-            path.write_bytes(text.encode("utf-8"))
+    apply_submodule(target, url, commit, add_submodule, initialize_submodule, moved_from)
+    write_files(files, actions, stale, shared)
     print("Installed. Commit the product files and gitlink when ready.")
     return 0
 
