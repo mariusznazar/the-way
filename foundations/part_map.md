@@ -84,7 +84,8 @@ The part answers for the form and writing of a project definition, its readiness
 breakdown of an approved definition into a project plan and the check of that plan, the refinement
 of a task before its implementation cycle, whether the task belongs to a project, uses its
 settlements as a source, or stands on its own, the leading of a handed-over plan through refinement
-and the evidence-backed upkeep of task states, and the tests of its readiness check, its plan check
+and the evidence-backed upkeep of task states, the closing of a project once each of its tasks is
+done, delivered in another task or withdrawn, and the tests of its readiness check, its plan check
 and its reader of task-cycle evidence for plan states. It also answers for the guide that an agent
 writing or completing a product's deployment skill reads,
 `project-level/task/deployment_skill_guide.md`, for when the line of a task in the product's
