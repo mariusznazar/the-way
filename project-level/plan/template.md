@@ -68,8 +68,8 @@ The headings stand once each, in this order, and no other second-level heading s
   `handed over YYYY-MM-DD`, and `closed YYYY-MM-DD` once the closing step of `lead-project`
   (`project-level/lead/skill/closure.md`) has closed the project, which it does only when every row
   of the plan is `done`, `done — goal delivered in task <n>` or `dropped — approved by human`
-  (WAY-142), and no row delivered in a task names a dropped one. It stands once, and each date is a
-  calendar date.
+  (WAY-142), and following the deliveries of its rows from task to task reaches a `done` task from
+  each. It stands once, and each date is a calendar date.
 - The `Definition:` line names the definition by its path relative to the plan, and the fingerprint
   the definition's approval record holds. A definition whose text no longer
   gives that fingerprint has
@@ -115,8 +115,10 @@ needing task n's result, is logged with its reason, and is proposed again once n
 `Depends on` alone never delays refinement (WAY-144, WAY-154).
 
 A closed plan holds only rows `done`, `done — goal delivered in task <n>` and
-`dropped — approved by human`, and no row `done — goal delivered in task <n>` that names a task in
-the last state.
+`dropped — approved by human`, and no row `done — goal delivered in task <n>` from which following
+the deliveries, from the task it names to the task that one names where its row is also a delivery,
+and so on, never reaches a `done` task, because they end in a `dropped — approved by human` row or
+run in a loop.
 
 A `done — goal delivered in task <n>` dependency supplies completion only when delivery through
 the named task is established. `dropped — approved by human` does not establish delivery of its
@@ -195,7 +197,8 @@ the other and no change log item lets them go side by side on it (WAY-230), or a
 the definition does not stand word for word with a task or an answer, and, in a plan whose `Status:`
 line reads `closed YYYY-MM-DD`, a row in a state other than `done`,
 `done — goal delivered in task <n>` or `dropped — approved by human`, or a row
-`done — goal delivered in task <n>` naming a task that is dropped (WAY-142, WAY-146; invariants
+`done — goal delivered in task <n>` whose deliveries never reach a `done` task, ending in a dropped
+task or running in a loop (WAY-142, WAY-146; invariants
 `project-plan-form` and `project-plan-check`).
 
 The plan's independent critique judges what no script tells apart: whether each task that is not

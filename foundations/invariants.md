@@ -271,8 +271,9 @@ a reason; an open question of the definition does not stand in the plan exactly 
 word with the place its definition gives it, with a task of the plan or an answer; a cell or an
 item of the open questions names a task, an entry, an item or a question that the plan or its
 definition does not hold; or, in a plan whose `Status:` line reads closed, a task is in a state
-other than done, delivered by another task or dropped, or a task's goal is delivered by a task that
-is dropped.
+other than done, delivered by another task or dropped, or a task's goal is delivered in another
+task and following the deliveries from task to task never reaches a task that is done, because they
+end in a dropped task or run in a loop.
 
 - **Method:** test
 - **Rests on:** none

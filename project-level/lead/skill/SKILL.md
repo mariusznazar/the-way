@@ -86,11 +86,11 @@ project skill with the `the-way-` prefix, never a personal copy.
   while a delegated structural plan edit owns that file (step 5). Run `project-level/plan_check.py`
   after plan changes and resolve findings before relying on them.
 - When the reconciliation leaves every row `done`, `dropped — approved by human` or
-  `done — goal delivered in task <n>` with a task n that is not dropped, read `closure.md` beside
+  `done — goal delivered in task <n>` whose deliveries reach a `done` task, read `closure.md` beside
   this skill: it closes the project. Where a row stands in another state, `in cycle` and
-  `ready for cycle` among them, or is delivered in a dropped task, the closing does not start: tell
-  the human which row, by its number and name, and in which state, or in which dropped task, holds
-  it. Do not equate a dropped task with a delivered goal, and perform no implementation.
+  `ready for cycle` among them, or its deliveries end in a dropped task or run in a loop, the
+  closing does not start: tell the human which row, by its number and name, and in which state, or
+  that its deliveries end in a dropped task or run in a loop, holds it. Do not equate a dropped task with a delivered goal, and perform no implementation.
 
 ## 2. Confirm a round
 

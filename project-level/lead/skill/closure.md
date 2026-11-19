@@ -12,14 +12,17 @@ changes nothing of the definition (section 8). A dropped task is one whose row r
 
 The closing starts only when the reconciliation of step 1 of `SKILL.md`, every supported transition
 applied with its line in the change log, leaves each row of the plan `done`,
-`dropped — approved by human` or `done — goal delivered in task <n>` with a task n that is not
-dropped. Read the plan again after the last write of that step, never from memory.
+`dropped — approved by human` or `done — goal delivered in task <n>` whose deliveries reach a `done`
+task. Following them goes from the task the row names to the task that one names, where its row is
+also a delivery, and so on. Read the plan again after the last write of that step, never from
+memory.
 
 Where a row stands in any other state — `in cycle` and `ready for cycle` among them — or is
-`done — goal delivered in task <n>` with a task n that is dropped, the closing does not start: tell
-the human which row, by its number and name, and in which state, or in which dropped task its goal is
-delivered, holds it, and go on with the rest of the skill. A dropped task establishes no delivery, so
-the second kind of row is reconciled with the human before any preview, as the plan template gives.
+`done — goal delivered in task <n>` whose deliveries never reach a `done` task, the closing does not
+start: tell the human which row, by its number and name, and in which state, or that its deliveries
+end in a dropped task or run in a loop, holds it, and go on with the rest of the skill. A dropped
+task establishes no delivery and a loop establishes none, so the second kind of row is reconciled
+with the human before any preview, as the plan template gives.
 Where every row is final, tell the human that the project is ready to close and go on with
 section 2. Nothing is written before section 6 has the human's acceptance.
 
