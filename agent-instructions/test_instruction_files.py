@@ -163,7 +163,7 @@ def import_problems(root):
         except OSError as error:
             found.append("%s: cannot be read (%s)" % (path, error.strerror))
             continue
-        lines = [line[:-1] if line.endswith("\r") else line for line in text.split("\n")]
+        lines = [line.removesuffix("\r") for line in text.split("\n")]
         fenced = fenced_lines(lines)
         for index, line in enumerate(lines):
             if index in fenced:

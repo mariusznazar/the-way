@@ -69,9 +69,7 @@ def discover(root):
         check=True,
     )
     paths = sorted({path for path in result.stdout.decode("utf-8").split("\0") if path})
-    return [
-        path for path in paths if not (path.startswith(".claude/") or path.startswith(".agents/"))
-    ]
+    return [path for path in paths if not path.startswith((".claude/", ".agents/"))]
 
 
 def _unquote_double(value):

@@ -214,7 +214,7 @@ def locate(word, skill_dir, world, base=None):
 def resolve(path, world):
     """("file", path) where `path` names a file of the-way (a placeholder or `*` standing for any
     text of one segment), ("dead", reason) where it names none."""
-    if path.startswith("../") or path == ".." or path.startswith("/") or "\0" in path:
+    if path.startswith(("../", "/")) or path == ".." or "\0" in path:
         return "dead", "a path that leaves the-way"
     if PLACEHOLDER.search(path):
         pattern = "".join(
