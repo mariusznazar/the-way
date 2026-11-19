@@ -175,8 +175,8 @@ python -B gate/run_tests.py
 It ends with a line counting the tests and naming each directory that failed, and its exit code is 0
 only when every test passes. `python -B gate/run_tests.py <directory>` runs the tests of one
 directory. Two invariants of the foundation of the-way, `map-reference-target` and
-`test-method-citation`, are checked by one of these tests; the whole check of the foundation runs on
-its own by:
+`test-method-citation`, are checked by one of these tests, and the whole check of the foundation runs
+in the gate too, under the invariant `own-foundation-check-report`; it runs on its own by:
 
 ```bash
 python -B elements/common/foundation_check.py

@@ -2237,9 +2237,10 @@ class FoundationCheckTest(unittest.TestCase):
     # cites (test-method-citation). A withdrawn part is a finding by the message "`<name>` is
     # withdrawn; name its successor" where <name> is a row of the part map's *Withdrawn
     # identifiers*: the check gives the same message for a decision number, an invariant or a
-    # fact, which these two invariants do not cover. The check's other findings depend on the
-    # branch a clone calls its main one, or on the foundation beyond these two, so they are left
-    # out (WAY-08; causes 5 and 23).
+    # fact, which these two invariants do not cover. The check's other findings concern the
+    # foundation beyond these two, so this test leaves them out and the whole check stands in
+    # `test_the_way_foundation_check_reports_no_error` below, which cites its own invariant (WAY-08;
+    # cause 23).
     OWN_FINDINGS = (
         "names no part",
         "is no identifier of a part",
@@ -2274,6 +2275,19 @@ class FoundationCheckTest(unittest.TestCase):
             if ": listed: " not in line and any(text in line for text in own)
         ]
         self.assertEqual(findings, [], report)
+
+    def test_the_way_foundation_check_reports_no_error(self):
+        # invariant: own-foundation-check-report
+        # The whole check, with no switch and with the base the script finds in git, on the
+        # repository as it stands; the test above keeps its two invariants apart from it.
+        result = subprocess.run(
+            [sys.executable, "-B", SCRIPT, THE_WAY],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        # exit code 0 is "without errors" by the head of foundation_check.py ("Exit code:")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":
