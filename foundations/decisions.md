@@ -5590,9 +5590,9 @@ written from a row this decision therefore prevails over WAY-100, whose rule on 
 leaves out of a practice holds for every other decision. Where the source of a row keeps a way
 with no cost or with only a cost of the process, or keeps a way of the process such as how or when
 an answer is recorded, agents settled the case one way in one cycle and another way in the next, so
-this decision settles it once. The price: the refinement of a row that adopts a practice asks one question more, and a
-decision from a row whose source kept no left-out part says nothing in *Rejected* of what the
-practice leaves out.
+this decision settles it once. The price: the refinement of a row that adopts a practice asks one
+question more, and a decision from a row whose source kept no left-out part says nothing in
+*Rejected* of what the practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
 a task has no readiness approval to approve their wording, and refining a task would
 weigh as much as defining a
