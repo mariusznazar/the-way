@@ -52,10 +52,12 @@ import remarks_check  # noqa: E402  the cutting of a record's lines, shared with
 display = remarks_check.display
 
 MONEY = Decimal("0.000001")
-# The script that measures the cost, and no other: a change of it between two versions starts a
+# The script that measures the cost spans two files, `cycle_stages.py` and the module
+# `stage_transcripts.py` it imports, and no other: a change of either between two versions starts a
 # series of the cost (and so of the count of remarks), with a new price list (WAY-339).
 COST_SCRIPT = "task-cycle/cycle_stages.py"
-COST_SCRIPTS = (COST_SCRIPT,)
+COST_MODULE = "task-cycle/stage_transcripts.py"
+COST_SCRIPTS = (COST_SCRIPT, COST_MODULE)
 # The files of the-way that give the form of a stage report and the instructions of the reviewer: a
 # change of any of them between two versions starts a series of the count of remarks and none of the
 # cost. The type of agent `the-way-stage.md` is here because the reviewer receives its text as its

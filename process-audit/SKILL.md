@@ -51,7 +51,8 @@ These hold at every step.
   from it, and add the levels into no score.
 - **Measures are compared inside a series only** (WAY-339). The versions of the process are cut into
   two kinds of series. A series of the cost, which holds the median cost and the answer Q3, begins
-  at a new price list or at a change of `task-cycle/cycle_stages.py`, the script that measures the
+  at a new price list or at a change of `task-cycle/cycle_stages.py` or of the module
+  `task-cycle/stage_transcripts.py` that it imports, the two files of the script that measures the
   cost, and at no other change. A series of the count of remarks, which holds the answers Q1 and Q2,
   begins wherever a series of the cost begins, and also at a date of *Added* or *Withdrawn* in the
   register's list of classes, and at any change of the files of the-way under `task-cycle/change`,

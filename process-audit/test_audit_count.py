@@ -29,6 +29,8 @@ PIN = "0123456789abcdef0123456789abcdef01234567"
 BASE = "89abcdef0123456789abcdef0123456789abcdef"
 # The four tools that write a file of a cycle's copy and whose change by a cycle the count notes.
 STAGE_SCRIPT = "task-cycle/cycle_stages.py"
+# The module the stage script imports: the script that measures the cost spans both files (WAY-339).
+STAGE_MODULE = "task-cycle/stage_transcripts.py"
 MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
 GATE_SCRIPT = "task-cycle/gate_times.py"
 GATE_RUNNER = "gate/run_tests.py"
@@ -327,7 +329,10 @@ class AuditCountCase(unittest.TestCase):
         version as its *Process pin* (each PIN of `record_text` is replaced by it). Writes the
         locations file; returns the commit that adds the copy and the version."""
         way = self.repository("the-way")
-        base = {"README.md": "the-way\n", **{path: "version one\n" for path in TOOLS}}
+        base = {
+            "README.md": "the-way\n",
+            **{path: "version one\n" for path in (*TOOLS, STAGE_MODULE)},
+        }
         version = way.commit(base, "The version the cycle ran on")
         after = {**base, **(changed or {})}
         work = way.commit(after, "The task branch changes files", version)
@@ -689,6 +694,21 @@ class Times(AuditCountCase):
             self.assertIn(CHANGED_WHY, reason, name)
             self.assertIn("`task-cycle/cycle_stages.py`", reason, name)
             self.assertEqual(1, [row[2] for row in unknown].count(name), name)
+
+    def test_a_changed_stage_module_gives_the_times_the_cost_and_the_share_unknown_too(self):
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
+        # The script that measures the cost spans `cycle_stages.py` and the module
+        # `stage_transcripts.py` it imports: a cycle that changes only the module changes the tool
+        # that wrote `stages.md`, and the reason names the module that changed.
+        _, cycle, cost = self.own_values({STAGE_MODULE: "version two\n"})
+        self.assertEqual(["unknown", "unknown"], [cycle[self.WORKING], cycle["Waiting for tools"]])
+        self.assertEqual(["unknown", "1", "unknown"], [cost[3], cost[4], cost[5]])
+        unknown = self.rows("Unknown values")
+        for name in self.STAGE_NAMES:
+            reason = self.reasons_of(unknown, name)
+            self.assertIn(CHANGED_WHY, reason, name)
+            self.assertIn("`task-cycle/stage_transcripts.py`", reason, name)
+            self.assertNotIn("`task-cycle/cycle_stages.py`", reason, name)
 
     def test_a_cycle_that_changed_none_of_the_stage_tools_gives_the_stage_values_as_before(self):
         # The cycle changes the other three tools and another file, which the stage script does not
@@ -2883,25 +2903,27 @@ class GateRunsMeasures(MeasuresCase):
     def test_a_git_failure_on_the_gate_file_leaves_the_files_that_were_read(self):
         sys.path.insert(0, str(HERE))
         import audit_count
+        from record_reading import Cycle, Git, GitError
+        from stage_pricing import Prices
 
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record(), GATE: gate_file()})
         gate_blob = product.git("rev-parse", f"{added}:docs/task-cycles/a-task/{GATE}")
 
-        class Failing(audit_count.Git):
+        class Failing(Git):
             def run(self, *arguments):
                 if arguments[:2] == ("cat-file", "blob") and arguments[2] == gate_blob:
-                    raise audit_count.GitError("git cat-file failed (128): made up")
+                    raise GitError("git cat-file failed (128): made up")
                 return super().run(*arguments)
 
-        cycle = audit_count.Cycle("product", "a-task", added, added)
+        cycle = Cycle("product", "a-task", added, added)
         audit_count.fill(
             cycle,
             Failing(product.root),
             added,
             b"a-task",
             True,
-            audit_count.Prices("2026-11-11", {}),
+            Prices("2026-11-11", {}),
         )
         reasons = dict(cycle.unknown)
         self.assertIn("git could not read the copy", reasons["Gate runs"])
@@ -4481,6 +4503,7 @@ class ProcessVersions(AuditCountCase):
         day = "2025-10-09"
         for changed, cost, known in (
             ({STAGE_SCRIPT: "version two\n"}, "unknown", "0"),
+            ({STAGE_MODULE: "version two\n"}, "unknown", "0"),
             ({}, "2.000000", "1"),
         ):
             with self.subTest(sorted(changed)):
@@ -4510,6 +4533,7 @@ class ProcessVersions(AuditCountCase):
             "`task-cycle/agent-types/the-way-stage.md`",
         ),
         ("task-cycle/cycle_stages.py", True, "`task-cycle/cycle_stages.py`"),
+        ("task-cycle/stage_transcripts.py", True, "`task-cycle/stage_transcripts.py`"),
         # Files that start neither: the other type of agent, the other scripts, the rest of the
         # method of the cycle and a file of another part.
         ("task-cycle/agent-types/the-way-author.md", False, None),
@@ -4525,27 +4549,29 @@ class ProcessVersions(AuditCountCase):
         `path` changed (None: unchanged), as the versions the audit compares, and the Ancestry that
         reads the repository."""
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from record_reading import Git
+        from version_analysis import Ancestry, Version
 
         way = self.repository(name)
         files = {listed: "a\n" for listed, _, _ in self.BOUNDARIES}
         first = way.commit(files, "First")
         second = way.commit({**files, **({path: "b\n"} if path else {})}, "Second", first)
         return (
-            audit_count.Version(first, 1, "2025-10-09", "2026-01-01", []),
-            audit_count.Version(second, 2, "2025-10-10", "2026-01-01", []),
-            audit_count.Ancestry(audit_count.Git(way.root)),
+            Version(first, 1, "2025-10-09", "2026-01-01", []),
+            Version(second, 2, "2025-10-10", "2026-01-01", []),
+            Ancestry(Git(way.root)),
         )
 
     def test_each_file_starts_the_series_of_its_own_kind_and_no_other(self):
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from problem_register import Register
+        from version_analysis import cost_boundary, count_boundary
 
         for number, (path, in_cost, reason) in enumerate(self.BOUNDARIES):
             with self.subTest(path):
                 earlier, later, ancestry = self.two_versions(f"way-{number}", path)
-                cost = audit_count.cost_boundary(earlier, later, ancestry)
-                count = audit_count.count_boundary(earlier, later, audit_count.Register(), ancestry)
+                cost = cost_boundary(earlier, later, ancestry)
+                count = count_boundary(earlier, later, Register(), ancestry)
                 if reason is None:
                     self.assertIsNone(cost)
                     self.assertIsNone(count)
@@ -4556,62 +4582,63 @@ class ProcessVersions(AuditCountCase):
 
     def test_two_identical_versions_share_a_series_of_each_kind(self):
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from problem_register import Register
+        from version_analysis import cost_boundary, count_boundary
 
         earlier, later, ancestry = self.two_versions("way-same", None)
-        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
-        self.assertIsNone(
-            audit_count.count_boundary(earlier, later, audit_count.Register(), ancestry)
-        )
+        self.assertIsNone(cost_boundary(earlier, later, ancestry))
+        self.assertIsNone(count_boundary(earlier, later, Register(), ancestry))
 
     def test_a_date_of_the_list_of_classes_starts_a_series_of_the_count_alone(self):
         # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from problem_register import Register
+        from version_analysis import cost_boundary, count_boundary
 
         earlier, later, ancestry = self.two_versions("way-classes", None)
-        known = audit_count.Register(class_dates=["2025-10-10"])
-        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
+        known = Register(class_dates=["2025-10-10"])
+        self.assertIsNone(cost_boundary(earlier, later, ancestry))
         self.assertEqual(
             "the register's list of classes changed between the two versions",
-            audit_count.count_boundary(earlier, later, known, ancestry),
+            count_boundary(earlier, later, known, ancestry),
         )
         # A date after the two versions, and one before them, divide nothing.
         for days in (["2025-10-08"], ["2025-10-11"]):
             with self.subTest(days):
                 self.assertIsNone(
-                    audit_count.count_boundary(
-                        earlier, later, audit_count.Register(class_dates=days), ancestry
-                    )
+                    count_boundary(earlier, later, Register(class_dates=days), ancestry)
                 )
-        unknown = audit_count.Register(class_dates_unknown=True)
-        self.assertIsNone(audit_count.cost_boundary(earlier, later, ancestry))
-        self.assertIn(
-            "not given in full", audit_count.count_boundary(earlier, later, unknown, ancestry)
-        )
+        unknown = Register(class_dates_unknown=True)
+        self.assertIsNone(cost_boundary(earlier, later, ancestry))
+        self.assertIn("not given in full", count_boundary(earlier, later, unknown, ancestry))
 
     def test_a_git_that_cannot_compare_the_two_versions_counts_as_a_change_of_both_kinds(self):
         # Versions that the checkout does not hold: `git diff --quiet` ends with exit 128, and a
         # series is never joined by mistake.
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from problem_register import Register
+        from version_analysis import Version, cost_boundary, count_boundary
 
         _, _, ancestry = self.two_versions("way-failing", None)
-        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
-        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-01-01", [])
-        stage = "`task-cycle/cycle_stages.py` changed between the two versions"
-        self.assertEqual(stage, audit_count.cost_boundary(earlier, later, ancestry))
-        self.assertEqual(
-            stage, audit_count.count_boundary(earlier, later, audit_count.Register(), ancestry)
+        earlier = Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = Version("b" * 40, 2, "2025-10-10", "2026-01-01", [])
+        # Git cannot tell which file changed, so the reason names each file of the script that
+        # measures the cost: `cycle_stages.py` and the module `stage_transcripts.py` it imports
+        # (WAY-339); the expected value changes with that cause (WAY-233).
+        stage = (
+            "`task-cycle/cycle_stages.py` and `task-cycle/stage_transcripts.py` "
+            "changed between the two versions"
         )
+        self.assertEqual(stage, cost_boundary(earlier, later, ancestry))
+        self.assertEqual(stage, count_boundary(earlier, later, Register(), ancestry))
 
     def test_each_path_that_starts_a_series_is_a_path_git_tracks(self):
         # Break caught: a rename of one of these files while the audit keeps the old path: the
         # history of a path that does not exist is empty, so no change would ever start a series.
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from version_analysis import COST_SCRIPTS, COUNT_PATHS
 
-        for path in (*audit_count.COST_SCRIPTS, *audit_count.COUNT_PATHS):
+        for path in (*COST_SCRIPTS, *COUNT_PATHS):
             with self.subTest(path):
                 done = subprocess.run(
                     ["git", "-C", str(HERE.parent), "ls-files", "-z", "--", ":(literal)" + path],
@@ -4620,7 +4647,13 @@ class ProcessVersions(AuditCountCase):
                     check=True,
                 )
                 self.assertTrue(done.stdout, f"git tracks no file at {path}")
-        self.assertEqual(("task-cycle/cycle_stages.py",), audit_count.COST_SCRIPTS)
+        # The script that measures the cost spans two files, `cycle_stages.py` and the module
+        # `stage_transcripts.py` it imports, since the reading of the transcripts moved out of
+        # `cycle_stages.py` (WAY-339, `audit-series-script-paths`); the expected value changes with
+        # that cause (WAY-233).
+        self.assertEqual(
+            ("task-cycle/cycle_stages.py", "task-cycle/stage_transcripts.py"), COST_SCRIPTS
+        )
         self.assertEqual(
             (
                 "task-cycle/change",
@@ -4629,7 +4662,7 @@ class ProcessVersions(AuditCountCase):
                 "task-cycle/spec",
                 "task-cycle/agent-types/the-way-stage.md",
             ),
-            audit_count.COUNT_PATHS,
+            COUNT_PATHS,
         )
 
     def test_the_older_and_the_newer_form_of_the_stage_report_are_never_in_one_comparison(self):
@@ -4893,9 +4926,10 @@ class ProcessVersions(AuditCountCase):
 
     def test_the_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
         sys.path.insert(0, str(HERE))
-        import audit_count
+        sys.path.insert(0, str(HERE.parent / "task-cycle"))
+        import remarks_check
+        from record_items import read_contradiction
 
-        remarks_check = audit_count.remarks_check
         crafted = (
             ("very long", "reason: `open design choice` " + "x " * 100_000),
             ("very long before", "no " * 200_000 + "reason: `open design choice`"),
@@ -4907,9 +4941,7 @@ class ProcessVersions(AuditCountCase):
         for label, text in crafted:
             with self.subTest(label):
                 lines = remarks_check.split_lines(f"- Discarded attempt: {text}\n")
-                answer, why = audit_count.read_contradiction(
-                    lines, remarks_check.fenced_flags(lines)
-                )
+                answer, why = read_contradiction(lines, remarks_check.fenced_flags(lines))
                 self.assertIn(answer, ("yes", None))
                 self.assertEqual(answer is None, why is not None)
         # Run whole: no cell of the result holds a bar or a control character from the item.
@@ -5244,7 +5276,7 @@ class MeasureVersions(AuditCountCase):
         # scripts and the reason names the ones that changed, in the order of the scripts; the
         # mechanism measures split at no change of the test runner.
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from version_analysis import Version, instrument_series
 
         class Changed:
             def __init__(self, paths):
@@ -5254,18 +5286,16 @@ class MeasureVersions(AuditCountCase):
                 return any(path in self.paths for path in paths)
 
         scripts = ("task-cycle/gate_times.py", "gate/run_tests.py")
-        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
-        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
-        runner = audit_count.instrument_series(
-            [earlier, later], Changed({"gate/run_tests.py"}), scripts
-        )
+        earlier = Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        runner = instrument_series([earlier, later], Changed({"gate/run_tests.py"}), scripts)
         self.assertEqual("`gate/run_tests.py` changed between the two versions", runner[1].begins)
-        both = audit_count.instrument_series([earlier, later], Changed(set(scripts)), scripts)
+        both = instrument_series([earlier, later], Changed(set(scripts)), scripts)
         self.assertEqual(
             "`task-cycle/gate_times.py` and `gate/run_tests.py` changed between the two versions",
             both[1].begins,
         )
-        measures = audit_count.instrument_series(
+        measures = instrument_series(
             [earlier, later], Changed({"gate/run_tests.py"}), ("task-cycle/cycle_measures.py",)
         )
         self.assertEqual([[earlier, later]], [block.versions for block in measures])
@@ -5342,7 +5372,7 @@ class MeasureVersions(AuditCountCase):
         # One price list prices a whole run, so no real run splits at it: the series of the
         # measures are asked of the two versions directly, and ask git about their scripts alone.
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from version_analysis import Version, cost_boundary, instrument_series
 
         asked = []
 
@@ -5351,17 +5381,17 @@ class MeasureVersions(AuditCountCase):
                 asked.append(tuple(paths))
                 return False
 
-        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
-        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        earlier = Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
         for scripts in (
             ("task-cycle/cycle_measures.py",),
             ("task-cycle/gate_times.py", "gate/run_tests.py"),
         ):
             with self.subTest(scripts):
-                blocks = audit_count.instrument_series([earlier, later], Unchanged(), scripts)
+                blocks = instrument_series([earlier, later], Unchanged(), scripts)
                 self.assertEqual([[earlier, later]], [block.versions for block in blocks])
                 self.assertEqual(scripts, asked[-1])
-        self.assertEqual("the price list changed", audit_count.cost_boundary(earlier, later, None))
+        self.assertEqual("the price list changed", cost_boundary(earlier, later, None))
 
     def test_medians_and_falls_of_three_versions_over_an_odd_and_an_even_number_of_cycles(self):
         # Calls in all: v1 has 10, 4 and 7 (median 7, odd), v2 has 6 and 9 (median 7.5, even, so
@@ -5682,14 +5712,15 @@ class PriceBoundary(unittest.TestCase):
     def test_a_new_price_list_starts_a_new_series_of_the_cost_and_of_the_count_of_remarks(self):
         # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         sys.path.insert(0, str(HERE))
-        import audit_count
+        from problem_register import Register
+        from version_analysis import Version, cost_boundary, count_boundary
 
-        earlier = audit_count.Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
-        later = audit_count.Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
-        self.assertEqual("the price list changed", audit_count.cost_boundary(earlier, later, None))
+        earlier = Version("a" * 40, 1, "2025-10-09", "2026-01-01", [])
+        later = Version("b" * 40, 2, "2025-10-10", "2026-02-01", [])
+        self.assertEqual("the price list changed", cost_boundary(earlier, later, None))
         self.assertEqual(
             "the price list changed",
-            audit_count.count_boundary(earlier, later, audit_count.Register(), None),
+            count_boundary(earlier, later, Register(), None),
         )
 
 
