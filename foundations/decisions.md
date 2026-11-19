@@ -5268,7 +5268,7 @@ read, and the closing has no skill of its own.
   - complies: the skill that leads the plan names, at the step that reconciles progress, the file
     that describes the closing and says when it is read, and that file holds the whole closing;
   - violates: the closing is given a skill of its own, with an entry point and a description, while
-    it only reads the plan, writes an item of its log and moves the tasks the human withdrew.
+    it only reads the plan, writes an item of its log and moves the dropped tasks.
 - **Origin:** none
 
 *Rationale:* the skill that leads the plan already holds the evidence of each task's state and
@@ -5318,7 +5318,7 @@ note of the next project that already stands takes a section, since a second fil
 splits what its definition has to read.
 *Rejected:* the same three places, the closing writing in the plan only where the task went and the
 human moving the content — the move of the question and of the entry again rests on the human's
-memory; only two places, a task of its own or dropped — it departs from how projects were closed by
+memory; only two places, a task of its own or given up for good — it departs from how projects were closed by
 hand before, and the definition of the next project would have to look for such tasks in the place
 for tasks itself, or a duplicate arises; as before, only an item in the log with no place required
 — a dropped task can be lost.
@@ -5350,9 +5350,9 @@ corrected by hand in two places.
 ### WAY-414 — How does the closing of a project learn whether the entry a dropped task was to write is in the foundation?
 
 The closing searches the product's foundation, at a commit it names, for the projected entry of a
-dropped task, by the question the heading of a decision holds or by the identifier or term of any
-other entry, which the plan keeps word for word, and compares the text of what it finds with the
-projected change. It writes that the entry is absent from the foundation at that commit, or the
+dropped task, by the question the heading of a new decision holds, by the number of the current
+decision it changes, or by the identifier or term of any other entry, as the plan keeps the heading
+word for word, and compares the text of what it finds with the projected change. It writes that the entry is absent from the foundation at that commit, or the
 entry it found, a part of it included, that another task wrote (WAY-126), or that an entry stands
 under that identifier or term without the change. A hit the closing cannot tell to be the same
 entry, or to hold the change, is put to the human as a question in the preview, before anything is
