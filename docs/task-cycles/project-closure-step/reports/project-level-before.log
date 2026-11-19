@@ -1,0 +1,255 @@
+...FFFFFFFFFFF...............................................................................................................................FFFFF..........................................................................................................................................................
+======================================================================
+FAIL: test_a_closed_line_with_trailing_spaces_is_still_a_closed_plan (test_plan_check.Closed.test_a_closed_line_with_trailing_spaces_is_still_a_closed_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1076, in test_a_closed_line_with_trailing_spaces_is_still_a_closed_plan
+    self.assertEqual(found, ["closed"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['form'] != ['closed']
+
+First differing element 0:
+'form'
+'closed'
+
+- ['form']
++ ['closed']
+
+======================================================================
+FAIL: test_a_closed_plan_whose_delivering_task_is_dropped_is_reported_at_the_delivered_row (test_plan_check.Closed.test_a_closed_plan_whose_delivering_task_is_dropped_is_reported_at_the_delivered_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1055, in test_a_closed_plan_whose_delivering_task_is_dropped_is_reported_at_the_delivered_row
+    self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('form', 3)] != [('closed', 11)]
+
+First differing element 0:
+('form', 3)
+('closed', 11)
+
+- [('form', 3)]
++ [('closed', 11)]
+
+======================================================================
+FAIL: test_a_closed_plan_whose_every_task_is_done_delivered_or_dropped_passes (test_plan_check.Closed.test_a_closed_plan_whose_every_task_is_done_delivered_or_dropped_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1038, in test_a_closed_plan_whose_every_task_is_done_delivered_or_dropped_passes
+    self.assertEqual(conditions(self.closed(ALL_FINISHED)), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['form'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'form'
+
+- ['form']
++ []
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_state_off_the_list_is_reported_as_closed_too (test_plan_check.Closed.test_a_closed_plan_with_a_state_off_the_list_is_reported_as_closed_too)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1081, in test_a_closed_plan_with_a_state_off_the_list_is_reported_as_closed_too
+    self.assertEqual(sorted(found), ["closed", "form"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['form', 'form'] != ['closed', 'form']
+
+First differing element 0:
+'form'
+'closed'
+
+- ['form', 'form']
+?   ^ ^^
+
++ ['closed', 'form']
+?   ^^ ^^^
+
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row (test_plan_check.Closed.test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row) (state='to refine')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1047, in test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row
+    self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('form', 3)] != [('closed', 10)]
+
+First differing element 0:
+('form', 3)
+('closed', 10)
+
+- [('form', 3)]
++ [('closed', 10)]
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row (test_plan_check.Closed.test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row) (state='waiting for human')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1047, in test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row
+    self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('form', 3)] != [('closed', 10)]
+
+First differing element 0:
+('form', 3)
+('closed', 10)
+
+- [('form', 3)]
++ [('closed', 10)]
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row (test_plan_check.Closed.test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row) (state='ready for cycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1047, in test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row
+    self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('form', 3)] != [('closed', 10)]
+
+First differing element 0:
+('form', 3)
+('closed', 10)
+
+- [('form', 3)]
++ [('closed', 10)]
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row (test_plan_check.Closed.test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row) (state='in cycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1047, in test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row
+    self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [('form', 3)] != [('closed', 10)]
+
+First differing element 0:
+('form', 3)
+('closed', 10)
+
+- [('form', 3)]
++ [('closed', 10)]
+
+======================================================================
+FAIL: test_a_goal_delivered_in_a_done_task_passes_in_a_closed_plan (test_plan_check.Closed.test_a_goal_delivered_in_a_done_task_passes_in_a_closed_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1061, in test_a_goal_delivered_in_a_done_task_passes_in_a_closed_plan
+    self.assertEqual(conditions(self.closed(tasks)), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['form'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'form'
+
+- ['form']
++ []
+
+======================================================================
+FAIL: test_a_second_status_line_is_reported_at_that_line (test_plan_check.Closed.test_a_second_status_line_is_reported_at_that_line) (first='Status: closed 2026-11-06')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1093, in test_a_second_status_line_is_reported_at_that_line
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        [(f.condition, f.line) for f in findings(text)],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        [("form", line_of(text, second))],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [('form', 3)] != [('form', 4)]
+
+First differing element 0:
+('form', 3)
+('form', 4)
+
+- [('form', 3)]
+?           ^
+
++ [('form', 4)]
+?           ^
+
+
+======================================================================
+FAIL: test_a_second_status_line_is_reported_at_that_line (test_plan_check.Closed.test_a_second_status_line_is_reported_at_that_line) (first='Status: handed over 2026-10-06')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_check.py", line 1093, in test_a_second_status_line_is_reported_at_that_line
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        [(f.condition, f.line) for f in findings(text)],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        [("form", line_of(text, second))],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [] != [('form', 4)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+('form', 4)
+
+- []
++ [('form', 4)]
+
+======================================================================
+FAIL: test_a_closed_plan_is_reported_closed_and_proposes_nothing (test_plan_state.Command.test_a_closed_plan_is_reported_closed_and_proposes_nothing) (status='Status: closed 2026-11-19')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_state.py", line 511, in test_a_closed_plan_is_reported_closed_and_proposes_nothing
+    output = self.run_reader()
+  File "project-level\test_plan_state.py", line 200, in run_reader
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : fail: form — line 3: the status reads neither `draft` nor `handed over YYYY-MM-DD`
+fail: plan must have one handed-over Status line
+
+
+======================================================================
+FAIL: test_a_closed_plan_is_reported_closed_and_proposes_nothing (test_plan_state.Command.test_a_closed_plan_is_reported_closed_and_proposes_nothing) (status='Status: closed 2026-11-19 \t')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_state.py", line 511, in test_a_closed_plan_is_reported_closed_and_proposes_nothing
+    output = self.run_reader()
+  File "project-level\test_plan_state.py", line 200, in run_reader
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : fail: form — line 3: the status reads neither `draft` nor `handed over YYYY-MM-DD`
+fail: plan must have one handed-over Status line
+
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_a_finding (test_plan_state.Command.test_a_closed_plan_with_a_task_in_another_state_is_a_finding) (state='ready for cycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_state.py", line 522, in test_a_closed_plan_with_a_task_in_another_state_is_a_finding
+    self.assertIn("fail: closed — line", output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail: closed — line' not found in 'fail: form — line 3: the status reads neither `draft` nor `handed over YYYY-MM-DD`\nfail: plan must have one handed-over Status line\n'
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_a_finding (test_plan_state.Command.test_a_closed_plan_with_a_task_in_another_state_is_a_finding) (state='in cycle')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_state.py", line 522, in test_a_closed_plan_with_a_task_in_another_state_is_a_finding
+    self.assertIn("fail: closed — line", output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail: closed — line' not found in 'fail: form — line 3: the status reads neither `draft` nor `handed over YYYY-MM-DD`\nfail: plan must have one handed-over Status line\n'
+
+======================================================================
+FAIL: test_a_closed_plan_with_a_task_in_another_state_is_a_finding (test_plan_state.Command.test_a_closed_plan_with_a_task_in_another_state_is_a_finding) (state='to refine')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "project-level\test_plan_state.py", line 522, in test_a_closed_plan_with_a_task_in_another_state_is_a_finding
+    self.assertIn("fail: closed — line", output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fail: closed — line' not found in 'fail: form — line 3: the status reads neither `draft` nor `handed over YYYY-MM-DD`\nfail: plan must have one handed-over Status line\n'
+
+----------------------------------------------------------------------
+Ran 293 tests in 140.385s
+
+FAILED (failures=16)
+exit 1
