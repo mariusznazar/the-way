@@ -2903,7 +2903,8 @@ class GateRunsMeasures(MeasuresCase):
     def test_a_git_failure_on_the_gate_file_leaves_the_files_that_were_read(self):
         sys.path.insert(0, str(HERE))
         import audit_count
-        from record_reading import Cycle, Git, GitError
+        from audit_shared import Git, GitError
+        from record_reading import Cycle
         from stage_pricing import Prices
 
         product = self.repository()
@@ -4549,7 +4550,7 @@ class ProcessVersions(AuditCountCase):
         `path` changed (None: unchanged), as the versions the audit compares, and the Ancestry that
         reads the repository."""
         sys.path.insert(0, str(HERE))
-        from record_reading import Git
+        from audit_shared import Git
         from version_analysis import Ancestry, Version
 
         way = self.repository(name)

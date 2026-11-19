@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 
-from record_reading import MAX_BYTES, THE_WAY, AuditCountError, is_separator, table_cells
+from audit_shared import MAX_BYTES, THE_WAY, AuditCountError, is_separator, table_cells
 from stage_pricing import TEXT_CAP
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "task-cycle"))

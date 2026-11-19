@@ -32,16 +32,14 @@ from problem_register import (
     Problem,
     Register,
 )
+from audit_shared import THE_WAY, Git, GitError
 from record_reading import (
     ABSENCE_CAUSES,
     GATE_FILE,
     MEASURE_LABELS,
     MEASURES_FILE,
     SHARE_LABEL,
-    THE_WAY,
     Cycle,
-    Git,
-    GitError,
     Read,
 )
 from stage_pricing import TEXT_CAP, UNKNOWN, Prices

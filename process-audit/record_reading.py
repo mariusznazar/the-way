@@ -4,22 +4,21 @@ The values of a `Cycle` read from the copy of a record that a commit holds: the 
 (its *Process pin*, its process remarks and the items the questions of a process version read),
 `stages.md` (the times, the cost and the share of the fix rounds), `mechanism_measures.md` and
 `gate_times.md` (WAY-337, WAY-339, WAY-350), as `process-audit/audit_count.py` counts them; the
-classes the reading fills (`Cycle`, `GateRun`, `Read`); git run to read only (`Git`); and what the
-other reading of the audit shares with it, the error of the command (`AuditCountError`) and the cells
-of a table (`table_cells`, `is_separator`). A record and each file of a copy are untrusted input
-(WAY-48). It is imported, never run, and runs nothing when imported. Standard library only.
+classes the reading fills (`Cycle`, `GateRun`, `Read`). The git it runs to read only, the error of the
+command and the cells of a table stand in `audit_shared.py`. A record and each file of a copy are
+untrusted input (WAY-48). It is imported, never run, and runs nothing when imported. Standard
+library only.
 """
 
 from __future__ import annotations
 
-import os
 import re
-import subprocess
 import sys
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
 
+from audit_shared import MAX_BYTES, Git, GitError, is_separator, table_cells
 from stage_pricing import (
     TEXT_CAP,
     UNKNOWN,
@@ -46,11 +45,7 @@ from record_items import (  # noqa: E402  the reading of the items of a record
 
 display = remarks_check.display
 
-THE_WAY = "the-way"
 RECORDS = "docs/task-cycles/"
-# A copy's file larger than this is not read: no record or `stages.md` comes near it.
-MAX_BYTES = 4 * 1024 * 1024
-GIT_TIMEOUT = 120
 # A commit as a record writes it: 7 to 40 hexadecimal characters, a digit among them, so that an
 # English word written in the letters a-f is not taken for one, standing apart from other letters
 # and digits.
@@ -167,64 +162,6 @@ MAX_RUNS = 500
 MAX_DIRECTORIES = 50
 GATE_NONE = "—"
 DIRECTORY_SEPARATOR = " · "
-
-
-class AuditCountError(Exception):
-    """A wrong argument, a missing or wrong key of the locations file, or a result that cannot
-    be written: nothing is written."""
-
-
-class GitError(Exception):
-    pass
-
-
-# Git
-
-
-class Git:
-    """Git run to read only, with no prompt, no pager and nothing on stdin."""
-
-    def __init__(self, repository: Path):
-        self.repository = repository
-
-    def execute(self, arguments: tuple[str, ...]) -> subprocess.CompletedProcess:
-        # A `GIT_` variable of the environment the command starts in, such as GIT_DIR set by a
-        # hook, would point git at another repository or add configuration: none is passed on.
-        environment = {
-            name: value for name, value in os.environ.items() if not name.upper().startswith("GIT_")
-        }
-        environment.update(GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never", GIT_OPTIONAL_LOCKS="0")
-        try:
-            return subprocess.run(
-                [
-                    "git",
-                    "--no-pager",
-                    "-c",
-                    "core.fsmonitor=false",
-                    "-c",
-                    "log.showSignature=false",
-                    "-C",
-                    str(self.repository),
-                    *arguments,
-                ],
-                stdin=subprocess.DEVNULL,
-                capture_output=True,
-                timeout=GIT_TIMEOUT,
-                env=environment,
-            )
-        except (OSError, subprocess.TimeoutExpired) as error:
-            raise GitError(f"git {arguments[0]}: {display(error)}") from None
-
-    def run(self, *arguments: str) -> bytes:
-        result = self.execute(arguments)
-        if result.returncode != 0:
-            detail = result.stderr.decode("utf-8", errors="replace").strip()
-            raise GitError(f"git {arguments[0]} failed ({result.returncode}): {display(detail)}")
-        return result.stdout
-
-    def code(self, *arguments: str) -> int:
-        """The exit code of git run to read, for a command whose exit code is its answer."""
-        return self.execute(arguments).returncode
 
 
 # Reading a cycle
@@ -411,40 +348,6 @@ def missing_line(cycle: Cycle, prefix: str) -> str:
     name = f"line {prefix[2:-1]}"
     cycle.missing.append(name)
     return missing_reason(name)
-
-
-# Tables
-
-
-def table_cells(line: str) -> list[str]:
-    """The cells of a table row; a backslash escapes the character after it, so that an escaped
-    bar stays inside its cell. Linear in the length of the line."""
-    text = line.strip()
-    cells: list[str] = []
-    current: list[str] = []
-    escaped = False
-    for char in text:
-        if escaped:
-            current.append(char)
-            escaped = False
-        elif char == "\\":
-            current.append(char)
-            escaped = True
-        elif char == "|":
-            cells.append("".join(current).strip())
-            current = []
-        else:
-            current.append(char)
-    cells.append("".join(current).strip())
-    if text.startswith("|") and cells[0] == "":
-        cells.pop(0)
-    if text.endswith("|") and cells and cells[-1] == "":
-        cells.pop()
-    return cells
-
-
-def is_separator(cells: list[str]) -> bool:
-    return all(cell and set(cell) <= set("-:") for cell in cells)
 
 
 def token_count(text: str) -> int | None:

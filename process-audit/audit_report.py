@@ -16,7 +16,8 @@ from decimal import Decimal
 from pathlib import Path
 
 from problem_register import COST_LEVELS
-from record_reading import MEASURE_LABELS, THE_WAY, AuditCountError, Cycle, Read
+from audit_shared import THE_WAY, AuditCountError
+from record_reading import MEASURE_LABELS, Cycle, Read
 from stage_pricing import UNKNOWN, Prices
 from version_analysis import (
     COST_MODULE,

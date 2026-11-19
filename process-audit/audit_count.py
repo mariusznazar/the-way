@@ -351,6 +351,15 @@ from decimal import Decimal
 from pathlib import Path
 
 sys.dont_write_bytecode = True
+from audit_shared import (  # noqa: E402  what the audit's modules share, in the directory of this file
+    MAX_BYTES,
+    THE_WAY,
+    AuditCountError,
+    Git,
+    GitError,
+    is_separator,
+    table_cells,
+)
 from stage_pricing import (  # noqa: E402  the price of a stage's rows, in the directory of this file
     NO_MODEL,
     TEXT_CAP,
@@ -360,22 +369,16 @@ from stage_pricing import (  # noqa: E402  the price of a stage's rows, in the d
 )
 from record_reading import (  # noqa: E402  the reading of a cycle's record, in the directory of this file
     GATE_FILE,
-    MAX_BYTES,
     MEASURES_FILE,
     RECORDS,
-    THE_WAY,
     WRITE_1H_COLUMN,
     WRITE_5M_COLUMN,
-    AuditCountError,
     Cycle,
-    Git,
-    GitError,
     Read,
     add_cost,
     guarded_optional,
     has_line,
     header_fields,
-    is_separator,
     missing_line,
     missing_reason,
     process_pin,
@@ -385,7 +388,6 @@ from record_reading import (  # noqa: E402  the reading of a cycle's record, in 
     read_measures,
     remarks_count,
     stages_time,
-    table_cells,
     tree_entries,
 )
 from problem_register import (  # noqa: E402  the register of problems, in the directory of this file
