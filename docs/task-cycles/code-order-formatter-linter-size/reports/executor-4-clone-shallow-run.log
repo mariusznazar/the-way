@@ -1,0 +1,7 @@
+.............................s.................................................................................................................................................................................................................................................
+skipped: test_element_directory_contents.ElementDirectoryContents.test_every_element_directory_holds_a_template_examples_or_a_pointer_and_a_skill: no main branch exists, so {merge-onto} does not and the invariant says nothing
+----------------------------------------------------------------------
+Ran 271 tests in 156.493s
+
+OK (skipped=1)
+exit=0

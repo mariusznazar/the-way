@@ -1,0 +1,9 @@
+missing|--locations .runs/review-18/in/nofile.json
+invalid|--locations .runs/review-18/in/invalid.json
+empty|--locations .runs/review-18/in/empty.json
+noreg|--locations .runs/review-18/in/noreg.json
+reg|--locations .runs/review-18/in/reg.json
+list|--locations .runs/review-18/in/list.json
+today|--today notadate
+unknown|--bogus
+help|--help

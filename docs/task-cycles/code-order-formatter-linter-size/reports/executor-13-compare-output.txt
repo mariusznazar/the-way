@@ -1,0 +1,60 @@
+same claude_good_sub exit=0/0 out=3052/3052 err=137/137
+same claude_good_nometa exit=0/0 out=3104/3104 err=229/229
+same claude_bad_meta exit=1/1 out=0/0 err=251/251
+same claude_no_usage exit=2/2 out=0/0 err=165/165
+same claude_no_cc exit=2/2 out=0/0 err=177/177
+same claude_no_1h exit=2/2 out=0/0 err=203/203
+same claude_null_count exit=2/2 out=0/0 err=180/180
+same claude_float_count exit=2/2 out=0/0 err=201/201
+same claude_big_count exit=2/2 out=0/0 err=199/199
+same claude_neg_count exit=2/2 out=0/0 err=209/209
+same claude_bool_count exit=2/2 out=0/0 err=210/210
+same claude_bad_time exit=2/2 out=0/0 err=172/172
+same claude_time_int exit=2/2 out=0/0 err=172/172
+same claude_no_message exit=2/2 out=0/0 err=161/161
+same claude_no_content exit=2/2 out=0/0 err=169/169
+same claude_synthetic exit=0/0 out=2720/2720 err=137/137
+same claude_model_null exit=0/0 out=2939/2939 err=221/221
+same claude_split_mismatch exit=0/0 out=3005/3005 err=423/423
+same claude_not_json exit=1/1 out=0/0 err=194/194
+same claude_deep exit=1/1 out=0/0 err=228/228
+same claude_empty exit=1/1 out=0/0 err=145/145
+same claude_unknown_first exit=1/1 out=0/0 err=200/200
+same claude_non_dict_line exit=0/0 out=2459/2459 err=0/0
+same claude_bad_utf8 exit=1/1 out=0/0 err=224/224
+same claude_surrogate exit=0/0 out=2459/2459 err=0/0
+same codex_good exit=0/0 out=3580/3580 err=564/564
+same codex_no_sub exit=0/0 out=2955/2955 err=385/385
+same codex_no_id exit=2/2 out=0/0 err=176/176
+same codex_empty_id exit=2/2 out=0/0 err=190/190
+same codex_bad_time exit=2/2 out=0/0 err=189/189
+same codex_no_time exit=2/2 out=0/0 err=177/177
+same codex_tok_no_thread exit=2/2 out=0/0 err=192/192
+same codex_tok_no_turn exit=2/2 out=0/0 err=188/188
+same codex_tok_no_usage exit=2/2 out=0/0 err=187/187
+same codex_tok_bad_count exit=2/2 out=0/0 err=227/227
+same codex_tok_no_out exit=2/2 out=0/0 err=199/199
+same codex_sub_bad_other exit=2/2 out=0/0 err=199/199
+same codex_sub_nonobject_payload exit=0/0 out=3552/3552 err=564/564
+same codex_line_list exit=2/2 out=0/0 err=190/190
+same codex_not_json exit=2/2 out=0/0 err=178/178
+same codex_sub_as_orch exit=1/1 out=0/0 err=206/206
+same codex_first_not_meta exit=0/0 out=2453/2453 err=191/191
+same codex_sub_empty exit=1/1 out=0/0 err=165/165
+same codex_sub_nometa exit=0/0 out=2955/2955 err=385/385
+same codex_sub_open_turn exit=0/0 out=3277/3277 err=493/493
+same codex_many_files exit=0/0 out=3977/3977 err=695/695
+same codex_two_orch exit=0/0 out=4182/4182 err=1128/1128
+same mixed exit=0/0 out=4254/4254 err=701/701
+same missing_session exit=1/1 out=0/0 err=44/44
+same by_id exit=0/0 out=3580/3580 err=564/564
+same no_args exit=1/1 out=0/0 err=83/83
+cases 51 different 0
+exit codes seen [0, 1, 2]
+output file bytes equal True
+claude_no_cc 2 ge\repos\the-way-wt\code-order-formatter-linter-size\.runs\executor-13\inputs\claude_no_cc\claude\projects\p\sess.jsonl:2: no field message.usage.cache_creation
+claude_null_count 2 repos\the-way-wt\code-order-formatter-linter-size\.runs\executor-13\inputs\claude_null_count\claude\projects\p\sess.jsonl:2: no field message.usage.input_tokens
+codex_tok_bad_count 2 ze\.runs\executor-13\inputs\codex_tok_bad_count\codex\sessions\2026\10\06\rollout-x-orch.jsonl:10: field payload.usage.cached_input_tokens is not a whole number
+codex_no_id 2 age\repos\the-way-wt\code-order-formatter-linter-size\.runs\executor-13\inputs\codex_no_id\codex\sessions\2026\10\06\rollout-x-orch.jsonl:1: no field payload.id
+codex_tok_no_turn 2 e-way-wt\code-order-formatter-linter-size\.runs\executor-13\inputs\codex_tok_no_turn\codex\sessions\2026\10\06\rollout-x-orch.jsonl:10: no field payload.turn_id
+claude_not_json 1 wt\code-order-formatter-linter-size\.runs\executor-13\inputs\claude_not_json\claude\projects\p\sess.jsonl:2: not JSON: Expecting value: line 1 column 1 (char 0)
