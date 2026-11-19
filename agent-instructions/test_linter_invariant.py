@@ -9,8 +9,8 @@ The class Formatter holds the tests of the invariant `formatter-layout`, which t
 through its formatter (WAY-382). The first of them runs the formatter in its check mode over every
 Python file that git tracks in the parts of PARTS and fails where the formatter would change a file
 or cannot run. The second fails where such a file holds a comment that switches the formatter off,
-`fmt: off`, `fmt: on` or `fmt: skip`: the comments are read with the `tokenize` module of the
-standard library, so the same words in a string count for nothing.
+`fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable`: the comments are read with
+the `tokenize` module of the standard library, so the same words in a string count for nothing.
 
 Ruff comes from the environment `.runs/quality-venv` of the main checkout of the repository, found
 through the common directory of git, so that one installation serves every working directory of
@@ -45,8 +45,9 @@ PARTS = (
     "task-cycle",
 )
 CLEAN_FILE = '"""A file that breaks no rule of the linter."""\n\nVALUE = 1\n'
-# A comment that switches the formatter off for the statement or the lines it stands at.
-FORMATTER_SWITCH = re.compile(r"\bfmt:\s*(?:off|on|skip)\b")
+# A comment that switches the formatter off for the statement or the lines it stands at: the
+# three comments of Ruff's own and the two of the formatter it follows, which Ruff takes as well.
+FORMATTER_SWITCH = re.compile(r"\b(?:fmt:\s*(?:off|on|skip)|yapf:\s*(?:disable|enable))\b")
 
 
 def main_checkout() -> Path:
@@ -192,8 +193,9 @@ class Formatter(unittest.TestCase):
         self.assertEqual(
             switched,
             [],
-            "a comment fmt: off, fmt: on or fmt: skip switches the formatter off for a file "
-            "of the parts: remove it and lay the code out as the formatter leaves it (WAY-382)",
+            "a comment fmt: off, fmt: on, fmt: skip, yapf: disable or yapf: enable switches the "
+            "formatter off for a file of the parts: remove it and lay the code out as the "
+            "formatter leaves it (WAY-382)",
         )
 
 

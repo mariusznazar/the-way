@@ -447,7 +447,7 @@ No file of a part named in the *Scope* of WAY-379 breaks a rule that WAY-380 giv
 
 ## formatter-layout
 
-Every `.py` file that git tracks in a part named in the *Scope* of WAY-379 stands as the formatter of the Ruff that WAY-381 pins leaves it when run with the configuration `ruff.toml`, with no part of it left out of the formatter by a comment `fmt: off`, `fmt: on` or `fmt: skip`.
+Every `.py` file that git tracks in a part named in the *Scope* of WAY-379 stands as the formatter of the Ruff that WAY-381 pins leaves it when run with the configuration `ruff.toml`, with no part of it left out of the formatter by a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable`.
 
 - **Method:** test
 - **Rests on:** none

@@ -10695,8 +10695,8 @@ that `### Formatter` of its coding guidelines names this decision and the invari
 leaves, the formatter having entered the-way by one reformatting of the whole of that code (WAY-205).
 
 The formatter and its invariant cover `.py` files only, never a Python example in a Markdown file, and
-a comment `fmt: off`, `fmt: on` or `fmt: skip` in a file that the rule covers is forbidden: the test of
-the formatter fails on it.
+a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable` in a file that the
+rule covers is forbidden: the test of the formatter fails on it.
 
 - **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
   agent-instructions, instruction-files, installation, process-audit, product-guidelines, repository
