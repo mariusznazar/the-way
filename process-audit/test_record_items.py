@@ -269,7 +269,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         )
         self.assertEqual(("yes", None), read(same))
 
-    def test_a_deeper_line_under_the_first_sub_item_is_no_sub_item_of_the_list(self):
+    def test_a_nested_list_item_under_the_first_sub_item_is_no_sub_item_of_the_list(self):
         record = (
             "- Discarded attempt:"
             + NL
