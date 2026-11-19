@@ -4174,15 +4174,23 @@ class Run(AuditCountCase):
         # decision: WAY-344 "Where the locations file has no key `repository` under `the-way`"
         # The script lies in a checkout built here: a copy of it with the files it reads beside it,
         # and a history that holds one cycle, so that the cycles it counts say whose history it read.
+        # Every module of process-audit/ that is not a test is copied, as found when the test runs,
+        # so that a module a later change moves out of audit_count.py needs no change of this test.
         checkout = self.repository("checkout")
-        files = {}
-        for name in (
+        names = [
             "process-audit/audit_count.py",
             "process-audit/record_items.py",
             "process-audit/stage_pricing.py",
             "process-audit/price_list.md",
             "task-cycle/remarks_check.py",
-        ):
+        ]
+        names += [
+            f"process-audit/{path.name}"
+            for path in sorted(HERE.glob("*.py"))
+            if not path.name.startswith("test_")
+        ]
+        files = {}
+        for name in dict.fromkeys(names):
             files[name] = (HERE.parent / name).read_bytes()
             (checkout.root / name).parent.mkdir(parents=True, exist_ok=True)
             (checkout.root / name).write_bytes(files[name])
