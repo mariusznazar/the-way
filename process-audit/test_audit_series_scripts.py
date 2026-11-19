@@ -1,9 +1,10 @@
 """Test of the invariant audit-series-script-paths: each path of a script whose history
-`process-audit/audit_count.py` reads, to start a new series of the cost of cycles, of the measures of how a cycle's
-agents use context and the prompt cache or of the gate times, is a file git tracks — the script
-that measures the cost, `task-cycle/cycle_stages.py` with the module
-`task-cycle/stage_transcripts.py` that it imports, the script that counts those measures, the
-script that records the gate times and the test runner of the gate.
+`process-audit/audit_count.py` reads through `process-audit/version_analysis.py`, which it
+imports, to start a new series of the cost of cycles, of the measures of how a cycle's agents use
+context and the prompt cache or of the gate times, is a file git tracks — the script that measures
+the cost, `task-cycle/cycle_stages.py` with the module `task-cycle/stage_transcripts.py` that it
+imports, the script that counts those measures, the script that records the gate times and the
+test runner of the gate.
 
 The reader holds those paths in `version_analysis.py`, which is imported: it is a file of this
 part. The writing side is the repository itself, read through git, never imported.
