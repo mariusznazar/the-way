@@ -278,6 +278,144 @@ def header_fields(text, label):
     return fields
 
 
+def anchored_parents(path, source, document, task, frozen_copy):
+    """The folders a record's task documents may stand in, anchored at its original source, as
+    (parents, None); where the source cannot be anchored or is another task's, (None, problem)
+    with the problem as (kind, message)."""
+    candidates = [
+        candidate for candidate in map(source_path, leading_values(source)) if candidate is not None
+    ]
+    if frozen_copy is None:
+        if not candidates or document is None or task.document == "—":
+            return None, (
+                "unresolved",
+                path + ": original Task source or Document cannot be anchored",
+            )
+        if document not in candidates:
+            return None, (
+                "foreign",
+                path + ": Task source " + source + " differs from Document " + document,
+            )
+        return [Path(document).parent], None
+    # The source document is gone; any folder its recorded path may name can hold it.
+    return [Path(candidate).parent for candidate in candidates], None
+
+
+def relation_problem(path, relation_text, parents, plan_path, task, frozen_copy):
+    """None where a record's Task relation names this plan's item of the task, else the problem as
+    (kind, message)."""
+    if not re.match(r"plan item(?![\w-])", relation_text):
+        return (
+            "unresolved",
+            path + ": same-source Task relation does not establish this plan's membership",
+        )
+    # The frozen task binds plan and name below; only the one expanded form also names them.
+    relation = re.fullmatch(
+        r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
+        r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?",
+        relation_text,
+    )
+    if not relation:
+        return None
+    related_plan = source_path(relation[1], parents[0]) if parents else relation[1]
+    if names_plan(relation[1], parents, plan_path) and relation[3] == task.name:
+        return None
+    if unsure(relation[1], frozen_copy) and relation[3] == task.name:
+        return (
+            "unresolved",
+            path + ": Task relation's plan cannot be resolved without the removed source document",
+        )
+    return (
+        "foreign",
+        path
+        + ": Task relation names plan "
+        + str(related_plan)
+        + " item "
+        + relation[2]
+        + " "
+        + relation[3],
+    )
+
+
+def frozen_artifact_problem(path, paths, read, text, parents, plan_path, task, frozen_copy):
+    """None where a record's frozen task artifact stands in its cycle snapshot and names this plan
+    and task, else the problem as (kind, message)."""
+    artifacts = re.search(r"^## Artifacts\s*\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL)
+    frozen = []
+    if artifacts:
+        for line in artifacts[1].splitlines():
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            if len(cells) >= 2 and cells[0].lower() == "frozen task":
+                frozen.append(cells[1])
+    if len(frozen) != 1:
+        return "unresolved", path + ": missing or ambiguous frozen task artifact"
+    # Frozen artifacts must belong to this snapshot, not today's external source or another cycle.
+    targets = {
+        posixpath.normpath(
+            posixpath.join(posixpath.dirname(path), path_value(value).replace("\\", "/"))
+        )
+        for value in leading_values(frozen[0])
+        if path_value(value)
+    } & set(paths)
+    if len(targets) != 1:
+        return "unresolved", path + ": frozen task artifact absent from this cycle snapshot"
+    target = targets.pop()
+    if frozen_copy is not None and read(target).replace("\r\n", "\n") != frozen_copy.replace(
+        "\r\n", "\n"
+    ):
+        return "foreign", path + ": frozen task differs from the frozen copy the Document links"
+    memberships = header_fields(read(target), "Project relation")
+    if len(memberships) != 1:
+        return "unresolved", path + ": missing or ambiguous frozen task membership"
+    membership = re.fullmatch(r"plan item: (.+) — ([a-z0-9]+(?:-[a-z0-9]+)*)", memberships[0])
+    if not membership:
+        return "unresolved", path + ": frozen task membership cannot be read"
+    member_plan = source_path(membership[1], parents[0]) if parents else membership[1]
+    if names_plan(membership[1], parents, plan_path) and membership[2] == task.name:
+        return None
+    if unsure(membership[1], frozen_copy) and membership[2] == task.name:
+        return (
+            "unresolved",
+            path + ": frozen task's plan cannot be resolved without the removed source document",
+        )
+    return (
+        "foreign",
+        path
+        + ": frozen task names plan "
+        + str(member_plan)
+        + " task "
+        + membership[2]
+        + ", not the supplied plan/task",
+    )
+
+
+def record_provenance(path, paths, read, plan_path, task, frozen_copy, document):
+    """Judge one record of a cycle: ("skip", None) where it holds no provenance field, ("owned",
+    None) where it belongs to the task, else ("unresolved" or "foreign", the reason)."""
+    text = read(path)
+    sources = header_fields(text, "Task source")
+    relations = header_fields(text, "Task relation")
+    if not sources and not relations:
+        return "skip", None
+    if len(sources) != 1 or len(relations) != 1:
+        return "unresolved", path + ": missing or ambiguous task provenance fields"
+    if frozen_copy is False:
+        return (
+            "unresolved",
+            path + ": frozen copy the Document links is absent from the product repository",
+        )
+    parents, problem = anchored_parents(path, sources[0], document, task, frozen_copy)
+    if problem:
+        return problem
+    problem = relation_problem(path, relations[0], parents, plan_path, task, frozen_copy)
+    if problem:
+        return problem
+    problem = frozen_artifact_problem(
+        path, paths, read, text, parents, plan_path, task, frozen_copy
+    )
+    return problem or ("owned", None)
+
+
 def provenance(paths, read, plan_path, task, frozen_copy=None):
     """Associate each record with its own retained task, anchored at its original source.
 
@@ -287,120 +425,13 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
     document = source_path(task.document, Path(plan_path).parent)
     owned, unresolved, foreign = [], [], []
     for path in paths:
-        text = read(path)
-        sources = header_fields(text, "Task source")
-        relations = header_fields(text, "Task relation")
-        if not sources and not relations:
-            continue
-        if len(sources) != 1 or len(relations) != 1:
-            unresolved.append(path + ": missing or ambiguous task provenance fields")
-            continue
-        if frozen_copy is False:
-            unresolved.append(
-                path + ": frozen copy the Document links is absent from the product repository"
-            )
-            continue
-        candidates = [
-            candidate
-            for candidate in map(source_path, leading_values(sources[0]))
-            if candidate is not None
-        ]
-        if frozen_copy is None:
-            if not candidates or document is None or task.document == "—":
-                unresolved.append(path + ": original Task source or Document cannot be anchored")
-                continue
-            if document not in candidates:
-                foreign.append(
-                    path + ": Task source " + sources[0] + " differs from Document " + document
-                )
-                continue
-            parents = [Path(document).parent]
-        else:
-            # The source document is gone; any folder its recorded path may name can hold it.
-            parents = [Path(candidate).parent for candidate in candidates]
-        if not re.match(r"plan item(?![\w-])", relations[0]):
-            unresolved.append(
-                path + ": same-source Task relation does not establish this plan's membership"
-            )
-            continue
-        # The frozen task binds plan and name below; only the one expanded form also names them.
-        relation = re.fullmatch(
-            r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
-            r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?",
-            relations[0],
-        )
-        if relation:
-            related_plan = source_path(relation[1], parents[0]) if parents else relation[1]
-            if not names_plan(relation[1], parents, plan_path) or relation[3] != task.name:
-                if unsure(relation[1], frozen_copy) and relation[3] == task.name:
-                    unresolved.append(
-                        path + ": Task relation's plan cannot be resolved without "
-                        "the removed source document"
-                    )
-                    continue
-                foreign.append(
-                    path
-                    + ": Task relation names plan "
-                    + str(related_plan)
-                    + " item "
-                    + relation[2]
-                    + " "
-                    + relation[3]
-                )
-                continue
-        artifacts = re.search(r"^## Artifacts\s*\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL)
-        frozen = []
-        if artifacts:
-            for line in artifacts[1].splitlines():
-                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-                if len(cells) >= 2 and cells[0].lower() == "frozen task":
-                    frozen.append(cells[1])
-        if len(frozen) != 1:
-            unresolved.append(path + ": missing or ambiguous frozen task artifact")
-            continue
-        # Frozen artifacts must belong to this snapshot, not today's external source or another cycle.
-        targets = {
-            posixpath.normpath(
-                posixpath.join(posixpath.dirname(path), path_value(value).replace("\\", "/"))
-            )
-            for value in leading_values(frozen[0])
-            if path_value(value)
-        } & set(paths)
-        if len(targets) != 1:
-            unresolved.append(path + ": frozen task artifact absent from this cycle snapshot")
-            continue
-        target = targets.pop()
-        if frozen_copy is not None and read(target).replace("\r\n", "\n") != frozen_copy.replace(
-            "\r\n", "\n"
-        ):
-            foreign.append(path + ": frozen task differs from the frozen copy the Document links")
-            continue
-        memberships = header_fields(read(target), "Project relation")
-        if len(memberships) != 1:
-            unresolved.append(path + ": missing or ambiguous frozen task membership")
-            continue
-        membership = re.fullmatch(r"plan item: (.+) — ([a-z0-9]+(?:-[a-z0-9]+)*)", memberships[0])
-        if not membership:
-            unresolved.append(path + ": frozen task membership cannot be read")
-            continue
-        member_plan = source_path(membership[1], parents[0]) if parents else membership[1]
-        if not names_plan(membership[1], parents, plan_path) or membership[2] != task.name:
-            if unsure(membership[1], frozen_copy) and membership[2] == task.name:
-                unresolved.append(
-                    path + ": frozen task's plan cannot be resolved without the "
-                    "removed source document"
-                )
-                continue
-            foreign.append(
-                path
-                + ": frozen task names plan "
-                + str(member_plan)
-                + " task "
-                + membership[2]
-                + ", not the supplied plan/task"
-            )
-            continue
-        owned.append(path)
+        kind, reason = record_provenance(path, paths, read, plan_path, task, frozen_copy, document)
+        if kind == "owned":
+            owned.append(path)
+        elif kind == "unresolved":
+            unresolved.append(reason)
+        elif kind == "foreign":
+            foreign.append(reason)
     if foreign:
         return "foreign", owned, foreign
     if unresolved:
@@ -410,11 +441,129 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
     return "owned", owned, []
 
 
+@dataclass
+class TaskEvidence:
+    """What the report on one task has found so far: its lines, the evidence of each kind, and
+    the reasons the evidence cannot be established or contradicts the plan."""
+
+    prefix: str
+    lines: list = field(default_factory=list)
+    active: list = field(default_factory=list)
+    archived: list = field(default_factory=list)
+    merged: list = field(default_factory=list)
+    unchecked: list = field(default_factory=list)
+    errors: list = field(default_factory=list)
+    contradictions: list = field(default_factory=list)
+
+
+def archived_cycles(git, observation, task, plan_path, frozen_copy, archive, evidence):
+    """Read the cycle records each commit that touches the task's archive directory holds, and
+    note those that belong to the task in `evidence`. Return the record paths of each such
+    commit."""
+    prefix = evidence.prefix
+    candidates = commits_touching(git, observation.refs, archive)
+    snapshots = {}
+    for commit in candidates:
+        paths = archived_files(git, commit, archive)
+        if not paths:
+            continue  # Deletion alone cannot supply a record; earlier snapshots remain visible.
+        cache = {}
+
+        def read(name):
+            if name not in cache:
+                cache[name] = git.run("show", commit + ":" + name).stdout.decode(
+                    "utf-8", errors="replace"
+                )
+            return cache[name]
+
+        status, records, reasons = provenance(paths, read, plan_path, task, frozen_copy)
+        if status != "owned":
+            destination = evidence.contradictions if status == "foreign" else evidence.unchecked
+            destination.extend("commit " + commit + ": " + reason for reason in reasons)
+            continue
+        evidence.archived.append(commit)
+        snapshots[commit] = records
+        refs = git.text(
+            "for-each-ref",
+            "--contains=" + commit,
+            "--format=%(refname)",
+            "refs/heads/",
+            "refs/remotes/",
+        )
+        evidence.lines.append(
+            "evidence %s: archived cycle %s commit %s on %s"
+            % (prefix, archive, commit, display(", ".join(refs.splitlines())))
+        )
+        pointers, blocked = record_requests(git, commit, records)
+        for source, link in pointers:
+            evidence.lines.append(
+                "evidence %s: PR pointer from %s: %s" % (prefix, display(source), display(link))
+            )
+        for record in blocked:
+            evidence.lines.append(
+                "evidence %s: blocked draft request in record %s commit %s"
+                % (prefix, display(record), commit)
+            )
+    return snapshots
+
+
+def report_verdict(observation, task, evidence):
+    """The lines that close the report on a task: its working cycles, the conflicts, the proposed
+    moves and what stays unchecked. Return the lines, whether the task conflicts and whether an
+    error stopped the reading."""
+    prefix, lines = evidence.prefix, evidence.lines
+    unchecked = evidence.unchecked
+    for path in evidence.active:
+        lines.append("evidence %s: working cycle %s" % (prefix, display(path)))
+    trace = bool(evidence.active or evidence.archived or evidence.merged)
+    conflict = bool(evidence.contradictions)
+    for reason in evidence.contradictions:
+        lines.append("conflict %s: %s; human reconciliation required" % (prefix, display(reason)))
+    if conflict:
+        pass
+    elif task.state in ("ready for cycle", "in cycle"):
+        if task.state == "ready for cycle" and trace:
+            lines.append("propose %s: ready for cycle -> in cycle" % prefix)
+        if evidence.merged and not evidence.errors:
+            lines.append("propose %s: in cycle -> done" % prefix)
+        else:
+            unchecked.append(
+                "PR outcome unchecked; cycle evidence is outside established fresh "
+                "integration history"
+                if trace
+                else "no sufficient cycle trace; PR outcome unchecked"
+            )
+    elif trace and (
+        task.state != "done"
+        or evidence.active
+        or (
+            observation.commit
+            and observation.complete
+            and not evidence.merged
+            and not evidence.errors
+        )
+    ):
+        conflict = True
+        lines.append(
+            "conflict %s: cycle trace conflicts with plan state %s; human reconciliation "
+            "required" % (prefix, task.state)
+        )
+    elif task.state == "done" and not evidence.merged:
+        unchecked.append(
+            "plan says done but completion cannot be established from fresh Git history"
+        )
+    elif not trace:
+        unchecked.append("no sufficient cycle trace; no progress inferred")
+    for reason in observation.unchecked + unchecked:
+        lines.append("unchecked %s: %s" % (prefix, display(reason)))
+    for error in evidence.errors:
+        lines.append("error: " + error)
+    return lines, conflict, bool(evidence.errors)
+
+
 def task_report(git, observation, task, plan_path):
     prefix = "%d %s" % (task.number, task.name)
-    lines = ["task %s: %s" % (prefix, task.state)]
-    active, archived, merged = [], [], []
-    unchecked, errors, contradictions = [], [], []
+    evidence = TaskEvidence(prefix, ["task %s: %s" % (prefix, task.state)])
     working = ".runs/task-cycles/" + task.name
     archive = "docs/task-cycles/" + task.name + "/"
     try:
@@ -441,62 +590,24 @@ def task_report(git, observation, task, plan_path):
                         frozen_copy,
                     )
                     if status == "owned":
-                        active.append(path)
+                        evidence.active.append(path)
                     else:
-                        destination = contradictions if status == "foreign" else unchecked
+                        destination = (
+                            evidence.contradictions if status == "foreign" else evidence.unchecked
+                        )
                         destination.extend(str(path) + ": " + reason for reason in reasons)
             except OSError as error:
-                unchecked.append("cannot read working-cycle path %s: %s" % (path, error))
-        candidates = commits_touching(git, observation.refs, archive)
-        snapshots = {}
-        for commit in candidates:
-            paths = archived_files(git, commit, archive)
-            if not paths:
-                continue  # Deletion alone cannot supply a record; earlier snapshots remain visible.
-            cache = {}
-
-            def read(name):
-                if name not in cache:
-                    cache[name] = git.run("show", commit + ":" + name).stdout.decode(
-                        "utf-8", errors="replace"
-                    )
-                return cache[name]
-
-            status, records, reasons = provenance(paths, read, plan_path, task, frozen_copy)
-            if status != "owned":
-                destination = contradictions if status == "foreign" else unchecked
-                destination.extend("commit " + commit + ": " + reason for reason in reasons)
-                continue
-            archived.append(commit)
-            snapshots[commit] = records
-            refs = git.text(
-                "for-each-ref",
-                "--contains=" + commit,
-                "--format=%(refname)",
-                "refs/heads/",
-                "refs/remotes/",
-            )
-            lines.append(
-                "evidence %s: archived cycle %s commit %s on %s"
-                % (prefix, archive, commit, display(", ".join(refs.splitlines())))
-            )
-            pointers, blocked = record_requests(git, commit, records)
-            for source, link in pointers:
-                lines.append(
-                    "evidence %s: PR pointer from %s: %s" % (prefix, display(source), display(link))
-                )
-            for record in blocked:
-                lines.append(
-                    "evidence %s: blocked draft request in record %s commit %s"
-                    % (prefix, display(record), commit)
-                )
+                evidence.unchecked.append("cannot read working-cycle path %s: %s" % (path, error))
+        snapshots = archived_cycles(
+            git, observation, task, plan_path, frozen_copy, archive, evidence
+        )
         # A deletion is a cycle trace, but cannot stand for actual archived content.
         if observation.commit and observation.complete:
             for commit in commits_touching(git, [observation.commit], archive):
                 paths = snapshots.get(commit, [])
                 if paths:
-                    merged.append(commit)
-                    lines.append(
+                    evidence.merged.append(commit)
+                    evidence.lines.append(
                         "evidence %s: cycle record %s commit %s reachable from %s %s"
                         % (
                             prefix,
@@ -507,49 +618,9 @@ def task_report(git, observation, task, plan_path):
                         )
                     )
     except (GitError, UnicodeError) as error:
-        errors.append(display(error))
-        merged = []
-    for path in active:
-        lines.append("evidence %s: working cycle %s" % (prefix, display(path)))
-    trace = bool(active or archived or merged)
-    conflict = bool(contradictions)
-    for reason in contradictions:
-        lines.append("conflict %s: %s; human reconciliation required" % (prefix, display(reason)))
-    if conflict:
-        pass
-    elif task.state in ("ready for cycle", "in cycle"):
-        if task.state == "ready for cycle" and trace:
-            lines.append("propose %s: ready for cycle -> in cycle" % prefix)
-        if merged and not errors:
-            lines.append("propose %s: in cycle -> done" % prefix)
-        else:
-            unchecked.append(
-                "PR outcome unchecked; cycle evidence is outside established fresh "
-                "integration history"
-                if trace
-                else "no sufficient cycle trace; PR outcome unchecked"
-            )
-    elif trace and (
-        task.state != "done"
-        or active
-        or (observation.commit and observation.complete and not merged and not errors)
-    ):
-        conflict = True
-        lines.append(
-            "conflict %s: cycle trace conflicts with plan state %s; human reconciliation "
-            "required" % (prefix, task.state)
-        )
-    elif task.state == "done" and not merged:
-        unchecked.append(
-            "plan says done but completion cannot be established from fresh Git history"
-        )
-    elif not trace:
-        unchecked.append("no sufficient cycle trace; no progress inferred")
-    for reason in observation.unchecked + unchecked:
-        lines.append("unchecked %s: %s" % (prefix, display(reason)))
-    for error in errors:
-        lines.append("error: " + error)
-    return lines, conflict, bool(errors)
+        evidence.errors.append(display(error))
+        evidence.merged = []
+    return report_verdict(observation, task, evidence)
 
 
 def sources(plan_path):

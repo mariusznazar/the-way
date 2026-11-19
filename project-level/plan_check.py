@@ -188,8 +188,8 @@ def definition_path(plan_text):
 # --- The header -------------------------------------------------------------------------------
 
 
-def check_header(preamble, definition_text, definition_error):
-    """Return the findings of the header, and the definition read, or None where it cannot be."""
+def check_status(preamble):
+    """Return the findings of the `Status:` line of the header."""
     findings = []
     status = [(n, line) for n, line in preamble if line.startswith("Status:")]
     if not status:
@@ -210,6 +210,55 @@ def check_header(preamble, definition_text, definition_error):
                 "the plan was handed over on %s, which is no calendar date" % match.group("date"),
             )
         )
+    return findings
+
+
+def check_fingerprints(number, held, definition_text, by_name):
+    """Return the findings of the fingerprint the plan holds, against the one the definition's
+    approval record holds and the one its text gives."""
+    findings = []
+    approved = [
+        m.group(1)
+        for _, l in by_name[readiness_check.APPROVAL_RECORD].lines
+        if (m := APPROVAL_FINGERPRINT.match(l.rstrip()))
+    ]
+    if not approved:
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the definition's approval record holds no line "
+                "`- Definition fingerprint: <hex>` — the definition has not "
+                "passed its readiness approval",
+            )
+        )
+    elif approved[0] != held:
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the fingerprint %s is not the one the "
+                "definition's approval record holds, %s" % (held, approved[0]),
+            )
+        )
+    text_fingerprint = readiness_check.definition_fingerprint(definition_text)
+    if text_fingerprint != held:
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the fingerprint %s is not the one the "
+                "definition's text gives, %s — the plan stands on nothing until "
+                "the definition passes its readiness approval again and the plan "
+                "is checked against it" % (held, text_fingerprint),
+            )
+        )
+    return findings
+
+
+def check_header(preamble, definition_text, definition_error):
+    """Return the findings of the header, and the definition read, or None where it cannot be."""
+    findings = check_status(preamble)
     lines = [(n, line) for n, line in preamble if line.startswith("Definition:")]
     if not lines:
         findings.append(
@@ -263,42 +312,7 @@ def check_header(preamble, definition_text, definition_error):
         return findings, None
     by_name = {s.name: s for s in sections}
     held = match.group("fingerprint")
-    approved = [
-        m.group(1)
-        for _, l in by_name[readiness_check.APPROVAL_RECORD].lines
-        if (m := APPROVAL_FINGERPRINT.match(l.rstrip()))
-    ]
-    if not approved:
-        findings.append(
-            Finding(
-                "form",
-                number,
-                "the definition's approval record holds no line "
-                "`- Definition fingerprint: <hex>` — the definition has not "
-                "passed its readiness approval",
-            )
-        )
-    elif approved[0] != held:
-        findings.append(
-            Finding(
-                "form",
-                number,
-                "the fingerprint %s is not the one the "
-                "definition's approval record holds, %s" % (held, approved[0]),
-            )
-        )
-    text_fingerprint = readiness_check.definition_fingerprint(definition_text)
-    if text_fingerprint != held:
-        findings.append(
-            Finding(
-                "form",
-                number,
-                "the fingerprint %s is not the one the "
-                "definition's text gives, %s — the plan stands on nothing until "
-                "the definition passes its readiness approval again and the plan "
-                "is checked against it" % (held, text_fingerprint),
-            )
-        )
+    findings += check_fingerprints(number, held, definition_text, by_name)
     definition = read_definition(by_name)
     if definition.in_scope is None:
         findings.append(
