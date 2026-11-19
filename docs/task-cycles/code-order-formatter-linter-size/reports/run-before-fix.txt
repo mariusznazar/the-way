@@ -1,0 +1,17 @@
+.................F.................x................
+======================================================================
+FAIL: test_no_file_of_a_part_breaks_a_blocking_rule (test_linter_invariant.Linter.test_no_file_of_a_part_breaks_a_blocking_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_linter_invariant.py", line 173, in test_no_file_of_a_part_breaks_a_blocking_rule
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : process-audit\test_audit_count.py:3034:21: F541 [*] f-string without any placeholders
+Found 1 error.
+[*] 1 fixable with `--fix`.
+
+
+----------------------------------------------------------------------
+Ran 52 tests in 10.758s
+
+FAILED (failures=1, expected failures=1)

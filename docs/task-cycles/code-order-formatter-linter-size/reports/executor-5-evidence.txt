@@ -1,0 +1,20 @@
+--- number_timestamp.jsonl
+{"type":"user","timestamp":12345,"message":{"role":"user","content":"hello"}}
+--- number_timestamp_codex.jsonl
+{"type":"session_meta","timestamp":"2026-01-01T00:00:00Z","payload":{"id":"abc"}}
+{"type":"event_msg","timestamp":12345,"payload":{"type":"task_started","turn_id":"t1"}}
+--- bool_timestamp.jsonl
+{"type":"user","timestamp":true,"message":{"role":"user","content":"hello"}}
+--- bad_text_timestamp.jsonl
+{"type":"user","timestamp":"not a time","message":{"role":"user","content":"hello"}}
+
+=== before (exit 2 each)
+Error: .runs\executor-5\number_timestamp.jsonl:1: field timestamp is not a time
+Error: .runs\executor-5\number_timestamp_codex.jsonl:2: field timestamp is not a time
+Error: .runs\executor-5\bool_timestamp.jsonl:1: field timestamp is not a time
+Error: .runs\executor-5\bad_text_timestamp.jsonl:1: field timestamp is not a time
+=== after (exit 2 each)
+Error: .runs\executor-5\number_timestamp.jsonl:1: field timestamp is not a time
+Error: .runs\executor-5\number_timestamp_codex.jsonl:2: field timestamp is not a time
+Error: .runs\executor-5\bool_timestamp.jsonl:1: field timestamp is not a time
+Error: .runs\executor-5\bad_text_timestamp.jsonl:1: field timestamp is not a time

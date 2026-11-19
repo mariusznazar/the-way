@@ -1,0 +1,28 @@
+...............F.x.................x................
+======================================================================
+FAIL: test_no_python_file_of_the_parts_holds_a_comment_that_switches_the_formatter_off (test_linter_invariant.Formatter.test_no_python_file_of_the_parts_holds_a_comment_that_switches_the_formatter_off)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_linter_invariant.py", line 197, in test_no_python_file_of_the_parts_holds_a_comment_that_switches_the_formatter_off
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        switched,
+        ^^^^^^^^^
+    ...<2 lines>...
+        "of the parts: remove it and lay the code out as the formatter leaves it (WAY-382)",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: ['gate/run_tests.py:222: # fmt: skip'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'gate/run_tests.py:222: # fmt: skip'
+
+- ['gate/run_tests.py:222: # fmt: skip']
++ [] : a comment fmt: off, fmt: on or fmt: skip switches the formatter off for a file of the parts: remove it and lay the code out as the formatter leaves it (WAY-382)
+
+----------------------------------------------------------------------
+Ran 52 tests in 7.921s
+
+FAILED (failures=1, expected failures=2)

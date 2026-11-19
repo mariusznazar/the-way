@@ -1,0 +1,42 @@
+== bad.jsonl
+Error: .runs\review-5\inputs\bad.jsonl:1: field timestamp is not a time
+exit 2
+== big.jsonl
+Error: .runs\review-5\inputs\big.jsonl:1: field timestamp is not a time
+exit 2
+== codex_list.jsonl
+Error: .runs\review-5\inputs\codex_list.jsonl:2: field timestamp is not a time
+exit 2
+== dct.jsonl
+Error: .runs\review-5\inputs\dct.jsonl:1: field timestamp is not a time
+exit 2
+== emp.jsonl
+Error: .runs\review-5\inputs\emp.jsonl:1: field timestamp is not a time
+exit 2
+== flt.jsonl
+Error: .runs\review-5\inputs\flt.jsonl:1: field timestamp is not a time
+exit 2
+== lst.jsonl
+Error: .runs\review-5\inputs\lst.jsonl:1: field timestamp is not a time
+exit 2
+== miss.jsonl
+Warning: Claude Code session `miss`: the orchestrator's transcript holds no turn
+Warning: Claude Code session `miss`: the orchestrator's transcript holds no token usage
+exit 0
+== naive.jsonl
+Warning: Claude Code session `naive`: the orchestrator's transcript holds no turn
+Warning: Claude Code session `naive`: the orchestrator's transcript holds no token usage
+exit 0
+== nul.jsonl
+Error: .runs\review-5\inputs\nul.jsonl:1: no field timestamp
+exit 2
+== num.jsonl
+Error: .runs\review-5\inputs\num.jsonl:1: field timestamp is not a time
+exit 2
+== ok.jsonl
+Warning: Claude Code session `ok`: the orchestrator's transcript holds no turn
+Warning: Claude Code session `ok`: the orchestrator's transcript holds no token usage
+exit 0
+== tru.jsonl
+Error: .runs\review-5\inputs\tru.jsonl:1: field timestamp is not a time
+exit 2
