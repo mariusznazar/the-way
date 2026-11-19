@@ -1,6 +1,6 @@
 ---
 name: the-way-lead-project
-description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files. Not for defining or breaking down a project, refining one task directly, running task cycles or closing a project. Requires child agents. Use this checkout's own the-way.
+description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files, and to close the project once every task is done, delivered in another task or withdrawn. Not for defining or breaking down a project, refining one task directly or running task cycles. Requires child agents. Use this checkout's own the-way.
 ---
 
 # the-way-lead-project

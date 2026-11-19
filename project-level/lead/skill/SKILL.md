@@ -1,18 +1,19 @@
 ---
 name: lead-project
-description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files. Not for defining or breaking down a project, refining one task directly, running task cycles or closing a project. Requires child agents.
+description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files, and to close the project once every task is done, delivered in another task or withdrawn. Not for defining or breaking down a project, refining one task directly or running task cycles. Requires child agents.
 ---
 
 # Lead a project plan
 
 You are the project orchestrator: the agent in conversation with the human about a handed-over
 plan. Keep its states current and coordinate refinement until the human accepts each
-complete task document. The human starts cycles separately. Launch no `implement-task`, perform
-no project closure and write no product foundation entries. After a merge, do not recheck ready
-dependent documents; the task cycle checks and adapts sources at its own start. The human needs
-one conversation that keeps the plan moving and its progress visible; keeping task execution and
-closure separate bounds it, and leaving the check of current sources to the point where
-implementation begins avoids repeating a check whose inputs can change again.
+complete task document. The human starts cycles separately. Launch no `implement-task` and write
+no product foundation entries. When every task is final, closing the project is a step of this
+skill (step 1). After a merge, do not recheck ready dependent documents; the task cycle checks and
+adapts sources at its own start. The human needs one conversation that keeps the plan moving and
+its progress visible; keeping task execution separate bounds it, and leaving the check of current
+sources to the point where implementation begins avoids repeating a check whose inputs can change
+again.
 
 This skill lives in `project-level/lead/skill/` of the-way. In the-way itself use the checkout or
 worktree the session works in, which `git rev-parse --show-toplevel` names; in a product use its
@@ -36,7 +37,10 @@ project skill with the `the-way-` prefix, never a personal copy.
   a large definition/plan by `project-level/plan/skill/reading_definition_and_plan.md`: complete
   inventories before selection, whole relevant units and expansion; preserve every borrowed
   skill's mandatory whole reads.
-- Require a handed-over plan. Run `python -B <the-way>/project-level/readiness_check.py <definition>`
+- Require a handed-over plan. A plan whose `Status:` line reads `closed YYYY-MM-DD` is a closed
+  project: tell the human so, with each finding `plan_check.py` gives it, and stop, with no round,
+  no state upkeep and no second closing. Run
+  `python -B <the-way>/project-level/readiness_check.py <definition>`
   and `python -B <the-way>/project-level/plan_check.py <plan>` on the original whole files and read
   their reports. A draft, finding, unreadable source or failed command is an obstacle, never
   agreement. Verify the definition's approved Status and actual human approval record as well;
@@ -81,9 +85,10 @@ project skill with the `the-way-` prefix, never a personal copy.
 - You own ordinary State/Document-cell updates and their change-log lines. Pause these writes
   while a delegated structural plan edit owns that file (step 5). Run `project-level/plan_check.py`
   after plan changes and resolve findings before relying on them.
-- If the last task is `done`, including an established goal delivered through another done task,
-  tell the human that project closure is next and no closure skill exists. Stop there. Do not
-  equate a dropped task with a delivered goal or perform closure or implementation.
+- When the reconciliation leaves every row `done`, `done — goal delivered in task <n>` or
+  `dropped — approved by human`, read `closure.md` beside this skill: it closes the project, and
+  it keeps a row in any other state, `in cycle` and `ready for cycle` among them, from starting
+  the closing. Do not equate a dropped task with a delivered goal, and perform no implementation.
 
 ## 2. Confirm a round
 

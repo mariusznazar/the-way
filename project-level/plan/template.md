@@ -65,7 +65,10 @@ The headings stand once each, in this order, and no other second-level heading s
 ## The header
 
 - The `Status:` line reads `draft` until the plan is handed to the human, then
-  `handed over YYYY-MM-DD` (WAY-142).
+  `handed over YYYY-MM-DD`, and `closed YYYY-MM-DD` once the closing step of `lead-project`
+  (`project-level/lead/skill/closure.md`) has closed the project, which it does only when every row
+  of the plan is `done`, `done — goal delivered in task <n>` or `dropped — approved by human`
+  (WAY-142). It stands once, and each date is a calendar date.
 - The `Definition:` line names the definition by its path relative to the plan, and the fingerprint
   the definition's approval record holds. A definition whose text no longer
   gives that fingerprint has
@@ -109,6 +112,9 @@ During leading, agent turns, `questions` and question-specific `waits for task <
 The latter is a conversation result, never a new task-document Status. A wait names the question
 needing task n's result, is logged with its reason, and is proposed again once n is done;
 `Depends on` alone never delays refinement (WAY-144, WAY-154).
+
+A closed plan holds no row in another state, and no row `done — goal delivered in task <n>` that
+names a task `dropped — approved by human`.
 
 A `done — goal delivered in task <n>` dependency supplies completion only when delivery through
 the named task is established. `dropped — approved by human` does not establish delivery of its
@@ -173,6 +179,9 @@ definition's language (WAY-230):
 
 The breakdown shows each such item to the human when it hands the plan over (WAY-230).
 
+The closing step of `lead-project` adds one closing item to the change log of the plan it closes,
+in the form `project-level/lead/skill/closure.md` gives (WAY-142).
+
 ## What the check decides, and what the critique judges
 
 `plan_check.py` rejects a plan whose form it cannot read — the header, the sections, the columns,
@@ -181,7 +190,10 @@ exactly one of them writing it, an item of In scope has no task, a task depends 
 does not hold or on itself through other tasks, a preparatory task has no task depending on it, two
 tasks neither done, delivered nor dropped realize the same projected entry while neither depends on
 the other and no change log item lets them go side by side on it (WAY-230), or an open question of
-the definition does not stand word for word with a task or an answer (WAY-146; invariants
+the definition does not stand word for word with a task or an answer, and, in a plan whose `Status:`
+line reads `closed YYYY-MM-DD`, a row in a state other than `done`,
+`done — goal delivered in task <n>` or `dropped — approved by human`, or a row
+`done — goal delivered in task <n>` naming a task that is dropped (WAY-146; invariants
 `project-plan-form` and `project-plan-check`).
 
 The plan's independent critique judges what no script tells apart: whether each task that is not
