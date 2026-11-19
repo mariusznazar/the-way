@@ -73,11 +73,25 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[1:6], ["1", "8", "4", "fits", "—"])
 
+    def test_changed_code_file_that_read_names_by_ranges_counts_whole(self) -> None:
+        # "line one\n" is 9 characters, "line two\n" 9 and "line three\n" 11: 29 characters,
+        # 12 tokens (29 / 2.5 = 11.6, rounded up). The agent reads the whole code file it changes,
+        # so the range 1-1 (9 characters, 4 tokens) does not narrow it.
+        self.file("task-cycle/tool.py", "line one\nline two\nline three\n")
+        code, output, _ = self.run_plan(
+            "### Slice 1 — Change a code file\n"
+            "- **Change:** `task-cycle/tool.py`\n"
+            "- **Read:** `task-cycle/tool.py:1-1`\n"
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(self.row(output, "1")[1:6], ["1", "29", "12", "fits", "—"])
+
     def test_changed_file_that_read_names_whole_and_by_ranges_counts_whole(self) -> None:
         # "one\ntwo\nthree\n" is 14 characters; the range 2-2 would count 4.
-        self.file("log.md", "one\ntwo\nthree\n")
+        self.file("foundations/decisions.md", "one\ntwo\nthree\n")
         code, output, _ = self.run_plan(
-            "### Slice 1\n- **Change:** `log.md`\n- **Read:** `log.md` · `log.md:2-2`\n"
+            "### Slice 1\n- **Change:** `foundations/decisions.md`\n"
+            "- **Read:** `foundations/decisions.md` · `foundations/decisions.md:2-2`\n"
         )
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[1:4], ["1", "14", "6"])

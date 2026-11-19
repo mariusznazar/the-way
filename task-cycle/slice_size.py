@@ -17,7 +17,12 @@ that names nothing under DIR is a file the slice creates, with nothing to read. 
 *Change* counts as one file and is not expanded against files under DIR.
 
 A slice reads every file of *Read* and every file of *Change* that exists, each counted once. A file
-of *Change* that *Read* names by ranges counts the lines those ranges name; any other file counts
+of *Change* that *Read* names by ranges counts the lines those ranges name where it is a file of the
+foundation, one under `foundations/` of DIR: the five files that the part map lists there as the
+files of its parts and WAY-04 names as the foundation's elements — the decision log, the
+invariants, the glossary, the environment facts and the part map — which a slice changes entry by
+entry and reads by the ranges of its entries. A file of *Change* that is no file of the foundation
+counts whole, as its agent reads it, whatever ranges of it *Read* names. Any other file counts
 whole where either field names it whole, otherwise the lines its ranges name; a file that *Read*
 names whole counts whole, whatever ranges of it *Read* names beside. Its size to read is the number
 of characters of that text, and its tokens are estimated from them as the source below gives, never
@@ -62,6 +67,7 @@ from pathlib import Path
 CHARACTERS_PER_TOKEN = 2.5
 READ_LIMIT_TOKENS = 150_000
 CHANGE_LIMIT = 10
+FOUNDATION_DIRECTORY = "foundations"
 
 SLICE_HEADING = re.compile(r"### Slice (\S+?)(?:\s+—.*)?\s*")
 SLICE_START = re.compile(r"###\s+Slice\b")
@@ -192,7 +198,7 @@ def measure(item: Slice, root: Path) -> Size:
         else:
             whole.add(found)
     for found in existing:
-        if found not in ranges:
+        if found not in ranges or found.relative_to(root).parts[0] != FOUNDATION_DIRECTORY:
             whole.add(found)
     characters = 0
     for path in whole:
