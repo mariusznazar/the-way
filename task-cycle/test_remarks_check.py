@@ -438,8 +438,8 @@ def write_record(
         (record / "cycle.md").write_text(cycle, encoding="utf-8")
     if reports:
         (record / "reports").mkdir()
-        for name, text in reports.items():
-            (record / "reports" / name).write_text(text, encoding="utf-8")
+        for report, text in reports.items():
+            (record / "reports" / report).write_text(text, encoding="utf-8")
     return record
 
 

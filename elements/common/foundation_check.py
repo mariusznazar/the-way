@@ -637,7 +637,7 @@ class Foundation:
                 self.refer_decisions(DECISIONS, line, text)
             for word, line in located(found, "Verification", VERIFIED):
                 self.refer(DECISIONS, line, word, "invariant")
-        for _, (_, found) in self.entries[INVARIANTS].items():
+        for _, found in self.entries[INVARIANTS].values():
             known = self.known_part(INVARIANTS, found, "Derives from")
             for line, text in unquoted(known, "Derives from"):
                 self.refer_decisions(INVARIANTS, line, text)
@@ -646,7 +646,7 @@ class Foundation:
                 self.refer(INVARIANTS, line, word, "fact")
             for word, line in located(found, "Part"):
                 self.refer(INVARIANTS, line, word, "part", EMPTY + ("every",))
-        for _, (_, found) in self.entries[PART_MAP].items():
+        for _, found in self.entries[PART_MAP].values():
             for name, kind in (
                 ("Depends on", "part"),
                 ("Parts", "part"),

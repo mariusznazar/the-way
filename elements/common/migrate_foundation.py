@@ -418,7 +418,7 @@ class Migration:
                 out += self.fix_markdown(piece, DECISIONS, where)
             elif index in first:
                 chain = versions[first[index]]
-                last_version, last = max(chain, key=lambda pair: pair[0] or 0)
+                _last_version, last = max(chain, key=lambda pair: pair[0] or 0)
                 before = pieces[last]
                 after = self.decision(before, len(chain) > 1, chain, pieces)
                 if len(chain) > 1:
@@ -759,7 +759,7 @@ class Migration:
         return lines
 
     def external_context(self, piece):
-        header, rows = table(piece)
+        header, _rows = table(piece)
         if "Updates with the product" not in header:
             return piece
         column = header.index("Updates with the product")

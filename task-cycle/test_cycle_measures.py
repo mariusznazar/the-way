@@ -17,6 +17,7 @@ from collections.abc import Iterator
 from contextlib import redirect_stderr
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Self
 from unittest import mock
 
 HERE = Path(__file__).resolve().parent
@@ -1182,7 +1183,7 @@ class EdgeReadingTest(MeasuresTest):
         first = json.dumps(prompt("09:00:00", "run")) + "\n"
 
         class Handle:
-            def __enter__(self) -> Handle:
+            def __enter__(self) -> Self:
                 return self
 
             def __exit__(self, *details: object) -> None:

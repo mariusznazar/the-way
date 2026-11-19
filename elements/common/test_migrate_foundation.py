@@ -703,7 +703,7 @@ class Applied(unittest.TestCase):
             for path in FILES
             if os.path.exists(os.path.join(self.root, *path.split("/")))
         }
-        code, output, _ = run(self.root, "--apply")
+        _code, output, _ = run(self.root, "--apply")
         after = {path: read(self.root, path) for path in before}
         self.assertEqual(after, before)
         self.assertTrue(
