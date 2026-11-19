@@ -74,7 +74,7 @@ Instructions:
 ## Turn <number>
 
 Actor: <refiner | answering agent | project orchestrator>
-Sources checked: <file/entry/section and revision or content identity; findings, or none>
+Sources checked: <file/item/section and revision or content identity; findings, or none>
 
 ### Questions
 

@@ -20,7 +20,7 @@ record what is needed and return, without making up the result.
 - Classify each question as current behavior (how the product is) or required behavior (how it is
   to be). If the question mixes them, distinguish its factual and decision parts explicitly.
 - Answer only by a quotation from the approved definition, plan, current foundation or another
-  task document, with exact file/section/entry or line and revision/content identity; or by a
+  task document, with exact file/section/item or line and revision/content identity; or by a
   factual code observation with `file:line` and revision. Check that the source actually answers
   this question, holds for its scope and has the claimed approval/status. A draft/proposal is
   material to question, not authority for required behavior.

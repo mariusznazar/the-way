@@ -23,7 +23,7 @@ named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_
 The other runs counted are those whose interval met this run's: an ended one that started before this
 run ended and ended after it started; a running one that started before this run ended and no more
 than six hours before it. Ended runs over a day old and running runs over six hours old are deleted at
-the start of a run. An entry whose time cannot be (an end or a start more than a minute after the
+the start of a run. A file whose time cannot be (an end or a start more than a minute after the
 present, or an end before its start) is deleted at the start of a run as well and counted for nothing,
 so that one damaged or hand-made file cannot count as another run for ever. A name of another form is
 left alone and counted for nothing. Where the registry cannot be made or listed, a `Warning:` goes to stderr and the count is `unknown`.
@@ -186,7 +186,7 @@ def relay(stream, sink, on_line) -> None:
 
 
 def parse_name(name: str) -> tuple[int, int | None, str] | None:
-    """The start, the end (None while running) and the token of an entry; None for another form."""
+    """The start, the end (None while running) and the token of a file; None for another form."""
     running = RUNNING.fullmatch(name)
     if running:
         return int(running.group(1)), None, running.group(2)
@@ -197,7 +197,7 @@ def parse_name(name: str) -> tuple[int, int | None, str] | None:
 
 
 def malformed(start: int, end: int | None, now: int) -> bool:
-    """Whether an entry has a time that cannot be: a start or an end more than a minute after
+    """Whether a file has a time that cannot be: a start or an end more than a minute after
     `now`, or an end before its start."""
     if start > now + CLOCK_SLACK_MS:
         return True
@@ -205,15 +205,15 @@ def malformed(start: int, end: int | None, now: int) -> bool:
 
 
 def prepare(folder: Path, now: int) -> bool:
-    """Makes the registry and deletes the entries that are too old to count; False where it cannot be
+    """Makes the registry and deletes the files that are too old to count; False where it cannot be
     made or listed."""
     try:
         folder.mkdir(parents=True, exist_ok=True)
         for name in os.listdir(folder):
-            entry = parse_name(name)
-            if entry is None:
+            file = parse_name(name)
+            if file is None:
                 continue
-            start, end, _ = entry
+            start, end, _ = file
             stale = start < now - RUNNING_LIMIT_MS if end is None else end < now - DAY_MS
             if stale or malformed(start, end, now):
                 try:
@@ -236,10 +236,10 @@ def count_others(folder: Path, token: str, start: int, end: int) -> str:
         return UNKNOWN
     count = 0
     for name in names:
-        entry = parse_name(name)
-        if entry is None or entry[2] == token:
+        file = parse_name(name)
+        if file is None or file[2] == token:
             continue
-        begin, finish, _ = entry
+        begin, finish, _ = file
         if malformed(begin, finish, end):
             continue
         if finish is None:
@@ -320,7 +320,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             os.replace(own, folder / f"{start}_{end}_{token}.run")
         except OSError as error:
-            warn(f"cannot end this run's entry in the registry: {error}")
+            warn(f"cannot end this run's file in the registry: {error}")
     others = count_others(folder, token, start, end) if usable else UNKNOWN
 
     try:

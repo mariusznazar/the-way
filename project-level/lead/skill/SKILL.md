@@ -78,7 +78,7 @@ project skill with the `the-way-` prefix, never a personal copy.
   If the tool is unavailable, ask the human with the collected evidence. A closed-unmerged PR or
   conflicting trace goes to the human without automatic correction; a failed fetch or lookup
   cannot become `done`. Do not invent a PR URL or use branch names as proof.
-- You own ordinary State/Document-cell updates and their change-log entries. Pause these writes
+- You own ordinary State/Document-cell updates and their change-log lines. Pause these writes
   while a delegated structural plan edit owns that file (step 5). Run `project-level/plan_check.py`
   after plan changes and resolve findings before relying on them.
 - If the last task is `done`, including an established goal delivered through another done task,

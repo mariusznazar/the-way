@@ -390,9 +390,9 @@ class RegistryTest(GateTimesTest):
         }
         for name in made.values():
             (self.registry / name).touch()
-        # The command makes the entry of a run that ended after this run started: started a minute
+        # The command makes the file of a run that ended after this run started: started a minute
         # before it, ended 5 seconds after the instant the clock gives, which is the run's start. The
-        # entry appears while the command runs, so that a count taken before the command would miss it.
+        # file appears while the command runs, so that a count taken before the command would miss it.
         inside = f"{NOW - 60000}_{NOW + 5000}_inside.run"
         result = self.run_gate_at(
             NOW,
@@ -415,7 +415,7 @@ class RegistryTest(GateTimesTest):
         self.assertNotIn(made["old"], listing)
         for kept in ("before", "touching", "running", "other", "notes"):
             self.assertIn(made[kept], listing)
-        # The run's own entry is renamed to its end: an empty file in the ended form, started and
+        # The run's own file is renamed to its end: an empty file in the ended form, started and
         # ended at the instant the clock gave.
         self.assertIn(inside, listing)
         own = listing - set(made.values()) - {inside}
@@ -426,7 +426,7 @@ class RegistryTest(GateTimesTest):
         self.assertEqual(0, os.path.getsize(self.registry / name))
 
     # invariant: gate-times-refuses-impossible-entry
-    def test_entries_with_a_time_that_cannot_be_are_deleted_and_count_for_nothing(self) -> None:
+    def test_files_with_a_time_that_cannot_be_are_deleted_and_count_for_nothing(self) -> None:
         # Malformed: an end more than a minute after the present, an end before the start, a start
         # more than a minute after the present (ended or running). Each is deleted at the start of
         # a run; a valid run still going is counted, and a run that ends 30 seconds ahead is not
@@ -449,12 +449,12 @@ class RegistryTest(GateTimesTest):
             self.assertNotIn(name, listing)
         for name in kept:
             self.assertIn(name, listing)
-        # Counted: the valid running one, and the entry that ends 30 seconds ahead (its interval
+        # Counted: the valid running one, and the file that ends 30 seconds ahead (its interval
         # met this run's); the malformed ones count for nothing.
         self.assertEqual("2", self.rows()[0][3])
 
     # invariant: gate-times-refuses-impossible-entry
-    def test_a_malformed_entry_that_cannot_be_deleted_still_counts_for_nothing(self) -> None:
+    def test_a_malformed_file_that_cannot_be_deleted_still_counts_for_nothing(self) -> None:
         # A directory in the place of a file cannot be unlinked: a warning, and no count.
         self.registry.mkdir(parents=True)
         stuck = self.registry / f"{NOW - 1000}_{NOW + 3 * DAY}_stuck.run"
@@ -485,9 +485,9 @@ class RegistryTest(GateTimesTest):
         result = self.run_gate(printed(b"== a\nRan 1 test in 0.1s\n"), options=options)
         self.assertEqual(0, result.returncode, result.stderr)
         folder = self.root / "home" / ".the-way" / "gate_runs"
-        entries = os.listdir(folder)
-        self.assertEqual(1, len(entries))
-        self.assertIsNotNone(ENDED.match(entries[0]), entries[0])
+        files = os.listdir(folder)
+        self.assertEqual(1, len(files))
+        self.assertIsNotNone(ENDED.match(files[0]), files[0])
         self.assertEqual("0", self.rows()[0][3])
 
 

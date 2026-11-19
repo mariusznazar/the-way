@@ -29,7 +29,7 @@ def q1(discarded: str, rounds: str = " none"):
     return read(f"- Discarded attempt: {discarded}\n- Review rounds:{rounds}\n")
 
 
-ENTRIES_IN_NEITHER_FORM = (
+SUB_ITEMS_IN_NEITHER_FORM = (
     "the return step: fix `reports/return_fix.md`",
     "review `reports/r.md`, FAIL: x",
     "review `reports/r.md`: PASS",
@@ -115,11 +115,13 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertIn(SEVERAL_REASONS, why)
                 self.assertNotIn(NO_MARKER, why)
 
-    def test_one_entry_for_each_attempt_gives_yes_where_any_marker_is_an_open_design_choice(self):
+    def test_one_sub_item_for_each_attempt_gives_yes_where_any_marker_is_an_open_design_choice(
+        self,
+    ):
         # decision: WAY-405 "The reason of a discarded attempt stands at the start of the record's item"
         # A cycle that discarded an attempt for an open design choice and, after the spec, another
         # for size writes one sub-item for each, in either order; the sub-items carry the details.
-        def read_entries(*texts):
+        def read_sub_items(*texts):
             body = "".join(f"{NL}  - {text}" for text in texts)
             return read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
 
@@ -134,13 +136,13 @@ class DiscardedAttemptReason(unittest.TestCase):
             ((second,), "no"),
         ):
             with self.subTest(str(texts)[:50]):
-                self.assertEqual((answer, None), read_entries(*texts))
+                self.assertEqual((answer, None), read_sub_items(*texts))
 
-    def test_an_entry_without_a_marker_gives_unknown_unless_another_entry_is_an_open_design_choice(
+    def test_a_sub_item_without_a_marker_gives_unknown_unless_another_sub_item_is_an_open_design_choice(
         self,
     ):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
-        def read_entries(*texts):
+        def read_sub_items(*texts):
             body = "".join(f"{NL}  - {text}" for text in texts)
             return read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
 
@@ -152,15 +154,15 @@ class DiscardedAttemptReason(unittest.TestCase):
             ("reason: `size`; reason: `reserved choice`",),
         ):
             with self.subTest(texts):
-                answer, why = read_entries(*texts)
+                answer, why = read_sub_items(*texts)
                 self.assertIsNone(answer)
                 self.assertIn("opens with no marker of its reason", why)
         self.assertEqual(
             ("yes", None),
-            read_entries("reason: `size`", "a time overrun", "reason: `open design choice`"),
+            read_sub_items("reason: `size`", "a time overrun", "reason: `open design choice`"),
         )
 
-    def test_a_plain_first_attempt_under_an_empty_item_beside_an_entry_gives_unknown(self):
+    def test_a_plain_first_attempt_under_an_empty_item_beside_a_sub_item_gives_unknown(self):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # The record a leader writes for two discards when it only adds a
         # sub-item: the first attempt
@@ -198,7 +200,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 )
                 self.assertEqual((answer, None), read(record))
 
-    def test_a_plain_line_beside_the_entries_gives_unknown_with_its_reason(self):
+    def test_a_plain_line_beside_the_sub_items_gives_unknown_with_its_reason(self):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         beside = "a plain line"
         for body in (
@@ -219,7 +221,7 @@ class DiscardedAttemptReason(unittest.TestCase):
                 self.assertIsNone(answer)
                 self.assertIn(BESIDE, why)
 
-    def test_a_line_deeper_than_the_entries_continues_an_entry(self):
+    def test_a_line_deeper_than_the_sub_items_continues_a_sub_item(self):
         record = (
             "- Discarded attempt:"
             + NL
@@ -234,7 +236,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         )
         self.assertEqual(("yes", None), read(record))
 
-    def test_an_entry_first_under_the_item_and_deeper_than_the_next_one_is_not_dropped(self):
+    def test_a_sub_item_first_under_the_item_and_deeper_than_the_next_one_is_not_dropped(self):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         # As Markdown the sub-items of such a list are two sub-items of one
         # list; the first holds the
@@ -267,7 +269,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         )
         self.assertEqual(("yes", None), read(same))
 
-    def test_a_sub_entry_under_the_first_entry_is_no_entry_of_the_list(self):
+    def test_a_deeper_line_under_the_first_sub_item_is_no_sub_item_of_the_list(self):
         record = (
             "- Discarded attempt:"
             + NL
@@ -282,14 +284,14 @@ class DiscardedAttemptReason(unittest.TestCase):
         )
         self.assertEqual(("no", None), read(record))
 
-    def test_a_hundred_thousand_entries_with_a_plain_line_beside_them_are_read_at_once(self):
+    def test_a_hundred_thousand_sub_items_with_a_plain_line_beside_them_are_read_at_once(self):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
         body = "".join(NL + "  - reason: `size`; x" for _ in range(100_000)) + NL + "  a plain line"
         answer, why = read("- Discarded attempt:" + body + NL + "- Review rounds: none" + NL)
         self.assertIsNone(answer)
         self.assertIn(BESIDE, why)
 
-    def test_text_beside_the_entries_or_an_entry_deeper_or_fenced_is_not_a_second_attempt(self):
+    def test_text_beside_the_sub_items_or_a_sub_item_deeper_or_fenced_is_not_a_second_attempt(self):
         beside = (
             "- Discarded attempt: reason: `size`"
             + NL
@@ -328,7 +330,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         )
         self.assertEqual(("no", None), read(fenced))
 
-    def test_a_marker_in_a_deeper_line_of_an_entry_is_a_detail_and_is_not_read(self):
+    def test_a_marker_in_a_deeper_line_of_a_sub_item_is_a_detail_and_is_not_read(self):
         # decision: WAY-405 "Where the lines are sub-items at one indent alone and nothing stands beside the colon"
         # In a list of sub-items only the first line of a sub-item is read; the second marker of a detail
         # gives no unknown there, while the same text as the details of one attempt gives unknown.
@@ -401,7 +403,7 @@ class DiscardedAttemptReason(unittest.TestCase):
         # of a list of sub-items, is
         # no detail: the sub-item opens with no marker and gives unknown,
         # unless another one gives yes.
-        entries = (
+        sub_items = (
             "- Discarded attempt:"
             + NL
             + "  - reason: `size`; 10:32"
@@ -411,7 +413,7 @@ class DiscardedAttemptReason(unittest.TestCase):
             + "- Review rounds: none"
             + NL
         )
-        answer, why = read(entries)
+        answer, why = read(sub_items)
         self.assertIsNone(answer)
         self.assertIn(NO_MARKER, why)
 
@@ -501,12 +503,12 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertIsNone(answer)
         self.assertIn(BESIDE, why)
 
-    def test_entries_of_discarded_attempts_leave_the_rounds_to_say_whether_there_was_a_contradiction(
+    def test_sub_items_of_discarded_attempts_leave_the_rounds_to_say_whether_there_was_a_contradiction(
         self,
     ):
-        entries = NL + "  - reason: `size`" + NL + "  - reason: `reserved choice`"
-        self.assertEqual(("no", None), q1(entries, findings("a", ", contradiction no")))
-        self.assertEqual((None, SILENT), q1(entries, findings("a")))
+        sub_items = NL + "  - reason: `size`" + NL + "  - reason: `reserved choice`"
+        self.assertEqual(("no", None), q1(sub_items, findings("a", ", contradiction no")))
+        self.assertEqual((None, SILENT), q1(sub_items, findings("a")))
 
     def test_a_missing_or_doubled_item_gives_unknown_with_its_reason(self):
         # decision: WAY-344 "Each reading of a file that the rule covers has one test"
@@ -533,10 +535,10 @@ class DiscardedAttemptReason(unittest.TestCase):
         self.assertEqual(("yes", None), read(record))
 
 
-class RoundEntries(unittest.TestCase):
+class RoundSubItems(unittest.TestCase):
     """The mark of a sub-item of *Review rounds*, in either of its two forms."""
 
-    def test_an_entry_marked_yes_gives_yes_whatever_the_other_item_says(self):
+    def test_a_sub_item_marked_yes_gives_yes_whatever_the_other_item_says(self):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
         marked = findings("a", ", contradiction yes")
         self.assertEqual(("yes", None), q1("none", marked))
@@ -544,7 +546,7 @@ class RoundEntries(unittest.TestCase):
         self.assertEqual(("yes", None), q1("a time overrun", marked))
         self.assertEqual(("yes", None), q1("none", findings("b") + marked))
 
-    def test_every_entry_marked_no_and_a_review_that_passed_give_no(self):
+    def test_every_sub_item_marked_no_and_a_review_that_passed_give_no(self):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
         passed = "\n  - review `reports/review_return_step.md`, PASS: the return step, range a..b"
         for rounds in (
@@ -556,7 +558,7 @@ class RoundEntries(unittest.TestCase):
             with self.subTest(rounds[:60]):
                 self.assertEqual(("no", None), q1("none", rounds))
 
-    def test_an_entry_without_its_mark_gives_unknown_with_the_one_reason(self):
+    def test_a_sub_item_without_its_mark_gives_unknown_with_the_one_reason(self):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
         # The first is the form from before the mark, the others are marks of a form it is not.
         for rounds in (
@@ -572,19 +574,19 @@ class RoundEntries(unittest.TestCase):
             with self.subTest(rounds[:70]):
                 self.assertEqual((None, SILENT), q1("none", rounds))
 
-    def test_an_entry_marked_yes_wins_over_an_entry_without_a_mark(self):
+    def test_a_sub_item_marked_yes_wins_over_a_sub_item_without_a_mark(self):
         self.assertEqual(
             ("yes", None), q1("none", findings("a") + findings("b", ", contradiction yes"))
         )
 
-    def test_an_entry_in_neither_form_gives_unknown_and_names_no_findings_file(self):
-        for entry in ENTRIES_IN_NEITHER_FORM:
-            with self.subTest(entry[:50]):
-                answer, why = q1("none", f"\n  - {entry}")
+    def test_a_sub_item_in_neither_form_gives_unknown_and_names_no_findings_file(self):
+        for sub_item in SUB_ITEMS_IN_NEITHER_FORM:
+            with self.subTest(sub_item[:50]):
+                answer, why = q1("none", f"\n  - {sub_item}")
                 self.assertIsNone(answer)
                 self.assertIn("does not give its sub-items", why)
                 rounds, why = record_items.read_rounds(
-                    *lines_of(f"- Review rounds:\n  - {entry}\n")
+                    *lines_of(f"- Review rounds:\n  - {sub_item}\n")
                 )
                 self.assertIsNone(rounds)
                 self.assertIn("names no findings file", why)
@@ -619,7 +621,7 @@ class RoundEntries(unittest.TestCase):
             with self.subTest(record[:60]):
                 self.assertIsNone(read(record)[0])
         # The mark of a sub-item is read only where *Review rounds* is held once and in its form: a
-        # doubled item, an entry in neither form, a findings file named twice and text beside the
+        # doubled item, a sub-item in neither form, a findings file named twice and text beside the
         # colon leave the item unread, so its mark gives no yes, whatever *Discarded attempt* says
         # short of the marker, which does stand over it.
         unread = {
@@ -650,12 +652,12 @@ class RoundEntries(unittest.TestCase):
                     read(record),
                 )
 
-    def test_an_entry_in_neither_form_does_not_hide_a_yes_of_the_item_discarded_attempt(self):
+    def test_a_sub_item_in_neither_form_does_not_hide_a_yes_of_the_item_discarded_attempt(self):
         self.assertEqual(
             ("yes", None), q1("reason: `open design choice`", "\n  - the return step: fix")
         )
 
-    def test_only_the_entries_at_the_first_indent_and_outside_a_fence_are_read(self):
+    def test_only_the_sub_items_at_the_first_indent_and_outside_a_fence_are_read(self):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
         # A line that quotes a sub-item deeper in the item, in a code fence or in another item is no
         # sub-item of the item.
@@ -706,7 +708,7 @@ class RoundEntries(unittest.TestCase):
         ):
             self.assertEqual(("yes", None), read(record))
 
-    def test_a_hundred_thousand_entries_are_read_at_once(self):
+    def test_a_hundred_thousand_sub_items_are_read_at_once(self):
         # The names stand once each: a reading that compared each sub-item with the ones before it
         # would not finish.
         rounds = "".join(
@@ -747,7 +749,7 @@ class FixRounds(unittest.TestCase):
             ([], None), record_items.review_rounds(*lines_of(f"- Review rounds:{only}\n"))
         )
 
-    def test_a_findings_file_named_twice_or_an_entry_in_neither_form_gives_none(self):
+    def test_a_findings_file_named_twice_or_a_sub_item_in_neither_form_gives_none(self):
         twice = findings("a") + findings("a", ", contradiction no")
         names, why = record_items.review_rounds(*lines_of(f"- Review rounds:{twice}\n"))
         self.assertIsNone(names)
