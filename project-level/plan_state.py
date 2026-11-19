@@ -2,9 +2,11 @@
 
 Usage: python -B <the-way>/project-level/plan_state.py PLAN PRODUCT_REPOSITORY
 
-Exit codes: 0 for a completed observation (unchecked evidence can remain), 1 for source
-findings or conflicting task states, 2 for invocation, source-read or Git operational errors.
-Only Git metadata is refreshed; proposals never apply changes to the plan or task documents.
+Exit codes: 0 for a completed observation (unchecked evidence can remain) or for a closed plan,
+1 for source findings or conflicting task states, 2 for invocation, source-read or Git operational
+errors. A plan whose `Status:` line reads `closed YYYY-MM-DD` and whose tasks all stand in a final
+state is reported closed, and no Git evidence is read for it. Only Git metadata is refreshed;
+proposals never apply changes to the plan or task documents.
 Command output is UTF-8, including redirected reports and diagnostics.
 """
 
@@ -627,17 +629,18 @@ def sources(plan_path):
     """Validate original whole sources with the existing checkers, then reuse their parser."""
     text, error = plan_check.read(plan_path)
     if error:
-        return None, ["error: " + display(error)], 2
+        return None, ["error: " + display(error)], 2, None
     relative = plan_check.definition_path(text)
     definition, error = None, None
     if relative is not None:
         definition, error = plan_check.read(os.path.join(os.path.dirname(plan_path), relative))
         if error:
-            return None, ["error: " + display(error)], 2
+            return None, ["error: " + display(error)], 2, None
     findings = [str(finding) for finding in plan_check.check(text, definition, error)]
     preamble, sections = plan_check.split(text)
     statuses = [line.rstrip() for _, line in preamble if line.startswith("Status:")]
-    if len(statuses) != 1 or not statuses[0].startswith("Status: handed over "):
+    closed = plan_check.closed_date(preamble)
+    if not closed and (len(statuses) != 1 or not statuses[0].startswith("Status: handed over ")):
         findings.append("fail: plan must have one handed-over Status line")
     if definition is not None:
         findings.extend(
@@ -652,10 +655,10 @@ def sources(plan_path):
         elif not plan_check.calendar_date(approvals[0][-10:]):
             findings.append("fail: definition approval date is not a calendar date")
     if findings:
-        return None, findings, 1
+        return None, findings, 1, None
     section = next(section for section in sections if section.name == plan_check.TASKS)
     _, tasks, _ = plan_check.read_tasks(section)
-    return tasks, [], 0
+    return tasks, [], 0, closed
 
 
 def main(argv=None):
@@ -672,11 +675,14 @@ def main(argv=None):
     try:
         plan_path = os.path.abspath(args.plan)
         repository = Path(args.product_repository).resolve()
-        tasks, findings, code = sources(plan_path)
+        tasks, findings, code, closed = sources(plan_path)
         for finding in findings:
             print(display(finding))
         if code:
             return code
+        if closed:
+            print("closed: the plan was closed on %s; its tasks stand in final states" % closed)
+            return 0
         print("repository: " + display(repository))
         git = Git(repository)
         observation = observe(git)

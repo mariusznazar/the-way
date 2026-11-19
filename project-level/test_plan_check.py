@@ -217,6 +217,13 @@ def changed(rows, number, column, value, columns=TASK_COLUMNS):
     return [tuple(row) for row in result]
 
 
+FINISHED_STATES = ("done", "done — goal delivered in task 1", "dropped — approved by human")
+# The rows a closed plan holds: task 1 done, task 2 delivered by task 1, task 3 dropped.
+ALL_FINISHED = [
+    row[:6] + (state,) + row[7:] for row, state in zip(TASKS, FINISHED_STATES, strict=True)
+]
+
+
 def plan(
     status="Status: draft",
     definition_line=None,
@@ -306,6 +313,10 @@ class Header(unittest.TestCase):
             "Status: handed over",
             "Status: handed over 5.10.2026",
             "Status: Draft",
+            "Status: closed",
+            "Status: closed 6.11.2026",
+            "Status: Closed 2026-11-06",
+            "Status: closed 2026-11-06 early",
         ):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
@@ -315,6 +326,12 @@ class Header(unittest.TestCase):
         for status in ("Status: handed over 2026-13-45", "Status: handed over 2026-02-30"):
             with self.subTest(status=status):
                 self.assertIn("form", conditions(plan(status=status)))
+
+    def test_a_closed_date_that_is_no_calendar_date_is_reported(self):
+        # invariant: project-plan-form
+        for status in ("Status: closed 2026-13-45", "Status: closed 2026-02-30"):
+            with self.subTest(status=status):
+                self.assertIn("form", conditions(plan(status=status, tasks=ALL_FINISHED)))
 
     def test_an_approval_record_without_its_fingerprint_line_is_reported(self):
         # invariant: project-plan-form
@@ -1009,6 +1026,74 @@ class Order(unittest.TestCase):
     def test_a_dependency_off_its_form_leaves_the_order_unchecked(self):
         tasks = changed(self.TASKS, 3, "Depends on", "one")
         self.assertEqual(set(conditions(plan(tasks=tasks))), {"form"})
+
+
+class Closed(unittest.TestCase):
+    CLOSED = "Status: closed 2026-11-06"
+
+    def closed(self, tasks, status=CLOSED):
+        return plan(status=status, tasks=tasks)
+
+    def test_a_closed_plan_whose_every_task_is_done_delivered_or_dropped_passes(self):
+        self.assertEqual(conditions(self.closed(ALL_FINISHED)), [])
+
+    def test_a_closed_plan_with_a_task_in_another_state_is_reported_at_its_row(self):
+        # invariant: project-plan-check
+        # Break caught: a plan closed over a task still waiting for its cycle.
+        for state in ("to refine", "waiting for human", "ready for cycle", "in cycle"):
+            with self.subTest(state=state):
+                text = self.closed(changed(ALL_FINISHED, 1, "State", state))
+                row = line_of(text, "| 1 | test-server |")
+                self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+
+    def test_a_closed_plan_whose_delivering_task_is_dropped_is_reported_at_the_delivered_row(self):
+        # invariant: project-plan-check
+        # Break caught: task 2 stays done on the word of task 1, which no one ever made.
+        tasks = changed(ALL_FINISHED, 1, "State", "dropped — approved by human")
+        text = self.closed(tasks)
+        row = line_of(text, "| 2 | first-map |")
+        self.assertEqual([(f.condition, f.line) for f in findings(text)], [("closed", row)])
+
+    def test_a_goal_delivered_in_a_done_task_passes_in_a_closed_plan(self):
+        # Task 3 is delivered by task 2, which is done, and task 2's own delivery is not asked.
+        tasks = changed(ALL_FINISHED, 3, "State", "done — goal delivered in task 2")
+        tasks = changed(tasks, 2, "State", "done")
+        self.assertEqual(conditions(self.closed(tasks)), [])
+
+    def test_the_same_rows_in_a_plan_not_closed_are_no_finding(self):
+        # invariant: project-plan-check
+        # Break caught: the check of rows applied to a plan that is still being led.
+        tasks = changed(ALL_FINISHED, 1, "State", "dropped — approved by human")
+        tasks = changed(tasks, 3, "State", "in cycle")
+        for status in ("Status: draft", "Status: handed over 2026-10-06"):
+            with self.subTest(status=status):
+                self.assertEqual(conditions(self.closed(tasks, status)), [])
+
+    def test_a_closed_line_with_trailing_spaces_is_still_a_closed_plan(self):
+        # invariant: project-plan-check
+        tasks = changed(ALL_FINISHED, 1, "State", "in cycle")
+        found = conditions(self.closed(tasks, self.CLOSED + "  \t"))
+        self.assertEqual(found, ["closed"])
+
+    def test_a_closed_plan_with_a_state_off_the_list_is_reported_as_closed_too(self):
+        # invariant: project-plan-check
+        found = conditions(self.closed(changed(ALL_FINISHED, 1, "State", "blocked")))
+        self.assertEqual(sorted(found), ["closed", "form"])
+
+    def test_a_second_status_line_is_reported_at_that_line(self):
+        # invariant: project-plan-form
+        # Break caught: a closed line followed by a handed-over one reads as one plan to one
+        # reader and as the other to the next.
+        for first, second in (
+            (self.CLOSED, "Status: handed over 2026-10-06"),
+            ("Status: handed over 2026-10-06", self.CLOSED),
+        ):
+            with self.subTest(first=first):
+                text = plan(status=first + "\n" + second, tasks=ALL_FINISHED)
+                self.assertEqual(
+                    [(f.condition, f.line) for f in findings(text)],
+                    [("form", line_of(text, second))],
+                )
 
 
 class Questions(unittest.TestCase):
