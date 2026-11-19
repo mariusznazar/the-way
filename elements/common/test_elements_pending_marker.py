@@ -18,8 +18,9 @@ MARKER = re.compile(r"decision[ \n]+pending")
 
 
 def tracked_files_under_elements() -> list[str]:
-    run = subprocess.run(["git", "ls-files", "-z", "--", "elements"], cwd=ROOT,
-                         capture_output=True, check=True)
+    run = subprocess.run(
+        ["git", "ls-files", "-z", "--", "elements"], cwd=ROOT, capture_output=True, check=True
+    )
     return [name for name in run.stdout.decode("utf-8").split("\0") if name]
 
 

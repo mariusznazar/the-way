@@ -26,9 +26,21 @@ import readiness_check  # noqa: E402
 # definition holds above its approval record, then the approval record. Written out here, not
 # taken from readiness_check.SECTIONS, so that a section the code drops does not vanish from the
 # test data too; the test of the template checks that these are the headings of the form.
-FORM = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints", "Deliverables",
-        "Success", "Risks", "Open questions", "Touched parts and decisions", "Technology",
-        "Projected foundation changes", "Approval record")
+FORM = (
+    "Goal",
+    "Background",
+    "In scope",
+    "Out of scope",
+    "Inputs and constraints",
+    "Deliverables",
+    "Success",
+    "Risks",
+    "Open questions",
+    "Touched parts and decisions",
+    "Technology",
+    "Projected foundation changes",
+    "Approval record",
+)
 
 DECISION = """#### (new) — What does the archive exclude for good?
 
@@ -77,7 +89,7 @@ BODIES = {
     "Success": "Gracz kończy mapę.\n**OBALENIE:** jeśli nikt nie kończy mapy — rama jest fałszywa.",
     "Risks": "none",
     "Open questions": "- Jak mierzymy postęp? — resolved in: breakdown\n"
-                      "- Jakie narzędzia ma autor? — resolved in: task: edytor",
+    "- Jakie narzędzia ma autor? — resolved in: task: edytor",
     "Touched parts and decisions": "none",
     "Technology": "- Język i miejsce działania aplikacji — held by: ARC-01",
     "Projected foundation changes": projected(),
@@ -94,14 +106,16 @@ def wording_fingerprint(text):
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:8]
 
 
-def definition(status="Status: approved 2026-10-03", bodies=None, approval=None, order=None,
-               fingerprint=None):
+def definition(
+    status="Status: approved 2026-10-03", bodies=None, approval=None, order=None, fingerprint=None
+):
     bodies = dict(BODIES, **(bodies or {}))
     order = order or list(FORM[:-1])
     content = body_text(bodies, order)
     if approval is None:
-        approval = ("- Approved by: Mariusz, 2026-10-03\n"
-                "- Definition fingerprint: %s" % (fingerprint or wording_fingerprint(content)))
+        approval = "- Approved by: Mariusz, 2026-10-03\n- Definition fingerprint: %s" % (
+            fingerprint or wording_fingerprint(content)
+        )
     return "# Pierwsza mapa\n\n%s\n\n%s\n\n## Approval record\n\n%s\n" % (status, content, approval)
 
 
@@ -136,11 +150,12 @@ class Template(unittest.TestCase):
 
     def test_the_technology_section_the_template_gives_passes_its_checks(self):
         text = self.template()
-        technology = ("## Technology\n" +
-                      text.split("```markdown\n## Technology\n", 1)[1].split("\n```", 1)[0])
+        technology = (
+            "## Technology\n"
+            + text.split("```markdown\n## Technology\n", 1)[1].split("\n```", 1)[0]
+        )
         marker = "```markdown\n## Projected foundation changes\n"
-        block = ("## Projected foundation changes\n" +
-                 text.split(marker, 1)[1].split("\n```", 1)[0])
+        block = "## Projected foundation changes\n" + text.split(marker, 1)[1].split("\n```", 1)[0]
         _, sections = readiness_check.split(technology + "\n" + block)
         self.assertEqual(readiness_check.check_technology(sections[0], sections[1]), [])
 
@@ -160,8 +175,10 @@ class Whole(unittest.TestCase):
 class Structure(unittest.TestCase):
     def test_a_missing_status_line_is_reported(self):
         # invariant: project-definition-form
-        self.assertEqual(conditions(definition(status="")),
-                         [("structure", "no `Status:` line above the first section")])
+        self.assertEqual(
+            conditions(definition(status="")),
+            [("structure", "no `Status:` line above the first section")],
+        )
 
     def test_a_status_off_its_forms_is_reported(self):
         # invariant: project-definition-form
@@ -190,16 +207,18 @@ class Structure(unittest.TestCase):
     def test_a_section_outside_the_template_is_reported(self):
         # invariant: project-definition-form
         text = definition().replace("## Risks", "## Stakeholders\n\nMariusz\n\n## Risks")
-        self.assertIn(("structure", "`## Stakeholders` is no section of the template"),
-                      conditions(text))
+        self.assertIn(
+            ("structure", "`## Stakeholders` is no section of the template"), conditions(text)
+        )
 
     def test_the_heading_of_the_record_before_the_rename_is_reported(self):
         # invariant: project-definition-form
         # Source: the human's answer to question 1 of the task, 2026-11-14: the scripts take no
         # `## Gate record` beside `## Approval record`.
         text = definition().replace("## Approval record", "## Gate record")
-        self.assertIn(("structure", "`## Gate record` is no section of the template"),
-                      conditions(text))
+        self.assertIn(
+            ("structure", "`## Gate record` is no section of the template"), conditions(text)
+        )
 
     def test_sections_out_of_order_are_reported(self):
         # invariant: project-definition-form
@@ -217,7 +236,9 @@ class Structure(unittest.TestCase):
         self.assertEqual(conditions(text), [])
 
     def test_a_third_level_heading_is_no_section(self):
-        text = definition(bodies={"Background": "### A detail\n\nGra istnieje tylko jako koncepcja."})
+        text = definition(
+            bodies={"Background": "### A detail\n\nGra istnieje tylko jako koncepcja."}
+        )
         self.assertEqual(conditions(text), [])
 
 
@@ -233,52 +254,84 @@ class Gaps(unittest.TestCase):
     def test_todo_in_a_field_waiting_for_code_is_no_gap(self):
         decision = DECISION.replace(
             "- **Verification:** an agent compares the change with the decision",
-            "- **Verification:** TODO")
-        text = definition(bodies={"Projected foundation changes":
-                                  projected(entries="### Decisions\n\n" + decision)})
+            "- **Verification:** TODO",
+        )
+        text = definition(
+            bodies={
+                "Projected foundation changes": projected(entries="### Decisions\n\n" + decision)
+            }
+        )
         self.assertEqual(conditions(text), [])
 
     def test_todo_on_a_line_continuing_a_field_is_no_gap(self):
         decision = DECISION.replace(
             "- **Verification:** an agent compares the change with the decision",
             "- **Verification:** an agent compares the change with the decision:\n"
-            "  - complies: TODO")
-        text = definition(bodies={"Projected foundation changes":
-                                  projected(entries="### Decisions\n\n" + decision)})
+            "  - complies: TODO",
+        )
+        text = definition(
+            bodies={
+                "Projected foundation changes": projected(entries="### Decisions\n\n" + decision)
+            }
+        )
         self.assertEqual(conditions(text), [])
 
     def test_todo_in_the_fields_and_the_meaning_sentence_of_an_invariant_is_no_gap(self):
-        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
-            DECISION, INVARIANT)
+        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (DECISION, INVARIANT)
         text = definition(bodies={"Projected foundation changes": projected(entries=entries)})
         self.assertEqual(conditions(text), [])
 
     def test_todo_in_the_binding_sentence_of_a_projected_entry_is_reported(self):
         # invariant: project-readiness-check
-        decision = DECISION.replace(
-            "The archive has no public write API.", "TODO")
-        found = conditions(definition(bodies={"Projected foundation changes":
-                                              projected(entries="### Decisions\n\n" + decision)}))
+        decision = DECISION.replace("The archive has no public write API.", "TODO")
+        found = conditions(
+            definition(
+                bodies={
+                    "Projected foundation changes": projected(
+                        entries="### Decisions\n\n" + decision
+                    )
+                }
+            )
+        )
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_todo_in_the_definition_of_a_projected_term_is_reported(self):
         term = "#### parcel\n\nTODO\n\n- **Not:** none"
-        found = conditions(definition(bodies={"Projected foundation changes":
-                                              projected(entries="### Glossary\n\n" + term)}))
+        found = conditions(
+            definition(
+                bodies={
+                    "Projected foundation changes": projected(entries="### Glossary\n\n" + term)
+                }
+            )
+        )
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_todo_in_the_rationale_of_a_projected_decision_is_reported(self):
         decision = DECISION.replace(
-            "*Rationale:* publishing is outside the archive's purpose.", "*Rationale:* TODO")
-        found = conditions(definition(bodies={"Projected foundation changes":
-                                              projected(entries="### Decisions\n\n" + decision)}))
+            "*Rationale:* publishing is outside the archive's purpose.", "*Rationale:* TODO"
+        )
+        found = conditions(
+            definition(
+                bodies={
+                    "Projected foundation changes": projected(
+                        entries="### Decisions\n\n" + decision
+                    )
+                }
+            )
+        )
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_todo_in_the_rejected_options_of_a_projected_decision_is_reported(self):
-        decision = DECISION.replace(
-            "*Rejected:* none considered", "*Rejected:* TODO")
-        found = conditions(definition(bodies={"Projected foundation changes":
-                                              projected(entries="### Decisions\n\n" + decision)}))
+        decision = DECISION.replace("*Rejected:* none considered", "*Rejected:* TODO")
+        found = conditions(
+            definition(
+                bodies={
+                    "Projected foundation changes": projected(
+                        entries="### Decisions\n\n" + decision
+                    )
+                }
+            )
+        )
         self.assertIn(("a", "`## Projected foundation changes` holds TODO"), found)
 
     def test_a_field_line_outside_projected_changes_still_holds_todo(self):
@@ -310,19 +363,26 @@ class OpenQuestions(unittest.TestCase):
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
 
     def test_a_place_on_a_continuation_line_counts(self):
-        text = definition(bodies={"Open questions":
-                                  "- Jak mierzymy postęp\n  na drugiej mapie? — resolved in: breakdown"})
+        text = definition(
+            bodies={
+                "Open questions": "- Jak mierzymy postęp\n  na drugiej mapie? — resolved in: breakdown"
+            }
+        )
         self.assertEqual(conditions(text), [])
 
     def test_a_nested_detail_under_a_question_with_its_place_is_no_finding(self):
-        text = definition(bodies={"Open questions":
-                                  "- Jak mierzymy postęp? — resolved in: breakdown\n"
-                                  "  - kontekst: mapa 2"})
+        text = definition(
+            bodies={
+                "Open questions": "- Jak mierzymy postęp? — resolved in: breakdown\n"
+                "  - kontekst: mapa 2"
+            }
+        )
         self.assertEqual(conditions(text), [])
 
     def test_a_place_on_a_nested_detail_is_no_place_of_the_question(self):
-        text = definition(bodies={"Open questions":
-                                  "- Jak mierzymy postęp?\n\t- detal — resolved in: breakdown"})
+        text = definition(
+            bodies={"Open questions": "- Jak mierzymy postęp?\n\t- detal — resolved in: breakdown"}
+        )
         self.assertEqual([c for c, _ in conditions(text)], ["d"])
 
     def test_prose_under_open_questions_is_reported(self):
@@ -333,37 +393,54 @@ class OpenQuestions(unittest.TestCase):
         self.assertEqual(conditions(definition(bodies={"Open questions": "none"})), [])
 
 
-WORKING_TABLE = ("### Candidates in progress\n\n"
-                 "| # | Settlement | Kind | Source | What the next reader would guess | State |\n"
-                 "|---|---|---|---|---|---|\n"
-                 "| 1 | Postać należy do jednej drużyny | decision | material: koncepcja §5 "
-                 "| model danych drużyny | waiting |")
-WORKING_TABLE_MESSAGE = ("the working table of candidates still stands — the step that finds "
-                         "foundation entries has not ended")
+WORKING_TABLE = (
+    "### Candidates in progress\n\n"
+    "| # | Settlement | Kind | Source | What the next reader would guess | State |\n"
+    "|---|---|---|---|---|---|\n"
+    "| 1 | Postać należy do jednej drużyny | decision | material: koncepcja §5 "
+    "| model danych drużyny | waiting |"
+)
+WORKING_TABLE_MESSAGE = (
+    "the working table of candidates still stands — the step that finds "
+    "foundation entries has not ended"
+)
 
 
 class Candidates(unittest.TestCase):
     def test_a_projected_section_without_the_candidates_line_is_reported(self):
         # invariant: project-readiness-check
         found = conditions(definition(bodies={"Projected foundation changes": "none"}))
-        self.assertEqual(found, [("f", "`## Projected foundation changes` does not begin with "
-                                       "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`")])
+        self.assertEqual(
+            found,
+            [
+                (
+                    "f",
+                    "`## Projected foundation changes` does not begin with "
+                    "`Candidates: <n> shown, <k> accepted — YYYY-MM-DD`",
+                )
+            ],
+        )
 
     def test_a_candidates_line_off_its_form_is_reported(self):
         body = projected(first="Candidates: 3 shown, 1 accepted")
-        self.assertEqual([c for c, _ in conditions(definition(
-            bodies={"Projected foundation changes": body}))], ["f"])
+        self.assertEqual(
+            [c for c, _ in conditions(definition(bodies={"Projected foundation changes": body}))],
+            ["f"],
+        )
 
     def test_the_candidates_line_stands_first(self):
-        body = "### Decisions\n\n%s\n\n%s" % (DECISION,
-                                             CANDIDATES_LINE)
-        self.assertEqual([c for c, _ in conditions(definition(
-            bodies={"Projected foundation changes": body}))], ["f"])
+        body = "### Decisions\n\n%s\n\n%s" % (DECISION, CANDIDATES_LINE)
+        self.assertEqual(
+            [c for c, _ in conditions(definition(bodies={"Projected foundation changes": body}))],
+            ["f"],
+        )
 
     def test_more_accepted_than_shown_is_reported(self):
         body = projected(first="Candidates: 1 shown, 3 accepted — 2026-10-03")
-        self.assertEqual(conditions(definition(bodies={"Projected foundation changes": body})),
-                         [("f", "more candidates accepted than shown")])
+        self.assertEqual(
+            conditions(definition(bodies={"Projected foundation changes": body})),
+            [("f", "more candidates accepted than shown")],
+        )
 
     def test_none_below_the_candidates_line_passes(self):
         body = projected(entries="none")
@@ -372,27 +449,41 @@ class Candidates(unittest.TestCase):
     def test_a_working_table_still_standing_is_reported_before_approval(self):
         # invariant: project-readiness-check
         body = projected(entries=WORKING_TABLE + "\n\n### Decisions\n\n" + DECISION)
-        text = definition(status="Status: awaiting approval", approval="",
-                          bodies={"Projected foundation changes": body})
+        text = definition(
+            status="Status: awaiting approval",
+            approval="",
+            bodies={"Projected foundation changes": body},
+        )
         self.assertEqual(conditions(text, before_approval=True), [("f", WORKING_TABLE_MESSAGE)])
 
     def test_a_section_still_reading_todo_is_one_gap_and_no_f(self):
-        text = definition(status="Status: definition — open: Projected foundation changes",
-                          approval="", bodies={"Projected foundation changes": "TODO"})
-        self.assertEqual(conditions(text, before_approval=True),
-                         [("a", "`## Projected foundation changes` holds TODO")])
+        text = definition(
+            status="Status: definition — open: Projected foundation changes",
+            approval="",
+            bodies={"Projected foundation changes": "TODO"},
+        )
+        self.assertEqual(
+            conditions(text, before_approval=True),
+            [("a", "`## Projected foundation changes` holds TODO")],
+        )
 
 
-TECHNOLOGY_PROJECTED = ("- Archiwum dokumentów — projected: What does the archive exclude for good?\n"
-                        "- Język i miejsce działania aplikacji — held by: ARC-01")
-NONE_MESSAGE = ("`## Technology` reads `none` — list the choices the project needs, each with the "
-                "entry that settles it")
-NO_MARKER_MESSAGE = ("the choice ends with none of `— held by: <decision>`, "
-                     "`— projected: <question>`")
+TECHNOLOGY_PROJECTED = (
+    "- Archiwum dokumentów — projected: What does the archive exclude for good?\n"
+    "- Język i miejsce działania aplikacji — held by: ARC-01"
+)
+NONE_MESSAGE = (
+    "`## Technology` reads `none` — list the choices the project needs, each with the "
+    "entry that settles it"
+)
+NO_MARKER_MESSAGE = (
+    "the choice ends with none of `— held by: <decision>`, `— projected: <question>`"
+)
 OPEN_MESSAGE = "the choice is still open — the step that settles the technology has not ended"
 HELD_FORM_MESSAGE = "`held by:` names no decision as `<PREFIX>-<NN>`"
-DANGLING_MESSAGE = ("`projected:` names a question no heading under "
-                    "`## Projected foundation changes` holds")
+DANGLING_MESSAGE = (
+    "`projected:` names a question no heading under `## Projected foundation changes` holds"
+)
 
 
 class Technology(unittest.TestCase):
@@ -402,8 +493,10 @@ class Technology(unittest.TestCase):
     def test_a_definition_without_the_technology_section_is_reported(self):
         # invariant: project-technology-record
         order = [n for n in FORM[:-1] if n != "Technology"]
-        self.assertIn(("structure", "the section `## Technology` is missing"),
-                      conditions(definition(order=order)))
+        self.assertIn(
+            ("structure", "the section `## Technology` is missing"),
+            conditions(definition(order=order)),
+        )
 
     def test_none_is_reported(self):
         # invariant: project-technology-record
@@ -415,33 +508,42 @@ class Technology(unittest.TestCase):
 
     def test_an_open_choice_is_reported_before_approval(self):
         # invariant: project-technology-record
-        text = definition(status="Status: awaiting approval", approval="",
-                          bodies={"Technology": "- Magazyn danych — open"})
+        text = definition(
+            status="Status: awaiting approval",
+            approval="",
+            bodies={"Technology": "- Magazyn danych — open"},
+        )
         self.assertEqual(conditions(text, before_approval=True), [("g", OPEN_MESSAGE)])
 
     def test_held_by_off_the_identifier_form_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("- Język — held by: decyzja o języku"),
-                         [("g", HELD_FORM_MESSAGE)])
+        self.assertEqual(
+            self.technology("- Język — held by: decyzja o języku"), [("g", HELD_FORM_MESSAGE)]
+        )
 
     def test_a_projected_question_no_heading_holds_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("- Magazyn danych — projected: Where is data stored?"),
-                         [("g", DANGLING_MESSAGE)])
+        self.assertEqual(
+            self.technology("- Magazyn danych — projected: Where is data stored?"),
+            [("g", DANGLING_MESSAGE)],
+        )
 
     def test_projected_naming_an_invariant_heading_is_reported(self):
         # invariant: project-technology-record
-        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (
-            DECISION, INVARIANT)
-        text = definition(bodies={
-            "Technology": "- Dokumenty — projected: one-workspace-per-document",
-            "Projected foundation changes": projected(entries=entries)})
+        entries = "### Decisions\n\n%s\n\n### Invariants\n\n%s" % (DECISION, INVARIANT)
+        text = definition(
+            bodies={
+                "Technology": "- Dokumenty — projected: one-workspace-per-document",
+                "Projected foundation changes": projected(entries=entries),
+            }
+        )
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_held_by_with_a_version_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("- Magazyn danych — held by: ARC-02/1"),
-                         [("g", HELD_FORM_MESSAGE)])
+        self.assertEqual(
+            self.technology("- Magazyn danych — held by: ARC-02/1"), [("g", HELD_FORM_MESSAGE)]
+        )
 
     def test_a_choice_still_open_after_a_held_marker_is_reported(self):
         # invariant: project-technology-record
@@ -450,28 +552,38 @@ class Technology(unittest.TestCase):
 
     def test_projected_with_no_decision_heading_in_the_section_is_reported(self):
         # invariant: project-technology-record
-        text = definition(bodies={
-            "Technology": "- Magazyn danych — projected: Which database?",
-            "Projected foundation changes": projected(
-                first="Candidates: 0 shown, 0 accepted — 2026-10-03", entries="none")})
+        text = definition(
+            bodies={
+                "Technology": "- Magazyn danych — projected: Which database?",
+                "Projected foundation changes": projected(
+                    first="Candidates: 0 shown, 0 accepted — 2026-10-03", entries="none"
+                ),
+            }
+        )
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_projected_matching_the_candidates_line_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("- Hosting — projected: 2026-10-03"),
-                         [("g", DANGLING_MESSAGE)])
+        self.assertEqual(
+            self.technology("- Hosting — projected: 2026-10-03"), [("g", DANGLING_MESSAGE)]
+        )
 
     def test_projected_naming_part_of_a_heading_question_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("- Archiwum — projected: What does the archive"),
-                         [("g", DANGLING_MESSAGE)])
+        self.assertEqual(
+            self.technology("- Archiwum — projected: What does the archive"),
+            [("g", DANGLING_MESSAGE)],
+        )
 
     def test_a_decision_heading_outside_projected_changes_holds_no_question(self):
         # invariant: project-technology-record
-        text = definition(bodies={
-            "Background": "Gra istnieje tylko jako koncepcja.\n\n"
-                          "#### (new) — Where is data stored?",
-            "Technology": "- Magazyn danych — projected: Where is data stored?"})
+        text = definition(
+            bodies={
+                "Background": "Gra istnieje tylko jako koncepcja.\n\n"
+                "#### (new) — Where is data stored?",
+                "Technology": "- Magazyn danych — projected: Where is data stored?",
+            }
+        )
         self.assertEqual(conditions(text), [("g", DANGLING_MESSAGE)])
 
     def test_an_open_choice_after_a_settled_one_is_reported(self):
@@ -487,20 +599,26 @@ class Technology(unittest.TestCase):
 
     def test_indented_prose_under_technology_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("  Zostajemy przy obecnym stacku."),
-                         [("g", "a line under `## Technology` that is no choice item")])
+        self.assertEqual(
+            self.technology("  Zostajemy przy obecnym stacku."),
+            [("g", "a line under `## Technology` that is no choice item")],
+        )
 
     def test_prose_under_technology_is_reported(self):
         # invariant: project-technology-record
-        self.assertEqual(self.technology("Wszystko jest w fundamencie."),
-                         [("g", "a line under `## Technology` that is no choice item")])
+        self.assertEqual(
+            self.technology("Wszystko jest w fundamencie."),
+            [("g", "a line under `## Technology` that is no choice item")],
+        )
 
     def test_choices_held_and_projected_pass(self):
         self.assertEqual(self.technology(TECHNOLOGY_PROJECTED), [])
 
     def test_choices_all_held_by_the_foundation_pass(self):
-        body = ("- Język i miejsce działania aplikacji — held by: ARC-01\n"
-                "- Magazyn kont i zapisów — held by: ARC-02")
+        body = (
+            "- Język i miejsce działania aplikacji — held by: ARC-01\n"
+            "- Magazyn kont i zapisów — held by: ARC-02"
+        )
         self.assertEqual(self.technology(body), [])
 
     def test_a_choice_whose_name_holds_a_dash_reads_its_last_marker(self):
@@ -516,17 +634,25 @@ class Technology(unittest.TestCase):
     def test_projected_naming_a_change_of_a_current_decision_passes(self):
         decision = DECISION.replace(
             "#### (new) — What does the archive exclude for good?",
-            "#### WAY-07 — What does the archive exclude for good?")
-        text = definition(bodies={
-            "Technology": TECHNOLOGY_PROJECTED,
-            "Projected foundation changes": projected(entries="### Decisions\n\n" + decision)})
+            "#### WAY-07 — What does the archive exclude for good?",
+        )
+        text = definition(
+            bodies={
+                "Technology": TECHNOLOGY_PROJECTED,
+                "Projected foundation changes": projected(entries="### Decisions\n\n" + decision),
+            }
+        )
         self.assertEqual(conditions(text), [])
 
     def test_a_section_still_reading_todo_is_one_gap_and_no_g(self):
-        text = definition(status="Status: definition — open: Technology", approval="",
-                          bodies={"Technology": "TODO"})
-        self.assertEqual(conditions(text, before_approval=True),
-                         [("a", "`## Technology` holds TODO")])
+        text = definition(
+            status="Status: definition — open: Technology",
+            approval="",
+            bodies={"Technology": "TODO"},
+        )
+        self.assertEqual(
+            conditions(text, before_approval=True), [("a", "`## Technology` holds TODO")]
+        )
 
 
 class ApprovalRecord(unittest.TestCase):
@@ -535,19 +661,28 @@ class ApprovalRecord(unittest.TestCase):
         self.assertIn("e", [c for c, _ in found])
 
     def test_an_approval_line_off_its_form_is_reported(self):
-        approval = ("- Approved by: Mariusz\n"
-                    "- Definition fingerprint: 00000000")
+        approval = "- Approved by: Mariusz\n- Definition fingerprint: 00000000"
         found = conditions(definition(approval=approval))
         self.assertIn(("e", "the line is not `- Approved by: …` in its form"), found)
 
     def test_an_approval_record_naming_the_foundation_commit_searched_is_reported(self):
         content = body_text(BODIES, FORM[:-1])
-        approval = ("- Approved by: Mariusz, 2026-10-03\n"
-                    "- Foundation searched at: 595f839\n"
-                    "- Definition fingerprint: %s" % wording_fingerprint(content))
+        approval = (
+            "- Approved by: Mariusz, 2026-10-03\n"
+            "- Foundation searched at: 595f839\n"
+            "- Definition fingerprint: %s" % wording_fingerprint(content)
+        )
         found = conditions(definition(approval=approval))
-        self.assertEqual(found, [("e", "the approval record holds 3 lines, not the two: Approved "
-                                       "by, Definition fingerprint")])
+        self.assertEqual(
+            found,
+            [
+                (
+                    "e",
+                    "the approval record holds 3 lines, not the two: Approved "
+                    "by, Definition fingerprint",
+                )
+            ],
+        )
 
     def test_a_definition_changed_after_its_approval_is_reported(self):
         stale = definition()
@@ -556,8 +691,9 @@ class ApprovalRecord(unittest.TestCase):
         self.assertEqual(found, ["e"])
 
     def test_a_change_of_spaces_only_keeps_the_fingerprint(self):
-        text = definition().replace("Gra istnieje tylko jako koncepcja.",
-                                    "Gra istnieje  tylko\njako koncepcja.")
+        text = definition().replace(
+            "Gra istnieje tylko jako koncepcja.", "Gra istnieje  tylko\njako koncepcja."
+        )
         self.assertEqual(conditions(text), [])
 
     def test_the_status_line_and_the_approval_record_stay_outside_the_fingerprint(self):
@@ -586,10 +722,13 @@ class Command(unittest.TestCase):
         self.assertTrue(out.endswith("readiness: 1 finding(s)\n"))
 
     def test_before_approval_says_what_it_left_out(self):
-        code, out, _ = self.run_main(definition(status="Status: awaiting approval", approval=""),
-                                     "--before-approval")
-        self.assertEqual((code, out), (0, "readiness: nothing found (approval record left out: "
-                                          "--before-approval)\n"))
+        code, out, _ = self.run_main(
+            definition(status="Status: awaiting approval", approval=""), "--before-approval"
+        )
+        self.assertEqual(
+            (code, out),
+            (0, "readiness: nothing found (approval record left out: --before-approval)\n"),
+        )
 
     def test_fingerprint_prints_the_definition_fingerprint(self):
         text = definition(approval="")

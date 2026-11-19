@@ -61,7 +61,9 @@ def git(root: Path, *arguments: str) -> bytes:
     except OSError as error:
         raise FileSizesError(f"cannot start git: {error}") from error
     if run.returncode != 0:
-        message = run.stderr.decode("utf-8", errors="replace").strip() or f"exit code {run.returncode}"
+        message = (
+            run.stderr.decode("utf-8", errors="replace").strip() or f"exit code {run.returncode}"
+        )
         raise FileSizesError(f"`git {' '.join(arguments[:2])}` failed in {root}: {message}")
     return run.stdout
 
@@ -70,13 +72,25 @@ def resolve(root: Path, name: str) -> str:
     """The identifier of the commit `name` stands for."""
     try:
         run = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", "--verify", "--quiet", "--end-of-options",
-             f"{name}^{{commit}}"], capture_output=True)
+            [
+                "git",
+                "-C",
+                str(root),
+                "rev-parse",
+                "--verify",
+                "--quiet",
+                "--end-of-options",
+                f"{name}^{{commit}}",
+            ],
+            capture_output=True,
+        )
     except OSError as error:
         raise FileSizesError(f"cannot start git: {error}") from error
     found = run.stdout.decode("utf-8", errors="replace").strip()
     if run.returncode != 0 or not found:
-        git(root, "rev-parse", "--git-dir")  # a directory with no repository ends here, with git's words
+        git(
+            root, "rev-parse", "--git-dir"
+        )  # a directory with no repository ends here, with git's words
         raise FileSizesError(f"`{name}` names no commit in {root}")
     return found
 
@@ -94,7 +108,10 @@ class Blobs:
         try:
             self.process = subprocess.Popen(
                 ["git", "-C", str(root), "cat-file", "--batch"],
-                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+            )
         except OSError as error:
             raise FileSizesError(f"cannot start git: {error}") from error
 
@@ -142,7 +159,10 @@ def parse_raw(output: bytes) -> list[tuple[list[str], list[str]]]:
         if len(fields) != 5:
             raise FileSizesError(f"cannot read a line of the answer of git diff: {header[:80]!r}")
         count = 2 if fields[4][:1] in ("R", "C") else 1
-        paths = [token.decode("utf-8", errors="replace") for token in tokens[index + 1:index + 1 + count]]
+        paths = [
+            token.decode("utf-8", errors="replace")
+            for token in tokens[index + 1 : index + 1 + count]
+        ]
         if len(paths) != count:
             raise FileSizesError("the answer of git diff ends in the middle of a record")
         records.append((fields, paths))
@@ -171,8 +191,7 @@ def measure(root: Path, base: str, head: str) -> list[Entry]:
                 note = "modified"
             else:
                 raise FileSizesError(f"git diff gives the status {status} of {paths[-1]!r}")
-            entries.append(Entry(paths[-1], before, after, note,
-                                 paths[0] if kind == "R" else None))
+            entries.append(Entry(paths[-1], before, after, note, paths[0] if kind == "R" else None))
     finally:
         blobs.close()
     return entries
@@ -221,8 +240,10 @@ def report(entries: list[Entry], base: str, head: str) -> str:
     counts = {"added": 0, "deleted": 0, "renamed": 0, "modified": 0, "not measured": 0}
     for entry in entries:
         delta = difference(entry)
-        lines.append(f"| {code_span(entry.path)} | {cell(entry.before)} | {cell(entry.after)} | "
-                     f"{'—' if delta is None else format(delta, '+d')} | {note_text(entry)} |")
+        lines.append(
+            f"| {code_span(entry.path)} | {cell(entry.before)} | {cell(entry.after)} | "
+            f"{'—' if delta is None else format(delta, '+d')} | {note_text(entry)} |"
+        )
         if isinstance(entry.before, int):
             before_total += entry.before
         if isinstance(entry.after, int):
@@ -239,8 +260,10 @@ def report(entries: list[Entry], base: str, head: str) -> str:
             counts["modified"] += 1
     kinds = ", ".join(f"{number} {name}" for name, number in counts.items())
     lines.append("")
-    lines.append(f"Summary: {len(entries)} files changed ({kinds}); lines before {before_total}, "
-                 f"after {after_total}, change {after_total - before_total:+d}.")
+    lines.append(
+        f"Summary: {len(entries)} files changed ({kinds}); lines before {before_total}, "
+        f"after {after_total}, change {after_total - before_total:+d}."
+    )
     return "\n".join(lines) + "\n"
 
 

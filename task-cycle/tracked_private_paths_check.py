@@ -49,7 +49,9 @@ def git(root: Path | None, *arguments: str) -> bytes:
         raise PrivatePathsError(f"cannot run git: {private_paths_check.display(error)}") from error
     if run.returncode != 0:
         message = run.stderr.decode("utf-8", "replace").strip()
-        raise PrivatePathsError(f"git {arguments[0]} failed: {private_paths_check.display(message)}")
+        raise PrivatePathsError(
+            f"git {arguments[0]} failed: {private_paths_check.display(message)}"
+        )
     return run.stdout
 
 
@@ -70,7 +72,8 @@ def sentence_of(root: Path, invariant: str) -> str:
         lines = path.read_text(encoding="utf-8").splitlines()
     except (OSError, UnicodeDecodeError) as error:
         raise PrivatePathsError(
-            f"cannot read {INVARIANTS_FILE}: {private_paths_check.display(error)}") from error
+            f"cannot read {INVARIANTS_FILE}: {private_paths_check.display(error)}"
+        ) from error
     heading = f"## {invariant}"
     for index, line in enumerate(lines):
         if line.rstrip() == heading:
@@ -78,7 +81,7 @@ def sentence_of(root: Path, invariant: str) -> str:
     else:
         raise PrivatePathsError(f"{INVARIANTS_FILE} holds no invariant {invariant}")
     sentence = []
-    for line in lines[index + 1:]:
+    for line in lines[index + 1 :]:
         if sentence and not line.strip():
             break
         if line.strip():
@@ -95,7 +98,8 @@ def skipped_files(root: Path, invariant: str, tracked: list[str]) -> list[str]:
     if untracked:
         raise PrivatePathsError(
             f"the sentence of {invariant} names files git does not track: "
-            + ", ".join(private_paths_check.display(name) for name in untracked))
+            + ", ".join(private_paths_check.display(name) for name in untracked)
+        )
     return names
 
 
@@ -107,7 +111,8 @@ def check_tracked(root: Path, skipped: list[str], tracked: list[str]) -> private
         if name in skipped or not path.is_file():
             continue
         private_paths_check.check_file(
-            path, result, note_links=name.lower().endswith(MARKDOWN_SUFFIXES), name=name)
+            path, result, note_links=name.lower().endswith(MARKDOWN_SUFFIXES), name=name
+        )
     return result
 
 

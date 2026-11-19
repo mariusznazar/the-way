@@ -56,8 +56,7 @@ CONTROL = ("AGENTS.md", "CLAUDE.md", "agent-instructions/README.md")
 
 def tracked(root):
     """Every path, from `root`, that git tracks there, with `/` between directories."""
-    result = subprocess.run(["git", "ls-files", "-z"], cwd=root, capture_output=True,
-                            check=True)
+    result = subprocess.run(["git", "ls-files", "-z"], cwd=root, capture_output=True, check=True)
     return sorted({path for path in result.stdout.decode("utf-8").split("\0") if path})
 
 
@@ -73,8 +72,9 @@ def names(text, path):
     for written in {path, path.replace("/", "\\")}:
         start = text.find(written)
         while start != -1:
-            if start == 0 or (text[start - 1] not in ASCII_ALNUM
-                              and text[start - 1] not in NOT_BEFORE_PATH):
+            if start == 0 or (
+                text[start - 1] not in ASCII_ALNUM and text[start - 1] not in NOT_BEFORE_PATH
+            ):
                 return True
             start = text.find(written, start + 1)
     return False
@@ -108,8 +108,14 @@ def code_span_mask(line):
     while index < len(runs):
         start, end = runs[index]
         width = end - start
-        closing = next((other for other in range(index + 1, len(runs))
-                        if runs[other][1] - runs[other][0] == width), None)
+        closing = next(
+            (
+                other
+                for other in range(index + 1, len(runs))
+                if runs[other][1] - runs[other][0] == width
+            ),
+            None,
+        )
         if closing is None:
             index += 1
             continue
@@ -123,8 +129,7 @@ def fenced_lines(lines):
     """The indexes of the lines that lie in a fenced code block: a block runs from a line whose
     first characters other than spaces are three backticks or three tildes to the next such line,
     both lines included. An opening line with no such line after it opens no block."""
-    fence_lines = [index for index, line in enumerate(lines)
-                   if line.lstrip(" ").startswith(FENCES)]
+    fence_lines = [index for index, line in enumerate(lines) if line.lstrip(" ").startswith(FENCES)]
     inside = set()
     for opening, closing in zip(fence_lines[0::2], fence_lines[1::2]):
         inside.update(range(opening, closing + 1))
@@ -167,8 +172,10 @@ def import_problems(root):
                 continue
             for column in counted_ats(line):
                 word = re.match(r"\S*", line[column:]).group(0)
-                found.append("%s:%d:%d: an import-like `%s` outside code spans and fenced code "
-                             "blocks" % (path, index + 1, column + 1, word))
+                found.append(
+                    "%s:%d:%d: an import-like `%s` outside code spans and fenced code "
+                    "blocks" % (path, index + 1, column + 1, word)
+                )
     return found
 
 
@@ -182,11 +189,13 @@ def root_import_problems(root):
         data = read(root, ROOT_CLAUDE)
     except OSError as error:
         return ["%s: cannot be read (%s)" % (ROOT_CLAUDE, error.strerror)]
-    rest = data[len(ROOT_IMPORT):]
+    rest = data[len(ROOT_IMPORT) :]
     if data.startswith(ROOT_IMPORT) and (rest == b"" or rest.startswith(LINE_BREAKS)):
         return []
-    return ["%s:1: its text begins with %r, not with `@AGENTS.md` followed by a line break or "
-            "the end of the text" % (ROOT_CLAUDE, data[:len(ROOT_IMPORT) + 2])]
+    return [
+        "%s:1: its text begins with %r, not with `@AGENTS.md` followed by a line break or "
+        "the end of the text" % (ROOT_CLAUDE, data[: len(ROOT_IMPORT) + 2])
+    ]
 
 
 def build(directory, files, untracked=()):
@@ -199,59 +208,72 @@ def build(directory, files, untracked=()):
         with open(full, "wb") as handle:
             handle.write(text if isinstance(text, bytes) else text.encode("utf-8"))
     if files:
-        subprocess.run(["git", "-c", "core.autocrlf=false", "-c", "core.safecrlf=false", "add",
-                        "--"] + sorted(files), cwd=directory, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "-c", "core.autocrlf=false", "-c", "core.safecrlf=false", "add", "--"]
+            + sorted(files),
+            cwd=directory,
+            check=True,
+            capture_output=True,
+        )
 
 
 def clean_environment():
-    return mock.patch.dict(os.environ, {key: value for key, value in os.environ.items()
-                                        if not key.startswith("GIT_")}, clear=True)
+    return mock.patch.dict(
+        os.environ,
+        {key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+        clear=True,
+    )
 
 
 def located(found):
     """The (file, line) of each reported problem."""
-    return Counter((match.group(1), int(match.group(2)))
-                   for match in (re.match(r"^(.*?):(\d+):", line) for line in found) if match)
+    return Counter(
+        (match.group(1), int(match.group(2)))
+        for match in (re.match(r"^(.*?):(\d+):", line) for line in found)
+        if match
+    )
 
 
 # A root `AGENTS.md` holding every kind of `@` the sentence counts and every kind it lets pass,
 # and the paths that name, or fail to name, the files beside it.
-ROOT_AGENTS = "\n".join([
-    "# Agents",                                                        # 1
-    "See @docs/rules.md for the rules.",                               # 2 counted
-    "Mail a@example.com, x@letter -@dash _@under .@dot <@angle :@colon",  # 3
-    "Inline `@docs/rules.md` and ``a ` @b`` stay quiet.",              # 4
-    "```",                                                             # 5
-    "@fenced",                                                         # 6
-    "```",                                                             # 7
-    "  ~~~",                                                           # 8
-    "@tilde",                                                          # 9
-    "~~~",                                                             # 10
-    "(@p) [@b] {@c} \"@d\" '@e' “@f” ‘@g’ „@h",  # 11 eight counted
-    "Ping @someone today.",                                            # 12 counted
-    "@@twice",                                                         # 13 one counted
-    "A line ending in @",                                              # 14
-    "An @ alone, a (@ before a space and an @\tbefore a tab",          # 15
-    "Unclosed ` @open here",                                           # 16 counted
-    "Across ``lines @split",                                           # 17 counted
-    "end`` of it.",                                                    # 18
-    "\t```",                                                           # 19 no fence
-    "@tabbed",                                                         # 20 counted
-    "\t```",                                                           # 21
-    "    ```",                                                         # 22
-    "@deep",                                                           # 23
-    "```",                                                             # 24
-    "```",                                                             # 25
-    "@mixed",                                                          # 26
-    "~~~",                                                             # 27
-    "@after",                                                          # 28 counted
-    "@AGENTS.md",                                                      # 29 counted
-    "Rules: [linked](docs/linked.md), docs/untracked.md, docs/notes.txt.",  # 30
-    "Not named: xdocs/l1.md 9docs/l2.md .docs/l3.md -docs/l4.md _docs/l5.md /docs/l6.md "
-    "\\docs\\l7.md",                                                   # 31
-    "Named: łdocs/accent.md",                                     # 32
-    "",
-])
+ROOT_AGENTS = "\n".join(
+    [
+        "# Agents",  # 1
+        "See @docs/rules.md for the rules.",  # 2 counted
+        "Mail a@example.com, x@letter -@dash _@under .@dot <@angle :@colon",  # 3
+        "Inline `@docs/rules.md` and ``a ` @b`` stay quiet.",  # 4
+        "```",  # 5
+        "@fenced",  # 6
+        "```",  # 7
+        "  ~~~",  # 8
+        "@tilde",  # 9
+        "~~~",  # 10
+        "(@p) [@b] {@c} \"@d\" '@e' “@f” ‘@g’ „@h",  # 11 eight counted
+        "Ping @someone today.",  # 12 counted
+        "@@twice",  # 13 one counted
+        "A line ending in @",  # 14
+        "An @ alone, a (@ before a space and an @\tbefore a tab",  # 15
+        "Unclosed ` @open here",  # 16 counted
+        "Across ``lines @split",  # 17 counted
+        "end`` of it.",  # 18
+        "\t```",  # 19 no fence
+        "@tabbed",  # 20 counted
+        "\t```",  # 21
+        "    ```",  # 22
+        "@deep",  # 23
+        "```",  # 24
+        "```",  # 25
+        "@mixed",  # 26
+        "~~~",  # 27
+        "@after",  # 28 counted
+        "@AGENTS.md",  # 29 counted
+        "Rules: [linked](docs/linked.md), docs/untracked.md, docs/notes.txt.",  # 30
+        "Not named: xdocs/l1.md 9docs/l2.md .docs/l3.md -docs/l4.md _docs/l5.md /docs/l6.md "
+        "\\docs\\l7.md",  # 31
+        "Named: łdocs/accent.md",  # 32
+        "",
+    ]
+)
 
 ROOT_CLAUDE_TEXT = "@AGENTS.md\n@AGENTS.md\nAlso docs\\other.mdc, docs/unnamed.txt.\n"
 
@@ -287,19 +309,42 @@ IMPORT_UNTRACKED = {
 }
 
 IMPORT_POPULATION = [
-    ".claude/CLAUDE.md", "AGENTS.md", "CLAUDE.local.md", "CLAUDE.md", "docs/accent.md",
-    "docs/linked.md", "docs/other.mdc", "docs/rules.md", "pkg/AGENTS.md",
-    "sub/CLAUDE.local.md", "sub/CLAUDE.md",
+    ".claude/CLAUDE.md",
+    "AGENTS.md",
+    "CLAUDE.local.md",
+    "CLAUDE.md",
+    "docs/accent.md",
+    "docs/linked.md",
+    "docs/other.mdc",
+    "docs/rules.md",
+    "pkg/AGENTS.md",
+    "sub/CLAUDE.local.md",
+    "sub/CLAUDE.md",
 ]
 
-IMPORT_EXPECTED = Counter({
-    ("AGENTS.md", 2): 1, ("AGENTS.md", 11): 8, ("AGENTS.md", 12): 1, ("AGENTS.md", 13): 1,
-    ("AGENTS.md", 16): 1, ("AGENTS.md", 17): 1, ("AGENTS.md", 20): 1, ("AGENTS.md", 28): 1,
-    ("AGENTS.md", 29): 1, ("CLAUDE.md", 2): 1, ("CLAUDE.local.md", 1): 1,
-    (".claude/CLAUDE.md", 2): 1, ("sub/CLAUDE.local.md", 2): 1, ("docs/rules.md", 2): 1,
-    ("docs/linked.md", 1): 1, ("docs/other.mdc", 1): 1, ("docs/accent.md", 1): 1,
-    ("sub/CLAUDE.md", 1): 1, ("pkg/AGENTS.md", 2): 1,
-})
+IMPORT_EXPECTED = Counter(
+    {
+        ("AGENTS.md", 2): 1,
+        ("AGENTS.md", 11): 8,
+        ("AGENTS.md", 12): 1,
+        ("AGENTS.md", 13): 1,
+        ("AGENTS.md", 16): 1,
+        ("AGENTS.md", 17): 1,
+        ("AGENTS.md", 20): 1,
+        ("AGENTS.md", 28): 1,
+        ("AGENTS.md", 29): 1,
+        ("CLAUDE.md", 2): 1,
+        ("CLAUDE.local.md", 1): 1,
+        (".claude/CLAUDE.md", 2): 1,
+        ("sub/CLAUDE.local.md", 2): 1,
+        ("docs/rules.md", 2): 1,
+        ("docs/linked.md", 1): 1,
+        ("docs/other.mdc", 1): 1,
+        ("docs/accent.md", 1): 1,
+        ("sub/CLAUDE.md", 1): 1,
+        ("pkg/AGENTS.md", 2): 1,
+    }
+)
 
 
 class InstructionFiles(unittest.TestCase):
@@ -309,14 +354,22 @@ class InstructionFiles(unittest.TestCase):
         for path in CONTROL:
             self.assertIn(path, found_population)
         found = import_problems(ROOT)
-        self.assertEqual(found, [], "a repository instruction file of the-way holds an `@` a "
-                         "tool would take for an import:\n" + "\n".join(found))
+        self.assertEqual(
+            found,
+            [],
+            "a repository instruction file of the-way holds an `@` a "
+            "tool would take for an import:\n" + "\n".join(found),
+        )
 
     def test_the_root_claude_md_begins_with_the_import_of_agents_md(self):
         # invariant: root-claude-md-import
         found = root_import_problems(ROOT)
-        self.assertEqual(found, [], "the root `CLAUDE.md` of the-way does not begin with the "
-                         "import of `AGENTS.md`:\n" + "\n".join(found))
+        self.assertEqual(
+            found,
+            [],
+            "the root `CLAUDE.md` of the-way does not begin with the "
+            "import of `AGENTS.md`:\n" + "\n".join(found),
+        )
 
     def test_import_problems_reports_each_counted_at_and_passes_the_rest(self):
         """On a repository whose root files hold every kind of `@` the sentence counts and every
@@ -341,8 +394,11 @@ class InstructionFiles(unittest.TestCase):
             ("@AGENTS.md\n@\n", []),
         )
         for text, expected in cases:
-            with self.subTest(text=text), tempfile.TemporaryDirectory() as directory, \
-                    clean_environment():
+            with (
+                self.subTest(text=text),
+                tempfile.TemporaryDirectory() as directory,
+                clean_environment(),
+            ):
                 build(directory, {"AGENTS.md": "# Agents\n", "CLAUDE.md": text})
                 found = import_problems(directory)
             self.assertEqual(located(found), Counter(expected), "\n".join(found))
@@ -350,14 +406,29 @@ class InstructionFiles(unittest.TestCase):
     def test_root_import_problems_reports_a_root_claude_md_without_the_import(self):
         """Each root `CLAUDE.md` text the sentence refuses gives one problem naming the file;
         each it allows, and a repository with no tracked root `CLAUDE.md`, gives none."""
-        allowed = (b"@AGENTS.md", b"@AGENTS.md\n", b"@AGENTS.md\nText.\n",
-                   b"@AGENTS.md\r\nText.\r\n")
-        refused = (b"", b"@AGENTS.md \n", b"@AGENTS.mdx\n", b"\n@AGENTS.md\n",
-                   b"\xef\xbb\xbf@AGENTS.md\n", b"@agents.md\n", b"@AGENTS.md\rText.\n",
-                   b"# Title\n@AGENTS.md\n", b" @AGENTS.md\n")
+        allowed = (
+            b"@AGENTS.md",
+            b"@AGENTS.md\n",
+            b"@AGENTS.md\nText.\n",
+            b"@AGENTS.md\r\nText.\r\n",
+        )
+        refused = (
+            b"",
+            b"@AGENTS.md \n",
+            b"@AGENTS.mdx\n",
+            b"\n@AGENTS.md\n",
+            b"\xef\xbb\xbf@AGENTS.md\n",
+            b"@agents.md\n",
+            b"@AGENTS.md\rText.\n",
+            b"# Title\n@AGENTS.md\n",
+            b" @AGENTS.md\n",
+        )
         for data in allowed + refused:
-            with self.subTest(data=data), tempfile.TemporaryDirectory() as directory, \
-                    clean_environment():
+            with (
+                self.subTest(data=data),
+                tempfile.TemporaryDirectory() as directory,
+                clean_environment(),
+            ):
                 build(directory, {"AGENTS.md": "# Agents\n", "CLAUDE.md": data})
                 found = root_import_problems(directory)
             if data in allowed:
@@ -372,8 +443,11 @@ class InstructionFiles(unittest.TestCase):
             ({}, {}),
         )
         for files, untracked in nothing_required:
-            with self.subTest(files=files, untracked=untracked), \
-                    tempfile.TemporaryDirectory() as directory, clean_environment():
+            with (
+                self.subTest(files=files, untracked=untracked),
+                tempfile.TemporaryDirectory() as directory,
+                clean_environment(),
+            ):
                 build(directory, files, untracked)
                 self.assertEqual(root_import_problems(directory), [])
 

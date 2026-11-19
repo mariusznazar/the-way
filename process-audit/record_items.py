@@ -88,6 +88,7 @@ class Round:
     its mark of a contradiction with the settlements, `yes` or `no`, or
     None where the sub-item gives
     none."""
+
     kind: str
     path: str
     contradiction: str | None
@@ -99,9 +100,13 @@ def rounds_item(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None,
     or [] where the item reads `none`; None with the reason where the item is missing, doubled, or
     holds neither `none` nor sub-items, or text beside its sub-items. Outside code fences only; one
     pass over the lines."""
-    openers = [index for index, line in enumerate(lines)
-               if not fenced[index] and line.startswith("- ")
-               and (header_field(line) or ("", ""))[0] == ROUNDS_LABEL]
+    openers = [
+        index
+        for index, line in enumerate(lines)
+        if not fenced[index]
+        and line.startswith("- ")
+        and (header_field(line) or ("", ""))[0] == ROUNDS_LABEL
+    ]
     if not openers:
         return None, "the record holds no item `Review rounds`: an earlier form"
     if len(openers) > 1:
@@ -109,7 +114,7 @@ def rounds_item(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None,
     start = openers[0]
     rest = header_field(lines[start])[1]
     markers: list[tuple[int, str]] = []
-    for line, inside in zip(lines[start + 1:], fenced[start + 1:]):
+    for line, inside in zip(lines[start + 1 :], fenced[start + 1 :]):
         if not line.strip():
             continue
         indent = remarks_check.indent_of(line)
@@ -121,8 +126,10 @@ def rounds_item(lines: list[str], fenced: list[bool]) -> tuple[list[str] | None,
     if not markers:
         if remarks_check.reads_none(rest):
             return [], None
-        return None, ("the item `Review rounds` names no findings file: it reads neither `none` nor "
-                      "a sub-item for each round")
+        return None, (
+            "the item `Review rounds` names no findings file: it reads neither `none` nor "
+            "a sub-item for each round"
+        )
     if rest:
         return None, "the item `Review rounds` holds text beside its sub-items"
     base = min(indent for indent, _ in markers)
@@ -154,10 +161,12 @@ def read_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[Round] | Non
     for text in texts:
         entry = round_of(text)
         if entry is None:
-            return None, ("a sub-item of the item `Review rounds` names no findings file and is no "
-                          "review that passed: it opens with neither the word findings and "
-                          "reports/<file>.md between backticks nor the word review, "
-                          "reports/<file>.md between backticks and PASS")
+            return None, (
+                "a sub-item of the item `Review rounds` names no findings file and is no "
+                "review that passed: it opens with neither the word findings and "
+                "reports/<file>.md between backticks nor the word review, "
+                "reports/<file>.md between backticks and PASS"
+            )
         if entry.kind == FINDINGS:
             if entry.path in findings:
                 return None, "the item `Review rounds` names a findings file twice"
@@ -178,8 +187,9 @@ def review_rounds(lines: list[str], fenced: list[bool]) -> tuple[list[str] | Non
     return [entry.path for entry in rounds if entry.kind == FINDINGS], None
 
 
-def item_texts(lines: list[str], fenced: list[bool],
-               label: str) -> list[tuple[str, list[tuple[str, bool]]]]:
+def item_texts(
+    lines: list[str], fenced: list[bool], label: str
+) -> list[tuple[str, list[tuple[str, bool]]]]:
     """The items `- <label>: ...` of a record outside code fences, each as its text on its line and
     the lines indented under it with their fence flags. The whole record is read, since the items
     of the spec and the plan sit below the header. One pass: each item reads down to the next line
@@ -206,8 +216,11 @@ def item_texts(lines: list[str], fenced: list[bool],
 
 
 def item_count_reason(label: str, items: list) -> str:
-    return (f"the record holds the item `{label}` more than once" if items
-            else f"the record holds no item `{label}`")
+    return (
+        f"the record holds the item `{label}` more than once"
+        if items
+        else f"the record holds no item `{label}`"
+    )
 
 
 def item_words(rest: str, below: list[tuple[str, bool]]) -> str:
@@ -244,19 +257,26 @@ def discarded_entries(below: list[tuple[str, bool]]) -> tuple[list[str], bool]:
     the sub-items, after the first one, continues one of them; a first line
     deeper than the sub-items
     that come after it continues nothing, so the sub-items are not read as a list."""
-    lines = [(remarks_check.indent_of(text), remarks_check.MARKER.fullmatch(text))
-             for text, inside in below if not inside]
+    lines = [
+        (remarks_check.indent_of(text), remarks_check.MARKER.fullmatch(text))
+        for text, inside in below
+        if not inside
+    ]
     markers = [(indent, marker.group("text")) for indent, marker in lines if marker]
     if not markers:
         return [], False
     base = min(indent for indent, _ in markers)
-    alone = lines[0][1] is not None and lines[0][0] == base and all(
-        marker is not None or indent > base for indent, marker in lines)
+    alone = (
+        lines[0][1] is not None
+        and lines[0][0] == base
+        and all(marker is not None or indent > base for indent, marker in lines)
+    )
     return [text for indent, text in markers if indent == base], alone
 
 
-def discarded_reasons(rest: str, below: list[tuple[str, bool]]
-                      ) -> tuple[list[str | None] | None, str | None]:
+def discarded_reasons(
+    rest: str, below: list[tuple[str, bool]]
+) -> tuple[list[str | None] | None, str | None]:
     """The reasons of the attempts the item *Discarded attempt* gives, or None with the reason where
     the item is not in a form read. A cycle that discarded one attempt writes it in the text of the
     item, on its line or on the lines under it, the details possibly as a list: one reason, or
@@ -274,20 +294,28 @@ def discarded_reasons(rest: str, below: list[tuple[str, bool]]
     second attempt), and is not read otherwise."""
     entries, alone = discarded_entries(below)
     if entries and alone and not rest.strip():
-        return [None if reason in (NO_ATTEMPT, SEVERAL) else reason
-                for reason in map(discarded_reason, entries)], None
+        return [
+            None if reason in (NO_ATTEMPT, SEVERAL) else reason
+            for reason in map(discarded_reason, entries)
+        ], None
     reason = discarded_reason(item_words(rest, below))
     if reason == SEVERAL:
-        return None, ("the item `Discarded attempt` holds more than one reason in a form that is "
-                      "not read: write nothing beside its colon and one sub-item for each attempt")
+        return None, (
+            "the item `Discarded attempt` holds more than one reason in a form that is "
+            "not read: write nothing beside its colon and one sub-item for each attempt"
+        )
     if reason is None and entries and not rest.strip():
-        return None, ("a line of the item `Discarded attempt` is no sub-item or stands at another "
-                      "indent than its sub-items: write each attempt as a sub-item, all at one "
-                      "indent, and nothing else beside them")
+        return None, (
+            "a line of the item `Discarded attempt` is no sub-item or stands at another "
+            "indent than its sub-items: write each attempt as a sub-item, all at one "
+            "indent, and nothing else beside them"
+        )
     if reason is None:
-        return None, ("the item `Discarded attempt` opens with no marker of its reason: it reads "
-                      "neither `none` nor `reason: ` and one of open design choice, reserved choice "
-                      "and size in backticks")
+        return None, (
+            "the item `Discarded attempt` opens with no marker of its reason: it reads "
+            "neither `none` nor `reason: ` and one of open design choice, reserved choice "
+            "and size in backticks"
+        )
     return [reason], None
 
 
@@ -313,8 +341,10 @@ def read_contradiction(lines: list[str], fenced: list[bool]) -> tuple[str | None
     if None in reasons:
         return None, "a sub-item of the item `Discarded attempt` opens with no marker of its reason"
     if rounds is None:
-        return None, ("the item `Review rounds` does not give its sub-items, so whether a review "
-                      "round found a contradiction is not known")
+        return None, (
+            "the item `Review rounds` does not give its sub-items, so whether a review "
+            "round found a contradiction is not known"
+        )
     if any(entry.contradiction is None for entry in rounds):
         return None, "the sub-item of a round does not say whether there was a contradiction"
     return "no", None

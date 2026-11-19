@@ -25,20 +25,26 @@ import audit_count  # noqa: E402
 
 def tracked(path):
     """The files git tracks that the path names, as `git ls-files` lists them."""
-    done = subprocess.run(["git", "-C", str(THE_WAY), "ls-files", "-z", "--", ":(literal)" + path],
-                          capture_output=True, check=True)
+    done = subprocess.run(
+        ["git", "-C", str(THE_WAY), "ls-files", "-z", "--", ":(literal)" + path],
+        capture_output=True,
+        check=True,
+    )
     return [name for name in done.stdout.decode("utf-8").split("\0") if name]
 
 
 class AuditSeriesScriptPaths(unittest.TestCase):
-
     def test_each_path_the_audit_reads_the_history_of_is_a_file_git_tracks(self):
         # invariant: audit-series-script-paths
         # Break caught: moving or renaming one of the four scripts while the audit keeps the old
         # path; the history of a path that does not exist is empty, so no change of the script
         # would ever start a new series and the audit would compare measures of two scripts.
-        paths = (audit_count.COST_SCRIPT, audit_count.MEASURES_SCRIPT, audit_count.GATE_SCRIPT,
-                 audit_count.GATE_TEST_RUNNER)
+        paths = (
+            audit_count.COST_SCRIPT,
+            audit_count.MEASURES_SCRIPT,
+            audit_count.GATE_SCRIPT,
+            audit_count.GATE_TEST_RUNNER,
+        )
         for path in paths:
             with self.subTest(path=path):
                 self.assertEqual([path], tracked(path))
@@ -47,8 +53,15 @@ class AuditSeriesScriptPaths(unittest.TestCase):
         # Break caught: a path added to the audit's series that the test above does not name, so
         # that it would stand unguarded.
         started = {path for _file, paths in audit_count.TOOL_GROUPS for path in paths}
-        self.assertEqual({audit_count.COST_SCRIPT, audit_count.MEASURES_SCRIPT,
-                          audit_count.GATE_SCRIPT, audit_count.GATE_TEST_RUNNER}, started)
+        self.assertEqual(
+            {
+                audit_count.COST_SCRIPT,
+                audit_count.MEASURES_SCRIPT,
+                audit_count.GATE_SCRIPT,
+                audit_count.GATE_TEST_RUNNER,
+            },
+            started,
+        )
 
     def test_a_path_git_does_not_track_is_listed_as_no_file(self):
         # Break caught: a listing that names a path git does not track, which would let the test

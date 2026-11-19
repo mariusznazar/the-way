@@ -11,13 +11,23 @@ import unittest
 SOURCE = Path(__file__).resolve().parent.parent
 INSTALL = SOURCE / "installation/install.py"
 LEAD_SOURCE = "project-level/lead/skill/SKILL.md"
-WRAPPERS = (".claude/skills/the-way-lead-project/SKILL.md",
-            ".agents/skills/the-way-lead-project/SKILL.md")
+WRAPPERS = (
+    ".claude/skills/the-way-lead-project/SKILL.md",
+    ".agents/skills/the-way-lead-project/SKILL.md",
+)
 
 
 def command(*args: str, cwd: Path, input_text: str | None = None):
-    return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
 
 
 class LeadInstallationTest(unittest.TestCase):
@@ -49,14 +59,25 @@ class LeadInstallationTest(unittest.TestCase):
         return result
 
     def install(self, *args: str):
-        return command(sys.executable, "-B", str(self.installer), str(self.product),
-                       "--url", str(self.source), *args, cwd=self.product, input_text="y\n")
+        return command(
+            sys.executable,
+            "-B",
+            str(self.installer),
+            str(self.product),
+            "--url",
+            str(self.source),
+            *args,
+            cwd=self.product,
+            input_text="y\n",
+        )
 
     def product_files(self):
-        return {path.relative_to(self.product).as_posix(): path.read_bytes()
-                for path in self.product.rglob("*")
-                if path.is_file() and path.relative_to(self.product).parts[0]
-                not in (".git", ".the-way")}
+        return {
+            path.relative_to(self.product).as_posix(): path.read_bytes()
+            for path in self.product.rglob("*")
+            if path.is_file()
+            and path.relative_to(self.product).parts[0] not in (".git", ".the-way")
+        }
 
     def test_preview_apply_repeat_exposes_lead_and_preserves_product(self) -> None:
         # Omitting lead from installation must fail before any product write.
@@ -93,18 +114,23 @@ class LeadInstallationTest(unittest.TestCase):
         for directory in (".claude", ".agents"):
             for sibling in (self.product / directory / "skills").glob("*/SKILL.md"):
                 self.assertIn("`lead-project`", sibling.read_text(encoding="utf-8"))
-        self.assertIn("`the-way-lead-project`",
-                      (self.product / "AGENTS.md").read_text(encoding="utf-8"))
+        self.assertIn(
+            "`the-way-lead-project`", (self.product / "AGENTS.md").read_text(encoding="utf-8")
+        )
         for name in ("foundations/decisions.md", "CLAUDE.md"):
             self.assertEqual((self.product / name).read_bytes(), originals[name])
         for name in ("AGENTS.md", ".gitignore"):
             self.assertTrue((self.product / name).read_bytes().startswith(originals[name]))
-        self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(),
-                         self.commit)
-        self.assertIn(f"160000 {self.commit}",
-                      self.git("ls-files", "--stage", "--", ".the-way").stdout)
-        self.assertEqual(set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
-                         {".gitmodules", ".the-way"})
+        self.assertEqual(
+            self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(), self.commit
+        )
+        self.assertIn(
+            f"160000 {self.commit}", self.git("ls-files", "--stage", "--", ".the-way").stdout
+        )
+        self.assertEqual(
+            set(self.git("diff", "--cached", "--name-only").stdout.splitlines()),
+            {".gitmodules", ".the-way"},
+        )
 
         installed = self.product_files()
         repeated = self.install("--apply")
@@ -121,13 +147,21 @@ class LeadInstallationTest(unittest.TestCase):
         clone = self.root / "clone"
         self.git("clone", "-q", "--", str(self.product), str(clone), cwd=self.root)
         self.assertFalse((clone / ".the-way" / LEAD_SOURCE).exists())
-        self.git("-c", "protocol.file.allow=always", "submodule", "update", "--init",
-                 "--", ".the-way", cwd=clone)
-        self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD",
-                                  cwd=clone).stdout.strip(), self.commit)
+        self.git(
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "update",
+            "--init",
+            "--",
+            ".the-way",
+            cwd=clone,
+        )
+        self.assertEqual(
+            self.git("-C", ".the-way", "rev-parse", "HEAD", cwd=clone).stdout.strip(), self.commit
+        )
         expected = self.git("show", f"{self.commit}:{LEAD_SOURCE}", cwd=self.source).stdout
-        self.assertEqual((clone / ".the-way" / LEAD_SOURCE).read_text(encoding="utf-8"),
-                         expected)
+        self.assertEqual((clone / ".the-way" / LEAD_SOURCE).read_text(encoding="utf-8"), expected)
         self.assertEqual((clone / WRAPPERS[0]).read_bytes(), (clone / WRAPPERS[1]).read_bytes())
 
     def test_conflicting_lead_wrapper_refuses_before_writing(self) -> None:
@@ -158,12 +192,14 @@ class LeadInstallationTest(unittest.TestCase):
         for args in ((), ("--apply",)):
             refused = self.install(*args)
             self.assertNotEqual(refused.returncode, 0)
-            self.assertIn(f"has {self.commit} checked out but the gitlink pins {other_commit}",
-                          refused.stderr)
+            self.assertIn(
+                f"has {self.commit} checked out but the gitlink pins {other_commit}", refused.stderr
+            )
             self.assertEqual(before, self.product_files())
             self.assertEqual(index, self.git("ls-files", "--stage").stdout)
-            self.assertEqual(self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(),
-                             self.commit)
+            self.assertEqual(
+                self.git("-C", ".the-way", "rev-parse", "HEAD").stdout.strip(), self.commit
+            )
 
 
 if __name__ == "__main__":

@@ -60,16 +60,23 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 SECTION = "searches not found or unclear"
-REMARKS_PREFIXES = ("process remark", "process improvements", "other process remarks",
-                    "searches not found")
+REMARKS_PREFIXES = (
+    "process remark",
+    "process improvements",
+    "other process remarks",
+    "searches not found",
+)
 
 # The number a report may put before a section's name: `12.`, `12)`, `3.1`, `3.1.`.
 SECTION_NUMBER = re.compile(r"\d+(?:\.\d+)*[.)]?[ \t]+")
 HEADING = re.compile(r" {0,3}(#{1,6})(?:[ \t]+(.*?))?(?:[ \t]+#+)?[ \t]*")
 FENCE = re.compile(r" {0,3}(`{3,}|~{3,})")
-LABEL = re.compile(r"(?P<indent>[ \t]*)(?:(?P<marker>[-*+]|\d+[.)])[ \t]+)?"
-                   r"\*\*[ \t]*Searches not found or unclear[ \t]*:?[ \t]*\*\*[ \t]*:?[ \t]*"
-                   r"(?P<rest>.*)", re.I)
+LABEL = re.compile(
+    r"(?P<indent>[ \t]*)(?:(?P<marker>[-*+]|\d+[.)])[ \t]+)?"
+    r"\*\*[ \t]*Searches not found or unclear[ \t]*:?[ \t]*\*\*[ \t]*:?[ \t]*"
+    r"(?P<rest>.*)",
+    re.I,
+)
 MARKER = re.compile(r"(?P<indent>[ \t]*)(?P<marker>[-*+]|\d+[.)])[ \t]+(?P<text>.*)")
 RULE = re.compile(r" {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*")
 BOLD_START = re.compile(r"[ \t]{0,3}\*\*")
@@ -115,8 +122,12 @@ def fenced_flags(lines: list[str]) -> list[bool]:
         match = FENCE.match(line)
         if fence:
             flags.append(True)
-            if match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence) \
-                    and not line.strip().strip(fence[0]):
+            if (
+                match
+                and match.group(1)[0] == fence[0]
+                and len(match.group(1)) >= len(fence)
+                and not line.strip().strip(fence[0])
+            ):
                 fence = ""
         elif match:
             fence = match.group(1)
@@ -129,14 +140,18 @@ def fenced_flags(lines: list[str]) -> list[bool]:
 def names_section(heading_text: str) -> bool:
     text = re.sub(r"[*_`]", "", heading_text).strip().rstrip(":").strip().casefold()
     number = SECTION_NUMBER.match(text)
-    text = text[number.end():] if number else text
-    return text.startswith(SECTION) and not text[len(SECTION):len(SECTION) + 1].isalnum()
+    text = text[number.end() :] if number else text
+    return text.startswith(SECTION) and not text[len(SECTION) : len(SECTION) + 1].isalnum()
 
 
 def is_report(path: Path) -> bool:
     """A file of `reports/` the script reads: a `.md` file whose name holds neither word."""
-    return (path.is_file() and path.name.endswith(".md")
-            and "handoff" not in path.name and "findings" not in path.name)
+    return (
+        path.is_file()
+        and path.name.endswith(".md")
+        and "handoff" not in path.name
+        and "findings" not in path.name
+    )
 
 
 def reads_none(item: str) -> bool:
@@ -178,8 +193,7 @@ def split_items(body: list[tuple[str, bool]]) -> list[str]:
             items.append(current)
         elif marker and current is not None:
             current.parts.append(text.strip())
-        elif current is None or (blank and (current.kind == "paragraph"
-                                            or indent <= (base or 0))):
+        elif current is None or (blank and (current.kind == "paragraph" or indent <= (base or 0))):
             current = Item("paragraph", [text.strip()])
             items.append(current)
         else:
@@ -197,9 +211,13 @@ def opens_paragraph(lines: list[str], fenced: list[bool], index: int) -> bool:
         # The line is not fenced itself, so the line before it can only be the closing fence.
         return True
     before = lines[index - 1]
-    return (not before.strip() or HEADING.fullmatch(before) is not None
-            or RULE.fullmatch(before) is not None or MARKER.fullmatch(before) is not None
-            or BOLD_START.match(before) is not None)
+    return (
+        not before.strip()
+        or HEADING.fullmatch(before) is not None
+        or RULE.fullmatch(before) is not None
+        or MARKER.fullmatch(before) is not None
+        or BOLD_START.match(before) is not None
+    )
 
 
 def label_end(lines: list[str], fenced: list[bool], start: int, indent: int, is_list: bool) -> int:
@@ -214,8 +232,9 @@ def label_end(lines: list[str], fenced: list[bool], start: int, indent: int, is_
                 if is_list:
                     if indent_of(line) <= indent:
                         break
-                elif RULE.fullmatch(line) or (BOLD_START.match(line)
-                                              and not MARKER.fullmatch(line)):
+                elif RULE.fullmatch(line) or (
+                    BOLD_START.match(line) and not MARKER.fullmatch(line)
+                ):
                     break
         end += 1
     return end
@@ -241,14 +260,15 @@ def section_items(text: str) -> list[str]:
                 if other and len(other.group(1)) <= level:
                     break
                 end += 1
-            found += split_items(list(zip(lines[index + 1:end], fenced[index + 1:end])))
+            found += split_items(list(zip(lines[index + 1 : end], fenced[index + 1 : end])))
             index = end
             continue
         label = LABEL.fullmatch(lines[index])
         if label and (label.group("marker") is not None or opens_paragraph(lines, fenced, index)):
-            end = label_end(lines, fenced, index, len(label.group("indent")),
-                            label.group("marker") is not None)
-            body = list(zip(lines[index + 1:end], fenced[index + 1:end]))
+            end = label_end(
+                lines, fenced, index, len(label.group("indent")), label.group("marker") is not None
+            )
+            body = list(zip(lines[index + 1 : end], fenced[index + 1 : end]))
             if label.group("rest").strip():
                 body.insert(0, (label.group("rest"), False))
             found += split_items(body)
@@ -271,7 +291,7 @@ def opens_block(line: str) -> str | None:
     body = line.lstrip(" \t")
     marker = DIGEST_MARKER.match(body)
     if marker:
-        return "bullet" if body[marker.end():].lower().startswith(REMARKS_PREFIXES) else None
+        return "bullet" if body[marker.end() :].lower().startswith(REMARKS_PREFIXES) else None
     return "paragraph" if body.lower().startswith(REMARKS_PREFIXES) else None
 
 
@@ -333,20 +353,25 @@ def read(path: Path) -> str:
         return path.read_text(encoding="utf-8-sig")
     except (OSError, UnicodeDecodeError) as error:
         raise RemarksCheckError(
-            f"cannot read {display(path)} as UTF-8: {display(error)}") from error
+            f"cannot read {display(path)} as UTF-8: {display(error)}"
+        ) from error
 
 
 def check(record: Path) -> Result:
     """The items of the reports of `record` that its process remarks do not hold."""
     cycle = record / "cycle.md"
     if not cycle.is_file():
-        raise RemarksCheckError(f"{display(record)} holds no cycle.md; give the cycle-record "
-                                f"directory")
+        raise RemarksCheckError(
+            f"{display(record)} holds no cycle.md; give the cycle-record directory"
+        )
     remarks = collapse(BLOCK_SEPARATOR.join(remark_blocks(read(cycle))))
     result = Result()
     reports_dir = record / "reports"
-    names = sorted(path.name for path in reports_dir.glob("*.md") if is_report(path)) \
-        if reports_dir.is_dir() else []
+    names = (
+        sorted(path.name for path in reports_dir.glob("*.md") if is_report(path))
+        if reports_dir.is_dir()
+        else []
+    )
     held: dict[str, int] = {}
     seen: Counter[str] = Counter()
     for name in names:
@@ -375,8 +400,10 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")
     for path, item in result.listed:
         sys.stdout.write(f"{display(path.as_posix())}: {display(item)}\n")
-    sys.stdout.write(f"checked: {result.reports} reports, {result.items} items other than none, "
-                     f"{len(result.listed)} not in the process remarks\n")
+    sys.stdout.write(
+        f"checked: {result.reports} reports, {result.items} items other than none, "
+        f"{len(result.listed)} not in the process remarks\n"
+    )
     return 1 if result.listed else 0
 
 

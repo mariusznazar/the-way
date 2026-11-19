@@ -33,7 +33,9 @@ def shown(text: str) -> list[str]:
 class WindowsPathTest(unittest.TestCase):
     def test_a_drive_path_with_backslashes_is_listed(self) -> None:
         text = "The worktree is C:" + BS + "Work" + BS + "proj" + BS + "wt, as the log says."
-        self.assertEqual(hits(text), [(1, "absolute path", "C:" + BS + "Work" + BS + "proj" + BS + "wt")])
+        self.assertEqual(
+            hits(text), [(1, "absolute path", "C:" + BS + "Work" + BS + "proj" + BS + "wt")]
+        )
 
     def test_a_drive_path_with_slashes_is_listed_in_either_case_of_the_letter(self) -> None:
         self.assertEqual(shown("at C:/Work/proj and d:/data/x"), ["C:/Work/proj", "d:/data/x"])
@@ -52,18 +54,27 @@ class WindowsPathTest(unittest.TestCase):
 
     def test_a_path_ends_before_a_space_a_quote_a_bracket_or_closing_punctuation(self) -> None:
         for text, expected in (
-                ("`C:/Work/proj/a.md`", "C:/Work/proj/a.md"),
-                ("(C:/Work/proj/a.md)", "C:/Work/proj/a.md"),
-                ('"C:/Work/proj/a.md"', "C:/Work/proj/a.md"),
-                ("see C:/Work/proj/a.md.", "C:/Work/proj/a.md"),
-                ("C:/Work/proj, then", "C:/Work/proj"),
-                ("C:/Work/Team Notes/x", "C:/Work/Team")):
+            ("`C:/Work/proj/a.md`", "C:/Work/proj/a.md"),
+            ("(C:/Work/proj/a.md)", "C:/Work/proj/a.md"),
+            ('"C:/Work/proj/a.md"', "C:/Work/proj/a.md"),
+            ("see C:/Work/proj/a.md.", "C:/Work/proj/a.md"),
+            ("C:/Work/proj, then", "C:/Work/proj"),
+            ("C:/Work/Team Notes/x", "C:/Work/Team"),
+        ):
             self.assertEqual(shown(text), [expected], text)
 
     def test_a_letter_that_ends_a_word_starts_no_drive(self) -> None:
         # A match there would list every URL and every `Note:` of prose.
-        for text in ("https://example.com/a/b", "http://host/c/d", "ftp://h/x", "Status: ok",
-                     "Note: a / b", "see Q: and A: b", "https://host/C:/x", "key:" + BS + "n and ab:" + BS + "x"):
+        for text in (
+            "https://example.com/a/b",
+            "http://host/c/d",
+            "ftp://h/x",
+            "Status: ok",
+            "Note: a / b",
+            "see Q: and A: b",
+            "https://host/C:/x",
+            "key:" + BS + "n and ab:" + BS + "x",
+        ):
             self.assertEqual(hits(text), [], text)
 
     def test_a_windows_path_written_in_the_form_of_an_address_is_listed(self) -> None:
@@ -93,8 +104,12 @@ class WindowsPathTest(unittest.TestCase):
             self.assertEqual(hits("s:" + BS + sequence), [], sequence)
 
     def test_a_real_path_that_starts_like_an_escape_sequence_is_still_listed(self) -> None:
-        for text in ("C:" + BS + "new" + BS + "dir", "C:" + BS + "n" + BS + "dir",
-                     "C:" + BS + "tmp", "C:" + BS + "n/x"):
+        for text in (
+            "C:" + BS + "new" + BS + "dir",
+            "C:" + BS + "n" + BS + "dir",
+            "C:" + BS + "tmp",
+            "C:" + BS + "n/x",
+        ):
             self.assertEqual(shown('p = "' + text + '"'), [text], text)
 
     def test_text_stuck_to_an_escape_sequence_is_still_listed(self) -> None:
@@ -112,42 +127,70 @@ class PosixPathTest(unittest.TestCase):
         self.assertEqual(shown("/c/Work/proj and /d/data"), ["/c/Work/proj", "/d/data"])
 
     def test_the_wsl_and_cygwin_forms_of_a_drive_are_listed(self) -> None:
-        self.assertEqual(shown("/mnt/c/Work/proj, /cygdrive/d/data"),
-                         ["/mnt/c/Work/proj", "/cygdrive/d/data"])
+        self.assertEqual(
+            shown("/mnt/c/Work/proj, /cygdrive/d/data"), ["/mnt/c/Work/proj", "/cygdrive/d/data"]
+        )
 
     def test_the_home_directories_of_linux_and_macos_are_listed(self) -> None:
-        self.assertEqual(shown("/home/alice/work and /Users/alice/Library/x"),
-                         ["/home/alice/work", "/Users/alice/Library/x"])
+        self.assertEqual(
+            shown("/home/alice/work and /Users/alice/Library/x"),
+            ["/home/alice/work", "/Users/alice/Library/x"],
+        )
 
     def test_a_home_directory_with_no_name_or_a_placeholder_is_no_hit(self) -> None:
         for text in ("the /home/ directory", "write /home/<you>/x", "the /Users/ folder"):
             self.assertEqual(hits(text), [], text)
 
     def test_text_that_only_looks_like_a_drive_or_a_home_is_no_hit(self) -> None:
-        for text in ("and/or", "w/o/x", "2026/11/07", "s/a/b/", "https://host/c/path",
-                     "https://example.com/home/alice", "x/home/alice", "../home/alice",
-                     "~/home/alice", "src/c/main.py", "a /cd/x", "/ab/x"):
+        for text in (
+            "and/or",
+            "w/o/x",
+            "2026/11/07",
+            "s/a/b/",
+            "https://host/c/path",
+            "https://example.com/home/alice",
+            "x/home/alice",
+            "../home/alice",
+            "~/home/alice",
+            "src/c/main.py",
+            "a /cd/x",
+            "/ab/x",
+        ):
             self.assertEqual(hits(text), [], text)
 
     def test_a_path_in_a_file_url_is_listed(self) -> None:
         # A file URL names a place on a disk, unlike a letter after a slash in a web address.
-        self.assertEqual(shown("file:///C:/Work/proj/a.md and file:///home/alice/x"),
-                         ["C:/Work/proj/a.md", "/home/alice/x"])
-        self.assertEqual(shown("file:///Users/alice/x and file:///mnt/c/Work"),
-                         ["/Users/alice/x", "/mnt/c/Work"])
+        self.assertEqual(
+            shown("file:///C:/Work/proj/a.md and file:///home/alice/x"),
+            ["C:/Work/proj/a.md", "/home/alice/x"],
+        )
+        self.assertEqual(
+            shown("file:///Users/alice/x and file:///mnt/c/Work"), ["/Users/alice/x", "/mnt/c/Work"]
+        )
 
     def test_a_home_path_reached_through_tilde_or_a_relative_path_is_not_listed(self) -> None:
-        for text in ("~/.claude/x", "../x/y", "./a/b", "task-cycle/remarks_check.py",
-                     BS + BS + "host" + BS + "share"):
+        for text in (
+            "~/.claude/x",
+            "../x/y",
+            "./a/b",
+            "task-cycle/remarks_check.py",
+            BS + BS + "host" + BS + "share",
+        ):
             self.assertEqual(hits(text), [], text)
 
 
 class NoteLinkTest(unittest.TestCase):
     def test_a_link_with_a_title_an_alias_a_heading_or_an_embed_is_listed(self) -> None:
         text = "[[Meetings]] [[Meetings|the notes]] [[Meetings#Plan]] ![[photo.png]]"
-        self.assertEqual(hits(text), [
-            (1, "note link", "[[Meetings]]"), (1, "note link", "[[Meetings|the notes]]"),
-            (1, "note link", "[[Meetings#Plan]]"), (1, "note link", "[[photo.png]]")])
+        self.assertEqual(
+            hits(text),
+            [
+                (1, "note link", "[[Meetings]]"),
+                (1, "note link", "[[Meetings|the notes]]"),
+                (1, "note link", "[[Meetings#Plan]]"),
+                (1, "note link", "[[photo.png]]"),
+            ],
+        )
 
     def test_a_link_in_front_matter_is_listed(self) -> None:
         text = '---\ntitle: "x"\nrelated: "[[(P) Project]]"\n---\n'
@@ -168,27 +211,57 @@ class NoteLinkTest(unittest.TestCase):
 
     def test_a_link_stuck_to_a_letter_a_digit_a_dot_or_an_underscore_is_no_hit(self) -> None:
         # `p.[[PromiseResult]]` is the internal slot of a specification, `a[[0]]` an index.
-        for text in ("p.[[PromiseResult]]", "a[[0]]", "rows[[1, 2]]", "x_[[Note]]", "v2[[Note]]",
-                     "zob.[[Notatka]]", "Zażółć[[Note]]"):
+        for text in (
+            "p.[[PromiseResult]]",
+            "a[[0]]",
+            "rows[[1, 2]]",
+            "x_[[Note]]",
+            "v2[[Note]]",
+            "zob.[[Notatka]]",
+            "Zażółć[[Note]]",
+        ):
             self.assertEqual(hits(text), [], text)
 
     def test_a_link_after_a_space_a_mark_or_the_start_of_the_line_is_listed(self) -> None:
-        for text in ("see [[Note]]", "[[Note]]", '"[[Note]]"', "(see [[Note]])", "-[[Note]]",
-                     "|[[Note]]", "![[Note]]", "x [[Note]]", "[[A]][[B]]"):
+        for text in (
+            "see [[Note]]",
+            "[[Note]]",
+            '"[[Note]]"',
+            "(see [[Note]])",
+            "-[[Note]]",
+            "|[[Note]]",
+            "![[Note]]",
+            "x [[Note]]",
+            "[[A]][[B]]",
+        ):
             self.assertTrue(hits(text), text)
 
     def test_links_are_not_looked_for_when_the_caller_asks_for_paths_only(self) -> None:
         text = "see [[Note]] and C:/Work/proj and [[Other]]"
-        self.assertEqual(private_paths_check.find_in_text(text, note_links=False),
-                         [(1, "absolute path", "C:/Work/proj")])
+        self.assertEqual(
+            private_paths_check.find_in_text(text, note_links=False),
+            [(1, "absolute path", "C:/Work/proj")],
+        )
         self.assertEqual(shown(text), ["[[Note]]", "C:/Work/proj", "[[Other]]"])
 
 
 class PosixClassTest(unittest.TestCase):
     # A character class of the shell in double brackets, `[[:space:]]`, is no note link; the
     # exception covers the twelve names of the classes and no other text between the colons.
-    CLASSES = ("alnum", "alpha", "blank", "cntrl", "digit", "graph", "lower", "print", "punct",
-               "space", "upper", "xdigit")
+    CLASSES = (
+        "alnum",
+        "alpha",
+        "blank",
+        "cntrl",
+        "digit",
+        "graph",
+        "lower",
+        "print",
+        "punct",
+        "space",
+        "upper",
+        "xdigit",
+    )
 
     def test_each_of_the_twelve_classes_in_double_brackets_is_no_link(self) -> None:
         for name in self.CLASSES:
@@ -204,13 +277,18 @@ class PosixClassTest(unittest.TestCase):
 
     def test_another_name_between_the_colons_is_still_a_link(self) -> None:
         for text in ("[[:other:]]", "[[:alphanumeric:]]", "[[:Space:]]", "see [[:punct:x]]"):
-            self.assertEqual(hits(text), [(1, "note link", text[text.index("[["):])], text)
+            self.assertEqual(hits(text), [(1, "note link", text[text.index("[[") :])], text)
 
     def test_a_real_link_and_a_path_on_a_line_with_a_class_are_still_listed(self) -> None:
         text = "grep '[[:alpha:]]' C:/Work/proj/a.md, see [[Notatka]] and [[(P) Loop]]"
-        self.assertEqual(hits(text), [(1, "absolute path", "C:/Work/proj/a.md"),
-                                      (1, "note link", "[[Notatka]]"),
-                                      (1, "note link", "[[(P) Loop]]")])
+        self.assertEqual(
+            hits(text),
+            [
+                (1, "absolute path", "C:/Work/proj/a.md"),
+                (1, "note link", "[[Notatka]]"),
+                (1, "note link", "[[(P) Loop]]"),
+            ],
+        )
 
 
 class PlaceTest(unittest.TestCase):
@@ -221,8 +299,9 @@ class PlaceTest(unittest.TestCase):
 
     def test_a_hit_inside_fenced_code_or_a_code_span_is_listed(self) -> None:
         text = "```\nC:/Work/proj\n```\n`[[Note]]`\n"
-        self.assertEqual(hits(text), [(2, "absolute path", "C:/Work/proj"),
-                                      (4, "note link", "[[Note]]")])
+        self.assertEqual(
+            hits(text), [(2, "absolute path", "C:/Work/proj"), (4, "note link", "[[Note]]")]
+        )
 
     def test_two_hits_on_one_line_are_two_hits(self) -> None:
         self.assertEqual(shown("C:/a/x and /home/bob/y [[Z]]"), ["C:/a/x", "/home/bob/y", "[[Z]]"])
@@ -262,8 +341,9 @@ class CommandTest(unittest.TestCase):
         code, out, err = run_main([str(self.root / "record")])
         self.assertEqual((code, err), (1, ""))
         base = (self.root / "record").as_posix()
-        self.assertEqual(self.listing(out),
-                         [f"{base}/cycle.md:3: absolute path: C:/Work/proj/task.md"])
+        self.assertEqual(
+            self.listing(out), [f"{base}/cycle.md:3: absolute path: C:/Work/proj/task.md"]
+        )
         self.assertEqual(out.splitlines()[-1], "checked: 1 files, 1 listed")
 
     def test_every_file_below_the_directory_is_read_in_the_order_of_its_path(self) -> None:
@@ -272,8 +352,10 @@ class CommandTest(unittest.TestCase):
         self.write("record/reports/a/z.md", "[[A]]\n")
         self.write("record/sub/deep/notes.txt", "D:/d\n")
         _, out, _ = run_main([str(self.root / "record")])
-        self.assertEqual([line.rsplit(": ", 1)[1] for line in self.listing(out)],
-                         ["/home/alice/c", "[[A]]", "[[B]]", "D:/d"])
+        self.assertEqual(
+            [line.rsplit(": ", 1)[1] for line in self.listing(out)],
+            ["/home/alice/c", "[[A]]", "[[B]]", "D:/d"],
+        )
 
     def test_a_single_file_is_read_alone(self) -> None:
         self.write("other.md", "[[Not read]]\n")
@@ -284,12 +366,16 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(out.splitlines()[-1], "checked: 1 files, 1 listed")
 
     def test_a_block_in_another_language_is_read_like_the_rest(self) -> None:
-        text = ("**State: ready** - ok\n\n<details>\n<summary>W Twoim jezyku</summary>\n\n"
-                "Zadanie jest w [[Notatka zadania]].\n\n</details>\n")
+        text = (
+            "**State: ready** - ok\n\n<details>\n<summary>W Twoim jezyku</summary>\n\n"
+            "Zadanie jest w [[Notatka zadania]].\n\n</details>\n"
+        )
         path = self.write("request.md", text)
         code, out, _ = run_main([str(path)])
         self.assertEqual(code, 1)
-        self.assertEqual(self.listing(out), [f"{path.as_posix()}:6: note link: [[Notatka zadania]]"])
+        self.assertEqual(
+            self.listing(out), [f"{path.as_posix()}:6: note link: [[Notatka zadania]]"]
+        )
 
     def test_a_file_checked_without_links_lists_its_paths_under_the_name_given(self) -> None:
         path = self.write("a/code.py", "x = [[address, 1]]\ny = 'C:/Work/proj'\n")
@@ -299,8 +385,10 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(result.files, 1)
         every = private_paths_check.Result()
         private_paths_check.check_file(path, every)
-        self.assertEqual([(entry[0], entry[1], entry[2]) for entry in every.listed],
-                         [(path.as_posix(), 1, "note link"), (path.as_posix(), 2, "absolute path")])
+        self.assertEqual(
+            [(entry[0], entry[1], entry[2]) for entry in every.listed],
+            [(path.as_posix(), 1, "note link"), (path.as_posix(), 2, "absolute path")],
+        )
 
     def test_the_command_still_lists_a_link_in_a_file_of_any_kind(self) -> None:
         # A copy of a record holds reports in `.txt` and `.jsonl`; a link there is a leak too.
@@ -308,15 +396,20 @@ class CommandTest(unittest.TestCase):
         self.write("record/log.jsonl", '{"text": "see [[Other]]"}\n')
         code, out, _ = run_main([str(self.root / "record")])
         self.assertEqual(code, 1)
-        self.assertEqual([line.rsplit(": ", 1)[1] for line in self.listing(out)],
-                         ["[[Other]]", "[[Note]]"])
+        self.assertEqual(
+            [line.rsplit(": ", 1)[1] for line in self.listing(out)], ["[[Other]]", "[[Note]]"]
+        )
 
     def test_a_text_that_is_not_ascii_is_listed_as_it_stands(self) -> None:
         path = self.write("request.md", "zob. [[Zażółć gęślą]] i C:/Praca/żółw\n")
         _, out, _ = run_main([str(path)])
-        self.assertEqual(self.listing(out), [
-            f"{path.as_posix()}:1: note link: [[Zażółć gęślą]]",
-            f"{path.as_posix()}:1: absolute path: C:/Praca/żółw"])
+        self.assertEqual(
+            self.listing(out),
+            [
+                f"{path.as_posix()}:1: note link: [[Zażółć gęślą]]",
+                f"{path.as_posix()}:1: absolute path: C:/Praca/żółw",
+            ],
+        )
 
     def test_a_binary_file_is_not_read_and_is_counted(self) -> None:
         self.write("record/cycle.md", "# Record\n")
@@ -332,8 +425,9 @@ class CommandTest(unittest.TestCase):
         (record / "report.md").write_bytes("see C:/Work/x\n".encode("utf-16"))
         code, out, _ = run_main([str(record)])
         self.assertEqual(code, 1)
-        self.assertEqual(self.listing(out),
-                         [f"{record.as_posix()}/report.md:1: absolute path: C:/Work/x"])
+        self.assertEqual(
+            self.listing(out), [f"{record.as_posix()}/report.md:1: absolute path: C:/Work/x"]
+        )
         self.assertEqual(out.splitlines()[-1], "checked: 1 files, 1 listed")
 
     def test_a_directory_with_no_file_lists_nothing(self) -> None:
@@ -366,8 +460,9 @@ class CommandTest(unittest.TestCase):
     def test_a_control_character_in_a_hit_is_shown_escaped(self) -> None:
         path = self.write("request.md", "C:/Work/x\x1by\n")
         _, out, _ = run_main([str(path)])
-        self.assertEqual(self.listing(out),
-                         [f"{path.as_posix()}:1: absolute path: C:/Work/x" + BS + "x1by"])
+        self.assertEqual(
+            self.listing(out), [f"{path.as_posix()}:1: absolute path: C:/Work/x" + BS + "x1by"]
+        )
 
 
 if __name__ == "__main__":

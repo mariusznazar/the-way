@@ -24,8 +24,16 @@ sys.path.insert(0, str(HERE))
 import review_reminder  # noqa: E402
 
 SKILL = "foundation-review/SKILL.md"
-IDENTITY = ["-c", "user.name=Test", "-c", "user.email=test@example.com",
-            "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false"]
+IDENTITY = [
+    "-c",
+    "user.name=Test",
+    "-c",
+    "user.email=test@example.com",
+    "-c",
+    "commit.gpgsign=false",
+    "-c",
+    "tag.gpgsign=false",
+]
 # What the skill puts where the date goes, and the date this test gives it.
 DATE_FORM = "YYYY-MM-DD"
 DATE = "2026-01-10"
@@ -52,15 +60,18 @@ def last_review_tag_after_tagging(name):
     """What the reader finds as the last review tag on a repository whose one commit carries a tag
     of this name, made as the skill makes it: annotated."""
     with tempfile.TemporaryDirectory() as directory:
-        for arguments in (["init", "--quiet"], ["commit", "--quiet", "--allow-empty", "-m", "root"],
-                          ["tag", "-a", "-m", "review", name]):
-            subprocess.run(["git", *IDENTITY, "-C", directory, *arguments], check=True,
-                           capture_output=True)
+        for arguments in (
+            ["init", "--quiet"],
+            ["commit", "--quiet", "--allow-empty", "-m", "root"],
+            ["tag", "-a", "-m", "review", name],
+        ):
+            subprocess.run(
+                ["git", *IDENTITY, "-C", directory, *arguments], check=True, capture_output=True
+            )
         return review_reminder.last_review_tag(Path(directory), "HEAD")
 
 
 class ReviewTagPattern(unittest.TestCase):
-
     def test_the_reader_finds_every_name_the_skill_gives(self):
         # invariant: review-tag-pattern
         # Break caught: renaming the tag in the skill, or the pattern in the script, in one place

@@ -26,16 +26,32 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parent.parent
 # The parts with Python code, as the directories that hold it.
-PARTS = ("agent-instructions", "elements", "gate", "installation", "instruction-files",
-         "process-audit", "product-guidelines", "project-level", "relation-model", "task-cycle")
+PARTS = (
+    "agent-instructions",
+    "elements",
+    "gate",
+    "installation",
+    "instruction-files",
+    "process-audit",
+    "product-guidelines",
+    "project-level",
+    "relation-model",
+    "task-cycle",
+)
 CLEAN_FILE = '"""A file that breaks no rule of the linter."""\n\nVALUE = 1\n'
 
 
 def main_checkout() -> Path:
     """The main checkout of the repository this file stands in, found through the common
     directory of git, which is the same from a working directory of a worktree."""
-    done = subprocess.run(["git", "rev-parse", "--git-common-dir"], cwd=ROOT, check=True,
-                          capture_output=True, text=True, encoding="utf-8")
+    done = subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
     # The common directory is relative to ROOT in a main checkout and absolute in a worktree.
     return (ROOT / done.stdout.strip()).resolve().parent
 
@@ -50,11 +66,26 @@ def run_ruff(*arguments: str, cwd: Path) -> subprocess.CompletedProcess[str]:
     """Runs the pinned Ruff with the configuration of the repository and no cache."""
     program = ruff_program()
     if not program.is_file():
-        raise AssertionError(f"Ruff is not installed at {program}; install it as the README of "
-                             "the-way tells under \"Installing the linter\"")
-    return subprocess.run([str(program), "check", "--config", str(ROOT / "ruff.toml"),
-                           "--no-cache", "--output-format", "concise", *arguments],
-                          cwd=cwd, capture_output=True, text=True, encoding="utf-8")
+        raise AssertionError(
+            f"Ruff is not installed at {program}; install it as the README of "
+            'the-way tells under "Installing the linter"'
+        )
+    return subprocess.run(
+        [
+            str(program),
+            "check",
+            "--config",
+            str(ROOT / "ruff.toml"),
+            "--no-cache",
+            "--output-format",
+            "concise",
+            *arguments,
+        ],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
 
 
 class Linter(unittest.TestCase):
@@ -66,12 +97,25 @@ class Linter(unittest.TestCase):
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
 
     def test_every_python_file_git_tracks_lies_in_a_part_the_check_reads(self) -> None:
-        done = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, check=True,
-                              capture_output=True, text=True, encoding="utf-8")
-        outside = [name for name in done.stdout.split("\0")
-                   if name.endswith(".py") and name.split("/")[0] not in PARTS]
-        self.assertEqual(outside, [], "a tracked Python file lies in no directory of PARTS: add "
-                         "its directory to PARTS and to the Scope of WAY-379")
+        done = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        outside = [
+            name
+            for name in done.stdout.split("\0")
+            if name.endswith(".py") and name.split("/")[0] not in PARTS
+        ]
+        self.assertEqual(
+            outside,
+            [],
+            "a tracked Python file lies in no directory of PARTS: add "
+            "its directory to PARTS and to the Scope of WAY-379",
+        )
 
     @unittest.expectedFailure
     def test_no_file_of_a_part_breaks_a_blocking_rule(self) -> None:

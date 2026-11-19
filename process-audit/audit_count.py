@@ -352,13 +352,30 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 from stage_pricing import (  # noqa: E402  the price of a stage's rows, in the directory of this file
-    NO_MODEL, TEXT_CAP, UNKNOWN, ModelPrice, Prices, StageTokens, is_orchestrator_row, priced,
-    priced_older)
+    NO_MODEL,
+    TEXT_CAP,
+    UNKNOWN,
+    ModelPrice,
+    Prices,
+    StageTokens,
+    is_orchestrator_row,
+    priced,
+    priced_older,
+)
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "task-cycle"))
 import remarks_check  # noqa: E402  the cutting of a record's lines, shared with its check
 from record_items import (  # noqa: E402  the reading of the items of a record
-    ITEM_DISCARDED, header_field, is_report_file, item_count_reason, item_texts, item_words,
-    read_contradiction, reads_none_first, review_rounds)
+    ITEM_DISCARDED,
+    header_field,
+    is_report_file,
+    item_count_reason,
+    item_texts,
+    item_words,
+    read_contradiction,
+    reads_none_first,
+    review_rounds,
+)
 
 display = remarks_check.display
 
@@ -385,15 +402,25 @@ GIT_TIMEOUT = 120
 COMMIT = r"(?<![0-9A-Za-z])(?=[0-9a-fA-F]*[0-9])[0-9a-fA-F]{7,40}(?![0-9A-Za-z])"
 COMMIT_IN_TEXT = re.compile(COMMIT)
 MOVED_PIN = re.compile(r"moved to `?(" + COMMIT + r")`?", re.I)
-REMARKS_OPENER = re.compile(r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on the-way(?![\w-])"
-                            r"[ \t]*:?[ \t]*(?P<rest>.*)")
+REMARKS_OPENER = re.compile(
+    r"(?P<indent>[ \t]*)[-*+][ \t]+Process remarks on the-way(?![\w-])"
+    r"[ \t]*:?[ \t]*(?P<rest>.*)"
+)
 DURATION = re.compile(r"(\d{1,7}):([0-5]\d):([0-5]\d)")
 WORKING_LINE = "- Working time without waiting for tools:"
 WAITING_LINE = "- Waiting for tools:"
 SECTION_TITLE = "Stages: start, waiting for tools and tokens by model"
 STAGES_HEADING = "## " + SECTION_TITLE
-STAGE_COLUMNS = ["#", "Stage", "Start", "Waiting for tools", "Model", "Input", "Cached input",
-                 "Output"]
+STAGE_COLUMNS = [
+    "#",
+    "Stage",
+    "Start",
+    "Waiting for tools",
+    "Model",
+    "Input",
+    "Cached input",
+    "Output",
+]
 FILES_COLUMN = "Files named"
 # The two columns of the cache writes of each lifetime, a pair that follows *Files named* in the
 # newest form of the section and is never missing when neither stands (WAY-344).
@@ -401,8 +428,11 @@ WRITE_5M_COLUMN = "Cache write (5 minutes)"
 WRITE_1H_COLUMN = "Cache write (1 hour)"
 WRITE_COLUMNS = [WRITE_5M_COLUMN, WRITE_1H_COLUMN]
 # The three forms of the header of the section, each a prefix of the next.
-SECTION_FORMS = (STAGE_COLUMNS, STAGE_COLUMNS + [FILES_COLUMN],
-                 STAGE_COLUMNS + [FILES_COLUMN] + WRITE_COLUMNS)
+SECTION_FORMS = (
+    STAGE_COLUMNS,
+    STAGE_COLUMNS + [FILES_COLUMN],
+    STAGE_COLUMNS + [FILES_COLUMN] + WRITE_COLUMNS,
+)
 # The table of tokens by model, which every form of `stages.md` has and the older form is read
 # from: the table whose header row begins with `Model`.
 MODEL_COLUMN = "Model"
@@ -413,8 +443,10 @@ OLDER_NEEDED = ("Input", "Cached input", "Output")
 FIELD_SECTION = f"section {SECTION_TITLE}"
 FIELD_SECTION_TABLE = f"table of the section {SECTION_TITLE}"
 FIELD_OLDER_TABLE = f"table with the first cell {MODEL_COLUMN}"
-OLDER_NO_TURNS = ("`stages.md` is of the older form, whose table of tokens by model gives no turns, "
-                  "so no round is tied to the turns that served it")
+OLDER_NO_TURNS = (
+    "`stages.md` is of the older form, whose table of tokens by model gives no turns, "
+    "so no round is tied to the turns that served it"
+)
 # A findings file is told by the word in its name, as the check of process remarks tells it
 # (WAY-294); used only to find a turn given a findings file the record does not name.
 FINDINGS_WORD = "findings"
@@ -438,8 +470,13 @@ COST_SCRIPTS = (COST_SCRIPT,)
 # change of any of them between two versions starts a series of the count of remarks and none of the
 # cost. The type of agent `the-way-stage.md` is here because the reviewer receives its text as its
 # instruction.
-COUNT_PATHS = ("task-cycle/change", "task-cycle/plan", "task-cycle/review", "task-cycle/spec",
-               "task-cycle/agent-types/the-way-stage.md")
+COUNT_PATHS = (
+    "task-cycle/change",
+    "task-cycle/plan",
+    "task-cycle/review",
+    "task-cycle/spec",
+    "task-cycle/agent-types/the-way-stage.md",
+)
 # The items of the record the questions of a process version read (task-cycle/record_template.md).
 ITEM_PLAN = "Plan"
 ITEM_TOO_LARGE = "Slices returned too large"
@@ -468,22 +505,38 @@ MEASURES_FILE = "mechanism_measures.md"
 GATE_FILE = "gate_times.md"
 # The causes of a copy's lacking the file of a script. `gate_times.md` is written only by a gate
 # run on the cycle's own system, so a cycle whose final gate ran in CI may hold none (WAY-160).
-ABSENCE_CAUSES = {MEASURES_FILE: "an earlier cycle, or a script that failed",
-                  GATE_FILE: "an earlier cycle, a final gate that ran in CI, or a script that failed"}
+ABSENCE_CAUSES = {
+    MEASURES_FILE: "an earlier cycle, or a script that failed",
+    GATE_FILE: "an earlier cycle, a final gate that ran in CI, or a script that failed",
+}
 MEASURE_LABELS = (
-    "Calls in all", "Calls of the orchestrator", "Calls of subagents", "Mean context per call",
+    "Calls in all",
+    "Calls of the orchestrator",
+    "Calls of subagents",
+    "Mean context per call",
     "Mean context per call of the orchestrator",
     "Share of the context in calls above 200000 tokens",
-    "Context of the orchestrator's first call", "Context of the orchestrator's middle call",
-    "Context of the orchestrator's last call", "Cache written, 5 minutes", "Cache written, 1 hour",
-    "Cache written again by the orchestrator", "Calls of the orchestrator with a cache write again",
-    "Cache written again by subagents", "Calls of subagents with a cache write again",
+    "Context of the orchestrator's first call",
+    "Context of the orchestrator's middle call",
+    "Context of the orchestrator's last call",
+    "Cache written, 5 minutes",
+    "Cache written, 1 hour",
+    "Cache written again by the orchestrator",
+    "Calls of the orchestrator with a cache write again",
+    "Cache written again by subagents",
+    "Calls of subagents with a cache write again",
 )
 SHARE_LABEL = "Share of the context in calls above 200000 tokens"
 MEASURE_WHOLE = re.compile(r"[0-9]{1,15}")
 MEASURE_SHARE = re.compile(r"([0-9]{1,3}\.[0-9])%")
-GATE_COLUMNS = ["Started (UTC)", "Exit code", "Total seconds", "Other gate runs at the same time",
-                "Directory", "Directory seconds"]
+GATE_COLUMNS = [
+    "Started (UTC)",
+    "Exit code",
+    "Total seconds",
+    "Other gate runs at the same time",
+    "Directory",
+    "Directory seconds",
+]
 GATE_RUN_COLUMNS = GATE_COLUMNS[:4]
 GATE_TABLE_FIELD = "table of the runs"
 GATE_STARTED = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}")
@@ -514,8 +567,11 @@ STAGES_FILE = "stages.md"
 WORKING_NAME = "Working time without waiting for tools"
 WAITING_NAME = "Waiting for tools"
 STAGES_VALUES = (WORKING_NAME, WAITING_NAME, "Cost", "Fix rounds share")
-TOOL_GROUPS = ((STAGES_FILE, COST_SCRIPTS), (MEASURES_FILE, (MEASURES_SCRIPT,)),
-               (GATE_FILE, GATE_SCRIPTS))
+TOOL_GROUPS = (
+    (STAGES_FILE, COST_SCRIPTS),
+    (MEASURES_FILE, (MEASURES_SCRIPT,)),
+    (GATE_FILE, GATE_SCRIPTS),
+)
 
 
 class AuditCountError(Exception):
@@ -555,16 +611,18 @@ def read_locations(name: str) -> dict:
         seen: dict[str, object] = {}
         for key, value in pairs:
             if key in seen:
-                raise AuditCountError(f"{label} holds the key "
-                                      f"`{display(key[:TEXT_CAP])}` twice in one object")
+                raise AuditCountError(
+                    f"{label} holds the key `{display(key[:TEXT_CAP])}` twice in one object"
+                )
             seen[key] = value
         return seen
 
     try:
         data = json.loads(text, object_pairs_hook=unique)
     except json.JSONDecodeError as error:
-        raise AuditCountError(f"{label} is not JSON: line {error.lineno}, column "
-                              f"{error.colno}") from None
+        raise AuditCountError(
+            f"{label} is not JSON: line {error.lineno}, column {error.colno}"
+        ) from None
     except ValueError:
         # A number of more digits than Python converts is no JSONDecodeError.
         raise AuditCountError(f"{label} is not JSON: it holds a number too long to read") from None
@@ -580,8 +638,9 @@ def key_object(locations: dict, key: str) -> dict:
         raise AuditCountError(f"the locations file holds no key `{display(key)}`")
     value = locations[key]
     if not isinstance(value, dict):
-        raise AuditCountError(f"the key `{display(key)}` of the locations file is not a JSON "
-                              f"object")
+        raise AuditCountError(
+            f"the key `{display(key)}` of the locations file is not a JSON object"
+        )
     return value
 
 
@@ -591,18 +650,20 @@ def entry_path(locations: dict, key: str, entry: str, kind: str) -> Path:
     where = f"the key `{display(entry)}` under `{display(key)}`"
     entries = key_object(locations, key)
     if entry not in entries:
-        raise AuditCountError(f"the locations file holds no key `{display(entry)}` under "
-                              f"`{display(key)}`")
+        raise AuditCountError(
+            f"the locations file holds no key `{display(entry)}` under `{display(key)}`"
+        )
     value = entries[entry]
     if not isinstance(value, str) or not value.strip():
         raise AuditCountError(f"{where} of the locations file is not a path written as a string")
     try:
         path = Path(value).expanduser()
         if not path.is_absolute():
-            raise AuditCountError(f"{where} of the locations file is not an absolute path or a "
-                                  f"path from `~`")
+            raise AuditCountError(
+                f"{where} of the locations file is not an absolute path or a path from `~`"
+            )
         exists = path.is_dir() if kind == "directory" else path.is_file()
-    except (OSError, ValueError, RuntimeError):
+    except OSError, ValueError, RuntimeError:
         exists = False
     if not exists:
         raise AuditCountError(f"the path of {where} of the locations file is no existing {kind}")
@@ -630,8 +691,10 @@ def repositories(locations: dict, named: list[str]) -> dict[str, Path]:
             if REPOSITORY_ENTRY in key_object(locations, key):
                 found[key] = entry_path(locations, key, REPOSITORY_ENTRY, "directory")
     if not found:
-        raise AuditCountError("no repository named in the locations file holds a key "
-                              "`repository`; add one or name a repository with --repository")
+        raise AuditCountError(
+            "no repository named in the locations file holds a key "
+            "`repository`; add one or name a repository with --repository"
+        )
     return dict(sorted(found.items()))
 
 
@@ -653,16 +716,28 @@ class Git:
     def execute(self, arguments: tuple[str, ...]) -> subprocess.CompletedProcess:
         # A `GIT_` variable of the environment the command starts in, such as GIT_DIR set by a
         # hook, would point git at another repository or add configuration: none is passed on.
-        environment = {name: value for name, value in os.environ.items()
-                       if not name.upper().startswith("GIT_")}
-        environment.update(GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never",
-                           GIT_OPTIONAL_LOCKS="0")
+        environment = {
+            name: value for name, value in os.environ.items() if not name.upper().startswith("GIT_")
+        }
+        environment.update(GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never", GIT_OPTIONAL_LOCKS="0")
         try:
             return subprocess.run(
-                ["git", "--no-pager", "-c", "core.fsmonitor=false", "-c", "log.showSignature=false",
-                 "-C", str(self.repository), *arguments], stdin=subprocess.DEVNULL,
+                [
+                    "git",
+                    "--no-pager",
+                    "-c",
+                    "core.fsmonitor=false",
+                    "-c",
+                    "log.showSignature=false",
+                    "-C",
+                    str(self.repository),
+                    *arguments,
+                ],
+                stdin=subprocess.DEVNULL,
                 capture_output=True,
-                timeout=GIT_TIMEOUT, env=environment)
+                timeout=GIT_TIMEOUT,
+                env=environment,
+            )
         except (OSError, subprocess.TimeoutExpired) as error:
             raise GitError(f"git {arguments[0]}: {display(error)}") from None
 
@@ -670,8 +745,7 @@ class Git:
         result = self.execute(arguments)
         if result.returncode != 0:
             detail = result.stderr.decode("utf-8", errors="replace").strip()
-            raise GitError(f"git {arguments[0]} failed ({result.returncode}): "
-                           f"{display(detail)}")
+            raise GitError(f"git {arguments[0]} failed ({result.returncode}): {display(detail)}")
         return result.stdout
 
     def code(self, *arguments: str) -> int:
@@ -687,6 +761,7 @@ class GateRun:
     """A run of `gate_times.md` as numbers, for the medians of a version: the count of other gate
     runs at the same time, the total seconds, the seconds of each directory and the exit code, each
     None where the file gives it as unknown or in a form that is not its column's."""
+
     others: int | None
     total: Decimal | None
     directories: list[tuple[str, Decimal | None]] = field(default_factory=list)
@@ -786,8 +861,10 @@ def process_pin(text_lines, fenced, own: bool) -> tuple[str | None, str | None]:
         return None, "the record holds no line `Process pin`"
     bases = header_fields(text_lines, fenced, "Target branch and base")
     if len(bases) != 1:
-        return None, ("the line `Process pin` names no commit, and the line "
-                      "`Target branch and base` is " + ("doubled" if bases else "missing"))
+        return None, (
+            "the line `Process pin` names no commit, and the line "
+            "`Target branch and base` is " + ("doubled" if bases else "missing")
+        )
     found = COMMIT_IN_TEXT.search(bases[0])
     if not found:
         return None, "neither the line `Process pin` nor `Target branch and base` names a commit"
@@ -797,8 +874,11 @@ def process_pin(text_lines, fenced, own: bool) -> tuple[str | None, str | None]:
 def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str | None]:
     """The number of sub-items under the item `Process remarks on the-way`, or None with the
     reason."""
-    openers = [index for index, line in enumerate(lines)
-               if not fenced[index] and REMARKS_OPENER.fullmatch(line)]
+    openers = [
+        index
+        for index, line in enumerate(lines)
+        if not fenced[index] and REMARKS_OPENER.fullmatch(line)
+    ]
     if not openers:
         return None, "the record holds no item `Process remarks on the-way`: an earlier form"
     if len(openers) > 1:
@@ -807,7 +887,7 @@ def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str
     opener = REMARKS_OPENER.fullmatch(lines[start])
     base = remarks_check.indent_of(lines[start])
     markers: list[int] = []
-    for line, inside_fence in zip(lines[start + 1:], fenced[start + 1:]):
+    for line, inside_fence in zip(lines[start + 1 :], fenced[start + 1 :]):
         if not line.strip():
             continue
         indent = remarks_check.indent_of(line)
@@ -819,15 +899,21 @@ def remarks_count(lines: list[str], fenced: list[bool]) -> tuple[int | None, str
         return markers.count(min(markers)), None
     if remarks_check.reads_none(opener.group("rest")):
         return 0, None
-    return None, ("the item `Process remarks on the-way` holds no sub-items under it and does not "
-                  "read `none`: an earlier form")
+    return None, (
+        "the item `Process remarks on the-way` holds no sub-items under it and does not "
+        "read `none`: an earlier form"
+    )
 
 
-def stages_time(lines: list[str], fenced: list[bool], prefix: str,
-                what: str) -> tuple[int | None, str | None]:
+def stages_time(
+    lines: list[str], fenced: list[bool], prefix: str, what: str
+) -> tuple[int | None, str | None]:
     """The seconds a line of `stages.md` gives, or None with the reason."""
-    values = [line[len(prefix):].strip() for line, inside_fence in zip(lines, fenced)
-              if not inside_fence and line.startswith(prefix)]
+    values = [
+        line[len(prefix) :].strip()
+        for line, inside_fence in zip(lines, fenced)
+        if not inside_fence and line.startswith(prefix)
+    ]
     if not values:
         return None, f"`stages.md` holds no line `{prefix[2:-1]}`: an earlier form"
     if len(values) > 1:
@@ -908,9 +994,14 @@ def read_prices(name: str) -> Prices:
     fenced = remarks_check.fenced_flags(lines)
     dates = header_fields(lines, fenced, PRICE_HEADING)
     if len(dates) != 1:
-        raise AuditCountError(f"{label} "
-                              + ("holds the line `List date` more than once" if dates
-                                 else "holds no line `List date`"))
+        raise AuditCountError(
+            f"{label} "
+            + (
+                "holds the line `List date` more than once"
+                if dates
+                else "holds no line `List date`"
+            )
+        )
     if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", dates[0]):
         raise AuditCountError(f"the line `List date` of {label} is no date written YYYY-MM-DD")
     try:
@@ -928,8 +1019,9 @@ def read_prices(name: str) -> Prices:
             if cells[:1] == [PRICE_MODEL]:
                 lacking = [name_of for name_of in PRICE_COLUMNS if name_of not in cells]
                 if lacking:
-                    raise AuditCountError(f"a table of {label} lacks the column "
-                                          f"{', '.join(lacking)}")
+                    raise AuditCountError(
+                        f"a table of {label} lacks the column {', '.join(lacking)}"
+                    )
                 columns = [cells.index(name_of) for name_of in PRICE_COLUMNS]
             continue
         if is_separator(cells):
@@ -948,12 +1040,17 @@ def read_prices(name: str) -> Prices:
             else:
                 # A typo would otherwise leave the model unpriced, and every cycle that used it
                 # would point away from the list.
-                raise AuditCountError(f"a price of model `{display(model[:TEXT_CAP])}` in {label} "
-                                      "is neither a number nor `—`")
+                raise AuditCountError(
+                    f"a price of model `{display(model[:TEXT_CAP])}` in {label} "
+                    "is neither a number nor `—`"
+                )
         # A `—` in *Input*, *Cached input* or *Output* is a model with no price at all; one in a
         # write column leaves only that lifetime with no price.
-        table[model] = None if any(number is None for number in numbers[:3]) else ModelPrice(
-            numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
+        table[model] = (
+            None
+            if any(number is None for number in numbers[:3])
+            else ModelPrice(numbers[0], numbers[1], numbers[2], numbers[3], numbers[4])
+        )
     if not table:
         raise AuditCountError(f"{label} names no model")
     return Prices(dates[0], table)
@@ -986,6 +1083,7 @@ class StageTable:
     (`older`); `named` is whether the section's table has the column *Files named*. `rows` is None
     with the `reason` where they cannot be read; `missing` holds the fields the form needs that the
     file lacks (WAY-344), which are no refusal of the form but a field not found."""
+
     rows: list[StageTokens] | None = None
     named: bool = False
     older: bool = False
@@ -1004,8 +1102,11 @@ def stage_table(lines: list[str], fenced: list[bool]) -> StageTable:
     section, and is read from the table of that section; without the heading the file is of the
     older form, read from its table of tokens by model. A file with neither lacks the section and
     the table (WAY-344)."""
-    headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
-                if not inside and line.strip() == STAGES_HEADING]
+    headings = [
+        index
+        for index, (line, inside) in enumerate(zip(lines, fenced))
+        if not inside and line.strip() == STAGES_HEADING
+    ]
     if len(headings) > 1:
         return StageTable(reason="`stages.md` holds that section more than once")
     if headings:
@@ -1020,7 +1121,7 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     section. The two columns of the cache writes are a pair: with neither the table is of an earlier
     form, and with one the other is a field missing."""
     table: list[list[str]] = []
-    for line, inside in zip(lines[heading + 1:], fenced[heading + 1:]):
+    for line, inside in zip(lines[heading + 1 :], fenced[heading + 1 :]):
         if inside:
             continue
         if line.startswith("#"):
@@ -1028,20 +1129,26 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
         if line.startswith("|"):
             table.append(table_cells(line))
     if not table:
-        return StageTable(reason="the section in `stages.md` holds no table",
-                          missing=[FIELD_SECTION_TABLE])
+        return StageTable(
+            reason="the section in `stages.md` holds no table", missing=[FIELD_SECTION_TABLE]
+        )
     where = f"of the section {SECTION_TITLE}"
     absent = missing_columns(table[0], STAGE_COLUMNS, where)
     written = [name for name in WRITE_COLUMNS if name in table[0]]
     if len(written) == 1:
-        absent += missing_columns(table[0], [name for name in WRITE_COLUMNS if name not in written],
-                                  where)
+        absent += missing_columns(
+            table[0], [name for name in WRITE_COLUMNS if name not in written], where
+        )
     if absent:
-        return StageTable(reason="the table of the section in `stages.md` lacks a column",
-                          missing=absent)
+        return StageTable(
+            reason="the table of the section in `stages.md` lacks a column", missing=absent
+        )
     if table[0] not in SECTION_FORMS:
-        return StageTable(reason=("the table of the section in `stages.md` is not of the form the "
-                                  "stage report gives"))
+        return StageTable(
+            reason=(
+                "the table of the section in `stages.md` is not of the form the stage report gives"
+            )
+        )
     named = len(table[0]) > len(STAGE_COLUMNS)
     writes = len(table[0]) > len(STAGE_COLUMNS) + 1
     columns = len(table[0])
@@ -1051,14 +1158,21 @@ def section_table(lines: list[str], fenced: list[bool], heading: int) -> StageTa
     rows: list[StageTokens] = []
     for cells in body:
         if len(cells) != columns:
-            return StageTable(reason=(f"a row of the section in `stages.md` has {len(cells)} "
-                                      f"cells, not {columns}"))
+            return StageTable(
+                reason=(
+                    f"a row of the section in `stages.md` has {len(cells)} cells, not {columns}"
+                )
+            )
         counts = [token_count(cells[index]) for index in (5, 6, 7)]
         if writes:
             counts += [token_count(cells[index]) for index in (9, 10)]
         if any(count is None for count in counts):
-            return StageTable(reason=("a token count in the section of `stages.md` is not a number "
-                                      f"of at most {TOKEN_DIGITS} digits"))
+            return StageTable(
+                reason=(
+                    "a token count in the section of `stages.md` is not a number "
+                    f"of at most {TOKEN_DIGITS} digits"
+                )
+            )
         row = StageTokens(cells[0], cells[1], cells[4], *counts[:3])
         if writes:
             row.write_5m, row.write_1h = counts[3], counts[4]
@@ -1074,26 +1188,41 @@ def older_table(lines: list[str], fenced: list[bool]) -> StageTable:
     and the table; written twice, no row is chosen and the cost is unknown with no field missing;
     a header row without one of the columns the cost needs is a field missing, and in another
     order, or with another column beside them, none is and the table is refused."""
-    starts = [index for index, (line, inside) in enumerate(zip(lines, fenced))
-              if not inside and line.startswith("|") and table_cells(line)[:1] == [MODEL_COLUMN]
-              and (index == 0 or fenced[index - 1] or not lines[index - 1].startswith("|"))]
+    starts = [
+        index
+        for index, (line, inside) in enumerate(zip(lines, fenced))
+        if not inside
+        and line.startswith("|")
+        and table_cells(line)[:1] == [MODEL_COLUMN]
+        and (index == 0 or fenced[index - 1] or not lines[index - 1].startswith("|"))
+    ]
     if not starts:
-        return StageTable(reason=("`stages.md` holds neither the section `" + SECTION_TITLE
-                                  + "` nor a table of tokens by model"),
-                          missing=[FIELD_SECTION, FIELD_OLDER_TABLE])
+        return StageTable(
+            reason=(
+                "`stages.md` holds neither the section `"
+                + SECTION_TITLE
+                + "` nor a table of tokens by model"
+            ),
+            missing=[FIELD_SECTION, FIELD_OLDER_TABLE],
+        )
     if len(starts) > 1:
         return StageTable(reason="`stages.md` holds the table of tokens by model more than once")
     start = starts[0]
     header = table_cells(lines[start])
     absent = missing_columns(header, OLDER_NEEDED, f"with the first cell {MODEL_COLUMN}")
     if absent:
-        return StageTable(reason="the table of tokens by model in `stages.md` lacks a column",
-                          missing=absent)
+        return StageTable(
+            reason="the table of tokens by model in `stages.md` lacks a column", missing=absent
+        )
     form = "the table of tokens by model in `stages.md` is not of the form the stage report gives"
     if header != OLDER_COLUMNS:
         return StageTable(reason=form)
-    if (start + 1 >= len(lines) or fenced[start + 1] or not lines[start + 1].startswith("|")
-            or not is_separator(table_cells(lines[start + 1]))):
+    if (
+        start + 1 >= len(lines)
+        or fenced[start + 1]
+        or not lines[start + 1].startswith("|")
+        or not is_separator(table_cells(lines[start + 1]))
+    ):
         return StageTable(reason=form)
     body: list[list[str]] = []
     for index in range(start + 2, len(lines)):
@@ -1105,13 +1234,21 @@ def older_table(lines: list[str], fenced: list[bool]) -> StageTable:
     rows: list[StageTokens] = []
     for number, cells in enumerate(body, 1):
         if len(cells) != len(OLDER_COLUMNS):
-            return StageTable(reason=(f"a row of the table of tokens by model in `stages.md` has "
-                                      f"{len(cells)} cells, not {len(OLDER_COLUMNS)}"))
+            return StageTable(
+                reason=(
+                    f"a row of the table of tokens by model in `stages.md` has "
+                    f"{len(cells)} cells, not {len(OLDER_COLUMNS)}"
+                )
+            )
         counts = [token_count(cells[index]) for index in range(1, len(OLDER_COLUMNS))]
         if any(count is None for count in counts):
-            return StageTable(reason=("a token count in the table of tokens by model in "
-                                      f"`stages.md` is not a number of at most {TOKEN_DIGITS} "
-                                      "digits"))
+            return StageTable(
+                reason=(
+                    "a token count in the table of tokens by model in "
+                    f"`stages.md` is not a number of at most {TOKEN_DIGITS} "
+                    "digits"
+                )
+            )
         rows.append(StageTokens(str(number), cells[0], cells[0], counts[1], counts[2], counts[3]))
     return StageTable(rows=rows, older=True)
 
@@ -1131,8 +1268,11 @@ def read_plan(lines: list[str], fenced: list[bool]) -> tuple[bool, int | None, s
         return False, None, "the item `Plan` names no count of slices"
     figures = SLICES_COUNT.findall(text)
     if len(figures) != 1:
-        return False, None, ("the item `Plan` does not give one count of slices before the word "
-                             "`slices`")
+        return (
+            False,
+            None,
+            ("the item `Plan` does not give one count of slices before the word `slices`"),
+        )
     return False, int(figures[0]), None
 
 
@@ -1145,22 +1285,26 @@ def read_too_large(lines: list[str], fenced: list[bool]) -> tuple[int | None, st
     rest, below = items[0]
     if reads_none_first(rest) and not any(text.strip() for text, _ in below):
         return 0, None
-    markers = [remarks_check.indent_of(text) for text, inside in below
-               if not inside and remarks_check.MARKER.fullmatch(text)]
+    markers = [
+        remarks_check.indent_of(text)
+        for text, inside in below
+        if not inside and remarks_check.MARKER.fullmatch(text)
+    ]
     if rest.strip() or not markers:
-        return None, ("the item `Slices returned too large` reads neither none nor a sub-item "
-                      "per slice")
+        return None, (
+            "the item `Slices returned too large` reads neither none nor a sub-item per slice"
+        )
     base = min(markers)
     return sum(1 for indent in markers if indent == base), None
 
 
-def process_questions(cycle: Cycle, lines: list[str] | None, fenced: list[bool] | None,
-                      reason: str | None) -> None:
+def process_questions(
+    cycle: Cycle, lines: list[str] | None, fenced: list[bool] | None, reason: str | None
+) -> None:
     """Read the questions of a process version from the cycle's record; a value that cannot be
     read is `unknown` with its reason, and the record missing makes all of them unknown."""
     if lines is None or fenced is None:
-        cycle.unknown += [(ITEM_DISCARDED, reason), (ITEM_PLAN, reason),
-                          (ITEM_TOO_LARGE, reason)]
+        cycle.unknown += [(ITEM_DISCARDED, reason), (ITEM_PLAN, reason), (ITEM_TOO_LARGE, reason)]
         return
     cycle.contradiction, why = read_contradiction(lines, fenced)
     if why:
@@ -1175,17 +1319,24 @@ def process_questions(cycle: Cycle, lines: list[str] | None, fenced: list[bool] 
         cycle.unknown.append((ITEM_TOO_LARGE, why))
     elif cycle.planned is not None and cycle.too_large > cycle.planned:
         cycle.too_large = None
-        cycle.unknown.append((ITEM_TOO_LARGE,
-                              "more slices are returned too large than the plan made"))
+        cycle.unknown.append(
+            (ITEM_TOO_LARGE, "more slices are returned too large than the plan made")
+        )
 
 
 def missing_reason(name: str, file: str = "stages.md") -> str:
     return f"the file `{file}` of the copy lacks the field `{name}`"
 
 
-def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[bool] | None,
-             record_reason: str | None, stages_lines: list[str], stages_fenced: list[bool],
-             prices: Prices) -> None:
+def add_cost(
+    cycle: Cycle,
+    record_lines: list[str] | None,
+    record_fenced: list[bool] | None,
+    record_reason: str | None,
+    stages_lines: list[str],
+    stages_fenced: list[bool],
+    prices: Prices,
+) -> None:
     """The cycle's cost at the list's prices and the share of its fix rounds in it; a value that
     cannot be given is `unknown` with its reason, never zero. A field the form of `stages.md` needs
     and the file lacks is also put on the cycle's `missing`, for the `Error:` line (WAY-344)."""
@@ -1194,8 +1345,10 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
         if table.missing:
             for name in table.missing:
                 cycle.missing.append(name)
-                cycle.unknown += [("Cost", missing_reason(name)),
-                                  ("Fix rounds share", missing_reason(name))]
+                cycle.unknown += [
+                    ("Cost", missing_reason(name)),
+                    ("Fix rounds share", missing_reason(name)),
+                ]
         else:
             cycle.unknown += [("Cost", table.reason), ("Fix rounds share", table.reason)]
         return
@@ -1205,8 +1358,10 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
         return
     total = sum(costs, Decimal(0))
     if total >= COST_CEILING:
-        cycle.unknown += [("Cost", "the cost is at or above the command's limit of 10^18 USD"),
-                          ("Fix rounds share", "the cost is at or above the command's limit")]
+        cycle.unknown += [
+            ("Cost", "the cost is at or above the command's limit of 10^18 USD"),
+            ("Fix rounds share", "the cost is at or above the command's limit"),
+        ]
         return
     cycle.cost = total
     if table.older:
@@ -1228,8 +1383,14 @@ def add_cost(cycle: Cycle, record_lines: list[str] | None, record_fenced: list[b
         cycle.unknown.append(("Fix rounds share", reason))
 
 
-def fix_rounds_share(rows: list[StageTokens], costs: list[Decimal], total: Decimal, named: bool,
-                     findings: list[str], cycle: Cycle) -> str | None:
+def fix_rounds_share(
+    rows: list[StageTokens],
+    costs: list[Decimal],
+    total: Decimal,
+    named: bool,
+    findings: list[str],
+    cycle: Cycle,
+) -> str | None:
     """Set the share of the cost spent in the fix rounds whose findings files the record names:
     the cost of the subagent turns given one of those files, each turn once, over the cycle's
     cost (WAY-337). Returns the reason where it cannot be given."""
@@ -1243,39 +1404,53 @@ def fix_rounds_share(rows: list[StageTokens], costs: list[Decimal], total: Decim
         if is_orchestrator_row(row.name):
             continue
         if not row.files_read:
-            return (f"the cell `{FILES_COLUMN}` of stage `{row.name[:TEXT_CAP]}` is not a list of "
-                    "files of `reports/`")
+            return (
+                f"the cell `{FILES_COLUMN}` of stage `{row.name[:TEXT_CAP]}` is not a list of "
+                "files of `reports/`"
+            )
         if row.number in turns:
             # The model rows of one turn repeat its stage and its files; rows that disagree do
             # not tell which of them the turn was given.
             files, spent = turns[row.number]
             if names[row.number] != row.name or files != row.files:
-                return (f"the rows of stage number {row.number[:TEXT_CAP]} disagree in their stage "
-                        f"or in their cell `{FILES_COLUMN}`")
+                return (
+                    f"the rows of stage number {row.number[:TEXT_CAP]} disagree in their stage "
+                    f"or in their cell `{FILES_COLUMN}`"
+                )
             turns[row.number] = (files, spent + cost)
         else:
             turns[row.number] = (row.files, cost)
             names[row.number] = row.name
     given = [files for files, _ in turns.values() if files is not None]
     unread = len(turns) - len(given)
-    extra = sorted({path for files in given for path in files
-                    if FINDINGS_WORD in path.rsplit("/", 1)[-1]} - set(findings))
+    extra = sorted(
+        {path for files in given for path in files if FINDINGS_WORD in path.rsplit("/", 1)[-1]}
+        - set(findings)
+    )
     if extra:
-        return (f"{len(extra)} findings file(s) the subagent turns were given are not named by "
-                f"the item `Review rounds`, which names {len(findings)}: the record and "
-                "`stages.md` do not agree")
+        return (
+            f"{len(extra)} findings file(s) the subagent turns were given are not named by "
+            f"the item `Review rounds`, which names {len(findings)}: the record and "
+            "`stages.md` do not agree"
+        )
     if unread:
         # Such a turn may be a fix or the review of a fix: neither `none` nor a share without it
         # can be told.
-        return (f"the message of {unread} subagent turn(s) could not be read, so whether they "
-                "serve a fix round is not known")
+        return (
+            f"the message of {unread} subagent turn(s) could not be read, so whether they "
+            "serve a fix round is not known"
+        )
     for path in findings:
         count = sum(1 for files in given if path in files)
         if count < 2:
-            return (f"the findings file `{path}` that the item `Review rounds` names is named by "
-                    f"{count} subagent turn(s), and a round has a fix and the review of that fix")
-    spent = sum((cost for files, cost in turns.values()
-                 if files is not None and files & set(findings)), Decimal(0))
+            return (
+                f"the findings file `{path}` that the item `Review rounds` names is named by "
+                f"{count} subagent turn(s), and a round has a fix and the review of that fix"
+            )
+    spent = sum(
+        (cost for files, cost in turns.values() if files is not None and files & set(findings)),
+        Decimal(0),
+    )
     cycle.share = spent / total * 100
     return None
 
@@ -1310,20 +1485,24 @@ def read_file(git: Git, entries: dict, path: bytes) -> tuple[str | None, str | N
         return None, f"`{name}` of the copy is not UTF-8"
 
 
-def read_optional(git: Git, entries: dict, prefix: bytes,
-                  name: str) -> tuple[str | None, str | None]:
+def read_optional(
+    git: Git, entries: dict, prefix: bytes, name: str
+) -> tuple[str | None, str | None]:
     """The text of a file of the copy that an earlier form lacks, or None with the reason: the
     copy may be of an earlier cycle or of one whose script failed, and for `gate_times.md` of one
     whose final gate ran in CI."""
     path = prefix + name.encode("ascii")
     if path not in entries:
-        return None, (f"the copy holds no `{name}`: {ABSENCE_CAUSES[name]} "
-                      "(the record's *Verification* says which)")
+        return None, (
+            f"the copy holds no `{name}`: {ABSENCE_CAUSES[name]} "
+            "(the record's *Verification* says which)"
+        )
     return read_file(git, entries, path)
 
 
-def guarded_optional(git: Git, entries: dict, prefix: bytes,
-                     name: str) -> tuple[str | None, str | None]:
+def guarded_optional(
+    git: Git, entries: dict, prefix: bytes, name: str
+) -> tuple[str | None, str | None]:
     """`read_optional`, with a failure of git on this file given as its reason."""
     try:
         return read_optional(git, entries, prefix, name)
@@ -1358,31 +1537,36 @@ def read_measures(cycle: Cycle, text: str | None, reason: str | None) -> None:
                 cycle.missing_in.append((MEASURES_FILE, label))
                 cycle.unknown.append((label, missing_reason(label, MEASURES_FILE)))
             else:
-                cycle.unknown.append((label, f"`{MEASURES_FILE}` lacks a field, so its values "
-                                             "are unknown"))
+                cycle.unknown.append(
+                    (label, f"`{MEASURES_FILE}` lacks a field, so its values are unknown")
+                )
         return
     for label in MEASURE_LABELS:
         values = found[label]
         if len(values) > 1:
-            cycle.unknown.append((label, f"`{MEASURES_FILE}` holds the line `{label}` more than "
-                                         "once"))
+            cycle.unknown.append(
+                (label, f"`{MEASURES_FILE}` holds the line `{label}` more than once")
+            )
         elif values[0] == UNKNOWN:
             cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it as unknown"))
         elif measure_fits(label, values[0]):
             cycle.measures[label] = values[0]
         else:
-            cycle.unknown.append((label, f"`{MEASURES_FILE}` gives it in a form that is not what "
-                                         "its label gives"))
+            cycle.unknown.append(
+                (label, f"`{MEASURES_FILE}` gives it in a form that is not what its label gives")
+            )
 
 
-def gate_value(reasons: list[tuple[str, str]], column: str, value: str, pattern: re.Pattern,
-               why: str) -> str:
+def gate_value(
+    reasons: list[tuple[str, str]], column: str, value: str, pattern: re.Pattern, why: str
+) -> str:
     """A cell of a run in `gate_times.md` as written where it has the form of its column, else
     `unknown` with the reason kept in `reasons` under the value `Gate runs: <column>`."""
     if pattern.fullmatch(value):
         return value
-    reasons.append((f"Gate runs: {column}",
-                    f"`{GATE_FILE}` gives it as unknown" if value == UNKNOWN else why))
+    reasons.append(
+        (f"Gate runs: {column}", f"`{GATE_FILE}` gives it as unknown" if value == UNKNOWN else why)
+    )
     return UNKNOWN
 
 
@@ -1396,8 +1580,14 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
         return
     lines = remarks_check.split_lines(text)
     fenced = remarks_check.fenced_flags(lines)
-    header = next((index for index, (line, inside) in enumerate(zip(lines, fenced))
-                   if not inside and line.startswith("|")), None)
+    header = next(
+        (
+            index
+            for index, (line, inside) in enumerate(zip(lines, fenced))
+            if not inside and line.startswith("|")
+        ),
+        None,
+    )
     if header is None:
         cycle.missing_in.append((GATE_FILE, GATE_TABLE_FIELD))
         cycle.unknown.append(("Gate runs", missing_reason(GATE_TABLE_FIELD, GATE_FILE)))
@@ -1430,12 +1620,21 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
         key = None if wide else [cells[at[name]] for name in GATE_RUN_COLUMNS]
         if wide or last is None or key != last:
             if len(runs) >= MAX_RUNS:
-                reasons.append(("Gate runs", f"`{GATE_FILE}` holds more than {MAX_RUNS} runs: the "
-                                             "rest are not read"))
+                reasons.append(
+                    (
+                        "Gate runs",
+                        f"`{GATE_FILE}` holds more than {MAX_RUNS} runs: the rest are not read",
+                    )
+                )
                 break
             if wide:
-                reasons.append(("Gate runs", f"a row of the table in `{GATE_FILE}` has "
-                                             f"{len(cells)} cells, not {len(names)}"))
+                reasons.append(
+                    (
+                        "Gate runs",
+                        f"a row of the table in `{GATE_FILE}` has "
+                        f"{len(cells)} cells, not {len(names)}",
+                    )
+                )
                 runs.append((None, []))
                 last = None
                 continue
@@ -1449,14 +1648,25 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
             cut_directories = True
             continue
         directories.append((directory, seconds))
-    if any(not fenced[index] and lines[index].startswith("|")
-           for index in range(table_end, len(lines))):
-        reasons.append(("Gate runs", f"`{GATE_FILE}` holds a row after a line that is not a row of "
-                                     "the table: the rows after it are not read"))
+    if any(
+        not fenced[index] and lines[index].startswith("|") for index in range(table_end, len(lines))
+    ):
+        reasons.append(
+            (
+                "Gate runs",
+                f"`{GATE_FILE}` holds a row after a line that is not a row of "
+                "the table: the rows after it are not read",
+            )
+        )
     if cut_directories:
-        reasons.append(("Gate runs: Directories", f"a run in `{GATE_FILE}` lists more than "
-                                                  f"{MAX_DIRECTORIES} directories: the rest are "
-                                                  "not listed"))
+        reasons.append(
+            (
+                "Gate runs: Directories",
+                f"a run in `{GATE_FILE}` lists more than "
+                f"{MAX_DIRECTORIES} directories: the rest are "
+                "not listed",
+            )
+        )
     for key, directories in runs:
         if key is None:
             cycle.gate_runs.append([UNKNOWN] * 5)
@@ -1465,33 +1675,52 @@ def read_gate(cycle: Cycle, text: str | None, reason: str | None) -> None:
         started, code, total, others = [
             gate_value(reasons, column, value, pattern, why)
             for column, value, pattern, why in zip(
-                GATE_RUN_COLUMNS, key,
+                GATE_RUN_COLUMNS,
+                key,
                 (GATE_STARTED, GATE_CODE, GATE_TOTAL, GATE_OTHERS),
-                ("a start is not written YYYY-MM-DD HH:MM:SS.mmm",
-                 "an exit code is not a whole number",
-                 "a total is not written as seconds to three decimals",
-                 "a count of other gate runs is not a whole number"))]
+                (
+                    "a start is not written YYYY-MM-DD HH:MM:SS.mmm",
+                    "an exit code is not a whole number",
+                    "a total is not written as seconds to three decimals",
+                    "a count of other gate runs is not a whole number",
+                ),
+            )
+        ]
         listed = []
         # The numbers of the run: a directory written twice in it counts once, at its first time.
-        timed = GateRun(None if others == UNKNOWN else int(others),
-                        None if total == UNKNOWN else Decimal(total),
-                        code=None if code == UNKNOWN else int(code))
+        timed = GateRun(
+            None if others == UNKNOWN else int(others),
+            None if total == UNKNOWN else Decimal(total),
+            code=None if code == UNKNOWN else int(code),
+        )
         named: set[str] = set()
         for name, seconds in directories:
-            seconds = gate_value(reasons, "Directory seconds", seconds, GATE_SECONDS,
-                                 "the seconds of a directory are not a number")
-            listed.append(f"{name[:TEXT_CAP]} " + (seconds if seconds == UNKNOWN
-                                                   else seconds + " s"))
+            seconds = gate_value(
+                reasons,
+                "Directory seconds",
+                seconds,
+                GATE_SECONDS,
+                "the seconds of a directory are not a number",
+            )
+            listed.append(
+                f"{name[:TEXT_CAP]} " + (seconds if seconds == UNKNOWN else seconds + " s")
+            )
             if name[:TEXT_CAP] in named:
-                reasons.append(("Gate runs: Directories",
-                                f"a run in `{GATE_FILE}` lists a directory twice: only its first "
-                                "time is counted in the medians"))
+                reasons.append(
+                    (
+                        "Gate runs: Directories",
+                        f"a run in `{GATE_FILE}` lists a directory twice: only its first "
+                        "time is counted in the medians",
+                    )
+                )
                 continue
             named.add(name[:TEXT_CAP])
-            timed.directories.append((name[:TEXT_CAP],
-                                      None if seconds == UNKNOWN else Decimal(seconds)))
-        cycle.gate_runs.append([started, code, total, others,
-                                DIRECTORY_SEPARATOR.join(listed) or GATE_NONE])
+            timed.directories.append(
+                (name[:TEXT_CAP], None if seconds == UNKNOWN else Decimal(seconds))
+            )
+        cycle.gate_runs.append(
+            [started, code, total, others, DIRECTORY_SEPARATOR.join(listed) or GATE_NONE]
+        )
         cycle.gate_timed.append(timed)
     cycle.unknown.extend(dict.fromkeys(reasons))
 
@@ -1511,8 +1740,9 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
     else:
         # Each of the two optional files stands in a `try` of its own: a git failure on one leaves
         # the files that were read.
-        measures, gate = (guarded_optional(git, entries, prefix, name)
-                          for name in (MEASURES_FILE, GATE_FILE))
+        measures, gate = (
+            guarded_optional(git, entries, prefix, name) for name in (MEASURES_FILE, GATE_FILE)
+        )
     record_lines = record_fenced = None
     if record is None:
         cycle.unknown += [("Process pin", record_reason), ("Remarks", record_reason)]
@@ -1526,8 +1756,15 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         if reason:
             cycle.unknown.append(("Remarks", reason))
     process_questions(cycle, record_lines, record_fenced, record_reason)
-    cycle.held = {name for name, text in ((STAGES_FILE, stages), (MEASURES_FILE, measures[0]),
-                                          (GATE_FILE, gate[0])) if text is not None}
+    cycle.held = {
+        name
+        for name, text in (
+            (STAGES_FILE, stages),
+            (MEASURES_FILE, measures[0]),
+            (GATE_FILE, gate[0]),
+        )
+        if text is not None
+    }
     # The two files after the record's own values, so that the rows of *Unknown values* of a
     # cycle keep their order.
     read_measures(cycle, *measures)
@@ -1541,8 +1778,9 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
     # neither is an earlier form, whose two times are unknown with no field missing.
     has_working = has_line(lines, fenced, WORKING_LINE)
     has_waiting = has_line(lines, fenced, WAITING_LINE)
-    cycle.working, reason = stages_time(lines, fenced, WORKING_LINE,
-                                        "working time without waiting for tools")
+    cycle.working, reason = stages_time(
+        lines, fenced, WORKING_LINE, "working time without waiting for tools"
+    )
     if has_waiting and not has_working:
         reason = missing_line(cycle, WORKING_LINE)
     if reason:
@@ -1561,7 +1799,7 @@ def committed_date(stamp: str) -> str | None:
     it, and one such commit must not end the count of every repository."""
     try:
         return datetime.fromtimestamp(int(stamp), timezone.utc).date().isoformat()
-    except (OSError, OverflowError, ValueError):
+    except OSError, OverflowError, ValueError:
         return None
 
 
@@ -1572,14 +1810,35 @@ def read_repository(key: str, path: Path, prices: Prices) -> Read:
     try:
         git.run("rev-parse", "--git-dir")
         result.shallow = git.run("rev-parse", "--is-shallow-repository").strip() == b"true"
-        listed = git.run("log", "--full-history", "--branches", "--remotes", "--diff-filter=A",
-                         "--no-renames", "--topo-order", "--reverse", "--format=%H %ct", "--",
-                         RECORD_PATHSPEC).decode("ascii")
+        listed = git.run(
+            "log",
+            "--full-history",
+            "--branches",
+            "--remotes",
+            "--diff-filter=A",
+            "--no-renames",
+            "--topo-order",
+            "--reverse",
+            "--format=%H %ct",
+            "--",
+            RECORD_PATHSPEC,
+        ).decode("ascii")
         copies: dict[bytes, list[tuple[str, str]]] = {}
         for line in listed.splitlines():
             commit, _, stamp = line.partition(" ")
-            added = git.run("diff-tree", "--root", "--no-commit-id", "-r", "-z", "--no-renames",
-                            "--diff-filter=A", "--name-only", commit, "--", RECORD_PATHSPEC)
+            added = git.run(
+                "diff-tree",
+                "--root",
+                "--no-commit-id",
+                "-r",
+                "-z",
+                "--no-renames",
+                "--diff-filter=A",
+                "--name-only",
+                commit,
+                "--",
+                RECORD_PATHSPEC,
+            )
             for name in added.split(b"\0"):
                 parts = name.split(b"/")
                 if len(parts) == 4 and parts[3] == b"cycle.md" and parts[2]:
@@ -1590,12 +1849,18 @@ def read_repository(key: str, path: Path, prices: Prices) -> Read:
     for folder, commits in copies.items():
         first, stamp = commits[0]
         committed = committed_date(stamp)
-        cycle = Cycle(key, display(folder.decode("utf-8", errors="replace")), first,
-                      committed or UNKNOWN, [commit for commit, _ in commits[1:]],
-                      {commit: committed_date(when) or UNKNOWN for commit, when in commits})
+        cycle = Cycle(
+            key,
+            display(folder.decode("utf-8", errors="replace")),
+            first,
+            committed or UNKNOWN,
+            [commit for commit, _ in commits[1:]],
+            {commit: committed_date(when) or UNKNOWN for commit, when in commits},
+        )
         if committed is None:
-            cycle.unknown.append(("Committed", "the commit's date lies outside the years the "
-                                               "command can read"))
+            cycle.unknown.append(
+                ("Committed", "the commit's date lies outside the years the command can read")
+            )
         fill(cycle, git, commits[-1][0], folder, key == THE_WAY, prices)
         result.cycles.append(cycle)
     result.cycles.sort(key=lambda cycle: (cycle.committed, cycle.folder, cycle.record))
@@ -1611,8 +1876,19 @@ REGISTER_TABLES = (
     ("Weights", ["Weight", "Meaning"]),
     (COSTS_TITLE, ["Cost of an occurrence", "Meaning"]),
     ("Issues", ["Issue", "What", "Fate", "Fix"]),
-    ("Problems", ["Repository", "Record", "Stages", "What", "Class", "Weight",
-                  "Cost of an occurrence", "Issue"]),
+    (
+        "Problems",
+        [
+            "Repository",
+            "Record",
+            "Stages",
+            "What",
+            "Class",
+            "Weight",
+            "Cost of an occurrence",
+            "Issue",
+        ],
+    ),
 )
 # The scale of weight has these four levels and no other.
 LEVELS = ["no problem", "Minor", "Important", "Critical"]
@@ -1637,6 +1913,7 @@ SHORT_HASH = re.compile(r"[0-9a-f]{7,40}")
 @dataclass
 class Problem:
     """A row of the table *Problems* that the checks accept."""
+
     number: int
     repository: str
     record: str
@@ -1650,6 +1927,7 @@ class Problem:
 class Register:
     """What the register gives: its classes and issues in the order of their tables, the problems
     that pass the checks, and each refused row or table with its reason."""
+
     classes: list[str] = field(default_factory=list)
     issues: list[tuple[str, str, str]] = field(default_factory=list)
     problems: list[Problem] = field(default_factory=list)
@@ -1719,8 +1997,9 @@ def check_issue(cells: list[str]) -> tuple[str, str | None]:
     return name, None
 
 
-def named_rows(register: Register, title: str, rows: list[list[str]], width: int,
-               check) -> list[tuple[str, int, list[str]]]:
+def named_rows(
+    register: Register, title: str, rows: list[list[str]], width: int, check
+) -> list[tuple[str, int, list[str]]]:
     """The rows of one table that pass `check`, as (name, row number, cells) in table order. A row
     of the wrong width or refused by `check` is refused with its reason; a name written in two
     rows refuses both of them."""
@@ -1761,8 +2040,9 @@ def level_faults(rows: list[list[str]], levels: list[str]) -> str | None:
     return " and ".join(parts) or None
 
 
-def check_levels(register: Register, title: str, rows: list[list[str]], levels: list[str],
-                 check) -> None:
+def check_levels(
+    register: Register, title: str, rows: list[list[str]], levels: list[str], check
+) -> None:
     """Refuse the rows of a table of levels that `check` refuses, and where the table does not name
     each of its levels once, add an `Error:` of the register that names the level it lacks or
     writes twice (WAY-344). The result is still written: what depends on the table is unknown."""
@@ -1774,20 +2054,26 @@ def check_levels(register: Register, title: str, rows: list[list[str]], levels: 
         register.refuse(f"table `{title}`", why)
 
 
-def register_table(lines: list[str], fenced: list[bool], title: str, columns: list[str],
-                   missing: list[str]) -> tuple[list[list[str]] | None, str | None]:
+def register_table(
+    lines: list[str], fenced: list[bool], title: str, columns: list[str], missing: list[str]
+) -> tuple[list[list[str]] | None, str | None]:
     """The rows of the table under the heading `## <title>`, or None with the reason. The table
     starts at the first line that begins with `|` before the next heading, and its header row must
     be `columns`; its rows run on until a line that does not begin with `|`. A heading, a table or
     a column the register lacks is a field missing (WAY-344): it is added to `missing`, in words
     that name it, as well as returned as the reason."""
-    headings = [index for index, (line, inside) in enumerate(zip(lines, fenced))
-                if not inside and line.strip() == f"## {title}"]
+    headings = [
+        index
+        for index, (line, inside) in enumerate(zip(lines, fenced))
+        if not inside and line.strip() == f"## {title}"
+    ]
     if len(headings) != 1:
         if not headings:
             missing.append(f"the heading `## {title}`")
-        return None, (f"the register holds the heading `## {title}` "
-                      + ("more than once" if headings else "not at all"))
+        return None, (
+            f"the register holds the heading `## {title}` "
+            + ("more than once" if headings else "not at all")
+        )
     start = None
     for index in range(headings[0] + 1, len(lines)):
         if fenced[index]:
@@ -1808,8 +2094,11 @@ def register_table(lines: list[str], fenced: list[bool], title: str, columns: li
         missing.extend(f"the column `{name}` of the table `{title}`" for name in absent)
         return None, f"the table `{title}` does not have the header row the template gives"
     separator = start + 1
-    if (separator >= len(lines) or not lines[separator].startswith("|")
-            or not is_separator(table_cells(lines[separator]))):
+    if (
+        separator >= len(lines)
+        or not lines[separator].startswith("|")
+        or not is_separator(table_cells(lines[separator]))
+    ):
         return None, f"the table `{title}` lacks its separator row"
     rows = []
     for index in range(separator + 1, len(lines)):
@@ -1828,8 +2117,9 @@ def read_register(path: Path) -> Register:
         with open(path, "rb") as handle:
             raw = handle.read(MAX_BYTES + 1)
     except OSError as error:
-        raise AuditCountError("cannot read the register of problems: "
-                              f"{display(error.strerror or error)}") from None
+        raise AuditCountError(
+            f"cannot read the register of problems: {display(error.strerror or error)}"
+        ) from None
     if len(raw) > MAX_BYTES:
         raise AuditCountError(f"the register of problems is larger than {MAX_BYTES} bytes")
     try:
@@ -1854,8 +2144,10 @@ def read_register(path: Path) -> Register:
     if tables["Classes"] is None:
         register.class_dates_unknown = True
     else:
-        register.classes = [name for name, _, _ in
-                            named_rows(register, "Classes", tables["Classes"], 4, check_class)]
+        register.classes = [
+            name
+            for name, _, _ in named_rows(register, "Classes", tables["Classes"], 4, check_class)
+        ]
         for cells in tables["Classes"]:
             if len(cells) != 4 or check_class(cells)[1] is not None:
                 register.class_dates_unknown = True
@@ -1867,18 +2159,25 @@ def read_register(path: Path) -> Register:
     if tables[COSTS_TITLE] is not None:
         check_levels(register, COSTS_TITLE, tables[COSTS_TITLE], COST_LEVELS, check_cost_level)
     if tables["Issues"] is not None:
-        register.issues = [(name, cells[2], cells[3].lower()) for name, _, cells in
-                           named_rows(register, "Issues", tables["Issues"], 4, check_issue)]
+        register.issues = [
+            (name, cells[2], cells[3].lower())
+            for name, _, cells in named_rows(register, "Issues", tables["Issues"], 4, check_issue)
+        ]
     if tables["Problems"] is not None:
         class_names = set(register.classes)
         issue_names = {name for name, _, _ in register.issues}
         for number, cells in enumerate(tables["Problems"], 1):
             value = f"row {number} of `Problems`"
             if len(cells) != 8:
-                register.refuse(value, f"the row has {len(cells)} cells, not 8",
-                                cells[0] if cells else "", cells[1] if len(cells) > 1 else "")
-                register.refused_problems.append((cells[0] if cells else "",
-                                                  cells[1] if len(cells) > 1 else "", ""))
+                register.refuse(
+                    value,
+                    f"the row has {len(cells)} cells, not 8",
+                    cells[0] if cells else "",
+                    cells[1] if len(cells) > 1 else "",
+                )
+                register.refused_problems.append(
+                    (cells[0] if cells else "", cells[1] if len(cells) > 1 else "", "")
+                )
                 continue
             repository, record, _, _, cls, weight, cost, issue = cells
             why = None
@@ -1898,8 +2197,9 @@ def read_register(path: Path) -> Register:
                 register.refuse(value, why, repository, record)
                 register.refused_problems.append((repository, record, issue))
                 continue
-            register.problems.append(Problem(number, repository, record.lower(), cls, weight,
-                                             cost, issue))
+            register.problems.append(
+                Problem(number, repository, record.lower(), cls, weight, cost, issue)
+            )
     return register
 
 
@@ -1965,8 +2265,10 @@ class Ancestry:
             return True, None
         if code == 1:
             if self.shallow:
-                return None, ("the version lacks the fix in a shallow clone of the-way, which may "
-                              "lack its history")
+                return None, (
+                    "the version lacks the fix in a shallow clone of the-way, which may "
+                    "lack its history"
+                )
             return False, None
         return None, f"git could not compare the version {pin} with the fix (exit code {code})"
 
@@ -2002,6 +2304,7 @@ class Analysis:
     as (repository, record, value, why) (`unknown`), and the values the register holds back, its
     refused rows and problems whose cycle is not read (`held`); both go into the pairs of
     *Unknown values* alike."""
+
     cycle_rows: list[list[str]]
     fixed_rows: list[list[str]]
     open_rows: list[list[str]]
@@ -2011,8 +2314,7 @@ class Analysis:
     held: list[tuple[str, str, str, str]]
 
 
-def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
-            today: date) -> Analysis:
+def analyse(reads: list["Read"], register: Register, ancestry: Ancestry, today: date) -> Analysis:
     """Count the register's problems against the cycles the reads found: per cycle by class and
     weight, per fixed issue by whether the pin of its cycles holds the fix, and
     per open issue the cycles it came back in and the days it has waited."""
@@ -2028,8 +2330,9 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
     # The problems of a *Record* that names several cycles count in none of them, so the counts of
     # each of those cycles read `at least n`.
     uncounted: Counter = Counter()
-    found = [(problem, index.get((problem.repository, problem.record)))
-             for problem in register.problems]
+    found = [
+        (problem, index.get((problem.repository, problem.record))) for problem in register.problems
+    ]
     # The values the register holds back are its refused rows and the problems whose cycle is not
     # read; every unknown value, those included, is grouped by field and reason in `unknown_rows`.
     held = list(register.refused)
@@ -2044,13 +2347,22 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         if key in shared:
             for owner in shared[key]:
                 uncounted[(owner.repository, owner.record)] += 1
-            why = ("its Record is a commit that adds the records of more than one cycle, so the "
-                   "cycle it belongs to is not known")
+            why = (
+                "its Record is a commit that adds the records of more than one cycle, so the "
+                "cycle it belongs to is not known"
+            )
         else:
-            why = ("no named repository holds the cycle of its record; name its key with "
-                   "--repository")
-        held.append((problem.repository[:TEXT_CAP], problem.record,
-                     f"row {problem.number} of `Problems`", why))
+            why = (
+                "no named repository holds the cycle of its record; name its key with --repository"
+            )
+        held.append(
+            (
+                problem.repository[:TEXT_CAP],
+                problem.record,
+                f"row {problem.number} of `Problems`",
+                why,
+            )
+        )
     # A refused row belongs to the cycle its Repository and Record name, and to the issue its Issue
     # names, when each is usable; a row with neither stays in *Unknown values* only. Its count shows
     # as `at least n`, since the row's own figure is not in the count.
@@ -2078,8 +2390,9 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         for cls in register.classes:
             tally = [mine[(cls, weight)] for weight in LEVELS]
             if any(tally):
-                rows_here.append(head + [cls] + [counted(count, partial) for count in tally]
-                                 + [str(refused)])
+                rows_here.append(
+                    head + [cls] + [counted(count, partial) for count in tally] + [str(refused)]
+                )
         if not rows_here:
             rows_here.append(head + [NONE] + [counted(0, partial)] * 4 + [str(refused)])
         cycle_rows += rows_here
@@ -2094,10 +2407,12 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
         # problem of a cycle that is not read is counted, and a refused row makes the count a lower
         # bound.
         levels = Counter(problem.cost for problem, _ in members)
-        cost_rows.append([name, fate] + [counted(levels[level], refused_issue[name])
-                                         for level in COST_LEVELS] + [str(refused_issue[name])])
-        hit = {(cycle.repository, cycle.record): cycle for _, cycle in members
-               if cycle is not None}
+        cost_rows.append(
+            [name, fate]
+            + [counted(levels[level], refused_issue[name]) for level in COST_LEVELS]
+            + [str(refused_issue[name])]
+        )
+        hit = {(cycle.repository, cycle.record): cycle for _, cycle in members if cycle is not None}
         not_read = sum(1 for _, cycle in members if cycle is None)
         refused = refused_issue[name]
         if fate == FIXED:
@@ -2119,37 +2434,69 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
                         holding += 1
                     else:
                         lacking += 1
-            shown = (["unknown", "unknown"] if fixed is None
-                     else [counted(holding, refused), counted(lacking, refused)])
-            fixed_rows.append([name, fix] + shown + [counted(pin_unknown, refused),
-                                                     counted(not_read, refused), str(refused)])
+            shown = (
+                ["unknown", "unknown"]
+                if fixed is None
+                else [counted(holding, refused), counted(lacking, refused)]
+            )
+            fixed_rows.append(
+                [name, fix]
+                + shown
+                + [counted(pin_unknown, refused), counted(not_read, refused), str(refused)]
+            )
         elif fate == "open":
             # Each problem waits from the copy its Record names, which after a correction may be
             # a later copy than the cycle's first.
-            dates = [cycle.copies.get(problem.record, cycle.committed)
-                     for problem, cycle in members if cycle is not None]
+            dates = [
+                cycle.copies.get(problem.record, cycle.committed)
+                for problem, cycle in members
+                if cycle is not None
+            ]
             if refused:
                 days = UNKNOWN
-                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                "some of its problem rows are refused, so its waiting is not "
-                                "known"))
+                unknown.append(
+                    (
+                        THE_WAY,
+                        NONE,
+                        f"waiting of issue `{name}`",
+                        "some of its problem rows are refused, so its waiting is not known",
+                    )
+                )
             elif not members:
                 days = "—"
             elif not_read:
                 days = UNKNOWN
-                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                "a problem's cycle is not known, so the day it came back first is "
-                                "not known"))
+                unknown.append(
+                    (
+                        THE_WAY,
+                        NONE,
+                        f"waiting of issue `{name}`",
+                        "a problem's cycle is not known, so the day it came back first is "
+                        "not known",
+                    )
+                )
             elif UNKNOWN in dates:
                 days = UNKNOWN
-                unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                "the commit date of the copy one of its problems names is unknown"))
+                unknown.append(
+                    (
+                        THE_WAY,
+                        NONE,
+                        f"waiting of issue `{name}`",
+                        "the commit date of the copy one of its problems names is unknown",
+                    )
+                )
             else:
                 waited = (today - date.fromisoformat(min(dates))).days
                 if waited < 0:
                     days = UNKNOWN
-                    unknown.append((THE_WAY, NONE, f"waiting of issue `{name}`",
-                                    "its earliest copy is dated after the day of the run"))
+                    unknown.append(
+                        (
+                            THE_WAY,
+                            NONE,
+                            f"waiting of issue `{name}`",
+                            "its earliest copy is dated after the day of the run",
+                        )
+                    )
                 else:
                     days = str(waited)
             # The problem stands in the first cycle it is found in and comes back in each other
@@ -2157,14 +2504,35 @@ def analyse(reads: list["Read"], register: Register, ancestry: Ancestry,
             # A refused row or a problem of an unread cycle may belong to a cycle not counted
             # here, so the count is a lower bound then: at least the known cycles less one.
             came_back = max(len(hit) - 1, 0)
-            open_rows.append([name, counted(came_back, refused + not_read),
-                              counted(len(members), refused), counted(not_read, refused), days,
-                              str(refused)])
+            open_rows.append(
+                [
+                    name,
+                    counted(came_back, refused + not_read),
+                    counted(len(members), refused),
+                    counted(not_read, refused),
+                    days,
+                    str(refused),
+                ]
+            )
         else:
-            dropped_rows.append([name, counted(len(hit), refused), counted(len(members), refused),
-                                 counted(not_read, refused), str(refused)])
-    return Analysis(cycle_rows, fixed_rows, open_rows, dropped_rows, cost_rows,
-                    list(dict.fromkeys(unknown)), list(dict.fromkeys(held)))
+            dropped_rows.append(
+                [
+                    name,
+                    counted(len(hit), refused),
+                    counted(len(members), refused),
+                    counted(not_read, refused),
+                    str(refused),
+                ]
+            )
+    return Analysis(
+        cycle_rows,
+        fixed_rows,
+        open_rows,
+        dropped_rows,
+        cost_rows,
+        list(dict.fromkeys(unknown)),
+        list(dict.fromkeys(held)),
+    )
 
 
 def unknown_field(value: str) -> str:
@@ -2187,8 +2555,10 @@ def unknown_rows(unknown: list[tuple[str, str, str, str]]) -> list[list[str]]:
         shown = examples.setdefault(key, [])
         if len(shown) < EXAMPLES:
             shown.append(f"{repository} {record}: {value}")
-    return [[field_text, str(counts[(field_text, why)]), why,
-             "; ".join(examples[(field_text, why)])] for field_text, why in counts]
+    return [
+        [field_text, str(counts[(field_text, why)]), why, "; ".join(examples[(field_text, why)])]
+        for field_text, why in counts
+    ]
 
 
 # The process versions (WAY-339)
@@ -2198,6 +2568,7 @@ def unknown_rows(unknown: list[tuple[str, str, str, str]]) -> list[list[str]]:
 class Version:
     """A version of the process: the full commit of the-way that cycles pin, its committer date
     as a Unix time and as a day, the price list its costs are priced by, and its cycles."""
+
     commit: str
     stamp: int
     day: str
@@ -2209,6 +2580,7 @@ class Version:
 class Series:
     """A run of versions between which no change splits a series: why it begins with its first
     version, its versions, and the rows of its table."""
+
     begins: str
     versions: list[Version]
     rows: list[list[str]] = field(default_factory=list)
@@ -2229,10 +2601,22 @@ class Versions:
 
 SERIES_COST = "Cost"
 SERIES_COUNT = "Count of remarks"
-COST_HEADER = ["Version (commit)", "Committed", "Cycles", "Cycles with a known cost",
-               "Median cost (USD)", "Q3: cost falls"]
-COUNT_HEADER = ["Version (commit)", "Committed", "Cycles", "Q1: contradiction only after code",
-                "Plans read", "Q2: more than a third of slices too large"]
+COST_HEADER = [
+    "Version (commit)",
+    "Committed",
+    "Cycles",
+    "Cycles with a known cost",
+    "Median cost (USD)",
+    "Q3: cost falls",
+]
+COUNT_HEADER = [
+    "Version (commit)",
+    "Committed",
+    "Cycles",
+    "Q1: contradiction only after code",
+    "Plans read",
+    "Q2: more than a third of slices too large",
+]
 
 
 def median_of(costs: list[Decimal]) -> Decimal | None:
@@ -2250,8 +2634,9 @@ def median_of(costs: list[Decimal]) -> Decimal | None:
 FIRST_VERSION = "the first version of the result"
 
 
-def changed_paths(ancestry: Ancestry, earlier: str, later: str,
-                  paths: tuple[str, ...]) -> list[str]:
+def changed_paths(
+    ancestry: Ancestry, earlier: str, later: str, paths: tuple[str, ...]
+) -> list[str]:
     """The paths of `paths` whose files differ between two full commit hashes of the-way, none
     where no file does: `git diff --quiet` of each, a failure counting as changed, so that a series
     is never joined by mistake (WAY-339)."""
@@ -2264,8 +2649,9 @@ def names_of(paths: list[str]) -> str:
     return " and ".join(f"`{path}`" for path in paths)
 
 
-def changed_reason(ancestry: Ancestry, earlier: str, later: str,
-                   paths: tuple[str, ...]) -> str | None:
+def changed_reason(
+    ancestry: Ancestry, earlier: str, later: str, paths: tuple[str, ...]
+) -> str | None:
     """None where the files at `paths` do not differ between two full commit hashes of the-way,
     else a reason that names the paths that changed (WAY-339)."""
     changed = changed_paths(ancestry, earlier, later, paths)
@@ -2315,13 +2701,18 @@ def note_changed_tools(reads: list["Read"], ancestry: Ancestry) -> None:
                 continue
             last = cycle.later[-1] if cycle.later else cycle.record
             for file, paths in TOOL_GROUPS:
-                changed = (changed_paths(ancestry, version, last, paths)
-                           if file in cycle.held else [])
+                changed = (
+                    changed_paths(ancestry, version, last, paths) if file in cycle.held else []
+                )
                 if changed:
-                    withdraw_values(cycle, file, f"the cycle changed the tool that wrote them: "
-                                                 f"{names_of(changed)} changed between the "
-                                                 f"version it ran on and the last copy of its "
-                                                 f"record")
+                    withdraw_values(
+                        cycle,
+                        file,
+                        f"the cycle changed the tool that wrote them: "
+                        f"{names_of(changed)} changed between the "
+                        f"version it ran on and the last copy of its "
+                        f"record",
+                    )
 
 
 def cost_boundary(earlier: Version, later: Version, ancestry: Ancestry) -> str | None:
@@ -2332,8 +2723,9 @@ def cost_boundary(earlier: Version, later: Version, ancestry: Ancestry) -> str |
     return changed_reason(ancestry, earlier.commit, later.commit, COST_SCRIPTS)
 
 
-def count_boundary(earlier: Version, later: Version, register: Register,
-                   ancestry: Ancestry) -> str | None:
+def count_boundary(
+    earlier: Version, later: Version, register: Register, ancestry: Ancestry
+) -> str | None:
     """Why a new series of the count of remarks begins at `later`, or None where both versions
     share one: wherever a series of the cost begins, and at a date of the register's list of
     classes or a change of the files that give the form of a stage report or the reviewer's
@@ -2363,20 +2755,24 @@ def split_series(versions: list[Version], boundary) -> list[Series]:
     return blocks
 
 
-def instrument_series(versions: list[Version], ancestry: Ancestry,
-                      scripts: tuple[str, ...]) -> list[Series]:
+def instrument_series(
+    versions: list[Version], ancestry: Ancestry, scripts: tuple[str, ...]
+) -> list[Series]:
     """Split the versions, in the order of their dates, into series by the change of the scripts
     alone: a series begins at a version whose files at `scripts` differ from the previous
     version's (WAY-339), and its reason names the scripts that changed. Nothing else splits it:
     not the price list, the register's list of classes or the files of the count of remarks."""
-    return split_series(versions, lambda earlier, later: changed_reason(
-        ancestry, earlier.commit, later.commit, scripts))
+    return split_series(
+        versions,
+        lambda earlier, later: changed_reason(ancestry, earlier.commit, later.commit, scripts),
+    )
 
 
 @dataclass
 class MeasureVersions:
     """The series of the mechanism measures and of the gate times, each with its rows, and the
     answers of *Falls* that are unknown as (repository, record, value, why)."""
+
     mechanism: list[Series] = field(default_factory=list)
     gate: list[Series] = field(default_factory=list)
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
@@ -2384,8 +2780,15 @@ class MeasureVersions:
 
 NO_MEASURE = "—"  # the measure cell of the one row of a version that gives no value
 MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
-GATE_HEADER = ["Version (commit)", "Measure", "Runs compared", "Median (seconds)", "Falls",
-               "Runs not compared", "Median of those (seconds)"]
+GATE_HEADER = [
+    "Version (commit)",
+    "Measure",
+    "Runs compared",
+    "Median (seconds)",
+    "Falls",
+    "Runs not compared",
+    "Median of those (seconds)",
+]
 
 
 def median_text(median: Decimal | None, suffix: str = "") -> str:
@@ -2394,9 +2797,17 @@ def median_text(median: Decimal | None, suffix: str = "") -> str:
     return UNKNOWN if median is None else format(median, "f") + suffix
 
 
-def falls_answer(version: Version, first: bool, median: Decimal | None,
-                 previous: Decimal | None, subject: str, rest: str, what: str,
-                 unknown: list[tuple[str, str, str, str]], name: str) -> str:
+def falls_answer(
+    version: Version,
+    first: bool,
+    median: Decimal | None,
+    previous: Decimal | None,
+    subject: str,
+    rest: str,
+    what: str,
+    unknown: list[tuple[str, str, str, str]],
+    name: str,
+) -> str:
     """`yes` where the median is lower than the previous version's of the same measure in the same
     series, `no` where it is not, and `unknown`, with its reason kept in `unknown`, where the
     version is the first of its series or either median is not known."""
@@ -2427,21 +2838,46 @@ def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> N
         if not any(label in cycle.measures for cycle in version.cycles for label in MEASURE_LABELS):
             # A version no cycle of which gives a value has one row and one line of reason.
             block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN])
-            unknown.append((THE_WAY, NONE, f"Mechanism measures of version {version.commit}",
-                            "no cycle of this version gives a value: its copies hold no "
-                            f"`{MEASURES_FILE}` (an earlier cycle, or a script that failed; the "
-                            "record's *Verification* says which) or give none"))
+            unknown.append(
+                (
+                    THE_WAY,
+                    NONE,
+                    f"Mechanism measures of version {version.commit}",
+                    "no cycle of this version gives a value: its copies hold no "
+                    f"`{MEASURES_FILE}` (an earlier cycle, or a script that failed; the "
+                    "record's *Verification* says which) or give none",
+                )
+            )
             previous = {}
             continue
         for label in MEASURE_LABELS:
-            values = [measure_number(label, cycle.measures[label])
-                      for cycle in version.cycles if label in cycle.measures]
+            values = [
+                measure_number(label, cycle.measures[label])
+                for cycle in version.cycles
+                if label in cycle.measures
+            ]
             median = median_of(values)
             medians[label] = median
-            falls = falls_answer(version, index == 0, median, previous.get(label), "cycle", "",
-                                 "a value", unknown, f"Measure falls: {label}")
-            block.rows.append([version.commit, label, str(len(values)),
-                               median_text(median, "%" if label == SHARE_LABEL else ""), falls])
+            falls = falls_answer(
+                version,
+                index == 0,
+                median,
+                previous.get(label),
+                "cycle",
+                "",
+                "a value",
+                unknown,
+                f"Measure falls: {label}",
+            )
+            block.rows.append(
+                [
+                    version.commit,
+                    label,
+                    str(len(values)),
+                    median_text(median, "%" if label == SHARE_LABEL else ""),
+                    falls,
+                ]
+            )
         previous = medians
 
 
@@ -2475,20 +2911,43 @@ def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
         values = gate_values(version)
         if all(not alone and not apart for alone, apart in values.values()):
             block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN, "0", UNKNOWN])
-            unknown.append((THE_WAY, NONE, f"Gate times of version {version.commit}",
-                            "no run of this version gives a time: its copies hold no "
-                            f"`{GATE_FILE}` ({ABSENCE_CAUSES[GATE_FILE]}; the "
-                            "record's *Verification* says which) or give none"))
+            unknown.append(
+                (
+                    THE_WAY,
+                    NONE,
+                    f"Gate times of version {version.commit}",
+                    "no run of this version gives a time: its copies hold no "
+                    f"`{GATE_FILE}` ({ABSENCE_CAUSES[GATE_FILE]}; the "
+                    "record's *Verification* says which) or give none",
+                )
+            )
             previous = {}
             continue
         for name, (alone, apart) in values.items():
             median = median_of(alone)
             medians[name] = median
-            falls = falls_answer(version, index == 0, median, previous.get(name), "run",
-                                 " that passed with no other gate", "this time", unknown,
-                                 f"Gate time falls: {name}")
-            block.rows.append([version.commit, name, str(len(alone)), median_text(median), falls,
-                               str(len(apart)), median_text(median_of(apart))])
+            falls = falls_answer(
+                version,
+                index == 0,
+                median,
+                previous.get(name),
+                "run",
+                " that passed with no other gate",
+                "this time",
+                unknown,
+                f"Gate time falls: {name}",
+            )
+            block.rows.append(
+                [
+                    version.commit,
+                    name,
+                    str(len(alone)),
+                    median_text(median),
+                    falls,
+                    str(len(apart)),
+                    median_text(median_of(apart)),
+                ]
+            )
         previous = medians
 
 
@@ -2520,15 +2979,24 @@ def too_large_of(version: Version) -> tuple[str, str, str | None]:
     too-large over planned, above one third is yes. Where a plan is not read, its slices could
     turn either answer, so the answer is unknown."""
     planned_cycles = [cycle for cycle in version.cycles if not cycle.plan_left_out]
-    read = [cycle for cycle in planned_cycles
-            if cycle.planned is not None and cycle.too_large is not None]
+    read = [
+        cycle
+        for cycle in planned_cycles
+        if cycle.planned is not None and cycle.too_large is not None
+    ]
     plans_read = f"{len(read)} of {len(planned_cycles)}"
     if not read:
         return plans_read, "unknown", "no cycle's plan can be read"
     if len(read) < len(planned_cycles):
-        return plans_read, "unknown", (f"the plans of {len(planned_cycles) - len(read)} cycle(s) "
-                                       "are not read, so the share of the version's slices is "
-                                       "not known")
+        return (
+            plans_read,
+            "unknown",
+            (
+                f"the plans of {len(planned_cycles) - len(read)} cycle(s) "
+                "are not read, so the share of the version's slices is "
+                "not known"
+            ),
+        )
     planned = sum(cycle.planned for cycle in read if cycle.planned is not None)
     large = sum(cycle.too_large for cycle in read if cycle.too_large is not None)
     if planned == 0:
@@ -2536,8 +3004,9 @@ def too_large_of(version: Version) -> tuple[str, str, str | None]:
     return plans_read, ("yes" if 3 * large > planned else "no"), None
 
 
-def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
-                     prices: Prices) -> Versions:
+def process_versions(
+    reads: list[Read], register: Register, ancestry: Ancestry, prices: Prices
+) -> Versions:
     """Group the cycles by their version, split the versions into series, and answer the three
     questions of each version within its own series (WAY-339)."""
     result = Versions()
@@ -2561,16 +3030,20 @@ def process_versions(reads: list[Read], register: Register, ancestry: Ancestry,
             why = why or "the commit's date lies outside the years the command can read"
             result.no_version += members
             result.unknown.append((THE_WAY, NONE, f"version {commit}", why))
-            result.unknown += [(cycle.repository, cycle.record, "Process pin",
-                                "its version has no readable date") for cycle in members]
+            result.unknown += [
+                (cycle.repository, cycle.record, "Process pin", "its version has no readable date")
+                for cycle in members
+            ]
             continue
         versions.append(Version(commit, stamp or 0, day, prices.date, members))
     versions.sort(key=lambda version: (version.stamp, version.commit))
     result.ordered = versions
     result.count = split_series(
-        versions, lambda earlier, later: count_boundary(earlier, later, register, ancestry))
+        versions, lambda earlier, later: count_boundary(earlier, later, register, ancestry)
+    )
     result.cost = split_series(
-        versions, lambda earlier, later: cost_boundary(earlier, later, ancestry))
+        versions, lambda earlier, later: cost_boundary(earlier, later, ancestry)
+    )
     for block in result.count:
         count_rows(block, result.unknown)
     for block in result.cost:
@@ -2587,8 +3060,9 @@ def count_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
         for label, why in (("contradiction only after code", why1), ("slices too large", why2)):
             if why:
                 unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}", why))
-        block.rows.append([version.commit, version.day, str(len(version.cycles)), answer1, plans,
-                           answer2])
+        block.rows.append(
+            [version.commit, version.day, str(len(version.cycles)), answer1, plans, answer2]
+        )
 
 
 def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
@@ -2608,8 +3082,16 @@ def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
             why3 = None
         if why3:
             unknown.append((THE_WAY, NONE, f"cost falls, version {version.commit}", why3))
-        block.rows.append([version.commit, version.day, str(len(version.cycles)), str(len(costs)),
-                           money(median), answer3])
+        block.rows.append(
+            [
+                version.commit,
+                version.day,
+                str(len(version.cycles)),
+                str(len(costs)),
+                money(median),
+                answer3,
+            ]
+        )
         previous, previous_median = version, median
 
 
@@ -2646,11 +3128,17 @@ def versions_lines(versions: Versions) -> list[str]:
         "unknown. The reason each series begins where it does stands under its heading.",
         "",
     ]
-    for title, blocks, header in ((SERIES_COST, versions.cost, COST_HEADER),
-                                  (SERIES_COUNT, versions.count, COUNT_HEADER)):
+    for title, blocks, header in (
+        (SERIES_COST, versions.cost, COST_HEADER),
+        (SERIES_COUNT, versions.count, COUNT_HEADER),
+    ):
         for number, block in enumerate(blocks, 1):
-            lines += [f"### {title}, series {number}", "",
-                      f"Begins at this version: {block.begins}.", ""]
+            lines += [
+                f"### {title}, series {number}",
+                "",
+                f"Begins at this version: {block.begins}.",
+                "",
+            ]
             lines += table(header, block.rows)
             lines.append("")
     if versions.no_version:
@@ -2708,11 +3196,17 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "measure, and a value in *Unknown values*.",
         "",
     ]
-    for title, blocks, header in (("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
-                                  ("Gate times", measured.gate, GATE_HEADER)):
+    for title, blocks, header in (
+        ("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
+        ("Gate times", measured.gate, GATE_HEADER),
+    ):
         for number, block in enumerate(blocks, 1):
-            lines += [f"### {title}, series {number}", "",
-                      f"Begins at this version: {block.begins}.", ""]
+            lines += [
+                f"### {title}, series {number}",
+                "",
+                f"Begins at this version: {block.begins}.",
+                "",
+            ]
             lines += table(header, block.rows)
             lines.append("")
     if lines[-1] == "":
@@ -2764,9 +3258,14 @@ def measures_lines(cycles: list[Cycle]) -> list[str]:
         "table of agents stays in that file.",
         "",
     ]
-    rows = [[cycle.repository, cycle.record,
-             *[cycle.measures.get(label, UNKNOWN) for label in MEASURE_LABELS]]
-            for cycle in cycles]
+    rows = [
+        [
+            cycle.repository,
+            cycle.record,
+            *[cycle.measures.get(label, UNKNOWN) for label in MEASURE_LABELS],
+        ]
+        for cycle in cycles
+    ]
     return lines + table(["Repository", "Record", *MEASURE_LABELS], rows)
 
 
@@ -2781,12 +3280,27 @@ def gate_lines(cycles: list[Cycle]) -> list[str]:
         "",
     ]
     rows = [[cycle.repository, cycle.record, *run] for cycle in cycles for run in cycle.gate_runs]
-    return lines + table(["Repository", "Record", "Started (UTC)", "Exit code", "Total seconds",
-                          "Other gate runs at the same time", "Directories"], rows)
+    return lines + table(
+        [
+            "Repository",
+            "Record",
+            "Started (UTC)",
+            "Exit code",
+            "Total seconds",
+            "Other gate runs at the same time",
+            "Directories",
+        ],
+        rows,
+    )
 
 
-def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Versions,
-           measured: MeasureVersions) -> str:
+def render(
+    reads: list[Read],
+    prices: Prices,
+    analysis: Analysis,
+    versions: Versions,
+    measured: MeasureVersions,
+) -> str:
     cycles = [cycle for read in reads for cycle in read.cycles]
     lines = [
         "# Count of the audit of the process",
@@ -2824,7 +3338,8 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
             f"| {cell(cycle.repository)} | {cycle.record} | {cycle.committed} | {cell(cycle.folder)} "
             f"| {' · '.join(cycle.later) or 'none'} | {cycle.pin or UNKNOWN} "
             f"| {UNKNOWN if cycle.remarks is None else cycle.remarks} | {duration(cycle.working)} "
-            f"| {duration(cycle.waiting)} |")
+            f"| {duration(cycle.waiting)} |"
+        )
     lines += [
         "",
         "## Cost",
@@ -2850,9 +3365,19 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         lines.append(
             f"| {cell(cycle.repository)} | {cycle.record} | {cell(prices.date)} "
             f"| {money(cycle.cost)} | {UNKNOWN if cycle.rounds is None else cycle.rounds} "
-            f"| {share_text(cycle.share)} |")
-    lines += ["", *measures_lines(cycles), "", *gate_lines(cycles), "", *versions_lines(versions),
-              "", *measure_versions_lines(measured), ""]
+            f"| {share_text(cycle.share)} |"
+        )
+    lines += [
+        "",
+        *measures_lines(cycles),
+        "",
+        *gate_lines(cycles),
+        "",
+        *versions_lines(versions),
+        "",
+        *measure_versions_lines(measured),
+        "",
+    ]
     lines += [
         "## Problems by cycle",
         "",
@@ -2865,8 +3390,19 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "whose *Record* names more than one cycle, are in *Unknown values*.",
         "",
     ]
-    lines += table(["Repository", "Record", "Class", "No problem", "Minor", "Important",
-                    "Critical", "Refused rows"], analysis.cycle_rows)
+    lines += table(
+        [
+            "Repository",
+            "Record",
+            "Class",
+            "No problem",
+            "Minor",
+            "Important",
+            "Critical",
+            "Refused rows",
+        ],
+        analysis.cycle_rows,
+    )
     lines += [
         "",
         "## Fixed issues",
@@ -2877,9 +3413,18 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "rows of *Problems* that name this issue; a count with one reads `at least n`.",
         "",
     ]
-    lines += table(["Issue", "Fix", "Problems in cycles whose pin holds the fix",
-                    "Problems in cycles whose pin lacks it", "Problems with an unknown pin",
-                    "Problems whose cycle is not read", "Refused rows"], analysis.fixed_rows)
+    lines += table(
+        [
+            "Issue",
+            "Fix",
+            "Problems in cycles whose pin holds the fix",
+            "Problems in cycles whose pin lacks it",
+            "Problems with an unknown pin",
+            "Problems whose cycle is not read",
+            "Refused rows",
+        ],
+        analysis.fixed_rows,
+    )
     lines += [
         "",
         "## Open issues",
@@ -2894,9 +3439,17 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "ranked by their counts, and the weighing is the human's.",
         "",
     ]
-    lines += table(["Issue", "Cycles its problems came back in", "Problems",
-                    "Problems whose cycle is not read", "Days waiting", "Refused rows"],
-                   analysis.open_rows)
+    lines += table(
+        [
+            "Issue",
+            "Cycles its problems came back in",
+            "Problems",
+            "Problems whose cycle is not read",
+            "Days waiting",
+            "Refused rows",
+        ],
+        analysis.open_rows,
+    )
     lines += [
         "",
         "## Dropped issues",
@@ -2905,8 +3458,10 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "rows of the issue reads `at least n`.",
         "",
     ]
-    lines += table(["Issue", "Cycles", "Problems", "Problems whose cycle is not read",
-                    "Refused rows"], analysis.dropped_rows)
+    lines += table(
+        ["Issue", "Cycles", "Problems", "Problems whose cycle is not read", "Refused rows"],
+        analysis.dropped_rows,
+    )
     lines += [
         "",
         "## Cost of an occurrence by issue",
@@ -2936,8 +3491,11 @@ def render(reads: list[Read], prices: Prices, analysis: Analysis, versions: Vers
         "those copies, and have no list of their own.",
         "",
     ]
-    entries = [(cycle.repository, cycle.record, value, why)
-               for cycle in cycles for value, why in cycle.unknown]
+    entries = [
+        (cycle.repository, cycle.record, value, why)
+        for cycle in cycles
+        for value, why in cycle.unknown
+    ]
     entries += dict.fromkeys(analysis.unknown + versions.unknown + measured.unknown)
     entries += analysis.held
     lines += table(UNKNOWN_HEADER, unknown_rows(entries))
@@ -2952,9 +3510,11 @@ def write(folder: Path, name: str, text: str) -> None:
             handle.write(text)
         os.replace(temporary, target)
     except OSError as error:
-        raise AuditCountError(f"cannot write {name} in the directory of the key "
-                              f"`{RESULTS_ENTRY}` under `{THE_WAY}`: "
-                              f"{display(error.strerror or error)}") from None
+        raise AuditCountError(
+            f"cannot write {name} in the directory of the key "
+            f"`{RESULTS_ENTRY}` under `{THE_WAY}`: "
+            f"{display(error.strerror or error)}"
+        ) from None
 
 
 def day_of(text: str) -> date:
@@ -2987,10 +3547,12 @@ def main(argv: list[str] | None = None) -> int:
         # No repository holds the results, the-way's included, whether this run reads it or not.
         for key, path in [*named.items(), (THE_WAY, the_way)]:
             if inside(results, path):
-                raise AuditCountError(f"the directory of the key `{RESULTS_ENTRY}` under "
-                                      f"`{THE_WAY}` lies inside the repository "
-                                      f"`{display(key)}`; the result is never written into a "
-                                      f"repository")
+                raise AuditCountError(
+                    f"the directory of the key `{RESULTS_ENTRY}` under "
+                    f"`{THE_WAY}` lies inside the repository "
+                    f"`{display(key)}`; the result is never written into a "
+                    f"repository"
+                )
         prices = read_prices(args.prices)
         register = read_register(register_path)
         ancestry = Ancestry(Git(the_way))
@@ -3013,17 +3575,30 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
     # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-344): each is
     # named here after the result is written. The folder is text of the history, so it is cut.
-    lacking = [(read, cycle, missing_reason(name)) for read in reads for cycle in read.cycles
-               for name in cycle.missing]
+    lacking = [
+        (read, cycle, missing_reason(name))
+        for read in reads
+        for cycle in read.cycles
+        for name in cycle.missing
+    ]
     # The fields of mechanism_measures.md and gate_times.md are named the same way.
-    lacking += [(read, cycle, missing_reason(name, file)) for read in reads
-                for cycle in read.cycles for file, name in cycle.missing_in]
+    lacking += [
+        (read, cycle, missing_reason(name, file))
+        for read in reads
+        for cycle in read.cycles
+        for file, name in cycle.missing_in
+    ]
     for read, cycle, reason in lacking:
-        print(f"Error: repository `{display(read.key[:TEXT_CAP])}`: cycle "
-              f"`{display(cycle.folder[:TEXT_CAP])}`: {reason}", file=sys.stderr)
+        print(
+            f"Error: repository `{display(read.key[:TEXT_CAP])}`: cycle "
+            f"`{display(cycle.folder[:TEXT_CAP])}`: {reason}",
+            file=sys.stderr,
+        )
     count = sum(len(read.cycles) for read in reads)
-    print(f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
-          f"{len(reads)} repositories.")
+    print(
+        f"Wrote {dated} and {LATEST}: {count} cycles in {len(reads) - len(failed)} of "
+        f"{len(reads)} repositories."
+    )
     return 1 if failed or register.errors or lacking else 0
 
 

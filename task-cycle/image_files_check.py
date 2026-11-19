@@ -31,8 +31,20 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tif", ".tiff", ".ico",
-                    ".svg", ".avif", ".heic")
+IMAGE_EXTENSIONS = (
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".webp",
+    ".bmp",
+    ".tif",
+    ".tiff",
+    ".ico",
+    ".svg",
+    ".avif",
+    ".heic",
+)
 
 
 class ImageFilesError(Exception):
@@ -63,13 +75,16 @@ def check(target: Path) -> Result:
     """The image files of a file, or of every file below a directory."""
     result = Result()
     if target.is_dir():
-        paths = sorted((path for path in target.rglob("*") if path.is_file()),
-                       key=lambda found: found.as_posix())
+        paths = sorted(
+            (path for path in target.rglob("*") if path.is_file()),
+            key=lambda found: found.as_posix(),
+        )
     elif target.is_file():
         paths = [target]
     else:
-        raise ImageFilesError(f"{display(target)} is no file or directory; give the copy of the "
-                              f"record")
+        raise ImageFilesError(
+            f"{display(target)} is no file or directory; give the copy of the record"
+        )
     for path in paths:
         result.files += 1
         if is_image_name(path.name):

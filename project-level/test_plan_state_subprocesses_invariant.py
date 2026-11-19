@@ -91,10 +91,16 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.remote = self.root / "remote.git"
         self.publisher = self.root / "publisher"
         self.repo = self.root / "product"
-        self.env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
-                        GIT_TERMINAL_PROMPT="0", GIT_AUTHOR_NAME="Process fixture",
-                        GIT_AUTHOR_EMAIL="fixture@example.invalid", GIT_COMMITTER_NAME="Process fixture",
-                        GIT_COMMITTER_EMAIL="fixture@example.invalid")
+        self.env = dict(
+            os.environ,
+            GIT_CONFIG_NOSYSTEM="1",
+            GIT_CONFIG_GLOBAL=os.devnull,
+            GIT_TERMINAL_PROMPT="0",
+            GIT_AUTHOR_NAME="Process fixture",
+            GIT_AUTHOR_EMAIL="fixture@example.invalid",
+            GIT_COMMITTER_NAME="Process fixture",
+            GIT_COMMITTER_EMAIL="fixture@example.invalid",
+        )
         self.git(self.root, "init", "--bare", "--initial-branch=delivery", str(self.remote))
         self.git(self.root, "clone", str(self.remote), str(self.publisher))
         self.write(self.publisher / "README.md", "Fixture product\n")
@@ -104,11 +110,16 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.git(self.root, "clone", str(self.remote), str(self.repo))
         self.initial = self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery")
         cycle = self.publisher / "docs/task-cycles/report-download"
-        record = CYCLE_RECORD.format(source=self.root / "notes/tasks/report-download.md",
-                                     repository=self.repo, frozen="accepted-task.md")
-        record = record.replace("## Request handoff\n\nnone",
-                                "## Request handoff\n\n- Request URL and status: "
-                                "https://example.invalid/pull/41 and ready")
+        record = CYCLE_RECORD.format(
+            source=self.root / "notes/tasks/report-download.md",
+            repository=self.repo,
+            frozen="accepted-task.md",
+        )
+        record = record.replace(
+            "## Request handoff\n\nnone",
+            "## Request handoff\n\n- Request URL and status: "
+            "https://example.invalid/pull/41 and ready",
+        )
         self.write(cycle / "record.md", record)
         self.write(cycle / "accepted-task.md", TASK)
         self.git(self.publisher, "add", "docs/task-cycles/report-download")
@@ -117,10 +128,13 @@ class PlanStateSubprocesses(unittest.TestCase):
         self.git(self.publisher, "push", "origin", "delivery")
         self.plan = self.root / "notes/plan.md"
         self.write(self.plan, PLAN.format(fingerprint=FINGERPRINT, state="ready for cycle"))
-        self.write(self.plan.with_name("definition.md"),
-                   "# Report download\n\nStatus: approved 2026-10-01\n\n" + DEFINITION_BODY +
-                   "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
-                   "- Definition fingerprint: " + FINGERPRINT + "\n")
+        self.write(
+            self.plan.with_name("definition.md"),
+            "# Report download\n\nStatus: approved 2026-10-01\n\n"
+            + DEFINITION_BODY
+            + "## Approval record\n\n- Approved by: Fixture, 2026-10-01\n"
+            "- Definition fingerprint: " + FINGERPRINT + "\n",
+        )
         self.write(self.plan.parent / "tasks/report-download.md", TASK)
 
     @staticmethod
@@ -129,18 +143,40 @@ class PlanStateSubprocesses(unittest.TestCase):
         path.write_bytes(content.encode("utf-8"))
 
     def git(self, directory, *arguments):
-        result = subprocess.run(["git", "-C", str(directory), *arguments], env=self.env,
-                                capture_output=True, text=True, encoding="utf-8", timeout=30)
+        result = subprocess.run(
+            ["git", "-C", str(directory), *arguments],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=30,
+        )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         return result.stdout.strip()
 
     def observe_reader(self):
         trace = self.root / "reader-starts.jsonl"
-        result = subprocess.run([sys.executable, "-B", "-c", AUDITED_READER, str(READER),
-                                 str(self.plan), str(self.repo), str(trace)],
-                                env=self.env, capture_output=True, text=True, encoding="utf-8",
-                                errors="replace", timeout=60)
-        self.assertTrue(trace.is_file(), "Reader reached no observed process start: " + result.stderr)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-B",
+                "-c",
+                AUDITED_READER,
+                str(READER),
+                str(self.plan),
+                str(self.repo),
+                str(trace),
+            ],
+            env=self.env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
+        self.assertTrue(
+            trace.is_file(), "Reader reached no observed process start: " + result.stderr
+        )
         rows = [json.loads(line) for line in trace.read_text(encoding="utf-8").splitlines()]
         self.assertTrue(rows, "Empty observation cannot prove the property")
         return result, rows
@@ -158,17 +194,25 @@ class PlanStateSubprocesses(unittest.TestCase):
         result, rows = self.observe_reader()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         proposals = [line for line in result.stdout.splitlines() if line.startswith("propose ")]
-        self.assertCountEqual(proposals, [
-            "propose 1 report-download: ready for cycle -> in cycle",
-            "propose 1 report-download: in cycle -> done",
-        ], result.stdout + result.stderr)
+        self.assertCountEqual(
+            proposals,
+            [
+                "propose 1 report-download: ready for cycle -> in cycle",
+                "propose 1 report-download: in cycle -> done",
+            ],
+            result.stdout + result.stderr,
+        )
         self.assertIn("https://example.invalid/pull/41", result.stdout)
         self.assertIn("docs/task-cycles/report-download/", result.stdout)
-        self.assertIn("integration: refs/remotes/origin/delivery " + self.delivered,
-                      result.stdout.splitlines())
+        self.assertIn(
+            "integration: refs/remotes/origin/delivery " + self.delivered,
+            result.stdout.splitlines(),
+        )
         self.assert_only_git(rows)
         # Real remote-ref movement proves these are actual starts, not simulated calls.
-        self.assertEqual(self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.delivered)
+        self.assertEqual(
+            self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.delivered
+        )
 
     def test_failed_fetch_read_starts_only_git(self):
         # invariant: project-plan-state-subprocesses
@@ -177,7 +221,9 @@ class PlanStateSubprocesses(unittest.TestCase):
         result, rows = self.observe_reader()
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
         self.assert_only_git(rows)
-        self.assertEqual(self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.initial)
+        self.assertEqual(
+            self.git(self.repo, "rev-parse", "refs/remotes/origin/delivery"), self.initial
+        )
 
 
 if __name__ == "__main__":

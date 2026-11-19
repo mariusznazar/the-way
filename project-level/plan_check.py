@@ -73,8 +73,10 @@ TASK_COLUMNS = ("#", "Task", "Goal", "Depends on", "In scope", "Preparatory", "S
 ENTRY_COLUMNS = ("Entry", "Realized by", "Written by")
 
 STATUS = re.compile(r"^Status: (draft|handed over (?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2}))$")
-DEFINITION_LINE = re.compile(r"^Definition: (?P<path>\S.*?) — fingerprint "
-                             r"(?P<fingerprint>[0-9a-f]{8})$")
+DEFINITION_LINE = re.compile(
+    r"^Definition: (?P<path>\S.*?) — fingerprint "
+    r"(?P<fingerprint>[0-9a-f]{8})$"
+)
 DATED_ITEM = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2} — \S")
 SEPARATOR = re.compile(r"^\|(\s*:?-+:?\s*\|)+$")
 CELL_SPLIT = re.compile(r"(?<!\\)\|")
@@ -82,22 +84,37 @@ NUMBER = re.compile(r"^[1-9][0-9]*$")  # ASCII digits only: `\d` takes every Uni
 NUMBERS = re.compile(r"^[1-9][0-9]*(, [1-9][0-9]*)*$")
 NAME = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 DELIVERED_IN = re.compile(r"^done — goal delivered in task (?P<task>[1-9][0-9]*)$")
-STATES = ("to refine", "waiting for human", "ready for cycle", "in cycle", "done",
-          "dropped — approved by human")
+STATES = (
+    "to refine",
+    "waiting for human",
+    "ready for cycle",
+    "in cycle",
+    "done",
+    "dropped — approved by human",
+)
 FINISHED = ("done", "dropped — approved by human")  # and a goal delivered in another task
-SIDE_BY_SIDE = re.compile(r'^[0-9]{4}-[0-9]{2}-[0-9]{2} — side by side: tasks '
-                          r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) on "(?P<rest>.*)$')
+SIDE_BY_SIDE = re.compile(
+    r"^[0-9]{4}-[0-9]{2}-[0-9]{2} — side by side: tasks "
+    r'(?P<first>[1-9][0-9]*), (?P<second>[1-9][0-9]*) on "(?P<rest>.*)$'
+)
 NO_NUMBER = "—"
 PROJECTED_ENTRY = re.compile(r"^#### (.+?)\s*$")
 TOP_LEVEL_ITEM = re.compile(r"^([-*+]|[0-9]+[.)])[ \t]+\S")
 RULE = re.compile(r"^ {0,3}([-*_])([ \t]*\1){2,}[ \t]*$")  # a horizontal rule is no item
 RESOLVED_IN = " — resolved in: "
-PLAN_QUESTION = re.compile(r"^(?P<question>.+?) — definition: (?P<place>.+?) — "
-                           r"(?:plan: task (?P<task>.*)|answer:(?: (?P<answer>.*))?)$")
+PLAN_QUESTION = re.compile(
+    r"^(?P<question>.+?) — definition: (?P<place>.+?) — "
+    r"(?:plan: task (?P<task>.*)|answer:(?: (?P<answer>.*))?)$"
+)
 RAISED = "none"
 APPROVAL_FINGERPRINT = dict(readiness_check.APPROVAL_LINES)["Definition fingerprint"]
-DEFINITION_NEEDS = ("Goal", "In scope", readiness_check.OPEN_QUESTIONS, readiness_check.PROJECTED,
-                    readiness_check.APPROVAL_RECORD)
+DEFINITION_NEEDS = (
+    "Goal",
+    "In scope",
+    readiness_check.OPEN_QUESTIONS,
+    readiness_check.PROJECTED,
+    readiness_check.APPROVAL_RECORD,
+)
 
 
 @dataclass
@@ -134,6 +151,7 @@ class Entry:
 @dataclass
 class Plan:
     """What the check could read of a plan; None where a finding of form made it unreadable."""
+
     sections: dict = field(default_factory=dict)  # name -> Section, for a section standing once
     tasks: list | None = None
     numbers_known: bool = False  # every task row gives a readable number
@@ -143,6 +161,7 @@ class Plan:
 @dataclass
 class Definition:
     """What the plan check reads of a definition."""
+
     in_scope: int | None  # the number of In scope items, None where they cannot be numbered
     questions: list  # (question, place)
     projected: list  # projected headings, in order
@@ -176,59 +195,121 @@ def check_header(preamble, definition_text, definition_error):
     if not status:
         findings.append(Finding("form", 0, "no `Status:` line above the first section"))
     elif not (match := STATUS.match(status[0][1].rstrip())):
-        findings.append(Finding("form", status[0][0], "the status reads neither `draft` nor "
-                                "`handed over YYYY-MM-DD`"))
+        findings.append(
+            Finding(
+                "form",
+                status[0][0],
+                "the status reads neither `draft` nor `handed over YYYY-MM-DD`",
+            )
+        )
     elif match.group("date") and not calendar_date(match.group("date")):
-        findings.append(Finding("form", status[0][0], "the plan was handed over on %s, which is "
-                                "no calendar date" % match.group("date")))
+        findings.append(
+            Finding(
+                "form",
+                status[0][0],
+                "the plan was handed over on %s, which is no calendar date" % match.group("date"),
+            )
+        )
     lines = [(n, line) for n, line in preamble if line.startswith("Definition:")]
     if not lines:
-        findings.append(Finding("form", 0, "no `Definition: <path> — fingerprint <hex>` line "
-                                "above the first section"))
+        findings.append(
+            Finding(
+                "form",
+                0,
+                "no `Definition: <path> — fingerprint <hex>` line above the first section",
+            )
+        )
         return findings, None
     number, line = lines[0]
     match = DEFINITION_LINE.match(line.rstrip())
     if not match:
-        findings.append(Finding("form", number, "the line is not `Definition: <path> — "
-                                "fingerprint <8 lower-case hexadecimal digits>`"))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the line is not `Definition: <path> — "
+                "fingerprint <8 lower-case hexadecimal digits>`",
+            )
+        )
         return findings, None
     if definition_text is None:
         reason = ": %s" % definition_error if definition_error else ""
         path = match.group("path")
-        findings.append(Finding("form", number, "the definition %s cannot be read%s"
-                                % (path if path.isprintable() else repr(path), reason)))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the definition %s cannot be read%s"
+                % (path if path.isprintable() else repr(path), reason),
+            )
+        )
         return findings, None
     _, sections = split(definition_text)
     names = [s.name for s in sections]
     unread = [name for name in DEFINITION_NEEDS if names.count(name) != 1]
     if unread or names.index("Goal") > names.index(readiness_check.APPROVAL_RECORD):
-        findings.append(Finding("form", number, "the definition %s is not in its form: %s"
-                                % (match.group("path"), ", ".join("`## %s` does not stand once"
-                                                                  % name for name in unread)
-                                   or "`## Goal` stands after `## Approval record`")))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the definition %s is not in its form: %s"
+                % (
+                    match.group("path"),
+                    ", ".join("`## %s` does not stand once" % name for name in unread)
+                    or "`## Goal` stands after `## Approval record`",
+                ),
+            )
+        )
         return findings, None
     by_name = {s.name: s for s in sections}
     held = match.group("fingerprint")
-    approved = [m.group(1) for _, l in by_name[readiness_check.APPROVAL_RECORD].lines
-                if (m := APPROVAL_FINGERPRINT.match(l.rstrip()))]
+    approved = [
+        m.group(1)
+        for _, l in by_name[readiness_check.APPROVAL_RECORD].lines
+        if (m := APPROVAL_FINGERPRINT.match(l.rstrip()))
+    ]
     if not approved:
-        findings.append(Finding("form", number, "the definition's approval record holds no line "
-                                "`- Definition fingerprint: <hex>` — the definition has not "
-                                "passed its readiness approval"))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the definition's approval record holds no line "
+                "`- Definition fingerprint: <hex>` — the definition has not "
+                "passed its readiness approval",
+            )
+        )
     elif approved[0] != held:
-        findings.append(Finding("form", number, "the fingerprint %s is not the one the "
-                                "definition's approval record holds, %s" % (held, approved[0])))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the fingerprint %s is not the one the "
+                "definition's approval record holds, %s" % (held, approved[0]),
+            )
+        )
     text_fingerprint = readiness_check.definition_fingerprint(definition_text)
     if text_fingerprint != held:
-        findings.append(Finding("form", number, "the fingerprint %s is not the one the "
-                                "definition's text gives, %s — the plan stands on nothing until "
-                                "the definition passes its readiness approval again and the plan "
-                                "is checked against it" % (held, text_fingerprint)))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the fingerprint %s is not the one the "
+                "definition's text gives, %s — the plan stands on nothing until "
+                "the definition passes its readiness approval again and the plan "
+                "is checked against it" % (held, text_fingerprint),
+            )
+        )
     definition = read_definition(by_name)
     if definition.in_scope is None:
-        findings.append(Finding("form", number, "the definition's In scope reads neither `none` "
-                                "nor holds a top-level list item — its items cannot be "
-                                "numbered"))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "the definition's In scope reads neither `none` "
+                "nor holds a top-level list item — its items cannot be "
+                "numbered",
+            )
+        )
     return findings, definition
 
 
@@ -277,29 +358,49 @@ def check_sections(sections):
     names = [s.name for s in sections]
     for index, section in enumerate(sections):
         if section.name not in SECTIONS:
-            findings.append(Finding("form", section.heading_line,
-                                    "`## %s` is no section of the plan" % section.name))
+            findings.append(
+                Finding(
+                    "form", section.heading_line, "`## %s` is no section of the plan" % section.name
+                )
+            )
         elif names.index(section.name) != index:
-            findings.append(Finding("form", section.heading_line,
-                                    "`## %s` stands a second time" % section.name))
+            findings.append(
+                Finding("form", section.heading_line, "`## %s` stands a second time" % section.name)
+            )
     for name in SECTIONS:
         if name not in names:
             findings.append(Finding("form", 0, "the section `## %s` is missing" % name))
     known = [name for name in dict.fromkeys(names) if name in SECTIONS]
     if known != [name for name in SECTIONS if name in known]:
         line = next(s.heading_line for s in sections if s.name in SECTIONS)
-        findings.append(Finding("form", line, "the sections stand out of the template's order: "
-                                "%s" % ", ".join(known)))
+        findings.append(
+            Finding(
+                "form",
+                line,
+                "the sections stand out of the template's order: %s" % ", ".join(known),
+            )
+        )
     once = {s.name: s for s in sections if s.name in SECTIONS and names.count(s.name) == 1}
     for section in once.values():
         if not content(section):
-            findings.append(Finding("form", section.heading_line, "`## %s` is empty — write "
-                                    "`none` where nothing is there" % section.name))
+            findings.append(
+                Finding(
+                    "form",
+                    section.heading_line,
+                    "`## %s` is empty — write `none` where nothing is there" % section.name,
+                )
+            )
     if CHANGE_LOG in once and content(once[CHANGE_LOG]):
-        if not any(text is not None and DATED_ITEM.match(text)
-                   for _, text in items(once[CHANGE_LOG])):
-            findings.append(Finding("form", once[CHANGE_LOG].heading_line, "`## %s` holds no item "
-                                    "`- YYYY-MM-DD — <what changed>`" % CHANGE_LOG))
+        if not any(
+            text is not None and DATED_ITEM.match(text) for _, text in items(once[CHANGE_LOG])
+        ):
+            findings.append(
+                Finding(
+                    "form",
+                    once[CHANGE_LOG].heading_line,
+                    "`## %s` holds no item `- YYYY-MM-DD — <what changed>`" % CHANGE_LOG,
+                )
+            )
     return findings, once
 
 
@@ -320,32 +421,58 @@ def read_table(section, columns):
     lines = content(section)
     header = "| " + " | ".join(columns) + " |"
     if not lines or not lines[0][1].lstrip().startswith("|"):
-        return [Finding("form", section.heading_line,
-                        "`## %s` holds no table" % section.name)], None
+        return [
+            Finding("form", section.heading_line, "`## %s` holds no table" % section.name)
+        ], None
     number, first = lines[0]
     if first.strip() != header:
-        return [Finding("form", number, "the header row of `## %s` is not `%s`"
-                        % (section.name, header))], None
+        return [
+            Finding(
+                "form", number, "the header row of `## %s` is not `%s`" % (section.name, header)
+            )
+        ], None
     findings, rows = [], []
     rest = lines[1:]
     if rest and SEPARATOR.match(rest[0][1].strip()):
         separator_number, separator = rest[0]
         rest = rest[1:]
         if len(cells(separator)) != len(columns):
-            findings.append(Finding("form", separator_number, "the separator row holds %d cells, "
-                                    "not the %d columns of `## %s`"
-                                    % (len(cells(separator)), len(columns), section.name)))
+            findings.append(
+                Finding(
+                    "form",
+                    separator_number,
+                    "the separator row holds %d cells, "
+                    "not the %d columns of `## %s`"
+                    % (len(cells(separator)), len(columns), section.name),
+                )
+            )
     else:
-        findings.append(Finding("form", number, "no separator row `|---|` under the header row "
-                                "of `## %s`" % section.name))
+        findings.append(
+            Finding(
+                "form",
+                number,
+                "no separator row `|---|` under the header row of `## %s`" % section.name,
+            )
+        )
     for number, line in rest:
         row = cells(line)
         if row is None:
-            findings.append(Finding("form", number, "a line under `## %s` that is no row of its "
-                                    "table" % section.name))
+            findings.append(
+                Finding(
+                    "form",
+                    number,
+                    "a line under `## %s` that is no row of its table" % section.name,
+                )
+            )
         elif len(row) != len(columns):
-            findings.append(Finding("form", number, "the row holds %d cells, not the %d columns "
-                                    "of `## %s`" % (len(row), len(columns), section.name)))
+            findings.append(
+                Finding(
+                    "form",
+                    number,
+                    "the row holds %d cells, not the %d columns "
+                    "of `## %s`" % (len(row), len(columns), section.name),
+                )
+            )
         else:
             rows.append((number, row))
     return findings, rows
@@ -369,8 +496,9 @@ def read_tasks(section):
         task.document = values["Document"]
 
         def off(column, form):
-            findings.append(Finding("form", line, "`%s` reads `%s`, not %s"
-                                    % (column, values[column], form)))
+            findings.append(
+                Finding("form", line, "`%s` reads `%s`, not %s" % (column, values[column], form))
+            )
 
         if NUMBER.match(values["#"]):
             task.number = int(values["#"])
@@ -400,31 +528,48 @@ def read_tasks(section):
         elif values["State"] not in STATES:
             off("State", "a state of the template's list")
         if not values["Document"]:
-            findings.append(Finding("form", line, "`Document` is empty — write `—` until the "
-                                    "task has a document"))
+            findings.append(
+                Finding(
+                    "form", line, "`Document` is empty — write `—` until the task has a document"
+                )
+            )
         tasks.append(task)
     seen_numbers, seen_names = set(), set()
     for task in tasks:
         if task.number is not None:
             if task.number in seen_numbers:
-                findings.append(Finding("form", task.line, "the number %d is held by another "
-                                        "task" % task.number))
+                findings.append(
+                    Finding(
+                        "form", task.line, "the number %d is held by another task" % task.number
+                    )
+                )
             seen_numbers.add(task.number)
         if task.name is not None:
             if task.name in seen_names:
-                findings.append(Finding("form", task.line, "the name `%s` is held by another "
-                                        "task" % task.name))
+                findings.append(
+                    Finding("form", task.line, "the name `%s` is held by another task" % task.name)
+                )
             seen_names.add(task.name)
     for task in tasks:
         if task.delivered_in is not None and task.delivered_in == task.number:
-            findings.append(Finding("form", task.line, "the state names the task itself as the "
-                                    "one that delivered its goal"))
+            findings.append(
+                Finding(
+                    "form",
+                    task.line,
+                    "the state names the task itself as the one that delivered its goal",
+                )
+            )
     numbers_known = all(task.number is not None for task in tasks)
     if numbers_known:
         for task in tasks:
             if task.delivered_in is not None and task.delivered_in not in seen_numbers:
-                findings.append(Finding("form", task.line, "the state names task %d, which the "
-                                        "plan does not hold" % task.delivered_in))
+                findings.append(
+                    Finding(
+                        "form",
+                        task.line,
+                        "the state names task %d, which the plan does not hold" % task.delivered_in,
+                    )
+                )
     return findings, tasks, numbers_known
 
 
@@ -434,9 +579,14 @@ def read_entries(section, definition):
     lines = [line.strip() for _, line in content(section)]
     if lines == ["none"]:
         if definition is not None and definition.projected:
-            return [Finding("form", section.heading_line, "`## %s` reads `none`, while the "
-                            "definition projects %d entries"
-                            % (ENTRIES, len(definition.projected)))], None
+            return [
+                Finding(
+                    "form",
+                    section.heading_line,
+                    "`## %s` reads `none`, while the "
+                    "definition projects %d entries" % (ENTRIES, len(definition.projected)),
+                )
+            ], None
         return [], None
     findings, rows = read_table(section, ENTRY_COLUMNS)
     if rows is None:
@@ -447,13 +597,21 @@ def read_entries(section, definition):
         if NUMBERS.match(realized):
             entry.realized = number_list(realized)
         else:
-            findings.append(Finding("form", line, "`Realized by` reads `%s`, not positive "
-                                    "integers separated by `, `" % realized))
+            findings.append(
+                Finding(
+                    "form",
+                    line,
+                    "`Realized by` reads `%s`, not positive integers separated by `, `" % realized,
+                )
+            )
         if NUMBER.match(written):
             entry.written = int(written)
         else:
-            findings.append(Finding("form", line, "`Written by` reads `%s`, not the number of "
-                                    "one task" % written))
+            findings.append(
+                Finding(
+                    "form", line, "`Written by` reads `%s`, not the number of one task" % written
+                )
+            )
         entries.append(entry)
     return findings, entries
 
@@ -467,28 +625,52 @@ def check_entries(plan, definition, heading_line):
     for projected in definition.projected:
         rows = [entry for entry in plan.entries if entry.entry == projected]
         if not rows:
-            findings.append(Finding("entries", heading_line, "the projected entry `%s` has no "
-                                    "row" % projected))
+            findings.append(
+                Finding("entries", heading_line, "the projected entry `%s` has no row" % projected)
+            )
         for entry in rows[1:]:
-            findings.append(Finding("entries", entry.line, "the projected entry `%s` has a "
-                                    "second row" % projected))
+            findings.append(
+                Finding(
+                    "entries", entry.line, "the projected entry `%s` has a second row" % projected
+                )
+            )
     for entry in plan.entries:
         if entry.entry not in definition.projected:
-            findings.append(Finding("entries", entry.line, "`%s` is no projected heading of the "
-                                    "definition, word for word" % entry.entry))
+            findings.append(
+                Finding(
+                    "entries",
+                    entry.line,
+                    "`%s` is no projected heading of the definition, word for word" % entry.entry,
+                )
+            )
         if plan.tasks is not None and plan.numbers_known:
-            for column, numbers in (("Realized by", entry.realized or []),
-                                    ("Written by", [] if entry.written is None
-                                     else [entry.written])):
+            for column, numbers in (
+                ("Realized by", entry.realized or []),
+                ("Written by", [] if entry.written is None else [entry.written]),
+            ):
                 for number in numbers:
                     if number not in held:
-                        findings.append(Finding("entries", entry.line, "`%s` names task %d, "
-                                                "which the plan does not hold"
-                                                % (column, number)))
-        if entry.realized is not None and entry.written is not None \
-                and entry.written not in entry.realized:
-            findings.append(Finding("entries", entry.line, "the task that writes the entry, %d, "
-                                    "is not among those that realize it" % entry.written))
+                        findings.append(
+                            Finding(
+                                "entries",
+                                entry.line,
+                                "`%s` names task %d, "
+                                "which the plan does not hold" % (column, number),
+                            )
+                        )
+        if (
+            entry.realized is not None
+            and entry.written is not None
+            and entry.written not in entry.realized
+        ):
+            findings.append(
+                Finding(
+                    "entries",
+                    entry.line,
+                    "the task that writes the entry, %d, "
+                    "is not among those that realize it" % entry.written,
+                )
+            )
     return findings
 
 
@@ -499,14 +681,24 @@ def check_scope(tasks, definition, heading_line):
         for number in task.scope or []:
             named.add(number)
             if number > definition.in_scope:
-                findings.append(Finding("scope", task.line, "`In scope` names item %d, while the "
-                                        "definition's In scope holds %d items"
-                                        % (number, definition.in_scope)))
+                findings.append(
+                    Finding(
+                        "scope",
+                        task.line,
+                        "`In scope` names item %d, while the "
+                        "definition's In scope holds %d items" % (number, definition.in_scope),
+                    )
+                )
     if all(task.scope is not None for task in tasks):
         for number in range(1, definition.in_scope + 1):
             if number not in named:
-                findings.append(Finding("scope", heading_line, "item %d of the definition's In "
-                                        "scope is named by no task" % number))
+                findings.append(
+                    Finding(
+                        "scope",
+                        heading_line,
+                        "item %d of the definition's In scope is named by no task" % number,
+                    )
+                )
     return findings
 
 
@@ -538,18 +730,29 @@ def check_dependencies(tasks, numbers_known):
         if numbers_known:
             for number in task.depends:
                 if number not in held:
-                    findings.append(Finding("dependencies", task.line, "the task depends on task "
-                                            "%d, which the plan does not hold" % number))
+                    findings.append(
+                        Finding(
+                            "dependencies",
+                            task.line,
+                            "the task depends on task %d, which the plan does not hold" % number,
+                        )
+                    )
         if task.number is None:
             continue
         path = cycle_through(task.number, graph)
         if path is not None and len(path) == 2:
-            findings.append(Finding("dependencies", task.line, "task %d depends on itself"
-                                    % task.number))
+            findings.append(
+                Finding("dependencies", task.line, "task %d depends on itself" % task.number)
+            )
         elif path is not None:
-            findings.append(Finding("dependencies", task.line, "task %d depends on itself "
-                                    "through other tasks: %s" % (task.number,
-                                                                 " → ".join(map(str, path)))))
+            findings.append(
+                Finding(
+                    "dependencies",
+                    task.line,
+                    "task %d depends on itself "
+                    "through other tasks: %s" % (task.number, " → ".join(map(str, path))),
+                )
+            )
     return findings
 
 
@@ -558,10 +761,18 @@ def check_preparatory(tasks):
         return []  # a Depends on off its form leaves unknown who depends on what
     findings = []
     for task in tasks:
-        if task.preparatory and task.number is not None and not any(
-                task.number in other.depends for other in tasks if other is not task):
-            findings.append(Finding("preparatory", task.line, "the preparatory task %d has no "
-                                    "task depending on it" % task.number))
+        if (
+            task.preparatory
+            and task.number is not None
+            and not any(task.number in other.depends for other in tasks if other is not task)
+        ):
+            findings.append(
+                Finding(
+                    "preparatory",
+                    task.line,
+                    "the preparatory task %d has no task depending on it" % task.number,
+                )
+            )
     return findings
 
 
@@ -584,8 +795,9 @@ def check_order(plan):
         return []  # a number or a Depends on off its form leaves unknown who depends on what
     graph = {task.number: set(task.depends) for task in tasks}
     below = {number: depended_on(number, graph) for number in graph}
-    open_tasks = {task.number for task in tasks
-                  if task.state not in FINISHED and task.delivered_in is None}
+    open_tasks = {
+        task.number for task in tasks if task.state not in FINISHED and task.delivered_in is None
+    }
     allowed = []  # (pair, the item's text after `on "`): a heading may itself hold `" — `
     if CHANGE_LOG in plan.sections:
         for _, text in items(plan.sections[CHANGE_LOG]):
@@ -595,23 +807,30 @@ def check_order(plan):
 
     def lets(pair, heading):
         prefix = heading + '" — '
-        return any(other == pair and rest.startswith(prefix) and rest[len(prefix):].strip()
-                   for other, rest in allowed)
+        return any(
+            other == pair and rest.startswith(prefix) and rest[len(prefix) :].strip()
+            for other, rest in allowed
+        )
 
     findings, reported = [], set()
     for entry in plan.entries:
         realizing = sorted(set(entry.realized or []) & open_tasks)
         for first, second in itertools.combinations(realizing, 2):
             key = (frozenset((first, second)), entry.entry)
-            if first in below[second] or second in below[first] or key in reported \
-                    or lets(*key):
+            if first in below[second] or second in below[first] or key in reported or lets(*key):
                 continue
             reported.add(key)
-            findings.append(Finding("order", entry.line, "tasks %d and %d both realize `%s`, and "
-                                    "neither depends on the other — make one depend on the other, "
-                                    "or let them go side by side with a change log item "
-                                    "`- YYYY-MM-DD — side by side: tasks %d, %d on \"%s\" — <why>`"
-                                    % (first, second, entry.entry, first, second, entry.entry)))
+            findings.append(
+                Finding(
+                    "order",
+                    entry.line,
+                    "tasks %d and %d both realize `%s`, and "
+                    "neither depends on the other — make one depend on the other, "
+                    "or let them go side by side with a change log item "
+                    '`- YYYY-MM-DD — side by side: tasks %d, %d on "%s" — <why>`'
+                    % (first, second, entry.entry, first, second, entry.entry),
+                )
+            )
     return findings
 
 
@@ -624,9 +843,15 @@ def check_questions(section, definition, tasks, numbers_known):
         for number, text in items(section):
             match = PLAN_QUESTION.match(text) if text is not None else None
             if not match:
-                findings.append(Finding("questions", number, "the item is none of `- <question> "
-                                        "— definition: <place> — plan: task <n>`, `- <question> "
-                                        "— definition: <place> — answer: <text>`"))
+                findings.append(
+                    Finding(
+                        "questions",
+                        number,
+                        "the item is none of `- <question> "
+                        "— definition: <place> — plan: task <n>`, `- <question> "
+                        "— definition: <place> — answer: <text>`",
+                    )
+                )
                 continue
             task, answer = match.group("task"), match.group("answer")
             if task is not None and not NUMBER.match(task):
@@ -635,25 +860,44 @@ def check_questions(section, definition, tasks, numbers_known):
             if task is None and not (answer or "").strip():
                 findings.append(Finding("questions", number, "the answer is empty"))
             elif task is not None and held is not None and int(task) not in held:
-                findings.append(Finding("questions", number, "the question is sent to task %s, "
-                                        "which the plan does not hold" % task))
+                findings.append(
+                    Finding(
+                        "questions",
+                        number,
+                        "the question is sent to task %s, which the plan does not hold" % task,
+                    )
+                )
             found.append((number, match.group("question"), match.group("place")))
     if definition is None:
         return findings
     for question, place in definition.questions:
         standing = [number for number, q, p in found if q == question and p == place]
         if not standing:
-            findings.append(Finding("questions", section.heading_line, "the open question `%s` "
-                                    "— definition: %s does not stand in the plan word for word"
-                                    % (question, place)))
+            findings.append(
+                Finding(
+                    "questions",
+                    section.heading_line,
+                    "the open question `%s` "
+                    "— definition: %s does not stand in the plan word for word" % (question, place),
+                )
+            )
         for number in standing[1:]:
-            findings.append(Finding("questions", number, "the open question `%s` stands a second "
-                                    "time" % question))
+            findings.append(
+                Finding(
+                    "questions", number, "the open question `%s` stands a second time" % question
+                )
+            )
     for number, question, place in found:
         if place != RAISED and (question, place) not in definition.questions:
-            findings.append(Finding("questions", number, "the definition holds no open question "
-                                    "`%s` resolved in `%s` — a question the breakdown raised reads "
-                                    "`definition: none`" % (question, place)))
+            findings.append(
+                Finding(
+                    "questions",
+                    number,
+                    "the definition holds no open question "
+                    "`%s` resolved in `%s` — a question the breakdown raised reads "
+                    "`definition: none`" % (question, place),
+                )
+            )
     return findings
 
 
@@ -699,8 +943,10 @@ def read(path):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Check a project plan against its form and "
-                                     "against the definition it breaks down.")
+    parser = argparse.ArgumentParser(
+        description="Check a project plan against its form and "
+        "against the definition it breaks down."
+    )
     parser.add_argument("plan", help="the project plan, a Markdown file")
     args = parser.parse_args(argv)
     plan_text, error = read(args.plan)
@@ -711,8 +957,7 @@ def main(argv=None):
     path = definition_path(plan_text)
     if path is not None:
         try:
-            full = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(args.plan)),
-                                                 path))
+            full = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(args.plan)), path))
             definition_text, definition_error = read(full)
         except ValueError:  # a path the file system rejects, such as one holding NUL
             definition_error = "the file system rejects the path"

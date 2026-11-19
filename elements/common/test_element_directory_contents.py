@@ -65,8 +65,11 @@ def merge_onto_exists(root):
 def element_directories(paths):
     """The names of the directories under `elements/` that hold a tracked file, without the
     directory of the part the elements share."""
-    names = {path.split("/")[1] for path in paths
-             if path.startswith("elements/") and path.count("/") >= 2}
+    names = {
+        path.split("/")[1]
+        for path in paths
+        if path.startswith("elements/") and path.count("/") >= 2
+    }
     return sorted(names - {SHARED})
 
 
@@ -81,9 +84,9 @@ def pointer(root, base, known):
     start = EXAMPLES_HEADING.search(text)
     if not start:
         return None
-    rest = text[start.end():]
+    rest = text[start.end() :]
     following = re.search(r"^## ", rest, re.MULTILINE)
-    section = rest[:following.start()] if following else rest
+    section = rest[: following.start()] if following else rest
     return next((name for name in FOUNDATION_FILE.findall(section) if name in known), None)
 
 
@@ -104,19 +107,24 @@ def missing(root, tracked):
 
 
 class ElementDirectoryContents(unittest.TestCase):
-
     def test_every_element_directory_holds_a_template_examples_or_a_pointer_and_a_skill(self):
         # invariant: element-directory-contents
         if not merge_onto_exists(THE_WAY):
-            self.skipTest("no main branch exists, so {merge-onto} does not and the invariant "
-                          "says nothing")
+            self.skipTest(
+                "no main branch exists, so {merge-onto} does not and the invariant says nothing"
+            )
         paths = tracked_files(THE_WAY)
-        self.assertTrue(set(ELEMENTS) <= set(element_directories(paths)),
-                        "git lists the directories of the five elements under elements/")
-        self.assertEqual([], missing(THE_WAY, paths),
-                         "element directories that lack a template, examples or a pointer to "
-                         "examples (the section `## Examples` of the template naming a file of "
-                         "foundations/ in backticks), or a skill/SKILL.md")
+        self.assertTrue(
+            set(ELEMENTS) <= set(element_directories(paths)),
+            "git lists the directories of the five elements under elements/",
+        )
+        self.assertEqual(
+            [],
+            missing(THE_WAY, paths),
+            "element directories that lack a template, examples or a pointer to "
+            "examples (the section `## Examples` of the template naming a file of "
+            "foundations/ in backticks), or a skill/SKILL.md",
+        )
 
 
 class Missing(unittest.TestCase):
@@ -140,50 +148,69 @@ class Missing(unittest.TestCase):
         return made.name, sorted(files)
 
     def test_a_directory_with_a_template_examples_and_a_skill_lacks_nothing(self):
-        root, paths = self.directory({"elements/facts/template.md": "# T\n",
-                                      "elements/facts/examples.md": "# E\n",
-                                      "elements/facts/skill/SKILL.md": "# S\n"})
+        root, paths = self.directory(
+            {
+                "elements/facts/template.md": "# T\n",
+                "elements/facts/examples.md": "# E\n",
+                "elements/facts/skill/SKILL.md": "# S\n",
+            }
+        )
         self.assertEqual([], missing(root, paths))
 
     def test_a_template_that_points_to_a_tracked_foundation_file_stands_for_examples(self):
-        template = ("# T\n\n## Examples\n\nThe entries of `foundations/facts.md` serve as this "
-                    "element's examples.\n\n## Other\n")
-        root, paths = self.directory({"elements/facts/template.md": template,
-                                      "foundations/facts.md": "# Facts\n",
-                                      "elements/facts/skill/SKILL.md": "# S\n"})
+        template = (
+            "# T\n\n## Examples\n\nThe entries of `foundations/facts.md` serve as this "
+            "element's examples.\n\n## Other\n"
+        )
+        root, paths = self.directory(
+            {
+                "elements/facts/template.md": template,
+                "foundations/facts.md": "# Facts\n",
+                "elements/facts/skill/SKILL.md": "# S\n",
+            }
+        )
         self.assertEqual([], missing(root, paths))
 
     def test_a_pointer_to_a_file_git_does_not_track_stands_for_no_examples(self):
         template = "# T\n\n## Examples\n\nThe entries of `foundations/facts.md` serve.\n"
-        root, paths = self.directory({"elements/facts/template.md": template,
-                                      "elements/facts/skill/SKILL.md": "# S\n"})
+        root, paths = self.directory(
+            {"elements/facts/template.md": template, "elements/facts/skill/SKILL.md": "# S\n"}
+        )
         self.assertEqual([("elements/facts", "examples")], missing(root, paths))
 
     def test_a_pointer_outside_the_section_of_examples_stands_for_no_examples(self):
-        template = ("# T\n\n## Examples\n\nNone yet.\n\n## Links\n\nSee `foundations/facts.md`.\n")
-        root, paths = self.directory({"elements/facts/template.md": template,
-                                      "foundations/facts.md": "# Facts\n",
-                                      "elements/facts/skill/SKILL.md": "# S\n"})
+        template = "# T\n\n## Examples\n\nNone yet.\n\n## Links\n\nSee `foundations/facts.md`.\n"
+        root, paths = self.directory(
+            {
+                "elements/facts/template.md": template,
+                "foundations/facts.md": "# Facts\n",
+                "elements/facts/skill/SKILL.md": "# S\n",
+            }
+        )
         self.assertEqual([("elements/facts", "examples")], missing(root, paths))
 
     def test_a_directory_without_a_skill_is_reported(self):
-        root, paths = self.directory({"elements/facts/template.md": "# T\n",
-                                      "elements/facts/examples.md": "# E\n"})
+        root, paths = self.directory(
+            {"elements/facts/template.md": "# T\n", "elements/facts/examples.md": "# E\n"}
+        )
         self.assertEqual([("elements/facts", "skill")], missing(root, paths))
 
     def test_a_directory_without_a_template_is_reported(self):
-        root, paths = self.directory({"elements/facts/examples.md": "# E\n",
-                                      "elements/facts/skill/SKILL.md": "# S\n"})
+        root, paths = self.directory(
+            {"elements/facts/examples.md": "# E\n", "elements/facts/skill/SKILL.md": "# S\n"}
+        )
         self.assertEqual([("elements/facts", "template")], missing(root, paths))
 
     def test_a_new_directory_with_one_file_is_reported_for_the_other_two(self):
         root, paths = self.directory({"elements/new/template.md": "# T\n"})
-        self.assertEqual([("elements/new", "examples"), ("elements/new", "skill")],
-                         missing(root, paths))
+        self.assertEqual(
+            [("elements/new", "examples"), ("elements/new", "skill")], missing(root, paths)
+        )
 
     def test_the_directory_of_the_shared_part_is_no_element_directory(self):
-        root, paths = self.directory({"elements/common/rules.md": "# R\n",
-                                      "elements/common/skill/SKILL.md": "# S\n"})
+        root, paths = self.directory(
+            {"elements/common/rules.md": "# R\n", "elements/common/skill/SKILL.md": "# S\n"}
+        )
         self.assertEqual([], missing(root, paths))
 
 
@@ -202,8 +229,13 @@ class MergeOntoExists(unittest.TestCase):
         self.addCleanup(made.cleanup)
 
         def run(*args):
-            subprocess.run(["git", "-c", "user.name=test", "-c", "user.email=test@example.com",
-                            *args], cwd=made.name, env=CLEAN_GIT, check=True, capture_output=True)
+            subprocess.run(
+                ["git", "-c", "user.name=test", "-c", "user.email=test@example.com", *args],
+                cwd=made.name,
+                env=CLEAN_GIT,
+                check=True,
+                capture_output=True,
+            )
 
         run("init", "-q", "-b", branch)
         run("commit", "-q", "--allow-empty", "-m", "first")
@@ -224,8 +256,13 @@ class MergeOntoExists(unittest.TestCase):
     def test_a_repository_with_no_commit_has_none(self):
         made = tempfile.TemporaryDirectory()
         self.addCleanup(made.cleanup)
-        subprocess.run(["git", "init", "-q", "-b", "main"], cwd=made.name, env=CLEAN_GIT,
-                       check=True, capture_output=True)
+        subprocess.run(
+            ["git", "init", "-q", "-b", "main"],
+            cwd=made.name,
+            env=CLEAN_GIT,
+            check=True,
+            capture_output=True,
+        )
         self.assertFalse(merge_onto_exists(made.name))
 
 

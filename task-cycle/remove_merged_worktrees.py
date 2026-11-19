@@ -70,11 +70,31 @@ import sys
 from dataclasses import dataclass, field
 
 # Ignored paths that a command makes again, which the listing of ignored paths leaves out.
-KNOWN_CACHES = frozenset({
-    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".cache", ".tox", ".nox",
-    ".venv", "venv", "node_modules", "dist", "build", ".next", ".nuxt", ".turbo", ".parcel-cache",
-    "coverage", ".gradle", "target", ".DS_Store", "Thumbs.db",
-})
+KNOWN_CACHES = frozenset(
+    {
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".cache",
+        ".tox",
+        ".nox",
+        ".venv",
+        "venv",
+        "node_modules",
+        "dist",
+        "build",
+        ".next",
+        ".nuxt",
+        ".turbo",
+        ".parcel-cache",
+        "coverage",
+        ".gradle",
+        "target",
+        ".DS_Store",
+        "Thumbs.db",
+    }
+)
 BASE_COPY = re.compile(r"base(?:-(?:check|fix)(?:-(?P<task>[A-Za-z0-9][A-Za-z0-9._-]*))?)?")
 # The sentence of git's refusal to remove a checkout that holds a populated submodule; the rest of its
 # message names the path, which can hold any word.
@@ -123,9 +143,13 @@ class Entry:
 
 def git(directory: str, *arguments: str) -> subprocess.CompletedProcess:
     try:
-        return subprocess.run(["git", "-C", directory, *arguments], capture_output=True,
-                              stdin=subprocess.DEVNULL, env={**os.environ, **ENVIRONMENT},
-                              check=False)
+        return subprocess.run(
+            ["git", "-C", directory, *arguments],
+            capture_output=True,
+            stdin=subprocess.DEVNULL,
+            env={**os.environ, **ENVIRONMENT},
+            check=False,
+        )
     except OSError as error:
         raise CleanupError(f"git cannot run: {error}") from error
 
@@ -226,8 +250,10 @@ class Repository:
             raise CleanupError(f"git fetch {self.remote} failed: {first_line(done.stderr)}")
 
     def resolves(self, reference: str) -> bool:
-        return git(self.top, "rev-parse", "--verify", "--quiet",
-                   f"{reference}^{{commit}}").returncode == 0
+        return (
+            git(self.top, "rev-parse", "--verify", "--quiet", f"{reference}^{{commit}}").returncode
+            == 0
+        )
 
     def choose_target(self, target: str | None) -> None:
         self.target = self.find_target(target)
@@ -258,8 +284,9 @@ class Repository:
         if commit is None:
             return False
         if self.second_parents is None:
-            listed = git(self.top, "rev-list", "--first-parent", "--merges", "--parents",
-                         self.target)
+            listed = git(
+                self.top, "rev-list", "--first-parent", "--merges", "--parents", self.target
+            )
             if listed.returncode != 0:
                 raise CleanupError(f"git rev-list failed: {first_line(listed.stderr)}")
             self.second_parents = set()
@@ -270,8 +297,15 @@ class Repository:
         return commit in self.second_parents
 
     def pushed(self, commit: str) -> bool:
-        found = git(self.top, "for-each-ref", "--contains", commit, "--count=1",
-                    "--format=%(refname)", f"refs/remotes/{self.remote}/")
+        found = git(
+            self.top,
+            "for-each-ref",
+            "--contains",
+            commit,
+            "--count=1",
+            "--format=%(refname)",
+            f"refs/remotes/{self.remote}/",
+        )
         return found.returncode == 0 and bool(text(found.stdout).strip())
 
     def task_branch_tips(self, task: str) -> list[str]:
@@ -291,8 +325,10 @@ class Cleanup:
         self.places = places  # directories that no removed directory may hold
 
     def not_merged(self, subject: str) -> str:
-        return (f"{subject} has no merge git can see on {self.repository.target_name}: not merged, "
-                f"merged by squash or rebase, or its request open or closed")
+        return (
+            f"{subject} has no merge git can see on {self.repository.target_name}: not merged, "
+            f"merged by squash or rebase, or its request open or closed"
+        )
 
     def inspect(self, entry: Entry) -> None:
         """Fills `hard` and `soft` of an entry, and its ownership."""
@@ -308,8 +344,9 @@ class Cleanup:
             entry.hard.append("the directory the script runs in or from, or one that holds it")
         self.describe_owner(entry)
         if entry.prunable or not os.path.isdir(entry.path):
-            entry.hard.append("its directory is missing; `git worktree prune` removes the "
-                              "registration")
+            entry.hard.append(
+                "its directory is missing; `git worktree prune` removes the registration"
+            )
             return
         if is_link(entry.path):
             entry.hard.append("its path is a symbolic link or a junction")
@@ -322,22 +359,34 @@ class Cleanup:
         self.inspect_state(entry)
 
     def reads_as_checkout(self, entry: Entry) -> bool:
-        found = git(entry.path, "rev-parse", "--path-format=absolute", "--show-toplevel",
-                    "--git-common-dir")
+        found = git(
+            entry.path, "rev-parse", "--path-format=absolute", "--show-toplevel", "--git-common-dir"
+        )
         lines = text(found.stdout).splitlines()
-        return (found.returncode == 0 and len(lines) == 2 and same(lines[0], entry.path)
-                and same(lines[1], self.repository.common))
+        return (
+            found.returncode == 0
+            and len(lines) == 2
+            and same(lines[0], entry.path)
+            and same(lines[1], self.repository.common)
+        )
 
     def inspect_state(self, entry: Entry) -> None:
         # `--ignore-submodules=none` is git's own check in `git worktree remove`, which a submodule
         # declared `ignore` in the configuration would otherwise hide.
-        status = git(entry.path, "status", "--porcelain", "-z", "--untracked-files=normal",
-                     "--ignore-submodules=none")
+        status = git(
+            entry.path,
+            "status",
+            "--porcelain",
+            "-z",
+            "--untracked-files=normal",
+            "--ignore-submodules=none",
+        )
         if status.returncode != 0:
             entry.hard.append("git cannot read its state")
         elif status.stdout:
-            entry.hard.append("uncommitted changes: a tracked file changed or a new file that "
-                              "git does not ignore")
+            entry.hard.append(
+                "uncommitted changes: a tracked file changed or a new file that git does not ignore"
+            )
         if entry.head is None or not self.repository.pushed(entry.head):
             entry.hard.append(f"commits not on {self.repository.remote}")
         if entry.branch is not None:
@@ -350,16 +399,19 @@ class Cleanup:
             elif not all(self.repository.merged(tip) for tip in tips):
                 entry.soft.append(self.not_merged(f"its task branch task/{entry.task}"))
         elif entry.owned:
-            entry.soft.append("a base copy named for no task, which goes only with the directory "
-                              "that holds it")
+            entry.soft.append(
+                "a base copy named for no task, which goes only with the directory that holds it"
+            )
 
     def describe_owner(self, entry: Entry) -> None:
         if entry.branch is not None:
             record = os.path.isdir(os.path.join(entry.path, ".runs", "task-cycles"))
             entry.owned = entry.branch.startswith("task/") or record
             if not entry.owned:
-                entry.soft.append("not a cycle's directory: its branch has no `task/` prefix and "
-                                  "it holds no cycle record")
+                entry.soft.append(
+                    "not a cycle's directory: its branch has no `task/` prefix and "
+                    "it holds no cycle record"
+                )
             return
         named = BASE_COPY.fullmatch(entry.name)
         under_runs = os.path.basename(os.path.dirname(entry.path.rstrip("/\\"))) == ".runs"
@@ -367,14 +419,17 @@ class Cleanup:
             entry.owned = True
             entry.task = named.group("task")
         else:
-            entry.soft.append("not a cycle's directory: a detached checkout that is no copy of a "
-                              "base under a `.runs/` directory")
+            entry.soft.append(
+                "not a cycle's directory: a detached checkout that is no copy of a "
+                "base under a `.runs/` directory"
+            )
 
     def judge(self) -> None:
         for entry in self.entries:
             self.inspect(entry)
-        candidates = [entry for entry in self.entries
-                      if entry.owned and not entry.hard and not entry.soft]
+        candidates = [
+            entry for entry in self.entries if entry.owned and not entry.hard and not entry.soft
+        ]
         for parent in sorted(candidates, key=lambda entry: len(os.path.abspath(entry.path))):
             if parent.decision == "remove":
                 continue
@@ -389,22 +444,35 @@ class Cleanup:
             parent.reasons = [self.removal_reason(parent)]
             for entry in held:
                 entry.decision = "remove"
-                entry.reasons = [f"nested in {parent.name}, which is removed; clean and on "
-                                 f"{self.repository.remote}"]
+                entry.reasons = [
+                    f"nested in {parent.name}, which is removed; clean and on "
+                    f"{self.repository.remote}"
+                ]
         for entry in self.entries:
             if entry.decision == "keep":
                 entry.reasons = (entry.hard + entry.soft + entry.reasons) or ["kept"]
 
     def removal_reason(self, entry: Entry) -> str:
         if entry.branch is not None:
-            return (f"clean, on {self.repository.remote}, branch merged into "
-                    f"{self.repository.target_name}")
-        return (f"clean copy of a base on {self.repository.remote}; its task branch "
-                f"task/{entry.task} is merged into {self.repository.target_name}")
+            return (
+                f"clean, on {self.repository.remote}, branch merged into "
+                f"{self.repository.target_name}"
+            )
+        return (
+            f"clean copy of a base on {self.repository.remote}; its task branch "
+            f"task/{entry.task} is merged into {self.repository.target_name}"
+        )
 
     def list_ignored(self, entry: Entry) -> None:
-        found = git(entry.path, "ls-files", "--others", "--ignored", "--exclude-standard",
-                    "--directory", "-z")
+        found = git(
+            entry.path,
+            "ls-files",
+            "--others",
+            "--ignored",
+            "--exclude-standard",
+            "--directory",
+            "-z",
+        )
         if found.returncode != 0:
             entry.ignored = [f"cannot be listed: {first_line(found.stderr)}"]
             return
@@ -421,8 +489,9 @@ def removal_order(entries: list[Entry]) -> list[Entry]:
     """The directories marked `remove`, the deepest first, so that a nested checkout goes before the
     directory that holds it."""
     chosen = [entry for entry in entries if entry.decision == "remove"]
-    return sorted(chosen, key=lambda entry: (-len(os.path.abspath(entry.path).split(os.sep)),
-                                             entry.path))
+    return sorted(
+        chosen, key=lambda entry: (-len(os.path.abspath(entry.path).split(os.sep)), entry.path)
+    )
 
 
 def remove_entry(repository: Repository, entry: Entry) -> str | None:
@@ -443,8 +512,7 @@ def apply_removals(repository: Repository, entries: list[Entry]) -> list[str]:
     failed: dict[str, str] = {}
     lines = []
     for entry in removal_order(entries):
-        blocked = [other for other in entries
-                   if other.path in failed and inside(other, entry)]
+        blocked = [other for other in entries if other.path in failed and inside(other, entry)]
         if blocked:
             failed[entry.path] = f"{blocked[0].name} inside it was not removed"
             lines.append(f"failed   {entry.path}: {failed[entry.path]}")
@@ -465,23 +533,31 @@ def apply_removals(repository: Repository, entries: list[Entry]) -> list[str]:
 def report(entries: list[Entry], applied: list[str] | None) -> list[str]:
     lines = []
     for entry in entries:
-        lines.append(f"{entry.decision:<7} {entry.path}  [{entry.branch_label}]  "
-                     + "; ".join(entry.reasons))
+        lines.append(
+            f"{entry.decision:<7} {entry.path}  [{entry.branch_label}]  " + "; ".join(entry.reasons)
+        )
         if entry.decision == "remove" and entry.ignored:
             for shown in entry.ignored[:IGNORED_SHOWN]:
                 lines.append(f"          ignored: {shown}")
             if len(entry.ignored) > IGNORED_SHOWN:
-                lines.append(f"          ignored: ... and {len(entry.ignored) - IGNORED_SHOWN} more")
+                lines.append(
+                    f"          ignored: ... and {len(entry.ignored) - IGNORED_SHOWN} more"
+                )
     marked = sum(1 for entry in entries if entry.decision == "remove")
     if applied is None:
-        lines.append(f"Dry run: nothing was removed; {marked} directories are marked `remove`. "
-                     "Run again with --apply to remove them; a removal cannot be undone.")
+        lines.append(
+            f"Dry run: nothing was removed; {marked} directories are marked `remove`. "
+            "Run again with --apply to remove them; a removal cannot be undone."
+        )
     else:
         lines.extend(applied)
-    left = [entry for entry in entries
-            if entry.owned and entry.decision == "keep" and not entry.in_use]
-    lines.append("Directories of cycles that stay for a human decision (name | branch | reason):"
-                 + ("" if left else " none"))
+    left = [
+        entry for entry in entries if entry.owned and entry.decision == "keep" and not entry.in_use
+    ]
+    lines.append(
+        "Directories of cycles that stay for a human decision (name | branch | reason):"
+        + ("" if left else " none")
+    )
     for entry in left:
         reason = "; ".join(entry.reasons)
         lines.append(f"- {entry.name} | {entry.branch_label} | {reason}")

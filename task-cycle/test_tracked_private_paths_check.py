@@ -24,8 +24,10 @@ OPEN, CLOSE = "[" + "[", "]" + "]"
 
 
 def invariants_file(sentence: str, others: str = "") -> str:
-    return ("# Invariants\n\n" + others + f"## {INVARIANT}\n\n{sentence}\n\n- **Method:** test\n"
-            "- **Rests on:** none\n\n## after\n\nAnother sentence with `names.py` in it.\n")
+    return (
+        "# Invariants\n\n" + others + f"## {INVARIANT}\n\n{sentence}\n\n- **Method:** test\n"
+        "- **Rests on:** none\n\n## after\n\nAnother sentence with `names.py` in it.\n"
+    )
 
 
 class CommandTest(unittest.TestCase):
@@ -45,8 +47,12 @@ class CommandTest(unittest.TestCase):
         self.track("foundations/invariants.md", invariants_file(sentence, others))
 
     def run_command(self, *arguments: str, cwd: Path | None = None) -> tuple[int, str, str]:
-        run = subprocess.run([sys.executable, "-B", str(COMMAND), *arguments],
-                             cwd=cwd or self.root, capture_output=True, encoding="utf-8")
+        run = subprocess.run(
+            [sys.executable, "-B", str(COMMAND), *arguments],
+            cwd=cwd or self.root,
+            capture_output=True,
+            encoding="utf-8",
+        )
         return run.returncode, run.stdout, run.stderr
 
     def listing(self, out: str) -> list[str]:
@@ -64,7 +70,9 @@ class CommandTest(unittest.TestCase):
         self.track("notes/plan.md", "first\nsecond\nsee " + DRIVE + "work/proj now\n")
         code, out, err = self.run_command(INVARIANT)
         self.assertEqual((code, err), (1, ""))
-        self.assertEqual(self.listing(out), ["notes/plan.md:3: absolute path: " + DRIVE + "work/proj"])
+        self.assertEqual(
+            self.listing(out), ["notes/plan.md:3: absolute path: " + DRIVE + "work/proj"]
+        )
         self.assertEqual(out.splitlines()[-1], "checked: 2 files, 1 listed")
 
     def test_a_path_is_listed_in_a_file_of_any_kind(self) -> None:
@@ -72,8 +80,13 @@ class CommandTest(unittest.TestCase):
         self.track("deploy/run", "dir=" + DRIVE + "srv/x\n")
         self.track("src/a.py", "d = '" + DRIVE + "srv/y'\n")
         _, out, _ = self.run_command(INVARIANT)
-        self.assertEqual(self.listing(out), ["deploy/run:1: absolute path: " + DRIVE + "srv/x",
-                                             "src/a.py:1: absolute path: " + DRIVE + "srv/y"])
+        self.assertEqual(
+            self.listing(out),
+            [
+                "deploy/run:1: absolute path: " + DRIVE + "srv/x",
+                "src/a.py:1: absolute path: " + DRIVE + "srv/y",
+            ],
+        )
 
     def test_a_note_link_is_listed_in_a_markdown_file_only(self) -> None:
         self.invariant("No file git tracks contains a link.")
@@ -85,8 +98,9 @@ class CommandTest(unittest.TestCase):
         self.track("src/b.py", "x = " + OPEN + "a, b" + CLOSE + "\nnote = '" + link + "'\n")
         self.track("report.txt", "see " + link + "\n")
         _, out, _ = self.run_command(INVARIANT)
-        self.assertEqual(self.listing(out), ["B.MD:1: note link: " + link,
-                                             "a.md:1: note link: " + link])
+        self.assertEqual(
+            self.listing(out), ["B.MD:1: note link: " + link, "a.md:1: note link: " + link]
+        )
 
     def test_a_note_link_is_listed_in_every_markdown_suffix_in_any_letter_case(self) -> None:
         self.invariant("No file git tracks contains a link.")
@@ -95,23 +109,32 @@ class CommandTest(unittest.TestCase):
             self.track(name, "see " + link + "\n")
         self.track("src/a.py", "note = '" + link + "'\n")
         _, out, _ = self.run_command(INVARIANT)
-        self.assertEqual(self.listing(out), ["UPPER.MDC:1: note link: " + link,
-                                             "guide.markdown:1: note link: " + link,
-                                             "page.mdx:1: note link: " + link,
-                                             "rules.mdc:1: note link: " + link])
+        self.assertEqual(
+            self.listing(out),
+            [
+                "UPPER.MDC:1: note link: " + link,
+                "guide.markdown:1: note link: " + link,
+                "page.mdx:1: note link: " + link,
+                "rules.mdc:1: note link: " + link,
+            ],
+        )
 
     def test_a_character_class_of_the_shell_in_a_markdown_file_is_no_note_link(self) -> None:
         self.invariant("No file git tracks contains a link.")
         cls = OPEN + ":alpha:" + CLOSE
         link = OPEN + "Meeting notes" + CLOSE
-        self.track("a.md", "run `grep -E \"^" + OPEN + ":space:" + CLOSE + "*#\" f`, see " + link + "\n")
+        self.track(
+            "a.md", 'run `grep -E "^' + OPEN + ":space:" + CLOSE + '*#" f`, see ' + link + "\n"
+        )
         self.track("b.md", "only the class " + cls + " here\n")
         _, out, _ = self.run_command(INVARIANT)
         self.assertEqual(self.listing(out), ["a.md:1: note link: " + link])
 
     def test_the_files_the_sentence_names_are_skipped_and_others_are_not(self) -> None:
-        self.invariant("No file git tracks, other than `listed.py` and `tests/test_listed.py`, "
-                       "contains a path.")
+        self.invariant(
+            "No file git tracks, other than `listed.py` and `tests/test_listed.py`, "
+            "contains a path."
+        )
         self.track("listed.py", "p = '" + DRIVE + "dir'\n")
         self.track("tests/test_listed.py", "p = '" + DRIVE + "dir'\n")
         self.track("other.py", "p = '" + DRIVE + "dir'\n")
@@ -121,8 +144,10 @@ class CommandTest(unittest.TestCase):
         self.assertEqual(out.splitlines()[-1], "checked: 2 files, 1 listed")
 
     def test_a_sentence_that_runs_over_several_lines_names_its_files_from_all_of_them(self) -> None:
-        self.invariant("No file git tracks, other than `first.py`,\n`second.py` and\n"
-                       "`third.py`, contains a path.")
+        self.invariant(
+            "No file git tracks, other than `first.py`,\n`second.py` and\n"
+            "`third.py`, contains a path."
+        )
         for name in ("first.py", "second.py", "third.py"):
             self.track(name, "p = '" + DRIVE + "dir'\n")
         code, out, _ = self.run_command(INVARIANT)
@@ -135,8 +160,13 @@ class CommandTest(unittest.TestCase):
         self.track("names.py", "p = '" + DRIVE + "dir'\n")
         code, out, _ = self.run_command(INVARIANT)
         self.assertEqual(code, 1)
-        self.assertEqual(self.listing(out), ["names.py:1: absolute path: " + DRIVE + "dir",
-                                             "skipped.py:1: absolute path: " + DRIVE + "dir"])
+        self.assertEqual(
+            self.listing(out),
+            [
+                "names.py:1: absolute path: " + DRIVE + "dir",
+                "skipped.py:1: absolute path: " + DRIVE + "dir",
+            ],
+        )
 
     def test_the_command_reads_the_repository_it_is_started_in_from_a_subdirectory(self) -> None:
         self.invariant("No file git tracks, other than `skip.py`, contains a path.")
@@ -164,23 +194,38 @@ class CommandTest(unittest.TestCase):
         # The five shapes of false hits of code, the paths and the links a product really has.
         self.invariant("No file git tracks, other than `tests/support.py`, contains a path.")
         link = OPEN + "Notatka" + CLOSE
-        self.track("web/form.js", "const m = new Map(" + OPEN + OPEN + "address, check(address)"
-                   + CLOSE + CLOSE + ");\n")
-        self.track("deploy/run", "while " + OPEN + OPEN + ":space:" + CLOSE + CLOSE + "; do :; done\n")
-        self.track("foundations/facts.md", "slot p." + OPEN + "PromiseResult" + CLOSE + " of a promise\n")
-        self.track("src/wait.py", 'print(f"... within {limit} s:' + BS + 'n")\n'
-                   'print("done s:' + BS + 'n' + BS + 'n")\n'
-                   "pattern = re.compile(r'" + BS + "d" + BS + "d:" + BS + "d" + BS + "d')\n")
-        self.track("src/real.py", "root = r'C:" + BS + "new" + BS + "dir'\n"
-                   "line = 'wait s:" + BS + "nWynik'\n")
+        self.track(
+            "web/form.js",
+            "const m = new Map(" + OPEN + OPEN + "address, check(address)" + CLOSE + CLOSE + ");\n",
+        )
+        self.track(
+            "deploy/run", "while " + OPEN + OPEN + ":space:" + CLOSE + CLOSE + "; do :; done\n"
+        )
+        self.track(
+            "foundations/facts.md", "slot p." + OPEN + "PromiseResult" + CLOSE + " of a promise\n"
+        )
+        self.track(
+            "src/wait.py",
+            'print(f"... within {limit} s:' + BS + 'n")\n'
+            'print("done s:' + BS + "n" + BS + 'n")\n'
+            "pattern = re.compile(r'" + BS + "d" + BS + "d:" + BS + "d" + BS + "d')\n",
+        )
+        self.track(
+            "src/real.py",
+            "root = r'C:" + BS + "new" + BS + "dir'\nline = 'wait s:" + BS + "nWynik'\n",
+        )
         self.track("tests/support.py", "git_bash = '" + GIT_BASH + "'\nwin = 'C:" + BS + "x'\n")
         self.track("docs/note.md", "zob." + link + " i " + link + "\n")
         code, out, _ = self.run_command(INVARIANT)
         self.assertEqual(code, 1)
-        self.assertEqual(self.listing(out), [
-            "docs/note.md:1: note link: " + link,
-            "src/real.py:1: absolute path: C:" + BS + "new" + BS + "dir",
-            "src/real.py:2: absolute path: s:" + BS + "nWynik"])
+        self.assertEqual(
+            self.listing(out),
+            [
+                "docs/note.md:1: note link: " + link,
+                "src/real.py:1: absolute path: C:" + BS + "new" + BS + "dir",
+                "src/real.py:2: absolute path: s:" + BS + "nWynik",
+            ],
+        )
 
     def test_a_posix_example_of_a_shell_is_listed_unless_its_file_is_named(self) -> None:
         self.invariant("No file git tracks, other than `tests/support.py`, contains a path.")

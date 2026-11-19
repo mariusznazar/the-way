@@ -45,9 +45,21 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(HERE, "..", "relation-model"))
 from fingerprint import fingerprint  # noqa: E402
 
-SECTIONS = ("Goal", "Background", "In scope", "Out of scope", "Inputs and constraints",
-            "Deliverables", "Success", "Risks", "Open questions", "Touched parts and decisions",
-            "Technology", "Projected foundation changes", "Approval record")
+SECTIONS = (
+    "Goal",
+    "Background",
+    "In scope",
+    "Out of scope",
+    "Inputs and constraints",
+    "Deliverables",
+    "Success",
+    "Risks",
+    "Open questions",
+    "Touched parts and decisions",
+    "Technology",
+    "Projected foundation changes",
+    "Approval record",
+)
 APPROVAL_RECORD = "Approval record"
 OPEN_QUESTIONS = "Open questions"
 PROJECTED = "Projected foundation changes"
@@ -61,14 +73,18 @@ NESTED_ITEM = re.compile(r"^\s+([-*+]|\d+[.)]) ")
 RESOLVED = re.compile(r"— resolved in: (breakdown|task: \S.*)$")
 CANDIDATES = re.compile(r"^Candidates: (\d+) shown, (\d+) accepted — \d{4}-\d{2}-\d{2}$")
 WORKING_TABLE = "### Candidates in progress"
-TECHNOLOGY_ITEM = re.compile(r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected: (?P<question>\S.*?)"
-                             r"|(?P<open>open))\s*$")
+TECHNOLOGY_ITEM = re.compile(
+    r"^\S.*? — (?:held by: (?P<held>\S.*?)|projected: (?P<question>\S.*?)"
+    r"|(?P<open>open))\s*$"
+)
 DECISION_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9]*-\d+$")
 PROJECTED_HEADING = re.compile(r"^#### .+? — (.+?)\s*$")
 FIELD = re.compile(r"^- \*\*([^*]+):\*\*")
 MEANING = re.compile(r"^>")
-STATUS = re.compile(r"^Status: (definition — open: \S.*|awaiting approval"
-                    r"|approved \d{4}-\d{2}-\d{2})$")
+STATUS = re.compile(
+    r"^Status: (definition — open: \S.*|awaiting approval"
+    r"|approved \d{4}-\d{2}-\d{2})$"
+)
 APPROVAL_LINES = (
     ("Approved by", re.compile(r"^- Approved by: \S.*, \d{4}-\d{2}-\d{2}$")),
     ("Definition fingerprint", re.compile(r"^- Definition fingerprint: ([0-9a-f]{8})$")),
@@ -116,25 +132,44 @@ def check_structure(preamble, sections):
     if not status:
         findings.append(Finding("structure", 1, "no `Status:` line above the first section"))
     elif not STATUS.match(status[0][1].rstrip()):
-        findings.append(Finding("structure", status[0][0], "the status reads none of "
-                                "`definition — open: <sections>`, `awaiting approval`, "
-                                "`approved YYYY-MM-DD`"))
+        findings.append(
+            Finding(
+                "structure",
+                status[0][0],
+                "the status reads none of "
+                "`definition — open: <sections>`, `awaiting approval`, "
+                "`approved YYYY-MM-DD`",
+            )
+        )
     names = [s.name for s in sections]
     for section in sections:
         if section.name not in SECTIONS:
-            findings.append(Finding("structure", section.heading_line,
-                                    "`## %s` is no section of the template" % section.name))
+            findings.append(
+                Finding(
+                    "structure",
+                    section.heading_line,
+                    "`## %s` is no section of the template" % section.name,
+                )
+            )
         elif names.count(section.name) > 1 and names.index(section.name) != sections.index(section):
-            findings.append(Finding("structure", section.heading_line,
-                                    "`## %s` stands a second time" % section.name))
+            findings.append(
+                Finding(
+                    "structure", section.heading_line, "`## %s` stands a second time" % section.name
+                )
+            )
     for name in SECTIONS:
         if name not in names:
             findings.append(Finding("structure", 1, "the section `## %s` is missing" % name))
     known = [name for name in dict.fromkeys(names) if name in SECTIONS]
     if known != [name for name in SECTIONS if name in known]:
         line = next(s.heading_line for s in sections if s.name in SECTIONS)
-        findings.append(Finding("structure", line, "the sections stand out of the template's "
-                                "order: %s" % ", ".join(known)))
+        findings.append(
+            Finding(
+                "structure",
+                line,
+                "the sections stand out of the template's order: %s" % ", ".join(known),
+            )
+        )
     return findings
 
 
@@ -161,8 +196,13 @@ def check_gaps(sections):
     for section in sections:
         lines = content(section)
         if not lines:
-            findings.append(Finding("a", section.heading_line, "`## %s` is empty — write `none` "
-                                    "or `TODO`" % section.name))
+            findings.append(
+                Finding(
+                    "a",
+                    section.heading_line,
+                    "`## %s` is empty — write `none` or `TODO`" % section.name,
+                )
+            )
         exempt = field_lines(section) if section.name == PROJECTED else set()
         for number, line in lines:
             if TODO.search(line) and number not in exempt:
@@ -179,14 +219,26 @@ def check_candidates(section):
     number, first = lines[0]
     match = CANDIDATES.match(first.rstrip())
     if not match:
-        findings.append(Finding("f", number, "`## %s` does not begin with `Candidates: <n> shown, "
-                                "<k> accepted — YYYY-MM-DD`" % PROJECTED))
+        findings.append(
+            Finding(
+                "f",
+                number,
+                "`## %s` does not begin with `Candidates: <n> shown, "
+                "<k> accepted — YYYY-MM-DD`" % PROJECTED,
+            )
+        )
     elif int(match.group(2)) > int(match.group(1)):
         findings.append(Finding("f", number, "more candidates accepted than shown"))
     for number, line in lines:
         if line.rstrip() == WORKING_TABLE:
-            findings.append(Finding("f", number, "the working table of candidates still stands — "
-                                    "the step that finds foundation entries has not ended"))
+            findings.append(
+                Finding(
+                    "f",
+                    number,
+                    "the working table of candidates still stands — "
+                    "the step that finds foundation entries has not ended",
+                )
+            )
     return findings
 
 
@@ -217,20 +269,28 @@ def check_open_questions(section):
         return findings
     for number, text in items(section):
         if text is None:
-            findings.append(Finding("d", number, "a line under `## %s` that is no question "
-                                    "item" % OPEN_QUESTIONS))
+            findings.append(
+                Finding(
+                    "d", number, "a line under `## %s` that is no question item" % OPEN_QUESTIONS
+                )
+            )
         elif not RESOLVED.search(text):
-            findings.append(Finding("d", number, "the question names no place it is resolved "
-                                    "in — end it with `— resolved in: breakdown` or "
-                                    "`— resolved in: task: <name>`"))
+            findings.append(
+                Finding(
+                    "d",
+                    number,
+                    "the question names no place it is resolved "
+                    "in — end it with `— resolved in: breakdown` or "
+                    "`— resolved in: task: <name>`",
+                )
+            )
     return findings
 
 
 def projected_questions(section):
     """Return the question of every decision heading `#### <identifier> — <question>` of a
     section."""
-    return {match.group(1) for _, line in section.lines
-            if (match := PROJECTED_HEADING.match(line))}
+    return {match.group(1) for _, line in section.lines if (match := PROJECTED_HEADING.match(line))}
 
 
 def check_technology(section, projected_section):
@@ -239,28 +299,50 @@ def check_technology(section, projected_section):
     if not lines or [line.strip() for _, line in lines] == ["TODO"]:
         return []  # condition a reports the section as empty or open
     if [line.strip() for _, line in lines] == ["none"]:
-        return [Finding("g", lines[0][0], "`## %s` reads `none` — list the choices the project "
-                        "needs, each with the entry that settles it" % TECHNOLOGY)]
+        return [
+            Finding(
+                "g",
+                lines[0][0],
+                "`## %s` reads `none` — list the choices the project "
+                "needs, each with the entry that settles it" % TECHNOLOGY,
+            )
+        ]
     questions = projected_questions(projected_section)
     findings = []
     for number, text in items(section):
         if text is None:
-            findings.append(Finding("g", number, "a line under `## %s` that is no choice item"
-                                    % TECHNOLOGY))
+            findings.append(
+                Finding("g", number, "a line under `## %s` that is no choice item" % TECHNOLOGY)
+            )
             continue
         match = TECHNOLOGY_ITEM.match(text)
         if not match:
-            findings.append(Finding("g", number, "the choice ends with none of "
-                                    "`— held by: <decision>`, `— projected: <question>`"))
+            findings.append(
+                Finding(
+                    "g",
+                    number,
+                    "the choice ends with none of "
+                    "`— held by: <decision>`, `— projected: <question>`",
+                )
+            )
         elif match.group("open"):
-            findings.append(Finding("g", number, "the choice is still open — the step that "
-                                    "settles the technology has not ended"))
+            findings.append(
+                Finding(
+                    "g",
+                    number,
+                    "the choice is still open — the step that settles the technology has not ended",
+                )
+            )
         elif match.group("held") is not None and not DECISION_IDENTIFIER.match(match.group("held")):
-            findings.append(Finding("g", number, "`held by:` names no decision as "
-                                    "`<PREFIX>-<NN>`"))
+            findings.append(Finding("g", number, "`held by:` names no decision as `<PREFIX>-<NN>`"))
         elif match.group("question") is not None and match.group("question") not in questions:
-            findings.append(Finding("g", number, "`projected:` names a question no heading under "
-                                    "`## %s` holds" % PROJECTED))
+            findings.append(
+                Finding(
+                    "g",
+                    number,
+                    "`projected:` names a question no heading under `## %s` holds" % PROJECTED,
+                )
+            )
     return findings
 
 
@@ -271,26 +353,36 @@ def definition_fingerprint(text):
     _, sections = split(text)
     start = next(s.heading_line for s in sections if s.name == SECTIONS[0])
     end = next(s.heading_line for s in sections if s.name == APPROVAL_RECORD)
-    return fingerprint("\n".join(lines[start - 1:end - 1]))
+    return fingerprint("\n".join(lines[start - 1 : end - 1]))
 
 
 def check_approval_record(section, text):
     findings = []
     lines = content(section)
     if len(lines) != len(APPROVAL_LINES):
-        return [Finding("e", section.heading_line, "the approval record holds %d lines, not the "
-                        "two: Approved by, Definition fingerprint"
-                        % len(lines))]
+        return [
+            Finding(
+                "e",
+                section.heading_line,
+                "the approval record holds %d lines, not the "
+                "two: Approved by, Definition fingerprint" % len(lines),
+            )
+        ]
     for (number, line), (name, form) in zip(lines, APPROVAL_LINES):
         match = form.match(line.rstrip())
         if not match:
             findings.append(Finding("e", number, "the line is not `- %s: …` in its form" % name))
         elif name == "Definition fingerprint" and match.group(1) != definition_fingerprint(text):
-            findings.append(Finding("e", number, "the fingerprint %s does not match the "
-                                    "definition, whose fingerprint is %s — the definition "
-                                    "changed after its approval and goes through the readiness "
-                                    "approval again"
-                                    % (match.group(1), definition_fingerprint(text))))
+            findings.append(
+                Finding(
+                    "e",
+                    number,
+                    "the fingerprint %s does not match the "
+                    "definition, whose fingerprint is %s — the definition "
+                    "changed after its approval and goes through the readiness "
+                    "approval again" % (match.group(1), definition_fingerprint(text)),
+                )
+            )
     return findings
 
 
@@ -323,14 +415,20 @@ def read(path):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Check a project definition against the "
-                                     "conditions of the readiness approval a script decides.")
+    parser = argparse.ArgumentParser(
+        description="Check a project definition against the "
+        "conditions of the readiness approval a script decides."
+    )
     parser.add_argument("definition", help="the project definition, a Markdown file")
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument("--before-approval", action="store_true",
-                      help="leave out the approval record")
-    mode.add_argument("--fingerprint", action="store_true",
-                      help="print the fingerprint the approval record is to carry")
+    mode.add_argument(
+        "--before-approval", action="store_true", help="leave out the approval record"
+    )
+    mode.add_argument(
+        "--fingerprint",
+        action="store_true",
+        help="print the fingerprint the approval record is to carry",
+    )
     args = parser.parse_args(argv)
     text, error = read(args.definition)
     if error:
@@ -347,10 +445,11 @@ def main(argv=None):
     findings = check(text, before_approval=args.before_approval)
     for finding in findings:
         print(finding)
-    left_out = " (approval record left out: --before-approval)" \
-        if args.before_approval else ""
-    print("readiness: %s%s" % ("%d finding(s)" % len(findings) if findings else "nothing found",
-                               left_out))
+    left_out = " (approval record left out: --before-approval)" if args.before_approval else ""
+    print(
+        "readiness: %s%s"
+        % ("%d finding(s)" % len(findings) if findings else "nothing found", left_out)
+    )
     return 1 if findings else 0
 
 

@@ -120,7 +120,10 @@ CODEX = "Codex"
 UNKNOWN = "unknown"
 SYNTHETIC_MODEL = "<synthetic>"
 REWRITE_FLOOR = 2000
-REWRITE_SHRINK_LIMIT = (7, 10)  # a context that falls to 7/10 of the previous one or less is a collapse
+REWRITE_SHRINK_LIMIT = (
+    7,
+    10,
+)  # a context that falls to 7/10 of the previous one or less is a collapse
 LARGE_CONTEXT = 200000
 SEPARATORS = re.compile("[" + chr(92) * 2 + "/]+")  # the class `[\\/]`: a backslash or a slash
 LOG_PATH = re.compile(r"(?<![\w.-])foundations/decisions\.md(?![\w-]|\.\w)")
@@ -148,6 +151,7 @@ class Call:
 class Reads:
     """The bytes of the decision log and of the index of decisions that entered an agent's context,
     and how many times each entered it."""
+
     log_bytes: int = 0
     log_reads: int = 0
     index_bytes: int = 0
@@ -229,8 +233,9 @@ def json_lines(path: Path) -> Iterator[tuple[int, dict]]:
                 if entry is not None:
                     yield number, entry
     except MemoryError as error:
-        raise MeasuresError(f"{path}:{reading}: the line is too large to read into memory") \
-            from error
+        raise MeasuresError(
+            f"{path}:{reading}: the line is too large to read into memory"
+        ) from error
     except (OSError, UnicodeDecodeError) as error:
         raise MeasuresError(f"cannot read {path}: {error}") from error
 
@@ -241,14 +246,23 @@ def read_response(entry: dict, where: str, index: int) -> tuple[str, int, Call]:
     message = member(entry, "message", "message", where)
     usage = member(message, "usage", "message.usage", where)
     five_and_one = member(usage, "cache_creation", "message.usage.cache_creation", where)
-    write = whole(usage, "cache_creation_input_tokens", "message.usage.cache_creation_input_tokens",
-                  where)
+    write = whole(
+        usage, "cache_creation_input_tokens", "message.usage.cache_creation_input_tokens", where
+    )
     input_tokens = whole(usage, "input_tokens", "message.usage.input_tokens", where)
     read = whole(usage, "cache_read_input_tokens", "message.usage.cache_read_input_tokens", where)
-    write_5m = whole(five_and_one, "ephemeral_5m_input_tokens",
-                     "message.usage.cache_creation.ephemeral_5m_input_tokens", where)
-    write_1h = whole(five_and_one, "ephemeral_1h_input_tokens",
-                     "message.usage.cache_creation.ephemeral_1h_input_tokens", where)
+    write_5m = whole(
+        five_and_one,
+        "ephemeral_5m_input_tokens",
+        "message.usage.cache_creation.ephemeral_5m_input_tokens",
+        where,
+    )
+    write_1h = whole(
+        five_and_one,
+        "ephemeral_1h_input_tokens",
+        "message.usage.cache_creation.ephemeral_1h_input_tokens",
+        where,
+    )
     call = Call(
         at=read_time(entry, where),
         index=index,
@@ -293,8 +307,11 @@ def result_text(content: object, kinds: frozenset[str], label: str, where: str) 
     if isinstance(content, list):
         parts = []
         for index, block in enumerate(content):
-            if (isinstance(block, dict) and isinstance(block.get("type"), str)
-                    and block["type"] in kinds):
+            if (
+                isinstance(block, dict)
+                and isinstance(block.get("type"), str)
+                and block["type"] in kinds
+            ):
                 text = member(block, "text", f"{label}[{index}].text", where)
                 if isinstance(text, str):
                     parts.append(text)
@@ -355,8 +372,9 @@ def read_claude_blocks(entry: dict, where: str, counter: ReadCounter) -> None:
         elif kind == "user" and block.get("type") == "tool_result":
             ident = identifier(block, "tool_use_id", f"{label}.tool_use_id", where)
             result = member(block, "content", f"{label}.content", where)
-            counter.result(ident, result_text(result, CLAUDE_TEXT_BLOCKS, f"{label}.content",
-                                              where))
+            counter.result(
+                ident, result_text(result, CLAUDE_TEXT_BLOCKS, f"{label}.content", where)
+            )
 
 
 def read_claude_agent(path: Path) -> tuple[list[Call], Reads]:
@@ -416,12 +434,14 @@ def read_claude_session(path: Path) -> list[Agent]:
         for transcript in sorted(folder.glob("agent-*.jsonl")):
             agent_id = transcript.stem.removeprefix("agent-")
             calls, reads = read_claude_agent(transcript)
-            agents.append(Agent(read_subagent_name(transcript, agent_id), False, calls,
-                                reads=reads))
+            agents.append(
+                Agent(read_subagent_name(transcript, agent_id), False, calls, reads=reads)
+            )
     return agents
 
 
 # Codex
+
 
 @dataclass(frozen=True)
 class RolloutMeta:
@@ -473,7 +493,7 @@ def read_codex_record(entry: dict, where: str, counter: ReadCounter) -> None:
         if kind == "function_call" and isinstance(arguments, str):
             try:
                 texts.extend(text_values(json.loads(arguments)))
-            except (ValueError, RecursionError, MemoryError):
+            except ValueError, RecursionError, MemoryError:
                 pass  # not JSON, or too large to parse: the text itself was searched
         counter.call(ident, names_log(texts))
     elif kind in CODEX_OUTPUTS:
@@ -501,14 +521,24 @@ def read_codex_calls(path: Path, ident: str) -> tuple[list[Call], Reads]:
             continue
         usage = member(payload, "usage", "payload.usage", where)
         input_tokens = whole(usage, "input_tokens", "payload.usage.input_tokens", where)
-        calls.append(Call(at=read_time(entry, where), index=number, context=input_tokens,
-                          read=0, write=0, write_5m=0, write_1h=0))
+        calls.append(
+            Call(
+                at=read_time(entry, where),
+                index=number,
+                context=input_tokens,
+                read=0,
+                write=0,
+                write_5m=0,
+                write_1h=0,
+            )
+        )
     calls.sort(key=lambda call: (call.at, call.index))
     return calls, counter.reads
 
 
-def codex_subagents(home: Path, root: str,
-                    since: datetime | None) -> list[tuple[Path, RolloutMeta]]:
+def codex_subagents(
+    home: Path, root: str, since: datetime | None
+) -> list[tuple[Path, RolloutMeta]]:
     """Every rollout under `home/sessions` that descends from `root`, as its path and identity. A
     rollout descends from a rollout whose id its parent_thread_id names; the search goes level by
     level, each level in the order of the paths. A rollout last modified more than a second before
@@ -534,8 +564,11 @@ def codex_subagents(home: Path, root: str,
     while queue:
         for path, meta in children.get(queue.pop(0), []):
             if meta.ident in known:
-                print(f"Warning: {path} has the id {meta.ident} of an agent already found; its "
-                      "calls are not counted", file=sys.stderr)
+                print(
+                    f"Warning: {path} has the id {meta.ident} of an agent already found; its "
+                    "calls are not counted",
+                    file=sys.stderr,
+                )
                 continue
             known.add(meta.ident)
             found.append((path, meta))
@@ -648,8 +681,9 @@ def report(agents: list[Agent]) -> str:
     orchestrators = [agent for agent in agents if agent.orchestrator]
     subagents = [agent for agent in agents if not agent.orchestrator]
     # The sessions are in the order they were read in, so the stable sort keeps a tie in that order.
-    orchestrator_calls = sorted((call for agent in orchestrators for call in agent.calls),
-                                key=lambda call: call.at)
+    orchestrator_calls = sorted(
+        (call for agent in orchestrators for call in agent.calls), key=lambda call: call.at
+    )
     subagent_calls = [call for agent in subagents for call in agent.calls]
     everything = orchestrator_calls + subagent_calls
     contexts = [call.context for call in everything]
@@ -705,8 +739,9 @@ def current_session() -> str:
     if len(found) == 1:
         return next(iter(found.values()))
     if not found:
-        raise MeasuresError("name a session; neither " + " nor ".join(SESSION_VARIABLES)
-                            + " is set")
+        raise MeasuresError(
+            "name a session; neither " + " nor ".join(SESSION_VARIABLES) + " is set"
+        )
     raise MeasuresError("name a session; both " + " and ".join(SESSION_VARIABLES) + " are set")
 
 
@@ -720,8 +755,9 @@ def resolve(name: str, codex_home: Path, claude_home: Path) -> Path:
         return found[0]
     if not found:
         raise MeasuresError(f"no transcript of session {name!r}")
-    raise MeasuresError(f"session {name!r} matches several transcripts: "
-                        + ", ".join(str(path) for path in found))
+    raise MeasuresError(
+        f"session {name!r} matches several transcripts: " + ", ".join(str(path) for path in found)
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -729,13 +765,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("sessions", nargs="*", metavar="SESSION")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--codex-home", type=Path, default=default_home("CODEX_HOME", ".codex"))
-    parser.add_argument("--claude-home", type=Path,
-                        default=default_home("CLAUDE_CONFIG_DIR", ".claude"))
+    parser.add_argument(
+        "--claude-home", type=Path, default=default_home("CLAUDE_CONFIG_DIR", ".claude")
+    )
     args = parser.parse_args(argv)
     try:
         names = args.sessions or [current_session()]
-        paths = dict.fromkeys(resolve(name, args.codex_home, args.claude_home).resolve()
-                              for name in names)
+        paths = dict.fromkeys(
+            resolve(name, args.codex_home, args.claude_home).resolve() for name in names
+        )
         agents: list[Agent] = []
         for path in sorted(paths, key=lambda path: path.stem):
             agents.extend(read_session(path, args.codex_home))

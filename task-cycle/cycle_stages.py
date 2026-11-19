@@ -172,6 +172,7 @@ class Record:
 class Call:
     """A tool call from its start to its result. `end` is None where no result was read; `known`
     is False where the reader does not recognise the call's type."""
+
     start: datetime
     end: datetime | None
     name: str
@@ -248,8 +249,12 @@ def files_named(text: str) -> tuple[list[str], bool]:
     for match in FILE_NAMED.finditer(text):
         # A full stop after the name ends the sentence the name stands in; it is no part of it.
         name = match.group(1).rstrip(".")
-        if (len(name) > MAX_FILE_NAME or not name.endswith(".md") or ".." in name
-                or not (name[0].isalnum() or name[0] == "_")):
+        if (
+            len(name) > MAX_FILE_NAME
+            or not name.endswith(".md")
+            or ".." in name
+            or not (name[0].isalnum() or name[0] == "_")
+        ):
             continue
         path = f"reports/{name}"
         if path in found:
@@ -264,8 +269,10 @@ def add_named_note(agent: Agent, over: int) -> None:
     """A warning for the subagent turns that named more files than the column keeps; the
     orchestrator's own messages fill no column."""
     if over and agent.parent is not None:
-        agent.notes.append(f"{over} turn(s) name more than {MAX_FILES_NAMED} files of `reports/`; "
-                           "the rest are left out of *Files named*")
+        agent.notes.append(
+            f"{over} turn(s) name more than {MAX_FILES_NAMED} files of `reports/`; "
+            "the rest are left out of *Files named*"
+        )
 
 
 def parse_time(text: str) -> datetime:
@@ -299,8 +306,12 @@ def first_line(path: Path) -> dict:
     raise CycleStagesError(f"{path} is empty")
 
 
-def add_calls(agent: Agent, started: dict[str, tuple[datetime, str]],
-              ended: dict[str, datetime], tail: set[str]) -> None:
+def add_calls(
+    agent: Agent,
+    started: dict[str, tuple[datetime, str]],
+    ended: dict[str, datetime],
+    tail: set[str],
+) -> None:
     """The agent's calls, each with its result. A call with no result in `tail`, which no later
     entry of the transcript follows, is cut off by the end of the transcript: it is no wait, so it
     ends where it starts."""
@@ -316,12 +327,15 @@ def add_call_notes(agent: Agent) -> None:
     does not recognise."""
     unpaired = sum(1 for call in agent.calls if call.known and not call.readable)
     if unpaired:
-        agent.notes.append(f"{unpaired} tool call(s) with no readable result: their waits are "
-                           "unknown")
+        agent.notes.append(
+            f"{unpaired} tool call(s) with no readable result: their waits are unknown"
+        )
     unrecognised = [call.name for call in agent.calls if not call.known]
     if unrecognised:
-        agent.notes.append(f"{len(unrecognised)} call(s) of a type the reader does not recognise "
-                           f"({', '.join(sorted(set(unrecognised)))}): their waits are unknown")
+        agent.notes.append(
+            f"{len(unrecognised)} call(s) of a type the reader does not recognise "
+            f"({', '.join(sorted(set(unrecognised)))}): their waits are unknown"
+        )
 
 
 # Fields a reading needs
@@ -344,8 +358,12 @@ TOKEN_DIGITS = 15
 
 def required_count(holder: object, key: str, name: str, where: str) -> int:
     value = required(holder, key, name, where)
-    if (isinstance(value, bool) or not isinstance(value, int) or value < 0
-            or value >= 10 ** TOKEN_DIGITS):
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, int)
+        or value < 0
+        or value >= 10**TOKEN_DIGITS
+    ):
         raise MissingFieldError(f"{where}: field {name} is not a whole number")
     return value
 
@@ -495,8 +513,11 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
             elif event == "user_message":
                 owner = turn or current
                 text = payload.get("message")
-                if owner and owner not in messages and not (
-                        isinstance(text, str) and is_injected(text)):
+                if (
+                    owner
+                    and owner not in messages
+                    and not (isinstance(text, str) and is_injected(text))
+                ):
                     messages[owner] = text if isinstance(text, str) else None
             elif event == "task_complete":
                 ends[turn] = at
@@ -512,8 +533,9 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
             is_message, text = codex_message_text(payload, meta.get("agent_path"))
             if is_message:
                 passthrough = payload.get("internal_chat_message_metadata_passthrough")
-                owner = (passthrough.get("turn_id") if isinstance(passthrough, dict) else None) \
-                    or current
+                owner = (
+                    passthrough.get("turn_id") if isinstance(passthrough, dict) else None
+                ) or current
                 if owner and owner not in messages:
                     messages[owner] = text
             elif item in CODEX_CALL_KINDS:
@@ -550,8 +572,9 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
         turns.append((start, ends.get(turn) or last_seen[turn], named))
     open_turns = len(own_turns - ends.keys())
     if open_turns and parent is not None:
-        agent.notes.append(f"{open_turns} turn(s) without `task_complete`, each ending at its "
-                           "last entry")
+        agent.notes.append(
+            f"{open_turns} turn(s) without `task_complete`, each ending at its last entry"
+        )
     add_named_note(agent, over)
     turns.sort(key=lambda turn: turn[:2])
     agent.turns = [(start, end) for start, end, _ in turns]
@@ -560,19 +583,21 @@ def read_codex_agent(path: Path, parent: str | None) -> Agent:
     agent.calls.extend(unrecognised)
     if parent is not None:
         # A forked subagent's rollout repeats its parent's calls before its own turns.
-        agent.calls = [call for call in agent.calls
-                       if any(a <= call.start <= b for a, b in agent.turns)]
+        agent.calls = [
+            call for call in agent.calls if any(a <= call.start <= b for a, b in agent.turns)
+        ]
     if left_out:
-        agent.notes.append(f"{left_out} exec call(s) that call a subagent tool: their time is "
-                           "left out of the waits")
+        agent.notes.append(
+            f"{left_out} exec call(s) that call a subagent tool: their time is "
+            "left out of the waits"
+        )
     add_call_notes(agent)
     for at, turn, usage in raw:
         agent.records.append(Record(at, usage, models.get(turn)))
     return agent
 
 
-def codex_subagent_paths(home: Path, root: str,
-                         since: datetime | None) -> list[tuple[Path, str]]:
+def codex_subagent_paths(home: Path, root: str, since: datetime | None) -> list[tuple[Path, str]]:
     """Every rollout under `home/sessions` descending from `root`, with its parent's id. Where
     `since`, the time of the orchestrator's first turn, is None, no rollout is left out by its
     time."""
@@ -599,8 +624,10 @@ def read_codex_session(path: Path, codex_home: Path) -> Session:
     orchestrator = read_codex_agent(path, None)
     orchestrator.name = "orchestrator"
     since = min((start for start, _ in orchestrator.turns), default=None)
-    subagents = [read_codex_agent(p, parent) for p, parent in
-                 codex_subagent_paths(codex_home, orchestrator.key, since)]
+    subagents = [
+        read_codex_agent(p, parent)
+        for p, parent in codex_subagent_paths(codex_home, orchestrator.key, since)
+    ]
     return Session("Codex", orchestrator.key, path, orchestrator, subagents)
 
 
@@ -613,8 +640,12 @@ def text_of(value: object) -> str:
     return value if isinstance(value, str) else ""
 
 
-COUNT_FIELDS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens",
-                "output_tokens")
+COUNT_FIELDS = (
+    "input_tokens",
+    "cache_creation_input_tokens",
+    "cache_read_input_tokens",
+    "output_tokens",
+)
 # The cache writes of each lifetime, in `message.usage.cache_creation`.
 LIFETIME_FIELDS = ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")
 
@@ -625,8 +656,12 @@ def is_text(entry: dict) -> bool:
     if isinstance(content, str):
         return True
     # A content that is neither a text nor a list holds no text.
-    return (isinstance(content, list) and bool(content) and isinstance(content[0], dict)
-            and content[0].get("type") == "text")
+    return (
+        isinstance(content, list)
+        and bool(content)
+        and isinstance(content[0], dict)
+        and content[0].get("type") == "text"
+    )
 
 
 def content_blocks(entry: dict) -> list[dict]:
@@ -642,8 +677,11 @@ def message_text(entry: dict) -> str:
     content = (entry.get("message") or {}).get("content")
     if isinstance(content, str):
         return content
-    return "\n".join(block["text"] for block in content_blocks(entry)
-                     if block.get("type") == "text" and isinstance(block.get("text"), str))
+    return "\n".join(
+        block["text"]
+        for block in content_blocks(entry)
+        if block.get("type") == "text" and isinstance(block.get("text"), str)
+    )
 
 
 def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Agent:
@@ -688,12 +726,15 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             if model == "<synthetic>":
                 continue
             usage = required(message, "usage", "message.usage", where)
-            counts = {key: required_count(usage, key, f"message.usage.{key}", where)
-                      for key in COUNT_FIELDS}
+            counts = {
+                key: required_count(usage, key, f"message.usage.{key}", where)
+                for key in COUNT_FIELDS
+            }
             creation = required(usage, "cache_creation", "message.usage.cache_creation", where)
             for lifetime in LIFETIME_FIELDS:
-                counts[lifetime] = required_count(creation, lifetime,
-                                                  f"message.usage.cache_creation.{lifetime}", where)
+                counts[lifetime] = required_count(
+                    creation, lifetime, f"message.usage.cache_creation.{lifetime}", where
+                )
             activity.append(at)
             # Claude Code writes one response over several lines, which share its id.
             ident = text_of(message.get("id")) or text_of(entry.get("uuid")) or None
@@ -728,21 +769,33 @@ def read_claude_agent(path: Path, key: str, name: str, parent: str | None) -> Ag
             agent.turns.append((start, inside[-1]))
             agent.turn_files.append(named)
     add_named_note(agent, over)
-    split = sum(1 for _, usage, _ in responses.values()
-                if usage["ephemeral_5m_input_tokens"] + usage["ephemeral_1h_input_tokens"]
-                != usage["cache_creation_input_tokens"])
+    split = sum(
+        1
+        for _, usage, _ in responses.values()
+        if usage["ephemeral_5m_input_tokens"] + usage["ephemeral_1h_input_tokens"]
+        != usage["cache_creation_input_tokens"]
+    )
     if split:
-        agent.notes.append(f"{split} response(s) whose cache writes by lifetime do not add up to "
-                           f"cache_creation_input_tokens in {path}")
+        agent.notes.append(
+            f"{split} response(s) whose cache writes by lifetime do not add up to "
+            f"cache_creation_input_tokens in {path}"
+        )
     for at, usage, model in responses.values():
-        agent.records.append(Record(at, Usage(
-            usage["input_tokens"] + usage["cache_creation_input_tokens"]
-            + usage["cache_read_input_tokens"],
-            usage["cache_read_input_tokens"],
-            usage["output_tokens"],
-            write_5m=usage["ephemeral_5m_input_tokens"],
-            write_1h=usage["ephemeral_1h_input_tokens"],
-        ), model))
+        agent.records.append(
+            Record(
+                at,
+                Usage(
+                    usage["input_tokens"]
+                    + usage["cache_creation_input_tokens"]
+                    + usage["cache_read_input_tokens"],
+                    usage["cache_read_input_tokens"],
+                    usage["output_tokens"],
+                    write_5m=usage["ephemeral_5m_input_tokens"],
+                    write_1h=usage["ephemeral_1h_input_tokens"],
+                ),
+                model,
+            )
+        )
     agent.records.sort(key=lambda record: record.at)
     return agent
 
@@ -769,7 +822,8 @@ def read_claude_session(path: Path) -> Session:
             kind = meta.get("agentType")
             name = f"{description} ({kind})" if kind else description
             subagent = read_claude_agent(
-                transcript, agent_id, name, meta.get("parentAgentId") or session_id)
+                transcript, agent_id, name, meta.get("parentAgentId") or session_id
+            )
             subagent.notes.extend(notes)
             subagents.append(subagent)
     known = {agent.key for agent in subagents}
@@ -792,8 +846,9 @@ def resolve(name: str, codex_home: Path, claude_home: Path) -> Path:
         return found[0]
     if not found:
         raise CycleStagesError(f"no transcript of session {name!r}")
-    raise CycleStagesError(f"session {name!r} matches several transcripts: "
-                           + ", ".join(str(p) for p in found))
+    raise CycleStagesError(
+        f"session {name!r} matches several transcripts: " + ", ".join(str(p) for p in found)
+    )
 
 
 def read_session(path: Path, codex_home: Path) -> Session:
@@ -831,8 +886,9 @@ def merge(intervals: list[tuple[datetime, datetime]]) -> list[tuple[datetime, da
     return merged
 
 
-def overlap(intervals: list[tuple[datetime, datetime]], start: datetime | None,
-            end: datetime | None) -> timedelta:
+def overlap(
+    intervals: list[tuple[datetime, datetime]], start: datetime | None, end: datetime | None
+) -> timedelta:
     total = timedelta()
     for a, b in intervals:
         lo = a if start is None else max(a, start)
@@ -870,14 +926,25 @@ def build_rows(sessions: list[Session]) -> list[Row]:
             if agent.parent in roots:
                 count = len(agent.turns)
                 stages[agent.key] = [
-                    Row(start, agent.name + (f" — turn {n}" if count > 1 else ""), end - start,
-                        window=(start, end), named=named, usage_read=bool(agent.records))
-                    for n, ((start, end), named) in enumerate(
-                        zip(agent.turns, agent.turn_files), 1)
+                    Row(
+                        start,
+                        agent.name + (f" — turn {n}" if count > 1 else ""),
+                        end - start,
+                        window=(start, end),
+                        named=named,
+                        usage_read=bool(agent.records),
+                    )
+                    for n, ((start, end), named) in enumerate(zip(agent.turns, agent.turn_files), 1)
                 ]
-    owned = sorted(((record, top_level(agent, by_key, roots).key)
-                    for session in sessions for agent in session.subagents
-                    for record in agent.records), key=lambda pair: pair[0].at)
+    owned = sorted(
+        (
+            (record, top_level(agent, by_key, roots).key)
+            for session in sessions
+            for agent in session.subagents
+            for record in agent.records
+        ),
+        key=lambda pair: pair[0].at,
+    )
     for record, owner in owned:
         rows = stages.get(owner)
         if not rows:
@@ -901,28 +968,40 @@ def build_rows(sessions: list[Session]) -> list[Row]:
     stretches = []
     for index in range(0, len(edges), 2):
         start, end = edges[index], edges[index + 1]
-        stretches.append(Row(stretch_start(start, end, active), "orchestrator",
-                             overlap(active, start, end), window=(start, end),
-                             usage_read=orchestrator_read))
+        stretches.append(
+            Row(
+                stretch_start(start, end, active),
+                "orchestrator",
+                overlap(active, start, end),
+                window=(start, end),
+                usage_read=orchestrator_read,
+            )
+        )
     parallel: dict[frozenset[int], Row] = {}
 
     def orchestrator_row(at: datetime) -> Row:
         """The row the orchestrator's work at a moment is counted in: the stage running then, the
         row of the stages running together, or the orchestrator's stretch between stages."""
-        running = [i for i, row in enumerate(stage_rows)
-                   if row.window[0] <= at <= row.window[1]]
+        running = [i for i, row in enumerate(stage_rows) if row.window[0] <= at <= row.window[1]]
         if len(running) == 1:
             return stage_rows[running[0]]
         if running:
             group = frozenset(running)
             if group not in parallel:
                 names = ", ".join(stage_rows[i].name for i in sorted(running))
-                parallel[group] = Row(at, f"orchestrator while in parallel: {names}", None,
-                                      usage_read=orchestrator_read)
+                parallel[group] = Row(
+                    at,
+                    f"orchestrator while in parallel: {names}",
+                    None,
+                    usage_read=orchestrator_read,
+                )
             return parallel[group]
-        return next(r for r in stretches
-                    if (r.window[0] is None or r.window[0] < at)
-                    and (r.window[1] is None or at < r.window[1]))
+        return next(
+            r
+            for r in stretches
+            if (r.window[0] is None or r.window[0] < at)
+            and (r.window[1] is None or at < r.window[1])
+        )
 
     for session in sessions:
         for record in session.orchestrator.records:
@@ -938,8 +1017,9 @@ def build_rows(sessions: list[Session]) -> list[Row]:
     return rows
 
 
-def stretch_start(start: datetime | None, end: datetime | None,
-                  active: list[tuple[datetime, datetime]]) -> datetime:
+def stretch_start(
+    start: datetime | None, end: datetime | None, active: list[tuple[datetime, datetime]]
+) -> datetime:
     """Where an orchestrator stretch stands in time order: its start, or for the stretch before
     the first subagent turn the orchestrator's first turn."""
     if start is not None:
@@ -1027,8 +1107,10 @@ def number(value: int) -> str:
 def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str:
     lines = ["# Stages of the cycle run", ""]
     for session in sessions:
-        lines.append(f"- {session.tool} session `{session.id}`: {len(session.subagents)} "
-                     f"subagents — `{session.path.name}`")
+        lines.append(
+            f"- {session.tool} session `{session.id}`: {len(session.subagents)} "
+            f"subagents — `{session.path.name}`"
+        )
     lines += ["", "Warnings:" if warnings else "Warnings: none."]
     lines += [f"- {one_line(warning)}" for warning in warnings]
     lines += [
@@ -1057,15 +1139,17 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
             f"| {cell(', '.join(row.subagent_models)) or '—'} "
             f"| {cell(', '.join(row.orchestrator_models)) or '—'} "
             f"| {number(row.subagent.total)} | {number(row.orchestrator.total)} "
-            f"| {number(both.total)} | {number(both.cached)} | {number(both.output)} |")
+            f"| {number(both.total)} | {number(both.cached)} | {number(both.output)} |"
+        )
     by_model: dict[str, Usage] = {}
     for session in sessions:
         for agent in [session.orchestrator, *session.subagents]:
             for record in agent.records:
                 by_model.setdefault(record.model or "unknown", Usage()).add(record.usage)
-    active = merge([turn for session in sessions for turn in session.orchestrator.turns]
-                   + [row.window for row in rows if row.duration is not None
-                      and row.name != "orchestrator"])
+    active = merge(
+        [turn for session in sessions for turn in session.orchestrator.turns]
+        + [row.window for row in rows if row.duration is not None and row.name != "orchestrator"]
+    )
     working = overlap(active, None, None)
     waiting, unknown = wait_totals(rows, active)
     if unknown:
@@ -1082,8 +1166,7 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         ]
     lines += [
         "",
-        f"- Working time, orchestrator turns and subagent turns joined: "
-        f"{duration_text(working)}",
+        f"- Working time, orchestrator turns and subagent turns joined: {duration_text(working)}",
         *waiting_lines,
         f"- Tokens in all: {number(totals.total)} — cached input {number(totals.cached)}, "
         f"output {number(totals.output)}",
@@ -1092,8 +1175,10 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "|---|---|---|---|---|",
     ]
     for model, usage in sorted(by_model.items(), key=lambda item: -item[1].total):
-        lines.append(f"| {cell(model)} | {number(usage.total)} | {number(usage.input)} "
-                     f"| {number(usage.cached)} | {number(usage.output)} |")
+        lines.append(
+            f"| {cell(model)} | {number(usage.total)} | {number(usage.input)} "
+            f"| {number(usage.cached)} | {number(usage.output)} |"
+        )
     lines += [
         "",
         "## Stages: start, waiting for tools and tokens by model",
@@ -1115,14 +1200,17 @@ def report(sessions: list[Session], rows: list[Row], warnings: list[str]) -> str
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for index, row in enumerate(rows, 1):
-        models = (sorted(row.by_model.items(), key=lambda item: -item[1].total)
-                  or [("—" if row.usage_read else "unknown", Usage())])
+        models = sorted(row.by_model.items(), key=lambda item: -item[1].total) or [
+            ("—" if row.usage_read else "unknown", Usage())
+        ]
         named = "unknown" if row.named is None else cell(", ".join(row.named))
         for model, usage in models:
-            lines.append(f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
-                         f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
-                         f"| {number(usage.cached)} | {number(usage.output)} | {named} "
-                         f"| {number(usage.write_5m)} | {number(usage.write_1h)} |")
+            lines.append(
+                f"| {index} | {cell(row.name)} | {clock_text(row.start)} "
+                f"| {wait_text(row.calls)} | {cell(model)} | {number(usage.input)} "
+                f"| {number(usage.cached)} | {number(usage.output)} | {named} "
+                f"| {number(usage.write_5m)} | {number(usage.write_1h)} |"
+            )
     return "\n".join(lines) + "\n"
 
 
@@ -1140,11 +1228,11 @@ def current_session() -> str:
     if len(found) == 1:
         return next(iter(found.values()))
     if not found:
-        raise CycleStagesError("name a session; neither " + " nor ".join(SESSION_VARIABLES)
-                               + " is set")
+        raise CycleStagesError(
+            "name a session; neither " + " nor ".join(SESSION_VARIABLES) + " is set"
+        )
     # A tool started from the other's terminal inherits its variable.
-    raise CycleStagesError("name a session; both " + " and ".join(SESSION_VARIABLES)
-                           + " are set")
+    raise CycleStagesError("name a session; both " + " and ".join(SESSION_VARIABLES) + " are set")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1152,13 +1240,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("sessions", nargs="*", metavar="SESSION")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--codex-home", type=Path, default=default_home("CODEX_HOME", ".codex"))
-    parser.add_argument("--claude-home", type=Path,
-                        default=default_home("CLAUDE_CONFIG_DIR", ".claude"))
+    parser.add_argument(
+        "--claude-home", type=Path, default=default_home("CLAUDE_CONFIG_DIR", ".claude")
+    )
     args = parser.parse_args(argv)
     try:
         names = args.sessions or [current_session()]
-        paths = dict.fromkeys(resolve(name, args.codex_home, args.claude_home).resolve()
-                              for name in names)
+        paths = dict.fromkeys(
+            resolve(name, args.codex_home, args.claude_home).resolve() for name in names
+        )
         sessions = [read_session(path, args.codex_home) for path in paths]
         warnings = find_warnings(sessions)
         text = report(sessions, build_rows(sessions), warnings)

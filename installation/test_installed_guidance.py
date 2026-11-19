@@ -11,9 +11,19 @@ SOURCE = Path(__file__).resolve().parent.parent
 INSTALL = SOURCE / "installation" / "install.py"
 
 
-def command(*args: str, cwd: Path, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(args, cwd=cwd, input=input_text, text=True, encoding="utf-8",
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+def command(
+    *args: str, cwd: Path, input_text: str | None = None
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        cwd=cwd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
 
 
 class InstalledGuidanceTest(unittest.TestCase):
@@ -25,9 +35,20 @@ class InstalledGuidanceTest(unittest.TestCase):
         initialized = command("git", "init", "-q", str(self.product), cwd=SOURCE)
         self.assertEqual(initialized.returncode, 0, initialized.stderr)
 
-    def install(self, *args: str, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-        return command(sys.executable, "-B", str(INSTALL), str(self.product), "--url",
-                       str(SOURCE), *args, cwd=self.product, input_text=input_text)
+    def install(
+        self, *args: str, input_text: str | None = None
+    ) -> subprocess.CompletedProcess[str]:
+        return command(
+            sys.executable,
+            "-B",
+            str(INSTALL),
+            str(self.product),
+            "--url",
+            str(SOURCE),
+            *args,
+            cwd=self.product,
+            input_text=input_text,
+        )
 
     def test_creates_root_claude_import_when_missing(self) -> None:
         # invariant: installation-claude-guidance

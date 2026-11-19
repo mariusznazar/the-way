@@ -21,6 +21,7 @@ TEXT_CAP = 200
 class ModelPrice:
     """The prices of one model per million tokens. A write price is None where the list has `—`
     for that lifetime: the model has no price for such a write, while the other prices stand."""
+
     input: Decimal
     cached: Decimal
     output: Decimal
@@ -32,6 +33,7 @@ class ModelPrice:
 class Prices:
     """The price list: its date, and per model its prices, or None where no page gives the price
     of its input, its cached input or its output: a model with no price at all."""
+
     date: str
     table: dict[str, ModelPrice | None]
 
@@ -43,6 +45,7 @@ class StageTokens:
     cell reads `unknown` or the form has no such column; `files_read` is False where the cell is
     not a list of such files. `write_5m` and `write_1h` are the cache writes of each lifetime, parts
     of `input`: zero for the forms that have no such columns and for the older table."""
+
     number: str
     name: str
     model: str
@@ -79,8 +82,10 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
         if row.model == UNKNOWN:
             # `cycle_stages.py` writes this for a stage whose transcript holds no token usage at
             # all, and for tokens of a response that names no model.
-            return None, (f"stage `{name}` gives its model as unknown: its token usage was not "
-                          "read, or names no model")
+            return None, (
+                f"stage `{name}` gives its model as unknown: its token usage was not "
+                "read, or names no model"
+            )
         if row.model == NO_MODEL:
             if is_orchestrator_row(row.name):
                 # A row of the orchestrator's own work with no response of a model in it:
@@ -89,13 +94,15 @@ def priced(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | Non
                 continue
             # `cycle_stages.py` writes this mark for a stage it found no token usage for: its
             # tokens are not known, so its cost is not zero.
-            return None, (f"stage `{name}` has no token usage in its transcript, so its cost "
-                          "is not known")
+            return None, (
+                f"stage `{name}` has no token usage in its transcript, so its cost is not known"
+            )
         if row.cached > row.input:
             return None, f"the cached input of stage `{name}` is above its input"
         if row.cached + row.write_5m + row.write_1h > row.input:
-            return None, (f"the cached input and the cache writes of stage `{name}` are above its "
-                          "input")
+            return None, (
+                f"the cached input and the cache writes of stage `{name}` are above its input"
+            )
         price = prices.table.get(row.model)
         if price is None:
             return None, f"the price list gives no price for model `{row.model[:TEXT_CAP]}`"
@@ -114,20 +121,29 @@ def cost_at(price: ModelPrice, row: StageTokens) -> tuple[Decimal | None, str | 
     no writes is priced by the first, the second and the last alone. The caller has checked that the
     cached input and the writes together are not above the input."""
     plain = row.input - row.cached - row.write_5m - row.write_1h
-    total = (Decimal(plain) * price.input + Decimal(row.cached) * price.cached
-             + Decimal(row.output) * price.output)
-    for count, write_price, lifetime in ((row.write_5m, price.write_5m, "5 minutes"),
-                                         (row.write_1h, price.write_1h, "1 hour")):
+    total = (
+        Decimal(plain) * price.input
+        + Decimal(row.cached) * price.cached
+        + Decimal(row.output) * price.output
+    )
+    for count, write_price, lifetime in (
+        (row.write_5m, price.write_5m, "5 minutes"),
+        (row.write_1h, price.write_1h, "1 hour"),
+    ):
         if count == 0:
             continue
         if write_price is None:
-            return None, (f"the price list gives no price of a cache write of {lifetime} for "
-                          f"model `{row.model[:TEXT_CAP]}`")
+            return None, (
+                f"the price list gives no price of a cache write of {lifetime} for "
+                f"model `{row.model[:TEXT_CAP]}`"
+            )
         total += Decimal(count) * write_price
     return total / MILLION, None
 
 
-def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal] | None, str | None]:
+def priced_older(
+    rows: list[StageTokens], prices: Prices
+) -> tuple[list[Decimal] | None, str | None]:
     """The cost in dollars of each row of the table of tokens by model at the list's prices, as
     `priced` gives it for the rows of the section, or None with the reason: a model `unknown`, a
     cached input above its input, or a model with no price make the cost unknown."""
@@ -135,8 +151,10 @@ def priced_older(rows: list[StageTokens], prices: Prices) -> tuple[list[Decimal]
     for row in rows:
         name = row.model[:TEXT_CAP]
         if row.model == UNKNOWN:
-            return None, ("the table of tokens by model names the model `unknown`: its token usage "
-                          "was not read, or names no model")
+            return None, (
+                "the table of tokens by model names the model `unknown`: its token usage "
+                "was not read, or names no model"
+            )
         if row.cached > row.input:
             return None, f"the cached input of model `{name}` is above its input"
         price = prices.table.get(row.model)

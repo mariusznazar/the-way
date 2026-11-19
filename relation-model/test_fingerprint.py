@@ -42,57 +42,74 @@ class Fingerprint(unittest.TestCase):
 
     def test_a_run_of_spaces_counts_as_one_space(self):
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps  every   saved game after a reload."),
-                         WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("The product keeps  every   saved game after a reload."),
+            WORDING_FINGERPRINT,
+        )
 
     def test_a_line_break_counts_as_one_space(self):
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps every saved game\nafter a reload."),
-                         WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("The product keeps every saved game\nafter a reload."), WORDING_FINGERPRINT
+        )
 
     def test_a_carriage_return_and_line_feed_count_as_one_space(self):
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps every saved game\r\nafter a reload."),
-                         WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("The product keeps every saved game\r\nafter a reload."),
+            WORDING_FINGERPRINT,
+        )
 
     def test_a_lone_carriage_return_counts_as_one_space(self):
         """A text file ends a line with LF, CR LF or a lone CR, the three line endings Python's
         universal newlines read; a lone CR is a line break under the sentence as well."""
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps every saved game\rafter a reload."),
-                         WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("The product keeps every saved game\rafter a reload."), WORDING_FINGERPRINT
+        )
 
     def test_a_tab_is_kept(self):
         """A tab is neither a space nor a line break, so it stays in the text digested: the
         digest is that of the text with the tab, 78afb3c6, not WORDING_FINGERPRINT."""
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps every saved game\tafter a reload."),
-                         "78afb3c6")
+        self.assertEqual(
+            fingerprint("The product keeps every saved game\tafter a reload."), "78afb3c6"
+        )
 
     def test_a_tab_at_either_end_is_kept(self):
         """Trimming removes what the replacement left at an end, a space; nothing else in the text
         is changed (WAY-02), so a tab at an end stays in the text digested."""
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("\tThe product keeps every saved game after a reload."),
-                         "10fdd923")
-        self.assertEqual(fingerprint("The product keeps every saved game after a reload.\t"),
-                         "58c9b2a7")
+        self.assertEqual(
+            fingerprint("\tThe product keeps every saved game after a reload."), "10fdd923"
+        )
+        self.assertEqual(
+            fingerprint("The product keeps every saved game after a reload.\t"), "58c9b2a7"
+        )
 
     def test_a_run_of_spaces_and_line_breaks_counts_as_one_space(self):
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("The product keeps every saved game  \r\n\n  after a "
-                                     "reload."), WORDING_FINGERPRINT)
-        self.assertEqual(fingerprint("The product keeps every saved game \r \r\r\n after a "
-                                     "reload."), WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("The product keeps every saved game  \r\n\n  after a reload."),
+            WORDING_FINGERPRINT,
+        )
+        self.assertEqual(
+            fingerprint("The product keeps every saved game \r \r\r\n after a reload."),
+            WORDING_FINGERPRINT,
+        )
 
     def test_spaces_and_line_breaks_at_both_ends_are_trimmed(self):
         # invariant: fingerprint-definition
-        self.assertEqual(fingerprint("  The product keeps every saved game after a reload."),
-                         WORDING_FINGERPRINT)
-        self.assertEqual(fingerprint("The product keeps every saved game after a reload.  "),
-                         WORDING_FINGERPRINT)
-        self.assertEqual(fingerprint("\r\n The product keeps every saved game after a reload.\n"),
-                         WORDING_FINGERPRINT)
+        self.assertEqual(
+            fingerprint("  The product keeps every saved game after a reload."), WORDING_FINGERPRINT
+        )
+        self.assertEqual(
+            fingerprint("The product keeps every saved game after a reload.  "), WORDING_FINGERPRINT
+        )
+        self.assertEqual(
+            fingerprint("\r\n The product keeps every saved game after a reload.\n"),
+            WORDING_FINGERPRINT,
+        )
 
     def test_a_text_outside_ascii_is_digested_as_utf_8(self):
         # invariant: fingerprint-definition
@@ -106,8 +123,7 @@ class Fingerprint(unittest.TestCase):
         """The script's program path, run in this process with its standard input fed the text,
         so that the test starts no program (script-subprocesses)."""
         # invariant: fingerprint-definition
-        stdin = io.TextIOWrapper(io.BytesIO((NON_ASCII + "\n").encode("utf-8")),
-                                 encoding="utf-8")
+        stdin = io.TextIOWrapper(io.BytesIO((NON_ASCII + "\n").encode("utf-8")), encoding="utf-8")
         printed = io.StringIO()
         with unittest.mock.patch.object(sys, "stdin", stdin), contextlib.redirect_stdout(printed):
             runpy.run_path(os.path.join(HERE, "fingerprint.py"), run_name="__main__")
@@ -122,8 +138,12 @@ class Fingerprint(unittest.TestCase):
         # invariant: shared-module-import-runs-nothing
         code = "import sys; here = sys.argv[1]; sys.path.insert(0, here); import fingerprint"
         with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
-            process = subprocess.Popen([sys.executable, "-I", "-B", "-c", code, HERE],
-                                       stdin=subprocess.PIPE, stdout=output, stderr=errors)
+            process = subprocess.Popen(
+                [sys.executable, "-I", "-B", "-c", code, HERE],
+                stdin=subprocess.PIPE,
+                stdout=output,
+                stderr=errors,
+            )
             try:
                 exit_code = process.wait(timeout=IMPORT_TIMEOUT)
             except subprocess.TimeoutExpired:

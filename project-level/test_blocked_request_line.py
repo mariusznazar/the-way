@@ -40,7 +40,6 @@ def reads_as_blocked():
 
 
 class BlockedRequestLine(unittest.TestCase):
-
     def test_each_writer_gives_the_wording_the_reader_takes(self):
         # invariant: blocked-request-wording
         # Break caught: rewording what a skill of `task-cycle` tells the cycle to write, or what

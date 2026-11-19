@@ -28,8 +28,10 @@ sys.path.insert(0, str(HERE))
 import gate_times
 
 HEADING = "# Gate runs of the cycle"
-TABLE_HEADER = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
-                "| Directory | Directory seconds |")
+TABLE_HEADER = (
+    "| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
+    "| Directory | Directory seconds |"
+)
 STARTED = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}$")
 TOTAL = re.compile(r"^\d+\.\d{3}$")
 ENDED = re.compile(r"^(\d+)_(\d+)_([A-Za-z0-9]+)\.run$")
@@ -43,9 +45,13 @@ NOW_STAMP = "2025-10-09 08:53:20.123"
 def printed(text: bytes, code: int = 0) -> list[str]:
     """A command that writes `text` to its output exactly, as bytes, and exits with `code`. The text
     comes in hex in the arguments, so that the code of the command stays a literal."""
-    return [sys.executable, "-c",
-            "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); sys.exit(int(sys.argv[2]))",
-            text.hex(), str(code)]
+    return [
+        sys.executable,
+        "-c",
+        "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); sys.exit(int(sys.argv[2]))",
+        text.hex(),
+        str(code),
+    ]
 
 
 class GateTimesTest(unittest.TestCase):
@@ -63,8 +69,9 @@ class GateTimesTest(unittest.TestCase):
     def tearDown(self) -> None:
         self.folder.cleanup()
 
-    def run_gate(self, command: list[str], options: list[str] | None = None,
-                 end_options: bool = True) -> subprocess.CompletedProcess:
+    def run_gate(
+        self, command: list[str], options: list[str] | None = None, end_options: bool = True
+    ) -> subprocess.CompletedProcess:
         """Runs the script with the command after `--`, from the folder of the test."""
         if options is None:
             options = ["--output", str(self.output), "--registry", str(self.registry)]
@@ -80,28 +87,35 @@ class GateTimesTest(unittest.TestCase):
         stdout = io.TextIOWrapper(io.BytesIO(), encoding="utf-8")
         stderr = io.StringIO()
         arguments = ["--output", str(self.output), "--registry", str(self.registry), "--", *command]
-        with (mock.patch.object(gate_times, "now_ms", return_value=now),
-              mock.patch.dict(os.environ, self.env),
-              redirect_stdout(stdout), redirect_stderr(stderr)):
+        with (
+            mock.patch.object(gate_times, "now_ms", return_value=now),
+            mock.patch.dict(os.environ, self.env),
+            redirect_stdout(stdout),
+            redirect_stderr(stderr),
+        ):
             code = gate_times.main(arguments)
         stdout.flush()
-        return subprocess.CompletedProcess(arguments, code, stdout.buffer.getvalue(),
-                                           stderr.getvalue().encode("utf-8"))
+        return subprocess.CompletedProcess(
+            arguments, code, stdout.buffer.getvalue(), stderr.getvalue().encode("utf-8")
+        )
 
     def rows(self) -> list[list[str]]:
         """The rows of the table in the output file, each as its cells."""
         text = self.output.read_bytes().decode("utf-8")
-        body = [line for line in text.split("\n")
-                if line.startswith("| ") and line != TABLE_HEADER and not line.startswith("| ---")]
+        body = [
+            line
+            for line in text.split("\n")
+            if line.startswith("| ") and line != TABLE_HEADER and not line.startswith("| ---")
+        ]
         return [[cell.strip() for cell in line.strip("|").split("|")] for line in body]
 
 
 class RowsTest(GateTimesTest):
-
     def test_rows_follow_the_order_the_gate_printed_them(self) -> None:
         # Made-up output with the directories out of alphabetical order.
-        result = self.run_gate(printed(b"== zeta\nRan 3 tests in 0.010s\n\nOK\n"
-                                       b"== alpha\nRan 1 test in 0.002s\n\nOK\n"))
+        result = self.run_gate(
+            printed(b"== zeta\nRan 3 tests in 0.010s\n\nOK\n== alpha\nRan 1 test in 0.002s\n\nOK\n")
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         rows = self.rows()
         self.assertEqual(2, len(rows))
@@ -113,7 +127,9 @@ class RowsTest(GateTimesTest):
         self.assertEqual(["0", "0"], [rows[0][1], rows[0][3]])
 
     def test_block_without_a_ran_line_gives_unknown(self) -> None:
-        result = self.run_gate(printed(b"== first\nno timing here\n== second\nRan 2 tests in 0.5s\n"))
+        result = self.run_gate(
+            printed(b"== first\nno timing here\n== second\nRan 2 tests in 0.5s\n")
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         rows = self.rows()
         self.assertEqual(["first", "unknown"], rows[0][4:])
@@ -129,7 +145,9 @@ class RowsTest(GateTimesTest):
         self.assertEqual(["b", "0.1"], rows[1][4:])
 
     def test_text_before_the_first_block_belongs_to_no_directory(self) -> None:
-        result = self.run_gate(printed(b"Ran 9 tests in 9.9s\nstray\n== only\nRan 1 test in 0.100s\n"))
+        result = self.run_gate(
+            printed(b"Ran 9 tests in 9.9s\nstray\n== only\nRan 1 test in 0.100s\n")
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         rows = self.rows()
         self.assertEqual(1, len(rows))
@@ -156,10 +174,14 @@ class RunnerOutputTest(GateTimesTest):
     @staticmethod
     def waiting_for(path: Path) -> str:
         """The source of a loop that goes on once `path` exists and fails after two minutes."""
-        return (f"for _ in range(6000):\n    if os.path.exists({str(path)!r}):\n        break\n"
-                "    time.sleep(0.02)\nelse:\n    raise RuntimeError('a file never came')\n")
+        return (
+            f"for _ in range(6000):\n    if os.path.exists({str(path)!r}):\n        break\n"
+            "    time.sleep(0.02)\nelse:\n    raise RuntimeError('a file never came')\n"
+        )
 
-    def test_directories_that_end_out_of_the_order_of_their_names_each_get_their_own_time(self) -> None:
+    def test_directories_that_end_out_of_the_order_of_their_names_each_get_their_own_time(
+        self,
+    ) -> None:
         repo = self.root / "repo"
         a_started = repo / "a_has_started"
         b_reported = repo / "b_is_reported"
@@ -171,7 +193,9 @@ class RunnerOutputTest(GateTimesTest):
             "import os, time, unittest\n\n\nclass A(unittest.TestCase):\n"
             "    def test_a(self):\n"
             f"        open({str(a_started)!r}, 'w').close()\n"
-            + textwrap.indent(self.waiting_for(b_reported), "        "), encoding="utf-8")
+            + textwrap.indent(self.waiting_for(b_reported), "        "),
+            encoding="utf-8",
+        )
         # b waits for a to have started before the module is imported, so that b's own time begins
         # after a's, and a's time, which ends after b's report, holds b's.
         (repo / "b" / "test_b.py").write_text(
@@ -179,15 +203,30 @@ class RunnerOutputTest(GateTimesTest):
             + self.waiting_for(a_started)
             + "\n\nclass B(unittest.TestCase):\n"
             "    def test_b_one(self):\n        pass\n\n"
-            "    def test_b_two(self):\n        pass\n", encoding="utf-8")
+            "    def test_b_two(self):\n        pass\n",
+            encoding="utf-8",
+        )
         for command in (["init", "-q"], ["add", "--", "a/test_a.py", "b/test_b.py"]):
             subprocess.run(["git", *command], cwd=repo, check=True, capture_output=True)
         runner = HERE.parent / "gate" / "run_tests.py"
         gate = [sys.executable, "-B", str(runner), "--slowest", "1"]
         with subprocess.Popen(
-                [sys.executable, "-B", str(SCRIPT), "--output", str(self.output), "--registry",
-                 str(self.registry), "--"] + gate, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                cwd=repo, env=self.env) as process:
+            [
+                sys.executable,
+                "-B",
+                str(SCRIPT),
+                "--output",
+                str(self.output),
+                "--registry",
+                str(self.registry),
+                "--",
+            ]
+            + gate,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=repo,
+            env=self.env,
+        ) as process:
             lines = []
             for line in process.stdout:
                 lines.append(line)
@@ -220,9 +259,13 @@ class CapTest(GateTimesTest):
 
     def flood(self, blocks: int) -> list[str]:
         """A command that prints `blocks` blocks, each with a line of its time, as a loop."""
-        return [sys.executable, "-c",
-                "import sys\nfor i in range(int(sys.argv[1])):\n"
-                "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)", str(blocks)]
+        return [
+            sys.executable,
+            "-c",
+            "import sys\nfor i in range(int(sys.argv[1])):\n"
+            "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)",
+            str(blocks),
+        ]
 
     def test_blocks_beyond_the_fiftieth_are_not_listed_and_a_row_says_how_many(self) -> None:
         result = self.run_gate(self.flood(2000))
@@ -245,10 +288,15 @@ class CapTest(GateTimesTest):
 
     def test_time_after_a_block_not_listed_is_not_given_to_the_last_listed_block(self) -> None:
         # d49 has no Ran line; the Ran line after d50, which is not listed, must not become its time.
-        result = self.run_gate([sys.executable, "-c",
-                                "import sys\nfor i in range(49):\n"
-                                "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)\n"
-                                "sys.stdout.write('== d49\\n== d50\\nRan 1 test in 9.9s\\n')"])
+        result = self.run_gate(
+            [
+                sys.executable,
+                "-c",
+                "import sys\nfor i in range(49):\n"
+                "    sys.stdout.write('== d%d\\nRan 1 test in 0.1s\\n' % i)\n"
+                "sys.stdout.write('== d49\\n== d50\\nRan 1 test in 9.9s\\n')",
+            ]
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         rows = self.rows()
         self.assertEqual(["d49", "unknown"], rows[49][4:])
@@ -268,7 +316,6 @@ class CapTest(GateTimesTest):
 
 
 class PassThroughTest(GateTimesTest):
-
     # invariant: command-runner-passes-exit-code
     def test_exit_code_of_the_command_is_passed_on(self) -> None:
         # 2 is also the script's own error code, and 255 the largest code a process gives: each is
@@ -283,8 +330,9 @@ class PassThroughTest(GateTimesTest):
     # invariant: command-runner-passes-exit-code
     @unittest.skipIf(os.name == "nt", "Windows gives a killed process no signal number")
     def test_a_command_killed_by_a_signal_gives_128_plus_the_signal_number(self) -> None:
-        result = self.run_gate([sys.executable, "-c",
-                                "import os, signal; os.kill(os.getpid(), signal.SIGTERM)"])
+        result = self.run_gate(
+            [sys.executable, "-c", "import os, signal; os.kill(os.getpid(), signal.SIGTERM)"]
+        )
         self.assertEqual(128 + signal.SIGTERM, result.returncode, result.stderr)
         self.assertEqual(str(128 + signal.SIGTERM), self.rows()[-1][1])
 
@@ -303,10 +351,16 @@ class PassThroughTest(GateTimesTest):
 
     def test_output_is_passed_on_unchanged_with_error_output_joined(self) -> None:
         data = "alpha é\r\n== a\nRan 1 test in 0.1s\n|bar \x00 end\n".encode("utf-8")
-        result = self.run_gate([sys.executable, "-c",
-                                "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); "
-                                "sys.stdout.flush(); sys.stderr.buffer.write(b'err line\\n'); "
-                                "sys.stderr.flush()", data.hex()])
+        result = self.run_gate(
+            [
+                sys.executable,
+                "-c",
+                "import sys; sys.stdout.buffer.write(bytes.fromhex(sys.argv[1])); "
+                "sys.stdout.flush(); sys.stderr.buffer.write(b'err line\\n'); "
+                "sys.stderr.flush()",
+                data.hex(),
+            ]
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(data + b"err line\n", result.stdout)
 
@@ -323,17 +377,16 @@ class PassThroughTest(GateTimesTest):
 
 
 class RegistryTest(GateTimesTest):
-
     def test_other_runs_counted_from_the_registry(self) -> None:
         self.registry.mkdir(parents=True)
         made = {
-            "stale": f"{NOW - 7 * HOUR}_running_stale.run",   # running, over six hours old: deleted
+            "stale": f"{NOW - 7 * HOUR}_running_stale.run",  # running, over six hours old: deleted
             "old": f"{NOW - 3 * DAY}_{NOW - 2 * DAY}_old.run",  # ended over a day ago: deleted
             "before": f"{NOW - 120000}_{NOW - 100000}_before.run",  # ended before this run: not counted
             "touching": f"{NOW - 60000}_{NOW}_touching.run",  # ended as this run started: not counted
-            "running": f"{NOW - 60000}_running_runa.run",     # still running: counted
-            "other": f"{NOW - 60000}_running.run",            # another form: counted for nothing
-            "notes": "notes.txt",                              # another form: counted for nothing
+            "running": f"{NOW - 60000}_running_runa.run",  # still running: counted
+            "other": f"{NOW - 60000}_running.run",  # another form: counted for nothing
+            "notes": "notes.txt",  # another form: counted for nothing
         }
         for name in made.values():
             (self.registry / name).touch()
@@ -341,11 +394,18 @@ class RegistryTest(GateTimesTest):
         # before it, ended 5 seconds after the instant the clock gives, which is the run's start. The
         # entry appears while the command runs, so that a count taken before the command would miss it.
         inside = f"{NOW - 60000}_{NOW + 5000}_inside.run"
-        result = self.run_gate_at(NOW, [sys.executable, "-c",
-                                        "import os, sys; "
-                                        "open(os.path.join(sys.argv[1], sys.argv[2]), 'w').close(); "
-                                        "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
-                                        str(self.registry), inside])
+        result = self.run_gate_at(
+            NOW,
+            [
+                sys.executable,
+                "-c",
+                "import os, sys; "
+                "open(os.path.join(sys.argv[1], sys.argv[2]), 'w').close(); "
+                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
+                str(self.registry),
+                inside,
+            ],
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         rows = self.rows()
         self.assertEqual(NOW_STAMP, rows[0][0])
@@ -372,11 +432,13 @@ class RegistryTest(GateTimesTest):
         # a run; a valid run still going is counted, and a run that ends 30 seconds ahead is not
         # malformed and stays.
         self.registry.mkdir(parents=True)
-        malformed = [f"{NOW - 1000}_{NOW + 3 * DAY}_farend.run",
-                     f"{NOW + DAY}_{NOW + DAY + 1000}_farstart.run",
-                     f"{NOW - 1000}_{NOW - 5000}_reversed.run",
-                     f"{NOW + DAY}_running_farrunning.run",
-                     f"{NOW - 1000}_{NOW + 2 * HOUR}_farend2.run"]
+        malformed = [
+            f"{NOW - 1000}_{NOW + 3 * DAY}_farend.run",
+            f"{NOW + DAY}_{NOW + DAY + 1000}_farstart.run",
+            f"{NOW - 1000}_{NOW - 5000}_reversed.run",
+            f"{NOW + DAY}_running_farrunning.run",
+            f"{NOW - 1000}_{NOW + 2 * HOUR}_farend2.run",
+        ]
         kept = [f"{NOW - 60000}_running_valid.run", f"{NOW - 1000}_{NOW + 30000}_nearend.run"]
         for name in malformed + kept:
             (self.registry / name).touch()
@@ -404,10 +466,15 @@ class RegistryTest(GateTimesTest):
     def test_unusable_registry_gives_unknown_and_the_gate_still_runs(self) -> None:
         self.registry.write_text("not a folder", encoding="utf-8")
         marker = self.root / "ran.txt"
-        result = self.run_gate([sys.executable, "-c",
-                                "import sys; open(sys.argv[1], 'w').close(); "
-                                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
-                                str(marker)])
+        result = self.run_gate(
+            [
+                sys.executable,
+                "-c",
+                "import sys; open(sys.argv[1], 'w').close(); "
+                "sys.stdout.buffer.write(b'== a\\nRan 1 test in 0.1s\\n')",
+                str(marker),
+            ]
+        )
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue(marker.exists())
         self.assertTrue(result.stderr.decode("utf-8", errors="replace").startswith("Warning:"))
@@ -425,7 +492,6 @@ class RegistryTest(GateTimesTest):
 
 
 class ErrorTest(GateTimesTest):
-
     def assertError(self, result: subprocess.CompletedProcess) -> None:
         self.assertEqual(2, result.returncode, result.stdout)
         first = result.stderr.decode("utf-8", errors="replace").split("\n")[0]
@@ -438,8 +504,10 @@ class ErrorTest(GateTimesTest):
 
     def test_no_output_is_an_error_before_the_command_starts(self) -> None:
         marker = self.root / "ran.txt"
-        result = self.run_gate([sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
-                               options=["--registry", str(self.registry)])
+        result = self.run_gate(
+            [sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
+            options=["--registry", str(self.registry)],
+        )
         self.assertError(result)
         self.assertFalse(marker.exists())
 
@@ -447,8 +515,10 @@ class ErrorTest(GateTimesTest):
         folder = self.root / "a_folder"
         folder.mkdir()
         marker = self.root / "ran.txt"
-        result = self.run_gate([sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
-                               options=["--output", str(folder), "--registry", str(self.registry)])
+        result = self.run_gate(
+            [sys.executable, "-c", "open(sys.argv[1], 'w').close()", str(marker)],
+            options=["--output", str(folder), "--registry", str(self.registry)],
+        )
         self.assertError(result)
         self.assertFalse(marker.exists())
 
@@ -458,7 +528,6 @@ class ErrorTest(GateTimesTest):
 
 
 class TextTest(GateTimesTest):
-
     def test_script_imports_no_repository_module_and_starts_no_other_program(self) -> None:
         tree = ast.parse(SCRIPT.read_text(encoding="utf-8"))
         imported = set()
@@ -471,11 +540,16 @@ class TextTest(GateTimesTest):
         self.assertTrue(imported <= set(sys.stdlib_module_names), imported)
         started = []
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
-                    and isinstance(node.func.value, ast.Name):
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and isinstance(node.func.value, ast.Name)
+            ):
                 owner, name = node.func.value.id, node.func.attr
-                if owner == "subprocess" or (owner == "os" and name.startswith(
-                        ("system", "popen", "exec", "spawn", "posix_spawn"))):
+                if owner == "subprocess" or (
+                    owner == "os"
+                    and name.startswith(("system", "popen", "exec", "spawn", "posix_spawn"))
+                ):
                     started.append(f"{owner}.{name}")
         self.assertEqual(["subprocess.Popen"], started)
 

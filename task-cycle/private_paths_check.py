@@ -71,27 +71,36 @@ from pathlib import Path
 # A path in a `file://` URL is a path on a disk, so it may start right after `file://`. A drive
 # in the form of an address takes the slash in front of it, `/C:/dir`, when no word, dot, tilde,
 # colon, dash, slash or backslash stands before that slash: a URL's `host/C:/x` is no path.
-WINDOWS_DRIVE = (r"(?:(?:(?<![\w/\\])|(?<=file:///))[A-Za-z]:[\\/]"
-                 r"|(?<![\w.~/\\:-])/[A-Za-z]:[\\/])")
+WINDOWS_DRIVE = (
+    r"(?:(?:(?<![\w/\\])|(?<=file:///))[A-Za-z]:[\\/]"
+    r"|(?<![\w.~/\\:-])/[A-Za-z]:[\\/])"
+)
 POSIX_DRIVE = r"(?:(?<![\w.~/\\:-])|(?<=file://))(?:/mnt|/cygdrive)?/[A-Za-z]/(?=[\w.~-])"
 HOME_DIRECTORY = r"(?:(?<![\w.~/\\-])|(?<=file://))(?:/home|[\\/]Users)[\\/][\w.-]+"
 # What a path runs through after its start, for showing it: up to a space, a quote or a bracket.
 PATH_TAIL = r"""[^\s"'`<>|*?()\[\]{}]*"""
 # A character class of the shell in double brackets, `[[:space:]]`: one of the twelve POSIX names
 # between the colons, and nothing else in the brackets.
-POSIX_CLASS = (r":(?:alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space|upper|xdigit):"
-               r"\]\]")
+POSIX_CLASS = (
+    r":(?:alnum|alpha|blank|cntrl|digit|graph|lower|print|punct|space|upper|xdigit):"
+    r"\]\]"
+)
 # `[[` not stuck to a letter, a digit, a dot or an underscore on its left, not the start of a
 # POSIX class, followed by a first character that is no space, a letter or digit somewhere inside,
 # and no line end before the closing `]]`.
-NOTE_LINK = (r"(?<![\w.])\[\[(?!" + POSIX_CLASS + r")(?=[^\s\]])(?=[^\]\n]*[^\W_])[^\]\n]+\]\]")
+NOTE_LINK = r"(?<![\w.])\[\[(?!" + POSIX_CLASS + r")(?=[^\s\]])(?=[^\]\n]*[^\W_])[^\]\n]+\]\]"
 # A drive letter, a colon and nothing but the escape sequences of a newline, a tab or a carriage
 # return, with the slash of the address form in front or not: the end of a message in a string of
 # code, not a directory.
 ESCAPE_SEQUENCES_ONLY = re.compile(r"/?[A-Za-z]:(?:\\[ntr])+")
 
-PATH_PATTERN = (r"(?P<path>(?:" + "|".join((WINDOWS_DRIVE, POSIX_DRIVE, HOME_DIRECTORY)) + r")"
-                + PATH_TAIL + r")")
+PATH_PATTERN = (
+    r"(?P<path>(?:"
+    + "|".join((WINDOWS_DRIVE, POSIX_DRIVE, HOME_DIRECTORY))
+    + r")"
+    + PATH_TAIL
+    + r")"
+)
 FINDING = re.compile(PATH_PATTERN + r"|(?P<link>" + NOTE_LINK + r")")
 PATH_FINDING = re.compile(PATH_PATTERN)
 LINE_END = re.compile(r"\r\n|\r|\n")
@@ -137,8 +146,9 @@ def find_in_text(text: str, note_links: bool = True) -> list[tuple[int, str, str
     return hits
 
 
-def check_file(path: Path, result: Result, note_links: bool = True,
-               name: str | None = None) -> None:
+def check_file(
+    path: Path, result: Result, note_links: bool = True, name: str | None = None
+) -> None:
     """Reads one file into `result`, its hits under `name` where given, else under its path."""
     try:
         data = path.read_bytes()
@@ -152,7 +162,8 @@ def check_file(path: Path, result: Result, note_links: bool = True,
         text = data.decode("utf-16" if utf16 else "utf-8-sig")
     except UnicodeDecodeError as error:
         raise PrivatePathsError(
-            f"cannot read {display(name or path)} as UTF-8: {display(error)}") from error
+            f"cannot read {display(name or path)} as UTF-8: {display(error)}"
+        ) from error
     result.files += 1
     for number, kind, shown in find_in_text(text, note_links):
         result.listed.append((name or path.as_posix(), number, kind, shown))
@@ -168,8 +179,10 @@ def check(target: Path) -> Result:
     elif target.is_file():
         check_file(target, result)
     else:
-        raise PrivatePathsError(f"{display(target)} is no file or directory; give the copy of the "
-                                f"record or the description file")
+        raise PrivatePathsError(
+            f"{display(target)} is no file or directory; give the copy of the "
+            f"record or the description file"
+        )
     return result
 
 

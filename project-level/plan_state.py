@@ -24,8 +24,10 @@ import plan_check  # noqa: E402
 import readiness_check  # noqa: E402
 
 GIT_TIMEOUT = 30
-PR_LINK = re.compile(r"https?://[^\s<>\[\]()`\"']+/(?:pull|merge_requests)/[0-9]+"
-                     r"(?:[?#][^\s<>\[\]()`\"']*)?")
+PR_LINK = re.compile(
+    r"https?://[^\s<>\[\]()`\"']+/(?:pull|merge_requests)/[0-9]+"
+    r"(?:[?#][^\s<>\[\]()`\"']*)?"
+)
 # The wording of the field `Request URL and status` in a record committed before its request exists
 # (task-cycle/skill/reserved_return.md, blocked_finding.md): the whole line, nothing else.
 BLOCKED_DRAFT = "- Request URL and status: blocked draft, opened on this commit"
@@ -47,14 +49,19 @@ class Git:
     def run(self, *arguments, allowed=(0,)):
         environment = dict(os.environ, GIT_TERMINAL_PROMPT="0", GCM_INTERACTIVE="Never")
         try:
-            result = subprocess.run(["git", "-C", str(self.repository), *arguments],
-                                    capture_output=True, timeout=GIT_TIMEOUT, env=environment)
+            result = subprocess.run(
+                ["git", "-C", str(self.repository), *arguments],
+                capture_output=True,
+                timeout=GIT_TIMEOUT,
+                env=environment,
+            )
         except (OSError, subprocess.TimeoutExpired) as error:
             raise GitError("git %s: %s" % (arguments[0], display(error))) from error
         if result.returncode not in allowed:
             detail = result.stderr.decode("utf-8", errors="replace").strip()
-            raise GitError("git %s failed (%d): %s" %
-                           (arguments[0], result.returncode, display(detail)))
+            raise GitError(
+                "git %s failed (%d): %s" % (arguments[0], result.returncode, display(detail))
+            )
         return result
 
     def text(self, *arguments, allowed=(0,)):
@@ -91,23 +98,35 @@ def observe(git):
             observation.complete = False
         remotes = git.text("remote").splitlines()
         if "origin" not in remotes:
-            observation.unchecked.append("origin remote unavailable; integration is not established")
+            observation.unchecked.append(
+                "origin remote unavailable; integration is not established"
+            )
         else:
             route = git.run("symbolic-ref", "--quiet", "refs/remotes/origin/HEAD", allowed=(0, 1))
             ref = route.stdout.decode("utf-8").strip()
-            if route.returncode or not ref.startswith("refs/remotes/origin/") or ref.endswith("/HEAD"):
-                observation.unchecked.append("origin/HEAD does not establish one integration branch")
+            if (
+                route.returncode
+                or not ref.startswith("refs/remotes/origin/")
+                or ref.endswith("/HEAD")
+            ):
+                observation.unchecked.append(
+                    "origin/HEAD does not establish one integration branch"
+                )
             else:
-                branch = ref[len("refs/remotes/origin/"):]
+                branch = ref[len("refs/remotes/origin/") :]
                 remote_head = git.text("ls-remote", "--symref", "origin", "HEAD")
-                declared = [line.split("\t")[0][5:] for line in remote_head.splitlines()
-                            if line.startswith("ref: ") and line.endswith("\tHEAD")]
+                declared = [
+                    line.split("\t")[0][5:]
+                    for line in remote_head.splitlines()
+                    if line.startswith("ref: ") and line.endswith("\tHEAD")
+                ]
                 if declared != ["refs/heads/" + branch]:
-                    observation.unchecked.append("origin/HEAD disagrees with the remote default or "
-                                                 "the remote has no unambiguous HEAD")
+                    observation.unchecked.append(
+                        "origin/HEAD disagrees with the remote default or "
+                        "the remote has no unambiguous HEAD"
+                    )
                 else:
-                    git.run("fetch", "--no-tags", "origin",
-                            "+refs/heads/*:refs/remotes/origin/*")
+                    git.run("fetch", "--no-tags", "origin", "+refs/heads/*:refs/remotes/origin/*")
                     commit = git.text("rev-parse", "--verify", ref + "^{commit}")
                     observation.integration, observation.commit = ref, commit
     except (GitError, UnicodeError) as error:
@@ -115,10 +134,10 @@ def observe(git):
         observation.complete = False
     try:
         # Tags and detached HEADs do not declare branches. Symbolic remote HEAD is redundant.
-        refs = git.text("for-each-ref", "--format=%(refname) %(symref)",
-                        "refs/heads/", "refs/remotes/")
-        observation.refs = [line.split()[0] for line in refs.splitlines()
-                            if len(line.split()) == 1]
+        refs = git.text(
+            "for-each-ref", "--format=%(refname) %(symref)", "refs/heads/", "refs/remotes/"
+        )
+        observation.refs = [line.split()[0] for line in refs.splitlines() if len(line.split()) == 1]
     except (GitError, UnicodeError) as error:
         observation.errors.append(display(error))
         observation.complete = False
@@ -128,14 +147,14 @@ def observe(git):
 def commits_touching(git, refs, path):
     if not refs:
         return []
-    return git.text("log", "--full-history", "--format=%H", *refs, "--",
-                    ":(literal)" + path).splitlines()
+    return git.text(
+        "log", "--full-history", "--format=%H", *refs, "--", ":(literal)" + path
+    ).splitlines()
 
 
 def archived_files(git, commit, archive):
     """Inventory ordinary blobs without following symlinks or imposing record basenames."""
-    raw = git.run("ls-tree", "-r", "-z", "--full-tree", commit, "--",
-                  ":(literal)" + archive).stdout
+    raw = git.run("ls-tree", "-r", "-z", "--full-tree", commit, "--", ":(literal)" + archive).stdout
     paths = []
     for entry in raw.split(b"\0"):
         if entry:
@@ -159,10 +178,21 @@ def record_requests(git, commit, paths):
     """
     # BLOCKED_DRAFT holds no ERE metacharacter, so it is its own pattern: `re.escape` would add
     # backslashes before `-` and a space, which POSIX ERE leaves undefined.
-    result = git.run("grep", "-I", "-z", "-n", "-E",
-                     "-e", r"https?://[^ ]+/(pull|merge_requests)/[0-9]+",
-                     "-e", BLOCKED_DRAFT, commit, "--",
-                     *(":(literal)" + path for path in paths), allowed=(0, 1))
+    result = git.run(
+        "grep",
+        "-I",
+        "-z",
+        "-n",
+        "-E",
+        "-e",
+        r"https?://[^ ]+/(pull|merge_requests)/[0-9]+",
+        "-e",
+        BLOCKED_DRAFT,
+        commit,
+        "--",
+        *(":(literal)" + path for path in paths),
+        allowed=(0, 1),
+    )
     pointers, blocked = [], []
     for row in result.stdout.split(b"\n"):
         parts = row.split(b"\0", 2)
@@ -172,7 +202,7 @@ def record_requests(git, commit, paths):
             for link in PR_LINK.findall(text):
                 pointers.append((source, link))
             if text.rstrip(" \t\r") == BLOCKED_DRAFT and source.startswith(commit + ":"):
-                blocked.append(source[len(commit) + 1:])
+                blocked.append(source[len(commit) + 1 :])
     return sorted(set(pointers)), sorted(set(blocked))
 
 
@@ -203,14 +233,16 @@ def leading_values(value):
     # Cycles write a path followed by free annotations; separators can also occur inside a path,
     # so every cut is a candidate and none is chosen before comparing with a known identity.
     for separator in re.finditer(r"; |, | — | \(|`", value):
-        yield value[:separator.start()]
+        yield value[: separator.start()]
     yield value
 
 
 def frozen_link(document):
     """Read a Document link to a task's frozen copy as a product commit and path, or None."""
-    link = re.fullmatch(r"https?://[^/\s]+/\S*?/(?:-/)?blob/([0-9a-f]{7,40})/([^?#\s]+)(?:[?#]\S*)?",
-                        path_value(document))
+    link = re.fullmatch(
+        r"https?://[^/\s]+/\S*?/(?:-/)?blob/([0-9a-f]{7,40})/([^?#\s]+)(?:[?#]\S*)?",
+        path_value(document),
+    )
     if not link or any(not char.isprintable() for char in unquote(link[2])):
         return None
     return link[1], unquote(link[2])
@@ -223,8 +255,9 @@ def bare_name(value):
 
 def names_plan(value, parents, plan_path):
     """Accept a plan path relative to a task document's folder or the plan's bare file name."""
-    if bare_name(value) and os.path.normcase(path_value(value)) == \
-            os.path.normcase(os.path.basename(plan_path)):
+    if bare_name(value) and os.path.normcase(path_value(value)) == os.path.normcase(
+        os.path.basename(plan_path)
+    ):
         return True
     return any(source_path(value, parent) == source_path(plan_path) for parent in parents)
 
@@ -263,41 +296,59 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
             unresolved.append(path + ": missing or ambiguous task provenance fields")
             continue
         if frozen_copy is False:
-            unresolved.append(path + ": frozen copy the Document links is absent from the product "
-                              "repository")
+            unresolved.append(
+                path + ": frozen copy the Document links is absent from the product repository"
+            )
             continue
-        candidates = [candidate for candidate in map(source_path, leading_values(sources[0]))
-                      if candidate is not None]
+        candidates = [
+            candidate
+            for candidate in map(source_path, leading_values(sources[0]))
+            if candidate is not None
+        ]
         if frozen_copy is None:
             if not candidates or document is None or task.document == "—":
                 unresolved.append(path + ": original Task source or Document cannot be anchored")
                 continue
             if document not in candidates:
-                foreign.append(path + ": Task source " + sources[0] + " differs from Document " +
-                               document)
+                foreign.append(
+                    path + ": Task source " + sources[0] + " differs from Document " + document
+                )
                 continue
             parents = [Path(document).parent]
         else:
             # The source document is gone; any folder its recorded path may name can hold it.
             parents = [Path(candidate).parent for candidate in candidates]
         if not re.match(r"plan item(?![\w-])", relations[0]):
-            unresolved.append(path + ": same-source Task relation does not establish this plan's membership")
+            unresolved.append(
+                path + ": same-source Task relation does not establish this plan's membership"
+            )
             continue
         # The frozen task binds plan and name below; only the one expanded form also names them.
-        relation = re.fullmatch(r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
-                                r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?", relations[0])
+        relation = re.fullmatch(
+            r"plan item — (.+?) \([^\n]+\), item ([1-9][0-9]*) "
+            r"([a-z0-9]+(?:-[a-z0-9]+)*)(?:; .+)?",
+            relations[0],
+        )
         if relation:
             related_plan = source_path(relation[1], parents[0]) if parents else relation[1]
             if not names_plan(relation[1], parents, plan_path) or relation[3] != task.name:
                 if unsure(relation[1], frozen_copy) and relation[3] == task.name:
-                    unresolved.append(path + ": Task relation's plan cannot be resolved without "
-                                      "the removed source document")
+                    unresolved.append(
+                        path + ": Task relation's plan cannot be resolved without "
+                        "the removed source document"
+                    )
                     continue
-                foreign.append(path + ": Task relation names plan " + str(related_plan) +
-                               " item " + relation[2] + " " + relation[3])
+                foreign.append(
+                    path
+                    + ": Task relation names plan "
+                    + str(related_plan)
+                    + " item "
+                    + relation[2]
+                    + " "
+                    + relation[3]
+                )
                 continue
-        artifacts = re.search(r"^## Artifacts\s*\n(.*?)(?=^## |\Z)", text,
-                              re.MULTILINE | re.DOTALL)
+        artifacts = re.search(r"^## Artifacts\s*\n(.*?)(?=^## |\Z)", text, re.MULTILINE | re.DOTALL)
         frozen = []
         if artifacts:
             for line in artifacts[1].splitlines():
@@ -308,34 +359,46 @@ def provenance(paths, read, plan_path, task, frozen_copy=None):
             unresolved.append(path + ": missing or ambiguous frozen task artifact")
             continue
         # Frozen artifacts must belong to this snapshot, not today's external source or another cycle.
-        targets = {posixpath.normpath(posixpath.join(posixpath.dirname(path),
-                                                     path_value(value).replace("\\", "/")))
-                   for value in leading_values(frozen[0]) if path_value(value)} & set(paths)
+        targets = {
+            posixpath.normpath(
+                posixpath.join(posixpath.dirname(path), path_value(value).replace("\\", "/"))
+            )
+            for value in leading_values(frozen[0])
+            if path_value(value)
+        } & set(paths)
         if len(targets) != 1:
             unresolved.append(path + ": frozen task artifact absent from this cycle snapshot")
             continue
         target = targets.pop()
-        if frozen_copy is not None and \
-                read(target).replace("\r\n", "\n") != frozen_copy.replace("\r\n", "\n"):
+        if frozen_copy is not None and read(target).replace("\r\n", "\n") != frozen_copy.replace(
+            "\r\n", "\n"
+        ):
             foreign.append(path + ": frozen task differs from the frozen copy the Document links")
             continue
         memberships = header_fields(read(target), "Project relation")
         if len(memberships) != 1:
             unresolved.append(path + ": missing or ambiguous frozen task membership")
             continue
-        membership = re.fullmatch(r"plan item: (.+) — ([a-z0-9]+(?:-[a-z0-9]+)*)",
-                                  memberships[0])
+        membership = re.fullmatch(r"plan item: (.+) — ([a-z0-9]+(?:-[a-z0-9]+)*)", memberships[0])
         if not membership:
             unresolved.append(path + ": frozen task membership cannot be read")
             continue
         member_plan = source_path(membership[1], parents[0]) if parents else membership[1]
         if not names_plan(membership[1], parents, plan_path) or membership[2] != task.name:
             if unsure(membership[1], frozen_copy) and membership[2] == task.name:
-                unresolved.append(path + ": frozen task's plan cannot be resolved without the "
-                                  "removed source document")
+                unresolved.append(
+                    path + ": frozen task's plan cannot be resolved without the "
+                    "removed source document"
+                )
                 continue
-            foreign.append(path + ": frozen task names plan " + str(member_plan) +
-                           " task " + membership[2] + ", not the supplied plan/task")
+            foreign.append(
+                path
+                + ": frozen task names plan "
+                + str(member_plan)
+                + " task "
+                + membership[2]
+                + ", not the supplied plan/task"
+            )
             continue
         owned.append(path)
     if foreign:
@@ -363,11 +426,20 @@ def task_report(git, observation, task, plan_path):
             path = worktree / working
             try:
                 if path.is_dir():
-                    files = [file for file in path.rglob("*") if file.is_file() and
-                             not any(parent.is_symlink() for parent in (file, *file.parents))]
+                    files = [
+                        file
+                        for file in path.rglob("*")
+                        if file.is_file()
+                        and not any(parent.is_symlink() for parent in (file, *file.parents))
+                    ]
                     paths = [file.relative_to(path).as_posix() for file in files]
-                    status, _, reasons = provenance(paths, lambda name: (path / name).read_text(
-                        encoding="utf-8", errors="replace"), plan_path, task, frozen_copy)
+                    status, _, reasons = provenance(
+                        paths,
+                        lambda name: (path / name).read_text(encoding="utf-8", errors="replace"),
+                        plan_path,
+                        task,
+                        frozen_copy,
+                    )
                     if status == "owned":
                         active.append(path)
                     else:
@@ -386,7 +458,8 @@ def task_report(git, observation, task, plan_path):
             def read(name):
                 if name not in cache:
                     cache[name] = git.run("show", commit + ":" + name).stdout.decode(
-                        "utf-8", errors="replace")
+                        "utf-8", errors="replace"
+                    )
                 return cache[name]
 
             status, records, reasons = provenance(paths, read, plan_path, task, frozen_copy)
@@ -396,26 +469,43 @@ def task_report(git, observation, task, plan_path):
                 continue
             archived.append(commit)
             snapshots[commit] = records
-            refs = git.text("for-each-ref", "--contains=" + commit, "--format=%(refname)",
-                            "refs/heads/", "refs/remotes/")
-            lines.append("evidence %s: archived cycle %s commit %s on %s" %
-                         (prefix, archive, commit, display(", ".join(refs.splitlines()))))
+            refs = git.text(
+                "for-each-ref",
+                "--contains=" + commit,
+                "--format=%(refname)",
+                "refs/heads/",
+                "refs/remotes/",
+            )
+            lines.append(
+                "evidence %s: archived cycle %s commit %s on %s"
+                % (prefix, archive, commit, display(", ".join(refs.splitlines())))
+            )
             pointers, blocked = record_requests(git, commit, records)
             for source, link in pointers:
-                lines.append("evidence %s: PR pointer from %s: %s" %
-                             (prefix, display(source), display(link)))
+                lines.append(
+                    "evidence %s: PR pointer from %s: %s" % (prefix, display(source), display(link))
+                )
             for record in blocked:
-                lines.append("evidence %s: blocked draft request in record %s commit %s" %
-                             (prefix, display(record), commit))
+                lines.append(
+                    "evidence %s: blocked draft request in record %s commit %s"
+                    % (prefix, display(record), commit)
+                )
         # A deletion is a cycle trace, but cannot stand for actual archived content.
         if observation.commit and observation.complete:
             for commit in commits_touching(git, [observation.commit], archive):
                 paths = snapshots.get(commit, [])
                 if paths:
                     merged.append(commit)
-                    lines.append("evidence %s: cycle record %s commit %s reachable from %s %s" %
-                                 (prefix, display(", ".join(paths)), commit,
-                                  observation.integration, observation.commit))
+                    lines.append(
+                        "evidence %s: cycle record %s commit %s reachable from %s %s"
+                        % (
+                            prefix,
+                            display(", ".join(paths)),
+                            commit,
+                            observation.integration,
+                            observation.commit,
+                        )
+                    )
     except (GitError, UnicodeError) as error:
         errors.append(display(error))
         merged = []
@@ -433,15 +523,26 @@ def task_report(git, observation, task, plan_path):
         if merged and not errors:
             lines.append("propose %s: in cycle -> done" % prefix)
         else:
-            unchecked.append("PR outcome unchecked; cycle evidence is outside established fresh "
-                             "integration history" if trace else "no sufficient cycle trace; PR outcome unchecked")
-    elif trace and (task.state != "done" or active or (
-            observation.commit and observation.complete and not merged and not errors)):
+            unchecked.append(
+                "PR outcome unchecked; cycle evidence is outside established fresh "
+                "integration history"
+                if trace
+                else "no sufficient cycle trace; PR outcome unchecked"
+            )
+    elif trace and (
+        task.state != "done"
+        or active
+        or (observation.commit and observation.complete and not merged and not errors)
+    ):
         conflict = True
-        lines.append("conflict %s: cycle trace conflicts with plan state %s; human reconciliation "
-                     "required" % (prefix, task.state))
+        lines.append(
+            "conflict %s: cycle trace conflicts with plan state %s; human reconciliation "
+            "required" % (prefix, task.state)
+        )
     elif task.state == "done" and not merged:
-        unchecked.append("plan says done but completion cannot be established from fresh Git history")
+        unchecked.append(
+            "plan says done but completion cannot be established from fresh Git history"
+        )
     elif not trace:
         unchecked.append("no sufficient cycle trace; no progress inferred")
     for reason in observation.unchecked + unchecked:
@@ -468,10 +569,14 @@ def sources(plan_path):
     if len(statuses) != 1 or not statuses[0].startswith("Status: handed over "):
         findings.append("fail: plan must have one handed-over Status line")
     if definition is not None:
-        findings.extend("definition " + str(finding) for finding in readiness_check.check(definition))
+        findings.extend(
+            "definition " + str(finding) for finding in readiness_check.check(definition)
+        )
         header, _ = readiness_check.split(definition)
         approvals = [line.rstrip() for _, line in header if line.startswith("Status:")]
-        if len(approvals) != 1 or not re.fullmatch(r"Status: approved [0-9]{4}-[0-9]{2}-[0-9]{2}", approvals[0]):
+        if len(approvals) != 1 or not re.fullmatch(
+            r"Status: approved [0-9]{4}-[0-9]{2}-[0-9]{2}", approvals[0]
+        ):
             findings.append("fail: definition must have one approved Status line")
         elif not plan_check.calendar_date(approvals[0][-10:]):
             findings.append("fail: definition approval date is not a calendar date")
@@ -487,7 +592,9 @@ def main(argv=None):
     # Redirected Windows streams can inherit ANSI, which cannot preserve path evidence.
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="strict")
-    parser = argparse.ArgumentParser(description="Report Git evidence for project plan task states.")
+    parser = argparse.ArgumentParser(
+        description="Report Git evidence for project plan task states."
+    )
     parser.add_argument("plan", help="original handed-over project plan")
     parser.add_argument("product_repository", help="product Git repository")
     args = parser.parse_args(argv)

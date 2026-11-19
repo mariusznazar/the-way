@@ -76,8 +76,9 @@ def run(directory, stream=None, slowest=None):
         stream.write("no test found in %s\n" % directory)
         return 1
     options = {} if slowest is None else {"durations": slowest}
-    result = unittest.TextTestRunner(stream=stream, resultclass=NamingSkipsResult,
-                                     **options).run(suite)
+    result = unittest.TextTestRunner(stream=stream, resultclass=NamingSkipsResult, **options).run(
+        suite
+    )
     return 0 if result.wasSuccessful() else 1
 
 
@@ -90,8 +91,9 @@ def test_directories(root):
     found = set()
     for path in listed.stdout.decode("utf-8").split("\0"):
         folder, _, name = path.rpartition("/")
-        if fnmatch.fnmatchcase(name, PATTERN) and \
-                os.path.isfile(os.path.join(root, *path.split("/"))):
+        if fnmatch.fnmatchcase(name, PATTERN) and os.path.isfile(
+            os.path.join(root, *path.split("/"))
+        ):
             found.add(folder or ".")
     return sorted(found)
 
@@ -111,8 +113,7 @@ def run_all(jobs=None, slowest=None, stream=None):
     most `jobs` of them at once (all at once where it is None); prints each directory's report whole
     as its process ends; returns the exit code."""
     stream = stream or sys.stdout.buffer
-    top = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True,
-                         text=True)
+    top = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
     root = top.stdout.strip() if top.returncode == 0 else None
     directories = test_directories(root) if root else None
     if directories is None:
@@ -124,11 +125,14 @@ def run_all(jobs=None, slowest=None, stream=None):
         stream.flush()
         return 1
     failed, count = {}, 0
-    with concurrent.futures.ThreadPoolExecutor(max_workers=min(jobs or len(directories),
-                                                              len(directories))) as pool:
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=min(jobs or len(directories), len(directories))
+    ) as pool:
         try:
-            pending = {pool.submit(run_directory, root, directory, slowest): directory
-                       for directory in directories}
+            pending = {
+                pool.submit(run_directory, root, directory, slowest): directory
+                for directory in directories
+            }
             for done in concurrent.futures.as_completed(pending):
                 directory = pending[done]
                 output, code = done.result()
@@ -155,8 +159,11 @@ def run_all(jobs=None, slowest=None, stream=None):
             pool.shutdown(wait=True, cancel_futures=True)
             raise
     summary = "%d tests in %d directories; " % (count, len(directories))
-    summary += ("failed: " + ", ".join(failed[name] for name in directories if name in failed)) \
-        if failed else "every directory passed"
+    summary += (
+        ("failed: " + ", ".join(failed[name] for name in directories if name in failed))
+        if failed
+        else "every directory passed"
+    )
     stream.write((summary + "\n").encode("utf-8"))
     stream.flush()
     return 1 if failed else 0
@@ -174,20 +181,34 @@ def whole_number(text):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Run every test of the repository, or the "
-                                                 "unittest tests of one directory.")
-    parser.add_argument("directory", nargs="?",
-                        help="the directory whose test_*.py files hold the tests; without it, "
-                             "every directory holding a test_*.py file git tracks")
-    parser.add_argument("--jobs", type=whole_number, metavar="N",
-                        help="how many directories run at once, without DIRECTORY; default: all "
-                             "of them; 1 runs them one after another")
-    parser.add_argument("--slowest", type=whole_number, metavar="N",
-                        help="list the N slowest tests of each directory with their time")
+    parser = argparse.ArgumentParser(
+        description="Run every test of the repository, or the unittest tests of one directory."
+    )
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        help="the directory whose test_*.py files hold the tests; without it, "
+        "every directory holding a test_*.py file git tracks",
+    )
+    parser.add_argument(
+        "--jobs",
+        type=whole_number,
+        metavar="N",
+        help="how many directories run at once, without DIRECTORY; default: all "
+        "of them; 1 runs them one after another",
+    )
+    parser.add_argument(
+        "--slowest",
+        type=whole_number,
+        metavar="N",
+        help="list the N slowest tests of each directory with their time",
+    )
     arguments = parser.parse_args(argv)
     if arguments.slowest is not None and not supports_durations():
-        parser.error("--slowest needs a unittest that takes durations, Python 3.12 or later; "
-                     "this is Python %d.%d" % sys.version_info[:2])
+        parser.error(
+            "--slowest needs a unittest that takes durations, Python 3.12 or later; "
+            "this is Python %d.%d" % sys.version_info[:2]
+        )
     if arguments.directory is None:
         return run_all(arguments.jobs, arguments.slowest)
     # Tests import the product's own modules from the working directory, the root of the

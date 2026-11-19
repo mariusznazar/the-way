@@ -32,9 +32,9 @@ def section_text():
     start = re.search(r"^## %s\s*$" % SECTION, text, re.MULTILINE)
     if not start:
         raise AssertionError("%s has no section %r" % (TEMPLATE, SECTION))
-    rest = text[start.end():]
+    rest = text[start.end() :]
     following = re.search(r"^## ", rest, re.MULTILINE)
-    return rest[:following.start()] if following else rest
+    return rest[: following.start()] if following else rest
 
 
 def named_places():
@@ -53,7 +53,6 @@ def named_places():
 
 
 class GuidelinesFilePlace(unittest.TestCase):
-
     def test_every_file_the_template_names_is_read_by_the_check(self):
         # invariant: guidelines-file-place
         # Break caught: moving the directory of the guidelines, or nesting them, in the template

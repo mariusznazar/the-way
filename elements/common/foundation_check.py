@@ -145,8 +145,9 @@ LEFT_OUT = "Files left out on purpose"
 SKIP_TEST_CITATIONS = "--skip-test-citations"
 # The files of the foundation that the script reads at the commit the branch left.
 BASE_FILES = (DECISIONS, INVARIANTS)
-UNKNOWN_BASE = ("the commit the branch left the main branch from is not known, so nothing was "
-                "compared with it")
+UNKNOWN_BASE = (
+    "the commit the branch left the main branch from is not known, so nothing was compared with it"
+)
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -158,8 +159,10 @@ VERIFIED = re.compile(r"invariants:\s*(%s(?:\s*·\s*%s)*)" % (NAMED_ANY, NAMED_A
 DETECTED = re.compile(r"detected\s+by\s+(%s)" % WORDS)
 # A comment line reading `invariant:` cites all that follows, which is one word; one reading
 # `decision:` gives a decision number and a quotation.
-CITATION = re.compile(r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
-                      r"(?:\*/|-->)?\s*$")
+CITATION = re.compile(
+    r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
+    r"(?:\*/|-->)?\s*$"
+)
 ITEM = re.compile(r"[^·,\n]+")
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
@@ -170,22 +173,32 @@ TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
 TYPED_TODO = re.compile(r"(?:derives from|narrows)[ \t]+(?=`?TODO(?![^\s`]))")
 # The fields that take `TODO — <description>`: what a bare `TODO` in each fails to say, and the
 # form the description takes.
-MISSING = {"Rests on": ("names no fact", "<the fact, with its source>"),
-           "Derives from": ("names no decision", "<the decision, and where it is expected>"),
-           "Based on": ("says nothing of what is missing", "<what is missing, with its source>"),
-           "Relations": ("names no decision", "<the decision, and where it is expected>")}
+MISSING = {
+    "Rests on": ("names no fact", "<the fact, with its source>"),
+    "Derives from": ("names no decision", "<the decision, and where it is expected>"),
+    "Based on": ("says nothing of what is missing", "<what is missing, with its source>"),
+    "Relations": ("names no decision", "<the decision, and where it is expected>"),
+}
 ANY = lambda value: bool(value)
 DECISION_FIELDS = ("Scope", "Based on", "Relations", "Verification", "Origin")
-DECISION_WORDS = {"Scope": lambda value: value not in EMPTY,
-                  "Verification": lambda value: value != "TODO",
-                  "Origin": lambda value: not TODO_VALUE.match(value)}
-INVARIANT_FIELDS = {"Method": lambda value: value in ("test", "review"), "Rests on": ANY,
-                    "Derives from": ANY, "Part": lambda value: value not in EMPTY,
-                    "Violated": lambda value: value in ("yes", "no")}
+DECISION_WORDS = {
+    "Scope": lambda value: value not in EMPTY,
+    "Verification": lambda value: value != "TODO",
+    "Origin": lambda value: not TODO_VALUE.match(value),
+}
+INVARIANT_FIELDS = {
+    "Method": lambda value: value in ("test", "review"),
+    "Rests on": ANY,
+    "Derives from": ANY,
+    "Part": lambda value: value not in EMPTY,
+    "Violated": lambda value: value in ("yes", "no"),
+}
 FACT_FIELDS = {"Source": lambda value: value not in EMPTY}
-PART_FIELDS = {"Files": lambda value: value != "TODO",
-               "Depends on": lambda value: value != "TODO",
-               "Trust boundary": lambda value: value != "TODO"}
+PART_FIELDS = {
+    "Files": lambda value: value != "TODO",
+    "Depends on": lambda value: value != "TODO",
+    "Trust boundary": lambda value: value != "TODO",
+}
 EARLIER = {"Parts", "Invariant", "Criticality", "Coverage", "Declared at"}
 SURFACE_FIELDS = {"Relied on by": lambda value: value not in EMPTY}
 
@@ -240,8 +253,11 @@ def located(found, name, pattern=None):
     """(word, line number) of each item of a field's list joined by ` · ` or `, `, or of each
     item inside what the first group of a pattern matches in the field's value."""
     value, lines = found.get(name, ("", [0]))
-    spans = ([(match.start(1), match.group(1)) for match in pattern.finditer(value)]
-             if pattern else [(0, value)])
+    spans = (
+        [(match.start(1), match.group(1)) for match in pattern.finditer(value)]
+        if pattern
+        else [(0, value)]
+    )
     for start, text in spans:
         for item in ITEM.finditer(text):
             word = item.group(0).strip().strip("`").strip()
@@ -288,7 +304,7 @@ def unquoted(found, name):
     for piece in masked.split("·"):
         if "\0" not in piece:
             first = value.count("\n", 0, start)
-            for offset, text in enumerate(value[start:start + len(piece)].split("\n")):
+            for offset, text in enumerate(value[start : start + len(piece)].split("\n")):
                 yield lines[first + offset], text
         start += len(piece) + 1
 
@@ -338,8 +354,7 @@ def table(lines, title):
 
 def items(value):
     """The items of a list joined by ` · ` or `, `, over its lines."""
-    return [item.strip().strip("`").strip() for item in re.split(r"[·,\n]", value)
-            if item.strip()]
+    return [item.strip().strip("`").strip() for item in re.split(r"[·,\n]", value) if item.strip()]
 
 
 def cited_names(lines):
@@ -373,8 +388,10 @@ def invariant_entries(lines):
 class Foundation:
     def __init__(self, root, report):
         self.root, self.report = root, report
-        self.files = {path: read(root, path) for path in
-                      (DECISIONS, INVARIANTS, FACTS, GLOSSARY, PART_MAP, VIOLATED)}
+        self.files = {
+            path: read(root, path)
+            for path in (DECISIONS, INVARIANTS, FACTS, GLOSSARY, PART_MAP, VIOLATED)
+        }
         self.prefix, self.numbers = None, set()
         self.withdrawn_numbers = {}  # number -> (line, successors)
         self.withdrawn_lines = set()  # the lines of the log's list of withdrawn numbers
@@ -382,7 +399,7 @@ class Foundation:
         self.based_lines = set()  # the lines of the decisions' *Based on*
         self.relation_lines = set()  # the lines of the decisions' *Relations*
         self.number = None  # a decision number with the log's prefix
-        self.entries = {}    # path -> {identifier: (line, fields)}
+        self.entries = {}  # path -> {identifier: (line, fields)}
         self.withdrawn = {}  # path -> {identifier: (line, successors)}
         self.parts = set()
         # the identifiers named by a citing line of a file whose name does not end in `.md`
@@ -397,8 +414,14 @@ class Foundation:
 
     def read_decisions(self):
         lines = self.files[DECISIONS]
-        first = next((re.match(r"^### ([A-Z][A-Z0-9]*)-[0-9]", line) for line in lines
-                      if re.match(r"^### [A-Z][A-Z0-9]*-[0-9]", line)), None)
+        first = next(
+            (
+                re.match(r"^### ([A-Z][A-Z0-9]*)-[0-9]", line)
+                for line in lines
+                if re.match(r"^### [A-Z][A-Z0-9]*-[0-9]", line)
+            ),
+            None,
+        )
         if not first:
             return
         self.prefix = first.group(1)
@@ -417,10 +440,14 @@ class Foundation:
                 self.headings[key] = number
             for earlier, line in seen.get(key, []):
                 if version is None or earlier is None or earlier == version:
-                    twice = label if version is None or earlier is None else "%s/%d" % (
-                        label, version)
-                    self.report.error(DECISIONS, number, "`%s` stands twice; it also stands at "
-                                                         "line %d" % (twice, line))
+                    twice = (
+                        label if version is None or earlier is None else "%s/%d" % (label, version)
+                    )
+                    self.report.error(
+                        DECISIONS,
+                        number,
+                        "`%s` stands twice; it also stands at line %d" % (twice, line),
+                    )
                     break
             seen.setdefault(key, []).append((version, number))
         for number, cells in table(lines, WITHDRAWN)[1:]:
@@ -457,12 +484,16 @@ class Foundation:
                 names.append((number, cells[0]))
             for number, name in names:
                 if name in held:
-                    self.report.error(path, number, "`%s` stands twice; it also stands at %s:%d"
-                                      % ((name,) + held[name]))
+                    self.report.error(
+                        path,
+                        number,
+                        "`%s` stands twice; it also stands at %s:%d" % ((name,) + held[name]),
+                    )
                 else:
                     held[name] = (path, number)
-        self.parts = {name for name, (_, found) in self.entries[PART_MAP].items()
-                      if "Files" in found}
+        self.parts = {
+            name for name, (_, found) in self.entries[PART_MAP].items() if "Files" in found
+        }
         for _, found in self.entries[INVARIANTS].values():
             self.derived_lines.update(found.get("Derives from", ("", []))[1])
 
@@ -473,8 +504,11 @@ class Foundation:
             if term == WITHDRAWN:
                 continue
             if term.lower() in held:
-                self.report.error(GLOSSARY, number, "`%s` stands twice; it also stands at line %d"
-                                  % (term, held[term.lower()]))
+                self.report.error(
+                    GLOSSARY,
+                    number,
+                    "`%s` stands twice; it also stands at line %d" % (term, held[term.lower()]),
+                )
             else:
                 held[term.lower()] = number
 
@@ -482,18 +516,25 @@ class Foundation:
         for key, (number, successors) in self.withdrawn_numbers.items():
             for successor in items(successors):
                 match = re.fullmatch(r"%s-([0-9]+)" % self.prefix, successor)
-                if successor not in EMPTY and not (match and int(match.group(1)) in
-                                                   self.numbers | set(self.withdrawn_numbers)):
-                    self.report.error(DECISIONS, number, "withdrawn `%s-%02d` names the successor "
-                                                         "`%s`, which this file does not hold"
-                                      % (self.prefix, key, successor))
+                if successor not in EMPTY and not (
+                    match and int(match.group(1)) in self.numbers | set(self.withdrawn_numbers)
+                ):
+                    self.report.error(
+                        DECISIONS,
+                        number,
+                        "withdrawn `%s-%02d` names the successor "
+                        "`%s`, which this file does not hold" % (self.prefix, key, successor),
+                    )
         for path, withdrawn in self.withdrawn.items():
             for name, (number, successors) in withdrawn.items():
                 for successor in items(successors):
                     if successor not in EMPTY + tuple(self.entries[path]) + tuple(withdrawn):
-                        self.report.error(path, number, "withdrawn `%s` names the successor "
-                                                        "`%s`, which this file does not hold"
-                                          % (name, successor))
+                        self.report.error(
+                            path,
+                            number,
+                            "withdrawn `%s` names the successor "
+                            "`%s`, which this file does not hold" % (name, successor),
+                        )
 
     # --- references -----------------------------------------------------------------------------
 
@@ -522,18 +563,22 @@ class Foundation:
         for match in self.number.finditer(text):
             key = int(match.group(1))
             if key in self.withdrawn_numbers:
-                self.report.error(path, number, "`%s` is withdrawn; name its successor"
-                                  % match.group(0))
+                self.report.error(
+                    path, number, "`%s` is withdrawn; name its successor" % match.group(0)
+                )
             elif key not in self.numbers:
-                self.report.error(path, number, "`%s` names no decision of the log"
-                                  % match.group(0))
+                self.report.error(
+                    path, number, "`%s` names no decision of the log" % match.group(0)
+                )
 
     def check_decision_numbers(self, path, lines):
         """Every line but the log's withdrawn numbers, its *Based on* and *Relations*, and the
         invariants' *Derives from*, which `check_foundation_references` reads apart from the
         description of what is missing and the sources it quotes."""
-        skipped = {DECISIONS: self.withdrawn_lines | self.based_lines | self.relation_lines,
-                   INVARIANTS: self.derived_lines}.get(path, ())
+        skipped = {
+            DECISIONS: self.withdrawn_lines | self.based_lines | self.relation_lines,
+            INVARIANTS: self.derived_lines,
+        }.get(path, ())
         for number, line in enumerate(lines, start=1):
             if number not in skipped:
                 self.refer_decisions(path, number, line)
@@ -554,16 +599,25 @@ class Foundation:
         where = lines[value.count("\n", 0, start)]
         before = value[:start].rstrip(" \t\n")
         if todo is None:
-            self.report.error(path, where, "*%s* reads `TODO` after a relation type: the `TODO` "
-                              "item takes no `derives from` or `narrows`; write `TODO — %s`"
-                              % (name, MISSING[name][1]))
-        elif not value[todo.end():].strip(" \t\n`—–-"):
+            self.report.error(
+                path,
+                where,
+                "*%s* reads `TODO` after a relation type: the `TODO` "
+                "item takes no `derives from` or `narrows`; write `TODO — %s`"
+                % (name, MISSING[name][1]),
+            )
+        elif not value[todo.end() :].strip(" \t\n`—–-"):
             what, form = MISSING[name]
-            self.report.error(path, where,
-                              "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form))
+            self.report.error(
+                path, where, "*%s* reads `TODO` and %s: write `TODO — %s`" % (name, what, form)
+            )
         elif before and not before.endswith("·"):
-            self.report.error(path, where, "*%s* joins its items by ` · `: write ` · ` before "
-                                           "`TODO`, not a comma or a line break" % name)
+            self.report.error(
+                path,
+                where,
+                "*%s* joins its items by ` · `: write ` · ` before "
+                "`TODO`, not a comma or a line break" % name,
+            )
         return {**found, name: (value[:start], lines)}
 
     def check_foundation_references(self):
@@ -578,8 +632,7 @@ class Foundation:
             for line, text in unquoted(known, "Based on"):
                 self.refer_decisions(DECISIONS, line, text)
             self.relation_lines.update(found.get("Relations", ("", []))[1])
-            value, lines = self.known_part(DECISIONS, found, "Relations").get("Relations",
-                                                                              ("", []))
+            value, lines = self.known_part(DECISIONS, found, "Relations").get("Relations", ("", []))
             for line, text in zip(lines, value.split("\n")):
                 self.refer_decisions(DECISIONS, line, text)
             for word, line in located(found, "Verification", VERIFIED):
@@ -594,15 +647,20 @@ class Foundation:
             for word, line in located(found, "Part"):
                 self.refer(INVARIANTS, line, word, "part", EMPTY + ("every",))
         for _, (_, found) in self.entries[PART_MAP].items():
-            for name, kind in (("Depends on", "part"), ("Parts", "part"),
-                               ("Invariant", "invariant")):
+            for name, kind in (
+                ("Depends on", "part"),
+                ("Parts", "part"),
+                ("Invariant", "invariant"),
+            ):
                 for word, line in located(found, name):
                     self.refer(PART_MAP, line, word, kind)
             for word, line in located(found, "Failure modes", DETECTED):
                 self.refer(PART_MAP, line, word, "invariant")
-        for path, title in ((INVARIANTS, "Quarantined invariants"),
-                            (INVARIANTS, "Recovered invariants"),
-                            (VIOLATED, "Violated invariants")):
+        for path, title in (
+            (INVARIANTS, "Quarantined invariants"),
+            (INVARIANTS, "Recovered invariants"),
+            (VIOLATED, "Violated invariants"),
+        ):
             for number, cells in table(self.files[path], title)[1:]:
                 self.refer(path, number, cells[0], "invariant")
 
@@ -622,10 +680,16 @@ class Foundation:
                 missing = [name for name in DECISION_FIELDS if name not in found]
                 for name, words in DECISION_WORDS.items():
                     if name in found and not words(found[name][0]):
-                        self.report.error(DECISIONS, found[name][1][0], "*%s* does not take `%s`"
-                                          % (name, found[name][0]))
-                missing += [name for name in ("Rationale", "Rejected") if not any(
-                    line.startswith("*%s:*" % name) for _, line in body)]
+                        self.report.error(
+                            DECISIONS,
+                            found[name][1][0],
+                            "*%s* does not take `%s`" % (name, found[name][0]),
+                        )
+                missing += [
+                    name
+                    for name in ("Rationale", "Rejected")
+                    if not any(line.startswith("*%s:*" % name) for _, line in body)
+                ]
                 self.missing(DECISIONS, number, missing)
         checks = {INVARIANTS: INVARIANT_FIELDS, FACTS: FACT_FIELDS}
         for path in (INVARIANTS, FACTS, PART_MAP):
@@ -639,39 +703,57 @@ class Foundation:
                     continue
                 rules = checks.get(path)
                 if path == PART_MAP:
-                    rules = PART_FIELDS if "Files" in found else SURFACE_FIELDS \
-                        if "Relied on by" in found else None
+                    rules = (
+                        PART_FIELDS
+                        if "Files" in found
+                        else SURFACE_FIELDS
+                        if "Relied on by" in found
+                        else None
+                    )
                     if rules is None:
-                        self.report.error(path, number, "`%s` is neither a part, with *Files*, nor "
-                                                        "a surface, with *Relied on by*"
-                                          % match.group(1))
+                        self.report.error(
+                            path,
+                            number,
+                            "`%s` is neither a part, with *Files*, nor "
+                            "a surface, with *Relied on by*" % match.group(1),
+                        )
                         continue
                 self.missing(path, number, [name for name in rules if name not in found])
                 for name, words in rules.items():
                     if name in found and not words(found[name][0]):
-                        self.report.error(path, found[name][1][0], "*%s* does not take `%s`"
-                                          % (name, found[name][0]))
+                        self.report.error(
+                            path,
+                            found[name][1][0],
+                            "*%s* does not take `%s`" % (name, found[name][0]),
+                        )
         for number, title, body in blocks(self.files[GLOSSARY], "## "):
             if title[3:].strip() != WITHDRAWN and "Not" not in fields(body):
                 self.missing(GLOSSARY, number, ["Not"])
 
     def earlier(self, path, line, name):
-        self.report.error(path, line, "`%s` stands in the earlier form of its element; bring the "
-                                      "foundation to the current form with "
-                                      "elements/common/migrate_foundation.py" % name)
+        self.report.error(
+            path,
+            line,
+            "`%s` stands in the earlier form of its element; bring the "
+            "foundation to the current form with "
+            "elements/common/migrate_foundation.py" % name,
+        )
 
     def missing(self, path, line, names):
         if names:
-            self.report.error(path, line, "the entry lacks %s" % ", ".join(
-                "*%s*" % name for name in names))
+            self.report.error(
+                path, line, "the entry lacks %s" % ", ".join("*%s*" % name for name in names)
+            )
 
     # --- the state the branch left --------------------------------------------------------------
 
     def read_base(self):
         """Learn the commit the branch left and read at it the files of BASE_FILES."""
         self.base = fork_point(self.root)
-        self.base_files = {path: at_commit(self.root, self.base, path) if self.base else None
-                           for path in BASE_FILES}
+        self.base_files = {
+            path: at_commit(self.root, self.base, path) if self.base else None
+            for path in BASE_FILES
+        }
 
     def list_unknown_base(self):
         """List, for the base or for each file the base lacks, that nothing was compared. It is
@@ -684,8 +766,12 @@ class Foundation:
             return
         for path in BASE_FILES:
             if self.base_files[path] is None:
-                self.report.note(path, 0, "the commit the branch left the main branch from holds "
-                                          "no readable %s, so nothing of it was compared" % path)
+                self.report.note(
+                    path,
+                    0,
+                    "the commit the branch left the main branch from holds "
+                    "no readable %s, so nothing of it was compared" % path,
+                )
 
     def base_sentences(self):
         """{number: the binding sentences, normalised} of each unversioned entry of the log at the
@@ -704,8 +790,9 @@ class Foundation:
         """Whether a *Verification* holds a line that begins `- complies:` and one that begins
         `- violates:`."""
         lines = value.split("\n")
-        return (any(line.startswith("- complies:") for line in lines)
-                and any(line.startswith("- violates:") for line in lines))
+        return any(line.startswith("- complies:") for line in lines) and any(
+            line.startswith("- violates:") for line in lines
+        )
 
     def check_held(self):
         """Report each decision that nothing holds: no invariant after `invariants:`, no line
@@ -715,25 +802,37 @@ class Foundation:
         lacks *Verification* are left to `check_fields`. The switch `--skip-test-citations` has no
         part in it."""
         before = self.base_sentences()
-        named = {int(token.rsplit("-", 1)[1]) for token in self.held
-                 if self.prefix and re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token)}
-        nothing = ("no invariant after `invariants:`, no test with a line `decision:` that names "
-                   "it, no pair of `- complies:` and `- violates:` lines")
+        named = {
+            int(token.rsplit("-", 1)[1])
+            for token in self.held
+            if self.prefix and re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token)
+        }
+        nothing = (
+            "no invariant after `invariants:`, no test with a line `decision:` that names "
+            "it, no pair of `- complies:` and `- violates:` lines"
+        )
         for key, body in sorted(self.bodies.items()):
             found = fields(body)
             if "Verification" not in found:
                 continue
-            if key in named or self.held_by_pair(found["Verification"][0]) or any(
-                    word not in EMPTY for word, _ in located(found, "Verification", VERIFIED)):
+            if (
+                key in named
+                or self.held_by_pair(found["Verification"][0])
+                or any(word not in EMPTY for word, _ in located(found, "Verification", VERIFIED))
+            ):
                 continue
             label = "%s-%02d" % (self.prefix, key)
             if before is not None and before.get(key) != " ".join(binding(body)):
-                self.report.error(DECISIONS, self.headings[key],
-                                  "`%s` is added or changed by this change and nothing holds it: "
-                                  "%s" % (label, nothing))
+                self.report.error(
+                    DECISIONS,
+                    self.headings[key],
+                    "`%s` is added or changed by this change and nothing holds it: "
+                    "%s" % (label, nothing),
+                )
             else:
-                self.report.note(DECISIONS, self.headings[key],
-                                 "`%s` is held by nothing: %s" % (label, nothing))
+                self.report.note(
+                    DECISIONS, self.headings[key], "`%s` is held by nothing: %s" % (label, nothing)
+                )
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
@@ -749,21 +848,29 @@ class Foundation:
         for name, (number, sentence, found) in invariant_entries(self.files[INVARIANTS]).items():
             if name not in before:
                 continue
-            if not all(field in found for field in ("Method", "Part")) \
-                    or found["Method"][0] != "test" or sentence == before[name][1]:
+            if (
+                not all(field in found for field in ("Method", "Part"))
+                or found["Method"][0] != "test"
+                or sentence == before[name][1]
+            ):
                 continue
             lacking = [field for field in ("Method", "Part") if field not in before[name][2]]
             if lacking:
-                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is changed "
-                                 "by this change, while its copy at the base lacks %s, so it was "
-                                 "not compared with the files that cite it"
-                                 % (name, " and ".join("*%s*" % field for field in lacking)))
+                self.report.note(
+                    INVARIANTS,
+                    number,
+                    "`%s` reads `test` and its sentence is changed "
+                    "by this change, while its copy at the base lacks %s, so it was "
+                    "not compared with the files that cite it"
+                    % (name, " and ".join("*%s*" % field for field in lacking)),
+                )
             else:
                 candidates.append((name, number))
         if not candidates:
             return
-        code, diff = git(self.root, "diff", "--name-only", "--no-renames", "--diff-filter=D", "-z",
-                         self.base)
+        code, diff = git(
+            self.root, "diff", "--name-only", "--no-renames", "--diff-filter=D", "-z", self.base
+        )
         if code != 0:
             return
         lost = set()  # the identifiers that a file the change deleted cited at the base
@@ -782,10 +889,14 @@ class Foundation:
         for name, number in candidates:
             paths = citing.get(name, set())
             if paths and name not in lost and not paths & changed:
-                self.report.note(INVARIANTS, number, "`%s` reads `test` and its sentence is "
-                                 "changed by this change, while no file citing it changed (%s): "
-                                 "name it in the request, saying what the sentence now says"
-                                 % (name, ", ".join(sorted(paths))))
+                self.report.note(
+                    INVARIANTS,
+                    number,
+                    "`%s` reads `test` and its sentence is "
+                    "changed by this change, while no file citing it changed (%s): "
+                    "name it in the request, saying what the sentence now says"
+                    % (name, ", ".join(sorted(paths))),
+                )
 
     def check_decision_line(self, path, number, value):
         """Report a `decision:` line that gives no decision number, names no decision of the log or
@@ -794,8 +905,9 @@ class Foundation:
         token = parts[0] if parts else ""
         rest = parts[1] if len(parts) > 1 else ""
         if not re.fullmatch(r"[A-Z][A-Z0-9]*-[0-9]+", token):
-            self.report.error(path, number, "`decision:` gives no decision number as the log "
-                                            "writes it")
+            self.report.error(
+                path, number, "`decision:` gives no decision number as the log writes it"
+            )
             return
         self.held.setdefault(token, []).append((path, number))
         if not self.prefix or not re.fullmatch(r"%s-[0-9]+" % re.escape(self.prefix), token):
@@ -809,7 +921,7 @@ class Foundation:
         if not quoted:
             self.report.error(path, number, "`decision:` gives no quotation of the sentence")
             return
-        if rest[quoted.end():].strip():
+        if rest[quoted.end() :].strip():
             self.report.error(path, number, "`decision:` has text after the quotation")
             return
         quote = " ".join(quoted.group(1).split())
@@ -823,11 +935,13 @@ class Foundation:
                 if begins_sentence(paragraph, match.start()):
                     starts = True
         if not found:
-            self.report.error(path, number, "the quotation stands in no binding sentence of `%s`"
-                              % token)
+            self.report.error(
+                path, number, "the quotation stands in no binding sentence of `%s`" % token
+            )
         elif not starts:
-            self.report.error(path, number, "the quotation does not begin a sentence of `%s`"
-                              % token)
+            self.report.error(
+                path, number, "the quotation does not begin a sentence of `%s`" % token
+            )
 
     def check_citations(self, path, lines):
         for number, line in enumerate(lines, start=1):
@@ -838,8 +952,9 @@ class Foundation:
             if match.group(1) == "decision":
                 self.check_decision_line(path, number, value)
             elif len(value.split()) != 1:
-                self.report.error(path, number, "`%s: %s` cites no one identifier"
-                                  % (match.group(1), value))
+                self.report.error(
+                    path, number, "`%s: %s` cites no one identifier" % (match.group(1), value)
+                )
             else:
                 self.refer(path, number, value, match.group(1))
                 named = NAMED.fullmatch(value)
@@ -850,10 +965,12 @@ class Foundation:
         """Report each invariant that reads `test` and no line `check_citations` read cites."""
         for name, (_, found) in self.entries[INVARIANTS].items():
             if found.get("Method", ("",))[0] == "test" and name not in self.cited:
-                self.report.error(INVARIANTS, found["Method"][1][0],
-                                  "`%s` reads `test` and no test cites it: no file git tracks "
-                                  "whose name does not end in `.md` holds a line `invariant: %s`"
-                                  % (name, name))
+                self.report.error(
+                    INVARIANTS,
+                    found["Method"][1][0],
+                    "`%s` reads `test` and no test cites it: no file git tracks "
+                    "whose name does not end in `.md` holds a line `invariant: %s`" % (name, name),
+                )
 
     def check_guidelines(self, path, lines):
         fenced, kind = None, None
@@ -863,8 +980,11 @@ class Foundation:
                 mark = fence.group(1)
                 if fenced is None:
                     fenced = mark
-                elif mark[0] == fenced[0] and len(mark) >= len(fenced) and \
-                        not line.strip()[len(mark):]:
+                elif (
+                    mark[0] == fenced[0]
+                    and len(mark) >= len(fenced)
+                    and not line.strip()[len(mark) :]
+                ):
                     fenced = None
                 continue
             if fenced is not None:
@@ -905,9 +1025,18 @@ class Foundation:
         try:
             with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as stream:
                 stream.write("".join(line + "\n" for line in wanted))
-            code, answer = git(self.root, "-c", "core.attributesFile=" + attributes.replace(
-                os.sep, "/"), "-c", "core.ignorecase=false", "check-attr", "--all", "-z",
-                "--stdin", stdin="".join(path + "\0" for path in tracked))
+            code, answer = git(
+                self.root,
+                "-c",
+                "core.attributesFile=" + attributes.replace(os.sep, "/"),
+                "-c",
+                "core.ignorecase=false",
+                "check-attr",
+                "--all",
+                "-z",
+                "--stdin",
+                stdin="".join(path + "\0" for path in tracked),
+            )
         finally:
             os.unlink(attributes)
         if code != 0:
@@ -915,27 +1044,38 @@ class Foundation:
         claims, matched = {}, set()
         pieces = answer.split("\0")
         for index in range(0, len(pieces) - 2, 3):
-            path, attribute, value = pieces[index:index + 3]
+            path, attribute, value = pieces[index : index + 3]
             if value == "set":
                 matched.add(attribute)
             if attribute in owner and value == "set":
                 claims.setdefault(path, []).append(owner[attribute])
         for attribute, (line, name, field_name, pattern) in place.items():
             if attribute not in matched:
-                self.report.error(PART_MAP, line, "the pattern `%s` in the *%s* of `%s` matches no "
-                                                  "file git tracks" % (pattern, field_name, name))
+                self.report.error(
+                    PART_MAP,
+                    line,
+                    "the pattern `%s` in the *%s* of `%s` matches no "
+                    "file git tracks" % (pattern, field_name, name),
+                )
         for path in tracked:
             parts = list(dict.fromkeys(claims.get(path, [])))
             if path in left_out:
                 for part in parts:
-                    self.report.error(PART_MAP, left_out[path], "`%s` is left out on purpose and "
-                                                                "claimed by `%s`" % (path, part))
+                    self.report.error(
+                        PART_MAP,
+                        left_out[path],
+                        "`%s` is left out on purpose and claimed by `%s`" % (path, part),
+                    )
             elif not parts:
-                self.report.error(path, 0, "no part claims it: give it to a part or list it as "
-                                           "left out on purpose")
+                self.report.error(
+                    path,
+                    0,
+                    "no part claims it: give it to a part or list it as left out on purpose",
+                )
             elif len(parts) > 1:
-                self.report.error(path, 0, "claimed by %s" % " and ".join(
-                    "`%s`" % part for part in parts))
+                self.report.error(
+                    path, 0, "claimed by %s" % " and ".join("`%s`" % part for part in parts)
+                )
         return True
 
 
@@ -977,8 +1117,10 @@ def run(root, skip_test_citations=False):
         return ["git cannot match the path patterns of the part map"], 2
     lines = list(report.errors)
     count = len(lines)
-    return (lines + list(report.listed) + ["%d error%s" % (count, "" if count == 1 else "s")],
-            1 if count else 0)
+    return (
+        lines + list(report.listed) + ["%d error%s" % (count, "" if count == 1 else "s")],
+        1 if count else 0,
+    )
 
 
 def main(argv=None):

@@ -32,15 +32,31 @@ ENVIRONMENT = {
     **os.environ,
     "GIT_CONFIG_GLOBAL": os.devnull,
     "GIT_CONFIG_NOSYSTEM": "1",
-    "GIT_AUTHOR_NAME": "Test", "GIT_AUTHOR_EMAIL": "test@example.com",
-    "GIT_COMMITTER_NAME": "Test", "GIT_COMMITTER_EMAIL": "test@example.com",
+    "GIT_AUTHOR_NAME": "Test",
+    "GIT_AUTHOR_EMAIL": "test@example.com",
+    "GIT_COMMITTER_NAME": "Test",
+    "GIT_COMMITTER_EMAIL": "test@example.com",
 }
 
 
 def git(directory: Path, *arguments: str) -> str:
-    done = subprocess.run(["git", "-c", "core.autocrlf=false", "-c", "protocol.file.allow=always",
-                           "-C", str(directory), *arguments], capture_output=True, text=True,
-                          encoding="utf-8", env=ENVIRONMENT, stdin=subprocess.DEVNULL)
+    done = subprocess.run(
+        [
+            "git",
+            "-c",
+            "core.autocrlf=false",
+            "-c",
+            "protocol.file.allow=always",
+            "-C",
+            str(directory),
+            *arguments,
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env=ENVIRONMENT,
+        stdin=subprocess.DEVNULL,
+    )
     if done.returncode != 0:
         raise AssertionError(f"git {' '.join(arguments)} failed: {done.stdout}{done.stderr}")
     return done.stdout
@@ -68,8 +84,11 @@ def state(root: Path) -> dict[str, bytes | None]:
 
 def changed(before: dict[str, bytes | None], after: dict[str, bytes | None]) -> list[str]:
     """The paths that appeared, vanished or changed between two states of `state`."""
-    return sorted(path for path in before.keys() | after.keys()
-                  if path not in before or path not in after or before[path] != after[path])
+    return sorted(
+        path
+        for path in before.keys() | after.keys()
+        if path not in before or path not in after or before[path] != after[path]
+    )
 
 
 class Fixture:
@@ -90,8 +109,10 @@ class Fixture:
         git(self.root, "init", "--bare", "-b", target, str(self.origin))
         git(self.root, "init", "-b", target, str(self.main))
         git(self.main, "remote", "add", "origin", str(self.origin))
-        write(self.main / ".gitignore", ".runs/\n__pycache__/\nnode_modules/\n"
-                                        ".claude/settings.local.json\nlocal-notes/\n")
+        write(
+            self.main / ".gitignore",
+            ".runs/\n__pycache__/\nnode_modules/\n.claude/settings.local.json\nlocal-notes/\n",
+        )
         write(self.main / "a.txt")
         git(self.main, "add", ".gitignore", "a.txt")
         git(self.main, "commit", "-m", "root")
@@ -100,8 +121,13 @@ class Fixture:
     def close(self) -> None:
         self.holder.cleanup()
 
-    def add(self, directory: str, branch: str | None, start: str | None = None,
-            where: Path | None = None) -> Path:
+    def add(
+        self,
+        directory: str,
+        branch: str | None,
+        start: str | None = None,
+        where: Path | None = None,
+    ) -> Path:
         path = (where or self.worktrees) / directory
         arguments = ["worktree", "add"] + (["-b", branch] if branch else ["--detach"])
         git(self.main, *arguments, str(path), start or self.target)
@@ -121,8 +147,13 @@ class Fixture:
         git(self.main, "merge", "--no-ff", "-m", f"Merge pull request from {branch}", branch)
         git(self.main, "push", "origin", self.target)
 
-    def task(self, name: str, directory: str | None = None, branch: str | None = None,
-             where: Path | None = None) -> Path:
+    def task(
+        self,
+        name: str,
+        directory: str | None = None,
+        branch: str | None = None,
+        where: Path | None = None,
+    ) -> Path:
         """A working directory whose branch has a commit and is merged, as after a pull request."""
         branch = branch or f"task/{name}"
         path = self.add(directory or name, branch, where=where)
@@ -131,18 +162,37 @@ class Fixture:
         self.merge(branch)
         return path
 
-    def run(self, *arguments: str, cwd: Path | None = None,
-            repository: Path | None = None) -> subprocess.CompletedProcess:
-        command = [sys.executable, "-B", str(SCRIPT), "--repository",
-                   str(repository or self.main), *arguments]
-        return subprocess.run(command, capture_output=True, text=True, encoding="utf-8",
-                              env=ENVIRONMENT, cwd=cwd or self.root)
+    def run(
+        self, *arguments: str, cwd: Path | None = None, repository: Path | None = None
+    ) -> subprocess.CompletedProcess:
+        command = [
+            sys.executable,
+            "-B",
+            str(SCRIPT),
+            "--repository",
+            str(repository or self.main),
+            *arguments,
+        ]
+        return subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            env=ENVIRONMENT,
+            cwd=cwd or self.root,
+        )
 
     def run_copy(self, *arguments: str) -> subprocess.CompletedProcess:
         """Runs the copy of the script that `self.copy` names, which lies in a directory of a task."""
         command = [sys.executable, "-B", str(self.copy), "--repository", str(self.main), *arguments]
-        return subprocess.run(command, capture_output=True, text=True, encoding="utf-8",
-                              env=ENVIRONMENT, cwd=self.root)
+        return subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            env=ENVIRONMENT,
+            cwd=self.root,
+        )
 
     def relative(self, path: str) -> str:
         return Path(os.path.relpath(path, self.root)).as_posix()
@@ -154,19 +204,24 @@ class Fixture:
         for line in output.splitlines():
             match = LINE.match(line)
             if match:
-                found[self.relative(match.group(2))] = (match.group(1), match.group(3),
-                                                        match.group(4))
+                found[self.relative(match.group(2))] = (
+                    match.group(1),
+                    match.group(3),
+                    match.group(4),
+                )
         return found
 
     def kept(self, output: str) -> list[str]:
         lines = output.splitlines()
         start = next(i for i, line in enumerate(lines) if line.startswith(LIST_HEADER))
-        return [line for line in lines[start + 1:] if line.startswith("- ")]
+        return [line for line in lines[start + 1 :] if line.startswith("- ")]
 
     def registered(self) -> list[str]:
-        return [self.relative(line.split(" ", 1)[1]) for line in
-                git(self.main, "worktree", "list", "--porcelain").splitlines()
-                if line.startswith("worktree ")]
+        return [
+            self.relative(line.split(" ", 1)[1])
+            for line in git(self.main, "worktree", "list", "--porcelain").splitlines()
+            if line.startswith("worktree ")
+        ]
 
 
 class ClassificationTest(unittest.TestCase):
@@ -266,12 +321,21 @@ class ClassificationTest(unittest.TestCase):
     def test_ignored_files_do_not_keep_a_directory_and_are_listed_without_caches(self) -> None:
         # decision: WAY-376 "A file that git ignores does not count against a clean tree"
         self.assertEqual("remove", self.decision("wt/merged-ignored")[0])
-        shown = [line.strip() for line in self.result.stdout.splitlines()
-                 if line.strip().startswith("ignored:")]
+        shown = [
+            line.strip()
+            for line in self.result.stdout.splitlines()
+            if line.strip().startswith("ignored:")
+        ]
         self.assertIn("ignored: .claude/settings.local.json", shown)
         self.assertIn("ignored: local-notes/", shown)
-        self.assertEqual([], [line for line in shown
-                              if ".runs" in line or "__pycache__" in line or "node_modules" in line])
+        self.assertEqual(
+            [],
+            [
+                line
+                for line in shown
+                if ".runs" in line or "__pycache__" in line or "node_modules" in line
+            ],
+        )
 
     def test_a_commit_not_on_the_remote_keeps_the_directory(self) -> None:
         decision = self.decision("wt/extra-commit")
@@ -326,7 +390,9 @@ class ClassificationTest(unittest.TestCase):
         self.assertIn("does not read it as a checkout of this repository", pointed[2])
         self.assertTrue((self.fx.main / "a.txt").is_file())
 
-    def test_a_directory_name_with_a_space_a_dash_and_a_letter_outside_ascii_is_handled(self) -> None:
+    def test_a_directory_name_with_a_space_a_dash_and_a_letter_outside_ascii_is_handled(
+        self,
+    ) -> None:
         self.assertEqual("remove", self.decision("wt/-odd name ü")[0])
 
     def test_a_detached_checkout_that_is_no_base_copy_is_foreign(self) -> None:
@@ -356,8 +422,12 @@ class ClassificationTest(unittest.TestCase):
             self.assertEqual(3, len(line[2:].split(" | ")), line)
             self.assertNotIn(str(self.fx.root), line)
             self.assertNotIn(self.fx.root.name, line)
-        self.assertIn("- unmerged-pushed | task/unmerged-pushed | ", " ".join(kept).replace("\n", " "))
-        self.assertTrue([line for line in kept if line.startswith("- base-check-unmerged-pushed | detached | ")])
+        self.assertIn(
+            "- unmerged-pushed | task/unmerged-pushed | ", " ".join(kept).replace("\n", " ")
+        )
+        self.assertTrue(
+            [line for line in kept if line.startswith("- base-check-unmerged-pushed | detached | ")]
+        )
         self.assertTrue([line for line in kept if line.startswith("- locked | task/locked | ")])
 
 
@@ -391,7 +461,9 @@ class ApplyTest(unittest.TestCase):
         self.assertIn("task/merged", git(self.fx.main, "branch", "--list", "task/merged"))
         self.assertIn("task/merged", git(self.fx.main, "ls-remote", "--heads", "origin"))
 
-    def test_apply_removes_ignored_files_with_the_directory_and_the_dry_run_named_them(self) -> None:
+    def test_apply_removes_ignored_files_with_the_directory_and_the_dry_run_named_them(
+        self,
+    ) -> None:
         merged = self.fx.task("merged")
         write(merged / ".claude" / "settings.local.json")
         dry = self.fx.run()
@@ -410,8 +482,9 @@ class ApplyTest(unittest.TestCase):
         result = self.fx.run("--apply")
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue((self.fx.main / "a.txt").is_file())
-        self.assertEqual(("keep", "task/on-main", "the main checkout"),
-                         self.fx.decisions(result.stdout)["main"])
+        self.assertEqual(
+            ("keep", "task/on-main", "the main checkout"), self.fx.decisions(result.stdout)["main"]
+        )
 
     def test_the_directory_the_script_runs_in_is_not_removed(self) -> None:
         merged = self.fx.task("merged")
@@ -421,8 +494,12 @@ class ApplyTest(unittest.TestCase):
         self.assertIn("runs in or from", self.fx.decisions(result.stdout)["wt/merged"][2])
         # A subdirectory of it counts as well, and so does the repository the script is given.
         (merged / "sub").mkdir()
-        self.assertTrue(self.fx.run("--apply", cwd=merged / "sub").returncode == 0 and merged.is_dir())
-        self.assertTrue(self.fx.run("--apply", repository=merged).returncode == 0 and merged.is_dir())
+        self.assertTrue(
+            self.fx.run("--apply", cwd=merged / "sub").returncode == 0 and merged.is_dir()
+        )
+        self.assertTrue(
+            self.fx.run("--apply", repository=merged).returncode == 0 and merged.is_dir()
+        )
 
     def test_the_directory_that_holds_the_script_is_not_removed(self) -> None:
         # Breaks if a directory is removed under the very script that runs.
@@ -479,7 +556,9 @@ class ApplyTest(unittest.TestCase):
         self.fx.push("task/late")
         other = self.fx.root / "other"
         git(self.fx.root, "clone", str(self.fx.origin), str(other))
-        git(other, "merge", "--no-ff", "-m", "Merge pull request from task/late", "origin/task/late")
+        git(
+            other, "merge", "--no-ff", "-m", "Merge pull request from task/late", "origin/task/late"
+        )
         git(other, "push", "origin", self.fx.target)
         stale = self.fx.run("--apply", "--no-fetch")
         self.assertEqual("keep", self.fx.decisions(stale.stdout)["wt/late"][0])
@@ -510,7 +589,7 @@ class ApplyTest(unittest.TestCase):
         link.parent.mkdir(parents=True, exist_ok=True)
         try:
             os.symlink(outside, link, target_is_directory=True)
-        except (OSError, NotImplementedError):
+        except OSError, NotImplementedError:
             self.skipTest("this system makes no symbolic link")
         result = self.fx.run("--apply")
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
@@ -534,7 +613,9 @@ class ApplyTest(unittest.TestCase):
         result = self.fx.run("--apply")
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue((moved / "a.txt").is_file())
-        self.assertIn("symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2])
+        self.assertIn(
+            "symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2]
+        )
 
     def test_a_listed_path_that_is_a_link_is_kept(self) -> None:
         merged = self.fx.task("merged")
@@ -542,13 +623,15 @@ class ApplyTest(unittest.TestCase):
         merged.rename(moved)
         try:
             os.symlink(moved, merged, target_is_directory=True)
-        except (OSError, NotImplementedError):
+        except OSError, NotImplementedError:
             moved.rename(merged)
             self.skipTest("this system makes no symbolic link")
         result = self.fx.run("--apply")
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertTrue(moved.is_dir())
-        self.assertIn("symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2])
+        self.assertIn(
+            "symbolic link or a junction", self.fx.decisions(result.stdout)["wt/merged"][2]
+        )
 
     def add_submodule(self, ignore: str | None = None) -> None:
         """Gives the main checkout a submodule `.the-way`, as a product has, optionally declared
@@ -609,7 +692,9 @@ class ApplyTest(unittest.TestCase):
         self.assertTrue([line for line in kept if line.startswith("- stuck | task/stuck | ")])
         self.assertFalse([line for line in kept if str(self.fx.root) in line])
 
-    def test_a_nested_checkout_that_cannot_be_removed_keeps_the_directory_that_holds_it(self) -> None:
+    def test_a_nested_checkout_that_cannot_be_removed_keeps_the_directory_that_holds_it(
+        self,
+    ) -> None:
         # Breaks if the directory is removed over a nested checkout whose removal failed.
         merged = self.fx.task("merged")
         nested = self.fx.add("base-check", None, where=merged / ".runs")
@@ -656,8 +741,10 @@ class RefusalTest(unittest.TestCase):
 
         def refuse(directory, *arguments):
             calls.append(arguments)
-            message = (b"fatal: 'repos/fix-submodule-handling' contains modified or untracked files, "
-                       b"use --force to delete it")
+            message = (
+                b"fatal: 'repos/fix-submodule-handling' contains modified or untracked files, "
+                b"use --force to delete it"
+            )
             return subprocess.CompletedProcess(arguments, 128, b"", message)
 
         with mock.patch.object(remove_merged_worktrees, "git", refuse):
@@ -673,8 +760,12 @@ class RefusalTest(unittest.TestCase):
             message = b"fatal: cannot read repos/secret-dir/wt"
             return subprocess.CompletedProcess(arguments, 128, b"", message)
 
-        repository = SimpleNamespace(remote="origin", target_name="origin/main",
-                                     pushed=lambda commit: True, merged=lambda commit: True)
+        repository = SimpleNamespace(
+            remote="origin",
+            target_name="origin/main",
+            pushed=lambda commit: True,
+            merged=lambda commit: True,
+        )
         cleanup = remove_merged_worktrees.Cleanup(repository, [entry], [])
         with mock.patch.object(remove_merged_worktrees, "git", fail):
             cleanup.inspect_state(entry)

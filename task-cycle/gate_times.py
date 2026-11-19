@@ -57,7 +57,9 @@ DAY_MS = 24 * HOUR_MS
 RUNNING_LIMIT_MS = 6 * HOUR_MS
 CLOCK_SLACK_MS = 60 * 1000  # a time this far after the present is still a clock's difference
 CHUNK = 65536
-LINE_LIMIT = 1 << 20  # a line is read for the times up to this many bytes, so that memory stays bounded
+LINE_LIMIT = (
+    1 << 20
+)  # a line is read for the times up to this many bytes, so that memory stays bounded
 MAX_DIRECTORIES = 50  # the audit lists no more directories of a run
 DIRECTORY_CAP = 200  # the audit keeps no more characters of a directory
 UNKNOWN = "unknown"
@@ -69,8 +71,10 @@ ENDED = re.compile(r"(\d+)_(\d+)_([A-Za-z0-9]+)\.run")
 
 HEADING = "# Gate runs of the cycle"
 NOTE = "Each row is one run by this script; times are seconds."
-TABLE_HEADER = ("| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
-                "| Directory | Directory seconds |")
+TABLE_HEADER = (
+    "| Started (UTC) | Exit code | Total seconds | Other gate runs at the same time "
+    "| Directory | Directory seconds |"
+)
 TABLE_RULE = "| --- | --- | --- | --- | --- | --- |"
 
 
@@ -90,7 +94,7 @@ def parse(argv: list[str]) -> tuple[Path, Path | None, list[str]]:
     command is started."""
     if "--" in argv:
         split = argv.index("--")
-        options, command = argv[:split], argv[split + 1:]
+        options, command = argv[:split], argv[split + 1 :]
     else:
         options, command = argv, []
     parser = Parser(prog="gate_times.py", description="Run the gate and record its times.")
@@ -133,7 +137,7 @@ def cell(text: str) -> str:
 
 def cut(text: str) -> str:
     """The text as it is, or cut to DIRECTORY_CAP characters ending in `…`."""
-    return text if len(text) <= DIRECTORY_CAP else text[:DIRECTORY_CAP - 1] + "…"
+    return text if len(text) <= DIRECTORY_CAP else text[: DIRECTORY_CAP - 1] + "…"
 
 
 class Times:
@@ -141,7 +145,9 @@ class Times:
 
     def __init__(self) -> None:
         self.blocks: list[list[str | None]] = []  # [directory, seconds as printed or None]
-        self.not_listed = 0  # blocks after the last one kept; their lines give no time to a kept one
+        self.not_listed = (
+            0  # blocks after the last one kept; their lines give no time to a kept one
+        )
 
     def line(self, raw: bytes) -> None:
         text = raw.rstrip(b"\r").decode("utf-8", errors="replace")
@@ -149,7 +155,7 @@ class Times:
             if len(self.blocks) >= MAX_DIRECTORIES:
                 self.not_listed += 1
             else:
-                self.blocks.append([cut(cell(text[len(BLOCK):])), None])
+                self.blocks.append([cut(cell(text[len(BLOCK) :])), None])
             return
         if not self.blocks or self.not_listed:
             return

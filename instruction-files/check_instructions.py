@@ -60,32 +60,81 @@ CODE_SPAN = re.compile(r"`([^`\n]+)`")
 AT_IMPORT = re.compile(r"(?<![\w.@/\\])@([^\s`<>\"']+)")
 SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 TRAILING = ".,;:)!?]}"
-EXTENSIONS = ("md", "mdc", "json", "jsonl", "js", "mjs", "cjs", "ts", "tsx", "jsx", "py", "toml",
-              "yaml", "yml", "txt", "sh", "ps1", "bat", "cmd", "sql", "html", "css", "vue", "php",
-              "go", "rs", "java", "kt", "rb", "lock", "ini", "cfg", "env", "xml", "csv")
+EXTENSIONS = (
+    "md",
+    "mdc",
+    "json",
+    "jsonl",
+    "js",
+    "mjs",
+    "cjs",
+    "ts",
+    "tsx",
+    "jsx",
+    "py",
+    "toml",
+    "yaml",
+    "yml",
+    "txt",
+    "sh",
+    "ps1",
+    "bat",
+    "cmd",
+    "sql",
+    "html",
+    "css",
+    "vue",
+    "php",
+    "go",
+    "rs",
+    "java",
+    "kt",
+    "rb",
+    "lock",
+    "ini",
+    "cfg",
+    "env",
+    "xml",
+    "csv",
+)
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
 # Phrases saying that the thing a sentence names does not load, is not read or does not exist,
 # in the languages of the instruction files met so far. A file in another language keeps the
 # level a dead path has anywhere else.
 NOT_LOADED_PHRASES = (
-    "does not load", "doesn't load", "is not loaded", "never loads", "is not read",
-    "does not read", "does not exist", "doesn't exist",
-    "nie ładuje", "nie wczytuje", "nie jest wczytywan", "nie czyta", "nie istnieje",
+    "does not load",
+    "doesn't load",
+    "is not loaded",
+    "never loads",
+    "is not read",
+    "does not read",
+    "does not exist",
+    "doesn't exist",
+    "nie ładuje",
+    "nie wczytuje",
+    "nie jest wczytywan",
+    "nie czyta",
+    "nie istnieje",
 )
 PREFIX_PHRASES = ("nie jest wczytywan",)  # a word start: every ending of the verb counts
 NOT_LOADED = re.compile(
-    "|".join(r"\b" + r"\s+".join(re.escape(word) for word in phrase.split())
-             + ("" if phrase in PREFIX_PHRASES else r"\b")
-             for phrase in NOT_LOADED_PHRASES),
-    re.IGNORECASE)
+    "|".join(
+        r"\b"
+        + r"\s+".join(re.escape(word) for word in phrase.split())
+        + ("" if phrase in PREFIX_PHRASES else r"\b")
+        for phrase in NOT_LOADED_PHRASES
+    ),
+    re.IGNORECASE,
+)
 WINDOWS = os.name == "nt"  # the link walk and the file-system lookups differ on Windows
 PLATFORM = sys.platform  # the platform decision for network shapes; tests patch it with WINDOWS
 LINK_HOPS = 8  # the most links a chain may have before it is taken as leading out (Windows)
 NETWORK_START = ("\\\\", "\\??\\")  # the start of a network share, a device or a NT path
-LOCAL_EXTENDED = re.compile(r"^(\\\\\?|\\\?\?)\\(?=[A-Za-z]:\\)")  # \\?\C:\ or \??\C:\, a local drive
-BOMS_NOT_UTF8 = (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE, codecs.BOM_UTF16_LE,
-                 codecs.BOM_UTF16_BE)
+LOCAL_EXTENDED = re.compile(
+    r"^(\\\\\?|\\\?\?)\\(?=[A-Za-z]:\\)"
+)  # \\?\C:\ or \??\C:\, a local drive
+BOMS_NOT_UTF8 = (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE, codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)
 
 
 @dataclass(frozen=True)
@@ -110,7 +159,7 @@ def shown(value):
         else:
             out.append(character)
     text = "".join(out)
-    return text if len(text) <= MAX_SHOWN else text[:MAX_SHOWN - 1] + "…"
+    return text if len(text) <= MAX_SHOWN else text[: MAX_SHOWN - 1] + "…"
 
 
 def reason(error):
@@ -192,7 +241,7 @@ def leads_out(path, root, hops=LINK_HOPS):
             following = os.path.normpath(target)
         else:
             following = os.path.normpath(os.path.join(os.path.dirname(current), target))
-        return leads_out(os.path.join(following, *parts[index + 1:]), root, hops - 1)
+        return leads_out(os.path.join(following, *parts[index + 1 :]), root, hops - 1)
     return False
 
 
@@ -225,8 +274,15 @@ def instruction_files(root, findings):
             with os.scandir(current) as listing:
                 entries = sorted(listing, key=lambda entry: entry.name)
         except OSError as error:
-            findings.append(Finding("info", "walk", rel_dir or ".", 0,
-                                    f"a directory that cannot be listed: {reason(error)}"))
+            findings.append(
+                Finding(
+                    "info",
+                    "walk",
+                    rel_dir or ".",
+                    0,
+                    f"a directory that cannot be listed: {reason(error)}",
+                )
+            )
             return
         stack.append((rel_dir, iter(entries)))
 
@@ -243,19 +299,22 @@ def instruction_files(root, findings):
         rel = f"{rel_dir}/{name}" if rel_dir else name
         try:
             if entry.is_junction() or (entry.is_symlink() and directory_link(entry, root)):
-                findings.append(Finding("info", "walk", rel, 0,
-                                        "a link to a directory, not followed"))
+                findings.append(
+                    Finding("info", "walk", rel, 0, "a link to a directory, not followed")
+                )
             elif entry.is_dir(follow_symlinks=False):
                 if os.path.lexists(os.path.join(entry.path, ".git")):
                     continue
                 if name in MAIN_NAMES:
-                    findings.append(Finding("warn", "read", rel, 0,
-                                            "cannot be read: it is a directory"))
+                    findings.append(
+                        Finding("warn", "read", rel, 0, "cannot be read: it is a directory")
+                    )
                 enter(rel)
             elif is_instruction_name(rel, name):
                 if entry.is_symlink() and leads_out(entry.path, root):
-                    findings.append(Finding("info", "read", rel, 0,
-                                            "a link out of the repository, not read"))
+                    findings.append(
+                        Finding("info", "read", rel, 0, "a link out of the repository, not read")
+                    )
                 else:
                     found.append(rel)
         except OSError as error:
@@ -275,8 +334,9 @@ def read_text(path, shown_as, findings):
         findings.append(Finding("warn", "read", shown_as, 0, "cannot be read: it is a directory"))
         return None
     if not stat.S_ISREG(mode):
-        findings.append(Finding("warn", "read", shown_as, 0,
-                                "cannot be read: it is not a regular file"))
+        findings.append(
+            Finding("warn", "read", shown_as, 0, "cannot be read: it is not a regular file")
+        )
         return None
     try:
         with open(path, "rb") as handle:
@@ -287,21 +347,24 @@ def read_text(path, shown_as, findings):
     cut = len(data) > MAX_BYTES
     if cut:
         data = data[:MAX_BYTES]
-        findings.append(Finding("info", "read", shown_as, 0,
-                                f"only the first {MAX_BYTES} bytes were checked"))
+        findings.append(
+            Finding("info", "read", shown_as, 0, f"only the first {MAX_BYTES} bytes were checked")
+        )
     if data.startswith(BOMS_NOT_UTF8):
-        findings.append(Finding("warn", "read", shown_as, 0,
-                                "not UTF-8 text; its content was not checked"))
+        findings.append(
+            Finding("warn", "read", shown_as, 0, "not UTF-8 text; its content was not checked")
+        )
         return None
     if data.startswith(codecs.BOM_UTF8):
-        data = data[len(codecs.BOM_UTF8):]
+        data = data[len(codecs.BOM_UTF8) :]
     try:
         return data.decode("utf-8")
     except UnicodeDecodeError as error:
         if cut and error.reason == "unexpected end of data" and error.start >= len(data) - 3:
-            return data[:error.start].decode("utf-8")
-        findings.append(Finding("warn", "read", shown_as, 0,
-                                "not UTF-8 text; its content was not checked"))
+            return data[: error.start].decode("utf-8")
+        findings.append(
+            Finding("warn", "read", shown_as, 0, "not UTF-8 text; its content was not checked")
+        )
         return None
 
 
@@ -353,7 +416,7 @@ def says_not_loaded(paragraph):
     position = 0
     for match in SENTENCE_END.finditer(text):
         bounds.append(position)
-        verdicts.append(negates_loading(text[position:match.start()]))
+        verdicts.append(negates_loading(text[position : match.start()]))
         position = match.end()
     bounds.append(position)
     verdicts.append(negates_loading(text[position:]))
@@ -397,8 +460,10 @@ def segments(token):
 
 def is_link_like(info):
     """True when the `lstat` result INFO is a link, a junction or another reparse point."""
-    return bool(stat.S_ISLNK(info.st_mode)
-                or getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+    return bool(
+        stat.S_ISLNK(info.st_mode)
+        or getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
+    )
 
 
 def walk_exists(start, parts, follow, hops=LINK_HOPS):
@@ -425,7 +490,7 @@ def walk_exists(start, parts, follow, hops=LINK_HOPS):
         else:
             following = os.path.normpath(os.path.join(os.path.dirname(current), target))
         drive, root, tail = os.path.splitroot(following)
-        rest = [piece for piece in tail.split(os.sep) if piece] + list(parts[index + 1:])
+        rest = [piece for piece in tail.split(os.sep) if piece] + list(parts[index + 1 :])
         return walk_exists(drive + root, rest, True, hops - 1)
     return True
 
@@ -449,7 +514,7 @@ def names_something(path, base=None):
                 return walk_exists(base, rel.split(os.sep), False)
         drive, root, tail = os.path.splitroot(os.path.abspath(path))
         return walk_exists(drive + root, [piece for piece in tail.split(os.sep) if piece], True)
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return False
 
 
@@ -464,8 +529,11 @@ def resolve(token, bases):
         return False
     if os.path.isabs(path) or re.match(r"^[A-Za-z]:", path):
         return names_something(path)
-    return any(names_something(os.path.join(base, path), base) for base in bases
-               if base and not is_network(os.path.join(base, path)))
+    return any(
+        names_something(os.path.join(base, path), base)
+        for base in bases
+        if base and not is_network(os.path.join(base, path))
+    )
 
 
 def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
@@ -485,26 +553,52 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
                 if not looks_like_path(token):
                     continue
                 if is_network(token):
-                    findings.append(Finding("info", "dead-path", shown_as, number,
-                                            f"`{shown(token)}` is a network path, not checked"))
+                    findings.append(
+                        Finding(
+                            "info",
+                            "dead-path",
+                            shown_as,
+                            number,
+                            f"`{shown(token)}` is a network path, not checked",
+                        )
+                    )
                     continue
                 if resolve(token, bases):
                     continue
                 if not_loaded is None:
                     not_loaded = says_not_loaded(paragraph)
                 if not_loaded(number, match.start()):
-                    findings.append(Finding(
-                        "info", "dead-path", shown_as, number,
-                        f"`{shown(token)}` is named in a sentence saying it does not load or "
-                        "exist"))
+                    findings.append(
+                        Finding(
+                            "info",
+                            "dead-path",
+                            shown_as,
+                            number,
+                            f"`{shown(token)}` is named in a sentence saying it does not load or "
+                            "exist",
+                        )
+                    )
                 elif not in_repo and is_relative(token) and len(segments(token)) == 1:
-                    findings.append(Finding(
-                        "info", "dead-path", shown_as, number,
-                        f"`{shown(token)}` is a name relative to a place the sentence gives, and "
-                        "does not resolve from the file, the repository or the home directory"))
+                    findings.append(
+                        Finding(
+                            "info",
+                            "dead-path",
+                            shown_as,
+                            number,
+                            f"`{shown(token)}` is a name relative to a place the sentence gives, and "
+                            "does not resolve from the file, the repository or the home directory",
+                        )
+                    )
                 else:
-                    findings.append(Finding("warn", "dead-path", shown_as, number,
-                                            f"`{shown(token)}` does not exist"))
+                    findings.append(
+                        Finding(
+                            "warn",
+                            "dead-path",
+                            shown_as,
+                            number,
+                            f"`{shown(token)}` does not exist",
+                        )
+                    )
     emphasised = []
     for number, line in prose_lines(text):
         bare = CODE_SPAN.sub("", line)
@@ -515,43 +609,97 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
             if not ("." in token or "/" in token):
                 continue
             if token[-1] in TRAILING:
-                findings.append(Finding(
-                    "error", "at-import", shown_as, number,
-                    f"@{shown(token)} — a punctuation mark right after the path stops Claude Code "
-                    "from loading it, without a warning"))
+                findings.append(
+                    Finding(
+                        "error",
+                        "at-import",
+                        shown_as,
+                        number,
+                        f"@{shown(token)} — a punctuation mark right after the path stops Claude Code "
+                        "from loading it, without a warning",
+                    )
+                )
             elif is_network(token):
-                findings.append(Finding("info", "at-import", shown_as, number,
-                                        f"@{shown(token)} is a network path, not checked"))
+                findings.append(
+                    Finding(
+                        "info",
+                        "at-import",
+                        shown_as,
+                        number,
+                        f"@{shown(token)} is a network path, not checked",
+                    )
+                )
             elif not resolve(token, [file_dir]):
-                findings.append(Finding("warn", "at-import", shown_as, number,
-                                        f"@{shown(token)} imports a file that is not there"))
+                findings.append(
+                    Finding(
+                        "warn",
+                        "at-import",
+                        shown_as,
+                        number,
+                        f"@{shown(token)} imports a file that is not there",
+                    )
+                )
             else:
-                findings.append(Finding(
-                    "warn", "at-import", shown_as, number,
-                    f"@{shown(token)} — Claude Code loads the whole file into every session; Codex "
-                    "reads it as plain text; a pointer is a path in backticks"))
+                findings.append(
+                    Finding(
+                        "warn",
+                        "at-import",
+                        shown_as,
+                        number,
+                        f"@{shown(token)} — Claude Code loads the whole file into every session; Codex "
+                        "reads it as plain text; a pointer is a path in backticks",
+                    )
+                )
         if EMPHASIS.search(line):
             emphasised.append(number)
     if len(emphasised) > 1:
-        findings.append(Finding("warn", "emphasis", shown_as, emphasised[0],
-                                f"{len(emphasised)} emphasised lines — emphasis on one rule at most"))
+        findings.append(
+            Finding(
+                "warn",
+                "emphasis",
+                shown_as,
+                emphasised[0],
+                f"{len(emphasised)} emphasised lines — emphasis on one rule at most",
+            )
+        )
     if name != "SKILL.md":
-        findings.append(Finding("info", "size", shown_as, 0,
-                                f"{len(text.splitlines())} lines, {len(text.split())} words"))
+        findings.append(
+            Finding(
+                "info",
+                "size",
+                shown_as,
+                0,
+                f"{len(text.splitlines())} lines, {len(text.split())} words",
+            )
+        )
     return text
 
 
 def check_cursor_rule(rel, text, findings):
     if not rel.endswith(".mdc"):
-        findings.append(Finding("error", "cursor-rule", rel, 0,
-                                "Cursor reads only .mdc files in .cursor/rules; this one is ignored"))
+        findings.append(
+            Finding(
+                "error",
+                "cursor-rule",
+                rel,
+                0,
+                "Cursor reads only .mdc files in .cursor/rules; this one is ignored",
+            )
+        )
         return
     if text is None:
         return
     lines = text.splitlines()
     if not lines or lines[0].strip() != "---":
-        findings.append(Finding("error", "cursor-rule", rel, 1,
-                                "a Cursor rule without a YAML header is never attached"))
+        findings.append(
+            Finding(
+                "error",
+                "cursor-rule",
+                rel,
+                1,
+                "a Cursor rule without a YAML header is never attached",
+            )
+        )
 
 
 def excluded(base, rel):
@@ -561,8 +709,10 @@ def excluded(base, rel):
     parts = rel.split("/")
     if any(part in SKIP_DIRS for part in parts[:-1]):
         return True
-    return any(os.path.lexists(os.path.join(base, *parts[:depth], ".git"))
-               for depth in range(1, len(parts)))
+    return any(
+        os.path.lexists(os.path.join(base, *parts[:depth], ".git"))
+        for depth in range(1, len(parts))
+    )
 
 
 def pointed_files(root, texts, files):
@@ -599,7 +749,7 @@ def pointed_files(root, texts, files):
                 try:
                     if not stat.S_ISREG(os.stat(path).st_mode):
                         continue
-                except (OSError, ValueError):
+                except OSError, ValueError:
                     continue
                 known.add(real)
                 found.append((real, rel))
@@ -619,23 +769,49 @@ def check_layout(root, files, texts, findings):
             continue
         lines = [line.strip() for line in claude.splitlines()]
         if "@AGENTS.md" not in lines:
-            findings.append(Finding(
-                "warn", "root-layout", rel, 0,
-                "CLAUDE.md stands beside AGENTS.md without an `@AGENTS.md` line, so Claude Code "
-                "does not read AGENTS.md"))
+            findings.append(
+                Finding(
+                    "warn",
+                    "root-layout",
+                    rel,
+                    0,
+                    "CLAUDE.md stands beside AGENTS.md without an `@AGENTS.md` line, so Claude Code "
+                    "does not read AGENTS.md",
+                )
+            )
         elif lines[0] != "@AGENTS.md":
-            findings.append(Finding("warn", "root-layout", rel, lines.index("@AGENTS.md") + 1,
-                                    "`@AGENTS.md` alone is not its first line"))
+            findings.append(
+                Finding(
+                    "warn",
+                    "root-layout",
+                    rel,
+                    lines.index("@AGENTS.md") + 1,
+                    "`@AGENTS.md` alone is not its first line",
+                )
+            )
     if "AGENTS.md" in present and "CLAUDE.local.md" in present:
-        findings.append(Finding("warn", "root-layout", "CLAUDE.local.md", 0,
-                                "CLAUDE.local.md stops Claude Code from reading AGENTS.md"))
+        findings.append(
+            Finding(
+                "warn",
+                "root-layout",
+                "CLAUDE.local.md",
+                0,
+                "CLAUDE.local.md stops Claude Code from reading AGENTS.md",
+            )
+        )
     main = texts.get("AGENTS.md") or ""
     for rel in files:
         if rel != "AGENTS.md" and rel.endswith("/AGENTS.md") and rel not in main:
-            findings.append(Finding(
-                "warn", "nested-pointer", rel, 0,
-                f"no line of the root AGENTS.md points to {shown(rel)}; Codex reads it only when a "
-                "session starts in its directory"))
+            findings.append(
+                Finding(
+                    "warn",
+                    "nested-pointer",
+                    rel,
+                    0,
+                    f"no line of the root AGENTS.md points to {shown(rel)}; Codex reads it only when a "
+                    "session starts in its directory",
+                )
+            )
     unpointed = []
     for rel in files:
         if not rel.endswith("/SKILL.md"):
@@ -644,17 +820,30 @@ def check_layout(root, files, texts, findings):
         if rel.startswith(".agents/skills/") or "/.agents/skills/" in rel:
             twin = skill_dir.replace(".agents/skills", ".claude/skills") + "/SKILL.md"
             if twin not in present:
-                findings.append(Finding("warn", "skill-dir", rel, 0,
-                                        "not documented as read by Claude Code; give it a copy in .claude/skills"))
+                findings.append(
+                    Finding(
+                        "warn",
+                        "skill-dir",
+                        rel,
+                        0,
+                        "not documented as read by Claude Code; give it a copy in .claude/skills",
+                    )
+                )
         elif rel.startswith(".claude/skills/") and skill_dir not in main:
-            if ".agents/skills/" + rel[len(".claude/skills/"):] not in present:
+            if ".agents/skills/" + rel[len(".claude/skills/") :] not in present:
                 unpointed.append(skill_dir)
     if unpointed:
-        findings.append(Finding(
-            "info", "skill-dir", ".claude/skills", 0,
-            f"{len(unpointed)} skills in .claude/skills have no pointer in AGENTS.md and no copy "
-            "in .agents/skills; Codex does not read .claude/skills, so point to the SKILL.md of "
-            "each one Codex needs"))
+        findings.append(
+            Finding(
+                "info",
+                "skill-dir",
+                ".claude/skills",
+                0,
+                f"{len(unpointed)} skills in .claude/skills have no pointer in AGENTS.md and no copy "
+                "in .agents/skills; Codex does not read .claude/skills, so point to the SKILL.md of "
+                "each one Codex needs",
+            )
+        )
 
 
 def check(root, extra=()):
@@ -674,8 +863,9 @@ def check(root, extra=()):
         path = os.path.join(root, *rel.split("/"))
         seen.add(os.path.realpath(path))
         folder = rel[: -len(os.path.basename(rel))]
-        texts[rel] = check_file(path, rel, root, findings,
-                                agents_beside=folder + "AGENTS.md" in present)
+        texts[rel] = check_file(
+            path, rel, root, findings, agents_beside=folder + "AGENTS.md" in present
+        )
         if rel.startswith(".cursor/rules/") or "/.cursor/rules/" in rel:
             check_cursor_rule(rel, texts[rel], findings)
     for real, rel in pointed_files(root, texts, files):
@@ -696,10 +886,15 @@ def usage_error(message):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("root", nargs="?", default=None,
-                        help="the repository; defaults to the current directory unless --file is given")
-    parser.add_argument("--file", action="append", default=[],
-                        help="an instruction file outside the repository")
+    parser.add_argument(
+        "root",
+        nargs="?",
+        default=None,
+        help="the repository; defaults to the current directory unless --file is given",
+    )
+    parser.add_argument(
+        "--file", action="append", default=[], help="an instruction file outside the repository"
+    )
     args = parser.parse_args(argv)
     root = args.root or (None if args.file else ".")
     if root is not None and network_shaped(root):

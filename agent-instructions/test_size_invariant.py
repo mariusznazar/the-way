@@ -24,8 +24,18 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parent.parent
 # The parts with Python code, as the directories that hold it.
-PARTS = ("agent-instructions", "elements", "gate", "installation", "instruction-files",
-         "process-audit", "product-guidelines", "project-level", "relation-model", "task-cycle")
+PARTS = (
+    "agent-instructions",
+    "elements",
+    "gate",
+    "installation",
+    "instruction-files",
+    "process-audit",
+    "product-guidelines",
+    "project-level",
+    "relation-model",
+    "task-cycle",
+)
 FUNCTION_LIMIT = 80
 FILE_LIMIT = 1000
 
@@ -47,8 +57,14 @@ def file_lines(source: str) -> int:
 
 def script_files() -> list[Path]:
     """The Python files git tracks in the parts with Python code, except the test files."""
-    done = subprocess.run(["git", "ls-files", "-z", "--", *PARTS], cwd=ROOT, check=True,
-                          capture_output=True, text=True, encoding="utf-8")
+    done = subprocess.run(
+        ["git", "ls-files", "-z", "--", *PARTS],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
     names = [name for name in done.stdout.split("\0") if name.endswith(".py")]
     return [ROOT / name for name in names if not Path(name).name.startswith("test_")]
 
@@ -67,8 +83,9 @@ class Counting(unittest.TestCase):
             "    def method(self):\n"
             "        return 2\n"
         )
-        self.assertEqual(sorted(function_sizes(source)),
-                         [("inner", 3, 2), ("method", 8, 2), ("outer", 1, 5)])
+        self.assertEqual(
+            sorted(function_sizes(source)), [("inner", 3, 2), ("method", 8, 2), ("outer", 1, 5)]
+        )
 
     def test_a_file_counts_its_lines(self) -> None:
         self.assertEqual(file_lines("x = 1\n\n# note\n"), 3)
@@ -76,12 +93,25 @@ class Counting(unittest.TestCase):
 
 class Coverage(unittest.TestCase):
     def test_every_python_file_git_tracks_lies_in_a_part_the_check_reads(self) -> None:
-        done = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, check=True,
-                              capture_output=True, text=True, encoding="utf-8")
-        outside = [name for name in done.stdout.split("\0")
-                   if name.endswith(".py") and name.split("/")[0] not in PARTS]
-        self.assertEqual(outside, [], "a tracked Python file lies in no directory of PARTS: add "
-                         "its directory to PARTS and to the Scope of WAY-379")
+        done = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        outside = [
+            name
+            for name in done.stdout.split("\0")
+            if name.endswith(".py") and name.split("/")[0] not in PARTS
+        ]
+        self.assertEqual(
+            outside,
+            [],
+            "a tracked Python file lies in no directory of PARTS: add "
+            "its directory to PARTS and to the Scope of WAY-379",
+        )
 
 
 class Size(unittest.TestCase):
@@ -99,8 +129,10 @@ class Size(unittest.TestCase):
             if file_lines(source) > FILE_LIMIT:
                 too_big.append(f"  {name}: {file_lines(source)} lines")
         if too_long or too_big:
-            self.fail(f"{len(too_long)} functions over {FUNCTION_LIMIT} lines and {len(too_big)} "
-                      f"files over {FILE_LIMIT} lines:\n" + "\n".join(too_long + too_big))
+            self.fail(
+                f"{len(too_long)} functions over {FUNCTION_LIMIT} lines and {len(too_big)} "
+                f"files over {FILE_LIMIT} lines:\n" + "\n".join(too_long + too_big)
+            )
 
 
 if __name__ == "__main__":

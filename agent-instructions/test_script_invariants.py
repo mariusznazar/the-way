@@ -77,9 +77,13 @@ def tracked_files(root):
 
 def possible_scripts(paths):
     """The paths that are neither a Python file nor of a kind the list gives as no script."""
-    return [path for path in paths
-            if path.rpartition("/")[2] not in NAMES and not path.endswith(SUFFIXES)
-            and not any(path.startswith(place) and path.endswith(end) for place, end in PLACES)]
+    return [
+        path
+        for path in paths
+        if path.rpartition("/")[2] not in NAMES
+        and not path.endswith(SUFFIXES)
+        and not any(path.startswith(place) and path.endswith(end) for place, end in PLACES)
+    ]
 
 
 def declared_lines(root):
@@ -96,13 +100,17 @@ def wrong_interpreter(declared, running):
     versions of Python are the same in major and minor number; `declared` is None where
     `.python-version` is missing or holds no version, which the message names."""
     if declared is None:
-        return ("%s is missing or holds no version, so the version of Python the tests have to run "
-                "on is not declared (this run is on Python %s)" % (VERSION_FILE, running))
+        return (
+            "%s is missing or holds no version, so the version of Python the tests have to run "
+            "on is not declared (this run is on Python %s)" % (VERSION_FILE, running)
+        )
     if declared.split(".")[:2] == running.split(".")[:2]:
         return None
-    return ("the tests have to run on Python %s, the version %s declares, and this run is on "
-            "Python %s: the standard library of a version other than the declared one would "
-            "decide the imports" % (declared, VERSION_FILE, running))
+    return (
+        "the tests have to run on Python %s, the version %s declares, and this run is on "
+        "Python %s: the standard library of a version other than the declared one would "
+        "decide the imports" % (declared, VERSION_FILE, running)
+    )
 
 
 def outside_imports(root, paths):
@@ -118,41 +126,60 @@ def outside_imports(root, paths):
 
 
 class PythonVersionDeclared(unittest.TestCase):
-
     def test_the_repository_declares_python_3_14_in_python_version(self):
         # invariant: python-version-declared
         self.assertIn(VERSION_FILE, tracked_files(THE_WAY))
         lines = declared_lines(THE_WAY)
         self.assertEqual(1, len(lines or []), "%s holds one line" % VERSION_FILE)
-        self.assertTrue(lines[0] == DECLARED or lines[0].startswith(DECLARED + "."),
-                        "%s declares %r, not Python %s" % (VERSION_FILE, lines[0], DECLARED))
+        self.assertTrue(
+            lines[0] == DECLARED or lines[0].startswith(DECLARED + "."),
+            "%s declares %r, not Python %s" % (VERSION_FILE, lines[0], DECLARED),
+        )
 
 
 class ScriptLanguage(unittest.TestCase):
-
     def test_every_file_git_tracks_is_a_python_file_or_of_a_kind_that_is_no_script(self):
         # invariant: script-language
         paths = tracked_files(THE_WAY)
         self.assertIn("gate/run_tests.py", paths, "git lists the files of the repository")
-        self.assertEqual([], possible_scripts(paths),
-                         "files that are no Python file and of no kind on the lists SUFFIXES and "
-                         "NAMES of the test; a script among them is rewritten in Python, a file "
-                         "that is no script has its kind added to a list, with the reason")
+        self.assertEqual(
+            [],
+            possible_scripts(paths),
+            "files that are no Python file and of no kind on the lists SUFFIXES and "
+            "NAMES of the test; a script among them is rewritten in Python, a file "
+            "that is no script has its kind added to a list, with the reason",
+        )
 
     def test_a_file_of_another_language_is_reported(self):
         # The names are those of the scripts of the languages a repository usually holds.
-        paths = ["tools/build.sh", "tools/deploy.ps1", "run.bat", "web/app.js", "bin/start",
-                 "Makefile", "lib/helper.rb", "tools/old.py.bak"]
+        paths = [
+            "tools/build.sh",
+            "tools/deploy.ps1",
+            "run.bat",
+            "web/app.js",
+            "bin/start",
+            "Makefile",
+            "lib/helper.rb",
+            "tools/old.py.bak",
+        ]
         self.assertEqual(paths, possible_scripts(paths))
 
     def test_a_python_file_a_text_and_a_file_of_the_listed_kinds_pass(self):
         # The names are those the lists give: the task's list of kinds (.py, .md, .gitignore,
         # .gitattributes, .python-version) and the four kinds the change added, each in a file that
         # git tracks in this repository.
-        paths = ["gate/run_tests.py", "agent-instructions/skill.md", ".gitignore",
-                 "sub/.gitignore", ".gitattributes", ".python-version", "ruff.toml",
-                 "requirements-quality.in", "requirements-quality.txt",
-                 ".github/workflows/tests.yml"]
+        paths = [
+            "gate/run_tests.py",
+            "agent-instructions/skill.md",
+            ".gitignore",
+            "sub/.gitignore",
+            ".gitattributes",
+            ".python-version",
+            "ruff.toml",
+            "requirements-quality.in",
+            "requirements-quality.txt",
+            ".github/workflows/tests.yml",
+        ]
         self.assertEqual([], possible_scripts(paths))
 
     def test_a_configuration_file_outside_the_place_of_its_kind_is_reported(self):
@@ -163,12 +190,13 @@ class ScriptLanguage(unittest.TestCase):
 
     def test_a_file_named_like_a_listed_kind_in_its_ending_only_is_reported(self):
         # `ruff.toml` is listed by its name, so another `.toml` file is no listed kind.
-        self.assertEqual(["tools/other.toml", "docs/ruff.toml.sh"],
-                         possible_scripts(["tools/other.toml", "docs/ruff.toml.sh"]))
+        self.assertEqual(
+            ["tools/other.toml", "docs/ruff.toml.sh"],
+            possible_scripts(["tools/other.toml", "docs/ruff.toml.sh"]),
+        )
 
 
 class ScriptImports(unittest.TestCase):
-
     def test_no_python_file_git_tracks_imports_a_module_outside_the_standard_library(self):
         # invariant: script-imports
         running = "%d.%d" % sys.version_info[:2]
@@ -221,9 +249,11 @@ class ScriptImports(unittest.TestCase):
 
     def test_a_module_of_the_standard_library_and_a_tracked_file_are_no_failure(self):
         with tempfile.TemporaryDirectory() as root:
-            files = {"helper.py": "VALUE = 1\n",
-                     "main.py": "import json\nimport os.path\nimport helper\n"
-                                "import importlib\nimportlib.import_module('helper')\n"}
+            files = {
+                "helper.py": "VALUE = 1\n",
+                "main.py": "import json\nimport os.path\nimport helper\n"
+                "import importlib\nimportlib.import_module('helper')\n",
+            }
             for path, text in files.items():
                 with open(os.path.join(root, path), "w", encoding="utf-8", newline="\n") as handle:
                     handle.write(text)
@@ -232,7 +262,9 @@ class ScriptImports(unittest.TestCase):
     def test_an_import_whose_name_cannot_be_worked_out_is_reported(self):
         with tempfile.TemporaryDirectory() as root:
             with open(os.path.join(root, "a.py"), "w", encoding="utf-8", newline="\n") as handle:
-                handle.write("import importlib, os\nimportlib.import_module(os.environ['MODULE'])\n")
+                handle.write(
+                    "import importlib, os\nimportlib.import_module(os.environ['MODULE'])\n"
+                )
             problems = outside_imports(root, ["a.py"])
             # One report, at the line of the call (settlement row 3: reported, not passed).
             self.assertEqual(1, len(problems), problems)

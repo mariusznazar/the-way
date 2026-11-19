@@ -64,13 +64,15 @@ STEPS_OF = re.compile(STEP_NUMBERS + r"\s+(?:of|in)\s+(?:the\s+)?(?:skill\s+)?`(
 STEPS_AFTER = re.compile(r"`([^`\n]+)`(?:'s)?\s+(?:its\s+)?" + STEP_NUMBERS)
 HEADING_OF = re.compile(
     r"[\"\u201c]([^\"\u201d\n]{2,80})[\"\u201d]\s+(?:in|of)\s+(?:step\s+\d+\s+of\s+)?"
-    r"(?:the\s+)?(?:skill\s+)?`([^`\n]+)`")
+    r"(?:the\s+)?(?:skill\s+)?`([^`\n]+)`"
+)
 NAME_LINE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
 NUMBERED_HEADING = re.compile(r"^#{1,6}[ \t]+(?:Step[ \t]+)?(\d+)[.:)]?(?:[ \t]|$)", re.MULTILINE)
 NUMBERED_ITEM = re.compile(r"^(\d+)[.)][ \t]", re.MULTILINE)
 HEADING_LINE = re.compile(r"^#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$", re.MULTILINE)
-LEAD_IN = re.compile(r"^[ \t]*(?:[-*][ \t]+|\d+[.)][ \t]+)?\*\*([^*\n]{2,80}?)[.:]?\*\*",
-                     re.MULTILINE)
+LEAD_IN = re.compile(
+    r"^[ \t]*(?:[-*][ \t]+|\d+[.)][ \t]+)?\*\*([^*\n]{2,80}?)[.:]?\*\*", re.MULTILINE
+)
 PLACEHOLDER = re.compile(r"<[^<>/\s]*>|\*")
 SKILL_NAME = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 
@@ -96,7 +98,7 @@ def read_text(root, path):
     """The text of a file, or None where it cannot be read as UTF-8."""
     try:
         return (Path(root) / path).read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError, ValueError):
+    except OSError, UnicodeDecodeError, ValueError:
         return None
 
 
@@ -122,8 +124,11 @@ class World:
 
     def skill_files(self):
         """The skill files of the parts read, each with the directory of its skill."""
-        skill_dirs = sorted(posixpath.dirname(path) for path in self.files
-                            if path.endswith("/SKILL.md") and path.split("/")[0] in PARTS)
+        skill_dirs = sorted(
+            posixpath.dirname(path)
+            for path in self.files
+            if path.endswith("/SKILL.md") and path.split("/")[0] in PARTS
+        )
         found = {}
         for path in sorted(self.files):
             if path.endswith(".md") and path.split("/")[0] in PARTS:
@@ -179,7 +184,7 @@ def locate(word, skill_dir, world, base=None):
     prefixed = False
     for prefix in THE_WAY_PREFIXES:
         if word.startswith(prefix):
-            word, prefixed = word[len(prefix):], True
+            word, prefixed = word[len(prefix) :], True
             break
     if "/" not in word:
         if not prefixed and word in PRODUCT_FILES:
@@ -187,8 +192,11 @@ def locate(word, skill_dir, world, base=None):
         if base is not None:
             relative = posixpath.normpath(posixpath.join(base, word))
             return resolve(relative, world)
-        beside = sorted(path for path in world.files
-                        if path.startswith(skill_dir + "/") and path.rsplit("/", 1)[-1] == word)
+        beside = sorted(
+            path
+            for path in world.files
+            if path.startswith(skill_dir + "/") and path.rsplit("/", 1)[-1] == word
+        )
         if beside:
             return "file", beside[0]
         return "dead", "no file of that name beside the skill or below it"
@@ -209,10 +217,11 @@ def resolve(path, world):
     if path.startswith("../") or path == ".." or path.startswith("/") or "\0" in path:
         return "dead", "a path that leaves the-way"
     if PLACEHOLDER.search(path):
-        pattern = "".join("[^/]*" if PLACEHOLDER.fullmatch(piece) else re.escape(piece)
-                          for piece in re.split("(<[^<>/\\s]*>|\\*)", path))
-        matches = sorted(candidate for candidate in world.files
-                         if re.fullmatch(pattern, candidate))
+        pattern = "".join(
+            "[^/]*" if PLACEHOLDER.fullmatch(piece) else re.escape(piece)
+            for piece in re.split("(<[^<>/\\s]*>|\\*)", path)
+        )
+        matches = sorted(candidate for candidate in world.files if re.fullmatch(pattern, candidate))
         return ("file", matches[0]) if matches else ("dead", "no file matches")
     if path in world.files:
         return "file", path
@@ -275,8 +284,9 @@ def check_text(text, path, skill_dir, world):
             counts["file"] += 1
             kind, value = locate(target, skill_dir, world, base=here)
             if kind == "dead":
-                report(match.start(), "link %s names no file of the-way: %s" % (
-                    shown(target), value))
+                report(
+                    match.start(), "link %s names no file of the-way: %s" % (shown(target), value)
+                )
 
     def named(offset, name):
         """The file of a step or heading pointer, None where it is not a file of the-way."""
@@ -293,16 +303,21 @@ def check_text(text, path, skill_dir, world):
             for number in numbers_of(match.group(numbers_group)):
                 counts["step"] += 1
                 if number not in world.steps(target):
-                    report(match.start(), "step %d of %s, which has no such step" % (
-                        number, shown(target)))
+                    report(
+                        match.start(),
+                        "step %d of %s, which has no such step" % (number, shown(target)),
+                    )
     for match in HEADING_OF.finditer(prose):
         target = named(match.start(), match.group(2))
         if target is None:
             continue
         counts["heading"] += 1
         if plain_heading(match.group(1)) not in world.headings(target):
-            report(match.start(), "heading %s of %s, which has no such heading" % (
-                shown(match.group(1)), shown(target)))
+            report(
+                match.start(),
+                "heading %s of %s, which has no such heading"
+                % (shown(match.group(1)), shown(target)),
+            )
     return problems, counts
 
 
@@ -326,7 +341,6 @@ def check_tree(root):
 
 
 class TheSkillsOfTheWay(unittest.TestCase):
-
     def test_no_skill_file_holds_a_dead_pointer(self):
         # Break caught: a method file renamed, moved or dropped, or a step or a heading of a file
         # renumbered or reworded, while a skill file still points at the old one; the session that
@@ -352,11 +366,11 @@ FIXTURE = {
     "elements/common/tool.py": "",
     "foundations/decisions.md": "# The-way's own decisions\n",
     "relation-model/other/skill/SKILL.md": "---\nname: elsewhere\ndescription: x\n---\n\n"
-                                           "## 0. Start\n\n## 1. Next\n",
+    "## 0. Start\n\n## 1. Next\n",
     "product-guidelines/area/SKILL.md": "---\nname: area-skill\ndescription: x\n---\n\n"
-                                        "# The area\n\n## 0. Read\n\n## 1. Do\n\n"
-                                        "- **A lead-in.** Text.\n\n**Another lead-in** text.\n\n"
-                                        "A line with **bold** inside.\n",
+    "# The area\n\n## 0. Read\n\n## 1. Do\n\n"
+    "- **A lead-in.** Text.\n\n**Another lead-in** text.\n\n"
+    "A line with **bold** inside.\n",
     "product-guidelines/area/sibling.md": "# Sibling\n",
     "product-guidelines/area/deep/inner.md": "# Inner\n\n## 1. Only\n",
     "product-guidelines/area/template.md": "# T\n",
@@ -384,8 +398,9 @@ class Reading(unittest.TestCase):
     def test_a_file_of_the_way_is_found_and_a_dead_one_reported(self):
         # Break caught: a path looked up wrongly (a directory missing, a name compared in part),
         # so that a dead pointer passes or a live one is reported.
-        self.assertEqual([], self.problems_of("See `elements/common/way.md` and `elements/common/"
-                                              "tool.py`."))
+        self.assertEqual(
+            [], self.problems_of("See `elements/common/way.md` and `elements/common/tool.py`.")
+        )
         problems = self.problems_of("See `elements/common/gone.md`.")
         self.assertEqual(1, len(problems))
         self.assertIn("elements/common/gone.md", problems[0])
@@ -395,12 +410,13 @@ class Reading(unittest.TestCase):
         # Break caught: a path of a product taken for one of the-way, so that every skill that
         # names the product's `guidelines/coding.md` fails; or a path with an unknown first
         # directory taken for a product's, so that a mistyped directory passes.
-        product = ("`guidelines/coding.md` `guidelines/coding-<kind>.md` `AGENTS.md` "
-                   "`CLAUDE.md` `foundations/decisions.md` `.runs/coding/<question>.md` "
-                   "`.github/workflows/deploy.yml` `<product-repository>/.runs/x/<name>.md` "
-                   "`~/.the-way/locations.json` `/etc/hosts.txt` `"
-                   # A drive path, in pieces so that no check of private paths lists this line.
-                   + "C:" + "/Us" + "ers/x/file.md`")
+        product = (
+            "`guidelines/coding.md` `guidelines/coding-<kind>.md` `AGENTS.md` "
+            "`CLAUDE.md` `foundations/decisions.md` `.runs/coding/<question>.md` "
+            "`.github/workflows/deploy.yml` `<product-repository>/.runs/x/<name>.md` "
+            "`~/.the-way/locations.json` `/etc/hosts.txt` `" + "C:" + "/Us" + "ers/x/file.md`"
+            # A drive path, in pieces so that no check of private paths lists this line.
+        )
         self.assertEqual([], self.problems_of(product))
         problems = self.problems_of("`src/app.py` and `elements/commn/way.md`")
         self.assertEqual(2, len(problems))
@@ -408,8 +424,12 @@ class Reading(unittest.TestCase):
     def test_a_prefix_names_a_file_of_the_way_whatever_its_first_directory(self):
         # Break caught: the prefixes `<the-way>/` and `.the-way/` ignored, so that
         # `<the-way>/foundations/decisions.md` is taken for the product's and a dead one passes.
-        self.assertEqual([], self.problems_of("`<the-way>/foundations/decisions.md` "
-                                              "`.the-way/elements/common/way.md`"))
+        self.assertEqual(
+            [],
+            self.problems_of(
+                "`<the-way>/foundations/decisions.md` `.the-way/elements/common/way.md`"
+            ),
+        )
         problems = self.problems_of("`<the-way>/foundations/gone.md` `.the-way/foundations/x.md`")
         self.assertEqual(2, len(problems))
 
@@ -423,10 +443,13 @@ class Reading(unittest.TestCase):
 
     def test_a_bare_name_in_a_directory_below_a_skill_looks_beside_that_skill(self):
         # Break caught: the skill of a file taken to be the first one found, not the nearest above.
-        problems = self.problems_of("`template.md` `sibling.md`",
-                                    path="product-guidelines/other/method.md",
-                                    extra={"product-guidelines/other/SKILL.md":
-                                           "---\nname: other-skill\ndescription: x\n---\n"})
+        problems = self.problems_of(
+            "`template.md` `sibling.md`",
+            path="product-guidelines/other/method.md",
+            extra={
+                "product-guidelines/other/SKILL.md": "---\nname: other-skill\ndescription: x\n---\n"
+            },
+        )
         self.assertEqual(1, len(problems))
         self.assertIn("sibling.md", problems[0])
 
@@ -434,50 +457,69 @@ class Reading(unittest.TestCase):
         # Break caught: a path with `<name>` looked up as written, so that a the-way path with a
         # placeholder is always reported, or matched across directories.
         self.assertEqual([], self.problems_of("`product-guidelines/<discipline>/template.md`"))
-        problems = self.problems_of("`product-guidelines/<discipline>/gone.md` "
-                                    "`product-guidelines/<d>/inner.md`")
+        problems = self.problems_of(
+            "`product-guidelines/<discipline>/gone.md` `product-guidelines/<d>/inner.md`"
+        )
         self.assertEqual(2, len(problems))
 
     def test_a_step_of_a_file_is_found_and_a_missing_one_reported(self):
         # Break caught: steps read from the wrong headings, a list of steps not read where a file
         # has no numbered heading, or a number compared as text.
-        self.assertEqual([], self.problems_of(
-            "step 1 of `elements/common/way.md`, `elements/common/way.md` step 2, steps 0 and 1 "
-            "of `SKILL.md`, step 2 of `elements/common/numbered.md`, step 1 of `inner.md`."))
-        problems = self.problems_of("step 3 of `elements/common/way.md`; "
-                                    "`elements/common/numbered.md` steps 1 and 3; "
-                                    "step 2 of `inner.md`.")
+        self.assertEqual(
+            [],
+            self.problems_of(
+                "step 1 of `elements/common/way.md`, `elements/common/way.md` step 2, steps 0 and 1 "
+                "of `SKILL.md`, step 2 of `elements/common/numbered.md`, step 1 of `inner.md`."
+            ),
+        )
+        problems = self.problems_of(
+            "step 3 of `elements/common/way.md`; "
+            "`elements/common/numbered.md` steps 1 and 3; "
+            "step 2 of `inner.md`."
+        )
         self.assertEqual(3, len(problems))
         self.assertTrue(all("no such step" in problem for problem in problems))
 
     def test_a_step_of_a_skill_named_by_its_name_is_read_in_its_file(self):
         # Break caught: the name of a skill not looked up in the skills of the-way, so that a step
         # of a renamed or removed skill passes.
-        self.assertEqual([], self.problems_of("`elsewhere` step 1, step 0 of the skill `area-skill`"
-                                              ", `elsewhere` steps 0 to 1"))
+        self.assertEqual(
+            [],
+            self.problems_of(
+                "`elsewhere` step 1, step 0 of the skill `area-skill`, `elsewhere` steps 0 to 1"
+            ),
+        )
         problems = self.problems_of("`elsewhere` step 2 and `no-such-skill` step 1")
         self.assertEqual(2, len(problems))
 
     def test_a_heading_of_a_file_is_found_and_a_missing_one_reported(self):
         # Break caught: a heading compared with its number, its emphasis or a different case, or
         # not compared at all.
-        self.assertEqual([], self.problems_of(
-            '"Reading the foundation" in `elements/common/way.md`, "Read" of step 1 of '
-            '`elements/common/way.md`, the section "Do" in `SKILL.md`, "A lead-in" in `SKILL.md`, '
-            '"Another lead-in" in `SKILL.md`, and \u201cNext\u201d of `elsewhere`.'))
-        problems = self.problems_of('"Reading foundation" in `elements/common/way.md` and '
-                                    '"reading the foundation" in `elements/common/way.md` and '
-                                    '"bold" in `SKILL.md` (a word in a line is no lead-in)')
+        self.assertEqual(
+            [],
+            self.problems_of(
+                '"Reading the foundation" in `elements/common/way.md`, "Read" of step 1 of '
+                '`elements/common/way.md`, the section "Do" in `SKILL.md`, "A lead-in" in `SKILL.md`, '
+                '"Another lead-in" in `SKILL.md`, and \u201cNext\u201d of `elsewhere`.'
+            ),
+        )
+        problems = self.problems_of(
+            '"Reading foundation" in `elements/common/way.md` and '
+            '"reading the foundation" in `elements/common/way.md` and '
+            '"bold" in `SKILL.md` (a word in a line is no lead-in)'
+        )
         self.assertEqual(3, len(problems))
         self.assertTrue(all("no such heading" in problem for problem in problems))
 
     def test_a_pointer_in_a_fence_and_one_in_a_link_are_read_and_a_url_is_not(self):
         # Break caught: a fenced block or a link target skipped, or a file named in the text of a
         # link to a page of the web, which is no file of the-way, reported.
-        text = ("```\nsee elements/common/gone.md here\nalso/gone.md\n```\n"
-                "[a link](sibling.md) and [dead](missing.md) and "
-                "[`SKILL.md`](https://example.org/x/SKILL.md) and "
-                "[web](https://example.org/a.md)\n")
+        text = (
+            "```\nsee elements/common/gone.md here\nalso/gone.md\n```\n"
+            "[a link](sibling.md) and [dead](missing.md) and "
+            "[`SKILL.md`](https://example.org/x/SKILL.md) and "
+            "[web](https://example.org/a.md)\n"
+        )
         problems = self.problems_of(text)
         self.assertEqual(3, len(problems))
         self.assertTrue(any(":2:" in problem for problem in problems))
@@ -487,18 +529,25 @@ class Reading(unittest.TestCase):
     def test_a_file_outside_a_skill_directory_is_not_read(self):
         # Break caught: every file of the two parts read, so that a template or a procedure beside
         # no skill, which the row of the task leaves out, fails the test.
-        self.assertEqual([], self.problems_of("`elements/common/gone.md`",
-                                              path="product-guidelines/plain2.md"))
-        self.assertEqual([], self.problems_of("`elements/common/gone.md`",
-                                              path="elements/common/readme.md"))
+        self.assertEqual(
+            [], self.problems_of("`elements/common/gone.md`", path="product-guidelines/plain2.md")
+        )
+        self.assertEqual(
+            [], self.problems_of("`elements/common/gone.md`", path="elements/common/readme.md")
+        )
 
     def test_crafted_text_gives_problems_and_no_error(self):
         # Break caught: a path that leaves the-way or holds a character that opens no file, a
         # text that cannot be read, or a quotation of a pointer with a line break, crashing the
         # reading or putting a line of the input into a message unescaped.
-        crafted = ("`../../../etc/passwd.md` `elements/../../x.md` `a\x00b.md` `" + "a/" * 5000 +
-                   "x.md` `a\u2028b.md` \"" + "x" * 70 + "\" in `elements/common/way.md`\n"
-                   "step 99999999999999999999 of `elements/common/way.md`\n")
+        crafted = (
+            "`../../../etc/passwd.md` `elements/../../x.md` `a\x00b.md` `"
+            + "a/" * 5000
+            + 'x.md` `a\u2028b.md` "'
+            + "x" * 70
+            + '" in `elements/common/way.md`\n'
+            "step 99999999999999999999 of `elements/common/way.md`\n"
+        )
         problems = self.problems_of(crafted)
         self.assertGreaterEqual(len(problems), 4)
         for problem in problems:
@@ -506,7 +555,8 @@ class Reading(unittest.TestCase):
             self.assertLessEqual(len(problem), 400)
             self.assertTrue(problem.isascii())
         undecodable = self.problems_of(
-            "x", extra={"product-guidelines/area/bad.md": b"\xff\xfe\x00"})
+            "x", extra={"product-guidelines/area/bad.md": b"\xff\xfe\x00"}
+        )
         self.assertEqual(1, len(undecodable))
         self.assertIn("UTF-8", undecodable[0])
 
