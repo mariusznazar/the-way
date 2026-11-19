@@ -669,7 +669,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Report Git evidence for project plan task states."
     )
-    parser.add_argument("plan", help="original handed-over project plan")
+    parser.add_argument("plan", help="original handed-over or closed project plan")
     parser.add_argument("product_repository", help="product Git repository")
     args = parser.parse_args(argv)
     try:

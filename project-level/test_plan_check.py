@@ -1080,6 +1080,17 @@ class Closed(unittest.TestCase):
         found = conditions(self.closed(changed(ALL_FINISHED, 1, "State", "blocked")))
         self.assertEqual(sorted(found), ["closed", "form"])
 
+    def test_the_first_status_line_decides_whether_the_plan_is_closed(self):
+        # invariant: project-plan-check
+        # Break caught: reading the last Status line, so that a closed line followed by a
+        # handed-over one lets a row in cycle pass, or a handed-over line followed by a closed one
+        # reports rows of a plan that is not closed.
+        tasks = changed(ALL_FINISHED, 1, "State", "in cycle")
+        closed_first = plan(status=self.CLOSED + "\nStatus: handed over 2026-10-06", tasks=tasks)
+        self.assertEqual(sorted(conditions(closed_first)), ["closed", "form"])
+        handed_first = plan(status="Status: handed over 2026-10-06\n" + self.CLOSED, tasks=tasks)
+        self.assertEqual(conditions(handed_first), ["form"])
+
     def test_a_second_status_line_is_reported_at_that_line(self):
         # invariant: project-plan-form
         # Break caught: a closed line followed by a handed-over one reads as one plan to one

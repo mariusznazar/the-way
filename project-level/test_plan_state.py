@@ -501,8 +501,9 @@ class Command(unittest.TestCase):
 
     def test_a_closed_plan_is_reported_closed_and_proposes_nothing(self):
         # Break caught: a closed plan answered with the missing handed-over error, or read as one
-        # with task states left to move. The exit code 0 is the one the script's description gives
-        # to a completed observation.
+        # with task states left to move, or one whose Git evidence is read all the same. The exit
+        # code 0 is the one the script's description gives to a closed plan, for which it reads no
+        # Git evidence.
         self.archive()
         self.git(self.repo, "push", "origin", "release")
         for status in ("Status: closed 2026-11-19", "Status: closed 2026-11-19 \t"):
@@ -512,6 +513,7 @@ class Command(unittest.TestCase):
                 self.assertRegex(output, r"closed.*2026-11-19")
                 self.assertNotIn("fail:", output)
                 self.assertNotIn("propose ", output)
+                self.assertNotIn("repository:", output)
 
     def test_a_closed_plan_with_a_task_in_another_state_is_a_finding(self):
         # Break caught: a plan closed over a task still ready for its cycle passes as closed.
