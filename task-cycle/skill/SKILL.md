@@ -505,9 +505,9 @@ contradicts a decision.
         change. Every other slice goes on after its mechanical check, and the review of the whole
         change judges it (WAY-136). Where the slices with no review of their own are more than one
         reviewer of the whole change can compare with their sources — as in a change that rewrites
-        many entries of the foundation from many notes — the lead may dispatch a fresh reviewer with
-        `review-change` on groups of them in the plan's order, as for a slice with a review of its
-        own, and records the grouping and its reason.
+        many entries of the foundation from many notes — the orchestrator may dispatch a fresh
+        reviewer with `review-change` on groups of them in the plan's order, as for a slice with a
+        review of its own, and records the grouping and its reason.
 
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
