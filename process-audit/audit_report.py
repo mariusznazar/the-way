@@ -147,9 +147,9 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "`git diff --quiet` (exit 1, or any other failure, counts as changed). A new price list, a "
         "date of the register's list of classes and a change under `task-cycle/change`, "
         "`task-cycle/plan`, `task-cycle/review`, `task-cycle/spec` or of "
-        "`task-cycle/cycle_stages.py` or `task-cycle/stage_transcripts.py` split neither, "
+        f"`{COST_SCRIPT}` or `{COST_MODULE}` split neither, "
         "though a new price list and a change of "
-        "`task-cycle/cycle_stages.py` or `task-cycle/stage_transcripts.py` split the series "
+        f"`{COST_SCRIPT}` or `{COST_MODULE}` split the series "
         "of the cost, and the others the series "
         "of the count of remarks. "
         "Each series is its own subsection, a number of one series is never set beside a number of "
@@ -320,7 +320,7 @@ def cost_lines(cycles: list[Cycle], prices: Prices) -> list[str]:
         "## Cost",
         "",
         f"Prices of the list dated {prices.date}: a cost belongs to that series only, and a new "
-        "list or a change of `task-cycle/cycle_stages.py` or `task-cycle/stage_transcripts.py` "
+        f"list or a change of `{COST_SCRIPT}` or `{COST_MODULE}` "
         "starts a new one (WAY-339). A stretch of "
         "the orchestrator with no token usage costs nothing. A stage report whose section of "
         "stages has the columns *Cache write (5 minutes)* and *Cache write (1 hour)* is priced "
