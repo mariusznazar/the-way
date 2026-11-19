@@ -1091,6 +1091,88 @@ class Closed(unittest.TestCase):
         handed_first = plan(status="Status: handed over 2026-10-06\n" + self.CLOSED, tasks=tasks)
         self.assertEqual(conditions(handed_first), ["form"])
 
+    # Deliveries are followed from row to row, so the rows are written out: task n stands in
+    # states[n - 1]; tasks 1 to 3 are those of the plan, the others hold no scope and no entry.
+    def delivery_plan(self, states, status=CLOSED):
+        rows = [row[:6] + (states[n],) + row[7:] for n, row in enumerate(TASKS)]
+        for n in range(4, len(states) + 1):
+            rows.append((str(n), "task-%d" % n, "Cel zadania.", "—", "—", "no", states[n - 1], "—"))
+        return plan(status=status, tasks=rows)
+
+    def closed_rows(self, text):
+        return [(f.condition, f.line) for f in findings(text)]
+
+    DONE = "done"
+    DROPPED = "dropped — approved by human"
+
+    @staticmethod
+    def delivered(n):
+        return "done — goal delivered in task %d" % n
+
+    def test_two_tasks_delivered_by_each_other_are_reported_each_at_its_row(self):
+        # invariant: project-plan-check
+        # Break caught: the pair passes as a closed plan though no task of it is done.
+        text = self.delivery_plan([self.DONE, self.delivered(3), self.delivered(2)])
+        rows = [line_of(text, "| 2 | "), line_of(text, "| 3 | ")]
+        self.assertEqual(self.closed_rows(text), [("closed", row) for row in rows])
+
+    def test_a_loop_of_three_or_more_tasks_is_reported_at_each_row_of_it(self):
+        # invariant: project-plan-check
+        for size in (3, 4, 7):
+            with self.subTest(size=size):
+                # Tasks 2 to size + 1 deliver one another in a ring: 2 in 3, 3 in 4, ... last in 2.
+                ring = [self.delivered(n + 1) for n in range(2, size + 1)] + [self.delivered(2)]
+                text = self.delivery_plan([self.DONE] + ring)
+                rows = [line_of(text, "| %d | " % n) for n in range(2, size + 2)]
+                self.assertEqual(self.closed_rows(text), [("closed", row) for row in rows])
+
+    def test_a_chain_leading_into_a_loop_is_reported_at_every_row_of_the_chain_and_the_loop(self):
+        # invariant: project-plan-check
+        # Tasks 2 and 3 deliver one another; 4 is delivered in 3 and 5 in 4.
+        text = self.delivery_plan(
+            [self.DONE, self.delivered(3), self.delivered(2), self.delivered(3), self.delivered(4)]
+        )
+        rows = [line_of(text, "| %d | " % n) for n in (2, 3, 4, 5)]
+        self.assertEqual(self.closed_rows(text), [("closed", row) for row in rows])
+
+    def test_a_chain_of_deliveries_ending_in_a_done_task_passes(self):
+        # Task 2 is delivered in 3, 3 in 4, 4 in 5, and task 5 is done.
+        text = self.delivery_plan(
+            [self.DONE, self.delivered(3), self.delivered(4), self.delivered(5), self.DONE]
+        )
+        self.assertEqual(self.closed_rows(text), [])
+
+    def test_a_chain_of_deliveries_ending_in_a_dropped_task_is_reported_at_each_row(self):
+        # invariant: project-plan-check
+        # Task 2 is delivered in 3 and 3 in 4, which is dropped: task 3 was reported before, and
+        # task 2, whose goal no done task ever delivered, is now too.
+        text = self.delivery_plan([self.DONE, self.delivered(3), self.delivered(4), self.DROPPED])
+        rows = [line_of(text, "| %d | " % n) for n in (2, 3)]
+        self.assertEqual(self.closed_rows(text), [("closed", row) for row in rows])
+
+    def test_a_delivery_in_the_task_itself_stays_a_finding_of_form_alone(self):
+        # invariant: project-plan-form
+        text = self.delivery_plan([self.DONE, self.delivered(2), self.delivered(2)])
+        self.assertEqual(sorted(set(conditions(text))), ["form"])
+
+    def test_a_loop_of_deliveries_in_a_plan_not_closed_is_no_finding(self):
+        # invariant: project-plan-check
+        states = [self.DONE, self.delivered(3), self.delivered(2)]
+        for status in ("Status: draft", "Status: handed over 2026-10-06"):
+            with self.subTest(status=status):
+                self.assertEqual(self.closed_rows(self.delivery_plan(states, status)), [])
+
+    def test_a_chain_of_a_thousand_rows_ends_without_recursion(self):
+        # invariant: project-plan-check
+        # Break caught: following the deliveries recursively, which a long chain of crafted rows
+        # would overflow, or following each from its start, which would take a million steps.
+        size = 1000
+        chain = [self.delivered(n + 1) for n in range(2, size)]
+        done_end = self.delivery_plan([self.DONE] + chain + [self.DONE])
+        self.assertEqual(self.closed_rows(done_end), [])
+        loop_end = self.delivery_plan([self.DONE] + chain + [self.delivered(2)])
+        self.assertEqual(len(self.closed_rows(loop_end)), size - 1)
+
     def test_a_second_status_line_is_reported_at_that_line(self):
         # invariant: project-plan-form
         # Break caught: a closed line followed by a handed-over one reads as one plan to one

@@ -36,7 +36,9 @@ reports:
   reported at the entry's row, once for each entry the two share;
 - closed — only in a plan whose `Status:` line reads `closed YYYY-MM-DD`: each task whose state is
   none of `done`, `done — goal delivered in task <n>` and `dropped — approved by human`, and each
-  task whose goal is delivered in a task that is dropped, reported at the task's row;
+  task whose `done — goal delivered in task <n>` deliveries, followed from task to task, never reach
+  a task that is `done` because they end in a dropped task or run in a loop, each reported at the
+  task's own row;
 - questions — every open question of the definition stands once, word for word, with the place
   the definition gives it, followed by a task of the plan or a non-empty answer; every item is in
   one of these forms, and an item naming a place of the definition belongs to a question it holds.
@@ -874,12 +876,40 @@ def check_order(plan):
     return findings
 
 
+LOOP = "loop"
+
+
+def delivery_ends(by_number):
+    """How following `done — goal delivered in task <n>` ends, for each task number: the state of
+    the task whose row is no delivery, `LOOP` where the deliveries run in a loop, None where they
+    meet a task the plan does not hold or a task delivered in itself (a finding of form). Each task
+    is settled once and nothing recurses, so crafted rows cannot make it run long or deep."""
+    ends = {}
+    for start in by_number:
+        walked, current = {}, start
+        while current not in ends and current not in walked:
+            task = by_number.get(current)
+            if task is None or task.delivered_in == current:
+                ends[current] = None
+            elif task.delivered_in is None:
+                ends[current] = task.state
+            else:
+                walked[current] = None
+                current = task.delivered_in
+        ends.update(dict.fromkeys(walked, ends.get(current, LOOP)))
+    return ends
+
+
 def check_closed(tasks):
     """Report each row of a closed plan that is none of `done`, `done — goal delivered in task <n>`
-    and `dropped — approved by human`, and each row whose goal is delivered in a task dropped."""
+    and `dropped — approved by human`, and each row whose deliveries, followed from task to task,
+    never reach a task that is `done`: where the task it names is dropped, or where they end in a
+    dropped task or run in a loop."""
     findings = []
-    states = {task.number: task.state for task in tasks if task.number is not None}
+    by_number = {task.number: task for task in tasks if task.number is not None}
+    ends = delivery_ends(by_number)
     for task in tasks:
+        target = by_number.get(task.delivered_in)
         if task.delivered_in is None and task.state not in FINISHED:
             findings.append(
                 Finding(
@@ -889,13 +919,23 @@ def check_closed(tasks):
                     "task or dropped" % task.state,
                 )
             )
-        elif task.delivered_in is not None and states.get(task.delivered_in) == DROPPED:
+        elif target is not None and target.state == DROPPED:
             findings.append(
                 Finding(
                     "closed",
                     task.line,
                     "the plan is closed, while the goal is delivered in task %d, which is dropped"
                     % task.delivered_in,
+                )
+            )
+        elif task.delivered_in is not None and ends.get(task.number) in (LOOP, DROPPED):
+            findings.append(
+                Finding(
+                    "closed",
+                    task.line,
+                    "the plan is closed, while the deliveries from this task never reach a task "
+                    "that is done: they %s"
+                    % ("run in a loop" if ends[task.number] == LOOP else "end in a dropped task"),
                 )
             )
     return findings
