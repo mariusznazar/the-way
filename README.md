@@ -104,7 +104,8 @@ branch from.
 - `guidelines/` — the coding and testing guidelines of the-way's own code: the rules, each with the
   decision or the invariant that holds it, and, for each kind of file, the exemplar to copy.
 - `ruff.toml`, `requirements-quality.in` and `requirements-quality.txt` — the settings of the linter
-  of the-way's Python code and the version it is installed at; see "Installing the linter" below.
+  and the formatter of the-way's Python code and the version it is installed at; see "Installing the
+  linter" below.
 - `installation/` — prepares a product repository to use one pinned commit of the-way; see
   `installation/README.md`.
 - `project-level/` — defines a project, settles its technology, breaks it into a plan of tasks,
