@@ -1,7 +1,7 @@
 # Coding guidelines — shared-module
 
 - **Discipline:** coding
-- **Applies to:** relation-model · process-audit
+- **Applies to:** relation-model · process-audit · task-cycle
 
 ## When to read
 
@@ -39,3 +39,4 @@ above is the one that binds.
 
 - `relation-model/`
 - `process-audit/`
+- `task-cycle/`
