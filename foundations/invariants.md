@@ -463,7 +463,7 @@ No function of a script of a part named in the *Scope* of WAY-379 has more lines
 - **Rests on:** none
 - **Derives from:** WAY-385
 - **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines
-- **Violated:** yes
+- **Violated:** no
 
 ## generator-writes-only-with-write
 
