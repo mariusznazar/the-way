@@ -10793,7 +10793,7 @@ function and file over a threshold with its size (WAY-361).
 - **Scope:** elements-common, part-map, relation-model, project-level, task-cycle, gate,
   agent-instructions, instruction-files, installation, process-audit, product-guidelines
 - **Based on:** none
-- **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361
+- **Relations:** derives from WAY-379 · derives from WAY-360 · derives from WAY-361 · derives from WAY-382
 - **Verification:** invariants: function-and-file-size. tests: that a function is counted with the
   functions nested in it and that a method is a function. For what the invariant and the test leave,
   an agent compares a change with the decision:
