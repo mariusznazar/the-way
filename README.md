@@ -185,9 +185,11 @@ python -B elements/common/foundation_check.py
 ### Installing the linter
 
 One of the tests checks the Python code with Ruff, a linter pinned to version 0.17.1 by `ruff.toml`
-and by `requirements-quality.txt`, which lists the SHA-256 sum of every wheel of that release. Ruff
-is installed once, from the root of the repository, into the environment `.runs/quality-venv`, with
-that environment's own interpreter. On Windows:
+and by `requirements-quality.txt`, which lists the SHA-256 sum of every wheel of that release. The
+same Ruff also formats the Python code, at a line width of 100 set in `ruff.toml`, and another test
+checks that every Python file stands as the formatter leaves it. Only `.py` files are formatted; a
+Python example in a Markdown file is not. Ruff is installed once, from the root of the repository,
+into the environment `.runs/quality-venv`, with that environment's own interpreter. On Windows:
 
 ```bash
 python -m venv .runs/quality-venv
@@ -212,6 +214,23 @@ On Linux and macOS:
 ```bash
 .runs/quality-venv/bin/ruff --version
 ```
+
+To format a Python file with the installed Ruff, run this from the root of the repository. On
+Windows:
+
+```bash
+.runs/quality-venv/Scripts/ruff.exe format --config ruff.toml <file>
+```
+
+On Linux and macOS:
+
+```bash
+.runs/quality-venv/bin/ruff format --config ruff.toml <file>
+```
+
+The file `.git-blame-ignore-revs` at the root of the repository lists the commit that reformatted
+the Python code of the-way. `git blame --ignore-revs-file .git-blame-ignore-revs` passes over that
+commit and shows, for each line, the commit that last changed its text.
 
 The tests of the standing checks find that environment in the main checkout of the repository
 through the common directory of git (`git rev-parse --git-common-dir`), not in the directory they run

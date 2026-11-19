@@ -148,7 +148,8 @@ of critical flows.
 
 The part answers for the files that configure the repository itself rather than any one part.
 
-- **Files:** /.gitattributes
+- **Files:** /.git-blame-ignore-revs
+  /.gitattributes
   /.gitignore
   /.python-version
   /requirements-quality.in
