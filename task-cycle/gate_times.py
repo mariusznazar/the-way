@@ -210,10 +210,10 @@ def prepare(folder: Path, now: int) -> bool:
     try:
         folder.mkdir(parents=True, exist_ok=True)
         for name in os.listdir(folder):
-            file = parse_name(name)
-            if file is None:
+            run = parse_name(name)
+            if run is None:
                 continue
-            start, end, _ = file
+            start, end, _ = run
             stale = start < now - RUNNING_LIMIT_MS if end is None else end < now - DAY_MS
             if stale or malformed(start, end, now):
                 try:
@@ -236,10 +236,10 @@ def count_others(folder: Path, token: str, start: int, end: int) -> str:
         return UNKNOWN
     count = 0
     for name in names:
-        file = parse_name(name)
-        if file is None or file[2] == token:
+        run = parse_name(name)
+        if run is None or run[2] == token:
             continue
-        begin, finish, _ = file
+        begin, finish, _ = run
         if malformed(begin, finish, end):
             continue
         if finish is None:
