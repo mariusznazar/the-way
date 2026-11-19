@@ -120,7 +120,8 @@ A series of the cost, in which the median cost and the answer Q3 are compared, i
 consecutive versions between which neither of these changes:
 
 - the price list the costs are priced by (one list per run, so this never splits a run);
-- `task-cycle/cycle_stages.py`, the script that measures the cost, and no other script
+- `task-cycle/cycle_stages.py` and the module `task-cycle/stage_transcripts.py` that it imports,
+  the two files of the script that measures the cost, and no other script
   (`git diff --quiet`; exit 1, or any other failure, counts as changed).
 
 A series of the count of remarks, in which the answers Q1 and Q2 are compared, ends wherever a
@@ -191,8 +192,9 @@ the gate times of `gate_times.md` at one whose `task-cycle/gate_times.py` or `ga
 differs, by the same test as the series of the cost (`git diff --quiet`; exit 1, or any failure,
 counts as changed). No other change splits them: not the price list, a date of the register's list
 of classes, a change under `task-cycle/change`, `task-cycle/plan`, `task-cycle/review` or
-`task-cycle/spec`, nor one of `task-cycle/agent-types/the-way-stage.md` or
-`task-cycle/cycle_stages.py`, and neither script splits a series of the cost. The section
+`task-cycle/spec`, nor one of `task-cycle/agent-types/the-way-stage.md`,
+`task-cycle/cycle_stages.py` or `task-cycle/stage_transcripts.py`, and neither script splits a
+series of the cost. The section
 *Measure versions* gives, for each version of a series and each cycle-level measure, the number of
 cycles that give a value, their median (the rule of the median of the cost) and whether it falls
 against the previous version of the series, and for the gate times the total of the run and each
@@ -235,7 +237,8 @@ outside the years the platform reads gives *Committed* `unknown`. Git runs only 
 A cycle of the-way whose own change changes a tool that wrote a file of its copy gives the values
 that tool wrote as `unknown`, with the reason that the cycle changed the tool that wrote them, and
 its other values as they stand, under the version it ran on (WAY-339). The tools are those that
-start the series of what they measure: `task-cycle/cycle_stages.py` for the times, the cost and the
+start the series of what they measure: `task-cycle/cycle_stages.py` and the module
+`task-cycle/stage_transcripts.py` that it imports for the times, the cost and the
 share of the cost in fix rounds, read from `stages.md`; `task-cycle/cycle_measures.py` for
 `mechanism_measures.md`; `task-cycle/gate_times.py` and `gate/run_tests.py` for `gate_times.md`. The
 cycle changed a tool where its files differ between the version it ran on and the commit of the last
