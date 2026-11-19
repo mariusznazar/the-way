@@ -5502,7 +5502,7 @@ cannot hold, or the entry needs any other value neither the row nor the cycle's 
 cycle asks the human through a blocked draft request rather than write another entry, and otherwise
 the entry's meaning is the one the human accepted with the row in the task document (WAY-114); a
 kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
-becomes no second entry, the cycle tying the row to that entry and naming both in the request. A
+becomes no second entry, the cycle tying the row to that entry and naming both in the request; a
 way not chosen that the row's source keeps with no cost, or with only a cost of the process such as a
 gate to reopen or a step to repeat, stands in the rejected options with `no cost to the product
 known`, and a way that is itself a way of the process rather than of the product, such as how or
@@ -5587,12 +5587,10 @@ nobody knows what was weighed. A practice adopted from outside leaves parts out,
 human never saw would read in *Rejected* as a way the human refused, so the refinement shows each
 part among the ways of the question and the row keeps those the human turned down; for a decision
 written from a row this decision therefore prevails over WAY-100, whose rule on what a decision
-leaves out of a practice holds for every other decision. A way of the process, such as when an
-answer is recorded, is no alternative the product weighed, so listed among the rejected options it
-would make the proposer of a later change of the product meet a refusal that never concerned it; a
-way whose source gives no cost, or only a cost of the process, stands with the words `no cost to the
-product known`, so that its empty cost reads as nothing known to weigh and not as a cost nobody
-weighed. The price: the refinement of a row that adopts a practice asks one question more, and a
+leaves out of a practice holds for every other decision. Where the source of a row keeps a way
+with no cost or with only a cost of the process, or keeps a way of the process such as how or when
+an answer is recorded, agents settled the case one way in one cycle and another way in the next, so
+this decision settles it once. The price: the refinement of a row that adopts a practice asks one question more, and a
 decision from a row whose source kept no left-out part says nothing in *Rejected* of what the
 practice leaves out.
 *Rejected:* whole entries written while the task is refined, as a project definition projects them —
@@ -6258,7 +6256,7 @@ than one slice then gets one review of the whole change, which judges every slic
 review of its own and names, for each blocking finding, the slice it comes from or that it comes
 from none, while the review of a one-author change or of a plan's only slice is the review of the
 whole change; and that review also checks coverage of the task, every row of its *Settlements to
-record* and every projected entry it carries. Where the slices that have no review of their own
+record* and every projected entry it carries; where the slices that have no review of their own
 are more than one reviewer of the whole change can compare with their sources, the orchestrator
 may, by its own judgment and not by a measure, dispatch reviews of groups of them in the plan's
 order, as for a slice with a review of its own, and it records the grouping and its reason.
