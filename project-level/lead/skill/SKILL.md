@@ -1,6 +1,6 @@
 ---
 name: lead-project
-description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files, and to close the project once every task is done, delivered in another task or withdrawn. Not for defining or breaking down a project, refining one task directly or running task cycles. Requires child agents.
+description: Use to lead a handed-over project plan through human-confirmed rounds of task refinement and evidence-backed state upkeep, or resume that work from its files, and to close the project once every task is done, delivered in another task or dropped. Not for defining or breaking down a project, refining one task directly or running task cycles. Requires child agents.
 ---
 
 # Lead a project plan
@@ -85,10 +85,12 @@ project skill with the `the-way-` prefix, never a personal copy.
 - You own ordinary State/Document-cell updates and their change-log lines. Pause these writes
   while a delegated structural plan edit owns that file (step 5). Run `project-level/plan_check.py`
   after plan changes and resolve findings before relying on them.
-- When the reconciliation leaves every row `done`, `done — goal delivered in task <n>` or
-  `dropped — approved by human`, read `closure.md` beside this skill: it closes the project, and
-  it keeps a row in any other state, `in cycle` and `ready for cycle` among them, from starting
-  the closing. Do not equate a dropped task with a delivered goal, and perform no implementation.
+- When the reconciliation leaves every row `done`, `dropped — approved by human` or
+  `done — goal delivered in task <n>` with a task n that is not dropped, read `closure.md` beside
+  this skill: it closes the project. Where a row stands in another state, `in cycle` and
+  `ready for cycle` among them, or is delivered in a dropped task, the closing does not start: tell
+  the human which row, by its number and name, and in which state, or in which dropped task, holds
+  it. Do not equate a dropped task with a delivered goal, and perform no implementation.
 
 ## 2. Confirm a round
 
