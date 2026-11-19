@@ -51,8 +51,8 @@ The formatter is the one of Ruff that WAY-381 pins, run with the configuration `
 line width of 100 and every other setting at its default. It covers the `.py` files of the parts
 named above and no Python example in a Markdown file. Every such file stands as the formatter
 leaves it, and a comment `fmt: off`, `fmt: on`, `fmt: skip`, `yapf: disable` or `yapf: enable` in
-one is no way out: the test of the invariant fails on it. No command of the formatter stands beside the one command of the gate
-(WAY-16).
+one is no way out: the test of the invariant fails on it. No command of the formatter stands beside
+the one command of the gate (WAY-16).
 
 ### Dependency audit
 
