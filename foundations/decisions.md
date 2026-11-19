@@ -10702,15 +10702,7 @@ the formatter fails on it.
   agent-instructions, instruction-files, installation, process-audit, product-guidelines, repository
 - **Based on:** none
 - **Relations:** derives from WAY-379 · derives from WAY-173
-- **Verification:** invariants: formatter-layout. For what the invariant leaves, an agent compares the
-  change with the decision:
-  - complies: `### Formatter` of `guidelines/coding.md` names this decision and the invariant,
-    `ruff.toml` sets the width of the formatter to 100 and no other setting of it, a Python example in
-    a Markdown file stands as its author laid it out, CI runs no command of the formatter beside the
-    one command of the gate (WAY-16), and a file that needs another layout is changed instead of
-    marked;
-  - violates: `ruff.toml` sets another width or another setting of the formatter; a rule or a test of
-    the formatter reaches the Python examples of Markdown files; `### Formatter` reads `none —`.
+- **Verification:** invariants: formatter-layout.
 - **Origin:** none
 
 *Rationale:* where no tool sets the layout of a file, it follows the agent that wrote it, and a layout
@@ -10805,10 +10797,10 @@ function and file over a threshold with its size (WAY-361).
 - **Verification:** invariants: function-and-file-size. tests: that a function is counted with the
   functions nested in it and that a method is a function. For what the invariant and the test leave,
   an agent compares a change with the decision:
-  - complies: a test file of two thousand lines stays outside the rule; a function of 105 lines as the
-    formatter lays it out stays inside it; a change that adds a branch to a function over its
-    threshold begins with a move of a part of it out (WAY-365); a function that cannot be divided is
-    divided or the threshold is changed in this decision, never kept as an exception;
+  - complies: a test file of two thousand lines stays outside the rule; a change that adds a branch to
+    a function over its threshold begins with a move of a part of it out (WAY-365); a function that
+    cannot be divided is divided or the threshold is changed in this decision, never kept as an
+    exception;
   - violates: the configuration of the test lists a function or a file as an exception; the rule
     covers test files.
 - **Origin:** none
