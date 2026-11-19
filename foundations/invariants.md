@@ -443,7 +443,7 @@ No file of a part named in the *Scope* of WAY-379 breaks a rule that WAY-380 giv
 - **Rests on:** ruff-default-rules
 - **Derives from:** WAY-380
 - **Part:** elements-common · part-map · relation-model · project-level · task-cycle · gate · agent-instructions · instruction-files · installation · process-audit · product-guidelines · repository
-- **Violated:** yes
+- **Violated:** no
 
 ## formatter-layout
 

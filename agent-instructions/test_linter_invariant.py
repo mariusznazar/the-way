@@ -3,11 +3,7 @@ WAY-382).
 
 The first test fails where the pinned Ruff cannot be found or cannot run, so that a missing Ruff
 turns the gate red. The second test is the test of the invariant `ruff-blocking-rules`: it runs the
-same Ruff over every part with Python code and fails while a file breaks a blocking rule. That
-invariant reads `Violated: yes` (WAY-51, WAY-205), so the second test is marked as an expected
-failure; it is kept apart from the first so that a missing Ruff cannot pass as the expected
-failure. The change in which the last report is cleaned removes the marking and the mark of the
-invariant: an expected failure that passes ends the run as an unexpected success.
+same Ruff over every part with Python code and fails while a file breaks a blocking rule.
 
 The class Formatter holds the tests of the invariant `formatter-layout`, which the same Ruff holds
 through its formatter (WAY-382). The first of them runs the formatter in its check mode over every
@@ -171,7 +167,6 @@ class Linter(unittest.TestCase):
             "its directory to PARTS and to the Scope of WAY-379",
         )
 
-    @unittest.expectedFailure
     def test_no_file_of_a_part_breaks_a_blocking_rule(self) -> None:
         # invariant: ruff-blocking-rules
         done = run_ruff("--ignore-noqa", *PARTS, cwd=ROOT)

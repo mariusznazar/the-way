@@ -3031,7 +3031,7 @@ class RegisterCount(AuditCountCase):
                     "row of `Classes`",
                     "3",
                     "the class name is not lower-case letters, digits and hyphens, or it is `none`",
-                    f"the-way none: row 1 of `Classes`; "
+                    "the-way none: row 1 of `Classes`; "
                     "the-way none: row 3 of `Classes`; the-way none: row 4 of `Classes`",
                 ],
                 [
