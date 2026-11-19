@@ -542,7 +542,7 @@ class Remarks(AuditCountCase):
             "1", self.remarks_of("- Process remarks on the-way:\n  - one\n", extra=fenced)[0]
         )
 
-    def test_the_corrections_item_before_the_remarks_item_is_not_among_its_entries(self):
+    def test_the_corrections_item_before_the_remarks_item_is_not_among_its_sub_items(self):
         corrections = (
             "- Corrections after the request opened:\n"
             "  - correction 1, remarks `reports/correction-1-remarks.md`: remark · defect\n"
@@ -553,7 +553,7 @@ class Remarks(AuditCountCase):
         self.assertEqual("1", count)
         self.assertNotIn("Remarks", [row[2] for row in unknown])
 
-    def test_items_after_the_remarks_item_are_not_its_entries(self):
+    def test_items_after_the_remarks_item_are_not_its_sub_items(self):
         self.assertEqual(
             "0",
             self.remarks_of(
@@ -1425,7 +1425,7 @@ class Cost(AuditCountCase):
         self.assertEqual(["unknown", "unknown"], row[4:6])
         self.assertTrue(any("more than once" in reason for reason in why), why)
 
-    def test_an_entry_of_review_rounds_without_its_findings_file_leaves_the_share_unknown(self):
+    def test_a_sub_item_of_review_rounds_without_its_findings_file_leaves_the_share_unknown(self):
         rounds = ONE_ROUND + "  - the return step: fix `reports/return_fix.md`\n"
         row, why = self.share_of(one_fix_round(), fix_record(rounds=rounds))
         self.assertEqual(["unknown", "unknown"], row[4:6])
@@ -4983,7 +4983,7 @@ class ProcessVersions(AuditCountCase):
             "the sub-item of a round does not say whether there was a contradiction", pair[2]
         )
 
-    def test_crafted_entries_of_review_rounds_break_no_cell_and_give_no_answer_they_do_not_state(
+    def test_crafted_sub_items_of_review_rounds_break_no_cell_and_give_no_answer_they_do_not_state(
         self,
     ):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
