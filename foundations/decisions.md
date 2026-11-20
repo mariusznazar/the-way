@@ -681,22 +681,34 @@ rather than an invariant, a rule of a plan or a rule of a skill.
 
 ### WAY-05 — How is a decision entry written?
 
-A decision entry opens with one to three binding sentences that answer its question — in the
-present tense, describing a state that is to be true, concrete enough to check — and one paragraph
-of one to three binding sentences for each part of another question that it answers, followed by
-fields a script or an agent reads, then rationale and rejected options in prose, which, where the
-entry's author writes it rather than quotes a source, names no file, script or count — a count
-being how many files, tests or entries of its foundation the product holds; a measurement the
-choice rests on may stand, with what was measured and under which conditions, never as a general
-bound — nor what the process's own tools do or lack today, and does not tell how the decision was
-reached. A field stays in the template only while someone or something reads it, and what a
-decision forces on later work stands in a binding sentence or a field, never in prose. An example
-in `elements/decisions/` names a decision of the log by its number instead of copying it.
+A decision entry opens with one to three binding sentences that answer its question — in the present
+tense, describing a state that is to be true, concrete enough to check — and one paragraph of one to
+three binding sentences for each part of another question that it answers, and may carry a further
+such paragraph for each part of its own question that it sets apart, no paragraph of binding
+sentences running past 300 words and the binding sentences of one decision together not running past
+600, followed by fields a script or an agent reads, then rationale and rejected options in prose,
+which, where the entry's author writes it rather than quotes a source, names no file, script or
+count — a count being how many files, tests or entries of its foundation the product holds; a
+measurement the choice rests on may stand, with what was measured and under which conditions, never
+as a general bound — nor what the process's own tools do or lack today, and does not tell how the
+decision was reached. A field stays in the template only while someone or something reads it, and
+what a decision forces on later work stands in a binding sentence or a field, never in prose. An
+example in `elements/decisions/` names a decision of the log by its number instead of copying it.
+
+The check of the foundation reports as an error a paragraph of binding sentences that runs past
+three sentences or past 300 words, or binding sentences that together run past 600 words, in a
+decision that a change adds or whose binding sentences it alters, a different division of them into
+paragraphs included; any other decision over a limit stands in a list the check prints, and the
+list stops no change.
 
 - **Scope:** decisions
 - **Based on:** none
 - **Relations:** none
-- **Verification:** for the fields, an agent compares the change with the decision:
+- **Verification:** tests: that a paragraph of binding sentences over three sentences or over 300
+  words, and binding sentences together over 600 words, are an error in a decision a change adds or
+  whose binding sentences it alters, a different division of them into paragraphs included, and are
+  only listed in any other decision; how the sentences and the words are counted. For the fields, an
+  agent compares the change with the decision:
   - complies: a new field enters the template together with the reader named in its table;
   - violates: a "notes" or "related artifacts" field that nothing reads.
   For the rationale, an agent compares the change with the decision:
@@ -704,31 +716,52 @@ in `elements/decisions/` names a decision of the log by its number instead of co
     shorter ones';
   - violates: a rationale gives 'at most 12 loops' with no conditions, or how many entries the log
     held when the decision was taken.
-  For the binding sentences, an agent compares the change with the decision:
-  - complies: an entry answers its question in a paragraph of two sentences and gives the part of
-    another question that it answers its own paragraph of one sentence;
-  - violates: an entry answers its question in a paragraph of five sentences; a part of another
-    question is folded into the paragraph of the main question, which then runs past three
-    sentences.
+  For whether a part of a question has a paragraph of its own, an agent compares the change with the
+  decision:
+  - complies: an entry answers its question in a paragraph of two sentences, gives a part of its own
+    question a second paragraph of two sentences, and gives the part of another question that it
+    answers its own paragraph of one sentence;
+  - violates: a part of another question is folded into the paragraph of the main question, which
+    stays within three sentences and 300 words.
 - **Origin:** none
 
 *Rationale:* a record written like a legal code is followed worse, and agents generalise from the
-reasons they are given, so what binds stays short and checkable, reasoning below; a field
-nobody reads goes empty, and long lists of fields stop people recording decisions. The prose gives
-only what a reader needs to understand the choice: the history of the product or of the decision —
-what the product held, how the choice was reached — is information the reader does not need, while a
+reasons they are given, so what binds stays short and checkable, reasoning below; a field nobody
+reads goes empty, and long lists of fields stop people recording decisions. The prose gives only
+what a reader needs to understand the choice: the history of the product or of the decision — what
+the product held, how the choice was reached — is information the reader does not need, while a
 measurement the choice rests on is a reason for the choice. A part of a question that an entry
-already answers is a paragraph of its own, so that what binds each part stays as short as what
-binds the main question, and a reader or a test finds its sentences without sifting the rest.
+already answers is a paragraph of its own, so that what binds each part stays as short as what binds
+the main question, and a reader or a test finds its sentences without sifting the rest; a part of
+the entry's own question may stand in a paragraph of its own for the same reason. A limit in words
+beside the one in sentences keeps a paragraph short when its sentences are joined to stand under the
+count, and a limit for all the binding sentences together keeps an entry from growing without bound
+by adding paragraphs, which the limit of a paragraph alone allows.
 *Rejected:* prose without fields — nothing a script can read reliably; many fields and relations —
-fields without a reader; a hand-written status — every entry of the log binds; a one-sentence
-entry — no reasoning beside the rule; "will" or "should" — an intent, not a state; capitals such as
-MUST — shouting reads worse, not stronger; examples written for the template — an example with gaps
-teaches gaps; a rule of the template changed only with a decision citing its number — the template
-is the-way's own text, changed and reviewed like any other change to it; no number of sentences,
-each binding sentence answering the question of the entry or a part of it — nothing keeps an entry
-short, and the principle that what binds is short weakens; a higher fixed limit — a number with no
-ground that breaks at the first topic with more parts than it allows.
+fields without a reader; a hand-written status — every entry of the log binds; a one-sentence entry
+— no reasoning beside the rule; "will" or "should" — an intent, not a state; capitals such as MUST —
+shouting reads worse, not stronger; examples written for the template — an example with gaps teaches
+gaps; a rule of the template changed only with a decision citing its number — the template is
+the-way's own text, changed and reviewed like any other change to it; no number of sentences, each
+binding sentence answering the question of the entry or a part of it — nothing keeps an entry short,
+and the principle that what binds is short weakens; a higher fixed limit of sentences — a number
+with no ground that breaks at the first topic with more parts than it allows; a limit in sentences
+alone — the easiest repair of an entry over it is to join its sentences, so its length in words
+keeps growing, and three sentences can run to several hundred words; a limit in words alone, with no
+count of sentences — the rule on the number of sentences falls, which the rejection above of no
+number of sentences defends; a limit of 200 words beside the one in sentences — it sends many old
+entries to rework as an addition to a change that did not write them; an error only where a change
+adds an entry over a limit or lengthens one already over it — an entry over a limit may stay long
+for good, the rule is harder to explain and the script more complex; lists of entries over a limit
+and no error — such lines stop nothing and pass in review, so the length stays unguarded; a decision
+counted as changed only by a change of its words, as the check of what holds a decision counts it —
+two paragraphs joined into one over the limit, with no word changed, would give a listed line and no
+error; no limit for the whole entry — nothing then keeps the length of an entry; a limit on the
+number of paragraphs of an entry — several paragraphs at the limit of a paragraph still make a long
+entry; the rule kept for a part of another question alone, with entries divided at a part of their
+own question anyway — the rule and the entries then say different things and a reviewer can rightly
+object; every entry that divides at a part of its own question rewritten or split — a new wording of
+each approved decision for the human to read.
 
 ### WAY-12 — How is a decision checked?
 

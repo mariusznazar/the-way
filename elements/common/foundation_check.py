@@ -92,6 +92,14 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
   the earlier form and one that lacks *Verification* are left to the report of fields above, with no
   second report. The switch `--skip-test-citations` skips none of this;
+- a paragraph of the binding sentences of a decision with more than 3 sentences or more than 300
+  words, and binding sentences with more than 600 words in all their paragraphs together (WAY-05):
+  sentences are counted as above, and a word is a run of characters between spaces. In a decision
+  that the change adds, or whose binding sentences differ from those at the base in their words or
+  in their division into paragraphs, each is an error at the heading line, naming the decision,
+  the paragraph where it is one and each measure over its limit with its value; in any other
+  decision it is a line of the second kind below, at the heading line. Where the base is unknown
+  no decision is added or changed;
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
   base once every run of spaces and line breaks is made one space) is listed at its heading line,
   when no file whose name does not end in `.md` that cites it by `invariant:` now differs between
@@ -112,7 +120,9 @@ the one `refs/remotes/origin/HEAD` names; where that does not exist, the local b
 that does not exist, `master`. The commit the branch left it from is `git merge-base HEAD` that
 branch (the `{fork-point}` of `elements/common/rules.md`); `fork_point` gives it and `at_commit`
 reads a file as that commit holds it, for the checks that compare the foundation with it; both
-stand in `foundation_source.py` beside this file. Where
+stand in `foundation_source.py` beside this file, as the readers of the text of an entry — `blocks`,
+`fields`, `located`, `binding`, `begins_sentence`, `table` and `items` — stand in
+`foundation_text.py`, which other scripts import through this file. Where
 there is no such branch or no merge base (no remote HEAD, no `main`, no `master`, a shallow history,
 no commit), the base is unknown, and so it is for a file the base lacks or git cannot give as UTF-8
 text: `foundations/decisions.md` or `foundations/invariants.md`, never read as an empty file. An
@@ -130,6 +140,17 @@ import sys
 import tempfile
 
 from foundation_source import at_commit, fork_point, git, read
+from foundation_text import (
+    FIELD,
+    QUOTED,
+    begins_sentence,
+    binding,
+    blocks,
+    fields,
+    items,
+    located,
+    table,
+)
 
 sys.dont_write_bytecode = True
 
@@ -148,6 +169,10 @@ BASE_FILES = (DECISIONS, INVARIANTS)
 UNKNOWN_BASE = (
     "the commit the branch left the main branch from is not known, so nothing was compared with it"
 )
+# The limits of a paragraph of the binding sentences of a decision, and of all of them (WAY-05).
+SENTENCE_LIMIT = 3
+WORD_LIMIT = 300
+ENTRY_LIMIT = 600
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -163,10 +188,7 @@ CITATION = re.compile(
     r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
     r"(?:\*/|-->)?\s*$"
 )
-ITEM = re.compile(r"[^·,\n]+")
-FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
-QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
@@ -218,53 +240,6 @@ class Report:
         self.listed.setdefault("%s: listed: %s" % (where, message), None)
 
 
-def blocks(lines, level):
-    """(line number, heading, [(line number, line)]) of each block a heading of a level opens."""
-    found, current = [], None
-    for number, line in enumerate(lines, start=1):
-        if line.startswith("#"):
-            current = [] if line.startswith(level) else None
-            if current is not None:
-                found.append((number, line, current))
-        elif current is not None:
-            current.append((number, line))
-    return found
-
-
-def fields(body):
-    """{name: (value, [line number of each line of the value])} of the fields `- **Name:**
-    value` of a block; a field's value goes on over the indented lines that follow it."""
-    found, current = {}, None
-    for number, line in body:
-        match = FIELD.match(line)
-        if match:
-            current = match.group(1) if match.group(1) not in found else None
-            if current:
-                found[current] = [(match.group(2) or "").strip(), [number]]
-        elif current and line.strip() and line[:1].isspace():
-            found[current][0] += "\n" + line.strip()
-            found[current][1].append(number)
-        else:
-            current = None
-    return {name: tuple(value) for name, value in found.items()}
-
-
-def located(found, name, pattern=None):
-    """(word, line number) of each item of a field's list joined by ` · ` or `, `, or of each
-    item inside what the first group of a pattern matches in the field's value."""
-    value, lines = found.get(name, ("", [0]))
-    spans = (
-        [(match.start(1), match.group(1)) for match in pattern.finditer(value)]
-        if pattern
-        else [(0, value)]
-    )
-    for start, text in spans:
-        for item in ITEM.finditer(text):
-            word = item.group(0).strip().strip("`").strip()
-            if word:
-                yield word, lines[value.count("\n", 0, start + item.start())]
-
-
 def based_on(found):
     """(word, line number) of each fact a decision's *Based on* names: an item of its own, the
     items joined by ` · `, that is an identifier alone; and, in the old form, an identifier with
@@ -309,54 +284,6 @@ def unquoted(found, name):
         start += len(piece) + 1
 
 
-def binding(body):
-    """The binding sentences of an entry, as paragraphs: the lines before its first field, or
-    before its *Rationale* or *Rejected*, cut into paragraphs at blank lines, each with every run of
-    spaces and line breaks made one space and its ends trimmed."""
-    paragraphs, current = [], []
-    for _, line in body:
-        if FIELD.match(line) or line.startswith(("*Rationale:*", "*Rejected:*")):
-            break
-        if line.strip():
-            current.append(line)
-        elif current:
-            paragraphs.append(" ".join(" ".join(current).split()))
-            current = []
-    if current:
-        paragraphs.append(" ".join(" ".join(current).split()))
-    return paragraphs
-
-
-def begins_sentence(paragraph, start):
-    """Whether a sentence of the paragraph begins at `start`: at the start of the paragraph, or after
-    a full stop and a space, the full stop standing outside a passage between quotation marks."""
-    if start == 0:
-        return True
-    stop = start - 2
-    if paragraph[stop:start] != ". ":
-        return False
-    return not any(match.start() <= stop < match.end() for match in QUOTED.finditer(paragraph))
-
-
-def table(lines, title):
-    """(line number, cells) of each row of the table under `## title`, header and separator
-    row left out, the header's cells first as row 0."""
-    rows, inside = [], False
-    for number, line in enumerate(lines, start=1):
-        if line.startswith("#"):
-            inside = line.strip() == "## " + title
-        elif inside and line.strip().startswith("|"):
-            cells = [cell.strip().strip("`").strip() for cell in line.strip().strip("|").split("|")]
-            if not all(re.fullmatch(r":?-+:?", cell) for cell in cells):
-                rows.append((number, cells))
-    return rows
-
-
-def items(value):
-    """The items of a list joined by ` · ` or `, `, over its lines."""
-    return [item.strip().strip("`").strip() for item in re.split(r"[·,\n]", value) if item.strip()]
-
-
 def cited_names(lines):
     """The identifiers that the lines `invariant: <identifier>` of a file cite, each once."""
     names = set()
@@ -383,6 +310,19 @@ def invariant_entries(lines):
             continue
         found.setdefault(match.group(1), (number, " ".join(binding(body)), entry_fields))
     return found
+
+
+def excess(paragraph):
+    """The measures of a paragraph of binding sentences that stand over their limits, each as
+    `4 sentences (at most 3)` or `301 words (at most 300)`. A sentence begins as `begins_sentence`
+    gives it; a word is a run of characters between spaces."""
+    stops = re.finditer(r"\. ", paragraph)
+    sentences = 1 + sum(begins_sentence(paragraph, stop.end()) for stop in stops)
+    measures = (
+        (sentences, "sentences", SENTENCE_LIMIT),
+        (len(paragraph.split()), "words", WORD_LIMIT),
+    )
+    return ["%d %s (at most %d)" % (n, name, limit) for n, name, limit in measures if n > limit]
 
 
 class Foundation:
@@ -773,9 +713,9 @@ class Foundation:
                     "no readable %s, so nothing of it was compared" % path,
                 )
 
-    def base_sentences(self):
-        """{number: the binding sentences, normalised} of each unversioned entry of the log at the
-        base, or None where the base or its log is unknown."""
+    def base_paragraphs(self):
+        """{number: the paragraphs of the binding sentences, normalised} of each unversioned entry
+        of the log at the base, or None where the base or its log is unknown."""
         lines = self.base_files.get(DECISIONS)
         if lines is None or not self.prefix:
             return None
@@ -783,8 +723,13 @@ class Foundation:
         for _, heading, body in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+) — " % re.escape(self.prefix), heading)
             if match:
-                found[int(match.group(1))] = " ".join(binding(body))
+                found[int(match.group(1))] = binding(body)
         return found
+
+    def base_sentences(self):
+        """The same, each entry's paragraphs joined into one text."""
+        paragraphs = self.base_paragraphs()
+        return None if paragraphs is None else {k: " ".join(v) for k, v in paragraphs.items()}
 
     def held_by_pair(self, value):
         """Whether a *Verification* holds a line that begins `- complies:` and one that begins
@@ -833,6 +778,34 @@ class Foundation:
                 self.report.note(
                     DECISIONS, self.headings[key], "`%s` is held by nothing: %s" % (label, nothing)
                 )
+
+    def check_length(self):
+        """Report each paragraph of the binding sentences of a decision over the limits of
+        SENTENCE_LIMIT and WORD_LIMIT, and the binding sentences of a decision over ENTRY_LIMIT
+        words in all (WAY-05). In a decision that the change adds, or whose paragraphs differ from
+        those at the base, it is an error at the heading; in any other it is listed. A decision is
+        changed here by its words or its division into paragraphs."""
+        before = self.base_paragraphs()
+        for key, body in sorted(self.bodies.items()):
+            paragraphs = binding(body)
+            changed = before is not None and before.get(key) != paragraphs
+            found = [
+                "paragraph %d of its binding sentences has %s" % (number, " and ".join(over))
+                for number, paragraph in enumerate(paragraphs, start=1)
+                if (over := excess(paragraph))
+            ]
+            words = sum(len(paragraph.split()) for paragraph in paragraphs)
+            if words > ENTRY_LIMIT:
+                found.append(
+                    "its binding sentences have %d words in all (at most %d)" % (words, ENTRY_LIMIT)
+                )
+            label = "`%s-%02d`" % (self.prefix, key)
+            for what in found:
+                if changed:
+                    message = "%s is added or changed by this change: %s" % (label, what)
+                    self.report.error(DECISIONS, self.headings[key], message)
+                else:
+                    self.report.note(DECISIONS, self.headings[key], "%s: %s" % (label, what))
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
@@ -1110,6 +1083,7 @@ def run(root, skip_test_citations=False):
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
     foundation.check_held()
+    foundation.check_length()
     foundation.list_invariants(tracked)
     if not skip_test_citations:
         foundation.check_test_citations()
