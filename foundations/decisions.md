@@ -684,16 +684,16 @@ rather than an invariant, a rule of a plan or a rule of a skill.
 A decision entry opens with one to three binding sentences that answer its question — in the present
 tense, describing a state that is to be true, concrete enough to check — and one paragraph of one to
 three binding sentences for each part of another question that it answers, and may carry a further
-such paragraph for a part of its own question, no paragraph of binding sentences running past 300
-words and the binding sentences of one decision together not running past 600, followed by fields a
-script or an agent reads, then rationale and rejected options in prose, which, where the entry's
-author writes it rather than quotes a source, names no file, script or count — a count being how
-many files, tests or entries of its foundation the product holds; a measurement the choice rests on
-may stand, with what was measured and under which conditions, never as a general bound — nor what
-the process's own tools do or lack today, and does not tell how the decision was reached. A field
-stays in the template only while someone or something reads it, and what a decision forces on later
-work stands in a binding sentence or a field, never in prose. An example in `elements/decisions/`
-names a decision of the log by its number instead of copying it.
+such paragraph for each part of its own question that it sets apart, no paragraph of binding
+sentences running past 300 words and the binding sentences of one decision together not running past
+600, followed by fields a script or an agent reads, then rationale and rejected options in prose,
+which, where the entry's author writes it rather than quotes a source, names no file, script or
+count — a count being how many files, tests or entries of its foundation the product holds; a
+measurement the choice rests on may stand, with what was measured and under which conditions, never
+as a general bound — nor what the process's own tools do or lack today, and does not tell how the
+decision was reached. A field stays in the template only while someone or something reads it, and
+what a decision forces on later work stands in a binding sentence or a field, never in prose. An
+example in `elements/decisions/` names a decision of the log by its number instead of copying it.
 
 The check of the foundation reports as an error a paragraph of binding sentences that runs past
 three sentences or past 300 words, or binding sentences that together run past 600 words, in a

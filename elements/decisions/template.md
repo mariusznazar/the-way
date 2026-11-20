@@ -28,9 +28,12 @@ particular to a decision (WAY-35).
 
 <1–3 binding sentences, at most 300 words, that answer the question>
 
-<1–3 binding sentences, at most 300 words, for a part of another question this entry answers or for
-a part of the question of the heading, one paragraph for each such part; none where there is no
-such part; all the binding sentences together at most 600 words>
+<1–3 binding sentences, at most 300 words, for a part of another question this entry answers, one
+paragraph for each such part; none where there is no such part>
+
+<optionally 1–3 binding sentences, at most 300 words, for a part of the question of the heading that
+the entry sets apart, one paragraph for each such part; all the binding sentences together at most
+600 words>
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
@@ -132,10 +135,11 @@ A field stays in the template only while someone or something reads it (WAY-05).
 
 - One to three sentences, in at most 300 words, answer the question of the heading, in the first
   paragraph under it. A part of another question that the entry answers, which cannot change without
-  the entry (WAY-19), has its own paragraph after that one, one paragraph for each part. A part of
-  the entry's own question, the question of its heading, may also have a paragraph of its own after
-  the first. Each such paragraph has one to three sentences and at most 300 words, and the binding
-  sentences of one decision, all their paragraphs together, have at most 600 words (WAY-05).
+  the entry (WAY-19), has its own paragraph after that one, one paragraph for each part. Each part
+  of the entry's own question, the question of its heading, that the entry sets apart may also have
+  a paragraph of its own after the first. Each such paragraph has one to three sentences and at most
+  300 words, no limit stands on the number of paragraphs, and the binding sentences of one decision,
+  all their paragraphs together, have at most 600 words (WAY-05).
 - `foundation_check.py` counts the limits of a paragraph and the limit of all the binding sentences
   together in each decision that a change adds or whose binding sentences it alters, a different
   division into paragraphs included, and reports an excess as an error; an older entry over a limit
