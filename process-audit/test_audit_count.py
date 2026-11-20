@@ -472,7 +472,7 @@ class ProcessPin(AuditCountCase):
         self.assertIn("no line `Process pin`", unknown[0][3])
 
     def test_a_record_that_lacks_every_line_and_item_the_count_reads_is_of_an_earlier_form(self):
-        # decision: WAY-344 "Where the command that counts the audit reads a cycle's record that lacks"
+        # decision: WAY-416 "Where the command that counts the audit reads a cycle's record that lacks"
         # The record of a product with none of its items and no pin, and the record of a cycle of the
         # way itself with neither the pin nor the target line: no `Error:` line, exit code 0 (asserted
         # below), and for each line or item a reason that names it.
@@ -564,7 +564,7 @@ class Remarks(AuditCountCase):
 
 class Times(AuditCountCase):
     # The table of tokens by model of the older form, so that a file read for its times is no file
-    # that lacks the section and the table (WAY-344).
+    # that lacks the section and the table (WAY-416).
     TABLE = (
         "\n| Model | Total tokens | Input | Cached input | Output |\n|---|---|---|---|---|\n"
         "| model-a | 110 | 100 | 0 | 10 |\n"
@@ -1035,8 +1035,8 @@ class Locations(AuditCountCase):
         )
 
     def test_the_way_with_no_repository_key_is_the_checkout_the_script_lies_in(self):
-        # decision: WAY-344 "Where the locations file has no key `repository` under `the-way`"
-        # The key `repository` under `the-way` is no missing field (WAY-344): the count takes
+        # decision: WAY-416 "Where the locations file has no key `repository` under `the-way`"
+        # The key `repository` under `the-way` is no missing field (WAY-416): the count takes
         # the checkout this script lies in, so a pin of a commit of that checkout is resolved there.
         own = (
             subprocess.run(
@@ -1539,7 +1539,7 @@ class Cost(AuditCountCase):
         self.assertTrue(any("no price for model `model-c`" in why for why in reasons), reasons)
 
     def test_stages_md_without_the_section_is_priced_from_the_table_of_tokens_by_model(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         # Worked by hand in millionths of a dollar, at model-a 2 / 1 / 10 and model-b 4 / 0.5 / 20:
         # model-a is (3000 - 1000) * 2 + 1000 * 1 + 300 * 10 = 8000; model-b is (500 - 100) * 4
         # + 100 * 0.5 + 50 * 20 = 2650. The total is 10650.
@@ -2033,7 +2033,7 @@ NEWER_COLUMNS = [
 
 class StagesForms(AuditCountCase):
     """The reading of `stages.md` by its form, and a field the form needs that the file lacks
-    (WAY-344, as the settlement 6 of the task puts it for the count of the audit): the cost or the
+    (WAY-416, as the settlement 6 of the task puts it for the count of the audit): the cost or the
     time that needs it is unknown, the result is written, and the run ends with exit code 1 and an
     `Error:` line that names the file and the field."""
 
@@ -2088,7 +2088,7 @@ class StagesForms(AuditCountCase):
             self.assertTrue(any(field in reason for reason in reasons), (field, reasons))
 
     def test_a_column_of_the_newer_table_that_the_file_lacks_is_a_missing_field(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         for column in NEWER_COLUMNS:
             with self.subTest(column):
                 columns = [name for name in NEWER_COLUMNS if name != column]
@@ -2114,12 +2114,12 @@ class StagesForms(AuditCountCase):
         )
 
     def test_a_heading_with_no_table_at_all_misses_the_table(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         done = self.count(self.newer(table=False))
         self.assert_missing(done, [f"table of the section {SECTION}"])
 
     def test_a_column_of_the_older_table_that_the_file_lacks_is_a_missing_field(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         for column in ("Input", "Cached input", "Output"):
             with self.subTest(column):
                 names = ["Model", "Total tokens", "Input", "Cached input", "Output"]
@@ -2131,7 +2131,7 @@ class StagesForms(AuditCountCase):
                 )
 
     def test_a_file_with_neither_the_section_nor_the_table_misses_both(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         for label, stages in (
             ("only times", "# Stages\n\n" + TIME_LINES),
             (
@@ -2145,7 +2145,7 @@ class StagesForms(AuditCountCase):
                 self.assert_missing(done, [f"section {SECTION}", "table with the first cell Model"])
 
     def test_a_time_line_without_the_other_is_a_missing_field(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         cases = (
             (
                 "the wait",
@@ -2169,7 +2169,7 @@ class StagesForms(AuditCountCase):
                 self.assertEqual(sorted([known, "unknown"]), sorted(both))
 
     def test_neither_time_line_is_the_earlier_form_and_no_missing_field(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         done = self.count(
             older_stages(
                 older_row("model-a", 1000, 0, 100),
@@ -2185,14 +2185,14 @@ class StagesForms(AuditCountCase):
         )
 
     def test_the_column_files_named_is_never_a_missing_field(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         done = self.count(self.newer())
         self.assertEqual(0, done.returncode, done.stderr)
         self.assertNotIn(b"Error:", done.stderr)
         self.assertEqual("0.003000", self.rows("Cost")[0][3])
 
     def test_a_table_with_neither_write_column_is_the_earlier_form_and_misses_nothing(self):
-        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        # decision: WAY-416 "Where a stage report has neither of the two columns"
         # With and without the column *Files named*: the cost is the one the rows gave before the
         # write columns stood in the form, the run ends with exit code 0, and no `Error:` line and
         # no value unknown is added for the columns that were never there.
@@ -2216,7 +2216,7 @@ class StagesForms(AuditCountCase):
                 )
 
     def test_a_table_with_one_write_column_and_not_the_other_misses_the_other(self):
-        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        # decision: WAY-416 "Where a stage report has neither of the two columns"
         # The cost is unknown with the reason, the result is written, the run ends with exit code 1
         # and one `Error:` line names `stages.md` and the column that is missing.
         named = NEWER_COLUMNS + ["Files named"]
@@ -2232,7 +2232,7 @@ class StagesForms(AuditCountCase):
                 self.assert_missing(done, [field])
 
     def test_one_write_column_is_missing_whatever_else_stands_in_the_header(self):
-        # decision: WAY-344 "Where a stage report has neither of the two columns"
+        # decision: WAY-416 "Where a stage report has neither of the two columns"
         first, second = WRITE_COLUMNS
         for label, columns, absent in (
             ("with no files named", NEWER_COLUMNS + [first], second),
@@ -2379,7 +2379,7 @@ def gate_file(table=GATE_TABLE, rows="") -> str:
 
 class MeasuresCase(AuditCountCase):
     """The two files of a cycle's record the count reads: a copy holding
-    neither is an earlier form, and a file lacking a field it needs is an error (WAY-344)."""
+    neither is an earlier form, and a file lacking a field it needs is an error (WAY-416)."""
 
     def count(self, files, folder="a-task"):
         product = self.repository()
@@ -2537,7 +2537,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_measures_file_without_a_label_gives_every_value_unknown_and_exits_one(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
         done, added = self.count({MEASURES: measures_file(values)})
         self.assert_missing(done, MEASURES, "Calls of subagents")
@@ -2630,7 +2630,7 @@ class MechanismMeasures(MeasuresCase):
         self.assertEqual("", self.reasons_of(self.rows("Unknown values"), "Mechanism measures"))
 
     def test_a_field_missing_from_the_file_of_a_changed_tool_is_not_read_and_ends_no_run(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         # The values of that file are unknown for the change of the tool, so no field of it is read
         # as missing and the run ends with exit code 0.
         values = [pair for pair in MEASURE_VALUES if pair[0] != "Calls of subagents"]
@@ -2748,7 +2748,7 @@ class GateRunsMeasures(MeasuresCase):
         self.assert_measures_stand(self.cycles()[0]["Record"])
 
     def test_a_gate_file_without_a_column_is_a_missing_field_and_exits_one(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         table = (
             "| Started (UTC) | Total seconds | Other gate runs at the same time | Directory "
             "| Directory seconds |\n| --- | --- | --- | --- | --- |\n"
@@ -2758,13 +2758,13 @@ class GateRunsMeasures(MeasuresCase):
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_a_gate_file_without_a_table_is_a_missing_field_and_exits_one(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         done, _ = self.count({GATE: gate_file(table="")})
         self.assert_missing(done, GATE, "table of the runs")
         self.assertEqual([], self.rows("Gate runs"))
 
     def test_an_empty_gate_file_is_a_missing_field_and_not_an_empty_list_of_runs(self):
-        # decision: WAY-344 "The rule binds a script that a change adds and, in a script"
+        # decision: WAY-416 "The command that counts the audit, in a file of a cycle's record"
         # An empty file holds no table: the absence of the table is named, never read as no run.
         done, _ = self.count({GATE: ""})
         self.assert_missing(done, GATE, "table of the runs")
@@ -4006,7 +4006,7 @@ class RegisterCount(AuditCountCase):
         )
 
     def test_a_table_of_costs_that_lacks_a_level_is_treated_as_the_table_of_weights_is(self):
-        # decision: WAY-344 "The command that counts the audit, where a table of weights"
+        # decision: WAY-416 "The command that counts the audit, where a table of weights"
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
         lines = TEMPLATE.splitlines(keepends=True)
@@ -4068,7 +4068,7 @@ class RegisterCount(AuditCountCase):
             self.assertEqual(b"", done.stderr)
 
     def test_a_table_of_weights_that_lacks_a_level_names_the_level(self):
-        # decision: WAY-344 "The command that counts the audit, where a table of weights"
+        # decision: WAY-416 "The command that counts the audit, where a table of weights"
         product = self.repository()
         added, _ = product.cycle("a-task", {"cycle.md": record()})
         lines = TEMPLATE.splitlines(keepends=True)
@@ -4194,7 +4194,7 @@ class Run(AuditCountCase):
         )
 
     def test_the_way_without_a_repository_key_is_this_checkout(self):
-        # decision: WAY-344 "Where the locations file has no key `repository` under `the-way`"
+        # decision: WAY-416 "Where the locations file has no key `repository` under `the-way`"
         # The script lies in a checkout built here: a copy of it with the files it reads beside it,
         # and a history that holds one cycle, so that the cycles it counts say whose history it read.
         # Every module of process-audit/ that is not a test is copied, as found when the test runs,

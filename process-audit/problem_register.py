@@ -4,7 +4,7 @@ The register of problems the user keeps (`process-audit/problem_register.md` is 
 as untrusted input: the problem and the register it fills (`Problem`, `Register`), the checks of
 the rows of its tables and of the tables of levels, and the reading of the file (`read_register`),
 as `process-audit/audit_count.py` counts the problems against the cycles (WAY-330, WAY-344,
-WAY-48). It is imported, never run, and runs nothing when imported. Standard library only.
+WAY-416, WAY-48). It is imported, never run, and runs nothing when imported. Standard library only.
 """
 
 from __future__ import annotations
@@ -200,7 +200,7 @@ def check_levels(
 ) -> None:
     """Refuse the rows of a table of levels that `check` refuses, and where the table does not name
     each of its levels once, add an `Error:` of the register that names the level it lacks or
-    writes twice (WAY-344). The result is still written: what depends on the table is unknown."""
+    writes twice (WAY-416). The result is still written: what depends on the table is unknown."""
     named_rows(register, title, rows, 2, check)
     fault = level_faults(rows, levels)
     if fault is not None:

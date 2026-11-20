@@ -878,8 +878,9 @@ merged each change (WAY-14); a field for an entry's topic — nothing reads it (
 
 A number stands for the question a decision answers, carries the product's prefix and is given
 in the order entries are written; a new question gets the next free number, a question independent
-of every existing entry included, while a part of the question an existing entry answers is a
-sentence of that entry where it cannot change without changing that entry. A new answer to a
+of every existing entry included, while a part of another question that an existing entry
+answers, or a part of its own question that it sets apart, is a sentence of that entry where it
+cannot change without changing that entry. A new answer to a
 question the log holds rewrites that question's entry. When a new decision answers a question that
 an older one answered in passing, the sentence moves to the new decision, and the older one loses it
 in the same change.
@@ -1665,7 +1666,9 @@ work names no file yet, from the responsibilities it changes; finds by a touched
 the decisions whose *Scope* names it and the invariants whose *Part* names it or `every`, and adds
 the invariants a test the work alters cites, the decisions whose sentence such a test holds by a
 line `decision:`, the decisions the task's *Decisions in play* or the work's source names, the
-touched parts' entries of the map and the entries these link to as far as the work needs. Of the
+touched parts' entries of the map and the entries these link to as far as the work needs.
+
+Of the
 decisions it finds by *Scope*, by a line `decision:` or as the task or the work's source names
 them, whoever selects reads the index and opens whole only the decisions the work changes, goes
 against or proposes another answer to — that one with its rejected options — those the task or the
@@ -1689,7 +1692,7 @@ place of those found by *Scope* in the selection whose index it reads, and it ru
 questions alone of the decisions outside those sections whose *Scope* names a touched part and opens
 whole each whose question points to a bearing on the work. In a log without topical sections the
 decisions are selected by the parts the work touches, and their index takes the place of reading
-each of them whole, the decisions the first paragraph names being opened whole as it gives.
+each of them whole, the decisions the second paragraph names being opened whole as it gives.
 
 Outside the task cycle the agent doing the work selects its own reading, while in the task cycle
 the orchestrator selects for its own judgments and for each handoff, which names the foundation
@@ -2961,40 +2964,20 @@ field the script needs — a field being any named thing the script looks for da
 section heading, a row label, a table column or a JSON key — and where a field is missing or stands
 under another name the script ends with an error that names it, never guessing and never reading the
 absence as an empty value. The rule binds a script that a change adds and, in a script that a change
-changes, the whole reading of each file whose way of reading the change reworks — every field of that
-file, no other file and no other part of the script — and a missing field ends the script with exit
-code 2 and a message that names the file and the field, except that a script whose purpose is to
-check the form of a file reports a missing field whose presence it checks as a finding of its list,
-with exit code 1, and except that the command that counts the audit, in a file of a cycle's record
-that it reads from git history, gives the values that need a missing field as unknown, writes its
-result and ends with exit code 1 and a line `Error:` that names the file and the field — a field
-that an earlier form of the file never had being no missing field where the command reads the file
-as that form, which it does for a stage report that has no heading of its detailed section and holds
-a table of tokens by model, for one that has neither of its two time lines, and for one whose
-detailed section has no column *Files named*, and which gives the values that need that field as
-unknown, with no line `Error:` and no change of the exit code; a file of a tool that the cycle's own
-change changed is not read for that cycle (WAY-339), so none of its fields is missing and it gives
-no line `Error:`. Where a script whose purpose is to check the form of a file reads a copy of the
-file from the commit the branch left the main branch from, a field it needs for a comparison and
-finds missing from that copy is listed by a line `listed:` that names the entry and the field, with
-no error and no change of the exit code. Each reading of a file that the rule covers has one test that gives the file
+changes, the whole reading of each file whose way of reading the change reworks — every field of
+that file, no other file and no other part of the script — and a missing field ends the script with
+exit code 2 and a message that names the file and the field, except that a script whose purpose is
+to check the form of a file reports a missing field whose presence it checks as a finding of its
+list, with exit code 1, and except that the command that counts the audit is bound by WAY-416 in the
+cases that decision gives, where it prevails over this decision.
+
+Where a script whose purpose is to check the form of a file reads a copy of the file from the commit
+the branch left the main branch from, a field it needs for a comparison and finds missing from that
+copy is listed by a line `listed:` that names the entry and the field, with no error and no change
+of the exit code. Each reading of a file that the rule covers has one test that gives the file
 without one of the fields it needs and asserts the failure that names that field, the review of the
 change answering for the other fields; the *Scope* names every part of the-way's part map, and a
-change that adds a part to the part map adds it to this *Scope*. The command that counts the audit,
-where a table of weights or a table of the costs of an occurrence in the register of problems lacks
-one of its levels, writes its result, gives the values that depend on the table as unknown and ends
-with exit code 1 and a line `Error:` that names the missing level. Where a stage report has neither
-of the two columns of the cache writes in its detailed section, that command reads the report as an
-earlier form too, with no line `Error:`, giving the cost with the writes standing inside *Input* and
-priced as input, an approximation, and no value unknown for the missing columns, while a stage
-report that has one of the two columns and not the other has a missing field, with the line
-`Error:`. Where the command that counts the audit reads a cycle's record that lacks a line or an
-item it reads of it — the line `Process pin` or `Target branch and base`, or the item `Process
-remarks on the-way`, `Discarded attempt`, `Review rounds`, `Plan` or `Slices returned too large` — the
-record is of an earlier form and no field is missing: the command gives the values that need it as
-unknown, with a reason that names the line or the item, no line `Error:` and no change of the exit
-code. Where the locations file has no key `repository` under `the-way`, no field is missing and
-that command takes the checkout in which its script lies.
+change that adds a part to the part map adds it to this *Scope*.
 
 - **Scope:** decisions, part-map, relation-model, invariants, glossary, environment-facts,
   elements-common, project-level, task-cycle, foundation-review, gate, repository,
@@ -3004,25 +2987,11 @@ that command takes the checkout in which its script lies.
 - **Verification:** tests: that a field missing from a Claude Code transcript, which the script of
   the stages reads, or from the definition of an agent type, which the generator of the copies
   reads, ends the script with exit code 2 and a message that names the field, and that each such
-  reading has a test that gives the file without a field; that the command that counts the audit, at
-  a field missing in the file of the measures, the file of the gate times or a stage report, gives
-  the values that need it as unknown, writes its result and ends with exit code 1 and a line
-  `Error:` that names the file and the field; that it reads a stage report of an earlier form, one
-  with no heading of its detailed section, with neither time line, with no column *Files named* or
-  with neither column of the cache writes, with no line `Error:` and gives the values that need what
-  that form never had as unknown, and the cost of a form with no columns of the cache writes with
-  the writes priced as input; that it reads a report that has one time line or one of the two cache
-  write columns and not the other as a missing field; that it reads a cycle's record that lacks the
-  line `Process pin` or `Target branch and base` or an item it reads of it, with no line `Error:` and
-  no change of the exit code, and gives the values that need it as unknown with a reason that names
-  the line or the item; that a table of weights or of the costs of an
-  occurrence which lacks a level gives the result, unknown values and the line `Error:` that names
-  the level; that a locations file with no key `repository` under `the-way` gives the checkout in
-  which the script lies and no line `Error:`; that the check of the foundation lists an invariant
-  whose sentence the change reworded and whose copy at the commit the branch left lacks its *Method*
-  or its *Part* by one line `listed:` that names the invariant and the missing field, with no error
-  and no change of the exit code; and that the file of a tool the cycle's own change changed is not
-  read. An agent compares a change with the part no test holds:
+  reading has a test that gives the file without a field; and that the check of the foundation lists
+  an invariant whose sentence the change reworded and whose copy at the commit the branch left lacks
+  its *Method* or its *Part* by one line `listed:` that names the invariant and the missing field,
+  with no error and no change of the exit code. An agent compares a change with the part no test
+  holds:
   - complies: a new script reads a JSON file in which the key `due` of the issues has become
     `due_date`, and ends with exit code 2 and a message naming the file and `issues.due`, and its
     test gives the file without that key and asserts that the message names it; a change that
@@ -3043,48 +3012,22 @@ that command takes the checkout in which its script lies.
 
 *Rationale:* a script that reads a file an agent writes meets a changed format as an absent field,
 and an absent field read as a value — no items, no date, no finding — lets the check the script
-exists for pass with no error to show it, the same quiet pass that WAY-38 keeps out of the check of a
-product's commands. The coding guidelines of the-way point to this rule for a missing field of a file
-a script reads and repeat none of it (WAY-379), so the requirement stands once, in the-way's own log.
-An error naming the field lets the author of the change or the cycle repair the file or the script at
-once; exit code 2 says the
-file was not read, apart from a listing of findings, which a caller carries out as findings, and
-apart from the count of the audit, whose file in the history of git no later change can mend and
-whose run, at night with no human present, would otherwise leave the session of the audit with no
-result at all, the figures of the register of problems included; the count writes what it could read,
-leaves unknown what the file does not give and ends with the error that names the field, so that the
-error is seen and the rest of the result is not lost. A field that an earlier form of a file never
-had is no loss of the file but the way that form was written, and the count of the audit reads the
-files of cycles of every form; read as missing, it would end every count in exit code 1 for as long
-as such files are counted, and an exit code that every run gives carries no signal. The record of a
-cycle is such a file: a record lacks an item that the template gained after it was written, and it
-carries no sign that names its form, so every line and item the count reads of it is read as one an
-earlier form may lack. The rule covers
-the whole reading of a file a change reworks, so that the old reads of that file, which a change of
-format threatens most, are not left unchecked, and one test per reading, not one per field, keeps
-the cost of the check in proportion. The price: a change that reworks the reading of a file
-pays for the check of every field of that file; a stage report that has lost its two time lines, its
-detailed section while a table of tokens by model remains, the column *Files named* of that
-section, or the two columns of its cache writes, is read as the earlier form and gives unknown, or
-for the cache writes the cost as the approximation, where the rule alone would give an error; an
+exists for pass with no error to show it, the same quiet pass that WAY-38 keeps out of the check of
+a product's commands. The coding guidelines of the-way point to this rule for a missing field of a
+file a script reads and repeat none of it (WAY-379), so the requirement stands once, in the-way's
+own log. An error naming the field lets the author of the change or the cycle repair the file or the
+script at once; exit code 2 says the file was not read, apart from a listing of findings, which a
+caller carries out as findings. The rule covers the whole reading of a file a change reworks, so
+that the old reads of that file, which a change of format threatens most, are not left unchecked,
+and one test per reading, not one per field, keeps the cost of the check in proportion. The price: a
+change that reworks the reading of a file pays for the check of every field of that file; an
 existing script that no change touches stays as it is, so the rule protects new and changed readings
 first; and the review alone answers for the fields beyond the one each test gives up. Tests of a
 script's behaviour stand without an invariant, since WAY-12 concerns how a decision is checked. A
-table of the register of problems that lacks one of its levels leaves the rest of the register
-readable, so the count writes what it can read, gives unknown the values that depend on the table
-and names the missing level, and one misspelt level costs the session of the audit those values and
-not the whole result; a heading or a table that the register lacks leaves what depends on it
-unreadable and stays exit code 2. The key `repository` under `the-way` is the one key of the
-locations file that the count can do without: the checkout in which its script lies is the-way's
-own, so the lack of the key is a choice to read from it and no field lost. The exception is
-written for that key alone, since a rule that let a script read any field that has a default as
-optional would let the next author call any field optional. A stage report with neither column of
-the cache writes was written before the columns existed, and its cost is the approximation it has
-always been, so the count reads it as that; a report with one of the two columns has lost the other,
-which is the case the rule is for. A copy of a file at the commit the branch left is a file no
-change can mend, and what it lacks is a gap in what the check compares with, never a fault of the
-change; the check lists it, so that the reviewer learns that a reworded sentence was not compared,
-and ends with no error for a gap the change did not make.
+copy of a file at the commit the branch left is a file no change can mend, and what it lacks is a
+gap in what the check compares with, never a fault of the change; the check lists it, so that the
+reviewer learns that a reworded sentence was not compared, and ends with no error for a gap the
+change did not make.
 *Rejected:* the rule as a sentence of WAY-379 — WAY-379 settles whether the-way applies the template
 of the coding discipline, and this rule is a requirement, not an adoption or a departure; an agent
 that writes a script would look for rules in WAY-38 and the invariants `script-language`,
@@ -3093,36 +3036,26 @@ decision with an invariant whose *Part* is `every`, like `script-imports` — an
 something of every tracked script on every commit, so it needs an entry stating whether it holds
 today; without a review of every existing script any such entry is a guess, and marking it violated
 (WAY-51) would keep watch over new and changed scripts only while claiming a violation with no
-evidence; the whole script as what a changed script brings under the rule — a small fix grows into
-a review of every field the script reads, and the agent that reviews it has to read the whole script
+evidence; the whole script as what a changed script brings under the rule — a small fix grows into a
+review of every field the script reads, and the agent that reviews it has to read the whole script
 instead of the diff; only the readings of fields that the change adds or reworks — an existing
 script can stay checked by halves for good, and the old reads, which a change of format threatens
 most, stay unprotected; review alone with the test left to the choice of the cycle — an agent that
-reviews easily overlooks one unchecked field among many, and a later change that quietly removes
-the check breaks nothing; review and a test for every field — as many tests as fields, and for a
-file of a dozen fields the test costs more than the check, a work that falls on every change that
-reworks the reading of a file; exit code 1 always, a missing field as an item of the list — the
-orchestrator carries out a listing with exit code 1 as findings, and for the script that lists the
-process remarks every item goes into the remarks word for word (WAY-294), so a missing section in a
-report would become a process remark and the report would stay uncorrected, the same quiet pass the
-rule prevents; a new exit code, such as 3 — each skill that reads exit codes would have to be
-extended; exit code 2 with no result for the count of the audit — the count runs at night with no
-human present, so the session of the audit has no result, the numbers of the register of problems
-included, until someone mends the script; the exception for the stage report alone, the file of
-measures and the file of gate times keeping exit code 2 — a file of either kind from any old cycle
-that fits no form stops the whole weekly result; for a table of the register of problems that lacks
-a level, exit code 2 with the level named and no result — one misspelt level leaves the session of
-the audit without a result until the register is mended; for the key `repository` under
-`the-way`, exit code 2 — whoever has no key gets no result of the audit in the morning, and the
-intended return to the own checkout is gone; for the same key, a general exception for a field
-whose absence the description of a script allows with a default — a door by which the next author
-can call any field optional; for a generator of copies that shares its exit codes with another
-script, an exception written into this decision — the list of exceptions grows by a case with no
-reason beyond convenience, and the next script can copy it; for a field missing from the copy at the
-commit the branch left, an exception that leaves the invariant out with no word — a reworded
-sentence whose copy has a gap passes with no one told that it was not compared; the same case left
-as the cycle that wrote the check left it, with no sentence — the code departs from this decision
-and the departure returns at the next review.
+reviews easily overlooks one unchecked field among many, and a later change that quietly removes the
+check breaks nothing; review and a test for every field — as many tests as fields, and for a file of
+a dozen fields the test costs more than the check, a work that falls on every change that reworks
+the reading of a file; exit code 1 always, a missing field as an item of the list — the orchestrator
+carries out a listing with exit code 1 as findings, and for the script that lists the process
+remarks every item goes into the remarks word for word (WAY-294), so a missing section in a report
+would become a process remark and the report would stay uncorrected, the same quiet pass the rule
+prevents; a new exit code, such as 3 — each skill that reads exit codes would have to be extended;
+for a generator of copies that shares its exit codes with another script, an exception written into
+this decision — the list of exceptions grows by a case with no reason beyond convenience, and the
+next script can copy it; for a field missing from the copy at the commit the branch left, an
+exception that leaves the invariant out with no word — a reworded sentence whose copy has a gap
+passes with no one told that it was not compared; the same case left as the cycle that wrote the
+check left it, with no sentence — the code departs from this decision and the departure returns at
+the next review.
 
 ## Instruction files
 
@@ -3474,7 +3407,9 @@ uses since the step stood in the skill pass it by — also where no record exist
 one step or variant that is one instruction, which would otherwise stand in a file beside the skill,
 stays in `SKILL.md` where its pointer would stand, since the pointer is an instruction too; beyond
 that, a fragment's place follows from whether a use of the skill needs it at that step, never from
-the count of words or lines of the file. A fragment that some steps of the skill need, not all,
+the count of words or lines of the file.
+
+A fragment that some steps of the skill need, not all,
 stands by what it is: a rule of working that the agent has to keep during those steps stays in the
 skill's `SKILL.md`, and text the agent reads or consults, such as a procedure, a list or a template,
 stands in a file beside the skill that each of those steps names, a step after the first having that
@@ -4540,7 +4475,9 @@ preview of deployments; where the secrets lie and how they are rotated; rollback
 steps and what happens to the data; what the agent does and what the human does; how to read the
 logs; how long the record lives, between deployments too; and how a human learns of a failure.
 Beside the list it holds a guide to writing such a skill, with the deployment skill of loop2 as its
-first example, which binds nothing and which the check of the list points to. When a task's outcome
+first example, which binds nothing and which the check of the list points to.
+
+When a task's outcome
 deploys the product or changes how or where it runs, the-way's skill `refine-task` checks, while it
 refines the task, that the product has a deployment skill covering every item of the list, and where
 it has none or an item is missing, the task gains an item of its To do for that work or the human
@@ -5526,7 +5463,9 @@ glossary term, or an environment fact a candidate decision or invariant rests on
 that goes to another place those questions give — a skill or an instruction file, the guidelines of
 a discipline, or the data or code of the product — and a settlement that a current entry the
 refinement reads for the parts the task touches, or a projected entry the task carries, already
-states is no candidate. The task's cycle writes each kept row whole in the place its column gives,
+states is no candidate.
+
+The task's cycle writes each kept row whole in the place its column gives,
 in the same change as the code, in its foundation step, or in its return step where the foundation
 step missed it, one that no code makes true included, keeping its meaning and choosing its wording,
 and gives a decision written from a row as its rejected options only the ways not chosen that the
@@ -5711,7 +5650,9 @@ Project refinement resumes from the plan, task documents and one ignored convers
 at `.runs/project-refinement/<task-name>.md`, through which fresh parallel refiners, the answering
 agent and the project orchestrator take serialized turns on each file; the project orchestrator
 hands agents only its path and routing, never relays its contents, and each refiner ends its turn as
-`questions`, `waits for task <n>`, `ready for approval`, `plan change` or `obstacle`. Only a refiner
+`questions`, `waits for task <n>`, `ready for approval`, `plan change` or `obstacle`.
+
+Only a refiner
 changes the task document's body and transfers settled answers with their sources and the ways the
 human did not choose (WAY-134) into Questions to settle, and it writes besides what the project
 orchestrator's order asks of it: in the turn in which it first creates the task document, or in the
@@ -5725,7 +5666,9 @@ which is moving the line to ready and `ready for cycle`; the project orchestrato
 answers in conversations, owns ordinary plan updates and their log, brings the dependencies in the
 task lines in step with the plan when the plan's dependencies change, and after the human has
 accepted a complete task document, one document at a time, changes that document's Status line and
-moves the task's line to ready, making it already ready where none stands. Agent turns, questions
+moves the task's line to ready, making it already ready where none stands.
+
+Agent turns, questions
 and explicit waits keep the plan task to refine, a presented human package or ready for approval
 makes it waiting for human, and final acceptance makes both document and plan ready for cycle and
 removes only that conversation after all settled answers, their sources and the ways not chosen
@@ -6281,7 +6224,9 @@ report without code, its attempt is discarded with the foundation entries it wro
 divides the change. Every other change gets a plan written with the-way's skill `plan-task`, which
 divides it into slices and holds no code; the slices are made one after another in the plan's
 order, each by an agent of its own, and a slice that proves too large for it is discarded with its
-code and goes back to the planner to be split. A one-author change is reviewed by an agent that
+code and goes back to the planner to be split.
+
+A one-author change is reviewed by an agent that
 did not make it; of a plan's slices, only one that touches a trust boundary or holds an operation
 that cannot be undone, as the plan marks it, gets a review of its own by such an agent, and every
 other slice goes on after the orchestrator's mechanical check and its own checks; a change of more
@@ -6382,6 +6327,7 @@ and works without opening the plan; and since only the orchestrator reads `cycle
 handoff tells the agent that `cycle.md` and the other files of the cycle's record directory — other
 agents' handoffs, reports and findings — are not its to read unless its handoff names them, and an
 answer or choice that binds an agent goes into that agent's handoff or the message that resumes it.
+
 The orchestrator records the event and relevant choices before dependent dispatch and reads
 authoritative sources and relevant report evidence before deciding a question, settling a finding,
 accepting a foundation meaning or verifying disputed or incomplete evidence, while routine
@@ -7740,8 +7686,9 @@ a product's logging scope, a listing of the remarks check that the cycle holds w
 error of the form check that the cycle holds wrong, the pairs that give the cause of a
 correction after the request opened, each descriptive `TODO` in an
 invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* that stands on
-the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document — in
-three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
+the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document.
+
+The section stands in three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
 order: what the request cannot go on without, an answer or an action of the human; what the cycle did
 not do or did not fix and can still be done in this request, which the human has done there, makes a
 task of or lets through; and what the cycle did within its authority, which the human accepts by
@@ -7904,7 +7851,9 @@ through the running product and its screenshots included, by whether the product
 working with the process will feel it, and restates each that will be felt, in plain words, in the
 section for the human's decisions, under *Fix or let through*, as one question with the answers to
 fix it in this request, to make a task of it or to let it through, which one answer may settle for
-the whole list. The answer to fix it runs a correction with one fix and one review of that fix; the
+the whole list.
+
+The answer to fix it runs a correction with one fix and one review of that fix; the
 same answer is offered for a step or a check the cycle skipped, a proposal of the task's own
 sections not applied, an incomplete reading of the review of the whole change and something an entry
 stands on that the foundation does not hold yet, and runs the step or the check, applies the
@@ -8644,7 +8593,9 @@ how a cycle's agents use context and the prompt cache and the times of the gate 
 their own: a new series of those starts only with a change of the script that counts them or of the
 script that records them, and, for the times of the gate, also with a change of the test runner of
 the process, whose output gives the time of each directory; no change of the instructions of the
-cycle, the reviewer's and the author's included, starts one. The audit compares each measure only
+cycle, the reviewer's and the author's included, starts one.
+
+The audit compares each measure only
 within a series of its own kind, and judges a version of the process by the cycles that ran on it,
 never one week against another; and where a cycle's own change changes a tool that measures — the
 script that measures the cost, the script that counts the measures of context and cache use, the
@@ -8868,7 +8819,9 @@ The reason of a discarded attempt stands at the start of the record's item *Disc
 sub-item for each attempt; the item reads `none` where no attempt was discarded. The audit of the
 process takes from this item, for its answer whether a contradiction with the settlements came out
 only after the code was written, the markers alone and never the text of the item, so that an item
-that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown. Where
+that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown.
+
+Where
 the lines under the item are not sub-items at one indent alone — the first line a sub-item at that indent
 and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
 text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
@@ -8912,6 +8865,99 @@ unforeseen wording gives a false yes again, and the answer stays an inference fr
 rounds are not read by; leaving the reading as it is and adding a test that keeps the present
 behaviour as a known limit — the cheapest way, but the first discarded cycle described by such a
 sentence gives the false yes on which the human weighs whether the cycle needed a spec.
+
+### WAY-416 — What does the command that counts the audit do when a file it reads lacks a field it needs?
+
+For the command that counts the audit this decision prevails over WAY-344 in the cases that its
+sentences give, and in every other case WAY-344 binds that command. The command that counts the
+audit, in a file of a cycle's record that it reads from git history, gives the values that need a
+missing field as unknown, writes its result and ends with exit code 1 and a line `Error:` that names
+the file and the field — a field that an earlier form of the file never had being no missing field
+where the command reads the file as that form, which it does for a stage report that has no heading
+of its detailed section and holds a table of tokens by model, for one that has neither of its two
+time lines, and for one whose detailed section has no column *Files named*, and which gives the
+values that need that field as unknown, with no line `Error:` and no change of the exit code; a file
+of a tool that the cycle's own change changed is not read for that cycle (WAY-339), so none of its
+fields is missing and it gives no line `Error:`. The command that counts the audit, where a table of
+weights or a table of the costs of an occurrence in the register of problems lacks one of its
+levels, writes its result, gives the values that depend on the table as unknown and ends with exit
+code 1 and a line `Error:` that names the missing level.
+
+Where a stage report has neither of the two columns of the cache writes in its detailed section,
+that command reads the report as an earlier form too, with no line `Error:`, giving the cost with
+the writes standing inside *Input* and priced as input, an approximation, and no value unknown for
+the missing columns, while a stage report that has one of the two columns and not the other has a
+missing field, with the line `Error:`. Where the command that counts the audit reads a cycle's
+record that lacks a line or an item it reads of it — the line `Process pin` or `Target branch and
+base`, or the item `Process remarks on the-way`, `Discarded attempt`, `Review rounds`, `Plan` or
+`Slices returned too large` — the record is of an earlier form and no field is missing: the command
+gives the values that need it as unknown, with a reason that names the line or the item, no line
+`Error:` and no change of the exit code. Where the locations file has no key `repository` under
+`the-way`, no field is missing and that command takes the checkout in which its script lies.
+
+- **Scope:** process-audit, task-cycle
+- **Based on:** none
+- **Relations:** narrows WAY-344
+- **Verification:** tests: that the command that counts the audit, at a field missing in the file of
+  the measures, the file of the gate times or a stage report, gives the values that need it as
+  unknown, writes its result and ends with exit code 1 and a line `Error:` that names the file and
+  the field; that it reads a stage report of an earlier form, one with no heading of its detailed
+  section, with neither time line, with no column *Files named* or with neither column of the cache
+  writes, with no line `Error:` and gives the values that need what that form never had as unknown,
+  and the cost of a form with no columns of the cache writes with the writes priced as input; that
+  it reads a report that has one time line or one of the two cache write columns and not the other
+  as a missing field; that it reads a cycle's record that lacks the line `Process pin` or `Target
+  branch and base` or an item it reads of it, with no line `Error:` and no change of the exit code,
+  and gives the values that need it as unknown with a reason that names the line or the item; that a
+  table of weights or of the costs of an occurrence which lacks a level gives the result, unknown
+  values and the line `Error:` that names the level; that a locations file with no key `repository`
+  under `the-way` gives the checkout in which the script lies and no line `Error:`; and that the
+  file of a tool the cycle's own change changed is not read.
+- **Origin:** none
+
+*Rationale:* the cases of the command that counts the audit grow with each change to that command,
+so they stand in a decision of their own: a change to one of them then changes this entry and leaves
+the general rule of WAY-344 as it is. Exit code 2 says the file was not read, apart from the count
+of the audit, whose file in the history of git no later change can mend and whose run, at night with
+no human present, would otherwise leave the session of the audit with no result at all, the figures
+of the register of problems included; the count writes what it could read, leaves unknown what the
+file does not give and ends with the error that names the field, so that the error is seen and the
+rest of the result is not lost. A field that an earlier form of a file never had is no loss of the
+file but the way that form was written, and the count of the audit reads the files of cycles of
+every form; read as missing, it would end every count in exit code 1 for as long as such files are
+counted, and an exit code that every run gives carries no signal. The record of a cycle is such a
+file: a record lacks an item that the template gained after it was written, and it carries no sign
+that names its form, so every line and item the count reads of it is read as one an earlier form may
+lack. The price: a stage report that has lost its two time lines, its detailed section while a table
+of tokens by model remains, the column *Files named* of that section, or the two columns of its
+cache writes, is read as the earlier form and gives unknown, or for the cache writes the cost as the
+approximation, where the rule alone would give an error. A table of the register of problems that
+lacks one of its levels leaves the rest of the register readable, so the count writes what it can
+read, gives unknown the values that depend on the table and names the missing level, and one
+misspelt level costs the session of the audit those values and not the whole result; a heading or a
+table that the register lacks leaves what depends on it unreadable and stays exit code 2. The key
+`repository` under `the-way` is the one key of the locations file that the count can do without: the
+checkout in which its script lies is the-way's own, so the lack of the key is a choice to read from
+it and no field lost. The exception is written for that key alone, since a rule that let a script
+read any field that has a default as optional would let the next author call any field optional. A
+stage report with neither column of the cache writes was written before the columns existed, and its
+cost is the approximation it has always been, so the count reads it as that; a report with one of
+the two columns has lost the other, which is the case the rule is for.
+*Rejected:* exit code 2 with no result for the count of the audit — the count runs at night with no
+human present, so the session of the audit has no result, the numbers of the register of problems
+included, until someone mends the script; the exception for the stage report alone, the file of
+measures and the file of gate times keeping exit code 2 — a file of either kind from any old cycle
+that fits no form stops the whole weekly result; for a table of the register of problems that lacks
+a level, exit code 2 with the level named and no result — one misspelt level leaves the session of
+the audit without a result until the register is mended; for the key `repository` under `the-way`,
+exit code 2 — whoever has no key gets no result of the audit in the morning, and the intended return
+to the own checkout is gone; for the same key, a general exception for a field whose absence the
+description of a script allows with a default — a door by which the next author can call any field
+optional; the cases of the command that counts the audit kept in WAY-344 and divided into paragraphs
+only — the entry goes on collecting the cases of that command, and two of its paragraphs would stand
+at the limit, so the next change that adds a case rebuilds the entry all the same; a decision for
+each case of the command that counts the audit — the cost of the division would be several times as
+large, and the cases do not change independently enough of one another to justify it.
 
 ## Product guidelines and their rules
 
@@ -11178,7 +11224,7 @@ command is passed on unchanged.
 `relation-model/fingerprint.py` is the exemplar of the kind `shared-module` of the-way's code, and
 importing a file of the kind runs nothing.
 
-- **Scope:** relation-model
+- **Scope:** relation-model, process-audit, task-cycle, elements-common
 - **Based on:** none
 - **Relations:** derives from WAY-379 · derives from WAY-198
 - **Verification:** invariants: shared-module-import-runs-nothing. For the designation, an agent

@@ -185,10 +185,10 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    remarks, and a record that lacks another line or item the count reads of it (the line `Process pin`
    or `Target branch and base`, the item *Discarded attempt*, *Review rounds*, *Plan* or *Slices
    returned too large*) gives `unknown` for the values that need it, with a reason that names it and
-   no `Error:` line (WAY-344); a `stages.md` with neither of its two time lines gives no times, and no error, as an
+   no `Error:` line (WAY-416); a `stages.md` with neither of its two time lines gives no times, and no error, as an
    earlier form does; a `stages.md` with neither the section of tokens by model nor the earlier
    form's table of tokens by model gives no cost, and an earlier form with that table gives the cost
-   from it. The forms of `stages.md` the count reads, each with what it lacks (WAY-344):
+   from it. The forms of `stages.md` the count reads, each with what it lacks (WAY-416):
    (a) the older table of tokens by model, with no detailed section: its cost is given, its cache
    writes priced as input (an approximation), and the share of the cost in fix rounds `unknown`,
    since that table gives no turns;
