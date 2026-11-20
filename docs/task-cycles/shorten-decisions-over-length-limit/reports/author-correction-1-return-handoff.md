@@ -1,9 +1,0 @@
-# Handoff — the return step after correction 1 (`make-change`, return step)
-
-You are the one author of this change, resumed, for the return step after correction 1. Same worktree, branch `task/shorten-decisions-over-length-limit`, head `711a146c` (your correction, reviewed `PASS 711a146c`). Same delegation: no full gate, commits by path, English messages.
-
-- Read `task-cycle/skill/return_step.md` whole, as you did for the first return step. Repeat only what the correction touches: the correction changed one bullet of `elements/decisions/template.md` ("Changing a decision"), nothing else.
-- Compare with the code and the files of the repository the entry the correction edits — the template's bullet on the numbering rule — and the entries it names or rests on: WAY-19, WAY-05, WAY-07, WAY-14, WAY-114, and the template's other sections that refer to a part of a question ("Binding sentences", "Questions" if it has them), the decisions skill's `elements/decisions/skill/` files that restate the numbering rule, and the part-map entry `decisions`. Correct in the same change whatever no longer matches; where nothing does, commit nothing.
-- Write no entry unless the step's rules call for one (a row the foundation step missed, a choice that binds after the merge, an environment fact, a glossary term); the correction wrote none.
-- Report: `.runs/task-cycles/shorten-decisions-over-length-limit/reports/author-correction-1-return-report.md`, in the form of your first return report (entries compared and what no longer matched, decisions, invariants, environment facts, glossary terms, part-map changes, projected entries and rows written, or `none`; checks with command and exit code; **Unread material**; **Searches not found or unclear**; working copies).
-- `cycle.md` and the other files of the record directory are not yours to read, except those named here.
