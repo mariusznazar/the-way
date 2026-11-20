@@ -112,7 +112,9 @@ the one `refs/remotes/origin/HEAD` names; where that does not exist, the local b
 that does not exist, `master`. The commit the branch left it from is `git merge-base HEAD` that
 branch (the `{fork-point}` of `elements/common/rules.md`); `fork_point` gives it and `at_commit`
 reads a file as that commit holds it, for the checks that compare the foundation with it; both
-stand in `foundation_source.py` beside this file. Where
+stand in `foundation_source.py` beside this file, as the readers of the text of an entry — `blocks`,
+`fields`, `located`, `binding`, `begins_sentence`, `table` and `items` — stand in
+`foundation_text.py`, which other scripts import through this file. Where
 there is no such branch or no merge base (no remote HEAD, no `main`, no `master`, a shallow history,
 no commit), the base is unknown, and so it is for a file the base lacks or git cannot give as UTF-8
 text: `foundations/decisions.md` or `foundations/invariants.md`, never read as an empty file. An
@@ -130,6 +132,17 @@ import sys
 import tempfile
 
 from foundation_source import at_commit, fork_point, git, read
+from foundation_text import (
+    FIELD,
+    QUOTED,
+    begins_sentence,
+    binding,
+    blocks,
+    fields,
+    items,
+    located,
+    table,
+)
 
 sys.dont_write_bytecode = True
 
@@ -163,10 +176,7 @@ CITATION = re.compile(
     r"^\s*(?:#|//|--|;|%|\*|/\*|<!--|REM\b)\s*(invariant|decision):(.*?)"
     r"(?:\*/|-->)?\s*$"
 )
-ITEM = re.compile(r"[^·,\n]+")
-FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
-QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 EMPTY = ("none", "TODO")
 # The value of a field that begins with the word `TODO`, with or without backticks.
 TODO_VALUE = re.compile(r"`?TODO(?![^\s`])")
@@ -218,53 +228,6 @@ class Report:
         self.listed.setdefault("%s: listed: %s" % (where, message), None)
 
 
-def blocks(lines, level):
-    """(line number, heading, [(line number, line)]) of each block a heading of a level opens."""
-    found, current = [], None
-    for number, line in enumerate(lines, start=1):
-        if line.startswith("#"):
-            current = [] if line.startswith(level) else None
-            if current is not None:
-                found.append((number, line, current))
-        elif current is not None:
-            current.append((number, line))
-    return found
-
-
-def fields(body):
-    """{name: (value, [line number of each line of the value])} of the fields `- **Name:**
-    value` of a block; a field's value goes on over the indented lines that follow it."""
-    found, current = {}, None
-    for number, line in body:
-        match = FIELD.match(line)
-        if match:
-            current = match.group(1) if match.group(1) not in found else None
-            if current:
-                found[current] = [(match.group(2) or "").strip(), [number]]
-        elif current and line.strip() and line[:1].isspace():
-            found[current][0] += "\n" + line.strip()
-            found[current][1].append(number)
-        else:
-            current = None
-    return {name: tuple(value) for name, value in found.items()}
-
-
-def located(found, name, pattern=None):
-    """(word, line number) of each item of a field's list joined by ` · ` or `, `, or of each
-    item inside what the first group of a pattern matches in the field's value."""
-    value, lines = found.get(name, ("", [0]))
-    spans = (
-        [(match.start(1), match.group(1)) for match in pattern.finditer(value)]
-        if pattern
-        else [(0, value)]
-    )
-    for start, text in spans:
-        for item in ITEM.finditer(text):
-            word = item.group(0).strip().strip("`").strip()
-            if word:
-                yield word, lines[value.count("\n", 0, start + item.start())]
-
-
 def based_on(found):
     """(word, line number) of each fact a decision's *Based on* names: an item of its own, the
     items joined by ` · `, that is an identifier alone; and, in the old form, an identifier with
@@ -307,54 +270,6 @@ def unquoted(found, name):
             for offset, text in enumerate(value[start : start + len(piece)].split("\n")):
                 yield lines[first + offset], text
         start += len(piece) + 1
-
-
-def binding(body):
-    """The binding sentences of an entry, as paragraphs: the lines before its first field, or
-    before its *Rationale* or *Rejected*, cut into paragraphs at blank lines, each with every run of
-    spaces and line breaks made one space and its ends trimmed."""
-    paragraphs, current = [], []
-    for _, line in body:
-        if FIELD.match(line) or line.startswith(("*Rationale:*", "*Rejected:*")):
-            break
-        if line.strip():
-            current.append(line)
-        elif current:
-            paragraphs.append(" ".join(" ".join(current).split()))
-            current = []
-    if current:
-        paragraphs.append(" ".join(" ".join(current).split()))
-    return paragraphs
-
-
-def begins_sentence(paragraph, start):
-    """Whether a sentence of the paragraph begins at `start`: at the start of the paragraph, or after
-    a full stop and a space, the full stop standing outside a passage between quotation marks."""
-    if start == 0:
-        return True
-    stop = start - 2
-    if paragraph[stop:start] != ". ":
-        return False
-    return not any(match.start() <= stop < match.end() for match in QUOTED.finditer(paragraph))
-
-
-def table(lines, title):
-    """(line number, cells) of each row of the table under `## title`, header and separator
-    row left out, the header's cells first as row 0."""
-    rows, inside = [], False
-    for number, line in enumerate(lines, start=1):
-        if line.startswith("#"):
-            inside = line.strip() == "## " + title
-        elif inside and line.strip().startswith("|"):
-            cells = [cell.strip().strip("`").strip() for cell in line.strip().strip("|").split("|")]
-            if not all(re.fullmatch(r":?-+:?", cell) for cell in cells):
-                rows.append((number, cells))
-    return rows
-
-
-def items(value):
-    """The items of a list joined by ` · ` or `, `, over its lines."""
-    return [item.strip().strip("`").strip() for item in re.split(r"[·,\n]", value) if item.strip()]
 
 
 def cited_names(lines):
