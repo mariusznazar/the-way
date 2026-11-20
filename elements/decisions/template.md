@@ -26,10 +26,10 @@ particular to a decision (WAY-35).
 ```markdown
 ### WAY-NN — <the question this decision answers>
 
-<1–3 binding sentences that answer the question>
+<1–3 binding sentences, at most 300 words, that answer the question>
 
-<1–3 binding sentences for a part of another question this entry answers, one paragraph for each
-such part; none where there is no such part>
+<1–3 binding sentences, at most 300 words, for a part of another question this entry answers, one
+paragraph for each such part; none where there is no such part>
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
@@ -118,7 +118,7 @@ A field stays in the template only while someone or something reads it (WAY-05).
 |---|---|
 | number (heading) | references from entries, tests and code (WAY-02); `elements/common/foundation_check.py`, which reports a number the log does not hold |
 | question (heading) | the author and the skill: does the log already answer this question (WAY-19); an agent reading the index of a selection of decisions (WAY-150) |
-| binding sentences | an agent comparing a change with the decision (WAY-12); an agent reading the index of a selection of decisions (WAY-150); the author's search of the foundation (WAY-33); `foundation_check.py`, which compares them with the quotation of each line `decision:` of a test (WAY-02) and with those at the base to find a decision a change alters (WAY-12) |
+| binding sentences | an agent comparing a change with the decision (WAY-12); an agent reading the index of a selection of decisions (WAY-150); the author's search of the foundation (WAY-33); `foundation_check.py`, which compares them with the quotation of each line `decision:` of a test (WAY-02), with those at the base to find a decision a change alters (WAY-12), and counts the sentences and the words of each of their paragraphs in a decision a change adds or alters (WAY-05) |
 | Scope | finding the decisions for a change (WAY-21); the index of a selection of decisions, which gives it beside each (WAY-150); `foundation_check.py`, which reports a part the map does not hold |
 | Based on | the author of a change to a fact or a source, searching for what rests on it (WAY-33); `foundation_check.py`, which reports a fact the foundation does not hold |
 | Relations | an agent meeting two decisions that collide (WAY-25); the author's search of the foundation (WAY-33) |
@@ -129,9 +129,16 @@ A field stays in the template only while someone or something reads it (WAY-05).
 
 ## Binding sentences
 
-- One to three sentences answer the question of the heading, in the first paragraph under it. A part
-  of another question that the entry answers (WAY-19) has its own paragraph after that one, also of
-  one to three sentences, one paragraph for each part (WAY-05).
+- One to three sentences, in at most 300 words, answer the question of the heading, in the first
+  paragraph under it. A part of another question that the entry answers (WAY-19) has its own
+  paragraph after that one, also of one to three sentences and at most 300 words, one paragraph for
+  each part (WAY-05).
+- `foundation_check.py` counts both limits in each paragraph of the binding sentences of a decision
+  that a change adds or whose binding sentences it alters, a different division into paragraphs
+  included, and reports an excess as an error; an older entry over a limit meets them when a change
+  next alters it, and until then the script only lists it. It counts a sentence as the point on the
+  line `decision:` in "Verification" gives the start of one, and a word as a run of characters
+  between spaces (WAY-05).
 - Present tense, describing a state that is to be true, concrete enough to check (WAY-05).
 - Normative words — *must*, *must not* — appear only here, in lower case.
 - The words *should* and *will*, exclamation marks and the keywords of RFC 2119 in capitals (MUST,
