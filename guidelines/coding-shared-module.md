@@ -1,7 +1,7 @@
 # Coding guidelines — shared-module
 
 - **Discipline:** coding
-- **Applies to:** relation-model · process-audit · task-cycle
+- **Applies to:** relation-model · process-audit · task-cycle · elements-common
 
 ## When to read
 
@@ -40,3 +40,4 @@ above is the one that binds.
 - `relation-model/`
 - `process-audit/`
 - `task-cycle/`
+- `elements/common/`
