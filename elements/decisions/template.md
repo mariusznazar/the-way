@@ -32,8 +32,9 @@ particular to a decision (WAY-35).
 paragraph for each such part; none where there is no such part>
 
 <optionally 1–3 binding sentences, at most 300 words, for a part of the question of the heading that
-the entry sets apart, one paragraph for each such part; all the binding sentences together at most
-600 words>
+the entry sets apart, one paragraph for each such part>
+
+(all the binding sentences of the entry, its paragraphs together, at most 600 words)
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
