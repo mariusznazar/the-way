@@ -71,7 +71,7 @@ STAGE_COLUMNS = [
 ]
 FILES_COLUMN = "Files named"
 # The two columns of the cache writes of each lifetime, a pair that follows *Files named* in the
-# newest form of the section and is never missing when neither stands (WAY-344).
+# newest form of the section and is never missing when neither stands (WAY-416).
 WRITE_5M_COLUMN = "Cache write (5 minutes)"
 WRITE_1H_COLUMN = "Cache write (1 hour)"
 WRITE_COLUMNS = [WRITE_5M_COLUMN, WRITE_1H_COLUMN]
@@ -86,7 +86,7 @@ SECTION_FORMS = (
 MODEL_COLUMN = "Model"
 OLDER_COLUMNS = [MODEL_COLUMN, "Total tokens", "Input", "Cached input", "Output"]
 OLDER_NEEDED = ("Input", "Cached input", "Output")
-# The fields of `stages.md` a form needs, as an `Error:` line names them (WAY-344): no backtick
+# The fields of `stages.md` a form needs, as an `Error:` line names them (WAY-416): no backtick
 # stands in a name, since the line writes the name between backticks.
 FIELD_SECTION = f"section {SECTION_TITLE}"
 FIELD_SECTION_TABLE = f"table of the section {SECTION_TITLE}"
@@ -205,7 +205,7 @@ class Cycle:
     too_large: int | None = None
     unknown: list[tuple[str, str]] = field(default_factory=list)
     # The fields of `stages.md` a form needs that the copy lacks, as an `Error:` line names them
-    # (WAY-344): the run ends with exit code 1 where any cycle has one.
+    # (WAY-416): the run ends with exit code 1 where any cycle has one.
     missing: list[str] = field(default_factory=list)
     # The values of `mechanism_measures.md` by label, each as the file writes it; a label not here
     # is unknown.
@@ -376,7 +376,7 @@ class StageTable:
     rows of the section of the newer form, or of the table of tokens by model of the older form
     (`older`); `named` is whether the section's table has the column *Files named*. `rows` is None
     with the `reason` where they cannot be read; `missing` holds the fields the form needs that the
-    file lacks (WAY-344), which are no refusal of the form but a field not found."""
+    file lacks (WAY-416), which are no refusal of the form but a field not found."""
 
     rows: list[StageTokens] | None = None
     named: bool = False
@@ -395,7 +395,7 @@ def stage_table(lines: list[str], fenced: list[bool]) -> StageTable:
     """The rows `stages.md` gives for the cost. The newer form is known by the heading of its
     section, and is read from the table of that section; without the heading the file is of the
     older form, read from its table of tokens by model. A file with neither lacks the section and
-    the table (WAY-344)."""
+    the table (WAY-416)."""
     headings = [
         index
         for index, (line, inside) in enumerate(zip(lines, fenced))
@@ -633,7 +633,7 @@ def add_cost(
 ) -> None:
     """The cycle's cost at the list's prices and the share of its fix rounds in it; a value that
     cannot be given is `unknown` with its reason, never zero. A field the form of `stages.md` needs
-    and the file lacks is also put on the cycle's `missing`, for the `Error:` line (WAY-344)."""
+    and the file lacks is also put on the cycle's `missing`, for the `Error:` line (WAY-416)."""
     table = stage_table(stages_lines, stages_fenced)
     if table.rows is None:
         if table.missing:
@@ -816,7 +816,7 @@ def measure_fits(label: str, value: str) -> bool:
 def read_measures(cycle: Cycle, text: str | None, reason: str | None) -> None:
     """Read the cycle-level lines of `mechanism_measures.md` by their labels. A label the
     file lacks is a missing field: then every value of the file is unknown, and the field is named
-    for the `Error:` line (WAY-344). A label written twice, a value that is not what its label gives
+    for the `Error:` line (WAY-416). A label written twice, a value that is not what its label gives
     or `unknown` is unknown with its reason, and the count goes on."""
     if text is None:
         cycle.unknown.append(("Mechanism measures", reason))
@@ -866,7 +866,7 @@ def gate_value(
 
 def gate_header(cycle: Cycle, lines: list[str], fenced: list[bool]) -> tuple[int, list[str]] | None:
     """The index of the header row of the table of `gate_times.md` and its cells, or None where
-    the file lacks the table or one of its six columns: each is a missing field (WAY-344), put on
+    the file lacks the table or one of its six columns: each is a missing field (WAY-416), put on
     the cycle for the `Error:` line, and the runs are not read."""
     header = next(
         (

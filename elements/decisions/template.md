@@ -32,8 +32,9 @@ particular to a decision (WAY-35).
 paragraph for each such part; none where there is no such part>
 
 <optionally 1–3 binding sentences, at most 300 words, for a part of the question of the heading that
-the entry sets apart, one paragraph for each such part; all the binding sentences together at most
-600 words>
+the entry sets apart, one paragraph for each such part>
+
+(all the binding sentences of the entry, its paragraphs together, at most 600 words)
 
 - **Scope:** <parts from the part map>
 - **Based on:** <environment facts by identifier and sources quoted, joined by ` · `> | TODO — <what is missing, with its source> | none
@@ -206,11 +207,11 @@ A field stays in the template only while someone or something reads it (WAY-05).
 
 - A number stands for the question a decision answers, carries the product's prefix and is given
   in the order entries are written; a new question gets the next free number, a question
-  independent of every existing entry included (WAY-19). A part of the question an existing entry
-  answers is a sentence of that entry, in a paragraph of its own as "Binding sentences" gives,
-  where it cannot change without changing that entry; a part that can change on its own is a
-  question of its own with its own number (WAY-19). No entry and no withdrawn number holds the next
-  free number.
+  independent of every existing entry included (WAY-19). A part of another question that an existing
+  entry answers, or a part of its own question that it sets apart, is a sentence of that entry where
+  it cannot change without changing that entry; the first stands in a paragraph of its own and the
+  second may, as "Binding sentences" gives. A part that can change on its own is a question of its
+  own with its own number (WAY-19). No entry and no withdrawn number holds the next free number.
 - A change to a decision edits its entry in place: the binding sentences, the fields, *Rationale*
   and *Rejected* describe the decision as it then stands, never the change (WAY-07, WAY-19).
 - A human accepts the changed meaning by merging the request that carries the change (WAY-14),

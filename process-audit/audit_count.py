@@ -210,7 +210,7 @@ median that is a half is written with its decimal.
 A value a record or a `stages.md` does not give — an earlier form, a missing, doubled or malformed
 line, a file that is no regular file, too large or not UTF-8 — is `unknown`, never zero, and the
 result says why. A field of `stages.md` that the form the file's own signs name needs and the file
-lacks is a missing field (WAY-344, which gives this command its own way to end): the values that
+lacks is a missing field (WAY-416, which gives this command its own way to end): the values that
 need it are `unknown`, the result is written, and the run ends with exit 1 and, for each missing
 field, a line on stderr `Error: repository `<key>`: cycle `<folder>`: the file `stages.md` of the
 copy lacks the field `<field>``. The fields are: the columns `#`, `Stage`, `Start`, `Waiting for tools`,
@@ -266,7 +266,7 @@ own with every value `unknown`, and a cell of the form its column does not give 
 reason. At most 500 runs of a file, 50 directories of a run and 200 characters of a directory are
 read, and a row after a line that is no row of the table is not read; each says so in *Unknown
 values*. Both are under the check of WAY-344, since their reading is new, and they end the run
-with exit 1 and an `Error:` line that names the file and the field, as `stages.md` does.
+with exit 1 and an `Error:` line that names the file and the field (WAY-416), as `stages.md` does.
 
 The register of problems is read as untrusted input, in the form `process-audit/problem_register.md`
 gives: five tables, *Classes*, *Weights*, *Costs of an occurrence*, *Issues* and *Problems*, found
@@ -699,7 +699,7 @@ def fill(cycle: Cycle, git: Git, commit: str, folder: bytes, own: bool, prices: 
         return
     lines = remarks_check.split_lines(stages)
     fenced = remarks_check.fenced_flags(lines)
-    # A file with one of the two time lines and not the other lacks the other (WAY-344); a file with
+    # A file with one of the two time lines and not the other lacks the other (WAY-416); a file with
     # neither is an earlier form, whose two times are unknown with no field missing.
     has_working = has_line(lines, fenced, WORKING_LINE)
     has_waiting = has_line(lines, fenced, WAITING_LINE)
@@ -838,7 +838,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: repository `{display(read.key)}`: {read.error}", file=sys.stderr)
     for why in register.errors:
         print(f"Error: the register of problems: {display(why)}", file=sys.stderr)
-    # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-344): each is
+    # A field a copy's `stages.md` lacks is no reason to withhold the result (WAY-416): each is
     # named here after the result is written. The folder is text of the history, so it is cut.
     lacking = [
         (read, cycle, missing_reason(name))
