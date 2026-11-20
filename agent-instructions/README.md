@@ -13,8 +13,9 @@ another change.
 `elements/common/foundation_check.py` checks the identifiers, references, fields, the lines
 `decision:` of the tests and the part of each file of the foundation of the-way; it reports the
 decisions that nothing holds and the paragraphs of binding sentences over three sentences or 300
-words in a decision a change adds or whose binding sentences it alters, lists the other decisions
-over those limits, and lists the invariants that read `test` whose sentence a change rewords while
+words in a decision a change adds or whose binding sentences it alters, a different division into
+paragraphs counting as an alteration for this report alone, lists the other decisions over those
+limits, and lists the invariants that read `test` whose sentence a change rewords while
 no file citing them changes, all against the commit the branch left the main branch from; an
 invariant that reads `test` whose sentence a change rewords and whose copy at that commit
 lacks *Method* or *Part* it lists too, naming the field, whether or not a file citing it changes.

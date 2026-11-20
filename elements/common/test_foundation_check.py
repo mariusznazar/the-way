@@ -2188,7 +2188,7 @@ class FoundationCheckTest(unittest.TestCase):
         product = self.on_topic(
             DECISIONS
             + "\n"
-            + self.long_decision(long.replace(" ", "  ", 2).replace("e. ", "e.\n")),
+            + self.long_decision(long.replace(" ", "  ", 2).replace("d. ", "d.\n")),
             base=base,
         )
         result = product.check()

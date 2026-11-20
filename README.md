@@ -84,11 +84,13 @@ of the rule being weakened, and its test stands in the product's suite as an exp
 names an existing entry, every entry has the fields its template gives, every invariant that reads
 `test` has a test citing it, every line `decision:` of a test quotes a sentence of its decision, and
 every file belongs to one part. It reports as an error each decision that a change adds or whose
-binding sentences it alters and that nothing holds, and each paragraph of such a decision's binding
-sentences over three sentences or 300 words, and it lists, without failing, the other decisions
-that nothing holds, the other decisions with a paragraph over those limits and each invariant that
-reads `test` whose sentence a change rewords while no file citing it changes. All of these compare
-the change with the commit the branch left the main branch from.
+binding sentences it alters and that nothing holds. It reports as an error too each paragraph of
+binding sentences over three sentences or 300 words in a decision that a change adds or whose
+binding sentences it alters, a different division of them into paragraphs included. It lists,
+without failing, the other decisions that nothing holds, the other decisions with a paragraph over
+those limits and each invariant that reads `test` whose sentence a change rewords while no file
+citing it changes. All of these compare the change with the commit the branch left the main branch
+from.
 
 ## What else is here
 

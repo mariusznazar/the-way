@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 
 FIELD = re.compile(r"^- \*\*(.+?):\*\*(?: (.*))?$")
 ITEM = re.compile(r"[^·,\n]+")
-QUOTED = re.compile(r"\"[^\"]*\"|[“„][^”]*”")
+QUOTED = re.compile(r"\"[^\"]*\"|[\u201c\u201e][^\u201d]*\u201d")
 
 
 def blocks(lines, level):
