@@ -93,10 +93,11 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   the earlier form and one that lacks *Verification* are left to the report of fields above, with no
   second report. The switch `--skip-test-citations` skips none of this;
 - a paragraph of the binding sentences of a decision with more than 3 sentences or more than 300
-  words (WAY-05): sentences are counted as above, and a word is a run of characters between
-  spaces. In a decision that the change adds, or whose binding sentences differ from those at the
-  base in their words or in their division into paragraphs, it is an error at the heading line,
-  naming the decision, the paragraph and each measure over its limit with its value; in any other
+  words, and binding sentences with more than 600 words in all their paragraphs together (WAY-05):
+  sentences are counted as above, and a word is a run of characters between spaces. In a decision
+  that the change adds, or whose binding sentences differ from those at the base in their words or
+  in their division into paragraphs, each is an error at the heading line, naming the decision,
+  the paragraph where it is one and each measure over its limit with its value; in any other
   decision it is a line of the second kind below, at the heading line. Where the base is unknown
   no decision is added or changed;
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
@@ -168,9 +169,10 @@ BASE_FILES = (DECISIONS, INVARIANTS)
 UNKNOWN_BASE = (
     "the commit the branch left the main branch from is not known, so nothing was compared with it"
 )
-# The limits of a paragraph of the binding sentences of a decision (WAY-05).
+# The limits of a paragraph of the binding sentences of a decision, and of all of them (WAY-05).
 SENTENCE_LIMIT = 3
 WORD_LIMIT = 300
+ENTRY_LIMIT = 600
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -779,29 +781,31 @@ class Foundation:
 
     def check_length(self):
         """Report each paragraph of the binding sentences of a decision over the limits of
-        SENTENCE_LIMIT and WORD_LIMIT (WAY-05). In a decision that the change adds, or whose
-        paragraphs differ from those at the base, it is an error at the heading; in any other it is
-        listed. A decision is changed here by its words or its division into paragraphs."""
+        SENTENCE_LIMIT and WORD_LIMIT, and the binding sentences of a decision over ENTRY_LIMIT
+        words in all (WAY-05). In a decision that the change adds, or whose paragraphs differ from
+        those at the base, it is an error at the heading; in any other it is listed. A decision is
+        changed here by its words or its division into paragraphs."""
         before = self.base_paragraphs()
         for key, body in sorted(self.bodies.items()):
             paragraphs = binding(body)
             changed = before is not None and before.get(key) != paragraphs
-            for number, paragraph in enumerate(paragraphs, start=1):
-                over = excess(paragraph)
-                if over and changed:
-                    self.report.error(
-                        DECISIONS,
-                        self.headings[key],
-                        "`%s-%02d` is added or changed by this change: paragraph %d of its "
-                        "binding sentences has %s" % (self.prefix, key, number, " and ".join(over)),
-                    )
-                elif over:
-                    self.report.note(
-                        DECISIONS,
-                        self.headings[key],
-                        "`%s-%02d`: paragraph %d of its binding sentences has %s"
-                        % (self.prefix, key, number, " and ".join(over)),
-                    )
+            found = [
+                "paragraph %d of its binding sentences has %s" % (number, " and ".join(over))
+                for number, paragraph in enumerate(paragraphs, start=1)
+                if (over := excess(paragraph))
+            ]
+            words = sum(len(paragraph.split()) for paragraph in paragraphs)
+            if words > ENTRY_LIMIT:
+                found.append(
+                    "its binding sentences have %d words in all (at most %d)" % (words, ENTRY_LIMIT)
+                )
+            label = "`%s-%02d`" % (self.prefix, key)
+            for what in found:
+                if changed:
+                    message = "%s is added or changed by this change: %s" % (label, what)
+                    self.report.error(DECISIONS, self.headings[key], message)
+                else:
+                    self.report.note(DECISIONS, self.headings[key], "%s: %s" % (label, what))
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file

@@ -2224,6 +2224,73 @@ class FoundationCheckTest(unittest.TestCase):
         self.assertTrue(lines[1].startswith("foundations/decisions.md:29: listed: "), lines)
         self.assertEqual(lines[2], "1 error")
 
+    # Binding sentences of 600 words in all, each of the three paragraphs within its own limits;
+    # the sentence of WAY-05 that gives the limit of all the paragraphs together.
+    def whole(self, last=100):
+        """Three paragraphs of two sentences: 100 words each but for the last, `last`."""
+        return (self.paragraph(100, 100), self.paragraph(100, 100), self.paragraph(100, last))
+
+    def test_binding_sentences_of_600_words_in_all_pass(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(*self.whole()))
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_binding_sentences_of_601_words_in_all_are_an_error_that_names_no_paragraph(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(*self.whole(101)))
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "foundations/decisions.md:29:", "`ABC-03`", "601 words")
+        self.assertNotRegex(result[1], r"paragraph \d")
+
+    def test_a_decision_over_both_the_limit_of_a_paragraph_and_the_limit_of_all_is_reported_for_each(
+        self,
+    ):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        long = self.paragraph(80, 80, 80, 80)
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(long, long))
+        result = product.check()
+        self.assertFails(result, "3 errors")
+        self.assertReported(result, "`ABC-03`", "paragraph 1", "4 sentences", "320 words")
+        self.assertReported(result, "`ABC-03`", "640 words")
+
+    def test_a_decision_a_change_lengthens_past_600_words_is_an_error(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        base = DECISIONS + "\n" + self.long_decision(*self.whole(2))
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(*self.whole(101)), base=base)
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "foundations/decisions.md:29:", "`ABC-03`", "601 words")
+
+    def test_a_decision_over_600_words_whose_rationale_alone_changed_is_listed(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        base = DECISIONS + "\n" + self.long_decision(*self.whole(101))
+        product = self.on_topic(
+            DECISIONS
+            + "\n"
+            + self.long_decision(*self.whole(101), rationale="a folder is easy to find."),
+            base=base,
+        )
+        result = product.check()
+        self.assertEqual(result[0], 0, result[1])
+        self.assertReported(
+            result, "foundations/decisions.md:29: listed:", "`ABC-03`", "601 words", listed=True
+        )
+        self.assertIn("0 errors", result[1])
+
+    def test_a_different_division_of_binding_sentences_over_600_words_is_an_error(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        base = DECISIONS + "\n" + self.long_decision(*self.whole(101))
+        divided = self.long_decision(
+            self.paragraph(75, 75),
+            self.paragraph(75, 75),
+            self.paragraph(75, 75),
+            self.paragraph(75, 76),
+        )
+        result = self.on_topic(DECISIONS + "\n" + divided, base=base).check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "`ABC-03`", "601 words")
+
     # --- an invariant whose sentence changed while its test did not ---------------------------
 
     # save-round-trip stands at line 3 of the invariants of the good product.
