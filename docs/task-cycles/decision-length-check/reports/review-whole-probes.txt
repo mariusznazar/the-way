@@ -1,0 +1,21 @@
+== P0 unchanged | exit 0 | listed 12
+   0 errors
+== P1 WAY-344 divided in two, no word changed | exit 1 | listed 11
+   foundations/decisions.md:2947: `WAY-344` is added or changed by this change: paragraph 2 of its binding sentences has 7 sentences (at most 3) and 658 words (at most 300)
+   1 error
+== P2 WAY-405 rationale alone changed | exit 0 | listed 12
+   0 errors
+== P3 WAY-05 gets a fourth sentence | exit 1 | listed 12
+   foundations/decisions.md:682: `WAY-05` is added or changed by this change: paragraph 1 of its binding sentences has 4 sentences (at most 3)
+   1 error
+== P4 WAY-12 gets a sentence with a full stop inside curly quotation marks | exit 1 | listed 12
+   foundations/decisions.md:756: `WAY-12` is added or changed by this change: paragraph 1 of its binding sentences has 4 sentences (at most 3)
+   1 error
+== P4b WAY-12 gets a sentence whose stop stands inside low-high marks | exit 1 | listed 12
+   foundations/decisions.md:756: `WAY-12` is added or changed by this change: paragraph 1 of its binding sentences has 4 sentences (at most 3)
+   1 error
+== P5 WAY-256 reflowed: a space made a line break and a double space | exit 0 | listed 12
+   0 errors
+== P6 WAY-18 two paragraphs joined into one, no word changed | exit 1 | listed 12
+   foundations/decisions.md:814: `WAY-18` is added or changed by this change: paragraph 1 of its binding sentences has 5 sentences (at most 3)
+   1 error
