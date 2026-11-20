@@ -1668,11 +1668,10 @@ the invariants a test the work alters cites, the decisions whose sentence such a
 line `decision:`, the decisions the task's *Decisions in play* or the work's source names, the
 touched parts' entries of the map and the entries these link to as far as the work needs.
 
-Of the
-decisions it finds by *Scope*, by a line `decision:` or as the task or the work's source names
-them, whoever selects reads the index and opens whole only the decisions the work changes, goes
-against or proposes another answer to — that one with its rejected options — those the task or the
-work's source names, those whose sentence a test the work alters holds by a line `decision:` and
+Of the decisions it finds by *Scope*, by a line `decision:` or as the task or the work's source
+names them, whoever selects reads the index and opens whole only the decisions the work changes,
+goes against or proposes another answer to — that one with its rejected options — those the task or
+the work's source names, those whose sentence a test the work alters holds by a line `decision:` and
 those whose binding sentences leave open what the work has to do; each other entry it selects — an
 invariant, an entry of the map of a touched part, or an entry, a decision included, that these or
 the decisions of the index link to as far as the work needs — it reads whole, and it reads more
@@ -1686,13 +1685,13 @@ The index of a selection of decisions is no file of the repository: a script of 
 on demand into a file the agent names, and it gives for each selected decision its number, its
 question, its binding sentences and its *Scope*.
 
-In a decision log divided into topical sections, whoever selects picks from the list of sections,
-by each one's heading and sentence, the sections of the work's topics, whose decisions take the
-place of those found by *Scope* in the selection whose index it reads, and it runs through the
-questions alone of the decisions outside those sections whose *Scope* names a touched part and opens
-whole each whose question points to a bearing on the work. In a log without topical sections the
-decisions are selected by the parts the work touches, and their index takes the place of reading
-each of them whole, the decisions the second paragraph names being opened whole as it gives.
+In a decision log divided into topical sections, whoever selects picks from the list of sections, by
+each one's heading and sentence, the sections of the work's topics, whose decisions take the place
+of those found by *Scope* in the selection whose index it reads, and it runs through the questions
+alone of the decisions outside those sections whose *Scope* names a touched part and opens whole
+each whose question points to a bearing on the work. In a log without topical sections the decisions
+are selected by the parts the work touches, and their index takes the place of reading each of them
+whole, the decisions the second paragraph names being opened whole as it gives.
 
 Outside the task cycle the agent doing the work selects its own reading, while in the task cycle
 the orchestrator selects for its own judgments and for each handoff, which names the foundation
@@ -3409,11 +3408,11 @@ stays in `SKILL.md` where its pointer would stand, since the pointer is an instr
 that, a fragment's place follows from whether a use of the skill needs it at that step, never from
 the count of words or lines of the file.
 
-A fragment that some steps of the skill need, not all,
-stands by what it is: a rule of working that the agent has to keep during those steps stays in the
-skill's `SKILL.md`, and text the agent reads or consults, such as a procedure, a list or a template,
-stands in a file beside the skill that each of those steps names, a step after the first having that
-file read unless an earlier step did; fragments that stand unchanged are not bound by it.
+A fragment that some steps of the skill need, not all, stands by what it is: a rule of working that
+the agent has to keep during those steps stays in the skill's `SKILL.md`, and text the agent reads
+or consults, such as a procedure, a list or a template, stands in a file beside the skill that each
+of those steps names, a step after the first having that file read unless an earlier step did;
+fragments that stand unchanged are not bound by it.
 
 - **Scope:** instruction-files, decisions, invariants, glossary, part-map, environment-facts,
   elements-common, project-level, product-guidelines, task-cycle
@@ -4477,22 +4476,21 @@ logs; how long the record lives, between deployments too; and how a human learns
 Beside the list it holds a guide to writing such a skill, with the deployment skill of loop2 as its
 first example, which binds nothing and which the check of the list points to.
 
-When a task's outcome
-deploys the product or changes how or where it runs, the-way's skill `refine-task` checks, while it
-refines the task, that the product has a deployment skill covering every item of the list, and where
-it has none or an item is missing, the task gains an item of its To do for that work or the human
-splits that work into a task of its own, and that item and that task point to the guide, which an
-agent reads only when it writes or completes a deployment skill; for the items on how to read the
-logs, on the record's life and on a failure, the check quotes the answer a decision of the foundation or an
-approved definition the task carries already gives, and the task gains the item that writes it into
-the skill, a decision silent on how an agent reads the logs or on how long the record lives
-answering nothing for the item on that; where nothing answers the item on how to read the logs, it
-goes as the other items of the list do, and where nothing answers the item on the record's life or
-on a failure, the check asks the human whether to run the step that settles technology at the task
-(WAY-267), with a note on what the skill leaves unsaid, instead of filling the item in, and a skill
-that records the human's refusal covers the item, so the question does not return; each item of the
-To do that writes into the skill the answer to one of these three, or the record of the human's
-refusal, points to the guide too.
+When a task's outcome deploys the product or changes how or where it runs, the-way's skill
+`refine-task` checks, while it refines the task, that the product has a deployment skill covering
+every item of the list, and where it has none or an item is missing, the task gains an item of its
+To do for that work or the human splits that work into a task of its own, and that item and that
+task point to the guide, which an agent reads only when it writes or completes a deployment skill;
+for the items on how to read the logs, on the record's life and on a failure, the check quotes the
+answer a decision of the foundation or an approved definition the task carries already gives, and
+the task gains the item that writes it into the skill, a decision silent on how an agent reads the
+logs or on how long the record lives answering nothing for the item on that; where nothing answers
+the item on how to read the logs, it goes as the other items of the list do, and where nothing
+answers the item on the record's life or on a failure, the check asks the human whether to run the
+step that settles technology at the task (WAY-267), with a note on what the skill leaves unsaid,
+instead of filling the item in, and a skill that records the human's refusal covers the item, so the
+question does not return; each item of the To do that writes into the skill the answer to one of
+these three, or the record of the human's refusal, points to the guide too.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -5451,34 +5449,33 @@ candidate rows alone — neither accepts the complete task the cycle takes.
 
 Before a task is ready for its cycle, the human sees a table of candidates found in the task
 document and the conversation that refined it, in the form of the candidate table of the skills of
-the elements (`elements/common/skill/build_table.md`) with each settlement in
-the human's words and, in place of its kind, the place it goes to by the questions of the decisions
-template, and the task document keeps the rows the human accepts, one that goes outside the decision
-log included and those that repeat a choice the human made between ways shown included unless the
-human struck them, and, where the human chose among ways shown, each way not chosen, under the
-answer to its question or, for a choice made outside the task's questions, in the source of the row
-it settles; the agent refining the task presents the table, or, in orchestrated refinement, the
-project orchestrator as WAY-154 and WAY-155 give. A candidate is a decision, an invariant, a
-glossary term, or an environment fact a candidate decision or invariant rests on, or a settlement
-that goes to another place those questions give — a skill or an instruction file, the guidelines of
-a discipline, or the data or code of the product — and a settlement that a current entry the
-refinement reads for the parts the task touches, or a projected entry the task carries, already
-states is no candidate.
+the elements (`elements/common/skill/build_table.md`) with each settlement in the human's words and,
+in place of its kind, the place it goes to by the questions of the decisions template, and the task
+document keeps the rows the human accepts, one that goes outside the decision log included and those
+that repeat a choice the human made between ways shown included unless the human struck them, and,
+where the human chose among ways shown, each way not chosen, under the answer to its question or,
+for a choice made outside the task's questions, in the source of the row it settles; the agent
+refining the task presents the table, or, in orchestrated refinement, the project orchestrator as
+WAY-154 and WAY-155 give. A candidate is a decision, an invariant, a glossary term, or an
+environment fact a candidate decision or invariant rests on, or a settlement that goes to another
+place those questions give — a skill or an instruction file, the guidelines of a discipline, or the
+data or code of the product — and a settlement that a current entry the refinement reads for the
+parts the task touches, or a projected entry the task carries, already states is no candidate.
 
-The task's cycle writes each kept row whole in the place its column gives,
-in the same change as the code, in its foundation step, or in its return step where the foundation
-step missed it, one that no code makes true included, keeping its meaning and choosing its wording,
-and gives a decision written from a row as its rejected options only the ways not chosen that the
-row's source keeps, `none considered` where the human said so, or `unknown`; where that meaning
-cannot hold, or the entry needs any other value neither the row nor the cycle's work gives, the
-cycle asks the human through a blocked draft request rather than write another entry, and otherwise
-the entry's meaning is the one the human accepted with the row in the task document (WAY-114); a
-kept row whose settlement the cycle's search of the whole foundation (WAY-33) finds already stated
-becomes no second entry, the cycle tying the row to that entry and naming both in the request; a
-way not chosen that the row's source keeps with no cost, or with only a cost of the process such as a
-gate to reopen or a step to repeat, stands in the rejected options with `no cost to the product
-known`, and a way that is itself a way of the process rather than of the product, such as how or
-when an answer is recorded, stays out of them.
+The task's cycle writes each kept row whole in the place its column gives, in the same change as the
+code, in its foundation step, or in its return step where the foundation step missed it, one that no
+code makes true included, keeping its meaning and choosing its wording, and gives a decision written
+from a row as its rejected options only the ways not chosen that the row's source keeps, `none
+considered` where the human said so, or `unknown`; where that meaning cannot hold, or the entry
+needs any other value neither the row nor the cycle's work gives, the cycle asks the human through a
+blocked draft request rather than write another entry, and otherwise the entry's meaning is the one
+the human accepted with the row in the task document (WAY-114); a kept row whose settlement the
+cycle's search of the whole foundation (WAY-33) finds already stated becomes no second entry, the
+cycle tying the row to that entry and naming both in the request; a way not chosen that the row's
+source keeps with no cost, or with only a cost of the process such as a gate to reopen or a step to
+repeat, stands in the rejected options with `no cost to the product known`, and a way that is itself
+a way of the process rather than of the product, such as how or when an answer is recorded, stays
+out of them.
 
 Where a row adopts a practice from outside the product, the refinement shows the human, among the
 ways of the question that settles it, the parts the practice leaves out, so that the row's source
@@ -5652,28 +5649,26 @@ agent and the project orchestrator take serialized turns on each file; the proje
 hands agents only its path and routing, never relays its contents, and each refiner ends its turn as
 `questions`, `waits for task <n>`, `ready for approval`, `plan change` or `obstacle`.
 
-Only a refiner
-changes the task document's body and transfers settled answers with their sources and the ways the
-human did not choose (WAY-134) into Questions to settle, and it writes besides what the project
-orchestrator's order asks of it: in the turn in which it first creates the task document, or in the
-first later turn that can where that turn could not, the line of its task in the backlog the product
-names (WAY-107), where none stands, with the dependencies the plan gives the task, and, as the rules
-of the task place give, brings the lines of the tasks tied to its task into agreement with the
-plan's dependencies, at the same time as the other refiners of the round and with no queue between
-their writes; the plan, the definition and the foundation stay outside a refiner, and no agent other
-than the project orchestrator, after the human's word, takes a step that belongs to acceptance,
-which is moving the line to ready and `ready for cycle`; the project orchestrator records human
-answers in conversations, owns ordinary plan updates and their log, brings the dependencies in the
-task lines in step with the plan when the plan's dependencies change, and after the human has
-accepted a complete task document, one document at a time, changes that document's Status line and
-moves the task's line to ready, making it already ready where none stands.
+Only a refiner changes the task document's body and transfers settled answers with their sources and
+the ways the human did not choose (WAY-134) into Questions to settle, and it writes besides what the
+project orchestrator's order asks of it: in the turn in which it first creates the task document, or
+in the first later turn that can where that turn could not, the line of its task in the backlog the
+product names (WAY-107), where none stands, with the dependencies the plan gives the task, and, as
+the rules of the task place give, brings the lines of the tasks tied to its task into agreement with
+the plan's dependencies, at the same time as the other refiners of the round and with no queue
+between their writes; the plan, the definition and the foundation stay outside a refiner, and no
+agent other than the project orchestrator, after the human's word, takes a step that belongs to
+acceptance, which is moving the line to ready and `ready for cycle`; the project orchestrator
+records human answers in conversations, owns ordinary plan updates and their log, brings the
+dependencies in the task lines in step with the plan when the plan's dependencies change, and after
+the human has accepted a complete task document, one document at a time, changes that document's
+Status line and moves the task's line to ready, making it already ready where none stands.
 
-Agent turns, questions
-and explicit waits keep the plan task to refine, a presented human package or ready for approval
-makes it waiting for human, and final acceptance makes both document and plan ready for cycle and
-removes only that conversation after all settled answers, their sources and the ways not chosen
-survive in the task document; an explicit wait is logged and its task is proposed again when the
-named prerequisite is done.
+Agent turns, questions and explicit waits keep the plan task to refine, a presented human package or
+ready for approval makes it waiting for human, and final acceptance makes both document and plan
+ready for cycle and removes only that conversation after all settled answers, their sources and the
+ways not chosen survive in the task document; an explicit wait is logged and its task is proposed
+again when the named prerequisite is done.
 
 - **Scope:** project-level
 - **Based on:** none
@@ -6216,28 +6211,28 @@ goes against WAY-227, which would have to change, and the cycle would stop worki
 
 ### WAY-136 — When does a task's change need a plan, and who makes and reviews it?
 
-A change that, as the orchestrator judges before implementation from the task document and,
-where the task moves the pin, from the checks the move breaks (WAY-34), one agent can hold is made
-without a plan by one author, who writes its foundation entries, its code and its return step; the
-same judgment follows a reviewed spec, and an author that finds the change too large returns a
-report without code, its attempt is discarded with the foundation entries it wrote, and a planner
-divides the change. Every other change gets a plan written with the-way's skill `plan-task`, which
-divides it into slices and holds no code; the slices are made one after another in the plan's
-order, each by an agent of its own, and a slice that proves too large for it is discarded with its
-code and goes back to the planner to be split.
+A change that, as the orchestrator judges before implementation from the task document and, where
+the task moves the pin, from the checks the move breaks (WAY-34), one agent can hold is made without
+a plan by one author, who writes its foundation entries, its code and its return step; the same
+judgment follows a reviewed spec, and an author that finds the change too large returns a report
+without code, its attempt is discarded with the foundation entries it wrote, and a planner divides
+the change. Every other change gets a plan written with the-way's skill `plan-task`, which divides
+it into slices and holds no code; the slices are made one after another in the plan's order, each by
+an agent of its own, and a slice that proves too large for it is discarded with its code and goes
+back to the planner to be split.
 
-A one-author change is reviewed by an agent that
-did not make it; of a plan's slices, only one that touches a trust boundary or holds an operation
-that cannot be undone, as the plan marks it, gets a review of its own by such an agent, and every
-other slice goes on after the orchestrator's mechanical check and its own checks; a change of more
-than one slice then gets one review of the whole change, which judges every slice that had no
-review of its own and names, for each blocking finding, the slice it comes from or that it comes
-from none, while the review of a one-author change or of a plan's only slice is the review of the
-whole change; and that review also checks coverage of the task, every row of its *Settlements to
-record* and every projected entry it carries; where the slices that have no review of their own
-are more than one reviewer of the whole change can compare with their sources, the orchestrator
-may, by its own judgment and not by a measure, dispatch reviews of groups of them in the plan's
-order, as for a slice with a review of its own, and it records the grouping and its reason.
+A one-author change is reviewed by an agent that did not make it; of a plan's slices, only one that
+touches a trust boundary or holds an operation that cannot be undone, as the plan marks it, gets a
+review of its own by such an agent, and every other slice goes on after the orchestrator's
+mechanical check and its own checks; a change of more than one slice then gets one review of the
+whole change, which judges every slice that had no review of its own and names, for each blocking
+finding, the slice it comes from or that it comes from none, while the review of a one-author change
+or of a plan's only slice is the review of the whole change; and that review also checks coverage of
+the task, every row of its *Settlements to record* and every projected entry it carries; where the
+slices that have no review of their own are more than one reviewer of the whole change can compare
+with their sources, the orchestrator may, by its own judgment and not by a measure, dispatch reviews
+of groups of them in the plan's order, as for a slice with a review of its own, and it records the
+grouping and its reason.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -6318,15 +6313,15 @@ stays the choice.
 Every task-cycle stage passes its full handoff and report through files in the cycle's reports
 directory, while its messages carry routing, the stage's status, commits, a one-line check result
 naming what failed or did not run, where the stage runs a test or another check, and the report's
-path, while the agent's questions, concerns and each reach beyond its handoff stand
-in its report. The handoff names what the agent reads, as the
-orchestrator selects it (WAY-150, WAY-213), and keeps requirements and values in their own files:
-it may carry a section of the plan, spec or task copied word for word, never restated in other
-words, with its file named as its address, so that a slice's executor gets its section of the plan
-and works without opening the plan; and since only the orchestrator reads `cycle.md`, the
-handoff tells the agent that `cycle.md` and the other files of the cycle's record directory — other
-agents' handoffs, reports and findings — are not its to read unless its handoff names them, and an
-answer or choice that binds an agent goes into that agent's handoff or the message that resumes it.
+path, while the agent's questions, concerns and each reach beyond its handoff stand in its report.
+The handoff names what the agent reads, as the orchestrator selects it (WAY-150, WAY-213), and keeps
+requirements and values in their own files: it may carry a section of the plan, spec or task copied
+word for word, never restated in other words, with its file named as its address, so that a slice's
+executor gets its section of the plan and works without opening the plan; and since only the
+orchestrator reads `cycle.md`, the handoff tells the agent that `cycle.md` and the other files of
+the cycle's record directory — other agents' handoffs, reports and findings — are not its to read
+unless its handoff names them, and an answer or choice that binds an agent goes into that agent's
+handoff or the message that resumes it.
 
 The orchestrator records the event and relevant choices before dependent dispatch and reads
 authoritative sources and relevant report evidence before deciding a question, settling a finding,
@@ -7678,26 +7673,27 @@ The section of a request's description for the human's decisions holds everythin
 the human's yes — the cycle's choices beyond the task's content, the steps skipped and the checks
 not run, the incomplete reading of the review of the whole change where its reviewer did not read
 the index of its whole selection or itself named a decision concerning the change as unread, and the
-gap was not closed on the way by that reviewer, or a fresh one, reading what stayed
-unread, the unfixed findings the product's user or the human working with the process will feel, the
-decisions of the task's own sections, in a blocked request what the cycle needs to go on, the human
-actions, the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to
-a product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
-error of the form check that the cycle holds wrong, the pairs that give the cause of a
-correction after the request opened, each descriptive `TODO` in an
-invariant's *Rests on* or *Derives from* or in a decision's *Based on* or *Relations* that stands on
-the main branch after the change (WAY-71), and the foundation entries the human did not see at the task document.
+gap was not closed on the way by that reviewer, or a fresh one, reading what stayed unread, the
+unfixed findings the product's user or the human working with the process will feel, the decisions
+of the task's own sections, in a blocked request what the cycle needs to go on, the human actions,
+the changed invariant tests, surfaces and *Violated* marks, the additions a change makes to a
+product's logging scope, a listing of the remarks check that the cycle holds wrong (WAY-295), an
+error of the form check that the cycle holds wrong, the pairs that give the cause of a correction
+after the request opened, each descriptive `TODO` in an invariant's *Rests on* or *Derives from* or
+in a decision's *Based on* or *Relations* that stands on the main branch after the change (WAY-71),
+and the foundation entries the human did not see at the task document.
 
-The section stands in three groups, headed *Needed from you*, *Fix or let through* and *You accept by merging*, in this
-order: what the request cannot go on without, an answer or an action of the human; what the cycle did
-not do or did not fix and can still be done in this request, which the human has done there, makes a
-task of or lets through; and what the cycle did within its authority, which the human accepts by
-merging and which waits for no separate answer. Every group stands, reading `none` where it holds no
-item, the items are numbered in one run through the three groups, and the section reads `none` alone
-where no group holds an item, which says that nothing else in the request waits for the human's yes.
-A blocked request keeps the same skeleton, with `blocked` in its first sentence and what the cycle
-needs, in plain words, and the stages it did not run because it stopped, under *Needed from you*,
-while each remaining finding stands with its place in the code in the lower part.
+The section stands in three groups, headed *Needed from you*, *Fix or let through* and *You accept
+by merging*, in this order: what the request cannot go on without, an answer or an action of the
+human; what the cycle did not do or did not fix and can still be done in this request, which the
+human has done there, makes a task of or lets through; and what the cycle did within its authority,
+which the human accepts by merging and which waits for no separate answer. Every group stands,
+reading `none` where it holds no item, the items are numbered in one run through the three groups,
+and the section reads `none` alone where no group holds an item, which says that nothing else in the
+request waits for the human's yes. A blocked request keeps the same skeleton, with `blocked` in its
+first sentence and what the cycle needs, in plain words, and the stages it did not run because it
+stopped, under *Needed from you*, while each remaining finding stands with its place in the code in
+the lower part.
 
 Another decision may add a kind of item to one of the three groups, naming the group, and the
 template of a request's description lists every kind.
@@ -7853,17 +7849,16 @@ section for the human's decisions, under *Fix or let through*, as one question w
 fix it in this request, to make a task of it or to let it through, which one answer may settle for
 the whole list.
 
-The answer to fix it runs a correction with one fix and one review of that fix; the
-same answer is offered for a step or a check the cycle skipped, a proposal of the task's own
-sections not applied, an incomplete reading of the review of the whole change and something an entry
-stands on that the foundation does not hold yet, and runs the step or the check, applies the
-proposal, has a fresh reviewer read what stayed unread or has the missing fact, decision or source
-written, and what the correction leaves unfixed or undone, like whatever cannot be done in the
-request at all, is put by the request only with the question whether it becomes a task, which the
-human who makes none lets through by merging, or stays in the lower part, so that the loop ends
-after one correction. Every finding stays in its list of the lower part with the reviewer's words
-and its place in the code, and the judgment changes no finding's kind or grade and decides no fix
-and no block.
+The answer to fix it runs a correction with one fix and one review of that fix; the same answer is
+offered for a step or a check the cycle skipped, a proposal of the task's own sections not applied,
+an incomplete reading of the review of the whole change and something an entry stands on that the
+foundation does not hold yet, and runs the step or the check, applies the proposal, has a fresh
+reviewer read what stayed unread or has the missing fact, decision or source written, and what the
+correction leaves unfixed or undone, like whatever cannot be done in the request at all, is put by
+the request only with the question whether it becomes a task, which the human who makes none lets
+through by merging, or stays in the lower part, so that the loop ends after one correction. Every
+finding stays in its list of the lower part with the reviewer's words and its place in the code, and
+the judgment changes no finding's kind or grade and decides no fix and no block.
 
 - **Scope:** task-cycle, agent-instructions
 - **Based on:** none
@@ -8587,22 +8582,22 @@ fix rounds that is too low.
 A new series of the cost of cycles, the two numbers of WAY-337, starts only with a new price list or
 with a change of the script that measures the cost, `task-cycle/cycle_stages.py` with the module
 `task-cycle/stage_transcripts.py` that it imports; a new series of the count of remarks starts
-wherever a series of the cost starts and also with a change of the form of a stage report, of the list
-of classes or of the instructions of the reviewer. The measures of
-how a cycle's agents use context and the prompt cache and the times of the gate form series of
-their own: a new series of those starts only with a change of the script that counts them or of the
-script that records them, and, for the times of the gate, also with a change of the test runner of
-the process, whose output gives the time of each directory; no change of the instructions of the
-cycle, the reviewer's and the author's included, starts one.
+wherever a series of the cost starts and also with a change of the form of a stage report, of the
+list of classes or of the instructions of the reviewer. The measures of how a cycle's agents use
+context and the prompt cache and the times of the gate form series of their own: a new series of
+those starts only with a change of the script that counts them or of the script that records them,
+and, for the times of the gate, also with a change of the test runner of the process, whose output
+gives the time of each directory; no change of the instructions of the cycle, the reviewer's and the
+author's included, starts one.
 
-The audit compares each measure only
-within a series of its own kind, and judges a version of the process by the cycles that ran on it,
-never one week against another; and where a cycle's own change changes a tool that measures — the
-script that measures the cost, the script that counts the measures of context and cache use, the
-script that records the gate times or the test runner of the process — the audit gives the measures
-of that tool for that cycle as unknown, with the reason that the cycle changed the tool that wrote
-them (the file of that tool is not read for that cycle, so no field of it is missing and no line
-`Error:` is given for it), and its other measures as they stand under the version it ran on.
+The audit compares each measure only within a series of its own kind, and judges a version of the
+process by the cycles that ran on it, never one week against another; and where a cycle's own change
+changes a tool that measures — the script that measures the cost, the script that counts the
+measures of context and cache use, the script that records the gate times or the test runner of the
+process — the audit gives the measures of that tool for that cycle as unknown, with the reason that
+the cycle changed the tool that wrote them (the file of that tool is not read for that cycle, so no
+field of it is missing and no line `Error:` is given for it), and its other measures as they stand
+under the version it ran on.
 
 The measures of how a cycle's agents use the context and the prompt cache of the model — the number
 of model calls, the size of each call's context, the tokens written to the cache and the tokens
@@ -8815,25 +8810,24 @@ the spec.
 
 The reason of a discarded attempt stands at the start of the record's item *Discarded attempt* as
 `reason: ` and one of three markers in backticks — `open design choice`, `reserved choice` or `size`
-— or, where the cycle discarded more than one attempt, at the start of each sub-item under the item, one
-sub-item for each attempt; the item reads `none` where no attempt was discarded. The audit of the
-process takes from this item, for its answer whether a contradiction with the settlements came out
-only after the code was written, the markers alone and never the text of the item, so that an item
-that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown.
+— or, where the cycle discarded more than one attempt, at the start of each sub-item under the item,
+one sub-item for each attempt; the item reads `none` where no attempt was discarded. The audit of
+the process takes from this item, for its answer whether a contradiction with the settlements came
+out only after the code was written, the markers alone and never the text of the item, so that an
+item that reads neither `none` nor a marker, written in any earlier form, gives the answer unknown.
 
-Where
-the lines under the item are not sub-items at one indent alone — the first line a sub-item at that indent
-and no plain line at that indent or less — or text stands beside the colon, the whole is read as the
-text of one attempt, and gives the answer unknown unless it reads `none` or opens with `reason: ` and
-one marker and holds no second `reason: ` followed by a backtick (WAY-404); its later lines are
-details of that attempt, read for such a second `reason: ` alone, whatever word stands after the
-backtick, so that a second attempt written in them with no backtick after the `reason: ` or with its
-reason in other words is not read. Where the lines are sub-items at one indent alone and nothing stands beside the colon, a
-sub-item that opens with no marker gives the answer unknown unless another sub-item gives yes, and only the
-first line of each sub-item is read, so that a marker in a line deeper than the
-sub-item, or in a sub-item
-under it, is a detail and is not read. The item reads down to the next line at the left margin: a
-line written there, a continuation of a sub-item included, is no part of the item and is not read.
+Where the lines under the item are not sub-items at one indent alone — the first line a sub-item at
+that indent and no plain line at that indent or less — or text stands beside the colon, the whole is
+read as the text of one attempt, and gives the answer unknown unless it reads `none` or opens with
+`reason: ` and one marker and holds no second `reason: ` followed by a backtick (WAY-404); its later
+lines are details of that attempt, read for such a second `reason: ` alone, whatever word stands
+after the backtick, so that a second attempt written in them with no backtick after the `reason: `
+or with its reason in other words is not read. Where the lines are sub-items at one indent alone and
+nothing stands beside the colon, a sub-item that opens with no marker gives the answer unknown
+unless another sub-item gives yes, and only the first line of each sub-item is read, so that a
+marker in a line deeper than the sub-item, or in a sub-item under it, is a detail and is not read.
+The item reads down to the next line at the left margin: a line written there, a continuation of a
+sub-item included, is no part of the item and is not read.
 
 - **Scope:** process-audit, task-cycle
 - **Based on:** none
