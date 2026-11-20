@@ -92,6 +92,13 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
   the earlier form and one that lacks *Verification* are left to the report of fields above, with no
   second report. The switch `--skip-test-citations` skips none of this;
+- a paragraph of the binding sentences of a decision with more than 3 sentences or more than 300
+  words (WAY-05): sentences are counted as above, and a word is a run of characters between
+  spaces. In a decision that the change adds, or whose binding sentences differ from those at the
+  base in their words or in their division into paragraphs, it is an error at the heading line,
+  naming the decision, the paragraph and each measure over its limit with its value; in any other
+  decision it is a line of the second kind below, at the heading line. Where the base is unknown
+  no decision is added or changed;
 - an invariant that reads `test` whose sentence a change reworded (its sentence differs from the
   base once every run of spaces and line breaks is made one space) is listed at its heading line,
   when no file whose name does not end in `.md` that cites it by `invariant:` now differs between
@@ -161,6 +168,9 @@ BASE_FILES = (DECISIONS, INVARIANTS)
 UNKNOWN_BASE = (
     "the commit the branch left the main branch from is not known, so nothing was compared with it"
 )
+# The limits of a paragraph of the binding sentences of a decision (WAY-05).
+SENTENCE_LIMIT = 3
+WORD_LIMIT = 300
 
 WORDS = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 # An identifier, with what the old form put after it: `@<fingerprint>` or `/<version>`.
@@ -298,6 +308,19 @@ def invariant_entries(lines):
             continue
         found.setdefault(match.group(1), (number, " ".join(binding(body)), entry_fields))
     return found
+
+
+def excess(paragraph):
+    """The measures of a paragraph of binding sentences that stand over their limits, each as
+    `4 sentences (at most 3)` or `301 words (at most 300)`. A sentence begins as `begins_sentence`
+    gives it; a word is a run of characters between spaces."""
+    stops = re.finditer(r"\. ", paragraph)
+    sentences = 1 + sum(begins_sentence(paragraph, stop.end()) for stop in stops)
+    measures = (
+        (sentences, "sentences", SENTENCE_LIMIT),
+        (len(paragraph.split()), "words", WORD_LIMIT),
+    )
+    return ["%d %s (at most %d)" % (n, name, limit) for n, name, limit in measures if n > limit]
 
 
 class Foundation:
@@ -688,9 +711,9 @@ class Foundation:
                     "no readable %s, so nothing of it was compared" % path,
                 )
 
-    def base_sentences(self):
-        """{number: the binding sentences, normalised} of each unversioned entry of the log at the
-        base, or None where the base or its log is unknown."""
+    def base_paragraphs(self):
+        """{number: the paragraphs of the binding sentences, normalised} of each unversioned entry
+        of the log at the base, or None where the base or its log is unknown."""
         lines = self.base_files.get(DECISIONS)
         if lines is None or not self.prefix:
             return None
@@ -698,8 +721,13 @@ class Foundation:
         for _, heading, body in blocks(lines, "### "):
             match = re.match(r"^### %s-([0-9]+) — " % re.escape(self.prefix), heading)
             if match:
-                found[int(match.group(1))] = " ".join(binding(body))
+                found[int(match.group(1))] = binding(body)
         return found
+
+    def base_sentences(self):
+        """The same, each entry's paragraphs joined into one text."""
+        paragraphs = self.base_paragraphs()
+        return None if paragraphs is None else {k: " ".join(v) for k, v in paragraphs.items()}
 
     def held_by_pair(self, value):
         """Whether a *Verification* holds a line that begins `- complies:` and one that begins
@@ -748,6 +776,32 @@ class Foundation:
                 self.report.note(
                     DECISIONS, self.headings[key], "`%s` is held by nothing: %s" % (label, nothing)
                 )
+
+    def check_length(self):
+        """Report each paragraph of the binding sentences of a decision over the limits of
+        SENTENCE_LIMIT and WORD_LIMIT (WAY-05). In a decision that the change adds, or whose
+        paragraphs differ from those at the base, it is an error at the heading; in any other it is
+        listed. A decision is changed here by its words or its division into paragraphs."""
+        before = self.base_paragraphs()
+        for key, body in sorted(self.bodies.items()):
+            paragraphs = binding(body)
+            changed = before is not None and before.get(key) != paragraphs
+            for number, paragraph in enumerate(paragraphs, start=1):
+                over = excess(paragraph)
+                if over and changed:
+                    self.report.error(
+                        DECISIONS,
+                        self.headings[key],
+                        "`%s-%02d` is added or changed by this change: paragraph %d of its "
+                        "binding sentences has %s" % (self.prefix, key, number, " and ".join(over)),
+                    )
+                elif over:
+                    self.report.note(
+                        DECISIONS,
+                        self.headings[key],
+                        "`%s-%02d`: paragraph %d of its binding sentences has %s"
+                        % (self.prefix, key, number, " and ".join(over)),
+                    )
 
     def list_invariants(self, tracked):
         """List each invariant that reads `test` and whose sentence a change reworded, when no file
@@ -1025,6 +1079,7 @@ def run(root, skip_test_citations=False):
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
     foundation.check_held()
+    foundation.check_length()
     foundation.list_invariants(tracked)
     if not skip_test_citations:
         foundation.check_test_citations()

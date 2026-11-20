@@ -2066,6 +2066,164 @@ class FoundationCheckTest(unittest.TestCase):
         product = self.on_topic(DECISIONS + "\n" + self.decision(self.NOTHING))
         self.assertFails(product.check("--skip-test-citations"), self.NOT_HELD, "1 error")
 
+    # --- a decision whose binding sentences run past the limits -------------------------------
+
+    # A paragraph of three sentences and 300 words: the limits themselves, each token a word.
+    AT_THE_LIMITS = (100, 100, 100)
+
+    @staticmethod
+    def paragraph(*counts):
+        """Sentences of the numbers of words given, each ending in `well-known, end.`: the
+        paragraph's words are the runs of characters between spaces."""
+        return " ".join(
+            " ".join(["word"] * (count - 2) + ["well-known,", "end."]) for count in counts
+        )
+
+    def long_decision(self, *paragraphs, heading="ABC-03", rationale="a folder is known."):
+        """An entry ABC-03 held by an invariant, its binding sentences the paragraphs given."""
+        return self.decision(
+            self.BY_INVARIANT,
+            sentence="\n\n".join(paragraphs),
+            rationale=rationale,
+            heading=heading,
+        )
+
+    def assertReported(self, result, *parts, listed=False):
+        """The report has a line, an error or a listed line, that holds every part."""
+        report = result[1]
+        found = [
+            line
+            for line in report.splitlines()
+            if all(part in line for part in parts) and (": listed: " in line) == listed
+        ]
+        self.assertTrue(found, report)
+
+    def test_a_new_decision_with_four_sentences_in_a_paragraph_is_an_error(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(self.paragraph(3, 3, 3, 3)))
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(
+            result, "foundations/decisions.md:29:", "`ABC-03`", "paragraph 1", "4 sentences"
+        )
+
+    def test_a_paragraph_of_three_sentences_and_300_words_passes(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(
+            DECISIONS + "\n" + self.long_decision(self.paragraph(*self.AT_THE_LIMITS))
+        )
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_a_paragraph_of_301_words_is_an_error_that_names_the_words_alone(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(
+            DECISIONS + "\n" + self.long_decision(self.paragraph(100, 100, 101))
+        )
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "`ABC-03`", "paragraph 1", "301 words")
+        self.assertNotRegex(result[1], r"\d+ sentences")
+
+    def test_a_paragraph_over_both_limits_names_both_measures(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        product = self.on_topic(
+            DECISIONS + "\n" + self.long_decision(self.paragraph(80, 80, 80, 80))
+        )
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "`ABC-03`", "paragraph 1", "4 sentences", "320 words")
+
+    def test_each_paragraph_is_counted_by_itself(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        long_second = self.long_decision(self.paragraph(3, 3), self.paragraph(3, 3, 3, 3))
+        product = self.on_topic(DECISIONS + "\n" + long_second)
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "`ABC-03`", "paragraph 2", "4 sentences")
+        self.assertNotIn("paragraph 1", result[1])
+        # 400 words in all, over two paragraphs of 200
+        two = self.long_decision(self.paragraph(100, 100), self.paragraph(100, 100))
+        self.assertEqual(self.lines(self.on_topic(DECISIONS + "\n" + two).check()), ["0 errors"])
+
+    def test_a_full_stop_inside_quotation_marks_ends_no_sentence(self):
+        # decision: WAY-05 "A decision entry opens with one to three binding sentences that answer its question"
+        text = 'One says "Saved. Next game." and ends. Two is here. Three is here.'
+        product = self.on_topic(DECISIONS + "\n" + self.long_decision(text))
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_a_decision_whose_binding_sentences_a_change_alters_is_an_error(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        base = DECISIONS + "\n" + self.long_decision(self.paragraph(3, 3))
+        product = self.on_topic(
+            DECISIONS + "\n" + self.long_decision(self.paragraph(3, 3, 3, 3)), base=base
+        )
+        result = product.check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "foundations/decisions.md:29:", "`ABC-03`", "4 sentences")
+
+    def test_a_decision_over_a_limit_whose_rationale_alone_changed_is_listed(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        long = self.paragraph(3, 3, 3, 3)
+        base = DECISIONS + "\n" + self.long_decision(long)
+        product = self.on_topic(
+            DECISIONS + "\n" + self.long_decision(long, rationale="a folder is easy to find."),
+            base=base,
+        )
+        result = product.check()
+        self.assertEqual(result[0], 0, result[1])
+        self.assertReported(
+            result,
+            "foundations/decisions.md:29: listed:",
+            "`ABC-03`",
+            "paragraph 1",
+            "4 sentences",
+            listed=True,
+        )
+        self.assertIn("0 errors", result[1])
+
+    def test_a_decision_over_a_limit_whose_spacing_alone_changed_is_listed(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        long = self.paragraph(3, 3, 3, 3)
+        base = DECISIONS + "\n" + self.long_decision(long)
+        product = self.on_topic(
+            DECISIONS
+            + "\n"
+            + self.long_decision(long.replace(" ", "  ", 2).replace("e. ", "e.\n")),
+            base=base,
+        )
+        result = product.check()
+        self.assertEqual(result[0], 0, result[1])
+        self.assertReported(result, "`ABC-03`", "4 sentences", listed=True)
+
+    def test_a_different_division_into_paragraphs_counts_as_a_change(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        base = DECISIONS + "\n" + self.long_decision(self.paragraph(3, 3), self.paragraph(3, 3))
+        joined = self.long_decision(self.paragraph(3, 3, 3, 3))
+        result = self.on_topic(DECISIONS + "\n" + joined, base=base).check()
+        self.assertFails(result, "1 error")
+        self.assertReported(result, "`ABC-03`", "paragraph 1", "4 sentences")
+        # the other way, a paragraph over the limit divided in two with no word changed
+        divided = self.long_decision(self.paragraph(3, 3), self.paragraph(3, 3))
+        product = self.on_topic(DECISIONS + "\n" + divided, base=DECISIONS + "\n" + joined)
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_a_decision_over_a_limit_where_the_base_is_unknown_is_listed(self):
+        long = self.long_decision(self.paragraph(3, 3, 3, 3))
+        result = self.run_on(foundations__decisions_dot_md=DECISIONS + "\n" + long)
+        self.assertEqual(result[0], 0, result[1])
+        self.assertReported(result, "`ABC-03`", "4 sentences", listed=True)
+
+    def test_a_listed_decision_stands_after_the_errors_and_before_the_count(self):
+        # decision: WAY-05 "The check of the foundation reports as an error a paragraph of binding sentences"
+        long = self.paragraph(3, 3, 3, 3)
+        base = DECISIONS + "\n" + self.long_decision(long)
+        product = self.on_topic(base + "\n" + self.long_decision(long, heading="ABC-04"), base=base)
+        lines = self.lines(product.check(), 1)
+        self.assertEqual(len(lines), 3, lines)
+        self.assertTrue(lines[0].startswith("foundations/decisions.md:42: `ABC-04`"), lines)
+        self.assertTrue(lines[1].startswith("foundations/decisions.md:29: listed: "), lines)
+        self.assertEqual(lines[2], "1 error")
+
     # --- an invariant whose sentence changed while its test did not ---------------------------
 
     # save-round-trip stands at line 3 of the invariants of the good product.
