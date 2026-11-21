@@ -8660,20 +8660,22 @@ takes its figures from the file of the other.
   that the cycle changed the tool, and its other measures as they stand under the version it ran on;
   that the stage report holds, for each stage and model, the tokens written to the cache at each
   lifetime, and that the script that measures the cost and the script of the other measures count
-  the same tokens from the transcripts. For the rest, an agent compares a change with the decision:
+  the same tokens from the transcripts; that the audit shows each series as an image of all its
+  cycles that carries what its kind carries and neither the answer Q3 nor a fall, and, for each fixed
+  issue of the register with a fix commit that has cycles of the series on both sides of it, as a
+  comparison before and after the fix of the cycles on the versions that hold it against those on
+  the versions that lack it, the version a cycle ran on and never its date deciding its side, a
+  cycle whose version git cannot place standing on neither side, the times of the gate on both sides
+  taking only the runs that WAY-350 compares, and that an issue that is open or dropped, one whose
+  fix is no commit, one whose fix the checkout of the-way lacks, and a change with no fixed issue in
+  the register give no comparison. For the rest, an agent compares a change with the decision:
   - complies: the cycles of one version of the process are compared with the cycles of another
     version inside a series; a later change that adds one more measure of context or cache use adds
     it to the script and the file of those measures, and the stage report keeps the columns it has;
     the file of those measures gives for the reviewer of the whole change the bytes of the decision
     log that entered its context and in how many reads, and the bytes and reads of the index of
-    decisions it wrote, beside its other figures; a series of the cost is shown as the median cost of
-    all its cycles with a known cost, and, for a fixed issue with a fix commit, as that median over
-    its cycles on the versions that hold the fix against that over its cycles on the versions that
-    lack it;
+    decisions it wrote, beside its other figures;
   - violates: the cost or the number of remarks of one week is set against that of the week before;
-    the cycles before a fix are told from the cycles after it by the date of the fix; the image of a
-    series carries the answer Q3 or a fall; a change of the process that has no fixed issue with a
-    fix commit in the register gets a comparison before and after;
     a change adds to the stage report a column of a measure of context or cache use other than the
     tokens written to the cache by lifetime that the cost is priced from; the script of those
     measures writes its numbers into the stage report; the script that measures the cost takes the
@@ -9013,16 +9015,16 @@ against each other, gives a measure as its median and the number of its cycles w
 - **Scope:** process-audit
 - **Based on:** none
 - **Relations:** derives from WAY-339 · derives from WAY-404
-- **Verification:** an agent compares a change with the decision:
-  - complies: a series of five cycles, two of which answer yes to Q1, two no and one unknown, is
-    shown with Q1 as `yes 2 · no 2 · unknown 1` in its image, in the row of each version for the
-    cycles of that version and on each side of a comparison before and after a fix; a series of the
-    cost shows in its image the median cost and the number of cycles with a known cost and no Q3,
-    and shows Q3 in the row that sets a version against the previous version of its series and in
-    the comparison before and after a fix;
-  - violates: the Q1 of a version or of a group reads `yes` because one of its cycles answers yes;
-    the rows of the versions of a series give Q1 as a word while its image gives it as numbers; the
-    image of a series carries the answer Q3 or a fall.
+- **Verification:** tests: that the answer Q1 of a group of cycles — a version, a whole series, one
+  side of a comparison before and after a fix — is the number of its cycles that answer yes, the
+  number that answer no and the number that answer unknown, in the row of each version as in the
+  image of a series and on each side of a comparison, and no word taken from them; that the answer
+  Q2 of a group is the answer that the sums of the slices planned and returned too large over its
+  cycles whose plans are read give, with the two sums shown beside it in the image of a series and
+  on each side of a comparison; that the answer Q3 and the fall of a mechanism measure or of a gate
+  time stand in the row that sets a version against the previous version of its series and in the
+  comparison before and after a fix, and that the image of a series carries neither and gives a
+  measure as its median and the number of its cycles with a known value.
 - **Origin:** none
 
 *Rationale:* a word taken from many cycles reads `yes` as soon as one of them says yes, so in a long

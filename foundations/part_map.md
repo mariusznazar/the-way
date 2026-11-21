@@ -65,7 +65,8 @@ The part answers for a product's environment facts.
 ## elements-common
 
 The part answers for rules of form and the way of working shared by foundation-entry skills, the
-script that checks a whole foundation's identifiers, references and assignment of files to parts,
+way a skill hands work on to another skill of the-way, which every skill that hands work on shares,
+the script that checks a whole foundation's identifiers, references and assignment of files to parts,
 the references of a product's guidelines included, with the module that reads the files and git for
 it and the module that reads the text of an entry for it, the script that migrates a foundation from
 the earlier form of the-way, the script that writes the index of the decisions a reading selects
