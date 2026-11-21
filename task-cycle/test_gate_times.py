@@ -177,19 +177,37 @@ def passing(directory: str, seconds: str) -> str:
     return f"== {directory}\n.\n{RULE}\nRan 1 test in {seconds}s\n\nOK\n"
 
 
-def failing_with(nested: str, seconds: str, directory: str = "gate") -> str:
+def failing_with(
+    nested: str,
+    seconds: str,
+    directory: str = "gate",
+    separator: str = "AssertionError: 0 != 5 : ",
+    then: str = "",
+) -> str:
     """The report of the directory `directory` whose one test fails and prints, in its failure
     message, the output of a nested run of the runner (`nested`, ending with its summary line and a
     line end), as the unittest of Python prints it: the first line of `nested` stands after the
-    text of the message, the rest at the start of their lines, and the directory's own `Ran` line
-    comes after it."""
+    text of the message (after `separator`; a separator ending with a line end puts it at the start
+    of its line), the rest at the start of their lines, and the directory's own `Ran` line comes
+    after it. `then` is the report of a second failing test of the directory, printed after the
+    first one and ending with a blank line."""
     return (
         f"== {directory}\nF\n{FAILURE_RULE}\n"
         f"FAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
         "Traceback (most recent call last):\n"
         '  File "gate/test_nested.py", line 6, in test_nested\n'
-        f"    self.assertEqual(0, 5, done.stdout)\nAssertionError: 0 != 5 : {nested}\n\n{RULE}\n"
+        f"    self.assertEqual(0, 5, done.stdout)\n{separator}{nested}\n\n{then}{RULE}\n"
         f"Ran 1 test in {seconds}s\n\nFAILED (failures=1)\n"
+    )
+
+
+def failing_dir(directory: str, seconds: str, assert_line: str = "    assert x == y") -> str:
+    """The report of the directory `directory` whose one test fails with a traceback that holds
+    the line `assert_line`, which holds `== ` after text but opens no directory."""
+    return (
+        f"== {directory}\nF\n{FAILURE_RULE}\nFAIL: test_b (test_b.B.test_b)\n{RULE}\n"
+        f"Traceback (most recent call last):\n{assert_line}\nAssertionError\n\n"
+        f"{RULE}\nRan 1 test in {seconds}s\n\nFAILED (failures=1)\n"
     )
 
 
@@ -344,6 +362,115 @@ class NestedRunTest(GateTimesTest):
             + "4 tests in 2 directories; failed: gate (exit code 1)\n"
         )
         self.assertEqual([["other", "0.002"], ["gate", "0.539"]], self.read(text))
+
+    def test_a_comparison_line_of_an_earlier_directory_is_not_this_nested_runs_first_line(
+        self,
+    ) -> None:
+        # The directory `other` fails with `    assert x == y` in its traceback; the nested run of
+        # `gate` starts at the start of a line (its separator ends with a line end), so none of its
+        # directories stands after text. Four lines open a block (`other`, `gate`, `x`, `y`) and
+        # the run's own summary counts 2, so two are nested. The description at the head of the
+        # script: a line that holds `== ` after text counts only where it stands before exactly
+        # `<m>` less one of the lines `== ` that follow it up to the summary line; here `<m>` is 2
+        # and three lines follow it, so each nested line takes its `<m>`: `x` and `y` are nested.
+        text = (
+            failing_dir("other", "0.002")
+            + failing_with(
+                passing("x", "0.001") + passing("y", "0.003") + SUMMARY_TWO,
+                "0.500",
+                separator="AssertionError: 0 != 5 :\n",
+            )
+            + "4 tests in 2 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual([["other", "0.002"], ["gate", "0.500"]], self.read(text))
+
+    def test_a_comparison_line_in_the_second_nested_run_does_not_hide_the_first_ones_lines(
+        self,
+    ) -> None:
+        # `gate1` prints a nested run of two directories (`x1` after text, `y1` at the start of its
+        # line); `gate2` prints one of three (`a` after text, `b` and `c` at the start of their
+        # lines), and the failing test of `b` prints `    assert x == y`. Six lines open a block
+        # (`other`, `gate1`, `y1`, `gate2`, `b`, `c`) and the run's own summary counts 3, so three
+        # are nested. The description at the head of the script: of the lines before the summary
+        # line of three directories, the line that holds `== ` after text (`a`) stands before
+        # exactly `<m>` less one, 2, of the lines that follow it (`b`, `c`), so that summary takes
+        # two lines, `b` and `c`; the line `    assert x == y` is no such line, it stands before one.
+        # The summary of two directories takes the one line left to take: `y1`.
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("x1", "0.001") + passing("y1", "0.003") + SUMMARY_TWO, "0.500", "gate1"
+            )
+            + failing_with(
+                passing("a", "0.001")
+                + failing_dir("b", "0.002")
+                + passing("c", "0.003")
+                + "3 tests in 3 directories; every directory passed\n",
+                "0.600",
+                "gate2",
+            )
+            + "6 tests in 3 directories; failed: gate1 (exit code 1), gate2 (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["other", "0.002"], ["gate1", "0.500"], ["gate2", "0.600"]], self.read(text)
+        )
+
+    def test_a_comparison_line_after_the_first_nested_run_does_not_hide_the_second_ones(
+        self,
+    ) -> None:
+        # As in the test of two directories that each print a nested run, but `gate1` prints, after
+        # its nested run, a second failing test whose traceback holds `    assert a == b`. Five
+        # lines open a block (`other`, `gate1`, `y1`, `gate2`, `y2`) and the run's own summary
+        # counts 3, so two are nested. The description at the head of the script: the line of
+        # `x2`, which holds `== ` after text, stands before exactly `<m>` less one, 1, of the
+        # lines that follow it (`y2`), so the second summary takes one line, `y2`; the first
+        # summary takes the one left, `y1`. The line `    assert a == b` stands before two lines
+        # (`gate2`, `y2`), not one, and is no such line.
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("x1", "0.001") + passing("y1", "0.003") + SUMMARY_TWO,
+                "0.500",
+                "gate1",
+                then=(
+                    f"{FAILURE_RULE}\nFAIL: test_b (test_b.B.test_b)\n{RULE}\n"
+                    "Traceback (most recent call last):\n    assert a == b\nAssertionError\n\n"
+                ),
+            )
+            + failing_with(
+                passing("x2", "0.004") + passing("y2", "0.005") + SUMMARY_TWO, "0.600", "gate2"
+            )
+            + "5 tests in 3 directories; failed: gate1 (exit code 1), gate2 (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["other", "0.002"], ["gate1", "0.500"], ["gate2", "0.600"]], self.read(text)
+        )
+
+    def test_a_flood_of_comparison_lines_in_a_nested_directory_leaves_the_first_lines_place(
+        self,
+    ) -> None:
+        # As in the test of two directories that each print a nested run, but the directory `y2` of
+        # the second nested run prints 101 lines `    assert x == y` in its traceback. The
+        # description at the head of the script: the places of the last 100 different lines that
+        # hold `== ` after text are kept, each place once, so the 101 lines of `y2` are one place
+        # and the place of `x2`, the line before `y2`, stays. Five lines open a block and the
+        # run's own summary counts 3, so two are nested: `y1` and `y2`, as in that test.
+        flood = "\n".join(["    assert x == y"] * 101)
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("x1", "0.001") + passing("y1", "0.003") + SUMMARY_TWO, "0.500", "gate1"
+            )
+            + failing_with(
+                passing("x2", "0.004") + failing_dir("y2", "0.005", flood) + SUMMARY_TWO,
+                "0.600",
+                "gate2",
+            )
+            + "5 tests in 3 directories; failed: gate1 (exit code 1), gate2 (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["other", "0.002"], ["gate1", "0.500"], ["gate2", "0.600"]], self.read(text)
+        )
 
     def test_a_nested_run_cut_off_before_its_summary_line_is_read_as_before(self) -> None:
         # The nested output ends before its summary line, so the run holds one summary line, its
