@@ -17,7 +17,7 @@ This skill lives in `elements/common/skill/` of the-way. In the-way itself, the-
 or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the
 session's working directory; in a product, it is the product's pinned `.the-way`. `elements/common/`
 is there. A skill named in this skill or in the files beside it is handed on to as
-`elements/common/hand_over.md` there gives: read that file when the first hand-over comes, and
+`elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over comes, and
 follow it.
 
 ## What the caller gives

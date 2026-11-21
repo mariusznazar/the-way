@@ -3363,7 +3363,7 @@ that the installer writes.
   the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
     session works in for the-way itself and the pinned `.the-way` for a product, and the shared
-    file the paragraph points to, `elements/common/hand_over.md`, names the other the-way skill a
+    file the paragraph points to, `elements/common/reaching_another_skill.md`, names the other the-way skill a
     skill hands work on to as the file `SKILL.md` read from that checkout or worktree for the-way
     itself and as the project skill with the `the-way-` prefix for a product;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way

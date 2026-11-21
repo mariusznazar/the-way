@@ -19,7 +19,7 @@ This skill lives in `product-guidelines/styleguide/` of the-way. In the-way itse
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The files
 named below lie there. A skill named below or in the files beside this skill is handed on to as
-`elements/common/hand_over.md` there gives: read that file when the first hand-over comes, and
+`elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over comes, and
 follow it. The files beside this `SKILL.md` hold what one step or one variant
 of the work needs; each is read when the step or variant that names it comes, not at the start.
 

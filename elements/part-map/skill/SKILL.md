@@ -14,7 +14,7 @@ This skill lives in `elements/part-map/skill/` of the-way. In the-way itself, th
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The element's
 directory is `elements/part-map/` there. A skill named in this skill or in the files beside it is
-handed on to as `elements/common/hand_over.md` there gives: read that file when the first hand-over
+handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over
 comes, and follow it. Follow the steps of `elements/common/way_of_working.md` there;
 below is what the part map adds to each.
 

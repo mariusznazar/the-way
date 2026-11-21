@@ -18,7 +18,7 @@ again.
 This skill lives in `project-level/lead/skill/` of the-way. In the-way itself use the checkout or
 worktree the session works in, which `git rev-parse --show-toplevel` names; in a product use its
 pinned `.the-way`, verified against the product's gitlink. A skill named here is handed on to as
-`elements/common/hand_over.md` there gives: read that file when the first hand-over comes, and
+`elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over comes, and
 follow it. In the-way itself, give the brief of an agent you dispatch for such a skill the path of
 its `SKILL.md`, so that no personal skill of the same name stands in.
 

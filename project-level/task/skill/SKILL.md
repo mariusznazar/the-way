@@ -11,7 +11,7 @@ ask the human stands in `elements/common/way_of_working.md`. This skill holds th
 
 This skill lives in `project-level/task/skill/` of the-way. In the-way itself, read it in the
 checkout or worktree the session works in; in a product, at the pinned `.the-way` commit. Another
-skill named here is handed on to as `elements/common/hand_over.md` there gives: read that file when
+skill named here is handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when
 the first hand-over comes, and follow it.
 
 ## Orchestrated mode
