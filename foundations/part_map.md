@@ -167,8 +167,8 @@ The part answers for the files that configure the repository itself rather than 
 ## agent-instructions
 
 The part answers for the instructions agents read when they work on this repository, for the
-project skill entry points that make the-way's skills visible to sessions on it and the script that
-generates them, for the copies of the cycle's agent type definitions that make those types available
+project skill entry points through which a human starts the-way's skills in sessions on it, hidden
+from the model, and the script that generates them, for the copies of the cycle's agent type definitions that make those types available
 to sessions on it and the script that generates them, and for the hooks and the configuration of
 agents' tools and of CI that direct them, and for the guidelines of the-way's own code that those
 instructions point to, and for the tests of the rules every script of the-way keeps: the language it

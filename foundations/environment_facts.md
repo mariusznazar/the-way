@@ -153,6 +153,12 @@ Codex's initial list of skills includes each skill's file path.
 
 - **Source:** https://learn.chatgpt.com/docs/build-skills (archived: http://web.archive.org/web/20261002133901/https://learn.chatgpt.com/docs/build-skills, 2026-10-02) § Build skills — "In Codex, the initial list also includes each skill’s file path." · § Build skills — "This budget applies only to the initial skills list."; read 2026-10-08
 
+## claude-code-skill-model-hiding
+
+Claude Code removes a skill whose frontmatter holds `disable-model-invocation: true` from Claude's context, so that its description is not in context and Claude does not invoke it on its own, while the user can still invoke it.
+
+- **Source:** https://code.claude.com/docs/en/skills (archived: https://web.archive.org/web/20261114004012/https://code.claude.com/docs/en/skills, 2026-11-14) § Restrict Claude's skill access — "Hide individual skills by adding disable-model-invocation: true to their frontmatter. This removes the skill from Claude’s context entirely." · § Control who invokes a skill, the table row of `disable-model-invocation: true`, columns "You can invoke", "Claude can invoke" and "When loaded into context" — "Yes" · "Not on its own" · "Description not in context, full skill loads when invoked"; read 2026-11-21
+
 ## claude-code-imports
 
 Claude Code expands a file that a `CLAUDE.md` imports with `@path/to/import` syntax and loads it into context alongside that `CLAUDE.md`, loads at launch the `CLAUDE.md` files in the directory hierarchy above the working directory, and skips Markdown code spans and fenced code blocks when it parses imports.
