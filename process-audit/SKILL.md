@@ -284,8 +284,9 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    with its number and median, for the total and for each directory any run has. Under it stands,
    where the series has one, the comparison before and after a fix, a pair of rows for each measure
    with *Falls* beside the side after, `yes` where its median is lower than that of the side
-   before; for the gate times it stands where runs compared stand on both sides of the total, and
-   each side takes only the runs compared for its fall. The image holds no *Falls*. For each
+   before; for the mechanism measures it stands where a cycle of either side gives a value of any
+   measure, and for the gate times where runs compared stand on both sides of the total, each side
+   taking only the runs compared for its fall. The image holds no *Falls*. For each
    series, quote its image, its comparison where it has one and the rows of its table, each with
    the table's header row, in that order; then what follows from them and what does not; then one
    open question for the human that the rows answer, with a recommendation only where the rows

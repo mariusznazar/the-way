@@ -259,9 +259,10 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "Under the image a series has, for each fixed issue of the register of problems that "
         "has cycles on both sides of its fix, the same comparison as in *Process versions*: the "
         "side before and the side after, a pair of rows for each measure, with *Falls* beside the "
-        "side after, `yes` where its median is lower than that of the side before. For the gate "
-        "times the comparison stands where runs compared (see below) stand on both sides of the "
-        "total, and each side takes only the runs compared for its fall.",
+        "side after, `yes` where its median is lower than that of the side before. For the "
+        "mechanism measures the comparison stands where a cycle of either side gives a value of "
+        "any measure. For the gate times it stands where runs compared (see below) stand on both "
+        "sides of the total, and each side takes only the runs compared for its fall.",
         "",
         "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
         "and *Cycles with a value* counts them; in the image they are the cycles of the whole "

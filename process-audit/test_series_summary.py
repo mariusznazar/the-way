@@ -424,6 +424,23 @@ class MechanismComparison(unittest.TestCase):
     def test_cycles_on_one_side_only_give_no_comparison(self):
         self.assertEqual([], mechanism_comparison("slow", FIX, [cycle()], []).rows)
 
+    def test_cycles_on_both_sides_that_give_no_value_of_any_measure_give_no_comparison(self):
+        # Neither side has a median to set against the other, so each of the 15 pairs would read
+        # `0` and `unknown`: no row and no unknown value stand for the issue.
+        result = mechanism_comparison("slow", FIX, [cycle(), cycle()], [cycle(measures={})])
+        self.assertEqual([], result.rows)
+        self.assertEqual([], result.unknown)
+
+    def test_a_value_on_one_side_alone_still_gives_the_comparison_with_its_unknown_falls(self):
+        # Before: 4 calls. After: no value. The calls have a median on one side only, so their fall
+        # is unknown, and the comparison stands with the pairs of all the measures.
+        result = mechanism_comparison("slow", FIX, [cycle(measures={CALLS: "4"})], [cycle()])
+        rows = self.rows(result)
+        self.assertEqual(30, len(rows))
+        self.assertEqual(
+            ["slow", FIX, "after", CALLS, "0", "unknown", "unknown"], rows[(CALLS, "after")]
+        )
+
 
 class GateComparison(unittest.TestCase):
     A = DIRECTORY_MEASURE + "gate/a"

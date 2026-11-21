@@ -157,8 +157,8 @@ comparison, is the number of its cycles that answer yes, the number that answer 
 that answer unknown (`yes n · no n · unknown n`), never one word taken from them (WAY-417); a cycle
 answers for itself, as follows. A cycle's own answer to Q1, a contradiction with the product's
 settlements that came out only after code was written: from two marks of the cycle's record, never
-from the words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where a
-sub-item of *Review rounds* opens with the path of its findings file and
+from the words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes
+where a sub-item of *Review rounds* opens with the path of its findings file and
 `, contradiction yes`, or the
 item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
 any of its sub-items does, where a cycle that discarded more than one attempt writes one sub-item for each
@@ -196,10 +196,12 @@ side before, with the same answers.
 The measure versions (WAY-339, WAY-350): the same versions, in their own series, one kind of
 series for each instrument. As the series above, each opens with an image of all its cycles, which
 has no *Falls*, and has under it, for each fixed issue of the register with cycles on both sides of
-its fix, a comparison before and after it, with *Falls* beside the side after (for the gate times,
-where runs compared stand on both sides of the total); the rows per version follow. The count reads
-these measures and shows them with a median and a comparison for each version, because the numbers lie in the records of cycles, which the session
-of the audit does not open, and a comparison of before and after made by hand cannot say that a
+its fix, a comparison before and after it, with *Falls* beside the side after (for the mechanism
+measures, where a cycle of either side gives a value of any measure; for the gate times, where runs
+compared stand on both sides of the total); the rows per version follow. The count reads these
+measures and shows them with a median and a comparison for each version, because the numbers lie in
+the records of cycles, which the session of the audit does not open, and a comparison of before and
+after made by hand cannot say that a
 change to the process worked. A series of the mechanism measures of `mechanism_measures.md`
 begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
 series of

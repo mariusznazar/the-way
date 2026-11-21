@@ -274,9 +274,13 @@ def mechanism_comparison(
     name: str, fix: str, before: list[Cycle], after: list[Cycle]
 ) -> Comparison:
     """The comparison of the mechanism measures for a fix: for each measure the pair of rows of the
-    issue, where cycles stand on both sides, each side as the image of a series of those measures
-    gives it, and the fall beside the side after: `yes` where its median is lower."""
+    issue, where cycles stand on both sides and any of them gives a value of a measure, each side as
+    the image of a series of those measures gives it, and the fall beside the side after: `yes`
+    where its median is lower. Where no cycle of either side gives any value there is no median to
+    set against another, and no row stands for the issue."""
     if not before or not after:
+        return Comparison()
+    if not any(measure_values(before + after, label) for label in MEASURE_LABELS):
         return Comparison()
     result = Comparison()
     for label in MEASURE_LABELS:
