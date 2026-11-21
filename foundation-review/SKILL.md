@@ -18,15 +18,10 @@ repository at a time.
 
 This skill lives in `foundation-review/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the session's
-working directory; in a product, it is the product's pinned `.the-way`. In the-way itself, a skill
-named below is read as a file, not called, since Claude Code does not offer the entry points of
-the-way's skills to the model: its `SKILL.md` stands at the path that the list of skills in the
-entry point you were started with gives, or, where you were started without one, in the file under
-that root whose frontmatter has the line `name: <that name>`, which a search of the files that git
-lists as `SKILL.md` finds; read it there in full and follow it. In a product, it is the project
-skill of that name with the `the-way-` prefix. The repository under review is the one the session
-works in — the-way itself, or a product that pins it — and the review runs from that repository's
-root.
+working directory; in a product, it is the product's pinned `.the-way`. A skill named below is
+handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the
+first hand-over comes, and follow it. The repository under review is the one the session works in —
+the-way itself, or a product that pins it — and the review runs from that repository's root.
 
 A request's description asks for this review once the main branch holds as many merges since the
 last review tag as the threshold of the task cycle's reminder script gives (WAY-300); the human may

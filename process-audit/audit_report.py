@@ -18,6 +18,7 @@ from pathlib import Path
 from problem_register import COST_LEVELS
 from audit_shared import THE_WAY, AuditCountError
 from record_reading import MEASURE_LABELS, Cycle, Read
+from series_summary import money
 from stage_pricing import UNKNOWN, Prices
 from version_analysis import (
     COST_MODULE,
@@ -27,8 +28,8 @@ from version_analysis import (
     MEASURES_SCRIPT,
     Analysis,
     MeasureVersions,
+    Series,
     Versions,
-    money,
     unknown_rows,
 )
 
@@ -50,6 +51,25 @@ COST_HEADER = [
     "Median cost (USD)",
     "Q3: cost falls",
 ]
+# The image of a series, the table that stands first under its heading: what its kind carries over
+# all the cycles of the series, and no Q3 and no fall (WAY-417).
+COST_IMAGE_HEADER = ["Cycles", "Cycles with a known cost", "Median cost (USD)"]
+COUNT_IMAGE_HEADER = [
+    "Cycles",
+    "Q1: contradiction only after code",
+    "Plans read",
+    "Slices planned",
+    "Slices returned too large",
+    "Q2: more than a third of slices too large",
+]
+MECHANISM_IMAGE_HEADER = ["Measure", "Cycles with a value", "Median"]
+GATE_IMAGE_HEADER = [
+    "Measure",
+    "Runs compared",
+    "Median (seconds)",
+    "Runs not compared",
+    "Median of those (seconds)",
+]
 COUNT_HEADER = [
     "Version (commit)",
     "Committed",
@@ -58,6 +78,16 @@ COUNT_HEADER = [
     "Plans read",
     "Q2: more than a third of slices too large",
 ]
+
+# The comparison before and after a fix, the table that stands under the image of a series where it
+# has one: a pair of rows for each fixed issue of the register or, for the measures, for each
+# measure of it, the side before first. The kind's own columns follow the issue, its fix and the
+# side; Q3 and the fall stand beside the side after and nowhere else (WAY-339, WAY-417).
+COMPARISON_LEAD = ["Issue", "Fix", "Side"]
+COST_COMPARISON_HEADER = [*COMPARISON_LEAD, *COST_IMAGE_HEADER, "Q3: cost falls"]
+COUNT_COMPARISON_HEADER = [*COMPARISON_LEAD, *COUNT_IMAGE_HEADER]
+MECHANISM_COMPARISON_HEADER = [*COMPARISON_LEAD, *MECHANISM_IMAGE_HEADER, "Falls"]
+GATE_COMPARISON_HEADER = [*COMPARISON_LEAD, *GATE_IMAGE_HEADER, "Falls"]
 
 MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
 GATE_HEADER = [
@@ -69,6 +99,43 @@ GATE_HEADER = [
     "Runs not compared",
     "Median of those (seconds)",
 ]
+
+
+def series_lines(
+    title: str,
+    number: int,
+    block: Series,
+    headers: tuple[list[str], list[str], list[str]],
+) -> list[str]:
+    """The subsection of a series: its heading, the reason it begins where it does, the image of
+    all its cycles, the comparisons before and after a fix where it has any and then the table
+    with a row for each of its versions; `headers` are those of the image, the comparisons and the
+    versions, in that order."""
+    image_header, comparison_header, header = headers
+    comparison = []
+    if block.comparison:
+        comparison = [
+            "Before and after a fix, inside the series, for each fixed issue of the register "
+            "that has cycles on both sides of its fix (the side before first):",
+            "",
+            *table(comparison_header, block.comparison),
+            "",
+        ]
+    return [
+        f"### {title}, series {number}",
+        "",
+        f"Begins at this version: {block.begins}.",
+        "",
+        "The image of the series, over all its cycles:",
+        "",
+        *table(image_header, block.image),
+        "",
+        *comparison,
+        "By version:",
+        "",
+        *table(header, block.rows),
+        "",
+    ]
 
 
 def versions_lines(versions: Versions) -> list[str]:
@@ -101,23 +168,48 @@ def versions_lines(versions: Versions) -> list[str]:
         "the reviewer finding more or the process getting dearer, and the count of remarks, "
         "whose meaning changes with the reviewer, is the series that ends there.",
         "",
-        "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
-        "unknown. The reason each series begins where it does stands under its heading.",
+        "Each series opens with an image of all its cycles, and below it stands a table with a row "
+        "for each version. The image of a series of the cost gives its cycles, those with a known "
+        "cost and their median cost; the image of a series of the count of remarks gives Q1 and Q2. "
+        "Q1 of a group of cycles, a version or a whole series, is the number of its cycles that "
+        "answer `yes`, the number that answer `no` and the number that answer `unknown` "
+        "(`yes n · no n · unknown n`); each cycle answers for itself. Q2 of a group is the "
+        "answer, `yes`, `no` or `unknown`, that the sum of the slices planned and the sum of the "
+        "slices returned too large over the cycles whose plans are read (*Plans read*) give: "
+        "`unknown` where a plan of the group is not read, or no plan holds a slice. The image and "
+        "each side of a comparison show the two sums beside the answer, and the row of a version "
+        "shows *Plans read* and the answer. Q3 is `yes`, `no` or `unknown`, and stands only where "
+        "two groups meet: in the row of a version, set against the previous version of its "
+        "series, and beside the side after of a comparison; an image sets no two groups against "
+        "each other, so it holds no Q3. *Unknown values* says why the answer of a version or the "
+        "verdict of a comparison is unknown, a cycle's Q1 included; the reason of an unknown "
+        "answer of an image or of a side follows from the lines of its versions. The reason each "
+        "series begins where it does stands under its heading.",
+        "",
+        "Where a fixed issue of the register of problems has cycles on both sides of its fix "
+        "inside a series, a table under the image compares them: the cycles on the versions that "
+        "lack the fix (the side before) against the cycles on the versions that hold it (the side "
+        "after), a pair of rows for each such issue, the issues in the order of the register and "
+        "never ranked. Whether a version holds the fix is read from the history of git and never "
+        "from a date, so a version that is later by date and lacks the fix stands before it; a "
+        "version for which git cannot say stands on neither side, and *Unknown values* gives the "
+        "reason. Each side gives what the image of its series gives. In a series of the cost, Q3 "
+        "stands beside the side after: `yes` where its median cost is lower than that of the side "
+        "before, `no` where it is not, `unknown` where a median is not known. A series of the "
+        "count of remarks gives the two sides and no answer of its own. A change of the process "
+        "with no fixed issue in the register gets no comparison.",
         "",
     ]
-    for title, blocks, header in (
-        (SERIES_COST, versions.cost, COST_HEADER),
-        (SERIES_COUNT, versions.count, COUNT_HEADER),
+    for title, blocks, headers in (
+        (SERIES_COST, versions.cost, (COST_IMAGE_HEADER, COST_COMPARISON_HEADER, COST_HEADER)),
+        (
+            SERIES_COUNT,
+            versions.count,
+            (COUNT_IMAGE_HEADER, COUNT_COMPARISON_HEADER, COUNT_HEADER),
+        ),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += [
-                f"### {title}, series {number}",
-                "",
-                f"Begins at this version: {block.begins}.",
-                "",
-            ]
-            lines += table(header, block.rows)
-            lines.append("")
+            lines += series_lines(title, number, block, headers)
     if versions.no_version:
         lines += [
             "### No version",
@@ -160,8 +252,21 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "or either median is not known; *Unknown values* says why. A median is written as the "
         "exact value, a half with its decimal.",
         "",
+        "Each series opens with an image of all its cycles, and below it stands a table with a row "
+        "for each version. The image holds no *Falls*, which sets a version against the previous "
+        "one: it gives the measures of the series as their medians and the numbers behind them.",
+        "",
+        "Under the image a series has, for each fixed issue of the register of problems that "
+        "has cycles on both sides of its fix, the same comparison as in *Process versions*: the "
+        "side before and the side after, a pair of rows for each measure, with *Falls* beside the "
+        "side after, `yes` where its median is lower than that of the side before. For the "
+        "mechanism measures the comparison stands where a cycle of either side gives a value of "
+        "any measure. For the gate times it stands where runs compared (see below) stand on both "
+        "sides of the total, and each side takes only the runs compared for its fall.",
+        "",
         "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
-        "and *Cycles with a value* counts them.",
+        "and *Cycles with a value* counts them; in the image they are the cycles of the whole "
+        "series.",
         "",
         "*Gate times*: the runs are taken together over all the cycles of the version. The median "
         "and *Falls* take only the runs that passed (exit code 0) during which no other gate run by "
@@ -172,22 +277,21 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "version in which no run passed alone has no comparison. Each count is of the runs that "
         "give the time of its row, and a directory's median takes the runs that give its time. A "
         "version in which no cycle gives a value, or no run a time, has one row, with `—` for the "
-        "measure, and a value in *Unknown values*.",
+        "measure, and a value in *Unknown values*. The image of a series takes the runs of all its "
+        "cycles, compared and not compared apart in the same way, for the total and for each "
+        "directory that any of them has.",
         "",
     ]
-    for title, blocks, header in (
-        ("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
-        ("Gate times", measured.gate, GATE_HEADER),
+    for title, blocks, headers in (
+        (
+            "Mechanism measures",
+            measured.mechanism,
+            (MECHANISM_IMAGE_HEADER, MECHANISM_COMPARISON_HEADER, MECHANISM_HEADER),
+        ),
+        ("Gate times", measured.gate, (GATE_IMAGE_HEADER, GATE_COMPARISON_HEADER, GATE_HEADER)),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += [
-                f"### {title}, series {number}",
-                "",
-                f"Begins at this version: {block.begins}.",
-                "",
-            ]
-            lines += table(header, block.rows)
-            lines.append("")
+            lines += series_lines(title, number, block, headers)
     if lines[-1] == "":
         lines.pop()
     return lines

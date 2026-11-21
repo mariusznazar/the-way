@@ -143,12 +143,22 @@ compare. The price: after such a change the cost cannot tell "the reviewer found
 process got dearer", while the count of remarks, whose meaning changes with the reviewer, has a
 series that ends there.
 
-Per version of a series of the cost: the median cost at constant prices of its cycles with a known
-cost, and the answer Q3. Per version of a series of the count of remarks: the answers Q1 and Q2.
-Each answer is `yes`, `no` or `unknown`. Q1, a contradiction with the product's settlements
-that came out only after code was written: from two marks of the cycle's record, never from the
-words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes where a
-sub-item of *Review rounds* opens with the path of its findings file and
+Each series gives, before its rows per version, an image of all its cycles and, where a fixed issue
+of the register has cycles on both sides of its fix inside the series, a comparison before and after
+that fix (WAY-339, WAY-417). The image of a series of the cost: its cycles, those with a known cost
+and the median cost of those; of a series of the count of remarks: its cycles, Q1, the plans read
+and Q2. An image sets no two groups against each other, so it has no Q3. The comparison gives each
+side, the cycles on the versions that lack the fix and those on the versions that hold it, as the
+image gives it, and Q3 beside the side after for the cost. Then the rows per version: per version
+of a series of the cost, the median cost at constant prices of its cycles with a known cost, and
+the answer Q3; per version of a series of the count of remarks, the answers Q1 and Q2. Q2 and Q3
+are `yes`, `no` or `unknown`. Q1 of a group of cycles, a version, a series or a side of a
+comparison, is the number of its cycles that answer yes, the number that answer no and the number
+that answer unknown (`yes n · no n · unknown n`), never one word taken from them (WAY-417); a cycle
+answers for itself, as follows. A cycle's own answer to Q1, a contradiction with the product's
+settlements that came out only after code was written: from two marks of the cycle's record, never
+from the words of a reviewer's remarks or from the text of an item (WAY-404, WAY-405). It is yes
+where a sub-item of *Review rounds* opens with the path of its findings file and
 `, contradiction yes`, or the
 item *Discarded attempt* opens with `reason: ` and the marker `open design choice` in backticks, or
 any of its sub-items does, where a cycle that discarded more than one attempt writes one sub-item for each
@@ -180,12 +190,18 @@ and the sub-items of *Slices returned too large* (`none` is 0); the answer is ye
 the sum of too-large slices is above the sum of planned slices, and unknown where the plan of a
 cycle that has one is not read, since its slices could change the answer. Q3, the cost falls: the
 median against the previous version of the same series, yes where lower, unknown where there is
-none.
+none; in the comparison before and after a fix, the median of the side after against that of the
+side before, with the same answers.
 
 The measure versions (WAY-339, WAY-350): the same versions, in their own series, one kind of
-series for each instrument. The count reads these measures and shows them with a median and a
-comparison for each version, because the numbers lie in the records of cycles, which the session
-of the audit does not open, and a comparison of before and after made by hand cannot say that a
+series for each instrument. As the series above, each opens with an image of all its cycles, which
+has no *Falls*, and has under it, for each fixed issue of the register with cycles on both sides of
+its fix, a comparison before and after it, with *Falls* beside the side after (for the mechanism
+measures, where a cycle of either side gives a value of any measure; for the gate times, where runs
+compared stand on both sides of the total); the rows per version follow. The count reads these
+measures and shows them with a median and a comparison for each version, because the numbers lie in
+the records of cycles, which the session of the audit does not open, and a comparison of before and
+after made by hand cannot say that a
 change to the process worked. A series of the mechanism measures of `mechanism_measures.md`
 begins at a version whose `task-cycle/cycle_measures.py` differs from the previous version's, and a
 series of

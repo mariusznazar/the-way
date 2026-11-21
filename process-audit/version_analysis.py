@@ -3,11 +3,16 @@
 The version of the-way each cycle ran on and the series the versions are cut into (WAY-339,
 WAY-350): whether the checkout of the-way holds a commit (`Ancestry`), the register's problems
 counted against the cycles (`analyse`), the versions, their series and the boundaries between them,
-the medians and the answers Q1, Q2 and Q3 of each version (`process_versions`, `measure_versions`),
-and the values of a cycle that changed the tool that wrote them (`note_changed_tools`), as
-`process-audit/audit_count.py` counts them. It holds the paths of the scripts whose change starts a
-series. The cycles it reads are those of `record_reading.py` and the register that of
-`problem_register.py`; no file outside the product is read here, and git runs only to read. It is
+the row of each version in its series (`process_versions`, `measure_versions`) and the values of a
+cycle that changed the tool that wrote them (`note_changed_tools`), as `process-audit/audit_count.py`
+counts them. The row of a version holds its medians, its answer Q1 as the numbers of its cycles that
+answer yes, no and unknown, its answer Q2 from the sums of its slices and its answer Q3 or its fall
+against the previous version of its series; each series holds besides the image of all its cycles,
+which `process-audit/series_summary.py` makes (WAY-417), and the comparison before and after each
+fixed issue of the register, between the cycles on the versions that lack its fix and those on the
+versions that hold it, which `Ancestry.holds` decides and never a date (WAY-339). It holds the paths of the scripts whose
+change starts a series. The cycles it reads are those of `record_reading.py` and the register that
+of `problem_register.py`; no file outside the product is read here, and git runs only to read. It is
 imported, never run, and runs nothing when imported. Standard library only.
 """
 
@@ -17,6 +22,7 @@ import bisect
 import re
 import sys
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -42,6 +48,24 @@ from record_reading import (
     Cycle,
     Read,
 )
+from series_summary import (
+    Comparison,
+    cost_comparison,
+    cost_image,
+    count_comparison,
+    count_image,
+    gate_comparison,
+    gate_image,
+    gate_values,
+    mechanism_comparison,
+    mechanism_image,
+    measure_number,
+    median_of,
+    median_text,
+    money,
+    plan_sums,
+    q1_text,
+)
 from stage_pricing import TEXT_CAP, UNKNOWN, Prices
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "task-cycle"))
@@ -49,7 +73,6 @@ import remarks_check  # noqa: E402  the cutting of a record's lines, shared with
 
 display = remarks_check.display
 
-MONEY = Decimal("0.000001")
 # The script that measures the cost spans two files, `cycle_stages.py` and the module
 # `stage_transcripts.py` it imports, and no other: a change of either between two versions starts a
 # series of the cost (and so of the count of remarks), with a new price list (WAY-339).
@@ -74,6 +97,7 @@ COUNT_PATHS = (
 EXAMPLES = 3
 ROW_NUMBER = re.compile(r"^row [0-9]+ of ")
 ISSUE_VALUE = re.compile(r"^(the fix|waiting) of issue `.*`$")
+FIX_ISSUE = re.compile(r" after the fix of issue `[^`]*`")
 VERSION_SUFFIX = re.compile(r"\bversion \S+$")
 # The instruments that start a series of the measures they give (WAY-339): a change of the one
 # starts a series of the mechanism measures, a change of one of the gate's scripts a series of the
@@ -83,8 +107,6 @@ MEASURES_SCRIPT = "task-cycle/cycle_measures.py"
 GATE_SCRIPT = "task-cycle/gate_times.py"
 GATE_TEST_RUNNER = "gate/run_tests.py"
 GATE_SCRIPTS = (GATE_SCRIPT, GATE_TEST_RUNNER)
-TOTAL_MEASURE = "Total time of the run"
-DIRECTORY_MEASURE = "Directory: "
 # The three groups of tools that write the files of a cycle's copy, each as the file and the paths
 # of the tools that wrote it: the paths are those that start the series of what they measure
 # (COST_SCRIPTS, MEASURES_SCRIPT and GATE_SCRIPTS above), not a second list. A cycle of the-way
@@ -527,6 +549,7 @@ def unknown_field(value: str) -> str:
     and the commit of its version taken out, so that the values of one kind make one pair."""
     value = ROW_NUMBER.sub("row of ", value, count=1)
     value = ISSUE_VALUE.sub(r"\1 of an issue", value, count=1)
+    value = FIX_ISSUE.sub(" after the fix of an issue", value, count=1)
     return VERSION_SUFFIX.sub("a version", value, count=1)
 
 
@@ -566,11 +589,20 @@ class Version:
 @dataclass
 class Series:
     """A run of versions between which no change splits a series: why it begins with its first
-    version, its versions, and the rows of its table."""
+    version, its versions, the rows of its table with a row for each version, the rows of the
+    image of all its cycles, which holds no Q3 and no fall, and the rows of its comparisons before
+    and after a fix, a pair for each fixed issue of the register that has cycles on both sides of
+    its fix inside the series (WAY-339, WAY-417)."""
 
     begins: str
     versions: list[Version]
     rows: list[list[str]] = field(default_factory=list)
+    image: list[list[str]] = field(default_factory=list)
+    comparison: list[list[str]] = field(default_factory=list)
+
+    def cycles(self) -> list[Cycle]:
+        """The cycles of all the versions of the series."""
+        return [cycle for version in self.versions for cycle in version.cycles]
 
 
 @dataclass
@@ -584,18 +616,9 @@ class Versions:
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
     # Every version, in the order of their dates: the series of the measures are made of them.
     ordered: list[Version] = field(default_factory=list)
-
-
-def median_of(costs: list[Decimal]) -> Decimal | None:
-    """The median of the costs: the middle one, or the mean of the two middle ones; None where
-    there is none."""
-    if not costs:
-        return None
-    ordered = sorted(costs)
-    middle = len(ordered) // 2
-    if len(ordered) % 2:
-        return ordered[middle]
-    return (ordered[middle - 1] + ordered[middle]) / 2
+    # Each fixed issue of the register with its fix commit, in the order of the register: the
+    # series of the four kinds are compared before and after each (WAY-339).
+    fixes: list[tuple[str, str]] = field(default_factory=list)
 
 
 FIRST_VERSION = "the first version of the result"
@@ -748,12 +771,6 @@ class MeasureVersions:
 NO_MEASURE = "—"  # the measure cell of the one row of a version that gives no value
 
 
-def median_text(median: Decimal | None, suffix: str = "") -> str:
-    """A median as the exact value of its Decimal, a half with its decimal, never in exponent
-    form."""
-    return UNKNOWN if median is None else format(median, "f") + suffix
-
-
 def falls_answer(
     version: Version,
     first: bool,
@@ -780,15 +797,11 @@ def falls_answer(
     return UNKNOWN
 
 
-def measure_number(label: str, text: str) -> Decimal:
-    """The value of a cycle-level line that `read_measures` kept: a whole number, or for the share
-    a number of percent with one decimal."""
-    return Decimal(text[:-1] if label == SHARE_LABEL else text)
-
-
 def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
     """The rows of a series of the mechanism measures: for each version and each cycle-level
-    measure, the median of the cycles that give a value and whether it falls."""
+    measure, the median of the cycles that give a value and whether it falls; and the image of the
+    series, the same over all its cycles with no fall."""
+    block.image = mechanism_image(block.cycles())
     previous: dict[str, Decimal | None] = {}
     for index, version in enumerate(block.versions):
         medians: dict[str, Decimal | None] = {}
@@ -838,34 +851,16 @@ def mechanism_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> N
         previous = medians
 
 
-def gate_values(version: Version) -> dict[str, tuple[list[Decimal], list[Decimal]]]:
-    """The times of the runs of a version, over all its cycles, by measure: the total first and
-    then each directory that any run has, by name. Each measure holds the values of the runs that
-    passed with no other gate and apart those of the runs not compared: with another gate, with an
-    unknown count, that failed or whose exit code is unknown; a run that does not give the time
-    adds to neither (WAY-350)."""
-    found: dict[str, tuple[list[Decimal], list[Decimal]]] = {TOTAL_MEASURE: ([], [])}
-    for cycle in version.cycles:
-        for run in cycle.gate_timed:
-            side = 0 if run.others == 0 and run.code == 0 else 1
-            if run.total is not None:
-                found[TOTAL_MEASURE][side].append(run.total)
-            for name, seconds in run.directories:
-                lists = found.setdefault(DIRECTORY_MEASURE + name, ([], []))
-                if seconds is not None:
-                    lists[side].append(seconds)
-    return {name: found[name] for name in [TOTAL_MEASURE, *sorted(found.keys() - {TOTAL_MEASURE})]}
-
-
 def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
     """The rows of a series of the gate times: for each version and each measure, the median of the
     runs that passed with no other gate and whether it falls, and the runs not compared apart,
     never compared (WAY-350). A version no run of which gives a time has one row and one line of
-    reason."""
+    reason. The image of the series is the same over all its cycles, with no fall."""
+    block.image = gate_image(block.cycles())
     previous: dict[str, Decimal | None] = {}
     for index, version in enumerate(block.versions):
         medians: dict[str, Decimal | None] = {}
-        values = gate_values(version)
+        values = gate_values(version.cycles)
         if all(not alone and not apart for alone, apart in values.values()):
             block.rows.append([version.commit, NO_MEASURE, "0", UNKNOWN, UNKNOWN, "0", UNKNOWN])
             unknown.append(
@@ -908,6 +903,51 @@ def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
         previous = medians
 
 
+def fix_sides(
+    block: Series,
+    name: str,
+    fix: str,
+    ancestry: Ancestry,
+    unknown: list[tuple[str, str, str, str]],
+) -> tuple[list[Cycle], list[Cycle]]:
+    """The cycles of a series on the versions that lack a fix and those on the versions that hold
+    it, as (before, after): whether a version holds the fix is the answer of `Ancestry.holds` for
+    the version's commit and the fix, never a date. A version whose answer is unknown stands on
+    neither side, and a fix the checkout does not give puts every version there; the reason goes
+    into `unknown` (WAY-339)."""
+    value = f"comparison before and after the fix of issue `{name}`"
+    fixed, why = ancestry.commit(fix)
+    if fixed is None:
+        unknown.append((THE_WAY, NONE, value, why or ""))
+        return [], []
+    before: list[Cycle] = []
+    after: list[Cycle] = []
+    for version in block.versions:
+        holds, why = ancestry.holds(version.commit, fix)
+        if holds is None:
+            unknown.append((THE_WAY, NONE, f"{value}, version {version.commit}", why or ""))
+        else:
+            (after if holds else before).extend(version.cycles)
+    return before, after
+
+
+def compare_series(
+    block: Series,
+    fixes: list[tuple[str, str]],
+    ancestry: Ancestry,
+    compare: Callable[[str, str, list[Cycle], list[Cycle]], Comparison],
+    unknown: list[tuple[str, str, str, str]],
+) -> None:
+    """The comparisons of a series before and after each fixed issue of the register, in its order,
+    made by `compare` of the kind of the series, and where a verdict is unknown its reason added
+    to `unknown`."""
+    for name, fix in fixes:
+        before, after = fix_sides(block, name, fix, ancestry, unknown)
+        made = compare(name, fix, before, after)
+        block.comparison += made.rows
+        unknown += [(THE_WAY, NONE, value, why) for value, why in made.unknown]
+
+
 def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     """Group the versions into the series of each instrument and give the medians and the
     comparison of each version within its own series (WAY-339, WAY-350)."""
@@ -916,49 +956,11 @@ def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPTS)
     for block in result.mechanism:
         mechanism_rows(block, result.unknown)
+        compare_series(block, versions.fixes, ancestry, mechanism_comparison, result.unknown)
     for block in result.gate:
         gate_rows(block, result.unknown)
+        compare_series(block, versions.fixes, ancestry, gate_comparison, result.unknown)
     return result
-
-
-def contradiction_of(version: Version) -> tuple[str, str | None]:
-    """Q1 for a version: yes where a cycle answers yes, no where every cycle answers no."""
-    answers = [cycle.contradiction for cycle in version.cycles]
-    if "yes" in answers:
-        return "yes", None
-    if answers and all(answer == "no" for answer in answers):
-        return "no", None
-    return "unknown", "a cycle's answer is unknown, so the question is not settled for the version"
-
-
-def too_large_of(version: Version) -> tuple[str, str, str | None]:
-    """Q2 for a version, with the cell *Plans read*: the sums of the slices of the version's plans,
-    too-large over planned, above one third is yes. Where a plan is not read, its slices could
-    turn either answer, so the answer is unknown."""
-    planned_cycles = [cycle for cycle in version.cycles if not cycle.plan_left_out]
-    read = [
-        cycle
-        for cycle in planned_cycles
-        if cycle.planned is not None and cycle.too_large is not None
-    ]
-    plans_read = f"{len(read)} of {len(planned_cycles)}"
-    if not read:
-        return plans_read, "unknown", "no cycle's plan can be read"
-    if len(read) < len(planned_cycles):
-        return (
-            plans_read,
-            "unknown",
-            (
-                f"the plans of {len(planned_cycles) - len(read)} cycle(s) "
-                "are not read, so the share of the version's slices is "
-                "not known"
-            ),
-        )
-    planned = sum(cycle.planned for cycle in read if cycle.planned is not None)
-    large = sum(cycle.too_large for cycle in read if cycle.too_large is not None)
-    if planned == 0:
-        return plans_read, "unknown", "the plans that are read hold no slice"
-    return plans_read, ("yes" if 3 * large > planned else "no"), None
 
 
 def process_versions(
@@ -1001,30 +1003,43 @@ def process_versions(
     result.cost = split_series(
         versions, lambda earlier, later: cost_boundary(earlier, later, ancestry)
     )
+    result.fixes = [(name, fix) for name, fate, fix in register.issues if fate == FIXED]
     for block in result.count:
         count_rows(block, result.unknown)
+        compare_series(block, result.fixes, ancestry, count_comparison, result.unknown)
     for block in result.cost:
         cost_rows(block, result.unknown)
+        compare_series(block, result.fixes, ancestry, cost_comparison, result.unknown)
     return result
 
 
 def count_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
-    """The rows of a series of the count of remarks: for each version its answers Q1 and Q2, each
-    with its reason in `unknown` where it is not known. No number of the cost stands in them."""
+    """The rows of a series of the count of remarks: for each version its Q1, the numbers of its
+    cycles that answer yes, no and unknown, and its answer Q2 with the reason in `unknown` where it
+    is not known; and the image of the series, the same over all its cycles. No number of the cost
+    stands in them."""
+    block.image = count_image(block.cycles())
     for version in block.versions:
-        answer1, why1 = contradiction_of(version)
-        plans, answer2, why2 = too_large_of(version)
-        for label, why in (("contradiction only after code", why1), ("slices too large", why2)):
-            if why:
-                unknown.append((THE_WAY, NONE, f"{label}, version {version.commit}", why))
+        sums = plan_sums(version.cycles)
+        if sums.why:
+            unknown.append((THE_WAY, NONE, f"slices too large, version {version.commit}", sums.why))
         block.rows.append(
-            [version.commit, version.day, str(len(version.cycles)), answer1, plans, answer2]
+            [
+                version.commit,
+                version.day,
+                str(len(version.cycles)),
+                q1_text(version.cycles),
+                sums.plans_read,
+                sums.answer,
+            ]
         )
 
 
 def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
     """The rows of a series of the cost: for each version the median cost of its cycles with a
-    known cost, and Q3, whether it is lower than the previous version's of the same series."""
+    known cost, and Q3, whether it is lower than the previous version's of the same series; and
+    the image of the series, the median over all its cycles with no Q3."""
+    block.image = cost_image(block.cycles())
     previous: Version | None = None
     previous_median: Decimal | None = None
     for version in block.versions:
@@ -1050,7 +1065,3 @@ def cost_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
             ]
         )
         previous, previous_median = version, median
-
-
-def money(value: Decimal | None) -> str:
-    return UNKNOWN if value is None else format(value.quantize(MONEY), "f")

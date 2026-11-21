@@ -3362,9 +3362,10 @@ that the installer writes.
   For the paragraphs of the skills that say where the-way lies, an agent compares the change with
   the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
-    session works in for the-way itself and the pinned `.the-way` for a product, and names
-    another the-way skill it hands to as the file `SKILL.md` read from that checkout or worktree
-    for the-way itself and as the project skill with the `the-way-` prefix for a product;
+    session works in for the-way itself and the pinned `.the-way` for a product, and the shared
+    file the paragraph points to, `elements/common/reaching_another_skill.md`, names the other the-way skill a
+    skill hands work on to as the file `SKILL.md` read from that checkout or worktree for the-way
+    itself and as the project skill with the `the-way-` prefix for a product;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
     hands its work to `critique` by calling the skill, with the prefix or without it.
   For the global link and the skill of `instruction-files/`, an agent compares the change
@@ -8624,7 +8625,13 @@ measures of context and cache use, the script that records the gate times or the
 process — the audit gives the measures of that tool for that cycle as unknown, with the reason that
 the cycle changed the tool that wrote them (the file of that tool is not read for that cycle, so no
 field of it is missing and no line `Error:` is given for it), and its other measures as they stand
-under the version it ran on.
+under the version it ran on. The audit shows each series as an image of all its cycles — what its
+kind carries, the answer Q3 and the fall standing only where two groups meet (WAY-417) — and,
+inside it, as a comparison before and after a change: the cycles on the versions that hold the
+change against those on the versions that lack it, both groups of that series, the version a cycle
+ran on, never its date, deciding its group; for the times of the gate both take only the runs that
+WAY-350 compares. That comparison is made for each fixed issue of the register of problems with a
+fix commit, and for no other change.
 
 The measures of how a cycle's agents use the context and the prompt cache of the model — the number
 of model calls, the size of each call's context, the tokens written to the cache and the tokens
@@ -8653,7 +8660,15 @@ takes its figures from the file of the other.
   that the cycle changed the tool, and its other measures as they stand under the version it ran on;
   that the stage report holds, for each stage and model, the tokens written to the cache at each
   lifetime, and that the script that measures the cost and the script of the other measures count
-  the same tokens from the transcripts. For the rest, an agent compares a change with the decision:
+  the same tokens from the transcripts; that the audit shows each series as an image of all its
+  cycles that carries what its kind carries and neither the answer Q3 nor a fall, and, for each fixed
+  issue of the register with a fix commit that has cycles of the series on both sides of it, as a
+  comparison before and after the fix of the cycles on the versions that hold it against those on
+  the versions that lack it, the version a cycle ran on and never its date deciding its side, a
+  cycle whose version git cannot place standing on neither side, the times of the gate on both sides
+  taking only the runs that WAY-350 compares, and that an issue that is open or dropped, one whose
+  fix is no commit, one whose fix the checkout of the-way lacks, and a change with no fixed issue in
+  the register give no comparison. For the rest, an agent compares a change with the decision:
   - complies: the cycles of one version of the process are compared with the cycles of another
     version inside a series; a later change that adds one more measure of context or cache use adds
     it to the script and the file of those measures, and the stage report keeps the columns it has;
@@ -8979,6 +8994,51 @@ only — the entry goes on collecting the cases of that command, and two of its 
 at the limit, so the next change that adds a case rebuilds the entry all the same; a decision for
 each case of the command that counts the audit — the cost of the division would be several times as
 large, and the cases do not change independently enough of one another to justify it.
+
+### WAY-417 — How are the answers Q1 to Q3 of the audit of the process given for a group of many cycles?
+
+The answer Q1 of the audit, whether a contradiction with the settlements came out only after the
+code was written (WAY-404), is given for each group of cycles — the cycles of one version of the
+process, the cycles of a whole series, the cycles on one side of a comparison before and after a
+change (WAY-339) — as the number of its cycles that answer yes, the number that answer no and the
+number that answer unknown, never as one word taken from them. The answer Q2 of such a group is the
+answer that the sum of the slices planned and the sum of the slices returned too large over its
+cycles whose plans are read give, and the image of a series and each side of a comparison show the
+two sums beside it.
+
+The answer Q3, whether the median cost of a group is lower than that of the group it is set against,
+and the fall of a mechanism measure or of a gate time, a median lower than that of the group it is
+set against, stand only where two groups meet: a version against the previous version of its series,
+the cycles after a fix against the cycles before it. The image of a series, which sets no two groups
+against each other, gives a measure as its median and the number of its cycles with a known value.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-339 · derives from WAY-404
+- **Verification:** tests: that the answer Q1 of a group of cycles — a version, a whole series, one
+  side of a comparison before and after a fix — is the number of its cycles that answer yes, the
+  number that answer no and the number that answer unknown, in the row of each version as in the
+  image of a series and on each side of a comparison, and no word taken from them; that the answer
+  Q2 of a group is the answer that the sums of the slices planned and returned too large over its
+  cycles whose plans are read give, with the two sums shown beside it in the image of a series and
+  on each side of a comparison; that the answer Q3 and the fall of a mechanism measure or of a gate
+  time stand in the row that sets a version against the previous version of its series and in the
+  comparison before and after a fix, and that the image of a series carries neither and gives a
+  measure as its median and the number of its cycles with a known value.
+- **Origin:** none
+
+*Rationale:* a word taken from many cycles reads `yes` as soon as one of them says yes, so in a long
+series it reads `yes` almost always and says nothing of the rest; the numbers show the state as it
+is, with the cycles that did not answer counted apart and not read as no. A fall and the answer Q3
+are a judgment of one group against another, and a group that stands alone has nothing to be judged
+against. One form of the answer in every row keeps a result from holding two forms of one answer.
+The price: a reader meets three numbers where a word stood, and no verdict at a glance for a group
+whose cycles disagree.
+*Rejected:* the rules that give an answer for a version applied to the whole group — the answer Q1
+of any longer series comes out `yes` almost always, since one cycle is enough, and the answer Q3 of
+one group has nothing to be compared with; numbers for the image of a series and for the
+comparisons before and after a change alone, with the answer Q1 of the rows of the versions as a
+word — two forms of the same answer in one result.
 
 ## Product guidelines and their rules
 

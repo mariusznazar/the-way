@@ -59,6 +59,10 @@ These hold at every step.
   `task-cycle/plan`, `task-cycle/review` and `task-cycle/spec`, and of
   `task-cycle/agent-types/the-way-stage.md`, whose text the reviewer receives as its instruction,
   whatever the change, so that it compares less and never across a change WAY-339 names. The
+  comparison before and after a fix (step 3, point 4) lies inside one series, so for the count of
+  remarks, whose series begins anew at every change of those files and at every such date, it
+  works only for a fix outside those files and dates, while for the cost it works widely, since its
+  series begins only at a new price list or a change of the script that measures the cost. The
   mechanism measures (the numbers of how each cycle's agents use context and the prompt cache, from
   the cycle's `mechanism_measures.md`) and the gate times (the time of each run of the product's
   gate, from `gate_times.md`) have series of their own (WAY-350): a new series of the mechanism
@@ -219,11 +223,40 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    as the count gives them, with no waiting. Beside each issue, open or dropped, quote its row of
    *Cost of an occurrence by issue* with the header row of that table.
 4. **What each version of the process shows.** For each series of *Process versions*, one at a time,
-   with the line that says why it begins where it does. A series of the cost shows the median cost
-   at constant prices of each version and its answer Q3; a series of the count of remarks shows its
-   answers Q1 and Q2. Each answer is `yes`, `no` or `unknown` inside its series, and a number of one
-   kind of series is never set beside a number of the other. Q1 asks whether a contradiction with the
-   settlements came out only after the code was written, and the count reads it from two marks of the
+   with the line that says why it begins where it does. Show first the image of the series and,
+   where it has one, the comparison before and after a fix, as the matter the human weighs, and
+   the rows per version after them (WAY-339, WAY-417):
+   - *The image* of a series is what its kind carries over all the cycles of the series, in one
+     row. A series of the cost gives its cycles, those with a known cost and their median cost at
+     constant prices; a series of the count of remarks gives its cycles, Q1, *Plans read*, the
+     slices planned and returned too large and Q2. An image sets no two groups against each other,
+     so it holds no Q3 and no fall.
+   - *The comparison before and after a fix* stands under the image, for each issue of *Fixed
+     issues* that has a fix commit and has cycles on both sides of its fix inside the series, as a
+     pair of rows, the issues in the order of the register: the cycles on the versions that lack
+     the fix (the side *before*) against the cycles on the versions that hold it (the side
+     *after*). The version a cycle ran on decides its side, never its date, and a cycle whose
+     version git cannot place stands on neither side; *Unknown values* gives the reason. Each side
+     gives what the image gives, and the answer Q3 of a series of the cost stands beside the side
+     after alone. A series of the count of remarks gives the two sides and no answer of its own. A
+     change of the process with no fixed issue in the register gets no comparison, and the audit
+     holds none for it.
+   - *The rows per version* come last: a series of the cost shows the median cost at constant
+     prices of each version and its answer Q3, set against the previous version of its series; a
+     series of the count of remarks shows Q1 and Q2 of each version.
+
+   A number of one kind of series is never set beside a number of the other. The answers are these
+   (WAY-417). Q1 of a group of cycles — a version, a whole series, one side of a comparison — is
+   the number of its cycles that answer `yes`, the number that answer `no` and the number that
+   answer `unknown`, as `yes n · no n · unknown n`; a cycle that did not answer is counted as
+   `unknown` and never read as `no`, and no word is taken from the three numbers. Q2 of a group is
+   the answer, `yes`, `no` or `unknown`, that the sum of the slices planned and the sum of the
+   slices returned too large over the cycles whose plans are read give; the image of a series and
+   each side of a comparison show the two sums beside it, and the row of a version shows the
+   number of plans read with the answer. Q3 is `yes`, `no` or `unknown` and, with the fall of a
+   mechanism measure or of a gate time, stands only where two groups meet: a version against the
+   previous version of its series, the cycles after a fix against the cycles before it. Q1 asks whether a contradiction with the settlements came out only
+   after the code was written, and the count reads each cycle's own answer from two marks of the
    cycle's record, never from the text of a reviewer's remarks: `yes` where a sub-item of *Review
    rounds*, held once and in its form, says `contradiction yes` or *Discarded attempt*, held once,
    gives the reason `open design choice` (in any of its sub-items, where it holds one for each
@@ -241,17 +274,27 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    second `reason: ` followed by a backtick), which a record written before those marks stood in the
    template does wherever it holds such a sub-item or such a text. Quote
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
-   wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
-   the cycles in *No version*, with the reasons *Unknown values* gives.
+   wants them. Name together, in one matter, the series whose rows give nothing but `unknown`
+   (for Q1, a series whose every version reads `yes 0 · no 0 · unknown n`), and the cycles in *No
+   version*, with the reasons *Unknown values* gives.
    The series of *Measure versions* follow in the same matter, the mechanism measures and the gate
    times each apart, one series at a time, each with the line that says why it begins where it
-   does. For each series, quote the rows of its table with the table's header row; then what follows
-   from them and what does not; then one open question for the human that the rows answer, with a
-   recommendation only where the rows show something broken that a step can change, as above. The
-   gate times of runs not compared (those with another gate beside them or an
-   unknown count, those that failed and those whose exit code is unknown) are shown apart as the
-   count shows them, and are never compared (WAY-350). A version in which no cycle gives a value or
-   no run a time has one row with `—` for the measure; name such versions together, with the reason
+   does. Each opens with an image, as above: for each measure the number of cycles that give a
+   value and their median, and for the gate times the runs compared and the runs not compared, each
+   with its number and median, for the total and for each directory any run has. Under it stands,
+   where the series has one, the comparison before and after a fix, a pair of rows for each measure
+   with *Falls* beside the side after, `yes` where its median is lower than that of the side
+   before; for the mechanism measures it stands where a cycle of either side gives a value of any
+   measure, and for the gate times where runs compared stand on both sides of the total, each side
+   taking only the runs compared for its fall. The image holds no *Falls*. For each
+   series, quote its image, its comparison where it has one and the rows of its table, each with
+   the table's header row, in that order; then what follows from them and what does not; then one
+   open question for the human that the rows answer, with a recommendation only where the rows
+   show something broken that a step can change, as above. The gate times of runs not compared
+   (those with another gate beside them or an unknown count, those that failed and those whose exit
+   code is unknown) are shown apart as the count shows them, in the image and in the rows alike,
+   and are never compared (WAY-350). A version in which no cycle gives a value or no run a time
+   has one row with `—` for the measure; name such versions together, with the reason
    *Unknown values* gives, and quote no row of them one by one. A measure is material and never a
    priority, as the rules of working say of the other numbers.
 
