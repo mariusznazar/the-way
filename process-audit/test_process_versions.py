@@ -1751,6 +1751,19 @@ class SeriesImages(VersionsCase):
             self.cost_series(1),
         )
 
+    def test_a_version_has_no_reason_for_its_q1_and_each_cycle_keeps_its_own(self):
+        # decision: WAY-417 "The answer Q1 of the audit ... is given for each group of cycles"
+        # v2 holds c, whose Q1 is unknown, and d: the version no longer has an answer of its own
+        # to be unknown, so *Unknown values* holds no line for the Q1 of a version, and the reason
+        # of cycle c, that its discarded attempt opens with no marker, stays.
+        self.two_versions(self.SPECS)
+        unknown = self.rows("Unknown values")
+        self.assertEqual(
+            [], [row for row in unknown if row[2].startswith("contradiction only after code")]
+        )
+        [reason] = [row[3] for row in unknown if row[2] == "Discarded attempt"]
+        self.assertTrue(reason.startswith("the item `Discarded attempt` opens with no marker"))
+
     def test_the_image_stands_under_the_heading_of_the_series_before_its_table_per_version(self):
         # decision: WAY-417 "shows each series as an image of all its cycles"
         # The image carries no Q3 and no fall: its columns are those of its kind alone.
