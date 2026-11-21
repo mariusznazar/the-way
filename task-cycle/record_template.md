@@ -201,9 +201,10 @@ appearance.
 
 ## Return step
 
-- Foundation compared with code: <the entries the change writes or changes, those the task names
-  and those the search of the foundation found, and the part map of the touched parts, each
-  compared with the code: what no longer matched and its correction, or none>
+- Foundation compared with code: <the entries the change writes or changes, those the task names,
+  those the search of the foundation found and those the return step's own search by the names and
+  words the code adds found, and the part map of the touched parts, each compared with the code: what
+  no longer matched and its correction, or none>
 - Decisions written or changed: <identifiers or none>
 - Invariants written or changed: <identifiers, each with the task, decision or human that sets
   its rule, or none>
