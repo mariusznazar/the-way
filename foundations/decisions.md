@@ -3362,9 +3362,10 @@ that the installer writes.
   For the paragraphs of the skills that say where the-way lies, an agent compares the change with
   the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
-    session works in for the-way itself and the pinned `.the-way` for a product, and names
-    another the-way skill it hands to as the file `SKILL.md` read from that checkout or worktree
-    for the-way itself and as the project skill with the `the-way-` prefix for a product;
+    session works in for the-way itself and the pinned `.the-way` for a product, and the shared
+    file the paragraph points to, `elements/common/hand_over.md`, names the other the-way skill a
+    skill hands work on to as the file `SKILL.md` read from that checkout or worktree for the-way
+    itself and as the project skill with the `the-way-` prefix for a product;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
     hands its work to `critique` by calling the skill, with the prefix or without it.
   For the global link and the skill of `instruction-files/`, an agent compares the change

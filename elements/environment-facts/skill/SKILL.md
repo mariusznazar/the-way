@@ -13,14 +13,10 @@ holds only what is particular to an environment fact (WAY-35).
 This skill lives in `elements/environment-facts/skill/` of the-way. In the-way itself, the-way is
 the checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints
 in the session's working directory; in a product, it is the product's pinned `.the-way`. The
-element's directory is `elements/environment-facts/` there. In the-way itself, a skill named below
-is read as a file, not called, since Claude Code does not offer the entry points of the-way's skills
-to the model: its `SKILL.md` stands at the path that the list of skills in the entry point you were
-started with gives, or, where you were started without one, in the file under that root whose
-frontmatter has the line `name: <that name>`, which a search of the files that git lists as
-`SKILL.md` finds; read it there in full and follow it. In a product, it is the project skill of that
-name with the `the-way-` prefix. Follow the steps of `elements/common/way_of_working.md` there;
-below is what an environment fact adds to each.
+element's directory is `elements/environment-facts/` there. A skill named in this skill or in the
+files beside it is handed on to as `elements/common/hand_over.md` there gives: read that file when
+the first hand-over comes, and follow it. Follow the steps of
+`elements/common/way_of_working.md` there; below is what an environment fact adds to each.
 
 ## 1. Read
 
