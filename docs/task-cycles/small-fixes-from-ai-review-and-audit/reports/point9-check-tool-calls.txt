@@ -1,0 +1,16 @@
+Bash cd "the worktree root" && git rev-parse --show-toplevel && git ls-files --stage -- ':/.the-way' | head;
+Read elements/decisions/skill/SKILL.md
+Read elements/common/way_of_working.md
+Read elements/decisions/skill/read.md
+Read elements/decisions/template.md
+Read elements/common/rules.md
+Read elements/decisions/skill/decide_entry.md
+Read elements/decisions/skill/read.md
+Read elements/decisions/template.md
+Read elements/common/rules.md
+Read elements/decisions/skill/decide_entry.md
+Read elements/decisions/examples.md
+Read elements/common/reaching_another_skill.md
+Read elements/decisions/examples.md
+Read elements/common/reaching_another_skill.md
+Read elements/invariants/skill/SKILL.md
