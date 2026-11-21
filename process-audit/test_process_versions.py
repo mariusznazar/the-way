@@ -1291,6 +1291,7 @@ class MeasureVersions(VersionsCase):
         self.assertEqual("the price list changed", cost_boundary(earlier, later, None))
 
     def test_medians_and_falls_of_three_versions_over_an_odd_and_an_even_number_of_cycles(self):
+        # decision: WAY-417 "The answer Q3, whether the median cost"
         # Calls in all: v1 has 10, 4 and 7 (median 7, odd), v2 has 6 and 9 (median 7.5, even, so
         # not lower than 7), v3 has 2, 8, 5 and 6 (sorted 2, 5, 6, 8: median 5.5, lower than 7.5).
         # The share has a value in 2 of 3 cycles of v1 (12.5 and 13.0: 12.75), in 1 of 2 of v2
@@ -1352,6 +1353,7 @@ class MeasureVersions(VersionsCase):
         self.assertEqual("", self.reasons_of(unknown, f"Measure falls: Calls in all, version {v2}"))
 
     def test_the_gate_times_take_only_runs_with_no_other_gate_and_show_the_others_apart(self):
+        # decision: WAY-417 "The answer Q3, whether the median cost"
         # Medians by hand. v1: total of the runs alone 100 and 110 (105.000), apart 200 (company: 1
         # other gate) and 300 (count unknown): 250.000; gate/a alone 60.0 and 70.0 (65.0), apart
         # 135.0; gate/b alone 40.0, apart 80.0. v2: alone 90 and 95 (92.500, lower than 105), apart
@@ -1709,6 +1711,7 @@ class SeriesImages(VersionsCase):
     def test_a_series_of_two_versions_with_two_cycles_each_has_an_image_of_each_kind(self):
         # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # decision: WAY-417 "The image of a series, which sets no two groups against each other"
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # Every figure by hand from the description of SPECS. Cost: the cycles 4, the known costs 3
         # (2, 4 and 1 dollars), median 2. Count: Q1 of the four cycles, yes 1, no 2, unknown 1;
         # the plans of a, b and c read (3 of 3: d is on the one-author route), 4 + 2 + 3 = 9
@@ -1973,6 +1976,7 @@ class SeriesComparisons(VersionsCase):
 
     def test_the_count_of_remarks_gives_the_two_sides_and_no_answer_of_its_own(self):
         # decision: WAY-417 "The answer Q2 of such a group"
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # Before: a (yes) and b (no); plans 4 + 2 = 6 slices with 1 too large, which is not above
         # a third. After: c (unknown) and d (no); the plan of c read, 3 slices and none too large,
         # d on the one-author route.
@@ -2011,6 +2015,7 @@ class SeriesComparisons(VersionsCase):
 
     def test_the_gate_times_compare_the_runs_compared_and_show_the_others_apart(self):
         # decision: WAY-350 "The audit compares the times of the gate between versions"
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # Total: compared 100.000 and 110.000 before (105.000); after, c's 90.000 compared (90.000
         # is lower than 105.000, yes), and apart the failed 5.000 and d's 300.000 (152.500).
         # gate/a: 65.0 before, 80.0 after, not lower, no. gate/b: only after, the failed run

@@ -90,7 +90,8 @@ class CostImage(unittest.TestCase):
 
 class Q1Numbers(unittest.TestCase):
     def test_the_numbers_are_those_of_the_cycles_answering_each(self):
-        # Five cycles, as the verification of WAY-417 gives: two yes, two no and one unknown.
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
+        # Five cycles: two yes, two no and one unknown.
         cycles = [
             cycle(contradiction="yes"),
             cycle(contradiction="no"),
@@ -152,6 +153,7 @@ def tuple_of(sums):
 
 class CountImage(unittest.TestCase):
     def test_the_image_gives_q1_as_numbers_and_the_sums_of_q2(self):
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # Four cycles of two versions: yes, no, unknown and no; the plans 4 (3 too large), 2 (0),
         # none (the one-author route) and 3 (0) read: 9 planned, 3 too large, 9 is not above 9.
         cycles = [
@@ -346,6 +348,7 @@ class CostComparison(unittest.TestCase):
 
 class CountComparison(unittest.TestCase):
     def test_each_side_gives_q1_as_numbers_and_the_sums_of_q2_and_no_answer(self):
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # Before: yes with 4 slices of which 3 too large, and no with 2 and 0: 6 planned, 3 too
         # large, 9 is above 6: Q2 yes. After: unknown on the one-author route (no plan), and no
         # with 3 slices and none too large: 1 plan of 1 read, 3 planned, 0 too large: Q2 no.
@@ -472,6 +475,7 @@ class GateComparison(unittest.TestCase):
         return gate_comparison("slow", FIX, before, after)
 
     def test_each_measure_has_a_pair_of_rows_with_the_runs_compared_and_not_compared(self):
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # Total: compared 100 and 110 (105.000), not compared 200 (200.000); after: compared 90
         # (90.000), not compared 5.000 and 300.000 (152.500): 90 is lower than 105, so yes. gate/a:
         # 65.0 before (120.0 apart), 80.0 after: not lower, so no. gate/b: after only, not
