@@ -438,7 +438,7 @@ class NestedRunTest(GateTimesTest):
         text = "== a\nRan 1 test in " + "9" * 5000 + "s\nRan 1 test in 0.5s\n"
         self.assertEqual([["a", "0.5"]], self.read(text, code=0))
 
-    def test_a_flood_of_lines_with_a_comparison_between_blocks_keeps_the_memory_bounded(self) -> None:
+    def test_a_flood_of_lines_with_a_comparison_keeps_the_memory_bounded(self) -> None:
         times = gate_times.Times()
         tracemalloc.start()
         try:
