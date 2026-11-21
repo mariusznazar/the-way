@@ -13,10 +13,19 @@ only the lines it reads for the times. The exit code is the command's own.
 The times: the total wall time of the run, in seconds to three decimals; and for each block that
 `gate/run_tests.py` opens with a line `== <directory>`, the time of the first line `Ran <n> tests in
 <s>s` before the next block, kept as printed, or `unknown` where there is none. Text before the first
-block belongs to no directory. A run lists at most 50 directories, the number the audit reads, and a
-directory cell is cut at 200 characters, ending in `…` where cut; the directories after the fiftieth
-are not listed, and a last row of the run says how many (`… <n> more directories not listed`, with
-`—` for its seconds), so that the record stays small and no cut is read as a time.
+block belongs to no directory. A failing test of the gate may print, in its failure message, the
+output of a nested run of the runner, whose lines `== <directory>` are no blocks of this run. The
+last line `<n> tests in <m> directories; …` of the output is the run's own, each earlier one closes
+the output of a nested run; where there is an earlier one and more than `<m>` lines `== ` stand at
+the start of a line, the surplus lines are the nested run's, taken from those directly before an
+earlier summary line, last to first, each such line taking at most its own `<m>`, and a block
+that holds an earlier summary line takes the first `Ran` line after the last of them. A run with no
+earlier summary line is read as above. A run lists at most 50 directories, the number the audit
+reads, and a directory cell is cut at 200 characters, ending in `…` where cut; the directories after
+the fiftieth are not listed, and a last row of the run says how many (`… <n> more directories not
+listed`, with `—` for its seconds), so that the record stays small and no cut is read as a time. The
+memory the script keeps stays bounded whatever the output holds: it keeps the first 100 lines `== `
+and the last 100 summary lines that stand after one.
 
 The runs at the same time: each run makes an empty file in the registry (default `~/.the-way/gate_runs`)
 named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_<end ms>_<token>.run`.
@@ -49,6 +58,7 @@ import subprocess
 import sys
 import time
 import unicodedata
+from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -62,10 +72,16 @@ LINE_LIMIT = (
 )  # a line is read for the times up to this many bytes, so that memory stays bounded
 MAX_DIRECTORIES = 50  # the audit lists no more directories of a run
 DIRECTORY_CAP = 200  # the audit keeps no more characters of a directory
+PIECES_KEPT = 2 * MAX_DIRECTORIES  # the lines `== ` kept, so that nested ones can be left out of 50
+SUMMARIES_KEPT = 100  # the summary lines kept for the lines `== ` before them
 UNKNOWN = "unknown"
 NONE = "—"
 BLOCK = "== "
 RAN = re.compile(r"Ran \d+ tests? in ([0-9]+(?:\.[0-9]+)?)s")
+# The last line of the runner: the tests and directories it counts, and whether every one passed.
+SUMMARY = re.compile(
+    r"\d{1,9} tests in (\d{1,9}) directories; (?:every directory passed|failed: .*)"
+)
 RUNNING = re.compile(r"(\d+)_running_([A-Za-z0-9]+)\.run")
 ENDED = re.compile(r"(\d+)_(\d+)_([A-Za-z0-9]+)\.run")
 
@@ -140,28 +156,126 @@ def cut(text: str) -> str:
     return text if len(text) <= DIRECTORY_CAP else text[: DIRECTORY_CAP - 1] + "…"
 
 
+class Piece:
+    """The text of one line `== <directory>` at the start of a line, up to the next such line: the
+    directory as the record shows it, and what the text gives of its time."""
+
+    def __init__(self, directory: str) -> None:
+        self.directory = directory
+        self.own: str | None = None  # the first `Ran` line of the text, as printed
+        self.holds = False  # the text holds a summary line that is not the last of the run
+        self.after: str | None = None  # the first `Ran` line after the last such summary line
+
+
 class Times:
-    """The blocks of the gate's output and the time each block gives, read line by line."""
+    """The blocks of the gate's output and the time each block gives, read line by line.
+
+    A line `== <directory>` at the start of a line may be the nested run's, a run of the runner that
+    a failing test printed in its failure message; whether it is, the last summary line of the output
+    tells, so the lines are kept as pieces and the blocks are settled by `result` at the end. Of the
+    pieces only the first PIECES_KEPT are kept, and of the summary lines only the last SUMMARIES_KEPT
+    that stand after a piece, so that memory stays bounded whatever the output holds."""
 
     def __init__(self) -> None:
-        self.blocks: list[list[str | None]] = []  # [directory, seconds as printed or None]
-        self.not_listed = (
-            0  # blocks after the last one kept; their lines give no time to a kept one
-        )
+        self.pieces: list[Piece] = []
+        self.count = 0  # the lines `== ` at the start of a line, kept or not
+        self.current: Piece | None = None  # the piece the lines now read belong to, if kept
+        self.segment = 0  # the number of those lines before the latest summary line
+        # The summary lines read, each as (index of the first piece line after the one before it,
+        # number of piece lines since, its number of directories). The latest is the run's own
+        # until another comes.
+        self.latest: tuple[int, int, int] | None = None
+        self.earlier: deque[tuple[int, int, int]] = deque(maxlen=SUMMARIES_KEPT)
+        self.pending: Piece | None = None  # the piece that holds the latest summary line
+        self.pending_after: str | None = None  # the first `Ran` line after it, in that piece
+        self.waiting = False  # whether that line is still to come
 
     def line(self, raw: bytes) -> None:
         text = raw.rstrip(b"\r").decode("utf-8", errors="replace")
         if text.startswith(BLOCK):
-            if len(self.blocks) >= MAX_DIRECTORIES:
-                self.not_listed += 1
+            self.open(text[len(BLOCK) :])
+            return
+        text = text.rstrip()
+        summary = SUMMARY.fullmatch(text)
+        if summary:
+            self.summarise(int(summary.group(1)))
+            return
+        matched = RAN.fullmatch(text)
+        if matched and self.current is not None:
+            if self.current.own is None:
+                self.current.own = matched.group(1)
+            if self.waiting:
+                self.waiting = False
+                self.pending_after = matched.group(1)
+
+    def open(self, directory: str) -> None:
+        self.waiting = False
+        self.count += 1
+        if len(self.pieces) < PIECES_KEPT:
+            self.current = Piece(cut(cell(directory)))
+            self.pieces.append(self.current)
+        else:
+            self.current = None
+
+    def summarise(self, directories: int) -> None:
+        """A summary line: the one before it, if any, is no longer the last, so its piece holds it."""
+        if self.pending is not None:
+            self.pending.holds = True
+            self.pending.after = self.pending_after
+        if self.latest is not None and self.latest[1] > 0:
+            self.earlier.append(self.latest)
+        self.latest = (self.segment, self.count - self.segment, directories)
+        self.segment = self.count
+        self.pending = self.current
+        self.pending_after = None
+        self.waiting = True
+
+    def nested(self) -> list[tuple[int, int]]:
+        """The ranges of the lines that are the nested runs': where an earlier summary line stands,
+        the lines `== ` beyond the directories of the last summary line are taken from those
+        directly before an earlier summary line, last to first, each such line taking no more than
+        its own number of directories."""
+        if self.latest is None:
+            return []
+        surplus = self.count - self.latest[2]
+        ranges = []
+        for first, lines, directories in reversed(self.earlier):
+            if surplus <= 0:
+                break
+            taken = min(lines, directories, surplus)
+            ranges.append((first + lines - taken, first + lines))
+            surplus -= taken
+        return ranges
+
+    def result(self) -> tuple[list[list[str | None]], int]:
+        """The listed blocks, each as [directory, seconds as printed or None], and the number of
+        blocks not listed."""
+        ranges = self.nested()
+        groups: list[list[Piece]] = []
+        for index, piece in enumerate(self.pieces):
+            if any(first <= index < last for first, last in ranges):
+                if groups:
+                    groups[-1].append(piece)
             else:
-                self.blocks.append([cut(cell(text[len(BLOCK) :])), None])
-            return
-        if not self.blocks or self.not_listed:
-            return
-        matched = RAN.fullmatch(text.rstrip())
-        if matched and self.blocks[-1][1] is None:
-            self.blocks[-1][1] = matched.group(1)
+                groups.append([piece])
+        blocks = [[group[0].directory, seconds(group)] for group in groups[:MAX_DIRECTORIES]]
+        taken = sum(last - first for first, last in ranges)
+        return blocks, max(self.count - taken - len(blocks), 0)
+
+
+def seconds(group: list[Piece]) -> str | None:
+    """The time of a block made of the pieces of the group: where it holds a summary line that is
+    not the run's last, the first `Ran` line after the last such line, and none from the nested
+    run's; otherwise the first `Ran` line of its text."""
+    held = [index for index, piece in enumerate(group) if piece.holds]
+    if held:
+        last = group[held[-1]]
+        following = group[held[-1] + 1 :]
+        if last.after is not None:
+            return last.after
+    else:
+        following = group
+    return next((piece.own for piece in following if piece.own is not None), None)
 
 
 def relay(stream, sink, on_line) -> None:
@@ -264,11 +378,12 @@ def record(path: Path, lines: list[str]) -> None:
 
 def rows(started: str, code: int, total: str, others: str, times: Times) -> list[str]:
     head = [started, str(code), total, others]
-    if not times.blocks:
+    blocks, not_listed = times.result()
+    if not blocks:
         return ["| " + " | ".join(head + [NONE, NONE]) + " |"]
-    listed = [[directory, seconds or UNKNOWN] for directory, seconds in times.blocks]
-    if times.not_listed:
-        listed.append([f"… {times.not_listed} more directories not listed", NONE])
+    listed = [[directory, seconds or UNKNOWN] for directory, seconds in blocks]
+    if not_listed:
+        listed.append([f"… {not_listed} more directories not listed", NONE])
     return ["| " + " | ".join(head + pair) + " |" for pair in listed]
 
 

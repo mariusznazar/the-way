@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import tracemalloc
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -164,6 +165,206 @@ class RowsTest(GateTimesTest):
         result = self.run_gate(printed(b"== a|b  c\nRan 1 test in 0.1s\n"))
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(["a/b c", "0.1"], self.rows()[0][4:])
+
+
+RULE = "-" * 70
+FAILURE_RULE = "=" * 70
+SUMMARY_TWO = "2 tests in 2 directories; every directory passed\n"
+
+
+def passing(directory: str, seconds: str) -> str:
+    """The report `gate/run_tests.py` prints for a directory whose one test passes, under its line."""
+    return f"== {directory}\n.\n{RULE}\nRan 1 test in {seconds}s\n\nOK\n"
+
+
+def failing_with(nested: str, seconds: str) -> str:
+    """The report of the directory `gate` whose one test fails and prints, in its failure message,
+    the output of a nested run of the runner (`nested`, ending with its summary line and a line
+    end), as the unittest of Python prints it: the first line of `nested` stands after the text of
+    the message, the rest at the start of their lines, and the directory's own `Ran` line comes
+    after it."""
+    return (
+        f"== gate\nF\n{FAILURE_RULE}\nFAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
+        "Traceback (most recent call last):\n"
+        '  File "gate/test_nested.py", line 6, in test_nested\n'
+        f"    self.assertEqual(0, 5, done.stdout)\nAssertionError: 0 != 5 : {nested}\n\n{RULE}\n"
+        f"Ran 1 test in {seconds}s\n\nFAILED (failures=1)\n"
+    )
+
+
+class NestedRunTest(GateTimesTest):
+    """The output of a gate run whose failing test printed the output of a nested run of the runner:
+    the lines `== <directory>` of the nested run are no directories of the run, and the directory in
+    which the test failed gets its own time.
+
+    The outputs are written out by hand, as the runner and unittest print them; the rows expected are
+    worked out from them by hand."""
+
+    def read(self, text: str, code: int = 1) -> list[list[str]]:
+        result = self.run_gate(printed(text.encode("utf-8"), code=code))
+        self.assertEqual(code, result.returncode, result.stderr)
+        return [row[4:] for row in self.rows()]
+
+    def test_the_directories_a_nested_run_opened_are_no_directories_of_the_run(self) -> None:
+        # The nested run has two directories: `tests/one` stands in the failure message after text
+        # and opens no block; `tests/two` stands at the start of its line. Three lines open a block
+        # and the run's own summary counts 2 directories (`other`, `gate`), so one line is the
+        # nested run's: the one directly before the nested summary line.
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("tests/one", "0.001") + passing("tests/two", "0.003") + SUMMARY_TWO,
+                "0.539",
+            )
+            + "4 tests in 2 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertIn("AssertionError: 0 != 5 : == tests/one\n", text)
+        self.assertEqual([["other", "0.002"], ["gate", "0.539"]], self.read(text))
+
+    def test_a_nested_run_of_three_directories_gives_two_lines_that_open_no_block(self) -> None:
+        # The first of the three directories stands after text, the other two at the start of a
+        # line. Four lines open a block and the run's own summary counts 2, so two are nested.
+        nested = (
+            passing("tests/three", "0.000")
+            + passing("tests/one", "0.001")
+            + passing("tests/two", "0.003")
+            + "3 tests in 3 directories; every directory passed\n"
+        )
+        text = (
+            passing("other", "0.002")
+            + failing_with(nested, "0.539")
+            + "5 tests in 2 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual([["other", "0.002"], ["gate", "0.539"]], self.read(text))
+
+    def test_two_nested_runs_in_one_block_give_that_block_the_time_after_the_last(self) -> None:
+        # Two failing tests of `gate`, each with a nested run of two directories whose first line
+        # stands after text. Four lines open a block (`alpha`, `gate`, `b`, `d`) and the run's own
+        # summary counts 2, so two are nested: `b`, before the first nested summary, and `d`,
+        # before the second. The Ran line after the second nested summary is the block's.
+        text = (
+            passing("alpha", "0.010")
+            + "== gate\nFF\n"
+            + f"{FAILURE_RULE}\nFAIL: test_one (test_nested.N.test_one)\n{RULE}\n"
+            + f"AssertionError: 0 != 5 : {passing('a', '0.001')}{passing('b', '0.002')}"
+            + f"{SUMMARY_TWO}\n\n"
+            + f"{FAILURE_RULE}\nFAIL: test_two (test_nested.N.test_two)\n{RULE}\n"
+            + f"AssertionError: 0 != 5 : {passing('c', '0.004')}{passing('d', '0.005')}"
+            + f"{SUMMARY_TWO}\n\n"
+            + f"{RULE}\nRan 2 tests in 0.700s\n\nFAILED (failures=2)\n"
+            + "6 tests in 2 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual([["alpha", "0.010"], ["gate", "0.700"]], self.read(text))
+
+    def test_a_nested_run_in_a_block_that_is_not_the_first_leaves_the_blocks_around_it(
+        self,
+    ) -> None:
+        # `alpha`, then `gate` with a nested run of two directories (`x` after text, `y` at the
+        # start of a line), then `omega`. Four lines open a block and the run's own summary counts
+        # 3, so one is nested: `y`.
+        text = (
+            passing("alpha", "0.010")
+            + failing_with(passing("x", "0.001") + passing("y", "0.003") + SUMMARY_TWO, "0.539")
+            + passing("omega", "0.004")
+            + "4 tests in 3 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["alpha", "0.010"], ["gate", "0.539"], ["omega", "0.004"]], self.read(text)
+        )
+
+    def test_a_nested_run_cut_off_before_its_summary_line_is_read_as_before(self) -> None:
+        # The nested output ends before its summary line, so the run holds one summary line, its
+        # own, and is read as it was: `tests/two` is a block, and `gate` takes the first Ran line
+        # of its text, which is the nested run's.
+        text = (
+            failing_with(passing("tests/one", "0.001") + passing("tests/two", "0.003"), "0.539")
+            + "2 tests in 1 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual([["gate", "0.001"], ["tests/two", "0.003"]], self.read(text))
+
+    def test_a_nested_run_that_passes_gives_the_directory_the_time_after_it(self) -> None:
+        # A passing test of `gate` prints a nested run whose first line stands after the dot of the
+        # test; `tests/two` is nested, and the Ran line after the nested summary is the
+        # directory's own.
+        text = (
+            passing("other", "0.002")
+            + f"== gate\n.== tests/one\n.\n{RULE}\nRan 1 test in 0.001s\n\nOK\n"
+            + passing("tests/two", "0.003")
+            + SUMMARY_TWO
+            + f".\n{RULE}\nRan 1 test in 0.050s\n\nOK\n"
+            + "3 tests in 2 directories; every directory passed\n"
+        )
+        self.assertEqual([["other", "0.002"], ["gate", "0.050"]], self.read(text, code=0))
+
+    def test_a_block_that_holds_a_nested_summary_and_no_ran_line_after_it_gives_unknown(
+        self,
+    ) -> None:
+        # `gate` was cut off after the nested summary: no Ran line follows it in the block, and the
+        # Ran lines of the nested run give it none.
+        text = (
+            "== other\nRan 1 test in 0.002s\n== gate\nF\nAssertionError: 0 != 5 : x\n"
+            + passing("tests/two", "0.003")
+            + SUMMARY_TWO
+            + "3 tests in 2 directories; failed: gate (exit code -9)\n"
+        )
+        self.assertEqual([["other", "0.002"], ["gate", "unknown"]], self.read(text))
+
+    def test_a_later_ran_line_after_the_nested_summary_does_not_replace_the_first(self) -> None:
+        # Only the first Ran line after the nested summary line is the block's time.
+        text = (
+            "== gate\nF\nAssertionError: 0 != 5 : x\n"
+            + passing("tests/two", "0.003")
+            + SUMMARY_TWO
+            + "Ran 1 test in 0.539s\n\nFAILED (failures=1)\nRan 9 tests in 9.9s\n"
+            + "3 tests in 1 directories; failed: gate (exit code 1)\n"
+        )
+        self.assertEqual([["gate", "0.539"]], self.read(text))
+
+    def test_the_lines_taken_are_those_before_a_summary_line_and_no_more_than_it_counts(
+        self,
+    ) -> None:
+        # The run's own summary counts 1 directory, so three of the four lines `== …` are surplus.
+        # The nested summary counts 2 directories, so it takes `c` and `b`, and `a` stays a block;
+        # `d` is not before a summary line that is not the last, so it stays a block as well. `a`
+        # holds the nested summary line and no Ran line follows it in its text: unknown.
+        text = (
+            "== a\nRan 1 test in 0.001s\n== b\nRan 1 test in 0.002s\n== c\nRan 1 test in 0.003s\n"
+            + SUMMARY_TWO
+            + "== d\nRan 1 test in 0.004s\n"
+            + "4 tests in 1 directories; every directory passed\n"
+        )
+        self.assertEqual([["a", "unknown"], ["d", "0.004"]], self.read(text, code=0))
+
+    def test_summary_lines_with_numbers_no_run_prints_are_no_summary_lines(self) -> None:
+        # Crafted: numbers of five thousand digits, which a parse into a number would refuse, and
+        # a count of directories beyond the lines shown. No line is nested, and the script
+        # neither fails nor changes the exit code of the command.
+        huge = "9" * 5000
+        text = (
+            "== a\nRan 1 test in 0.001s\n"
+            f"{huge} tests in {huge} directories; every directory passed\n"
+            "== b\nRan 1 test in 0.002s\n"
+            "2 tests in 1000 directories; every directory passed\n"
+        )
+        self.assertEqual([["a", "0.001"], ["b", "0.002"]], self.read(text, code=0))
+
+    def test_a_flood_of_summary_lines_and_blocks_keeps_the_memory_bounded(self) -> None:
+        times = gate_times.Times()
+        tracemalloc.start()
+        try:
+            for index in range(100_000):
+                times.line(f"== directory {index}".encode("utf-8"))
+                times.line(b"Ran 1 test in 0.1s")
+                times.line(b"1 tests in 1 directories; every directory passed")
+            times.line(b"3 tests in 3 directories; every directory passed")
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        # The 50 listed blocks and what the script keeps of the summaries take well under a
+        # megabyte; 200000 blocks and 200000 summary lines kept would take tens.
+        self.assertLess(peak, 2_000_000)
+        blocks, _ = times.result()
+        self.assertLessEqual(len(blocks), 50)
 
 
 class RunnerOutputTest(GateTimesTest):
