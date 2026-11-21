@@ -1,10 +1,11 @@
 """End-to-end test of the invariant `skill-entry-points`.
 
 Someone adds, renames or moves a skill of the-way, or changes its description; a skill that a
-session on the-way would not find under its `the-way-` name has to be reported before the change
-reaches the main branch. This test runs the whole path a session takes: the skills of the-way as
-git lists them, and the entry points a session finds for them in `.claude/skills/` and
-`.agents/skills/`, against each property the invariant `skill-entry-points` names.
+human on the-way could not start under its `the-way-` name, or whose entry points would be offered
+to the model by Claude Code, has to be reported before the change reaches the main branch. This
+test runs the whole path a session takes: the skills of the-way as git lists them, and the entry
+points a session finds for them in `.claude/skills/` and `.agents/skills/`, against each property
+the invariant `skill-entry-points` names.
 
 Every value the test expects is written out below, taken from the sentence of that invariant. It
 imports nothing that computes entry points and finds the skills with its own call to git: were it
@@ -34,8 +35,10 @@ REQUIRED_WORDS = (
     "git ls-files --stage -- ':/.the-way'",
     "git rev-parse --show-toplevel",
     "If the skill tells you to resolve a link to find the-way, skip that",
+    "do not call it",
+    "read that skill's `SKILL.md`",
 )
-PREFIX_WORDS = "with the `the-way-` prefix, never an unprefixed one"
+HIDING_FIELD = "disable-model-invocation"
 
 # The command that writes the entry points, named in the failure message.
 GENERATOR = "python -B agent-instructions/skill_entry_points.py --write"
@@ -119,18 +122,10 @@ def frontmatter(text):
     return fields
 
 
-def sentences(text):
-    """The sentences of `text`, each with its whitespace collapsed: a sentence ends at `.`, `!`
-    or `?` followed by whitespace, or at a blank line."""
-    for paragraph in re.split(r"\n[ \t]*\n", text.replace("\r\n", "\n")):
-        for sentence in re.split(r"(?<=[.!?])\s+", collapse(paragraph)):
-            if sentence:
-                yield sentence
-
-
-def entry_problems(copy, data, skill_path, name, description, names):
+def entry_problems(copy, data, skill_path, name, description, skills):
     """The properties of the sentence that the entry point `copy`, holding the bytes `data`, of
-    the skill at `skill_path` fails, one line each."""
+    the skill at `skill_path` fails, one line each. `skills` holds the name and the path of every
+    skill of the-way."""
     found = []
     text = data.decode("utf-8", errors="replace")
     fields = frontmatter(text)
@@ -144,25 +139,21 @@ def entry_problems(copy, data, skill_path, name, description, names):
         found.append(
             "%s: its description does not start with the description of %s" % (copy, skill_path)
         )
+    if collapse(fields.get(HIDING_FIELD, "")) != "true":
+        found.append("%s: its frontmatter does not hold `%s: true`" % (copy, HIDING_FIELD))
     if "`" + skill_path + "`" not in text:
         found.append("%s: its text does not contain `%s` in backticks" % (copy, skill_path))
     collapsed = collapse(text)
     for words in REQUIRED_WORDS:
         if collapse(words) not in collapsed:
             found.append("%s: its text does not contain %s" % (copy, words))
-    wanted = ["`" + other + "`" for other in names]
-    holding = [sentence for sentence in sentences(text) if collapse(PREFIX_WORDS) in sentence]
-    if not any(all(each in sentence for each in wanted) for sentence in holding):
-        if not holding:
-            found.append('%s: no sentence of its text holds the words "%s"' % (copy, PREFIX_WORDS))
-        else:
-            missing = sorted(
-                {each for each in wanted if not any(each in sentence for sentence in holding)}
-            )
+    lines = [collapse(line) for line in text.splitlines()]
+    for other_name, other_path in skills:
+        named = "`" + other_name + "`"
+        placed = "`" + other_path + "`"
+        if not any(named in line and placed in line for line in lines):
             found.append(
-                '%s: no sentence holding the words "%s" names, in backticks, every '
-                "skill of the-way%s"
-                % (copy, PREFIX_WORDS, "; none names " + ", ".join(missing) if missing else "")
+                "%s: no line of its text names %s with %s in backticks" % (copy, named, placed)
             )
     return found
 
@@ -188,6 +179,7 @@ def problems(root):
             found.append(path + ": its frontmatter gives no description")
         skills.append((path, name, fields.get("description", "")))
     names = [name for _, name, _ in skills]
+    listed = [(name, path) for path, name, _ in skills]
     for path, name, description in skills:
         contents = {}
         for base in (CLAUDE_SKILLS, AGENTS_SKILLS):
@@ -205,7 +197,7 @@ def problems(root):
             if data in seen:
                 continue
             seen.add(data)
-            found.extend(entry_problems(copy, data, path, name, description, names))
+            found.extend(entry_problems(copy, data, path, name, description, listed))
     expected = {PREFIX + name for name in names}
     for base in (CLAUDE_SKILLS, AGENTS_SKILLS):
         full = os.path.join(root, *base.split("/"))
@@ -233,8 +225,13 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         self.assertEqual(
             found,
             [],
-            "a skill of the-way a session would not find under its "
-            "`the-way-` name; write the entry points with `"
+            "a skill of the-way whose entry points break the invariant `skill-entry-points`: a "
+            "skill file that cannot be read or has no name or description; an entry point that "
+            "is missing, or a pair that differs in bytes; an entry point with no frontmatter, "
+            "whose header does not name the skill, does not start with its description or lacks "
+            "`disable-model-invocation: true`, whose text lacks the path of its skill, a command "
+            "or sentence the invariant requires, or the line of another skill; or a directory "
+            "`the-way-*` that no skill produces; write the entry points with `"
             + GENERATOR
             + "`:\n"
             + "\n".join(found),
@@ -243,8 +240,11 @@ class SkillsReachTheWaySessions(unittest.TestCase):
     def test_problems_reports_a_skill_the_session_does_not_see(self):
         """On a repository with no commit, where every file stands untracked: `alpha` has no
         entry point, `beta` only the `.claude` one, `gamma` two copies that differ in bytes
-        alone, `delta` two good copies, and `the-way-orphan` names no skill."""
-        names = ("alpha", "beta", "gamma", "delta")
+        alone, `delta` two good copies, `epsilon` two copies whose header lacks the field that hides
+        the skill from the model, `zeta` two copies whose list of skills leaves out `alpha`, `eta`
+        two copies that say not to call a skill and do not send the session to its file, and
+        `the-way-orphan` names no skill."""
+        names = ("alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta")
 
         def skill(name):
             return (
@@ -252,16 +252,28 @@ class SkillsReachTheWaySessions(unittest.TestCase):
                 "# %s\n" % (name, name, name)
             )
 
-        def entry(name):
+        def entry(name, hidden=True, leaving_out=None, reading=True):
+            listed = "".join(
+                "- `%s`: `%s/skill/SKILL.md`\n" % (each, each)
+                for each in names
+                if each != leaving_out
+            )
             return (
                 "---\nname: the-way-%s\ndescription: Use when the %s of a product changes. "
-                "Found in the-way.\n---\n\n"
+                "Found in the-way.\n%s---\n\n"
                 "Read `%s/skill/SKILL.md` in the-way. Find the-way with "
                 "`git rev-parse --show-superproject-working-tree`, "
                 "`git ls-files --stage -- ':/.the-way'` and `git rev-parse --show-toplevel`. "
                 "If the skill tells you to resolve a link to find the-way, skip that.\n\n"
-                "Call the skills %s with the `the-way-` prefix, never an unprefixed one.\n"
-                % (name, name, name, ", ".join("`" + each + "`" for each in names))
+                "Where a skill is named, do not call it%s The skills and their files:\n\n%s"
+                % (
+                    name,
+                    name,
+                    "disable-model-invocation: true\n" if hidden else "",
+                    name,
+                    ": read that skill's `SKILL.md` under the same root." if reading else ".",
+                    listed,
+                )
             )
 
         files = {name + "/skill/SKILL.md": skill(name) for name in names}
@@ -270,6 +282,10 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         files[".agents/skills/the-way-gamma/SKILL.md"] = entry("gamma").replace("\n", "\r\n")
         files[".claude/skills/the-way-delta/SKILL.md"] = entry("delta")
         files[".agents/skills/the-way-delta/SKILL.md"] = entry("delta")
+        for base in (".claude/skills", ".agents/skills"):
+            files[base + "/the-way-epsilon/SKILL.md"] = entry("epsilon", hidden=False)
+            files[base + "/the-way-zeta/SKILL.md"] = entry("zeta", leaving_out="alpha")
+            files[base + "/the-way-eta/SKILL.md"] = entry("eta", reading=False)
         files[".claude/skills/the-way-orphan/SKILL.md"] = entry("orphan")
         clean = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         with (
@@ -309,7 +325,25 @@ class SkillsReachTheWaySessions(unittest.TestCase):
             ".claude/skills/the-way-orphan: no skill of the-way is named orphan", found, report
         )
         self.assertEqual([line for line in found if "delta" in line], [], report)
-        self.assertEqual(len(found), 5, report)
+        self.assertIn(
+            ".claude/skills/the-way-epsilon/SKILL.md: its frontmatter does not hold "
+            "`disable-model-invocation: true`",
+            found,
+            report,
+        )
+        self.assertIn(
+            ".claude/skills/the-way-zeta/SKILL.md: no line of its text names `alpha` with "
+            "`alpha/skill/SKILL.md` in backticks",
+            found,
+            report,
+        )
+        self.assertIn(
+            ".claude/skills/the-way-eta/SKILL.md: its text does not contain "
+            "read that skill's `SKILL.md`",
+            found,
+            report,
+        )
+        self.assertEqual(len(found), 8, report)
 
 
 if __name__ == "__main__":

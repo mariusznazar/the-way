@@ -152,11 +152,15 @@ project level's skill directories, `task-cycle/skill/`, `task-cycle/spec/`, `tas
 `instruction-files/`, `product-guidelines/styleguide/`, `product-guidelines/coding/` and
 `product-guidelines/testing/` hold one skill, named in its `SKILL.md`.
 
-A Claude Code or Codex session working in a checkout or worktree of the-way finds each of them as
-the project skill `the-way-<name>`: `.claude/skills/` holds the entry points Claude Code reads and
-`.agents/skills/` the identical ones Codex reads, and each entry point reads its skill from the
-checkout or worktree the session works in. They are generated; after adding, renaming or
-moving a skill, or changing its description, run:
+A human starts each of them in a Claude Code or Codex session working in a checkout or worktree of
+the-way as the project skill `the-way-<name>` — in Claude Code with the command `/the-way-<name>`:
+`.claude/skills/` holds the entry points Claude Code reads and `.agents/skills/` the identical ones
+Codex reads, and each entry point reads its skill from the checkout or worktree the session works
+in. Each entry point carries `disable-model-invocation: true`, which Claude Code documents as
+removing a skill from the model's context while a human can still start it with its `/name`, so a
+Claude Code session does not call a skill of the-way: where one skill names another, a session
+reads that skill's `SKILL.md` from the same checkout or worktree. They are generated; after adding,
+renaming or moving a skill, or changing its description, run:
 
 ```bash
 python -B agent-instructions/skill_entry_points.py --write

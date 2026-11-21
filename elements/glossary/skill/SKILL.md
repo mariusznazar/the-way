@@ -11,11 +11,16 @@ working the skills share stands in `elements/common/way_of_working.md`; this ski
 is particular to a glossary entry (WAY-35).
 
 This skill lives in `elements/glossary/skill/` of the-way. In the-way itself, the-way is the
-checkout or worktree the session works in, the directory `git rev-parse --show-toplevel`
-prints in the session's working directory; in a product, it is the product's pinned `.the-way`. The
-element's directory is `elements/glossary/` there, and each the-way skill named below is the
-project skill of that name with the `the-way-` prefix. Follow the steps of
-`elements/common/way_of_working.md` there; below is what a glossary entry adds to each.
+checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
+the session's working directory; in a product, it is the product's pinned `.the-way`. The element's
+directory is `elements/glossary/` there. In the-way itself, a skill named below is read as a file,
+not called, since Claude Code does not offer the entry points of the-way's skills to the model: its
+`SKILL.md` stands at the path that the list of skills in the entry point you were started with
+gives, or, where you were started without one, in the file under that root whose frontmatter has the
+line `name: <that name>`, which a search of the files that git lists as `SKILL.md` finds; read it
+there in full and follow it. In a product, it is the project skill of that name with the `the-way-`
+prefix. Follow the steps of `elements/common/way_of_working.md` there; below is what a glossary
+entry adds to each.
 
 ## 1. Read
 

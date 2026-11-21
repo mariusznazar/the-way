@@ -3328,20 +3328,30 @@ skill stand.
 
 ### WAY-127 — How does a session working on the-way itself reach the-way's skills?
 
-A session working on the-way itself reaches each skill of the-way as the project skill
-`the-way-<name>` through two identical tracked entry points, `.claude/skills/the-way-<name>/SKILL.md`
-and `.agents/skills/the-way-<name>/SKILL.md`, which a script of `agent-instructions` generates from
-the skill's `SKILL.md`. An entry point reads its skill, and each file the skill names when the step
-that names that file comes rather than all of them at the start, from the checkout or worktree the
-session works in — where it was started, or where it was last moved — stops itself in a product, and
-hands another the-way skill on under the `the-way-` prefix. No global link reaches a skill of the-way
-other than one to `instruction-files/`, whose skill, judging a repository that pins the-way, follows
-that repository's pinned copy instead, and the-way is not installed in itself.
+A session working on the-way itself reaches each skill of the-way, which a human starts, as the
+project skill `the-way-<name>` through two identical tracked entry points,
+`.claude/skills/the-way-<name>/SKILL.md` and `.agents/skills/the-way-<name>/SKILL.md`, which a script
+of `agent-instructions` generates from the skill's `SKILL.md`. An entry point reads its skill, and
+each file the skill names when the step that names that file comes rather than all of them at the
+start, from the checkout or worktree the session works in — where it was started, or where it was
+last moved — stops itself in a product, and hands another the-way skill on as the next paragraph
+gives. No global link reaches a skill of the-way other than one to `instruction-files/`, whose skill,
+judging a repository that pins the-way, follows that repository's pinned copy instead, and the-way
+is not installed in itself.
+
+The header of each entry point holds `disable-model-invocation: true`, so that Claude Code offers
+the model no skill of the-way, in the-way itself or in a product that carries it as `.the-way`, and
+a human starts a skill with the command `/the-way-<name>`. In the-way itself a skill hands another the-way
+skill on by reading that skill's `SKILL.md` from the checkout or worktree the session works in,
+never by calling it, each entry point giving the path of every skill; in a product a skill hands
+another on as the project skill with the `the-way-` prefix, through the product's own entry point
+that the installer writes.
 
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
-  glossary, part-map, environment-facts, installation, instruction-files
+  glossary, part-map, environment-facts, installation, instruction-files, foundation-review,
+  product-guidelines
 - **Based on:** claude-code-project-skills · claude-code-nested-skills ·
-  codex-repository-skills · codex-skill-paths
+  codex-repository-skills · codex-skill-paths · claude-code-skill-model-hiding
 - **Relations:** derives from WAY-44 · derives from WAY-256
 - **Verification:** invariants: skill-entry-points. For when an entry point has the files a skill
   names read, an agent compares the change with the decision:
@@ -3353,9 +3363,10 @@ that repository's pinned copy instead, and the-way is not installed in itself.
   the decision:
   - complies: a skill's paragraph names, as the place of the-way, the checkout or worktree the
     session works in for the-way itself and the pinned `.the-way` for a product, and names
-    another the-way skill it hands to as the project skill with the `the-way-` prefix;
+    another the-way skill it hands to as the file `SKILL.md` read from that checkout or worktree
+    for the-way itself and as the project skill with the `the-way-` prefix for a product;
   - violates: a skill tells an agent to resolve a global link to find the-way; a skill run in the-way
-    hands its work to `critique` without the prefix.
+    hands its work to `critique` by calling the skill, with the prefix or without it.
   For the global link and the skill of `instruction-files/`, an agent compares the change
   with the decision:
   - complies: a global link leads to `instruction-files/` of a worktree kept at the merged tip, and
@@ -3375,7 +3386,15 @@ worktree, and a session moved to another directory gains that directory's entry 
 the ones it started with; stopping in a product keeps a session there on its pinned the-way
 (WAY-34); the entry point's own directory, which Codex lists with each skill, lets the first product
 check find a product's submodule. The prefix keeps a personal skill of the same name from standing in
-for one of the-way's. The skill of instruction files serves repositories outside the-way and its
+for one of the-way's. A product that carries the-way as `.the-way` would otherwise show its session,
+once it reads a file there, the-way's own entry points beside the product's own, each name they
+share twice (claude-code-nested-skills); the header field removes them from what Claude Code offers
+the model and leaves them to the human who starts them (claude-code-skill-model-hiding), and one
+change to the generator covers every product. The price is that in Claude Code a request naming a
+skill without its command brings no skill in the-way itself, and that a skill reaches another
+through its file, with the path from the entry point's list, the checkout or worktree of the
+session still deciding which copy is read; a product's hand-over stays through its own entry point,
+which keeps the check of the pin (WAY-34). The skill of instruction files serves repositories outside the-way and its
 products too, where no entry point exists and the copy a global link reads is the one wanted; in a
 product the pinned copy governs (WAY-34), so the skill follows it there; a session on the-way still
 reaches its branch's copy through its entry point, and the-way's repository instruction files keep
@@ -3391,7 +3410,15 @@ by git — a global link reads one checkout whatever branch the session works on
 need a git setting and extra rights on Windows; names without the prefix — which skill a session
 gets would rest on how Claude Code and Codex settle two skills of one name; an entry point that has
 the skill and every file it names read at the start — the fragments placed beside a skill for one
-step would load with the skill.
+step would load with the skill; a setting the installer writes into each product to switch the-way's
+entry points off — a product's project settings match a skill by its name alone, so the name
+without the directory prefix would switch off the product's own entry point of the same name, the
+effect of a name with the prefix is not documented, the installer would write into the product's
+settings, and undoing it would take a change in each product; a list of exclusions kept by hand in a
+product's settings — it goes stale in silence when the-way adds a skill, and the duplicate returns;
+a skill handing another on by its file in a product as well — the product would lose the check of
+its pin at the hand-over, and the behaviour of every product would change with no need of this
+decision.
 
 ### WAY-256 — Where does a fragment of a skill stand?
 

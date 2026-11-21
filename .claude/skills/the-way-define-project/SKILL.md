@@ -1,6 +1,7 @@
 ---
 name: the-way-define-project
 description: Use when a project of a product that uses the-way has to be defined before it is broken into tasks — an idea, a concept or a note to turn into a project definition, a definition to resume from its status line, or a definition to take through the readiness approval. Use this checkout's own the-way.
+disable-model-invocation: true
 ---
 
 # the-way-define-project
@@ -12,4 +13,28 @@ This entry point serves a session that works on the-way itself. Stop following i
 
 The process root is the checkout or worktree the session works in: the directory `git rev-parse --show-toplevel` prints when run in the session's working directory — the directory the session was started in, or the one it was last moved to (Claude Code's `/cd`) — not in the shell's current directory, which moves with `cd`. Read `project-level/skill/SKILL.md` there in full and follow it, and read a file it names under the same root when the step or variant that names it comes, not all of them at the start, never a copy in another checkout or worktree. If `project-level/skill/SKILL.md` is absent there, stop and say so. If the skill tells you to resolve a link to find the-way, skip that: the root is the one above. Do not substitute a global skill.
 
-Where this skill or a file it reads names another the-way skill — `critique`, `find-foundation-entries`, `record-decision`, `record-environment-fact`, `record-glossary-term`, `record-invariant`, `update-part-map`, `review-foundation`, `maintain-instruction-files`, `audit-process`, `maintain-coding-guidelines`, `maintain-styleguide`, `maintain-testing-guidelines`, `lead-project`, `plan-project`, `define-project`, `refine-task`, `settle-technology`, `make-change`, `plan-task`, `review-change`, `implement-task` or `write-spec` — use this repository's project skill of the same name with the `the-way-` prefix, never an unprefixed one.
+Where this skill or a file it reads names another the-way skill, do not call it, since Claude Code does not offer the entry points of the-way's skills to the model: read that skill's `SKILL.md` under the same root in full and follow it there, as above. The skills of the-way and their files:
+
+- `critique`: `elements/common/critique/SKILL.md`
+- `find-foundation-entries`: `elements/common/skill/SKILL.md`
+- `record-decision`: `elements/decisions/skill/SKILL.md`
+- `record-environment-fact`: `elements/environment-facts/skill/SKILL.md`
+- `record-glossary-term`: `elements/glossary/skill/SKILL.md`
+- `record-invariant`: `elements/invariants/skill/SKILL.md`
+- `update-part-map`: `elements/part-map/skill/SKILL.md`
+- `review-foundation`: `foundation-review/SKILL.md`
+- `maintain-instruction-files`: `instruction-files/SKILL.md`
+- `audit-process`: `process-audit/SKILL.md`
+- `maintain-coding-guidelines`: `product-guidelines/coding/SKILL.md`
+- `maintain-styleguide`: `product-guidelines/styleguide/SKILL.md`
+- `maintain-testing-guidelines`: `product-guidelines/testing/SKILL.md`
+- `lead-project`: `project-level/lead/skill/SKILL.md`
+- `plan-project`: `project-level/plan/skill/SKILL.md`
+- `define-project`: `project-level/skill/SKILL.md`
+- `refine-task`: `project-level/task/skill/SKILL.md`
+- `settle-technology`: `project-level/technology/SKILL.md`
+- `make-change`: `task-cycle/change/SKILL.md`
+- `plan-task`: `task-cycle/plan/SKILL.md`
+- `review-change`: `task-cycle/review/SKILL.md`
+- `implement-task`: `task-cycle/skill/SKILL.md`
+- `write-spec`: `task-cycle/spec/SKILL.md`
