@@ -10,12 +10,13 @@ document's form and each section's rule stand in `project-level/task/template.md
 ask the human stands in `elements/common/way_of_working.md`. This skill holds the order of work.
 
 This skill lives in `project-level/task/skill/` of the-way. In the-way itself, read it in the
-checkout or worktree the session works in; in a product, at the pinned `.the-way` commit.
-In the-way itself, another the-way skill named here is read as a file, not called, since the entry
-points of the-way's skills are hidden from the model: its `SKILL.md` is the file under that root
-whose frontmatter has the line `name: <that name>`, which a search of the files named `SKILL.md`
-finds; read it there in full and follow it. In a product, it is the project skill with the
-`the-way-` prefix.
+checkout or worktree the session works in; in a product, at the pinned `.the-way` commit. In the-way
+itself, another the-way skill named here is read as a file, not called, since Claude Code does not
+offer the entry points of the-way's skills to the model: its `SKILL.md` stands at the path that the
+list of skills in the entry point you were started with gives, or, where you were started without
+one, in the file under that root whose frontmatter has the line `name: <that name>`, which a search
+of the files that git lists as `SKILL.md` finds; read it there in full and follow it. In a product,
+it is the project skill with the `the-way-` prefix.
 
 ## Orchestrated mode
 
