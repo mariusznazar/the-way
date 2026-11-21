@@ -4,11 +4,11 @@ the fixtures they use are imported from it."""
 
 import subprocess
 import sys
+from pathlib import Path
 
 from test_audit_count import (
     GATE,
     GIT_ENV,
-    HERE,
     MEASURES,
     MEASURE_LABELS,
     MEASURE_VALUES,
@@ -28,6 +28,8 @@ from test_audit_count import (
     register_text,
     stage_row,
 )
+
+HERE = Path(__file__).resolve().parent
 
 
 NL = chr(10)
