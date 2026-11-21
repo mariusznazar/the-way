@@ -26,6 +26,7 @@ from test_audit_count import (
     older_stages,
     record,
     register_text,
+    split_row,
     stage_row,
 )
 
@@ -33,6 +34,14 @@ HERE = Path(__file__).resolve().parent
 
 
 NL = chr(10)
+
+# Q1 of a group is the number of its cycles that answer yes, the number that answer no and the
+# number that answer unknown, never one word (WAY-417, row 3 of the settlements of the task). These
+# are the cell of a version of one cycle that answers yes, no and unknown; a version of several
+# cycles shows each count written out.
+Q1_YES = "yes 1 · no 0 · unknown 0"
+Q1_NO = "yes 0 · no 1 · unknown 0"
+Q1_UNKNOWN = "yes 0 · no 0 · unknown 1"
 
 
 def process_record(
@@ -54,7 +63,38 @@ def process_record(
     )
 
 
-class ProcessVersions(AuditCountCase):
+class VersionsCase(AuditCountCase):
+    """The reading of the two tables under the heading of a series: the image of all its cycles
+    and, after it, the table with a row for each version (WAY-417)."""
+
+    def tables(self, kind, number) -> list[tuple[list[str], list[list[str]]]]:
+        """The tables under `### <kind>, series <number>` of the latest result, each as its header
+        cells and its rows."""
+        text = self.latest()
+        heading = f"\n### {kind}, series {number}\n"
+        self.assertIn(heading, text, "the result has no such series")
+        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+        found: list[list[str]] = []
+        inside = False
+        for line in part.splitlines():
+            if line.startswith("|"):
+                if not inside:
+                    found.append([])
+                found[-1].append(line)
+            inside = line.startswith("|")
+        self.assertEqual(2, len(found), "a series holds its image and its table of versions")
+        return [(split_row(lines[0]), [split_row(line) for line in lines[2:]]) for lines in found]
+
+    def section(self, kind, number) -> list[list[str]]:
+        """The rows of the table of the versions of a series, which stands after its image."""
+        return self.tables(kind, number)[1][1]
+
+    def image(self, kind, number) -> list[list[str]]:
+        """The rows of the image of a series, which stands first under its heading."""
+        return self.tables(kind, number)[0][1]
+
+
+class ProcessVersions(VersionsCase):
     """The process versions, their series and the three questions (WAY-339)."""
 
     FIRST = 1759968000  # 2025-10-09, UTC midnight
@@ -147,14 +187,19 @@ class ProcessVersions(AuditCountCase):
             self.cost_series(1),
         )
         self.assertNotIn("### Cost, series 2", self.latest())
+        # The expected Q1 changes with the requirement (WAY-417, row 3): the cell of a version is
+        # the numbers of its cycles that answer yes, no and unknown, where it was the word `no`
+        # for a version whose cycles all answer no. v1 has two such cycles, v2 and v3 one each.
         self.assertEqual(
             [
-                [v1, "2025-10-09", "2", "no", "0 of 0", "unknown"],
-                [v2, "2025-10-10", "1", "no", "0 of 0", "unknown"],
+                [v1, "2025-10-09", "2", "yes 0 · no 2 · unknown 0", "0 of 0", "unknown"],
+                [v2, "2025-10-10", "1", Q1_NO, "0 of 0", "unknown"],
             ],
             self.count_series(1),
         )
-        self.assertEqual([[v3, "2026-03-01", "1", "no", "0 of 0", "unknown"]], self.count_series(2))
+        self.assertEqual(
+            [[v3, "2026-03-01", "1", Q1_NO, "0 of 0", "unknown"]], self.count_series(2)
+        )
         self.assertIn("### No version", self.latest())
         self.assertIn("## Process versions", self.latest())
         self.assertIn(
@@ -207,8 +252,14 @@ class ProcessVersions(AuditCountCase):
             self.cost_series(1),
         )
         self.assertNotIn("### Cost, series 2", self.latest())
-        self.assertEqual([[v1, "2025-10-09", "1", "no", "0 of 0", "unknown"]], self.count_series(1))
-        self.assertEqual([[v2, "2025-10-10", "1", "no", "0 of 0", "unknown"]], self.count_series(2))
+        # The expected Q1 changes with the requirement (WAY-417, row 3): the numbers of the one
+        # cycle of each version, which answers no, where the cell was the word `no`.
+        self.assertEqual(
+            [[v1, "2025-10-09", "1", Q1_NO, "0 of 0", "unknown"]], self.count_series(1)
+        )
+        self.assertEqual(
+            [[v2, "2025-10-10", "1", Q1_NO, "0 of 0", "unknown"]], self.count_series(2)
+        )
 
     def test_a_change_under_the_review_starts_a_series_of_the_count_and_none_of_the_cost(self):
         # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
@@ -323,8 +374,10 @@ class ProcessVersions(AuditCountCase):
                 done = self.run_with_prices()
                 self.assertEqual(0, done.returncode, done.stderr)
                 self.assertEqual([[version, day, "1", known, cost, "unknown"]], self.cost_series(1))
+                # The expected Q1 changes with the requirement (WAY-417, row 3): the numbers of
+                # the one cycle, which answers no, where the cell was the word `no`.
                 self.assertEqual(
-                    [[version, day, "1", "no", "0 of 0", "unknown"]], self.count_series(1)
+                    [[version, day, "1", Q1_NO, "0 of 0", "unknown"]], self.count_series(1)
                 )
                 self.assertNotIn("### Cost, series 2", self.latest())
 
@@ -553,10 +606,13 @@ class ProcessVersions(AuditCountCase):
             ],
         )
         self.run_versions(way, product)
-        # Q1 is yes from reading-a's discarded attempt. Q2 is unknown: reading-c's doubled item
-        # is not read, and its slices could change the share of the other two plans.
+        # Q1 is yes for reading-a, from its discarded attempt, and no for the other two: the cell
+        # gives the three numbers, where it gave the word `yes` for the one yes (WAY-417, row 3,
+        # the cause of this expected value). Q2 is unknown: reading-c's doubled item is not read,
+        # and its slices could change the share of the other two plans.
         self.assertEqual(
-            [[v1, "2025-10-09", "3", "yes", "2 of 3", "unknown"]], self.count_series(1)
+            [[v1, "2025-10-09", "3", "yes 1 · no 2 · unknown 0", "2 of 3", "unknown"]],
+            self.count_series(1),
         )
         self.assertEqual([[v1, "2025-10-09", "3", "3", "2.000000", "unknown"]], self.cost_series(1))
         plan_reasons = [row[3] for row in self.rows("Unknown values") if row[2] == "Plan"]
@@ -679,7 +735,9 @@ class ProcessVersions(AuditCountCase):
                 NL + "  reason: `open design choice`" + rest + NL + "  - report reports/x.md",
             ]
         )
-        self.assertEqual(["yes", "no", "no", "no", "yes", "no", "unknown", "yes"], answers)
+        # Each version holds one cycle, so its cell shows that cycle's answer as three numbers,
+        # where it showed the word (WAY-417, row 3, the cause of these expected values).
+        self.assertEqual([Q1_YES, Q1_NO, Q1_NO, Q1_NO, Q1_YES, Q1_NO, Q1_UNKNOWN, Q1_YES], answers)
 
     def test_the_four_denials_of_review_100_leave_q1_unknown(self):
         # decision: WAY-405 "The audit of the process takes from this item, for its answer whether"
@@ -703,7 +761,9 @@ class ProcessVersions(AuditCountCase):
             ],
         )
         self.run_versions(way, product)
-        self.assertEqual("unknown", self.count_series(1)[0][3])
+        # The four cycles stand in one version, none answers: the cell counts them as unknown, and
+        # no cycle is a no (WAY-417, row 3, the cause of this expected value).
+        self.assertEqual("yes 0 · no 0 · unknown 4", self.count_series(1)[0][3])
         [pair] = [row for row in self.pair_rows() if row[0] == "Discarded attempt"]
         self.assertEqual("4", pair[1])
         self.assertIn("opens with no marker of its reason", pair[2])
@@ -716,7 +776,9 @@ class ProcessVersions(AuditCountCase):
             "none — reason: `size`",
             "reason: `size`; reason: `open design choice`",
         ]
-        self.assertEqual(["unknown"] * 4, self.q1_of_each_version(texts))
+        # One cycle in each version: the cell gives that cycle's answer as three numbers (WAY-417,
+        # row 3, the cause of this expected value).
+        self.assertEqual([Q1_UNKNOWN] * 4, self.q1_of_each_version(texts))
 
     def test_a_second_reason_in_a_detail_or_at_the_margin_is_not_read_and_gives_the_first_one(self):
         # decision: WAY-405 "Where the lines are sub-items at one indent alone and nothing stands beside the colon"
@@ -731,7 +793,9 @@ class ProcessVersions(AuditCountCase):
             " reason: `size`; 10:32" + NL + "  - report reports/x.md",
             NL + "  - reason: `size`; 14:05" + NL + odc,
         ]
-        self.assertEqual(["no"] * 4, self.q1_of_each_version(texts))
+        # One cycle in each version: the cell gives that cycle's answer as three numbers (WAY-417,
+        # row 3, the cause of this expected value).
+        self.assertEqual([Q1_NO] * 4, self.q1_of_each_version(texts))
 
     def test_the_crafted_discarded_attempts_break_no_cell_and_no_pattern(self):
         sys.path.insert(0, str(HERE))
@@ -768,7 +832,10 @@ class ProcessVersions(AuditCountCase):
         self.assertEqual(
             [], [char for char in self.latest() if not char.isprintable() and char != "\n"]
         )
-        self.assertEqual(["yes"], [self.count_series(1)[0][3]])
+        # Of the six crafted items two open with the marker `open design choice` and answer yes (the
+        # very long one and the one with a bar); the other four give no answer that they state, so
+        # the cell counts them as unknown (WAY-417, row 3, the cause of this expected value).
+        self.assertEqual("yes 2 · no 0 · unknown 4", self.count_series(1)[0][3])
 
     def test_a_round_marked_as_a_contradiction_gives_yes_and_an_unmarked_round_unknown(self):
         # decision: WAY-404 "The cycle writes the mark into the sub-item of the round in the record's item"
@@ -782,8 +849,10 @@ class ProcessVersions(AuditCountCase):
             marked.format("maybe"),
             "\n  - findings `reports/a_findings.md`: the whole change, range a1b2c3d..e4f5a6b",
         ]
+        # One cycle in each version: the cell gives that cycle's answer as three numbers (WAY-417,
+        # row 3, the cause of these expected values).
         self.assertEqual(
-            ["yes", "no", "unknown", "unknown"], self.q1_of_each_version(["none"] * 4, rounds)
+            [Q1_YES, Q1_NO, Q1_UNKNOWN, Q1_UNKNOWN], self.q1_of_each_version(["none"] * 4, rounds)
         )
         [pair] = [row for row in self.pair_rows() if row[0] == "Discarded attempt"]
         self.assertEqual("2", pair[1])
@@ -811,7 +880,9 @@ class ProcessVersions(AuditCountCase):
             many,
         ]
         answers = self.q1_of_each_version(["none"] * len(rounds), rounds)
-        self.assertEqual(["unknown", "unknown", "unknown", "unknown", "no"], answers)
+        # One cycle in each version: the cell gives that cycle's answer as three numbers (WAY-417,
+        # row 3, the cause of these expected values).
+        self.assertEqual([Q1_UNKNOWN] * 4 + [Q1_NO], answers)
         self.assertEqual(
             [], [char for char in self.latest() if not char.isprintable() and char != "\n"]
         )
@@ -831,7 +902,9 @@ class ProcessVersions(AuditCountCase):
             product, [("no-discarded", no_discarded, 1_000), ("no-rounds", no_rounds, 1_000)]
         )
         self.run_versions(way, product)
-        self.assertEqual(["unknown", "unknown"], [row[3] for row in self.count_series(1)])
+        # One cycle in each of the two versions: the cell gives that cycle's answer as three
+        # numbers (WAY-417, row 3, the cause of this expected value).
+        self.assertEqual([Q1_UNKNOWN] * 2, [row[3] for row in self.count_series(1)])
         reasons = {row[2] for row in self.pair_rows() if row[0] == "Discarded attempt"}
         self.assertEqual(
             {
@@ -874,7 +947,12 @@ class ProcessVersions(AuditCountCase):
         )
         self.run_versions(way, product)
         [row] = self.count_series(1)
-        self.assertEqual([v2, "2025-10-10", "3", "unknown", "1 of 2", "unknown"], row)
+        # Q1 is the numbers of the three cycles: exact and crawling answer no, prose answers
+        # unknown, where the cell was the word `unknown` for the one that did not answer (WAY-417,
+        # row 3, the cause of this expected value).
+        self.assertEqual(
+            [v2, "2025-10-10", "3", "yes 0 · no 2 · unknown 1", "1 of 2", "unknown"], row
+        )
         self.assertEqual([[v2, "2025-10-10", "3", "3", "2.000000", "unknown"]], self.cost_series(1))
         unknown = self.rows("Unknown values")
         self.assertEqual(1, len([row for row in unknown if row[2] == "Discarded attempt"]))
@@ -899,7 +977,7 @@ def gate_run(second, others, total, *directories, code=0) -> str:
 TOTAL = "Total time of the run"
 
 
-class MeasureVersions(AuditCountCase):
+class MeasureVersions(VersionsCase):
     """The series of the mechanism measures and of the gate times, each by the change of its own
     instrument alone, and the median of each measure of each version (WAY-339, WAY-350).
     The helpers are those of ProcessVersions."""
@@ -1515,3 +1593,243 @@ class MeasureVersions(AuditCountCase):
         # the 499 directories of the runs after it.
         self.assertEqual(1 + 2 + 499, len(rows))
         self.assertIn(["Directory: " + "d" * 200], [[row[1]] for row in rows])
+
+
+class SeriesImages(VersionsCase):
+    """The image of each series of each of the four kinds, in the result of the count, and Q1 of
+    the row of a version as numbers (WAY-339, WAY-350, WAY-417). The helpers are those of
+    ProcessVersions."""
+
+    FIRST = ProcessVersions.FIRST
+    LATER = ProcessVersions.LATER
+    BASE_FILES = ProcessVersions.BASE_FILES
+    the_way = ProcessVersions.the_way
+    version_at = ProcessVersions.version_at
+    run_versions = ProcessVersions.run_versions
+    stages_of = ProcessVersions.stages_of
+    cost_series = ProcessVersions.cost_series
+    count_series = ProcessVersions.count_series
+
+    CALLS = "Calls in all"
+    GATE_A = "Directory: gate/a"
+    GATE_B = "Directory: gate/b"
+    # The four cycles, in the order of their versions: cycle a and b run on the first version and
+    # c and d on the second. The cost is that of 1,000,000 tokens of model-a at 2 dollars; cycle d
+    # has no stage report, so no known cost, and no file of measures. Q1: a yes (an open design
+    # choice), b no, c unknown (an overrun in prose), d no. Plans: a has 4 slices and 1 too large,
+    # b 2 and 0, c 3 and 0, and d, on the one-author route, none. The calls: 10, 4 and 7. The runs:
+    # a and b alone and passed (total 100 and 110, gate/a 60.0 and 70.0); c one with company (200,
+    # gate/a 120.0) and one that failed (5.000, gate/b 1.0); d one whose exit code is unknown (300).
+    SPECS = (
+        (
+            "a",
+            0,
+            "reason: `open design choice`; 10:32",
+            "4 slices",
+            "\n  - slice 1",
+            1_000_000,
+            {"Calls in all": "10"},
+            gate_run(1, 0, "100.000", ("gate/a", "60.0")),
+        ),
+        (
+            "b",
+            0,
+            "none",
+            "2 slices",
+            "none",
+            2_000_000,
+            {"Calls in all": "4"},
+            gate_run(2, 0, "110.000", ("gate/a", "70.0")),
+        ),
+        (
+            "c",
+            1,
+            "a time overrun",
+            "3 slices",
+            "none",
+            500_000,
+            {"Calls in all": "7"},
+            gate_run(3, 1, "200.000", ("gate/a", "120.0"))
+            + gate_run(4, 0, "5.000", ("gate/b", "1.0"), code=2),
+        ),
+        (
+            "d",
+            1,
+            "none",
+            "none on the one-author route",
+            "none",
+            None,
+            None,
+            gate_run(5, 0, "300.000", code="unknown"),
+        ),
+    )
+
+    def add_images(self, product, versions, specs) -> None:
+        """Each spec as (folder, number of its version in `versions`, discarded attempt, plan,
+        slices too large, tokens of its stage report or None for no report, values of the
+        measures or None for no file, rows of the gate times), chained in the history."""
+        parent = product.commit({"README.md": "a product\n"}, "Start")
+        for folder, number, discarded, plan, too_large, tokens, values, runs in specs:
+            files = {
+                "cycle.md": process_record(
+                    versions[number], discarded=discarded, plan=plan, too_large=too_large
+                ),
+                GATE: gate_file(rows=runs),
+            }
+            if tokens is not None:
+                files["stages.md"] = self.stages_of(tokens)
+            if values is not None:
+                files[MEASURES] = measures_file(
+                    [(label, values.get(label, default)) for label, default in MEASURE_VALUES]
+                )
+            _, parent = product.cycle(folder, files, parent=parent, branch=None)
+        product.branch("main", parent)
+
+    def two_versions(self, specs, changed=None):
+        """The result of the count for the cycles of `specs` in two versions of the-way, the
+        second with the files of `changed` replaced; returns the two commits."""
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        v2 = self.version_at(way, self.LATER, parent=v1, changed=changed)
+        product = self.repository()
+        self.add_images(product, [v1, v2], specs)
+        self.run_versions(way, product)
+        return v1, v2
+
+    def test_a_series_of_two_versions_with_two_cycles_each_has_an_image_of_each_kind(self):
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
+        # decision: WAY-417 "The image of a series, which sets no two groups against each other"
+        # Every figure by hand from the description of SPECS. Cost: the cycles 4, the known costs 3
+        # (2, 4 and 1 dollars), median 2. Count: Q1 of the four cycles, yes 1, no 2, unknown 1;
+        # the plans of a, b and c read (3 of 3: d is on the one-author route), 4 + 2 + 3 = 9
+        # slices planned and 1 too large, three times 1 is not above 9, so no. The calls in all:
+        # 10, 4 and 7 of three cycles (d gives none), median 7; the share: 12.5% in each of the
+        # three. The gate, total: compared 100 and 110 (105.000), not compared 200, 5 and 300
+        # (200.000); gate/a: compared 60.0 and 70.0 (65.0), not compared 120.0; gate/b: none
+        # compared, not compared 1.0.
+        self.two_versions(self.SPECS)
+        self.assertEqual([["4", "3", "2.000000"]], self.image("Cost", 1))
+        self.assertEqual(
+            [["4", "yes 1 · no 2 · unknown 1", "3 of 3", "9", "1", "no"]],
+            self.image("Count of remarks", 1),
+        )
+        mechanism = {row[0]: row for row in self.image("Mechanism measures", 1)}
+        self.assertEqual(15, len(mechanism))
+        self.assertEqual([self.CALLS, "3", "7"], mechanism[self.CALLS])
+        self.assertEqual(
+            ["Share of the context in calls above 200000 tokens", "3", "12.5%"],
+            mechanism["Share of the context in calls above 200000 tokens"],
+        )
+        self.assertEqual(
+            [
+                [TOTAL, "2", "105.000", "3", "200.000"],
+                [self.GATE_A, "2", "65.0", "1", "120.0"],
+                [self.GATE_B, "0", "unknown", "1", "1.0"],
+            ],
+            self.image("Gate times", 1),
+        )
+        for kind in ("Cost", "Count of remarks", "Mechanism measures", "Gate times"):
+            self.assertNotIn(f"### {kind}, series 2", self.latest())
+
+    def test_the_rows_of_the_versions_stay_and_give_q1_as_numbers_of_their_cycles(self):
+        # decision: WAY-417 "the rows of the versions of a series give Q1 as a word while its image"
+        # The tables per version stay beside the image. v1 has a (yes) and b (no); v2 has c
+        # (unknown) and d (no): the old cell would read `yes` for v1 and `unknown` for v2.
+        v1, v2 = self.two_versions(self.SPECS)
+        self.assertEqual(
+            [
+                [v1, "2025-10-09", "2", "yes 1 · no 1 · unknown 0", "2 of 2", "no"],
+                [v2, "2025-10-10", "2", "yes 0 · no 1 · unknown 1", "1 of 1", "no"],
+            ],
+            self.count_series(1),
+        )
+        self.assertEqual(
+            [
+                [v1, "2025-10-09", "2", "2", "3.000000", "unknown"],
+                [v2, "2025-10-10", "2", "1", "1.000000", "yes"],
+            ],
+            self.cost_series(1),
+        )
+
+    def test_the_image_stands_under_the_heading_of_the_series_before_its_table_per_version(self):
+        # decision: WAY-417 "shows each series as an image of all its cycles"
+        # The image carries no Q3 and no fall: its columns are those of its kind alone.
+        self.two_versions(self.SPECS)
+        expected = {
+            "Cost": (["Cycles", "Cycles with a known cost", "Median cost (USD)"], 3),
+            "Count of remarks": (
+                [
+                    "Cycles",
+                    "Q1: contradiction only after code",
+                    "Plans read",
+                    "Slices planned",
+                    "Slices returned too large",
+                    "Q2: more than a third of slices too large",
+                ],
+                6,
+            ),
+            "Mechanism measures": (["Measure", "Cycles with a value", "Median"], 3),
+            "Gate times": (
+                [
+                    "Measure",
+                    "Runs compared",
+                    "Median (seconds)",
+                    "Runs not compared",
+                    "Median of those (seconds)",
+                ],
+                5,
+            ),
+        }
+        for kind, (header, width) in expected.items():
+            with self.subTest(kind):
+                image, versions = self.tables(kind, 1)
+                self.assertEqual(header, image[0])
+                self.assertEqual({width}, {len(row) for row in image[1]})
+                self.assertEqual("Version (commit)", versions[0][0])
+
+    def test_the_image_of_a_series_takes_only_the_cycles_of_that_series(self):
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
+        # A change of the stage script splits the series of the cost and of the count of remarks
+        # between v1 (a and b) and v2 (c and d) and splits neither the mechanism measures nor the
+        # gate times. Cost: 2 and 4 dollars, median 3; then 1 dollar, d's cost unknown. Q1: a yes
+        # and b no; then c unknown and d no. Plans: 6 slices, 1 too large; then 3 and 0, d being
+        # on the one-author route.
+        self.two_versions(self.SPECS, changed={"task-cycle/cycle_stages.py": "newer form\n"})
+        self.assertEqual([["2", "2", "3.000000"]], self.image("Cost", 1))
+        self.assertEqual([["2", "1", "1.000000"]], self.image("Cost", 2))
+        self.assertEqual(
+            [["2", "yes 1 · no 1 · unknown 0", "2 of 2", "6", "1", "no"]],
+            self.image("Count of remarks", 1),
+        )
+        self.assertEqual(
+            [["2", "yes 0 · no 1 · unknown 1", "1 of 1", "3", "0", "no"]],
+            self.image("Count of remarks", 2),
+        )
+        calls = [row for row in self.image("Mechanism measures", 1) if row[0] == self.CALLS]
+        self.assertEqual([[self.CALLS, "3", "7"]], calls)
+        self.assertNotIn("### Mechanism measures, series 2", self.latest())
+        self.assertNotIn("### Gate times, series 2", self.latest())
+
+    def test_a_series_of_one_cycle_has_an_image_of_that_cycle(self):
+        # decision: WAY-417 "The image of a series, which sets no two groups against each other"
+        # Cycle b alone: cost 4 dollars, Q1 no, its plan of 2 slices read with none too large, 4
+        # calls, one run alone that passed (110.000, gate/a 70.0).
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        product = self.repository()
+        self.add_images(product, [v1], [self.SPECS[1]])
+        self.run_versions(way, product)
+        self.assertEqual([["1", "1", "4.000000"]], self.image("Cost", 1))
+        self.assertEqual(
+            [["1", "yes 0 · no 1 · unknown 0", "1 of 1", "2", "0", "no"]],
+            self.image("Count of remarks", 1),
+        )
+        calls = [row for row in self.image("Mechanism measures", 1) if row[0] == self.CALLS]
+        self.assertEqual([[self.CALLS, "1", "4"]], calls)
+        self.assertEqual(
+            [
+                [TOTAL, "1", "110.000", "0", "unknown"],
+                [self.GATE_A, "1", "70.0", "0", "unknown"],
+            ],
+            self.image("Gate times", 1),
+        )

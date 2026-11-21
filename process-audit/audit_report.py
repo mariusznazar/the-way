@@ -18,6 +18,7 @@ from pathlib import Path
 from problem_register import COST_LEVELS
 from audit_shared import THE_WAY, AuditCountError
 from record_reading import MEASURE_LABELS, Cycle, Read
+from series_summary import money
 from stage_pricing import UNKNOWN, Prices
 from version_analysis import (
     COST_MODULE,
@@ -27,8 +28,8 @@ from version_analysis import (
     MEASURES_SCRIPT,
     Analysis,
     MeasureVersions,
+    Series,
     Versions,
-    money,
     unknown_rows,
 )
 
@@ -50,6 +51,25 @@ COST_HEADER = [
     "Median cost (USD)",
     "Q3: cost falls",
 ]
+# The image of a series, the table that stands first under its heading: what its kind carries over
+# all the cycles of the series, and no Q3 and no fall (WAY-417).
+COST_IMAGE_HEADER = ["Cycles", "Cycles with a known cost", "Median cost (USD)"]
+COUNT_IMAGE_HEADER = [
+    "Cycles",
+    "Q1: contradiction only after code",
+    "Plans read",
+    "Slices planned",
+    "Slices returned too large",
+    "Q2: more than a third of slices too large",
+]
+MECHANISM_IMAGE_HEADER = ["Measure", "Cycles with a value", "Median"]
+GATE_IMAGE_HEADER = [
+    "Measure",
+    "Runs compared",
+    "Median (seconds)",
+    "Runs not compared",
+    "Median of those (seconds)",
+]
 COUNT_HEADER = [
     "Version (commit)",
     "Committed",
@@ -69,6 +89,27 @@ GATE_HEADER = [
     "Runs not compared",
     "Median of those (seconds)",
 ]
+
+
+def series_lines(
+    title: str, number: int, block: Series, image_header: list[str], header: list[str]
+) -> list[str]:
+    """The subsection of a series: its heading, the reason it begins where it does, the image of
+    all its cycles and then the table with a row for each of its versions."""
+    return [
+        f"### {title}, series {number}",
+        "",
+        f"Begins at this version: {block.begins}.",
+        "",
+        "The image of the series, over all its cycles:",
+        "",
+        *table(image_header, block.image),
+        "",
+        "By version:",
+        "",
+        *table(header, block.rows),
+        "",
+    ]
 
 
 def versions_lines(versions: Versions) -> list[str]:
@@ -101,23 +142,27 @@ def versions_lines(versions: Versions) -> list[str]:
         "the reviewer finding more or the process getting dearer, and the count of remarks, "
         "whose meaning changes with the reviewer, is the series that ends there.",
         "",
-        "Q1, Q2 and Q3 are `yes`, `no` or `unknown`; *Unknown values* says why an answer is "
-        "unknown. The reason each series begins where it does stands under its heading.",
+        "Each series opens with an image of all its cycles, and below it stands a table with a row "
+        "for each version. The image of a series of the cost gives its cycles, those with a known "
+        "cost and their median cost; the image of a series of the count of remarks gives Q1 and Q2. "
+        "Q1 of a group of cycles, a version or a whole series, is the number of its cycles that "
+        "answer `yes`, the number that answer `no` and the number that answer `unknown` "
+        "(`yes n · no n · unknown n`); each cycle answers for itself. Q2 of a group is the sum of the slices planned and the sum "
+        "of the slices returned too large over the cycles whose plans are read (*Plans read*), "
+        "with `yes`, `no` or `unknown` as the answer those sums give: `unknown` where a plan of the "
+        "group is not read, or no plan holds a slice. Q3 is `yes`, `no` or `unknown`, and stands "
+        "only in the row of a version, set against the previous version of its series: an image "
+        "sets no two groups against each other, so it holds no Q3. *Unknown values* says why an "
+        "answer is unknown, a cycle's Q1 included. The reason each series begins where it does "
+        "stands under its heading.",
         "",
     ]
-    for title, blocks, header in (
-        (SERIES_COST, versions.cost, COST_HEADER),
-        (SERIES_COUNT, versions.count, COUNT_HEADER),
+    for title, blocks, image_header, header in (
+        (SERIES_COST, versions.cost, COST_IMAGE_HEADER, COST_HEADER),
+        (SERIES_COUNT, versions.count, COUNT_IMAGE_HEADER, COUNT_HEADER),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += [
-                f"### {title}, series {number}",
-                "",
-                f"Begins at this version: {block.begins}.",
-                "",
-            ]
-            lines += table(header, block.rows)
-            lines.append("")
+            lines += series_lines(title, number, block, image_header, header)
     if versions.no_version:
         lines += [
             "### No version",
@@ -160,8 +205,13 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "or either median is not known; *Unknown values* says why. A median is written as the "
         "exact value, a half with its decimal.",
         "",
+        "Each series opens with an image of all its cycles, and below it stands a table with a row "
+        "for each version. The image holds no *Falls*, which sets a version against the previous "
+        "one: it gives the measures of the series as their medians and the numbers behind them.",
+        "",
         "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
-        "and *Cycles with a value* counts them.",
+        "and *Cycles with a value* counts them; in the image they are the cycles of the whole "
+        "series.",
         "",
         "*Gate times*: the runs are taken together over all the cycles of the version. The median "
         "and *Falls* take only the runs that passed (exit code 0) during which no other gate run by "
@@ -172,22 +222,17 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "version in which no run passed alone has no comparison. Each count is of the runs that "
         "give the time of its row, and a directory's median takes the runs that give its time. A "
         "version in which no cycle gives a value, or no run a time, has one row, with `—` for the "
-        "measure, and a value in *Unknown values*.",
+        "measure, and a value in *Unknown values*. The image of a series takes the runs of all its "
+        "cycles, compared and not compared apart in the same way, for the total and for each "
+        "directory that any of them has.",
         "",
     ]
-    for title, blocks, header in (
-        ("Mechanism measures", measured.mechanism, MECHANISM_HEADER),
-        ("Gate times", measured.gate, GATE_HEADER),
+    for title, blocks, image_header, header in (
+        ("Mechanism measures", measured.mechanism, MECHANISM_IMAGE_HEADER, MECHANISM_HEADER),
+        ("Gate times", measured.gate, GATE_IMAGE_HEADER, GATE_HEADER),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += [
-                f"### {title}, series {number}",
-                "",
-                f"Begins at this version: {block.begins}.",
-                "",
-            ]
-            lines += table(header, block.rows)
-            lines.append("")
+            lines += series_lines(title, number, block, image_header, header)
     if lines[-1] == "":
         lines.pop()
     return lines
