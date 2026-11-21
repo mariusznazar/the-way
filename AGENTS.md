@@ -16,9 +16,12 @@ each file the skill names when the step that names it comes. Start only these: a
 the same name without the prefix — `refine-task`, `critique` or another — is not the-way's. A change
 that adds, renames or moves a skill, or changes its description, runs
 `python -B agent-instructions/skill_entry_points.py --write` and commits what it writes; the gate's
-tests report an entry point that is missing, differs from its copy or lacks the field, so that a
-human could not start the skill under its `the-way-` name or the model would be offered it. A change
-to a definition of an agent type in `task-cycle/agent-types/` runs
+tests report each way an entry point breaks the invariant `skill-entry-points`: a skill file that
+cannot be read or has no name or description; an entry point that is missing, or a pair that differs
+in bytes; an entry point with no frontmatter, whose header does not name the skill, does not start
+with its description or lacks the field, whose text lacks the path of its skill, a command or
+sentence the invariant requires, or the line of another skill; or a directory `the-way-*` that no
+skill produces. A change to a definition of an agent type in `task-cycle/agent-types/` runs
 `python -B agent-instructions/agent_type_copies.py --write` and commits what it writes; the gate's
 tests report a copy in `.claude/agents/` that differs from its definition.
 

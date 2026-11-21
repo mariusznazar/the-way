@@ -2,10 +2,10 @@
 
 Someone adds, renames or moves a skill of the-way, or changes its description; a skill that a
 human on the-way could not start under its `the-way-` name, or whose entry points would be offered
-to the model, has to be reported before the change reaches the main branch. This test runs the
-whole path a session takes: the skills of the-way as git lists them, and the entry points a session
-finds for them in `.claude/skills/` and `.agents/skills/`, against each property the invariant
-`skill-entry-points` names.
+to the model by Claude Code, has to be reported before the change reaches the main branch. This
+test runs the whole path a session takes: the skills of the-way as git lists them, and the entry
+points a session finds for them in `.claude/skills/` and `.agents/skills/`, against each property
+the invariant `skill-entry-points` names.
 
 Every value the test expects is written out below, taken from the sentence of that invariant. It
 imports nothing that computes entry points and finds the skills with its own call to git: were it
@@ -225,8 +225,13 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         self.assertEqual(
             found,
             [],
-            "an entry point of a skill of the-way that is missing, differs from its copy or "
-            "is not hidden from the model; write the entry points with `"
+            "a skill of the-way whose entry points break the invariant `skill-entry-points`: a "
+            "skill file that cannot be read or has no name or description; an entry point that "
+            "is missing, or a pair that differs in bytes; an entry point with no frontmatter, "
+            "whose header does not name the skill, does not start with its description or lacks "
+            "`disable-model-invocation: true`, whose text lacks the path of its skill, a command "
+            "or sentence the invariant requires, or the line of another skill; or a directory "
+            "`the-way-*` that no skill produces; write the entry points with `"
             + GENERATOR
             + "`:\n"
             + "\n".join(found),
