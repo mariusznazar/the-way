@@ -10,11 +10,19 @@ figures over all the cycles of the series, as the cells of its table: `cost_imag
 image sets no two groups against each other, so it carries no answer Q3 and no fall. The cycles it
 reads are those of `record_reading.py`; it reads no file and runs no command. It is imported, never
 run, and runs nothing when imported. Standard library only.
+
+The comparison before and after a fix is made of the same figures for two groups of cycles, those
+on the versions that lack a fix and those on the versions that hold it, both of one series
+(WAY-339, WAY-417): `cost_comparison`, `count_comparison`, `mechanism_comparison` and
+`gate_comparison`, each taking the issue, its fix and the two lists of cycles, and giving the rows
+of a pair for each issue or each measure, with the answer Q3 or the fall where the kind has one,
+and the unknown answers with their reasons. Which cycles stand on which side is no business of
+this module: `version_analysis.py` decides it from the history of git.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 
 from record_reading import MEASURE_LABELS, SHARE_LABEL, Cycle
@@ -52,6 +60,13 @@ def measure_number(label: str, text: str) -> Decimal:
     """The value of a cycle-level line that `read_measures` kept: a whole number, or for the share
     a number of percent with one decimal."""
     return Decimal(text[:-1] if label == SHARE_LABEL else text)
+
+
+def measure_values(cycles: list[Cycle], label: str) -> list[Decimal]:
+    """The values of a mechanism measure over the cycles that give one."""
+    return [
+        measure_number(label, cycle.measures[label]) for cycle in cycles if label in cycle.measures
+    ]
 
 
 def gate_values(cycles: list[Cycle]) -> dict[str, tuple[list[Decimal], list[Decimal]]]:
@@ -155,11 +170,7 @@ def mechanism_image(cycles: list[Cycle]) -> list[list[str]]:
     give a value and the median of those values."""
     rows = []
     for label in MEASURE_LABELS:
-        values = [
-            measure_number(label, cycle.measures[label])
-            for cycle in cycles
-            if label in cycle.measures
-        ]
+        values = measure_values(cycles, label)
         rows.append(
             [
                 label,
@@ -184,3 +195,131 @@ def gate_image(cycles: list[Cycle]) -> list[list[str]]:
         ]
         for name, (compared, apart) in gate_values(cycles).items()
     ]
+
+
+# The comparison before and after a fix: the rows of a pair for each issue, or each measure of it,
+# the side before first (WAY-339, WAY-417)
+
+BEFORE = "before"
+AFTER = "after"
+NO_ANSWER = "—"  # the cell of the answer in the row of the side before, which answers nothing
+
+
+@dataclass
+class Comparison:
+    """The rows of the comparison of a series for one issue, none where it stands in no
+    comparison, and its answers that are unknown as (value, why)."""
+
+    rows: list[list[str]] = field(default_factory=list)
+    unknown: list[tuple[str, str]] = field(default_factory=list)
+
+
+def falls_between(
+    before: Decimal | None, after: Decimal | None, what: str
+) -> tuple[str, str | None]:
+    """`yes` where the median after the fix is lower than the median before it, `no` where it is
+    not, and `unknown`, with the reason, where either median is not known (WAY-417)."""
+    if before is None and after is None:
+        return UNKNOWN, f"no median of {what} is known on either side of the fix"
+    if before is None:
+        return UNKNOWN, f"the median of {what} before the fix is not known"
+    if after is None:
+        return UNKNOWN, f"the median of {what} after the fix is not known"
+    return ("yes" if after < before else "no"), None
+
+
+def side_rows(
+    name: str, fix: str, label: list[str], sides: list[list[str]], answer: str | None
+) -> list[list[str]]:
+    """The pair of rows of one issue, or of one measure of it: the side before and the side after,
+    each as the issue, its fix, the side, the label of the measure where the kind has one, the cells
+    of the side and, where the kind has an answer, `—` for the side before and the answer for the
+    side after."""
+    before, after = sides
+    ending = ([], []) if answer is None else ([NO_ANSWER], [answer])
+    return [
+        [name, fix, BEFORE, *label, *before, *ending[0]],
+        [name, fix, AFTER, *label, *after, *ending[1]],
+    ]
+
+
+def cost_comparison(name: str, fix: str, before: list[Cycle], after: list[Cycle]) -> Comparison:
+    """The comparison of the cost for a fix: the pair of rows of the issue, where cycles stand on
+    both sides, each side as the image of a series of the cost gives it and Q3 beside the side
+    after, `yes` where its median cost is lower."""
+    if not before or not after:
+        return Comparison()
+    medians = [
+        median_of([cycle.cost for cycle in cycles if cycle.cost is not None])
+        for cycles in (before, after)
+    ]
+    answer, why = falls_between(medians[0], medians[1], "the cost")
+    unknown = [(f"cost falls after the fix of issue `{name}`", why)] if why else []
+    rows = side_rows(name, fix, [], [cost_image(before)[0], cost_image(after)[0]], answer)
+    return Comparison(rows, unknown)
+
+
+def count_comparison(name: str, fix: str, before: list[Cycle], after: list[Cycle]) -> Comparison:
+    """The comparison of the count of remarks for a fix: the pair of rows of the issue, where
+    cycles stand on both sides, each side as the image of a series of the count gives it, Q1 as the
+    numbers of its cycles and the sums of Q2. It has no answer of its own, only the two sides."""
+    if not before or not after:
+        return Comparison()
+    return Comparison(
+        side_rows(name, fix, [], [count_image(before)[0], count_image(after)[0]], None)
+    )
+
+
+def mechanism_comparison(
+    name: str, fix: str, before: list[Cycle], after: list[Cycle]
+) -> Comparison:
+    """The comparison of the mechanism measures for a fix: for each measure the pair of rows of the
+    issue, where cycles stand on both sides, each side as the image of a series of those measures
+    gives it, and the fall beside the side after: `yes` where its median is lower."""
+    if not before or not after:
+        return Comparison()
+    result = Comparison()
+    for label in MEASURE_LABELS:
+        suffix = "%" if label == SHARE_LABEL else ""
+        values = [measure_values(cycles, label) for cycles in (before, after)]
+        medians = [median_of(each) for each in values]
+        answer, why = falls_between(medians[0], medians[1], "this measure")
+        if why:
+            result.unknown.append((f"Measure falls after the fix of issue `{name}`: {label}", why))
+        cells = [
+            [str(len(each)), median_text(median, suffix)] for each, median in zip(values, medians)
+        ]
+        result.rows += side_rows(name, fix, [label], cells, answer)
+    return result
+
+
+def gate_comparison(name: str, fix: str, before: list[Cycle], after: list[Cycle]) -> Comparison:
+    """The comparison of the gate times for a fix: where runs compared stand on both sides of the
+    total, for the total and each directory that any run of either side has, the pair of rows of
+    the issue with the runs compared and not compared of each side, as the image of a series of
+    the gate times gives them, and the fall beside the side after: `yes` where the median of its
+    runs compared is lower (WAY-350)."""
+    sides = [gate_values(before), gate_values(after)]
+    if not all(side[TOTAL_MEASURE][0] for side in sides):
+        return Comparison()
+    result = Comparison()
+    measures = [TOTAL_MEASURE, *sorted({*sides[0], *sides[1]} - {TOTAL_MEASURE})]
+    for measure in measures:
+        runs = [side.get(measure, ([], [])) for side in sides]
+        medians = [median_of(compared) for compared, _ in runs]
+        answer, why = falls_between(medians[0], medians[1], "the runs compared")
+        if why:
+            result.unknown.append(
+                (f"Gate time falls after the fix of issue `{name}`: {measure}", why)
+            )
+        cells = [
+            [
+                str(len(compared)),
+                median_text(median_of(compared)),
+                str(len(apart)),
+                median_text(median_of(apart)),
+            ]
+            for compared, apart in runs
+        ]
+        result.rows += side_rows(name, fix, [measure], cells, answer)
+    return result

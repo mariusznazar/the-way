@@ -19,10 +19,14 @@ from record_reading import Cycle, GateRun  # noqa: E402
 from series_summary import (  # noqa: E402
     DIRECTORY_MEASURE,
     TOTAL_MEASURE,
+    cost_comparison,
     cost_image,
+    count_comparison,
     count_image,
+    gate_comparison,
     gate_image,
     gate_values,
+    mechanism_comparison,
     mechanism_image,
     median_of,
     plan_sums,
@@ -286,6 +290,209 @@ class GateImage(unittest.TestCase):
             sorted(values[TOTAL_MEASURE][1]),
         )
         self.assertEqual([TOTAL_MEASURE, self.A, self.B], list(values))
+
+
+FIX = "a" * 40
+
+
+class CostComparison(unittest.TestCase):
+    def test_each_side_is_an_image_of_its_cycles_and_q3_stands_beside_the_side_after(self):
+        # Before the fix, costs 4 and 2: 2 cycles, 2 known, median 3. After it, costs 1 and
+        # unknown: 2 cycles, 1 known, median 1. The median after, 1, is lower than 3: Q3 is yes.
+        before = [cycle(cost=Decimal(4)), cycle(cost=Decimal(2))]
+        after = [cycle(cost=Decimal(1)), cycle(cost=None)]
+        result = cost_comparison("slow", FIX, before, after)
+        self.assertEqual(
+            [
+                ["slow", FIX, "before", "2", "2", "3.000000", "—"],
+                ["slow", FIX, "after", "2", "1", "1.000000", "yes"],
+            ],
+            result.rows,
+        )
+        self.assertEqual([], result.unknown)
+
+    def test_a_median_after_that_is_not_lower_is_no_whether_equal_or_higher(self):
+        # Break caught: `<=` where the median must be lower than the one before.
+        for after, median in ((Decimal(2), "2.000000"), (Decimal(3), "3.000000")):
+            with self.subTest(after=after):
+                result = cost_comparison("slow", FIX, [cycle(cost=Decimal(2))], [cycle(cost=after)])
+                self.assertEqual(["slow", FIX, "after", "1", "1", median, "no"], result.rows[1])
+
+    def test_a_side_with_no_known_cost_gives_unknown_with_its_reason(self):
+        result = cost_comparison("slow", FIX, [cycle(cost=Decimal(2))], [cycle(), cycle()])
+        self.assertEqual(["slow", FIX, "after", "2", "0", "unknown", "unknown"], result.rows[1])
+        self.assertEqual(
+            [
+                (
+                    "cost falls after the fix of issue `slow`",
+                    "the median of the cost after the fix is not known",
+                )
+            ],
+            result.unknown,
+        )
+
+    def test_no_known_cost_on_either_side_gives_unknown(self):
+        result = cost_comparison("slow", FIX, [cycle()], [cycle()])
+        self.assertEqual("unknown", result.rows[1][-1])
+        self.assertEqual(
+            "no median of the cost is known on either side of the fix", result.unknown[0][1]
+        )
+
+    def test_cycles_on_one_side_only_give_no_comparison(self):
+        self.assertEqual([], cost_comparison("slow", FIX, [cycle(cost=Decimal(1))], []).rows)
+        self.assertEqual([], cost_comparison("slow", FIX, [], [cycle(cost=Decimal(1))]).rows)
+        self.assertEqual([], cost_comparison("slow", FIX, [], []).unknown)
+
+
+class CountComparison(unittest.TestCase):
+    def test_each_side_gives_q1_as_numbers_and_the_sums_of_q2_and_no_answer(self):
+        # Before: yes with 4 slices of which 3 too large, and no with 2 and 0: 6 planned, 3 too
+        # large, 9 is above 6: Q2 yes. After: unknown on the one-author route (no plan), and no
+        # with 3 slices and none too large: 1 plan of 1 read, 3 planned, 0 too large: Q2 no.
+        before = [
+            cycle(contradiction="yes", planned=4, too_large=3),
+            cycle(contradiction="no", planned=2, too_large=0),
+        ]
+        after = [
+            cycle(contradiction=None, plan_left_out=True),
+            cycle(contradiction="no", planned=3, too_large=0),
+        ]
+        result = count_comparison("slow", FIX, before, after)
+        self.assertEqual(
+            [
+                ["slow", FIX, "before", "2", "yes 1 · no 1 · unknown 0", "2 of 2", "6", "3", "yes"],
+                ["slow", FIX, "after", "2", "yes 0 · no 1 · unknown 1", "1 of 1", "3", "0", "no"],
+            ],
+            result.rows,
+        )
+        self.assertEqual([], result.unknown)
+
+    def test_cycles_on_one_side_only_give_no_comparison(self):
+        self.assertEqual([], count_comparison("slow", FIX, [cycle()], []).rows)
+        self.assertEqual([], count_comparison("slow", FIX, [], [cycle()]).rows)
+
+
+class MechanismComparison(unittest.TestCase):
+    def rows(self, result) -> dict[tuple[str, str], list[str]]:
+        """The rows by (measure, side)."""
+        return {(row[3], row[2]): row for row in result.rows}
+
+    def comparison(self):
+        """Before the fix, two cycles: the calls 10 and 4 (median 7) and the share 12.5% and
+        13.0% (median 12.75%). After it, one cycle that gives 3 calls and no share, and one that
+        gives nothing. No cycle gives the calls of subagents on either side."""
+        before = [
+            cycle(measures={CALLS: "10", SHARE: "12.5%"}),
+            cycle(measures={CALLS: "4", SHARE: "13.0%"}),
+        ]
+        after = [cycle(measures={CALLS: "3"}), cycle(measures={})]
+        return mechanism_comparison("slow", FIX, before, after)
+
+    def test_each_measure_has_a_pair_of_rows_and_a_fall_beside_the_side_after(self):
+        rows = self.rows(self.comparison())
+        self.assertEqual(["slow", FIX, "before", CALLS, "2", "7", "—"], rows[(CALLS, "before")])
+        self.assertEqual(["slow", FIX, "after", CALLS, "1", "3", "yes"], rows[(CALLS, "after")])
+        self.assertEqual(30, len(rows))
+
+    def test_the_share_is_given_as_a_percent_and_unknown_where_a_side_gives_none(self):
+        rows = self.rows(self.comparison())
+        self.assertEqual(
+            ["slow", FIX, "before", SHARE, "2", "12.75%", "—"], rows[(SHARE, "before")]
+        )
+        self.assertEqual(
+            ["slow", FIX, "after", SHARE, "0", "unknown", "unknown"], rows[(SHARE, "after")]
+        )
+
+    def test_the_unknown_falls_have_their_reasons(self):
+        unknown = dict(self.comparison().unknown)
+        self.assertEqual(
+            "the median of this measure after the fix is not known",
+            unknown[f"Measure falls after the fix of issue `slow`: {SHARE}"],
+        )
+        self.assertEqual(
+            "no median of this measure is known on either side of the fix",
+            unknown["Measure falls after the fix of issue `slow`: Calls of subagents"],
+        )
+        self.assertNotIn(f"Measure falls after the fix of issue `slow`: {CALLS}", unknown)
+
+    def test_an_equal_median_does_not_fall(self):
+        # Before 10 and 4, median 7; after 7: not lower.
+        before = [cycle(measures={CALLS: "10"}), cycle(measures={CALLS: "4"})]
+        result = mechanism_comparison("slow", FIX, before, [cycle(measures={CALLS: "7"})])
+        self.assertEqual("no", self.rows(result)[(CALLS, "after")][-1])
+
+    def test_cycles_on_one_side_only_give_no_comparison(self):
+        self.assertEqual([], mechanism_comparison("slow", FIX, [cycle()], []).rows)
+
+
+class GateComparison(unittest.TestCase):
+    A = DIRECTORY_MEASURE + "gate/a"
+    B = DIRECTORY_MEASURE + "gate/b"
+
+    def comparison(self):
+        """Before the fix: two runs compared, total 100 and 110 (gate/a 60.0 and 70.0), and one
+        with company, total 200 (gate/a 120.0). After it: one run compared, total 90.000 (gate/a
+        80.0), and two not compared, one that failed, total 5.000 (gate/b 1.0), and one whose exit
+        code is unknown, total 300."""
+        before = [
+            cycle(gate_timed=[run(0, "100.000", ("gate/a", "60.0"))]),
+            cycle(
+                gate_timed=[
+                    run(0, "110.000", ("gate/a", "70.0")),
+                    run(1, "200.000", ("gate/a", "120.0")),
+                ]
+            ),
+        ]
+        after = [
+            cycle(
+                gate_timed=[
+                    run(0, "90.000", ("gate/a", "80.0")),
+                    run(0, "5.000", ("gate/b", "1.0"), code=2),
+                ]
+            ),
+            cycle(gate_timed=[run(0, "300.000", code=None)]),
+        ]
+        return gate_comparison("slow", FIX, before, after)
+
+    def test_each_measure_has_a_pair_of_rows_with_the_runs_compared_and_not_compared(self):
+        # Total: compared 100 and 110 (105.000), not compared 200 (200.000); after: compared 90
+        # (90.000), not compared 5.000 and 300.000 (152.500): 90 is lower than 105, so yes. gate/a:
+        # 65.0 before (120.0 apart), 80.0 after: not lower, so no. gate/b: after only, not
+        # compared, 1.0; no median of the runs compared on either side: unknown.
+        result = self.comparison()
+        self.assertEqual(
+            [
+                ["slow", FIX, "before", TOTAL_MEASURE, "2", "105.000", "1", "200.000", "—"],
+                ["slow", FIX, "after", TOTAL_MEASURE, "1", "90.000", "2", "152.500", "yes"],
+                ["slow", FIX, "before", self.A, "2", "65.0", "1", "120.0", "—"],
+                ["slow", FIX, "after", self.A, "1", "80.0", "0", "unknown", "no"],
+                ["slow", FIX, "before", self.B, "0", "unknown", "0", "unknown", "—"],
+                ["slow", FIX, "after", self.B, "0", "unknown", "1", "1.0", "unknown"],
+            ],
+            result.rows,
+        )
+        self.assertEqual(
+            [
+                (
+                    f"Gate time falls after the fix of issue `slow`: {self.B}",
+                    "no median of the runs compared is known on either side of the fix",
+                )
+            ],
+            result.unknown,
+        )
+
+    def test_a_side_with_no_run_compared_of_the_total_gives_no_comparison(self):
+        # After the fix the only run failed: it is not compared, so no comparison stands, though
+        # cycles stand on both sides.
+        before = [cycle(gate_timed=[run(0, "100.000")])]
+        after = [cycle(gate_timed=[run(0, "1.000", code=1)])]
+        self.assertEqual([], gate_comparison("slow", FIX, before, after).rows)
+        self.assertEqual([], gate_comparison("slow", FIX, after, before).rows)
+
+    def test_a_side_with_no_cycle_gives_no_comparison(self):
+        self.assertEqual(
+            [], gate_comparison("slow", FIX, [cycle(gate_timed=[run(0, "1.0")])], []).rows
+        )
 
 
 if __name__ == "__main__":

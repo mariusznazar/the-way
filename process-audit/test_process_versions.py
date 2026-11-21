@@ -21,6 +21,7 @@ from test_audit_count import (
     Repository,
     gate_file,
     gate_row,
+    issue_row,
     measures_file,
     older_row,
     older_stages,
@@ -82,12 +83,21 @@ class VersionsCase(AuditCountCase):
                     found.append([])
                 found[-1].append(line)
             inside = line.startswith("|")
-        self.assertEqual(2, len(found), "a series holds its image and its table of versions")
+        # A series holds its image and its table of versions, and between them the table of its
+        # comparisons before and after a fix where it has any (WAY-339).
+        self.assertIn(len(found), (2, 3), "a series holds two or three tables")
         return [(split_row(lines[0]), [split_row(line) for line in lines[2:]]) for lines in found]
 
     def section(self, kind, number) -> list[list[str]]:
-        """The rows of the table of the versions of a series, which stands after its image."""
-        return self.tables(kind, number)[1][1]
+        """The rows of the table of the versions of a series, which stands last."""
+        return self.tables(kind, number)[-1][1]
+
+    def comparison(self, kind, number) -> list[list[str]]:
+        """The rows of the table of the comparisons before and after a fix of a series, which
+        stands between its image and its table of versions; none where the series has no such
+        table."""
+        found = self.tables(kind, number)
+        return found[1][1] if len(found) == 3 else []
 
     def image(self, kind, number) -> list[list[str]]:
         """The rows of the image of a series, which stands first under its heading."""
@@ -1845,4 +1855,360 @@ class SeriesImages(VersionsCase):
                 [self.GATE_A, "1", "70.0", "0", "unknown"],
             ],
             self.image("Gate times", 1),
+        )
+
+
+class SeriesComparisons(VersionsCase):
+    """The comparison before and after a fix inside each series of the four kinds, for each fixed
+    issue of the register of problems (WAY-339, WAY-417). The helpers are those of
+    ProcessVersions and SeriesImages."""
+
+    FIRST = ProcessVersions.FIRST
+    LATER = ProcessVersions.LATER
+    MARCH = ProcessVersions.MARCH
+    BASE_FILES = ProcessVersions.BASE_FILES
+    the_way = ProcessVersions.the_way
+    version_at = ProcessVersions.version_at
+    run_versions = ProcessVersions.run_versions
+    stages_of = ProcessVersions.stages_of
+    add_cycles = ProcessVersions.add_cycles
+    add_images = SeriesImages.add_images
+
+    CALLS = "Calls in all"
+    SHARE = "Share of the context in calls above 200000 tokens"
+    GATE_A = "Directory: gate/a"
+    GATE_B = "Directory: gate/b"
+    KINDS = ("Cost", "Count of remarks", "Mechanism measures", "Gate times")
+    # Four cycles, a and b on the first version, which lacks the fix, c and d on the second, which
+    # holds it. Cost (1,000,000 tokens of model-a are 2 dollars): a 2, b 4, c 1, d unknown. Q1: a
+    # yes, b no, c unknown, d no. Plans: a 4 slices with 1 too large, b 2 and 0, c 3 and 0, d on the
+    # one-author route. Calls: a 10, b 4, c 3, d no file of measures. Runs: a and b alone and
+    # passed (total 100.000 and 110.000, gate/a 60.0 and 70.0); c one alone that passed (90.000,
+    # gate/a 80.0) and one that failed (5.000, gate/b 1.0); d one whose exit code is unknown (300).
+    SPECS = (
+        (
+            "a",
+            0,
+            "reason: `open design choice`; 10:32",
+            "4 slices",
+            "\n  - slice 1",
+            1_000_000,
+            {"Calls in all": "10"},
+            gate_run(1, 0, "100.000", ("gate/a", "60.0")),
+        ),
+        (
+            "b",
+            0,
+            "none",
+            "2 slices",
+            "none",
+            2_000_000,
+            {"Calls in all": "4"},
+            gate_run(2, 0, "110.000", ("gate/a", "70.0")),
+        ),
+        (
+            "c",
+            1,
+            "a time overrun",
+            "3 slices",
+            "none",
+            500_000,
+            {"Calls in all": "3"},
+            gate_run(3, 0, "90.000", ("gate/a", "80.0"))
+            + gate_run(4, 0, "5.000", ("gate/b", "1.0"), code=2),
+        ),
+        (
+            "d",
+            1,
+            "none",
+            "none on the one-author route",
+            "none",
+            None,
+            None,
+            gate_run(5, 0, "300.000", code="unknown"),
+        ),
+    )
+
+    def history(self):
+        """The-way as a line of commits: the first version, a commit that is the fix and the
+        second version on it; returns the repository, the two versions and the fix."""
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        fix = self.version_at(
+            way, self.FIRST + 43200, parent=v1, changed={"README.md": "the fix\n"}
+        )
+        v2 = self.version_at(way, self.LATER, parent=fix)
+        return way, v1, fix, v2
+
+    def fixed(self, *issues, fix) -> None:
+        """The register with each name of `issues` as an issue fixed by the commit `fix`."""
+        rows = [issue_row(name, "fixed", fix) for name in issues]
+        self.register.write_text(register_text(issues=rows), encoding="utf-8")
+
+    def run_specs(self, way, versions, specs) -> None:
+        product = self.repository()
+        self.add_images(product, versions, specs)
+        self.run_versions(way, product)
+
+    def test_the_cost_of_the_side_before_is_set_against_that_of_the_side_after(self):
+        # decision: WAY-339 "That comparison is made for each fixed issue of the register"
+        # Before the fix, a and b: 2 cycles, 2 known costs (2 and 4), median 3. After it, c and d:
+        # 2 cycles, 1 known cost (c's 1), median 1, lower than 3: Q3 is yes.
+        way, v1, fix, v2 = self.history()
+        self.fixed("slow", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        self.assertEqual(
+            [
+                ["slow", fix, "before", "2", "2", "3.000000", "—"],
+                ["slow", fix, "after", "2", "1", "1.000000", "yes"],
+            ],
+            self.comparison("Cost", 1),
+        )
+        header = self.tables("Cost", 1)[1][0]
+        self.assertEqual(
+            ["Issue", "Fix", "Side", "Cycles", "Cycles with a known cost", "Median cost (USD)"]
+            + ["Q3: cost falls"],
+            header,
+        )
+
+    def test_the_count_of_remarks_gives_the_two_sides_and_no_answer_of_its_own(self):
+        # decision: WAY-417 "on each side of a comparison before and after a fix"
+        # Before: a (yes) and b (no); plans 4 + 2 = 6 slices with 1 too large, which is not above
+        # a third. After: c (unknown) and d (no); the plan of c read, 3 slices and none too large,
+        # d on the one-author route.
+        way, v1, fix, v2 = self.history()
+        self.fixed("slow", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        self.assertEqual(
+            [
+                ["slow", fix, "before", "2", "yes 1 · no 1 · unknown 0", "2 of 2", "6", "1", "no"],
+                ["slow", fix, "after", "2", "yes 0 · no 1 · unknown 1", "1 of 1", "3", "0", "no"],
+            ],
+            self.comparison("Count of remarks", 1),
+        )
+
+    def test_a_mechanism_measure_falls_where_the_median_after_the_fix_is_lower(self):
+        # decision: WAY-417 "the fall of a mechanism measure or of a gate time"
+        # Calls: a 10 and b 4 before (median 7), c 3 after (d gives no file): falls, yes. The share
+        # is 12.5% in each cycle that gives a file, so 12.5% on each side: not lower, no.
+        way, v1, fix, v2 = self.history()
+        self.fixed("slow", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        rows = {(row[3], row[2]): row for row in self.comparison("Mechanism measures", 1)}
+        self.assertEqual(30, len(rows))
+        self.assertEqual(
+            ["slow", fix, "before", self.CALLS, "2", "7", "—"], rows[(self.CALLS, "before")]
+        )
+        self.assertEqual(
+            ["slow", fix, "after", self.CALLS, "1", "3", "yes"], rows[(self.CALLS, "after")]
+        )
+        self.assertEqual(
+            ["slow", fix, "before", self.SHARE, "2", "12.5%", "—"], rows[(self.SHARE, "before")]
+        )
+        self.assertEqual(
+            ["slow", fix, "after", self.SHARE, "1", "12.5%", "no"], rows[(self.SHARE, "after")]
+        )
+
+    def test_the_gate_times_compare_the_runs_compared_and_show_the_others_apart(self):
+        # decision: WAY-350 "only over the runs that passed and during which no other such run
+        # was going"
+        # Total: compared 100.000 and 110.000 before (105.000); after, c's 90.000 compared (90.000
+        # is lower than 105.000, yes), and apart the failed 5.000 and d's 300.000 (152.500).
+        # gate/a: 65.0 before, 80.0 after, not lower, no. gate/b: only after, the failed run
+        # apart: no median compared on either side, unknown.
+        way, v1, fix, v2 = self.history()
+        self.fixed("slow", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        total = "Total time of the run"
+        self.assertEqual(
+            [
+                ["slow", fix, "before", total, "2", "105.000", "0", "unknown", "—"],
+                ["slow", fix, "after", total, "1", "90.000", "2", "152.500", "yes"],
+                ["slow", fix, "before", self.GATE_A, "2", "65.0", "0", "unknown", "—"],
+                ["slow", fix, "after", self.GATE_A, "1", "80.0", "0", "unknown", "no"],
+                ["slow", fix, "before", self.GATE_B, "0", "unknown", "0", "unknown", "—"],
+                ["slow", fix, "after", self.GATE_B, "0", "unknown", "1", "1.0", "unknown"],
+            ],
+            self.comparison("Gate times", 1),
+        )
+        [pair] = [row for row in self.pair_rows() if row[0].startswith("Gate time falls after")]
+        self.assertEqual("Gate time falls after the fix of an issue: " + self.GATE_B, pair[0])
+        self.assertEqual(
+            "no median of the runs compared is known on either side of the fix", pair[2]
+        )
+
+    def test_the_comparison_stands_between_the_image_and_the_table_of_the_versions(self):
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
+        way, v1, fix, v2 = self.history()
+        self.fixed("slow", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        part = self.latest().split("\n### Cost, series 1\n", 1)[1].split("\n## ", 1)[0]
+        self.assertLess(part.index("The image of the series"), part.index("Before and after a fix"))
+        self.assertLess(part.index("Before and after a fix"), part.index("By version:"))
+
+    def test_a_version_that_is_later_by_date_but_lacks_the_fix_lands_before_it(self):
+        # decision: WAY-339 "the version a cycle ran on, never its date, deciding its group"
+        # v1, the fix on it, v3 on the fix and, later by date than v3, v2 on v1 beside the fix: v2
+        # lacks the fix. Costs: x on v1 4 dollars, y on v3 1, z on v2 2. Before: x and z, median 3;
+        # after: y, 1. A reading by date would put z after, with 1 and 2, median 1.5, and x alone
+        # before, 4.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        fix = self.version_at(way, self.FIRST + 43200, parent=v1, changed={"README.md": "fix\n"})
+        v3 = self.version_at(way, self.LATER, parent=fix)
+        v2 = self.version_at(way, self.MARCH, parent=v1)
+        self.fixed("slow", fix=fix)
+        product = self.repository()
+        self.add_cycles(
+            product,
+            [
+                ("x", process_record(v1), 2_000_000),
+                ("y", process_record(v3), 500_000),
+                ("z", process_record(v2), 1_000_000),
+            ],
+        )
+        self.run_versions(way, product)
+        self.assertEqual(
+            [
+                ["slow", fix, "before", "2", "2", "3.000000", "—"],
+                ["slow", fix, "after", "1", "1", "1.000000", "yes"],
+            ],
+            self.comparison("Cost", 1),
+        )
+
+    def test_a_series_with_cycles_on_one_side_of_the_fix_only_has_no_comparison(self):
+        # decision: WAY-339 "both groups of that series"
+        # The fix is a commit after both versions, which both lack, and then the first version
+        # itself, which both hold: in each case the cycles of every series stand on one side.
+        for case in ("after both versions", "the first version"):
+            with self.subTest(case):
+                self.fresh()
+                way, v1, _fix, v2 = self.history()
+                later = self.version_at(way, self.MARCH, parent=v2, changed={"README.md": "x\n"})
+                self.fixed("slow", fix=later if case == "after both versions" else v1)
+                self.run_specs(way, [v1, v2], self.SPECS)
+                for kind in self.KINDS:
+                    self.assertEqual([], self.comparison(kind, 1), kind)
+                self.assertNotIn("Before and after a fix, inside the series", self.latest())
+
+    def test_a_fix_that_the_checkout_lacks_gives_no_comparison_and_an_unknown_value(self):
+        # decision: WAY-339 "never its date"
+        # The register names a commit the checkout of the-way does not hold: no version can be put
+        # before or after it. The reason is one value of the issue, not one for each series.
+        way, v1, _fix, v2 = self.history()
+        self.fixed("slow", fix="1" * 40)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        for kind in self.KINDS:
+            self.assertEqual([], self.comparison(kind, 1), kind)
+        [pair] = [
+            row for row in self.pair_rows() if row[0].startswith("comparison before and after")
+        ]
+        self.assertEqual("comparison before and after the fix of an issue", pair[0])
+        self.assertEqual("1", pair[1])
+        self.assertEqual("the-way's history lacks commit " + "1" * 40, pair[2])
+
+    def test_two_issues_with_the_same_fix_each_have_their_pair_in_the_order_of_the_register(self):
+        # decision: WAY-339 "That comparison is made for each fixed issue of the register"
+        # `zeta` stands before `alpha` in the register: the pairs are in that order, not ranked.
+        way, v1, fix, v2 = self.history()
+        self.fixed("zeta", "alpha", fix=fix)
+        self.run_specs(way, [v1, v2], self.SPECS)
+        rows = self.comparison("Cost", 1)
+        self.assertEqual(
+            [("zeta", "before"), ("zeta", "after"), ("alpha", "before"), ("alpha", "after")],
+            [(row[0], row[2]) for row in rows],
+        )
+        self.assertEqual({fix}, {row[1] for row in rows})
+        self.assertEqual(
+            [row[2:] for row in rows[:2]],
+            [row[2:] for row in rows[2:]],
+            "each pair has the same figures",
+        )
+
+    def test_a_change_of_the_review_splits_the_count_so_that_each_part_has_one_side(self):
+        # decision: WAY-339 "both groups of that series"
+        # A change of `task-cycle/review` in v2, which holds the fix, ends the series of the count
+        # of remarks, and leaves the series of the cost whole: the count has v1 before the fix in
+        # its first series and v2 after it in its second, so neither has a comparison; the cost
+        # has both and compares them: x 4 dollars before, y 1 after.
+        way = self.the_way()
+        v1 = self.version_at(way, self.FIRST)
+        fix = self.version_at(way, self.FIRST + 43200, parent=v1, changed={"README.md": "fix\n"})
+        v2 = self.version_at(
+            way, self.LATER, parent=fix, changed={"task-cycle/review/SKILL.md": "reviewer\n"}
+        )
+        self.fixed("slow", fix=fix)
+        product = self.repository()
+        self.add_cycles(
+            product,
+            [("x", process_record(v1), 2_000_000), ("y", process_record(v2), 500_000)],
+        )
+        self.run_versions(way, product)
+        self.assertEqual([], self.comparison("Count of remarks", 1))
+        self.assertEqual([], self.comparison("Count of remarks", 2))
+        self.assertNotIn("### Count of remarks, series 3", self.latest())
+        self.assertEqual(
+            [
+                ["slow", fix, "before", "1", "1", "4.000000", "—"],
+                ["slow", fix, "after", "1", "1", "1.000000", "yes"],
+            ],
+            self.comparison("Cost", 1),
+        )
+
+    def test_a_fixed_issue_whose_fix_is_not_a_commit_and_the_other_fates_give_no_comparison(self):
+        # decision: WAY-339 "for each fixed issue of the register of problems with a fix commit,
+        # and for no other change"
+        # The register refuses a fixed issue whose Fix is no commit, so it is no fixed issue of the
+        # count; an open issue and a dropped one have no fix.
+        way, v1, _fix, v2 = self.history()
+        rows = [
+            issue_row("odd", "fixed", "not-a-commit"),
+            issue_row("waiting"),
+            issue_row("given-up", "dropped"),
+        ]
+        self.register.write_text(register_text(issues=rows), encoding="utf-8")
+        self.run_specs(way, [v1, v2], self.SPECS)
+        for kind in self.KINDS:
+            self.assertEqual([], self.comparison(kind, 1), kind)
+        self.assertNotIn("Before and after a fix, inside the series", self.latest())
+
+    def test_a_version_whose_answer_is_unknown_stands_on_neither_side(self):
+        # decision: WAY-339 "never its date" · WAY-330 the unknown value with its reason
+        # Three versions: the answer of `holds` for the first is no, for the second yes, for the
+        # third unknown (a shallow clone says that its history may lack the fix). The cycle of the
+        # third is on neither side, and the reason is the value of that version.
+        sys.path.insert(0, str(HERE))
+        from record_reading import Cycle
+        from version_analysis import Series, Version, fix_sides
+
+        answers = {
+            "a" * 40: (False, None),
+            "b" * 40: (True, None),
+            "c" * 40: (None, "the version lacks the fix in a shallow clone of the-way"),
+        }
+
+        class Known:
+            def commit(self, text):
+                return text, None
+
+            def holds(self, pin, fix):
+                return answers[pin]
+
+        cycles = {key: Cycle("product", key[:1], "0" * 40, "2026-11-11") for key in answers}
+        block = Series(
+            "x", [Version(key, 1, "2026-11-11", "2026-01-01", [cycles[key]]) for key in answers]
+        )
+        unknown = []
+        before, after = fix_sides(block, "slow", "f" * 40, Known(), unknown)
+        self.assertEqual([[cycles["a" * 40]], [cycles["b" * 40]]], [before, after])
+        self.assertEqual(
+            [
+                (
+                    "the-way",
+                    "none",
+                    "comparison before and after the fix of issue `slow`, version " + "c" * 40,
+                    "the version lacks the fix in a shallow clone of the-way",
+                )
+            ],
+            unknown,
         )

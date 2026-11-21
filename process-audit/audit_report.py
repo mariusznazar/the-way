@@ -79,6 +79,16 @@ COUNT_HEADER = [
     "Q2: more than a third of slices too large",
 ]
 
+# The comparison before and after a fix, the table that stands under the image of a series where it
+# has one: a pair of rows for each fixed issue of the register or, for the measures, for each
+# measure of it, the side before first. The kind's own columns follow the issue, its fix and the
+# side; Q3 and the fall stand beside the side after and nowhere else (WAY-339, WAY-417).
+COMPARISON_LEAD = ["Issue", "Fix", "Side"]
+COST_COMPARISON_HEADER = [*COMPARISON_LEAD, *COST_IMAGE_HEADER, "Q3: cost falls"]
+COUNT_COMPARISON_HEADER = [*COMPARISON_LEAD, *COUNT_IMAGE_HEADER]
+MECHANISM_COMPARISON_HEADER = [*COMPARISON_LEAD, *MECHANISM_IMAGE_HEADER, "Falls"]
+GATE_COMPARISON_HEADER = [*COMPARISON_LEAD, *GATE_IMAGE_HEADER, "Falls"]
+
 MECHANISM_HEADER = ["Version (commit)", "Measure", "Cycles with a value", "Median", "Falls"]
 GATE_HEADER = [
     "Version (commit)",
@@ -92,10 +102,25 @@ GATE_HEADER = [
 
 
 def series_lines(
-    title: str, number: int, block: Series, image_header: list[str], header: list[str]
+    title: str,
+    number: int,
+    block: Series,
+    headers: tuple[list[str], list[str], list[str]],
 ) -> list[str]:
     """The subsection of a series: its heading, the reason it begins where it does, the image of
-    all its cycles and then the table with a row for each of its versions."""
+    all its cycles, the comparisons before and after a fix where it has any and then the table
+    with a row for each of its versions; `headers` are those of the image, the comparisons and the
+    versions, in that order."""
+    image_header, comparison_header, header = headers
+    comparison = []
+    if block.comparison:
+        comparison = [
+            "Before and after a fix, inside the series, for each fixed issue of the register "
+            "that has cycles on both sides of its fix (the side before first):",
+            "",
+            *table(comparison_header, block.comparison),
+            "",
+        ]
     return [
         f"### {title}, series {number}",
         "",
@@ -105,6 +130,7 @@ def series_lines(
         "",
         *table(image_header, block.image),
         "",
+        *comparison,
         "By version:",
         "",
         *table(header, block.rows),
@@ -156,13 +182,30 @@ def versions_lines(versions: Versions) -> list[str]:
         "answer is unknown, a cycle's Q1 included. The reason each series begins where it does "
         "stands under its heading.",
         "",
+        "Where a fixed issue of the register of problems has cycles on both sides of its fix "
+        "inside a series, a table under the image compares them: the cycles on the versions that "
+        "lack the fix (the side before) against the cycles on the versions that hold it (the side "
+        "after), a pair of rows for each such issue, the issues in the order of the register and "
+        "never ranked. Whether a version holds the fix is read from the history of git and never "
+        "from a date, so a version that is later by date and lacks the fix stands before it; a "
+        "version for which git cannot say stands on neither side, and *Unknown values* gives the "
+        "reason. Each side gives what the image of its series gives. In a series of the cost, Q3 "
+        "stands beside the side after: `yes` where its median cost is lower than that of the side "
+        "before, `no` where it is not, `unknown` where a median is not known. A series of the "
+        "count of remarks gives the two sides and no answer of its own. A change of the process "
+        "with no fixed issue in the register gets no comparison.",
+        "",
     ]
-    for title, blocks, image_header, header in (
-        (SERIES_COST, versions.cost, COST_IMAGE_HEADER, COST_HEADER),
-        (SERIES_COUNT, versions.count, COUNT_IMAGE_HEADER, COUNT_HEADER),
+    for title, blocks, headers in (
+        (SERIES_COST, versions.cost, (COST_IMAGE_HEADER, COST_COMPARISON_HEADER, COST_HEADER)),
+        (
+            SERIES_COUNT,
+            versions.count,
+            (COUNT_IMAGE_HEADER, COUNT_COMPARISON_HEADER, COUNT_HEADER),
+        ),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += series_lines(title, number, block, image_header, header)
+            lines += series_lines(title, number, block, headers)
     if versions.no_version:
         lines += [
             "### No version",
@@ -209,6 +252,13 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "for each version. The image holds no *Falls*, which sets a version against the previous "
         "one: it gives the measures of the series as their medians and the numbers behind them.",
         "",
+        "Under the image a series has, for each fixed issue of the register of problems that "
+        "has cycles on both sides of its fix, the same comparison as in *Process versions*: the "
+        "side before and the side after, a pair of rows for each measure, with *Falls* beside the "
+        "side after, `yes` where its median is lower than that of the side before. For the gate "
+        "times the comparison stands where runs compared (see below) stand on both sides of the "
+        "total, and each side takes only the runs compared for its fall.",
+        "",
         "*Mechanism measures*: the median is of the values of the version's cycles that give one, "
         "and *Cycles with a value* counts them; in the image they are the cycles of the whole "
         "series.",
@@ -227,12 +277,16 @@ def measure_versions_lines(measured: MeasureVersions) -> list[str]:
         "directory that any of them has.",
         "",
     ]
-    for title, blocks, image_header, header in (
-        ("Mechanism measures", measured.mechanism, MECHANISM_IMAGE_HEADER, MECHANISM_HEADER),
-        ("Gate times", measured.gate, GATE_IMAGE_HEADER, GATE_HEADER),
+    for title, blocks, headers in (
+        (
+            "Mechanism measures",
+            measured.mechanism,
+            (MECHANISM_IMAGE_HEADER, MECHANISM_COMPARISON_HEADER, MECHANISM_HEADER),
+        ),
+        ("Gate times", measured.gate, (GATE_IMAGE_HEADER, GATE_COMPARISON_HEADER, GATE_HEADER)),
     ):
         for number, block in enumerate(blocks, 1):
-            lines += series_lines(title, number, block, image_header, header)
+            lines += series_lines(title, number, block, headers)
     if lines[-1] == "":
         lines.pop()
     return lines

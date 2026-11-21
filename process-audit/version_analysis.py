@@ -8,7 +8,9 @@ cycle that changed the tool that wrote them (`note_changed_tools`), as `process-
 counts them. The row of a version holds its medians, its answer Q1 as the numbers of its cycles that
 answer yes, no and unknown, its answer Q2 from the sums of its slices and its answer Q3 or its fall
 against the previous version of its series; each series holds besides the image of all its cycles,
-which `process-audit/series_summary.py` makes (WAY-417). It holds the paths of the scripts whose
+which `process-audit/series_summary.py` makes (WAY-417), and the comparison before and after each
+fixed issue of the register, between the cycles on the versions that lack its fix and those on the
+versions that hold it, which `Ancestry.holds` decides and never a date (WAY-339). It holds the paths of the scripts whose
 change starts a series. The cycles it reads are those of `record_reading.py` and the register that
 of `problem_register.py`; no file outside the product is read here, and git runs only to read. It is
 imported, never run, and runs nothing when imported. Standard library only.
@@ -20,6 +22,7 @@ import bisect
 import re
 import sys
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -46,10 +49,15 @@ from record_reading import (
     Read,
 )
 from series_summary import (
+    Comparison,
+    cost_comparison,
     cost_image,
+    count_comparison,
     count_image,
+    gate_comparison,
     gate_image,
     gate_values,
+    mechanism_comparison,
     mechanism_image,
     measure_number,
     median_of,
@@ -89,6 +97,7 @@ COUNT_PATHS = (
 EXAMPLES = 3
 ROW_NUMBER = re.compile(r"^row [0-9]+ of ")
 ISSUE_VALUE = re.compile(r"^(the fix|waiting) of issue `.*`$")
+FIX_ISSUE = re.compile(r" after the fix of issue `[^`]*`")
 VERSION_SUFFIX = re.compile(r"\bversion \S+$")
 # The instruments that start a series of the measures they give (WAY-339): a change of the one
 # starts a series of the mechanism measures, a change of one of the gate's scripts a series of the
@@ -540,6 +549,7 @@ def unknown_field(value: str) -> str:
     and the commit of its version taken out, so that the values of one kind make one pair."""
     value = ROW_NUMBER.sub("row of ", value, count=1)
     value = ISSUE_VALUE.sub(r"\1 of an issue", value, count=1)
+    value = FIX_ISSUE.sub(" after the fix of an issue", value, count=1)
     return VERSION_SUFFIX.sub("a version", value, count=1)
 
 
@@ -579,13 +589,16 @@ class Version:
 @dataclass
 class Series:
     """A run of versions between which no change splits a series: why it begins with its first
-    version, its versions, the rows of its table with a row for each version and the rows of the
-    image of all its cycles, which holds no Q3 and no fall (WAY-417)."""
+    version, its versions, the rows of its table with a row for each version, the rows of the
+    image of all its cycles, which holds no Q3 and no fall, and the rows of its comparisons before
+    and after a fix, a pair for each fixed issue of the register that has cycles on both sides of
+    its fix inside the series (WAY-339, WAY-417)."""
 
     begins: str
     versions: list[Version]
     rows: list[list[str]] = field(default_factory=list)
     image: list[list[str]] = field(default_factory=list)
+    comparison: list[list[str]] = field(default_factory=list)
 
     def cycles(self) -> list[Cycle]:
         """The cycles of all the versions of the series."""
@@ -603,6 +616,9 @@ class Versions:
     unknown: list[tuple[str, str, str, str]] = field(default_factory=list)
     # Every version, in the order of their dates: the series of the measures are made of them.
     ordered: list[Version] = field(default_factory=list)
+    # Each fixed issue of the register with its fix commit, in the order of the register: the
+    # series of the four kinds are compared before and after each (WAY-339).
+    fixes: list[tuple[str, str]] = field(default_factory=list)
 
 
 FIRST_VERSION = "the first version of the result"
@@ -887,6 +903,51 @@ def gate_rows(block: Series, unknown: list[tuple[str, str, str, str]]) -> None:
         previous = medians
 
 
+def fix_sides(
+    block: Series,
+    name: str,
+    fix: str,
+    ancestry: Ancestry,
+    unknown: list[tuple[str, str, str, str]],
+) -> tuple[list[Cycle], list[Cycle]]:
+    """The cycles of a series on the versions that lack a fix and those on the versions that hold
+    it, as (before, after): whether a version holds the fix is the answer of `Ancestry.holds` for
+    the version's commit and the fix, never a date. A version whose answer is unknown stands on
+    neither side, and a fix the checkout does not give puts every version there; the reason goes
+    into `unknown` (WAY-339)."""
+    value = f"comparison before and after the fix of issue `{name}`"
+    fixed, why = ancestry.commit(fix)
+    if fixed is None:
+        unknown.append((THE_WAY, NONE, value, why or ""))
+        return [], []
+    before: list[Cycle] = []
+    after: list[Cycle] = []
+    for version in block.versions:
+        holds, why = ancestry.holds(version.commit, fix)
+        if holds is None:
+            unknown.append((THE_WAY, NONE, f"{value}, version {version.commit}", why or ""))
+        else:
+            (after if holds else before).extend(version.cycles)
+    return before, after
+
+
+def compare_series(
+    block: Series,
+    fixes: list[tuple[str, str]],
+    ancestry: Ancestry,
+    compare: Callable[[str, str, list[Cycle], list[Cycle]], Comparison],
+    unknown: list[tuple[str, str, str, str]],
+) -> None:
+    """The comparisons of a series before and after each fixed issue of the register, in its order,
+    made by `compare` of the kind of the series, and where a verdict is unknown its reason added
+    to `unknown`."""
+    for name, fix in fixes:
+        before, after = fix_sides(block, name, fix, ancestry, unknown)
+        made = compare(name, fix, before, after)
+        block.comparison += made.rows
+        unknown += [(THE_WAY, NONE, value, why) for value, why in made.unknown]
+
+
 def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     """Group the versions into the series of each instrument and give the medians and the
     comparison of each version within its own series (WAY-339, WAY-350)."""
@@ -895,8 +956,10 @@ def measure_versions(versions: Versions, ancestry: Ancestry) -> MeasureVersions:
     result.gate = instrument_series(versions.ordered, ancestry, GATE_SCRIPTS)
     for block in result.mechanism:
         mechanism_rows(block, result.unknown)
+        compare_series(block, versions.fixes, ancestry, mechanism_comparison, result.unknown)
     for block in result.gate:
         gate_rows(block, result.unknown)
+        compare_series(block, versions.fixes, ancestry, gate_comparison, result.unknown)
     return result
 
 
@@ -940,10 +1003,13 @@ def process_versions(
     result.cost = split_series(
         versions, lambda earlier, later: cost_boundary(earlier, later, ancestry)
     )
+    result.fixes = [(name, fix) for name, fate, fix in register.issues if fate == FIXED]
     for block in result.count:
         count_rows(block, result.unknown)
+        compare_series(block, result.fixes, ancestry, count_comparison, result.unknown)
     for block in result.cost:
         cost_rows(block, result.unknown)
+        compare_series(block, result.fixes, ancestry, cost_comparison, result.unknown)
     return result
 
 
