@@ -18,9 +18,12 @@ output of a nested run of the runner, whose lines `== <directory>` are no blocks
 last line `<n> tests in <m> directories; …` of the output is the run's own, each earlier one closes
 the output of a nested run; where there is an earlier one and more than `<m>` lines `== ` stand at
 the start of a line, the surplus lines are the nested run's, taken from those directly before an
-earlier summary line, last to first, each such line taking at most its own `<m>`, and a block
-that holds an earlier summary line takes the first `Ran` line after the last of them. A run with no
-earlier summary line is read as above. A run lists at most 50 directories, the number the audit
+earlier summary line, last to first, each such line taking at most its own `<m>`; where a line that
+holds `== ` after text stands among those before it, the nested run begins there, and only the
+lines `== ` after the last such line are taken. A block that holds an earlier summary line takes
+the first `Ran` line after the last of them. A run with no earlier summary line is read as above.
+The numbers of a `Ran` line and of a summary line are ASCII digits, at most nine before a point
+and nine after it; a line with more or other digits is no such line. A run lists at most 50 directories, the number the audit
 reads, and a directory cell is cut at 200 characters, ending in `…` where cut; the directories after
 the fiftieth are not listed, and a last row of the run says how many (`… <n> more directories not
 listed`, with `—` for its seconds), so that the record stays small and no cut is read as a time. The
@@ -77,10 +80,10 @@ SUMMARIES_KEPT = 100  # the summary lines kept for the lines `== ` before them
 UNKNOWN = "unknown"
 NONE = "—"
 BLOCK = "== "
-RAN = re.compile(r"Ran \d+ tests? in ([0-9]+(?:\.[0-9]+)?)s")
+RAN = re.compile(r"Ran [0-9]{1,9} tests? in ([0-9]{1,9}(?:\.[0-9]{1,9})?)s")
 # The last line of the runner: the tests and directories it counts, and whether every one passed.
 SUMMARY = re.compile(
-    r"\d{1,9} tests in (\d{1,9}) directories; (?:every directory passed|failed: .*)"
+    r"[0-9]{1,9} tests in ([0-9]{1,9}) directories; (?:every directory passed|failed: .*)"
 )
 RUNNING = re.compile(r"(\d+)_running_([A-Za-z0-9]+)\.run")
 ENDED = re.compile(r"(\d+)_(\d+)_([A-Za-z0-9]+)\.run")
@@ -182,10 +185,12 @@ class Times:
         self.current: Piece | None = None  # the piece the lines now read belong to, if kept
         self.segment = 0  # the number of those lines before the latest summary line
         # The summary lines read, each as (index of the first piece line after the one before it,
-        # number of piece lines since, its number of directories). The latest is the run's own
-        # until another comes.
-        self.latest: tuple[int, int, int] | None = None
-        self.earlier: deque[tuple[int, int, int]] = deque(maxlen=SUMMARIES_KEPT)
+        # number of piece lines since, its number of directories, the number of piece lines since
+        # the last line that holds `== ` after text, None where none does). The latest is the
+        # run's own until another comes.
+        self.latest: tuple[int, int, int, int | None] | None = None
+        self.earlier: deque[tuple[int, int, int, int | None]] = deque(maxlen=SUMMARIES_KEPT)
+        self.mark: int | None = None  # the number of piece lines when the last such line was read
         self.pending: Piece | None = None  # the piece that holds the latest summary line
         self.pending_after: str | None = None  # the first `Ran` line after it, in that piece
         self.waiting = False  # whether that line is still to come
@@ -195,6 +200,8 @@ class Times:
         if text.startswith(BLOCK):
             self.open(text[len(BLOCK) :])
             return
+        if BLOCK in text:
+            self.mark = self.count
         text = text.rstrip()
         summary = SUMMARY.fullmatch(text)
         if summary:
@@ -224,8 +231,10 @@ class Times:
             self.pending.after = self.pending_after
         if self.latest is not None and self.latest[1] > 0:
             self.earlier.append(self.latest)
-        self.latest = (self.segment, self.count - self.segment, directories)
+        after = None if self.mark is None else self.count - self.mark
+        self.latest = (self.segment, self.count - self.segment, directories, after)
         self.segment = self.count
+        self.mark = None
         self.pending = self.current
         self.pending_after = None
         self.waiting = True
@@ -234,15 +243,17 @@ class Times:
         """The ranges of the lines that are the nested runs': where an earlier summary line stands,
         the lines `== ` beyond the directories of the last summary line are taken from those
         directly before an earlier summary line, last to first, each such line taking no more than
-        its own number of directories."""
+        its own number of directories. Where a line that holds `== ` after text stands among the
+        lines before it, the nested run's first directory is that line's, so only the lines after
+        the last such line are taken."""
         if self.latest is None:
             return []
         surplus = self.count - self.latest[2]
         ranges = []
-        for first, lines, directories in reversed(self.earlier):
+        for first, lines, directories, after in reversed(self.earlier):
             if surplus <= 0:
                 break
-            taken = min(lines, directories, surplus)
+            taken = min(lines if after is None else after, directories, surplus)
             ranges.append((first + lines - taken, first + lines))
             surplus -= taken
         return ranges

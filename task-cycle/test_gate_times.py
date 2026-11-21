@@ -177,14 +177,14 @@ def passing(directory: str, seconds: str) -> str:
     return f"== {directory}\n.\n{RULE}\nRan 1 test in {seconds}s\n\nOK\n"
 
 
-def failing_with(nested: str, seconds: str) -> str:
-    """The report of the directory `gate` whose one test fails and prints, in its failure message,
-    the output of a nested run of the runner (`nested`, ending with its summary line and a line
-    end), as the unittest of Python prints it: the first line of `nested` stands after the text of
-    the message, the rest at the start of their lines, and the directory's own `Ran` line comes
-    after it."""
+def failing_with(nested: str, seconds: str, directory: str = "gate") -> str:
+    """The report of the directory `directory` whose one test fails and prints, in its failure
+    message, the output of a nested run of the runner (`nested`, ending with its summary line and a
+    line end), as the unittest of Python prints it: the first line of `nested` stands after the
+    text of the message, the rest at the start of their lines, and the directory's own `Ran` line
+    comes after it."""
     return (
-        f"== gate\nF\n{FAILURE_RULE}\nFAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
+        f"== {directory}\nF\n{FAILURE_RULE}\nFAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
         "Traceback (most recent call last):\n"
         '  File "gate/test_nested.py", line 6, in test_nested\n'
         f"    self.assertEqual(0, 5, done.stdout)\nAssertionError: 0 != 5 : {nested}\n\n{RULE}\n"
@@ -272,6 +272,47 @@ class NestedRunTest(GateTimesTest):
             [["alpha", "0.010"], ["gate", "0.539"], ["omega", "0.004"]], self.read(text)
         )
 
+    def test_two_directories_that_each_print_a_nested_run_each_keep_their_own_time(self) -> None:
+        # Two failing directories, each with a nested run of two directories (`x1`, `x2` after
+        # text, `y1`, `y2` at the start of their lines). Five lines open a block (`other`, `gate1`,
+        # `y1`, `gate2`, `y2`) and the run's own summary counts 3, so two are nested: `y1` and
+        # `y2`, each the one line that follows the text with a directory after it. `gate1` and
+        # `gate2` stay blocks and take the first Ran line after their nested summary.
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("x1", "0.001") + passing("y1", "0.003") + SUMMARY_TWO, "0.500", "gate1"
+            )
+            + failing_with(
+                passing("x2", "0.004") + passing("y2", "0.005") + SUMMARY_TWO, "0.600", "gate2"
+            )
+            + "5 tests in 3 directories; failed: gate1 (exit code 1), gate2 (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["other", "0.002"], ["gate1", "0.500"], ["gate2", "0.600"]], self.read(text)
+        )
+
+    def test_a_whole_nested_run_beside_one_cut_off_is_read_by_the_one_with_a_summary_line(
+        self,
+    ) -> None:
+        # `gate1` prints a whole nested run, `gate2` one cut off before its summary line. Five lines
+        # open a block and the run's own summary counts 3, so two are nested in all, but only the
+        # whole run is known: `y1`, the line that follows the text with `x1` after it. The cut-off
+        # run is read as before: `y2` is a block, and `gate2` takes the first Ran line of its text,
+        # the nested run's.
+        text = (
+            passing("other", "0.002")
+            + failing_with(
+                passing("x1", "0.001") + passing("y1", "0.003") + SUMMARY_TWO, "0.500", "gate1"
+            )
+            + failing_with(passing("x2", "0.004") + passing("y2", "0.005"), "0.600", "gate2")
+            + "5 tests in 3 directories; failed: gate1 (exit code 1), gate2 (exit code 1)\n"
+        )
+        self.assertEqual(
+            [["other", "0.002"], ["gate1", "0.500"], ["gate2", "0.004"], ["y2", "0.005"]],
+            self.read(text),
+        )
+
     def test_a_nested_run_cut_off_before_its_summary_line_is_read_as_before(self) -> None:
         # The nested output ends before its summary line, so the run holds one summary line, its
         # own, and is read as it was: `tests/two` is a block, and `gate` takes the first Ran line
@@ -347,6 +388,38 @@ class NestedRunTest(GateTimesTest):
             "2 tests in 1000 directories; every directory passed\n"
         )
         self.assertEqual([["a", "0.001"], ["b", "0.002"]], self.read(text, code=0))
+
+    def test_a_summary_line_of_digits_no_run_prints_is_no_summary_line(self) -> None:
+        # Crafted: the digits are Arabic-Indic ones (three of each), which the runner never prints.
+        # Three lines open a block and the run's own summary counts 2; were the crafted line a
+        # summary line, `b`, the line before it, would be taken as nested.
+        text = (
+            "== a\nRan 1 test in 0.001s\n== b\nRan 1 test in 0.002s\n"
+            "٣ tests in ٣ directories; every directory passed\n"
+            "== c\nRan 1 test in 0.003s\n"
+            "3 tests in 2 directories; every directory passed\n"
+        )
+        self.assertEqual([["a", "0.001"], ["b", "0.002"], ["c", "0.003"]], self.read(text, code=0))
+
+    def test_a_ran_line_with_a_time_no_run_prints_is_no_time(self) -> None:
+        # Crafted: a time of five thousand digits stands in no real run; the next line is the time.
+        text = "== a\nRan 1 test in " + "9" * 5000 + "s\nRan 1 test in 0.5s\n"
+        self.assertEqual([["a", "0.5"]], self.read(text, code=0))
+
+    def test_a_flood_of_blocks_with_huge_times_keeps_the_memory_bounded(self) -> None:
+        times = gate_times.Times()
+        huge = b"Ran 1 test in " + b"9" * 100_000 + b"s"
+        tracemalloc.start()
+        try:
+            for index in range(300):
+                times.line(f"== directory {index}".encode("utf-8"))
+                times.line(huge)
+            _, peak = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+        # Each line is a time of a hundred thousand digits; a hundred of them kept, each as printed,
+        # would take ten megabytes.
+        self.assertLess(peak, 2_000_000)
 
     def test_a_flood_of_summary_lines_and_blocks_keeps_the_memory_bounded(self) -> None:
         times = gate_times.Times()
