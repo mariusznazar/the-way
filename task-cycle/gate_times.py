@@ -29,8 +29,8 @@ cut at 200 characters, ending in `…` where cut; the directories after the fift
 and a last row of the run says how many (`… <n> more directories not listed`, with `—` for its
 seconds), so that the record stays small and no cut is read as a time. The memory the script keeps
 stays bounded whatever the output holds: it keeps the first 100 lines `== ` and the last 100 summary
-lines that stand after one, and, in the lines since the last summary line, the places of the last
-100 lines that hold `== ` after text.
+lines that stand after one, and, in the whole output, the last 100 different places of lines that
+hold `== ` after text, each place once.
 
 The runs at the same time: each run makes an empty file in the registry (default `~/.the-way/gate_runs`)
 named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_<end ms>_<token>.run`.
@@ -193,7 +193,7 @@ class Times:
         self.latest: tuple[int, int, int, bool] | None = None
         self.earlier: deque[tuple[int, int, int, bool]] = deque(maxlen=SUMMARIES_KEPT)
         # The number of piece lines when each of the last lines that holds `== ` after text was
-        # read in this segment, each number once.
+        # read, each number once.
         self.marks: deque[int] = deque(maxlen=SUMMARIES_KEPT)
         self.pending: Piece | None = None  # the piece that holds the latest summary line
         self.pending_after: str | None = None  # the first `Ran` line after it, in that piece
@@ -238,7 +238,6 @@ class Times:
         opened = any(self.count - mark == directories - 1 for mark in self.marks)
         self.latest = (self.segment, self.count - self.segment, directories, opened)
         self.segment = self.count
-        self.marks.clear()
         self.pending = self.current
         self.pending_after = None
         self.waiting = True

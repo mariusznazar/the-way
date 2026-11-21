@@ -33,8 +33,11 @@ ENVIRONMENT = {
     "GIT_CONFIG_GLOBAL": os.devnull,
     "GIT_CONFIG_NOSYSTEM": "1",
     # Git's automatic maintenance and automatic collection of garbage stay off in every git process
-    # of the tests, the bare origin.git included, so that no maintenance.lock appears or vanishes
-    # while a snapshot is taken (the first CI run of pull request #144 failed this way on Linux).
+    # the tests start, so that no maintenance.lock appears or vanishes while a snapshot is taken
+    # (the first CI run of pull request #144 failed this way on Linux). A `push` to the bare
+    # origin.git is taken by git's own receive-pack, a process the tests do not start, which gets
+    # none of the variables that carry configuration (GIT_CONFIG_COUNT and its keys and values), so
+    # Fixture sets both in the configuration of each repository it builds.
     "GIT_CONFIG_COUNT": "2",
     "GIT_CONFIG_KEY_0": "gc.auto",
     "GIT_CONFIG_VALUE_0": "0",
@@ -115,7 +118,15 @@ class Fixture:
         self.copy = self.worktrees / "merged" / ".runs" / "copy" / "remove_merged_worktrees.py"
         self.files = 0
         git(self.root, "init", "--bare", "-b", target, str(self.origin))
+        # Git hands the side that takes a `push` to a local repository none of the variables that
+        # carry configuration in ENVIRONMENT (GIT_CONFIG_COUNT and its keys and values), so
+        # origin.git has its own configuration: otherwise its receive-pack starts `git maintenance
+        # run --auto --detach` there, which goes on in the background after the push returns.
+        git(self.origin, "config", "maintenance.auto", "false")
+        git(self.origin, "config", "gc.auto", "0")
         git(self.root, "init", "-b", target, str(self.main))
+        git(self.main, "config", "maintenance.auto", "false")
+        git(self.main, "config", "gc.auto", "0")
         git(self.main, "remote", "add", "origin", str(self.origin))
         write(
             self.main / ".gitignore",
@@ -447,8 +458,9 @@ class ApplyTest(unittest.TestCase):
     def test_a_dry_run_removes_nothing_and_apply_removes_only_what_is_marked(self) -> None:
         # invariant: repository-changer-acts-only-when-told
         # The snapshot must not see git's maintenance.lock come or go: ENVIRONMENT turns git's
-        # automatic maintenance off. The first CI run of pull request #144 on Linux failed with
-        # FileNotFoundError on maintenance.lock, and the rerun passed.
+        # automatic maintenance off in the processes the tests start, and Fixture sets it in the
+        # configuration of origin.git, where a `push` runs it. The first CI run of pull request
+        # #144 on Linux failed with FileNotFoundError on maintenance.lock, and the rerun passed.
         merged = self.fx.task("merged")
         unmerged = self.fx.add("unmerged", "task/unmerged")
         self.fx.commit(unmerged)

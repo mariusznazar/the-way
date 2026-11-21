@@ -169,6 +169,18 @@ none — WAY-402
 Running a flaky test again serves only the diagnosis of what makes it flaky, never making a run of
 the gate pass; disabling or deleting such a test is a change of `### Changing an existing test`.
 
+### Turning off git's automatic maintenance
+
+- **Decision:** none
+- **Invariant:** none
+- **Good:** a test that builds a bare remote repository sets `maintenance.auto` and `gc.auto` in that repository's own configuration
+- **Bad:** a test that pushes to a bare repository it built and turns off git's automatic maintenance only with environment variables
+
+A git test that turns off git's automatic maintenance sets it in the configuration of each
+repository it builds, the bare remote one too, and not in environment variables alone, because git
+passes none of them to the side that takes a `push` to a local repository, so maintenance runs
+there in the background after the push returns.
+
 ## Recipes
 
 ### unit
