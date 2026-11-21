@@ -1,0 +1,140 @@
+20:16:53.800567 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.805586 git.c:502               trace: built-in: git init --bare -b main 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:53.827670 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.832241 git.c:502               trace: built-in: git config maintenance.auto false
+20:16:53.843223 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.848743 git.c:502               trace: built-in: git config gc.auto 0
+20:16:53.860607 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.865633 git.c:502               trace: built-in: git init -b main 'the system temporary directory/tmpu19y4pd3/main'
+20:16:53.887316 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.892823 git.c:502               trace: built-in: git config maintenance.auto false
+20:16:53.907395 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.914449 git.c:502               trace: built-in: git config gc.auto 0
+20:16:53.928790 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.933797 git.c:502               trace: built-in: git remote add origin 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:53.949421 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.954581 git.c:502               trace: built-in: git add .gitignore a.txt
+20:16:53.981352 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:53.986371 git.c:502               trace: built-in: git commit -m root
+20:16:54.018240 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.024783 git.c:502               trace: built-in: git push -u origin main
+20:16:54.024783 run-command.c:674       trace: run_command: unset GIT_CONFIG_COUNT GIT_CONFIG_PARAMETERS GIT_PREFIX; 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.024783 run-command.c:946       trace: start_command: 'the Git installation directory/usr/bin/sh.exe' -c 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\''' 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.049859 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.051400 git.c:502               trace: built-in: git receive-pack 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:54.052908 run-command.c:674       trace: run_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.052908 run-command.c:946       trace: start_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.060971 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.062941 git.c:502               trace: built-in: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.064943 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-theRQQ GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-theRQQ git unpack-objects --pack_header=2,4 -q
+20:16:54.064943 run-command.c:946       trace: start_command: git unpack-objects --pack_header=2,4 -q
+20:16:54.072975 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.076345 git.c:502               trace: built-in: git unpack-objects --pack_header=2,4 -q
+20:16:54.106378 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-theRQQ GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-theRQQ git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.106378 run-command.c:946       trace: start_command: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.187978 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.189993 git.c:502               trace: built-in: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.191063 run-command.c:674       trace: run_command: unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX; git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.191063 run-command.c:946       trace: start_command: git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.199104 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.201111 git.c:502               trace: built-in: git for-each-ref '--format=%(objectname)'
+20:16:54.239068 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.246594 git.c:502               trace: built-in: git worktree add -b task/merged 'the system temporary directory/tmpu19y4pd3/wt/merged' main
+20:16:54.247661 run-command.c:674       trace: run_command: git branch task/merged main
+20:16:54.247661 run-command.c:946       trace: start_command: git branch task/merged main
+20:16:54.257972 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.260596 git.c:502               trace: built-in: git branch task/merged main
+20:16:54.270677 run-command.c:674       trace: run_command: GIT_DIR=the system temporary directory/tmpu19y4pd3/wt/merged/.git GIT_WORK_TREE=the system temporary directory/tmpu19y4pd3/wt/merged git reset --hard --no-recurse-submodules
+20:16:54.270677 run-command.c:946       trace: start_command: git reset --hard --no-recurse-submodules
+20:16:54.279649 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.282398 git.c:502               trace: built-in: git reset --hard --no-recurse-submodules
+20:16:54.303154 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.310008 git.c:502               trace: built-in: git add file1.txt
+20:16:54.329635 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.335145 git.c:502               trace: built-in: git commit -m 'add file1.txt'
+20:16:54.368077 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.374014 git.c:502               trace: built-in: git push origin task/merged
+20:16:54.375011 run-command.c:674       trace: run_command: unset GIT_CONFIG_COUNT GIT_CONFIG_PARAMETERS GIT_PREFIX; 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.375011 run-command.c:946       trace: start_command: 'the Git installation directory/usr/bin/sh.exe' -c 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\''' 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.400161 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.402161 git.c:502               trace: built-in: git receive-pack 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:54.403666 run-command.c:674       trace: run_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.403666 run-command.c:946       trace: start_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.411183 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.414188 git.c:502               trace: built-in: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.416694 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-T3lm1U GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-T3lm1U git unpack-objects --pack_header=2,3 -q
+20:16:54.416694 run-command.c:946       trace: start_command: git unpack-objects --pack_header=2,3 -q
+20:16:54.425210 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.428211 git.c:502               trace: built-in: git unpack-objects --pack_header=2,3 -q
+20:16:54.449320 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-T3lm1U GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-T3lm1U git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.449320 run-command.c:946       trace: start_command: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.459421 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.461398 git.c:502               trace: built-in: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.462415 run-command.c:674       trace: run_command: unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX; git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.462415 run-command.c:946       trace: start_command: git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.472061 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.474061 git.c:502               trace: built-in: git for-each-ref '--format=%(objectname)'
+20:16:54.510459 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.516028 git.c:502               trace: built-in: git merge --no-ff -m 'Merge pull request from task/merged' task/merged
+20:16:54.518514 run-command.c:674       trace: run_command: git stash create
+20:16:54.518514 run-command.c:946       trace: start_command: git stash create
+20:16:54.526717 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.530224 git.c:502               trace: built-in: git stash create
+20:16:54.557861 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.563158 git.c:502               trace: built-in: git push origin main
+20:16:54.564157 run-command.c:674       trace: run_command: unset GIT_CONFIG_COUNT GIT_CONFIG_PARAMETERS GIT_PREFIX; 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.564157 run-command.c:946       trace: start_command: 'the Git installation directory/usr/bin/sh.exe' -c 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\''' 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.591455 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.592455 git.c:502               trace: built-in: git receive-pack 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:54.594995 run-command.c:674       trace: run_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.594995 run-command.c:946       trace: start_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.603533 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.605509 git.c:502               trace: built-in: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.607016 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-2y5hsI GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-2y5hsI git unpack-objects --pack_header=2,1 -q
+20:16:54.607016 run-command.c:946       trace: start_command: git unpack-objects --pack_header=2,1 -q
+20:16:54.615579 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.617579 git.c:502               trace: built-in: git unpack-objects --pack_header=2,1 -q
+20:16:54.626694 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-2y5hsI GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-2y5hsI git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.626694 run-command.c:946       trace: start_command: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.635481 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.637489 git.c:502               trace: built-in: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.638468 run-command.c:674       trace: run_command: unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX; git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.638468 run-command.c:946       trace: start_command: git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.650536 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.653066 git.c:502               trace: built-in: git for-each-ref '--format=%(objectname)'
+20:16:54.680682 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.685682 git.c:502               trace: built-in: git worktree add -b task/unmerged 'the system temporary directory/tmpu19y4pd3/wt/unmerged' main
+20:16:54.686819 run-command.c:674       trace: run_command: git branch task/unmerged main
+20:16:54.686819 run-command.c:946       trace: start_command: git branch task/unmerged main
+20:16:54.695372 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.697533 git.c:502               trace: built-in: git branch task/unmerged main
+20:16:54.707717 run-command.c:674       trace: run_command: GIT_DIR=the system temporary directory/tmpu19y4pd3/wt/unmerged/.git GIT_WORK_TREE=the system temporary directory/tmpu19y4pd3/wt/unmerged git reset --hard --no-recurse-submodules
+20:16:54.707717 run-command.c:946       trace: start_command: git reset --hard --no-recurse-submodules
+20:16:54.717651 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.720823 git.c:502               trace: built-in: git reset --hard --no-recurse-submodules
+20:16:54.746148 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.752969 git.c:502               trace: built-in: git add file2.txt
+20:16:54.775207 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.781723 git.c:502               trace: built-in: git commit -m 'add file2.txt'
+20:16:54.814253 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.820355 git.c:502               trace: built-in: git push origin task/unmerged
+20:16:54.821354 run-command.c:674       trace: run_command: unset GIT_CONFIG_COUNT GIT_CONFIG_PARAMETERS GIT_PREFIX; 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.821354 run-command.c:946       trace: start_command: 'the Git installation directory/usr/bin/sh.exe' -c 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\''' 'git-receive-pack '\''the system temporary directory/tmpu19y4pd3/origin.git'\'''
+20:16:54.846597 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/bin
+20:16:54.848446 git.c:502               trace: built-in: git receive-pack 'the system temporary directory/tmpu19y4pd3/origin.git'
+20:16:54.849607 run-command.c:674       trace: run_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.849607 run-command.c:946       trace: start_command: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.859617 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.862618 git.c:502               trace: built-in: git pack-objects --all-progress-implied --revs --stdout --thin --delta-base-offset -q
+20:16:54.865130 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-rkSfrY GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-rkSfrY git unpack-objects --pack_header=2,3 -q
+20:16:54.866129 run-command.c:946       trace: start_command: git unpack-objects --pack_header=2,3 -q
+20:16:54.875492 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.878005 git.c:502               trace: built-in: git unpack-objects --pack_header=2,3 -q
+20:16:54.899776 run-command.c:674       trace: run_command: GIT_ALTERNATE_OBJECT_DIRECTORIES=the system temporary directory/tmpu19y4pd3/origin.git/./objects GIT_OBJECT_DIRECTORY=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-rkSfrY GIT_QUARANTINE_PATH=the system temporary directory/tmpu19y4pd3/origin.git/./objects/tmp_objdir-incoming-rkSfrY git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.899776 run-command.c:946       trace: start_command: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.909118 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.910622 git.c:502               trace: built-in: git rev-list --objects --stdin --not --exclude-hidden=receive --all --quiet --alternate-refs
+20:16:54.912626 run-command.c:674       trace: run_command: unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_DIR GIT_OBJECT_DIRECTORY GIT_PREFIX; git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.912626 run-command.c:946       trace: start_command: git --git-dir=the system temporary directory/tmpu19y4pd3/origin.git for-each-ref '--format=%(objectname)'
+20:16:54.921765 exec-cmd.c:266          trace: resolved executable dir: the Git installation directory/mingw64/libexec/git-core
+20:16:54.923789 git.c:502               trace: built-in: git for-each-ref '--format=%(objectname)'

@@ -1,0 +1,3 @@
+trace lines: 136
+lines naming git-receive-pack: 12
+lines that run git maintenance or git gc: 0

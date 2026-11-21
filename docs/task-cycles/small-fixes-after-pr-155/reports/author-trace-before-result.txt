@@ -1,0 +1,15 @@
+trace lines: 148
+lines naming git-receive-pack: 12
+lines that run git maintenance or git gc: 12
+  19:57:52.871559 run-command.c:674       trace: run_command: git maintenance run --auto --quiet --detach
+  19:57:52.871559 run-command.c:946       trace: start_command: git maintenance run --auto --quiet --detach
+  19:57:52.884558 git.c:502               trace: built-in: git maintenance run --auto --quiet --detach
+  19:57:53.197211 run-command.c:674       trace: run_command: git maintenance run --auto --quiet --detach
+  19:57:53.197211 run-command.c:946       trace: start_command: git maintenance run --auto --quiet --detach
+  19:57:53.210221 git.c:502               trace: built-in: git maintenance run --auto --quiet --detach
+  19:57:53.430566 run-command.c:674       trace: run_command: git maintenance run --auto --quiet --detach
+  19:57:53.430566 run-command.c:946       trace: start_command: git maintenance run --auto --quiet --detach
+  19:57:53.442614 git.c:502               trace: built-in: git maintenance run --auto --quiet --detach
+  19:57:53.777574 run-command.c:674       trace: run_command: git maintenance run --auto --quiet --detach
+  19:57:53.777574 run-command.c:946       trace: start_command: git maintenance run --auto --quiet --detach
+  19:57:53.788921 git.c:502               trace: built-in: git maintenance run --auto --quiet --detach
