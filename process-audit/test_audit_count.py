@@ -301,15 +301,6 @@ class AuditCountCase(unittest.TestCase):
         row or a table of it."""
         return [row for row in self.pair_rows() if row[0].startswith(("row of ", "table "))]
 
-    def section(self, kind, number) -> list[list[str]]:
-        """The rows of the table under `### <kind>, series <number>` of the latest result."""
-        text = self.latest()
-        heading = f"\n### {kind}, series {number}\n"
-        self.assertIn(heading, text, "the result has no such series")
-        part = text.split(heading, 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
-        lines = [line for line in part.splitlines() if line.startswith("|")]
-        return [split_row(line) for line in lines[2:]]
-
     def reasons_of(self, rows: list[list[str]], value: str) -> str:
         """The reasons of the rows of *Unknown values* that name `value`, joined: the rows are
         found by their value, since a cycle now has rows of its process questions too."""
