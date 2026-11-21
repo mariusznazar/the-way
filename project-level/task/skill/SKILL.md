@@ -11,7 +11,11 @@ ask the human stands in `elements/common/way_of_working.md`. This skill holds th
 
 This skill lives in `project-level/task/skill/` of the-way. In the-way itself, read it in the
 checkout or worktree the session works in; in a product, at the pinned `.the-way` commit.
-Another the-way skill named here is the project skill with the `the-way-` prefix.
+In the-way itself, another the-way skill named here is read as a file, not called, since the entry
+points of the-way's skills are hidden from the model: its `SKILL.md` is the file under that root
+whose frontmatter has the line `name: <that name>`, which a search of the files named `SKILL.md`
+finds; read it there in full and follow it. In a product, it is the project skill with the
+`the-way-` prefix.
 
 ## Orchestrated mode
 

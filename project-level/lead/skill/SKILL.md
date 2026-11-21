@@ -17,8 +17,11 @@ again.
 
 This skill lives in `project-level/lead/skill/` of the-way. In the-way itself use the checkout or
 worktree the session works in, which `git rev-parse --show-toplevel` names; in a product use its
-pinned `.the-way`, verified against the product's gitlink. Each the-way skill named here is the
-project skill with the `the-way-` prefix, never a personal copy.
+pinned `.the-way`, verified against the product's gitlink. In the-way itself, a skill named here is
+read as a file, not called, since the entry points of the-way's skills are hidden from the model:
+its `SKILL.md` is the file under that root whose frontmatter has the line `name: <that name>`,
+which a search of the files named `SKILL.md` finds; read it there in full and follow it. In a
+product, it is the project skill with the `the-way-` prefix, never a personal copy.
 
 ## 0. Read and recover
 
