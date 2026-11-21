@@ -1,5 +1,5 @@
-"""Generator of the project skill entry points through which a session working on the-way itself
-reaches the-way's own skills (WAY-127).
+"""Generator of the project skill entry points through which a human starts the-way's own skills
+in a session working on the-way itself (WAY-127).
 
 Usage, from the root of the-way:
 
@@ -9,7 +9,10 @@ A skill of the-way is a file `SKILL.md` that `git ls-files --cached --others --e
 lists in this repository outside `.claude/` and `.agents/`, and that exists on disk. From its
 frontmatter the generator takes `name:` and `description:`, each on one line, and produces
 `.claude/skills/the-way-<name>/SKILL.md` for Claude Code and a byte-identical
-`.agents/skills/the-way-<name>/SKILL.md` for Codex. The repository is the one this script lies in,
+`.agents/skills/the-way-<name>/SKILL.md` for Codex. The header of each entry point holds
+`disable-model-invocation: true`, which keeps the skill out of the model's list in Claude Code, and
+its text lists every skill with the path of its `SKILL.md`, which a session reads where one skill
+names another. The repository is the one this script lies in,
 whatever the current directory, so a run from a product's `.the-way` writes nothing into the
 product.
 
@@ -39,6 +42,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ENTRY_DIRECTORIES = (".claude/skills", ".agents/skills")
 PREFIX = "the-way-"
 SUFFIX = " Use this checkout's own the-way."
+HIDING_FIELD = "disable-model-invocation: true"
 NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 BLOCK_SCALAR = re.compile(r"[|>][-+0-9]*")
 UNSAFE_START = "-?:,[]{}#&*!|>'\"%@`"
@@ -166,12 +170,9 @@ def discover(root: Path) -> list[Skill]:
     return skills
 
 
-def sibling_names(skills: list[Skill]) -> str:
-    """The backticked names of all skills in their order, joined with `, ` and ` or `."""
-    names = [f"`{skill.name}`" for skill in skills]
-    if len(names) == 1:
-        return names[0]
-    return ", ".join(names[:-1]) + " or " + names[-1]
+def skill_list(skills: list[Skill]) -> str:
+    """One list item per skill, in order: its name and the path of its `SKILL.md`, in backticks."""
+    return "".join(f"- `{skill.name}`: `{skill.path}`\n" for skill in skills)
 
 
 def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
@@ -181,6 +182,7 @@ def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
         "---\n"
         f"name: {name}\n"
         f"description: {skill.description}{SUFFIX}\n"
+        f"{HIDING_FIELD}\n"
         "---\n"
         "\n"
         f"# {name}\n"
@@ -205,9 +207,12 @@ def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
         "If the skill tells you to resolve a link to find the-way, skip that: the root is the one above. Do not substitute "
         "a global skill.\n"
         "\n"
-        "Where this skill or a file it reads names another the-way skill — "
-        f"{sibling_names(skills)} — use this repository's project skill of the same name with the "
-        "`the-way-` prefix, never an unprefixed one.\n"
+        "Where this skill or a file it reads names another the-way skill, do not call it, since "
+        "the entry points of the-way's skills are hidden from the model: read that skill's "
+        "`SKILL.md` under the same root in full and follow it there, as above. The skills of "
+        "the-way and their files:\n"
+        "\n"
+        f"{skill_list(skills)}"
     )
 
 

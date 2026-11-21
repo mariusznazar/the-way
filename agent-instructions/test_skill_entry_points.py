@@ -36,6 +36,7 @@ DECISION_ENTRY = (
     "---\n"
     "name: the-way-record-decision\n"
     "description: Use when a decision has to be written. Use this checkout's own the-way.\n"
+    "disable-model-invocation: true\n"
     "---\n"
     "\n"
     "# the-way-record-decision\n"
@@ -60,9 +61,13 @@ DECISION_ENTRY = (
     "and say so. If the skill tells you to resolve a link to find the-way, skip "
     "that: the root is the one above. Do not substitute a global skill.\n"
     "\n"
-    "Where this skill or a file it reads names another the-way skill — `critique` or "
-    "`record-decision` — use this repository's project skill of the same name with the "
-    "`the-way-` prefix, never an unprefixed one.\n"
+    "Where this skill or a file it reads names another the-way skill, do not call it, since the "
+    "entry points of the-way's skills are hidden from the model: read that skill's `SKILL.md` "
+    "under the same root in full and follow it there, as above. The skills of the-way and their "
+    "files:\n"
+    "\n"
+    "- `critique`: `elements/common/critique/SKILL.md`\n"
+    "- `record-decision`: `elements/decisions/skill/SKILL.md`\n"
 )
 
 
@@ -110,13 +115,15 @@ class EntryPointText(unittest.TestCase):
         ]
         self.assertEqual(generator.entry_point_text(skills[1], skills), DECISION_ENTRY)
 
-    def test_one_skill_names_itself_alone(self) -> None:
+    def test_one_skill_lists_itself_alone(self) -> None:
         skill = generator.Skill("a/SKILL.md", "alpha", "Use for alpha.")
-        self.assertIn(
-            "another the-way skill — `alpha` — use", generator.entry_point_text(skill, [skill])
+        self.assertTrue(
+            generator.entry_point_text(skill, [skill]).endswith(
+                "The skills of the-way and their files:\n\n- `alpha`: `a/SKILL.md`\n"
+            )
         )
 
-    def test_siblings_follow_the_order_of_paths_with_or_before_the_last(self) -> None:
+    def test_the_list_follows_the_order_of_paths_with_a_line_for_each_skill(self) -> None:
         repository = Repository(self)
         repository.write("zeta/SKILL.md", "---\nname: alpha\ndescription: Use for alpha.\n---\n")
         repository.write("beta/SKILL.md", "---\nname: zulu\ndescription: Use for zulu.\n---\n")
@@ -128,7 +135,12 @@ class EntryPointText(unittest.TestCase):
             [skill.path for skill in skills],
             ["beta/SKILL.md", "dir with space/SKILL.md", "zeta/SKILL.md"],
         )
-        self.assertEqual(generator.sibling_names(skills), "`zulu`, `mike` or `alpha`")
+        self.assertEqual(
+            generator.skill_list(skills),
+            "- `zulu`: `beta/SKILL.md`\n"
+            "- `mike`: `dir with space/SKILL.md`\n"
+            "- `alpha`: `zeta/SKILL.md`\n",
+        )
 
 
 class Discovery(unittest.TestCase):
@@ -344,6 +356,16 @@ class Writing(unittest.TestCase):
             written[".agents/skills/the-way-critique/SKILL.md"],
         )
         self.assertEqual(repository.run("--write"), (0, "entry points are current\n", ""))
+
+    def test_the_header_of_both_copies_hides_the_skill_from_the_model(self) -> None:
+        repository = Repository(self)
+        repository.write("elements/common/critique/SKILL.md", CRITIQUE)
+        repository.run("--write")
+        for directory in (".claude/skills", ".agents/skills"):
+            with self.subTest(directory):
+                text = repository.files()[f"{directory}/the-way-critique/SKILL.md"].decode("utf-8")
+                header = text.split("\n---\n")[0].split("\n")
+                self.assertIn("disable-model-invocation: true", header)
 
     def test_without_write_it_lists_the_plan_and_writes_nothing(self) -> None:
         # invariant: generator-writes-only-with-write
