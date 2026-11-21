@@ -1,10 +1,11 @@
 """End-to-end test of the invariant `skill-entry-points`.
 
 Someone adds, renames or moves a skill of the-way, or changes its description; a skill that a
-session on the-way would not find under its `the-way-` name has to be reported before the change
-reaches the main branch. This test runs the whole path a session takes: the skills of the-way as
-git lists them, and the entry points a session finds for them in `.claude/skills/` and
-`.agents/skills/`, against each property the invariant `skill-entry-points` names.
+human on the-way could not start under its `the-way-` name, or whose entry points would be offered
+to the model, has to be reported before the change reaches the main branch. This test runs the
+whole path a session takes: the skills of the-way as git lists them, and the entry points a session
+finds for them in `.claude/skills/` and `.agents/skills/`, against each property the invariant
+`skill-entry-points` names.
 
 Every value the test expects is written out below, taken from the sentence of that invariant. It
 imports nothing that computes entry points and finds the skills with its own call to git: were it
@@ -35,6 +36,7 @@ REQUIRED_WORDS = (
     "git rev-parse --show-toplevel",
     "If the skill tells you to resolve a link to find the-way, skip that",
     "do not call it",
+    "read that skill's `SKILL.md`",
 )
 HIDING_FIELD = "disable-model-invocation"
 
@@ -223,8 +225,8 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         self.assertEqual(
             found,
             [],
-            "a skill of the-way a session would not find under its "
-            "`the-way-` name; write the entry points with `"
+            "an entry point of a skill of the-way that is missing, differs from its copy or "
+            "is not hidden from the model; write the entry points with `"
             + GENERATOR
             + "`:\n"
             + "\n".join(found),
@@ -234,9 +236,10 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         """On a repository with no commit, where every file stands untracked: `alpha` has no
         entry point, `beta` only the `.claude` one, `gamma` two copies that differ in bytes
         alone, `delta` two good copies, `epsilon` two copies whose header lacks the field that hides
-        the skill from the model, `zeta` two copies whose list of skills leaves out `alpha`, and
+        the skill from the model, `zeta` two copies whose list of skills leaves out `alpha`, `eta`
+        two copies that say not to call a skill and do not send the session to its file, and
         `the-way-orphan` names no skill."""
-        names = ("alpha", "beta", "gamma", "delta", "epsilon", "zeta")
+        names = ("alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta")
 
         def skill(name):
             return (
@@ -244,7 +247,7 @@ class SkillsReachTheWaySessions(unittest.TestCase):
                 "# %s\n" % (name, name, name)
             )
 
-        def entry(name, hidden=True, leaving_out=None):
+        def entry(name, hidden=True, leaving_out=None, reading=True):
             listed = "".join(
                 "- `%s`: `%s/skill/SKILL.md`\n" % (each, each)
                 for each in names
@@ -257,13 +260,13 @@ class SkillsReachTheWaySessions(unittest.TestCase):
                 "`git rev-parse --show-superproject-working-tree`, "
                 "`git ls-files --stage -- ':/.the-way'` and `git rev-parse --show-toplevel`. "
                 "If the skill tells you to resolve a link to find the-way, skip that.\n\n"
-                "Where a skill is named, do not call it: read its `SKILL.md` under the same "
-                "root. The skills and their files:\n\n%s"
+                "Where a skill is named, do not call it%s The skills and their files:\n\n%s"
                 % (
                     name,
                     name,
                     "disable-model-invocation: true\n" if hidden else "",
                     name,
+                    ": read that skill's `SKILL.md` under the same root." if reading else ".",
                     listed,
                 )
             )
@@ -277,6 +280,7 @@ class SkillsReachTheWaySessions(unittest.TestCase):
         for base in (".claude/skills", ".agents/skills"):
             files[base + "/the-way-epsilon/SKILL.md"] = entry("epsilon", hidden=False)
             files[base + "/the-way-zeta/SKILL.md"] = entry("zeta", leaving_out="alpha")
+            files[base + "/the-way-eta/SKILL.md"] = entry("eta", reading=False)
         files[".claude/skills/the-way-orphan/SKILL.md"] = entry("orphan")
         clean = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
         with (
@@ -328,7 +332,13 @@ class SkillsReachTheWaySessions(unittest.TestCase):
             found,
             report,
         )
-        self.assertEqual(len(found), 7, report)
+        self.assertIn(
+            ".claude/skills/the-way-eta/SKILL.md: its text does not contain "
+            "read that skill's `SKILL.md`",
+            found,
+            report,
+        )
+        self.assertEqual(len(found), 8, report)
 
 
 if __name__ == "__main__":

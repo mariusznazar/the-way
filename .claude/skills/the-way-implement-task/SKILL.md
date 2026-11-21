@@ -13,7 +13,7 @@ This entry point serves a session that works on the-way itself. Stop following i
 
 The process root is the checkout or worktree the session works in: the directory `git rev-parse --show-toplevel` prints when run in the session's working directory — the directory the session was started in, or the one it was last moved to (Claude Code's `/cd`) — not in the shell's current directory, which moves with `cd`. Read `task-cycle/skill/SKILL.md` there in full and follow it, and read a file it names under the same root when the step or variant that names it comes, not all of them at the start, never a copy in another checkout or worktree. If `task-cycle/skill/SKILL.md` is absent there, stop and say so. If the skill tells you to resolve a link to find the-way, skip that: the root is the one above. Do not substitute a global skill.
 
-Where this skill or a file it reads names another the-way skill, do not call it, since the entry points of the-way's skills are hidden from the model: read that skill's `SKILL.md` under the same root in full and follow it there, as above. The skills of the-way and their files:
+Where this skill or a file it reads names another the-way skill, do not call it, since Claude Code does not offer the entry points of the-way's skills to the model: read that skill's `SKILL.md` under the same root in full and follow it there, as above. The skills of the-way and their files:
 
 - `critique`: `elements/common/critique/SKILL.md`
 - `find-foundation-entries`: `elements/common/skill/SKILL.md`

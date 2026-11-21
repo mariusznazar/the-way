@@ -208,9 +208,9 @@ def entry_point_text(skill: Skill, skills: list[Skill]) -> str:
         "a global skill.\n"
         "\n"
         "Where this skill or a file it reads names another the-way skill, do not call it, since "
-        "the entry points of the-way's skills are hidden from the model: read that skill's "
-        "`SKILL.md` under the same root in full and follow it there, as above. The skills of "
-        "the-way and their files:\n"
+        "Claude Code does not offer the entry points of the-way's skills to the model: read that "
+        "skill's `SKILL.md` under the same root in full and follow it there, as above. The skills "
+        "of the-way and their files:\n"
         "\n"
         f"{skill_list(skills)}"
     )
