@@ -19,10 +19,9 @@ repository at a time.
 This skill lives in `foundation-review/` of the-way. In the-way itself, the-way is the checkout or
 worktree the session works in, the directory `git rev-parse --show-toplevel` prints in the session's
 working directory; in a product, it is the product's pinned `.the-way`. A skill named below is
-handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over
-comes, and follow it. The repository under review is the one the session
-works in — the-way itself, or a product that pins it — and the review runs from that repository's
-root.
+handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the
+first hand-over comes, and follow it. The repository under review is the one the session works in —
+the-way itself, or a product that pins it — and the review runs from that repository's root.
 
 A request's description asks for this review once the main branch holds as many merges since the
 last review tag as the threshold of the task cycle's reminder script gives (WAY-300); the human may

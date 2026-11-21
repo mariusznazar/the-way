@@ -15,8 +15,8 @@ This skill lives in `project-level/plan/skill/` of the-way. In the-way itself, t
 checkout or worktree the session works in, the directory `git rev-parse --show-toplevel` prints in
 the session's working directory; in a product, it is the product's pinned `.the-way`. The project
 level's directory, `project-level/`, is there. A skill named below or in the files beside this skill
-is handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the first hand-over
-comes, and follow it.
+is handed on to as `elements/common/reaching_another_skill.md` there gives: read that file when the
+first hand-over comes, and follow it.
 
 The breakdown reads the product's foundation and the definition and writes nothing in either
 (WAY-106). It writes no task document; each task is refined later through `refine-task`.
