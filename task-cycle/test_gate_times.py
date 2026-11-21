@@ -184,7 +184,8 @@ def failing_with(nested: str, seconds: str, directory: str = "gate") -> str:
     text of the message, the rest at the start of their lines, and the directory's own `Ran` line
     comes after it."""
     return (
-        f"== {directory}\nF\n{FAILURE_RULE}\nFAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
+        f"== {directory}\nF\n{FAILURE_RULE}\n"
+        f"FAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
         "Traceback (most recent call last):\n"
         '  File "gate/test_nested.py", line 6, in test_nested\n'
         f"    self.assertEqual(0, 5, done.stdout)\nAssertionError: 0 != 5 : {nested}\n\n{RULE}\n"

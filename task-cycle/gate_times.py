@@ -22,13 +22,13 @@ earlier summary line, last to first, each such line taking at most its own `<m>`
 holds `== ` after text stands among those before it, the nested run begins there, and only the
 lines `== ` after the last such line are taken. A block that holds an earlier summary line takes
 the first `Ran` line after the last of them. A run with no earlier summary line is read as above.
-The numbers of a `Ran` line and of a summary line are ASCII digits, at most nine before a point
-and nine after it; a line with more or other digits is no such line. A run lists at most 50 directories, the number the audit
-reads, and a directory cell is cut at 200 characters, ending in `…` where cut; the directories after
-the fiftieth are not listed, and a last row of the run says how many (`… <n> more directories not
-listed`, with `—` for its seconds), so that the record stays small and no cut is read as a time. The
-memory the script keeps stays bounded whatever the output holds: it keeps the first 100 lines `== `
-and the last 100 summary lines that stand after one.
+The numbers of a `Ran` line and of a summary line are ASCII digits, at most nine before a point and
+nine after it; a line with more or other digits is no such line. A run lists at most 50 directories,
+the number the audit reads, and a directory cell is cut at 200 characters, ending in `…` where cut;
+the directories after the fiftieth are not listed, and a last row of the run says how many (`… <n>
+more directories not listed`, with `—` for its seconds), so that the record stays small and no cut
+is read as a time. The memory the script keeps stays bounded whatever the output holds: it keeps the
+first 100 lines `== ` and the last 100 summary lines that stand after one.
 
 The runs at the same time: each run makes an empty file in the registry (default `~/.the-way/gate_runs`)
 named `<start ms>_running_<token>.run` and renames it on its end to `<start ms>_<end ms>_<token>.run`.
