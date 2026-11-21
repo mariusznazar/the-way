@@ -9000,8 +9000,9 @@ code was written (WAY-404), is given for each group of cycles — the cycles of 
 process, the cycles of a whole series, the cycles on one side of a comparison before and after a
 change (WAY-339) — as the number of its cycles that answer yes, the number that answer no and the
 number that answer unknown, never as one word taken from them. The answer Q2 of such a group is the
-sum of the slices planned and the sum of the slices returned too large over its cycles, with the
-answer that those sums give.
+answer that the sum of the slices planned and the sum of the slices returned too large over its
+cycles whose plans are read give, and the image of a series and each side of a comparison show the
+two sums beside it.
 
 The answer Q3, whether the median cost of a group is lower than that of the group it is set against,
 and the fall of a mechanism measure or of a gate time, a median lower than that of the group it is

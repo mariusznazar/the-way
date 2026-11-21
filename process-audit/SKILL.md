@@ -250,11 +250,12 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    the number of its cycles that answer `yes`, the number that answer `no` and the number that
    answer `unknown`, as `yes n · no n · unknown n`; a cycle that did not answer is counted as
    `unknown` and never read as `no`, and no word is taken from the three numbers. Q2 of a group is
-   the sum of the slices planned and the sum of the slices returned too large over the cycles whose
-   plans are read, with `yes`, `no` or `unknown` as the answer those sums give. Q3 is `yes`, `no`
-   or `unknown` and, with the fall of a mechanism measure or of a gate time, stands only where two
-   groups meet: a version against the previous version of its series, the cycles after a fix
-   against the cycles before it. Q1 asks whether a contradiction with the settlements came out only
+   the answer, `yes`, `no` or `unknown`, that the sum of the slices planned and the sum of the
+   slices returned too large over the cycles whose plans are read give; the image of a series and
+   each side of a comparison show the two sums beside it, and the row of a version shows the
+   number of plans read with the answer. Q3 is `yes`, `no` or `unknown` and, with the fall of a
+   mechanism measure or of a gate time, stands only where two groups meet: a version against the
+   previous version of its series, the cycles after a fix against the cycles before it. Q1 asks whether a contradiction with the settlements came out only
    after the code was written, and the count reads each cycle's own answer from two marks of the
    cycle's record, never from the text of a reviewer's remarks: `yes` where a sub-item of *Review
    rounds*, held once and in its form, says `contradiction yes` or *Discarded attempt*, held once,
@@ -273,8 +274,9 @@ one of three outcomes: the human weighs it further, decides on a step, or sets i
    second `reason: ` followed by a backtick), which a record written before those marks stood in the
    template does wherever it holds such a sub-item or such a text. Quote
    the cycles of a version from *Cost*, with their share of the cost in fix rounds, where the human
-   wants them. Name together, in one matter, the series whose rows give nothing but `unknown`, and
-   the cycles in *No version*, with the reasons *Unknown values* gives.
+   wants them. Name together, in one matter, the series whose rows give nothing but `unknown`
+   (for Q1, a series whose every version reads `yes 0 · no 0 · unknown n`), and the cycles in *No
+   version*, with the reasons *Unknown values* gives.
    The series of *Measure versions* follow in the same matter, the mechanism measures and the gate
    times each apart, one series at a time, each with the line that says why it begins where it
    does. Each opens with an image, as above: for each measure the number of cycles that give a
