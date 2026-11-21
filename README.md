@@ -158,9 +158,9 @@ the-way as the project skill `the-way-<name>` — in Claude Code with the comman
 Codex reads, and each entry point reads its skill from the checkout or worktree the session works
 in. Each entry point carries `disable-model-invocation: true`, which Claude Code documents as
 removing a skill from the model's context while a human can still start it with its `/name`, so a
-session does not call a skill of the-way: where one skill names another, it reads that skill's
-`SKILL.md` from the same checkout or worktree. They are generated; after adding, renaming or
-moving a skill, or changing its description, run:
+Claude Code session does not call a skill of the-way: where one skill names another, a session
+reads that skill's `SKILL.md` from the same checkout or worktree. They are generated; after adding,
+renaming or moving a skill, or changing its description, run:
 
 ```bash
 python -B agent-instructions/skill_entry_points.py --write

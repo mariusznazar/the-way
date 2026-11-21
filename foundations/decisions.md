@@ -3339,16 +3339,17 @@ gives. No global link reaches a skill of the-way other than one to `instruction-
 judging a repository that pins the-way, follows that repository's pinned copy instead, and the-way
 is not installed in itself.
 
-The header of each entry point holds `disable-model-invocation: true`, so that the model is offered
-no skill of the-way, in the-way itself or in a product that carries it as `.the-way`, and a human
-starts a skill with the command `/the-way-<name>`. In the-way itself a skill hands another the-way
+The header of each entry point holds `disable-model-invocation: true`, so that Claude Code offers
+the model no skill of the-way, in the-way itself or in a product that carries it as `.the-way`, and
+a human starts a skill with the command `/the-way-<name>`. In the-way itself a skill hands another the-way
 skill on by reading that skill's `SKILL.md` from the checkout or worktree the session works in,
 never by calling it, each entry point giving the path of every skill; in a product a skill hands
 another on as the project skill with the `the-way-` prefix, through the product's own entry point
 that the installer writes.
 
 - **Scope:** agent-instructions, elements-common, project-level, task-cycle, decisions, invariants,
-  glossary, part-map, environment-facts, installation, instruction-files
+  glossary, part-map, environment-facts, installation, instruction-files, foundation-review,
+  product-guidelines
 - **Based on:** claude-code-project-skills · claude-code-nested-skills ·
   codex-repository-skills · codex-skill-paths · claude-code-skill-model-hiding
 - **Relations:** derives from WAY-44 · derives from WAY-256
@@ -3387,13 +3388,13 @@ the ones it started with; stopping in a product keeps a session there on its pin
 check find a product's submodule. The prefix keeps a personal skill of the same name from standing in
 for one of the-way's. A product that carries the-way as `.the-way` would otherwise show its session,
 once it reads a file there, the-way's own entry points beside the product's own, each name they
-share twice (claude-code-nested-skills); the header field removes them from what the model is
-offered and leaves them to the human who starts them (claude-code-skill-model-hiding), and one
-change to the generator covers every product. The price is that a request naming a skill without its
-command brings no skill in the-way itself, and that a skill reaches another through its file, with
-the path from the entry point's list, the checkout or worktree of the session still deciding which
-copy is read; a product's hand-over stays through its own entry point, which keeps the check of the
-pin (WAY-34). The skill of instruction files serves repositories outside the-way and its
+share twice (claude-code-nested-skills); the header field removes them from what Claude Code offers
+the model and leaves them to the human who starts them (claude-code-skill-model-hiding), and one
+change to the generator covers every product. The price is that in Claude Code a request naming a
+skill without its command brings no skill in the-way itself, and that a skill reaches another
+through its file, with the path from the entry point's list, the checkout or worktree of the
+session still deciding which copy is read; a product's hand-over stays through its own entry point,
+which keeps the check of the pin (WAY-34). The skill of instruction files serves repositories outside the-way and its
 products too, where no entry point exists and the copy a global link reads is the one wanted; in a
 product the pinned copy governs (WAY-34), so the skill follows it there; a session on the-way still
 reaches its branch's copy through its entry point, and the-way's repository instruction files keep

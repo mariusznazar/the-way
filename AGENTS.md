@@ -9,15 +9,16 @@ When this checkout is a product's `.the-way` submodule, follow the product's ins
 A human starts each skill of the-way in a session on this repository as the project skill
 `the-way-<name>` — in Claude Code with the command `/the-way-<name>` — from its entry point in
 `.claude/skills/` for Claude Code and `.agents/skills/` for Codex. The entry points carry
-`disable-model-invocation: true`, so the model is not offered a skill of the-way and never calls
-one: a skill hands work to another through that skill's `SKILL.md`, which the session reads from the
-checkout or worktree it works in, as an entry point reads its skill and each file the skill names
-when the step that names it comes. Start only these: a personal skill of the same name without the
-prefix — `refine-task`, `critique` or another — is not the-way's. A change that adds, renames or
-moves a skill, or changes its description, runs
+`disable-model-invocation: true`, which in Claude Code keeps the model from being offered a skill of
+the-way and from calling one: a skill hands work to another through that skill's `SKILL.md`, which
+the session reads from the checkout or worktree it works in, as an entry point reads its skill and
+each file the skill names when the step that names it comes. Start only these: a personal skill of
+the same name without the prefix — `refine-task`, `critique` or another — is not the-way's. A change
+that adds, renames or moves a skill, or changes its description, runs
 `python -B agent-instructions/skill_entry_points.py --write` and commits what it writes; the gate's
-tests report a skill a human could not start under its `the-way-` name. A change to a definition of
-an agent type in `task-cycle/agent-types/` runs
+tests report an entry point that is missing, differs from its copy or lacks the field, so that a
+human could not start the skill under its `the-way-` name or the model would be offered it. A change
+to a definition of an agent type in `task-cycle/agent-types/` runs
 `python -B agent-instructions/agent_type_copies.py --write` and commits what it writes; the gate's
 tests report a copy in `.claude/agents/` that differs from its definition.
 
