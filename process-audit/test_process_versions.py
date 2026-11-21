@@ -1742,7 +1742,7 @@ class SeriesImages(VersionsCase):
             self.assertNotIn(f"### {kind}, series 2", self.latest())
 
     def test_the_rows_of_the_versions_stay_and_give_q1_as_numbers_of_their_cycles(self):
-        # decision: WAY-417 "the rows of the versions of a series give Q1 as a word while its image"
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # The tables per version stay beside the image. v1 has a (yes) and b (no); v2 has c
         # (unknown) and d (no): the old cell would read `yes` for v1 and `unknown` for v2.
         v1, v2 = self.two_versions(self.SPECS)
@@ -1762,7 +1762,7 @@ class SeriesImages(VersionsCase):
         )
 
     def test_a_version_has_no_reason_for_its_q1_and_each_cycle_keeps_its_own(self):
-        # decision: WAY-417 "The answer Q1 of the audit ... is given for each group of cycles"
+        # decision: WAY-417 "The answer Q1 of the audit, whether a contradiction"
         # v2 holds c, whose Q1 is unknown, and d: the version no longer has an answer of its own
         # to be unknown, so *Unknown values* holds no line for the Q1 of a version, and the reason
         # of cycle c, that its discarded attempt opens with no marker, stays.
@@ -1775,7 +1775,7 @@ class SeriesImages(VersionsCase):
         self.assertTrue(reason.startswith("the item `Discarded attempt` opens with no marker"))
 
     def test_the_image_stands_under_the_heading_of_the_series_before_its_table_per_version(self):
-        # decision: WAY-417 "shows each series as an image of all its cycles"
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # The image carries no Q3 and no fall: its columns are those of its kind alone.
         self.two_versions(self.SPECS)
         expected = {
@@ -1972,7 +1972,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_the_count_of_remarks_gives_the_two_sides_and_no_answer_of_its_own(self):
-        # decision: WAY-417 "on each side of a comparison before and after a fix"
+        # decision: WAY-417 "The answer Q2 of such a group"
         # Before: a (yes) and b (no); plans 4 + 2 = 6 slices with 1 too large, which is not above
         # a third. After: c (unknown) and d (no); the plan of c read, 3 slices and none too large,
         # d on the one-author route.
@@ -1988,7 +1988,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_a_mechanism_measure_falls_where_the_median_after_the_fix_is_lower(self):
-        # decision: WAY-417 "the fall of a mechanism measure or of a gate time"
+        # decision: WAY-417 "The answer Q3, whether the median cost"
         # Calls: a 10 and b 4 before (median 7), c 3 after (d gives no file): falls, yes. The share
         # is 12.5% in each cycle that gives a file, so 12.5% on each side: not lower, no.
         way, v1, fix, v2 = self.history()
@@ -2010,8 +2010,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_the_gate_times_compare_the_runs_compared_and_show_the_others_apart(self):
-        # decision: WAY-350 "only over the runs that passed and during which no other such run
-        # was going"
+        # decision: WAY-350 "The audit compares the times of the gate between versions"
         # Total: compared 100.000 and 110.000 before (105.000); after, c's 90.000 compared (90.000
         # is lower than 105.000, yes), and apart the failed 5.000 and d's 300.000 (152.500).
         # gate/a: 65.0 before, 80.0 after, not lower, no. gate/b: only after, the failed run
@@ -2047,7 +2046,7 @@ class SeriesComparisons(VersionsCase):
         self.assertLess(part.index("Before and after a fix"), part.index("By version:"))
 
     def test_a_version_that_is_later_by_date_but_lacks_the_fix_lands_before_it(self):
-        # decision: WAY-339 "the version a cycle ran on, never its date, deciding its group"
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # v1, the fix on it, v3 on the fix and, later by date than v3, v2 on v1 beside the fix: v2
         # lacks the fix. Costs: x on v1 4 dollars, y on v3 1, z on v2 2. Before: x and z, median 3;
         # after: y, 1. A reading by date would put z after, with 1 and 2, median 1.5, and x alone
@@ -2077,7 +2076,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_a_series_with_cycles_on_one_side_of_the_fix_only_has_no_comparison(self):
-        # decision: WAY-339 "both groups of that series"
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # The fix is a commit after both versions, which both lack, and then the first version
         # itself, which both hold: in each case the cycles of every series stand on one side.
         for case in ("after both versions", "the first version"):
@@ -2092,7 +2091,7 @@ class SeriesComparisons(VersionsCase):
                 self.assertNotIn("Before and after a fix, inside the series", self.latest())
 
     def test_a_fix_that_the_checkout_lacks_gives_no_comparison_and_an_unknown_value(self):
-        # decision: WAY-339 "never its date"
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # The register names a commit the checkout of the-way does not hold: no version can be put
         # before or after it. The reason is one value of the issue, not one for each series.
         way, v1, _fix, v2 = self.history()
@@ -2126,7 +2125,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_a_change_of_the_review_splits_the_count_so_that_each_part_has_one_side(self):
-        # decision: WAY-339 "both groups of that series"
+        # decision: WAY-339 "A new series of the cost of cycles, the two numbers of WAY-337"
         # A change of `task-cycle/review` in v2, which holds the fix, ends the series of the count
         # of remarks, and leaves the series of the cost whole: the count has v1 before the fix in
         # its first series and v2 after it in its second, so neither has a comparison; the cost
@@ -2156,8 +2155,7 @@ class SeriesComparisons(VersionsCase):
         )
 
     def test_a_fixed_issue_whose_fix_is_not_a_commit_and_the_other_fates_give_no_comparison(self):
-        # decision: WAY-339 "for each fixed issue of the register of problems with a fix commit,
-        # and for no other change"
+        # decision: WAY-339 "That comparison is made for each fixed issue of the register"
         # The register refuses a fixed issue whose Fix is no commit, so it is no fixed issue of the
         # count; an open issue and a dropped one have no fix.
         way, v1, _fix, v2 = self.history()
@@ -2173,10 +2171,11 @@ class SeriesComparisons(VersionsCase):
         self.assertNotIn("Before and after a fix, inside the series", self.latest())
 
     def test_a_version_whose_answer_is_unknown_stands_on_neither_side(self):
-        # decision: WAY-339 "never its date" · WAY-330 the unknown value with its reason
+        # decision: WAY-339 "The audit shows each series as an image of all its cycles"
         # Three versions: the answer of `holds` for the first is no, for the second yes, for the
         # third unknown (a shallow clone says that its history may lack the fix). The cycle of the
-        # third is on neither side, and the reason is the value of that version.
+        # third is on neither side, and the reason is the value of that version (WAY-330: an
+        # unknown value comes with its reason).
         sys.path.insert(0, str(HERE))
         from record_reading import Cycle
         from version_analysis import Series, Version, fix_sides
