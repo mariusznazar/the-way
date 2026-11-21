@@ -1,0 +1,85 @@
+.......................................FFF........FF.F
+======================================================================
+FAIL: test_one_skill_lists_itself_alone (test_skill_entry_points.EntryPointText.test_one_skill_lists_itself_alone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 120, in test_one_skill_lists_itself_alone
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        generator.entry_point_text(skill, [skill]).endswith(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            "The skills of the-way and their files:\n\n- `alpha`: `a/SKILL.md`\n"
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+        ^
+    )
+    ^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_text_is_the_written_out_form (test_skill_entry_points.EntryPointText.test_text_is_the_written_out_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 116, in test_text_is_the_written_out_form
+    self.assertEqual(generator.entry_point_text(skills[1], skills), DECISION_ENTRY)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "---\[113 chars]ay.\n---\n\n# the-way-record-decision\n\nThis [1461 chars]e.\n" != "---\[113 chars]ay.\ndisable-model-invocation: true\n---\n\n# [1676 chars]d`\n"
+Diff is 2071 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_the_list_follows_the_order_of_paths_with_a_line_for_each_skill (test_skill_entry_points.EntryPointText.test_the_list_follows_the_order_of_paths_with_a_line_for_each_skill)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 138, in test_the_list_follows_the_order_of_paths_with_a_line_for_each_skill
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        generator.skill_list(skills),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        "- `alpha`: `zeta/SKILL.md`\n",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: '' != '- `zulu`: `beta/SKILL.md`\n- `mike`: `dir[47 chars]d`\n'
++ - `zulu`: `beta/SKILL.md`
++ - `mike`: `dir with space/SKILL.md`
++ - `alpha`: `zeta/SKILL.md`
+
+
+======================================================================
+FAIL: test_the_header_of_both_copies_hides_the_skill_from_the_model (test_skill_entry_points.Writing.test_the_header_of_both_copies_hides_the_skill_from_the_model) [.claude/skills]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 368, in test_the_header_of_both_copies_hides_the_skill_from_the_model
+    self.assertIn("disable-model-invocation: true", header)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'disable-model-invocation: true' not found in ['---', 'name: the-way-critique', "description: Use when a proposal needs a second reader. Use this checkout's own the-way."]
+
+======================================================================
+FAIL: test_the_header_of_both_copies_hides_the_skill_from_the_model (test_skill_entry_points.Writing.test_the_header_of_both_copies_hides_the_skill_from_the_model) [.agents/skills]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 368, in test_the_header_of_both_copies_hides_the_skill_from_the_model
+    self.assertIn("disable-model-invocation: true", header)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'disable-model-invocation: true' not found in ['---', 'name: the-way-critique', "description: Use when a proposal needs a second reader. Use this checkout's own the-way."]
+
+======================================================================
+FAIL: test_write_creates_both_copies_and_a_rerun_finds_them_current (test_skill_entry_points.Writing.test_write_creates_both_copies_and_a_rerun_finds_them_current)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "agent-instructions\test_skill_entry_points.py", line 346, in test_write_creates_both_copies_and_a_rerun_finds_them_current
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        written[".claude/skills/the-way-record-decision/SKILL.md"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        DECISION_ENTRY.encode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: b"---[114 chars]ay.\n---\n\n# the-way-record-decision\n\nThis [1505 chars]e.\n" != b"---[114 chars]ay.\ndisable-model-invocation: true\n---\n\n# [1698 chars]d`\n"
+
+----------------------------------------------------------------------
+Ran 53 tests in 14.639s
+
+FAILED (failures=6)
