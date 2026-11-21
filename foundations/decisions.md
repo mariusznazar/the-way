@@ -8624,7 +8624,13 @@ measures of context and cache use, the script that records the gate times or the
 process — the audit gives the measures of that tool for that cycle as unknown, with the reason that
 the cycle changed the tool that wrote them (the file of that tool is not read for that cycle, so no
 field of it is missing and no line `Error:` is given for it), and its other measures as they stand
-under the version it ran on.
+under the version it ran on. The audit shows each series as an image of all its cycles — what its
+kind carries, the answer Q3 and the fall standing only where two groups meet (WAY-417) — and,
+inside it, as a comparison before and after a change: the cycles on the versions that hold the
+change against those on the versions that lack it, both groups of that series, the version a cycle
+ran on, never its date, deciding its group; for the times of the gate both take only the runs that
+WAY-350 compares. That comparison is made for each fixed issue of the register of problems with a
+fix commit, and for no other change.
 
 The measures of how a cycle's agents use the context and the prompt cache of the model — the number
 of model calls, the size of each call's context, the tokens written to the cache and the tokens
@@ -8659,8 +8665,14 @@ takes its figures from the file of the other.
     it to the script and the file of those measures, and the stage report keeps the columns it has;
     the file of those measures gives for the reviewer of the whole change the bytes of the decision
     log that entered its context and in how many reads, and the bytes and reads of the index of
-    decisions it wrote, beside its other figures;
+    decisions it wrote, beside its other figures; a series of the cost is shown as the median cost of
+    all its cycles with a known cost, and, for a fixed issue with a fix commit, as that median over
+    its cycles on the versions that hold the fix against that over its cycles on the versions that
+    lack it;
   - violates: the cost or the number of remarks of one week is set against that of the week before;
+    the cycles before a fix are told from the cycles after it by the date of the fix; the image of a
+    series carries the answer Q3 or a fall; a change of the process that has no fixed issue with a
+    fix commit in the register gets a comparison before and after;
     a change adds to the stage report a column of a measure of context or cache use other than the
     tokens written to the cache by lifetime that the cost is priced from; the script of those
     measures writes its numbers into the stage report; the script that measures the cost takes the
@@ -8979,6 +8991,50 @@ only — the entry goes on collecting the cases of that command, and two of its 
 at the limit, so the next change that adds a case rebuilds the entry all the same; a decision for
 each case of the command that counts the audit — the cost of the division would be several times as
 large, and the cases do not change independently enough of one another to justify it.
+
+### WAY-417 — How are the answers Q1 to Q3 of the audit of the process given for a group of many cycles?
+
+The answer Q1 of the audit, whether a contradiction with the settlements came out only after the
+code was written (WAY-404), is given for each group of cycles — the cycles of one version of the
+process, the cycles of a whole series, the cycles on one side of a comparison before and after a
+change (WAY-339) — as the number of its cycles that answer yes, the number that answer no and the
+number that answer unknown, never as one word taken from them. The answer Q2 of such a group is the
+sum of the slices planned and the sum of the slices returned too large over its cycles, with the
+answer that those sums give.
+
+The answer Q3, whether the median cost of a group is lower than that of the group it is set against,
+and the fall of a mechanism measure or of a gate time, a median lower than that of the group it is
+set against, stand only where two groups meet: a version against the previous version of its series,
+the cycles after a fix against the cycles before it. The image of a series, which sets no two groups
+against each other, gives a measure as its median and the number of its cycles with a known value.
+
+- **Scope:** process-audit
+- **Based on:** none
+- **Relations:** derives from WAY-339 · derives from WAY-404
+- **Verification:** an agent compares a change with the decision:
+  - complies: a series of five cycles, two of which answer yes to Q1, two no and one unknown, is
+    shown with Q1 as `yes 2 · no 2 · unknown 1` in its image, in the row of each version for the
+    cycles of that version and on each side of a comparison before and after a fix; a series of the
+    cost shows in its image the median cost and the number of cycles with a known cost and no Q3,
+    and shows Q3 in the row that sets a version against the previous version of its series and in
+    the comparison before and after a fix;
+  - violates: the Q1 of a version or of a group reads `yes` because one of its cycles answers yes;
+    the rows of the versions of a series give Q1 as a word while its image gives it as numbers; the
+    image of a series carries the answer Q3 or a fall.
+- **Origin:** none
+
+*Rationale:* a word taken from many cycles reads `yes` as soon as one of them says yes, so in a long
+series it reads `yes` almost always and says nothing of the rest; the numbers show the state as it
+is, with the cycles that did not answer counted apart and not read as no. A fall and the answer Q3
+are a judgment of one group against another, and a group that stands alone has nothing to be judged
+against. One form of the answer in every row keeps a result from holding two forms of one answer.
+The price: a reader meets three numbers where a word stood, and no verdict at a glance for a group
+whose cycles disagree.
+*Rejected:* the rules that give an answer for a version applied to the whole group — the answer Q1
+of any longer series comes out `yes` almost always, since one cycle is enough, and the answer Q3 of
+one group has nothing to be compared with; numbers for the image of a series and for the
+comparisons before and after a change alone, with the answer Q1 of the rows of the versions as a
+word — two forms of the same answer in one result.
 
 ## Product guidelines and their rules
 
