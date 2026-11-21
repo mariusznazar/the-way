@@ -190,14 +190,17 @@ def failing_with(
     text of the message (after `separator`; a separator ending with a line end puts it at the start
     of its line), the rest at the start of their lines, and the directory's own `Ran` line comes
     after it. `then` is the report of a second failing test of the directory, printed after the
-    first one and ending with a blank line."""
+    first one and ending with a blank line; the directory then has two failing tests, and its `F`
+    line and its `Ran` and `FAILED` lines count two."""
+    failures = 2 if then else 1
     return (
-        f"== {directory}\nF\n{FAILURE_RULE}\n"
+        f"== {directory}\n{'F' * failures}\n{FAILURE_RULE}\n"
         f"FAIL: test_nested (test_nested.N.test_nested)\n{RULE}\n"
         "Traceback (most recent call last):\n"
         '  File "gate/test_nested.py", line 6, in test_nested\n'
         f"    self.assertEqual(0, 5, done.stdout)\n{separator}{nested}\n\n{then}{RULE}\n"
-        f"Ran 1 test in {seconds}s\n\nFAILED (failures=1)\n"
+        f"Ran {failures} test{'s' if failures > 1 else ''} in {seconds}s\n\n"
+        f"FAILED (failures={failures})\n"
     )
 
 
@@ -451,9 +454,9 @@ class NestedRunTest(GateTimesTest):
     ) -> None:
         # As in the test of two directories that each print a nested run, but the directory `y2` of
         # the second nested run prints 101 lines `    assert x == y` in its traceback. The
-        # description at the head of the script: the places of the last 100 different lines that
-        # hold `== ` after text are kept, each place once, so the 101 lines of `y2` are one place
-        # and the place of `x2`, the line before `y2`, stays. Five lines open a block and the
+        # description at the head of the script keeps "the last 100 different places of lines that
+        # hold `== ` after text, each place once", so the 101 lines of `y2` are one place and the
+        # place of `x2`, the line before `y2`, stays. Five lines open a block and the
         # run's own summary counts 3, so two are nested: `y1` and `y2`, as in that test.
         flood = "\n".join(["    assert x == y"] * 101)
         text = (
