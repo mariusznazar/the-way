@@ -465,8 +465,9 @@ contradicts a decision.
         the harness's model closest to it, recorded in the slice's row; where yours is the
         strongest, `same` and `strongest` are one class; where the harness cannot choose a model,
         dispatch as it allows and record that the class was not applied — with the slice's
-        section of the plan copied word for word and what its *Read* names, as the handoff
-        paragraph above and `task-cycle/skill/planning.md` give;
+        section of the plan copied word for word, what its *Read* names and the tests the plan
+        leaves failing at its base with their owners, as the handoff paragraph above and
+        `task-cycle/skill/planning.md` give;
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
         (each path pattern there covers every changed file it matches)
@@ -475,11 +476,13 @@ contradicts a decision.
         **Unread material**, its **Searches not found or unclear** and its own-work check. Uncommitted work returns to the executor to commit, and a check without
         its command or exit code, or a report missing one of these sections, returns the report for
         repair (WAY-148, WAY-164, WAY-260); any other mismatch goes as
-        information to the review that judges the slice and does not return it.
+        information to the review that judges the slice and does not return it; a failing test that
+        its report names and no *Goal* names is handled as `task-cycle/skill/planning.md` gives.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a
-        failing check of its slice, or fails the mechanical check gets one retry (WAY-229): record
+        failing check of its slice — a listed test that fails as the plan says is none (WAY-136) — or
+        fails the mechanical check gets one retry (WAY-229): record
         its last commit, reset the branch to the slice's base and dispatch a fresh executor one
         class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.

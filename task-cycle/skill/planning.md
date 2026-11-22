@@ -35,3 +35,8 @@ moved it, and an entry the foundation step wrote by its identifier and its new r
 of the plan again by its heading where the plan changed, and a range of code or tests again where an
 earlier slice changed its file. Give the current ranges beside the copied section; where they differ
 from the plan's, the current ones hold.
+
+The handoff of each later slice also lists the tests the plan leaves failing at its base, with their
+owners, as the *Goal* of each earlier slice names them, so that its executor reports a listed test
+that fails as expected. Where a report names a failing test that no *Goal* names, give it an owner by
+editing the plan before the next slice is dispatched.
