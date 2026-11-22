@@ -261,6 +261,119 @@ class DecisionIndexTest(unittest.TestCase):
         self.assertIn("A level is won when its goal is reached.", text)
         self.assertNotIn("GAME-01", text)
 
+    def test_a_decision_is_found_by_the_value_of_its_number_whatever_the_prefix_and_zeros(self):
+        # The log of a product has one prefix (WAY-18), so GAME-01 is the decision 1 however the
+        # number is written.
+        self.write_log(TWO_SECTIONS)
+        for written in ("1", "01", "001", "GAME-1", "GAME-01", "D-1", "D-01"):
+            with self.subTest(written=written):
+                result = self.index("--decision", written)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                text = read_text(self.out)
+                self.assertIn("Listed in full: 1. Listed by heading alone: 0.", text)
+                self.assertIn("### GAME-01 — How is a game saved?", text)
+                self.assertNotIn("is withdrawn", text)
+
+    def test_a_number_the_log_holds_neither_as_a_decision_nor_as_withdrawn_is_an_error(self):
+        self.write_log(TWO_SECTIONS)
+        self.assert_error(self.index("--decision", "9"), "9")
+        self.assert_error(self.index("--decision", "GAME-x"), "GAME-x")
+        self.assert_error(self.index("--decision", "GAME-1-2"), "GAME-1-2")
+
+    def withdrawn_log(self):
+        rows = (
+            "| GAME-00 | old | GAME-01 |\n"
+            "| GAME-04 | merged into the saving rules | GAME-05 |\n"
+            "| GAME-05 | dropped for lack of use | none |\n"
+            "| GAME-06 | its rule stands in `game.py` | none |\n"
+            "| GAME-07 | split in two | GAME-02 · GAME-03 |\n"
+            "| GAME-08 | renamed | GAME-00 |\n"
+            "| GAME-09 | looped | GAME-10 |\n"
+            "| GAME-10 | looped back | GAME-09 |\n"
+        )
+        log = TWO_SECTIONS.replace("| GAME-00 | old | GAME-01 |\n", rows, 1)
+        self.assertNotEqual(log, TWO_SECTIONS)
+        self.write_log(log)
+
+    def test_a_withdrawn_number_lists_its_successors_in_full_under_a_line_that_says_so(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-07")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = read_text(self.out)
+        self.assertIn(
+            "Listed in full: 2. Listed by heading alone: 0.\n"
+            "GAME-07 is withdrawn: split in two; its successors are listed in full\n",
+            text,
+        )
+        self.assertIn("### GAME-02 — How is a save loaded?", text)
+        self.assertIn("### GAME-03 — How is a level won?", text)
+        self.assertNotIn("### GAME-01", text)
+
+    def test_a_withdrawn_number_is_found_by_its_value_too(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "7")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "GAME-07 is withdrawn: split in two; its successors are listed in full\n",
+            read_text(self.out),
+        )
+
+    def test_a_withdrawn_number_with_no_successor_gives_a_line_and_exit_code_0(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-06")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "Listed in full: 0. Listed by heading alone: 0.\n"
+            "GAME-06 is withdrawn: its rule stands in `game.py`; it has no successor\n",
+            read_text(self.out),
+        )
+
+    def test_the_rest_of_the_selection_is_listed_beside_a_withdrawn_number_with_no_successor(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-06", "--decision", "GAME-02")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = read_text(self.out)
+        self.assertIn("Listed in full: 1. Listed by heading alone: 0.", text)
+        self.assertIn(
+            "GAME-06 is withdrawn: its rule stands in `game.py`; it has no successor\n", text
+        )
+        self.assertIn("### GAME-02 — How is a save loaded?", text)
+
+    def test_a_successor_that_is_withdrawn_leads_on_to_the_decisions_that_live(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-08")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = read_text(self.out)
+        self.assertIn(
+            "Listed in full: 1. Listed by heading alone: 0.\n"
+            "GAME-08 is withdrawn: renamed; its successor GAME-00 is withdrawn: old; "
+            "its successors are listed in full\n",
+            text,
+        )
+        self.assertIn("### GAME-01 — How is a game saved?", text)
+
+    def test_a_chain_of_withdrawn_numbers_that_ends_in_none_names_the_whole_chain(self):
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-04")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "Listed in full: 0. Listed by heading alone: 0.\n"
+            "GAME-04 is withdrawn: merged into the saving rules; its successor GAME-05 is "
+            "withdrawn: dropped for lack of use; it has no successor\n",
+            read_text(self.out),
+        )
+
+    def test_withdrawn_numbers_that_lead_back_to_each_other_end_the_walk(self):
+        # A crafted list of withdrawn numbers must not keep the script walking.
+        self.withdrawn_log()
+        result = self.index("--decision", "GAME-09")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "GAME-09 is withdrawn: looped; its successor GAME-10 is withdrawn: looped back; "
+            "it has no successor\n",
+            read_text(self.out),
+        )
+
     def test_sections_lists_each_section_with_its_sentence_and_entries(self):
         self.write_log(TWO_SECTIONS)
         result = self.index("--sections")

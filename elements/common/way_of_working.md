@@ -102,9 +102,12 @@ gives.
      open whole each whose question points to a bearing on the work.
    - A log without topical sections: select by the parts the work touches, `--part ID` for each, and
      the index stands in for reading the decisions found whole.
-   - Add with `--decision NUMBER` the decisions the task's *Decisions in play* or the work's source
+   - Add with `--decision ID` the decisions the task's *Decisions in play* or the work's source
      names, and each decision whose sentence a test the work alters holds by a line `decision:`
-     (WAY-02, WAY-150), as step 3 adds the invariants such a test cites.
+     (WAY-02, WAY-150), as step 3 adds the invariants such a test cites. The ID is found by the
+     value of its number, so `7`, `WAY-7` and `D-07` name one decision, and an ID the log has
+     withdrawn lists its successors in full under a line that says why it was withdrawn, or that
+     it has no successor, instead of ending in an error.
    - Read the index. Of its decisions, open whole only those the work changes, goes against or
      proposes another answer to, those the task or the work's source names, those whose sentence a
      test the work alters holds by a line `decision:` and those whose binding sentences leave open
