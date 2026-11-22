@@ -85,6 +85,9 @@ warnings, which stop nothing. Until the command runs one of the two checks, the 
 `AGENTS.md` tells the agent to run that check on its own and to report that the one command
 leaves it unchecked.
 
+A warning is the change's to fix as an error is: the product keeps the script at no warning, and a
+change that adds one corrects the path or names it where the script does not read it.
+
 A product whose repository is public adds a second check, that no file git tracks holds an absolute
 path on the author's disk or, in a Markdown file, a link to a private note (WAY-324). The
 installer writes none of it; the product writes two things, and its one command of tests then runs

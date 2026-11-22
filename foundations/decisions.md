@@ -1216,6 +1216,12 @@ records the precedence in that decision, and its request names it with the passa
 human accepted that give the outcome, for the human to accept at the merge (WAY-114); otherwise
 the agent stops and asks.
 
+A decision that narrows another — named `narrows` in its *Relations*, or one whose binding
+sentences go against a decision it derives from in a narrower area, which is a `narrows` left
+unrecorded — leaves the log only with the area where it prevails carried into that other decision
+or into the skill or template that takes the rule, or it stays. A decision whose *Rejected* refuses
+the move that would withdraw it stays.
+
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** none
@@ -1226,11 +1232,14 @@ the agent stops and asks.
     decision that prevails, and its request quotes those passages for the human to accept at the
     merge; an agent meets two such decisions and finds that what the human accepted does not give
     the outcome, or that the change may not write the decision that prevails, stops and asks for
-    the precedence;
+    the precedence; a change withdraws a decision that narrows another in the same change that
+    carries the area where it prevailed into that other decision or into the template that takes
+    the rule; a decision whose *Rejected* refuses its own withdrawal stays in the log;
   - violates: an agent settles the collision in favour of the newer decision; an agent infers
     that A prevails over C because A narrows B and B narrows C; the change records a precedence
     that no passage of what the human accepted gives, or one its request does not name with those
-    passages.
+    passages; a change withdraws a decision that narrows another, or goes against one it derives
+    from in a narrower area, and carries the area where it prevailed nowhere.
 - **Origin:** none
 
 *Rationale:* pairs record only what someone actually weighed; nothing follows along a chain, because
@@ -1241,7 +1250,10 @@ passages that give it, so the human at the merge tells an entry that follows fro
 human made from one the agent invented, and strikes the latter. Whether the accepted passages give
 the outcome stays the agent's judgment, and the quoted passages are what that judgment is checked
 by. The decision that prevails holds the record, so a collision whose prevailing decision the change
-cannot write, such as one outside its own repository, still goes to a human.
+cannot write, such as one outside its own repository, still goes to a human. A decision that
+narrows another holds the rule for the area where it prevails; where it leaves the log with that
+area carried nowhere, the area falls back to the decision it narrowed, which says the opposite, and
+nothing shows the loss until someone meets the area again.
 *Rejected:* one ranked list of principles (AWS tenets) — an order claimed for pairs nobody weighed;
 levels of authority over whole groups of decisions — a collision inside a level stays unresolved;
 the newest decision wins — the date of a decision is not its weight; every precedence recorded by
@@ -1253,7 +1265,10 @@ alone, and an entry named without the passages it follows from leaves the human 
 judge it; the precedence recorded in the decision that prevails with no passages in the request —
 the entry is stated, but not where its outcome comes from; one passage of what the human accepted
 in the singular — an outcome can come from two passages read together, and an agent reading the
-wording literally would stop where the outcome is given.
+wording literally would stop where the outcome is given; a check of the foundation over the relation
+`narrows` that keeps a decision with that relation from leaving the log — the decisions lost
+earlier were tied to the decision they went against by `derives from` alone, so such a check would
+not have caught them.
 
 ### WAY-30 — What happens when a change contradicts a decision?
 
@@ -3320,6 +3335,40 @@ a pointer from one kind's file to another for a rule both need — a reference t
 rule repeated in the file of each kind that needs it — the copies drift; a cap on the lines of a
 skill's main file, as the same guide recommends — a count says nothing of whether a step needs a
 rule (WAY-256).
+
+### WAY-418 — What does a change do with a warning of the script that checks the instruction files?
+
+The product keeps the script that checks its instruction files at no warning: a change that adds a
+warning corrects the path or names it where the script does not read it, as it corrects an error. A
+warning of the script in a run on the head of the change is a finding of the review of the whole
+change, Important and within the task's scope, with no comparison with the base.
+
+- **Scope:** instruction-files, task-cycle, installation
+- **Based on:** none
+- **Relations:** none
+- **Verification:** an agent compares a change with the decision:
+  - complies: a change that names a path in an instruction file makes the path exist, or names it
+    where the script does not read it, such as a block of code or text the script takes for no
+    path; the review of the whole change reads one warning of the script in its run on the head of
+    the change, grades it Important within the task's scope and does not look at the run on the
+    base;
+  - violates: a change leaves a warning of the script in an instruction file, and the review passes
+    it because the base held the same warning; the review compares the warnings of the base with
+    those of the head and keeps only the new ones; the review grades such a warning Minor, or lists
+    it among the findings outside the task's scope.
+- **Origin:** none
+
+*Rationale:* a warning left in place is counted again by every run and read by nobody, so a new
+warning that matters stands among the old ones and no one sees it; a warning corrected as an error
+is corrected by the change that made it, while the cause stands in its diff. A review that grades
+the warnings of the head alone needs no second copy of the repository, and the product that stands
+at no warning makes every warning of a run its change's own.
+*Rejected:* a comparison of the warnings of the base with those of the head in the review of the
+whole change — it treats the symptom, in one reviewer's run only, and needs two more copies of the
+repository; a rewrite of the paths of a server in a product's instruction files into blocks of
+code — each new path brings the noise back; a warning that blocks nothing, its finding going to the
+lower lists of the request's description — warnings pile up again, the noise this decision cures
+returns, and "as an error" becomes an empty phrase.
 
 ## Skills and agent types in sessions
 
@@ -6247,7 +6296,9 @@ without code, its attempt is discarded with the foundation entries it wrote, and
 the change. Every other change gets a plan written with the-way's skill `plan-task`, which divides
 it into slices and holds no code; the slices are made one after another in the plan's order, each by
 an agent of its own, and a slice that proves too large for it is discarded with its code and goes
-back to the planner to be split.
+back to the planner to be split. A slice of a plan may leave tests of the product failing that a
+later slice of the same plan makes pass, where its *Goal* names each such test file and the slice
+that makes it pass, and the failure of a test so named is no failing check of the slice that meets it.
 
 A one-author change is reviewed by an agent that did not make it; of a plan's slices, only one that
 touches a trust boundary or holds an operation that cannot be undone, as the plan marks it, gets a
@@ -6283,7 +6334,9 @@ grouping and its reason.
     has the checks the move breaks counted in the route judgment and handed to its author or
     planner; a change that rewrites many entries of the foundation from many notes has the slices
     without a review of their own reviewed in groups, in the plan's order, the grouping and its
-    reason recorded;
+    reason recorded; a slice leaves a test file failing that a later slice makes pass, and its
+    *Goal* names the file and that slice, and the executor of a later slice reports the test as
+    failing as expected, not as a failing check of its slice;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -6292,7 +6345,9 @@ grouping and its reason.
     goes without a review of its own; a blocking finding of the whole-change review leaves open
     whether it comes from a slice; the route of a task that moves the pin is judged before the
     move, or without the checks it breaks; reviews of groups of slices are dispatched with no
-    grouping and reason recorded, or by a measure in place of the orchestrator's judgment.
+    grouping and reason recorded, or by a measure in place of the orchestrator's judgment; a slice
+    leaves a test failing that no *Goal* of the plan names; the executor of a slice takes a test
+    that the plan lists as failing for a failing check of its slice and is retried for it.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -6309,7 +6364,9 @@ as when many entries of the foundation are rewritten from many notes, that one r
 it, and reviews of groups of the slices give each reviewer a part it can compare, at the cost of the
 reviews added. The price is that a defect of an early slice is found only after
 later slices were built on it, and its fix may reach them; naming the slice of each blocking finding
-shows what that price is. The checks a move of the pin breaks are work of the task that its
+shows what that price is. A plan that must leave every slice green joins slices that cannot be made
+apart; a failure that a *Goal* names and an owner takes keeps the red state planned, so that the
+executor of a later slice tells a test that fails as the plan says from a failure of its own. The checks a move of the pin breaks are work of the task that its
 document cannot name in advance, so a judgment without them misjudges the change's size.
 *Rejected:* a plan for every change, including a small plan used only to choose the route — it
 charges for division where none is needed; lighter preparation only for changes leaving the
@@ -6327,7 +6384,7 @@ for the reviews of groups of slices taken from a measure of the slices' size, su
 the tokens estimated for reading the slices of a group within the limit of one slice — a sum of
 such estimates is off in two directions: a file read by several slices counts several times, the
 diff that a reviewer reads counts not at all, and a slice left unchecked has no size at all; a
-status by which the planner returns work it cannot divide into slices — the pin moved before the route keeps the installer's output out of every plan; a measure of
+status by which the planner returns work it cannot divide into slices — the pin moved before the route keeps the installer's output out of every plan; a ban on a red state between the slices of a plan — on the slices of one game product it would join one slice in nine to its neighbour, too large for an agent (the measurement is that product's own, and its record is not open to a reader of this repository); a measure of
 the change's size, such as the number of files, deciding the route at the start of the cycle between
 one author and a plan — on changes of one game product of 1 500 to 3 000 lines, with five cycles on
 each route, a whole cycle with a plan cost 0.0182 USD per changed line (median cycle 39 USD) and a
@@ -6692,6 +6749,11 @@ under about four minutes as well, since Claude Code falls back to five minutes w
 spends usage credits. Where the harness states no cache lifetime, the agent waits as the harness
 allows.
 
+An agent that waits for such a command stops it where it has not ended 30 minutes after it started,
+the same for every product, and reports it as unfinished with the command and the last lines of its
+output in place of waiting on; the orchestrator enters the check that command stood for as one that
+did not run.
+
 - **Scope:** task-cycle
 - **Based on:** claude-code-prompt-cache-expiry · claude-code-prompt-cache-ttls ·
   claude-code-subagent-cache-default · claude-code-subagent-cache-ttl ·
@@ -6702,12 +6764,16 @@ allows.
   - complies: a reviewer in Claude Code starts the mutation run its review needs in the background
     and reads its output every four minutes until it ends, and returns its report after reading the
     result; the one author, whose cache lives an hour, reads the output of a build it started in the
-    background every four minutes as well;
+    background every four minutes as well; an executor whose test file has not ended 30 minutes after
+    it started stops it and reports it unfinished with the command and the last lines of its output,
+    and the orchestrator enters the check it stood for as one that did not run;
   - violates: a subagent in Claude Code waits ten minutes in one command for a test suite to end; an
     agent's next step after a wait past its cache's lifetime writes its whole context to the cache
     again; the one author waits twenty minutes in one command on the strength of its hour; the type
     of a reviewer or of an executor sets the hour; an agent ends its turn with a note that it still
-    waits for the tests it started in the background, in place of their result.
+    waits for the tests it started in the background, in place of their result; an executor waits
+    two hours in four-minute stretches for a test file that never ends; the orchestrator reads the
+    check of a run that was stopped as unfinished as passed.
 - **Origin:** none
 
 *Rationale:* an agent whose cache has expired pays at its next step to write its whole context
@@ -6723,9 +6789,11 @@ the account in *Rejected* does not cover a restart. The probes are this product'
 record is not open to a reader of this repository. A turn that ends while the command still runs
 hands the orchestrator a note that the agent waits in place of the result the command was run to
 give, so the check it stood for stays undone; the turn therefore ends once the result is read. The
-price: an hour that Claude Code ignores
+tests an agent of the cycle starts are those of its own slice or change, so a run that outlasts 30
+minutes is taken for one that hangs and not for a long test, and one limit serves every product.
+The price: an hour that Claude Code ignores
 while a subscription spends usage credits leaves the author at five minutes, so its waits keep to
-four.
+four, and a run that was only slow costs the check it stood for, which the cycle names as not run.
 *Rejected:* one wait to the command's end — it writes the whole context again after every wait past
 the lifetime; a longer cache lifetime for every agent — it raises the price of each step to spare
 the few that wait: counted on the session records of past cycles of one game product and of the-way
@@ -6734,7 +6802,13 @@ repository), an hour for every subagent raises the cost of a game cycle by 4.7% 
 cycle of the-way itself by 1.4%, while an hour for the one author alone lowers them by 0.9% and 3.6%
 and, where the author is not resumed, raises them by 0.7% and 2.2%; for the executor of a slice it
 raises the cost of a game cycle by 1.6%, and for the reviewer of the whole change by 0.4% in a game
-cycle and by 1.0% in a cycle of the-way itself.
+cycle and by 1.0% in a cycle of the-way itself; a limit that is a multiple of the time of the
+product's full tests — a first cycle of a new product has no time of its own to take it from, the
+agent needs one more file, and the time of the full tests is the wrong scale for the tests of one
+slice that the agent starts; a limit of 30 minutes that a dispatch may lengthen for a named command
+— a sentence to add when the first such case comes; the criterion that the output has not grown for
+three waits — a healthy run of a directory prints nothing until it ends, so silence would stop sound
+runs.
 
 ### WAY-260 — What does each task-cycle stage report about what it could not find or understand?
 

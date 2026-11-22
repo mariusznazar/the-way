@@ -24,7 +24,10 @@ from none — a gap of the plan, or the plan's *Foundation entries*. Grade each 
 out-of-scope finding of the slice reviews the dispatch lists as a finding of this review. List
 each Minor finding with its place in the code and its own words, and say in them where a Minor
 finding lies outside the task, so that the cycle can cut the Minor findings within the task from
-the report into the findings file of the fix that follows them (WAY-161).
+the report into the findings file of the fix that follows them (WAY-161). A warning of the check of
+the product's instruction files, which the product's one command runs as `installation/README.md`
+gives, in a run on the head of the change, is a finding of this review without a comparison with
+the base: Important, within the task's scope, since the product keeps that check at no warning.
 
 ## The structure of the code the change leaves
 
