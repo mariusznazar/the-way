@@ -799,6 +799,56 @@ class PassThroughTest(GateTimesTest):
             result = self.run_gate_at(NOW, ["gate-command-that-is-replaced"])
         self.assertEqual(128 + signal.SIGTERM, result.returncode, result.stderr)
 
+    @unittest.skipUnless(os.name == "nt", "only Windows gives a command file the suffix .cmd")
+    def test_a_command_that_is_a_cmd_file_on_the_path_runs_by_its_bare_name(self) -> None:
+        # `npm test` of a product's declaration names `npm`, a file `npm.cmd` on Windows; here the
+        # file is `gatecmd.cmd`, which prints two lines of a block and ends with the code 3.
+        bin_folder = self.root / "bin"
+        bin_folder.mkdir()
+        (bin_folder / "gatecmd.cmd").write_bytes(
+            b"@echo off\r\necho == a\r\necho Ran 1 test in 0.1s\r\nexit /b 3\r\n"
+        )
+        self.env["PATH"] = str(bin_folder) + os.pathsep + self.env["PATH"]
+        result = self.run_gate(["gatecmd", "test"])
+        self.assertEqual(3, result.returncode, result.stderr)
+        self.assertNotIn(b"Error:", result.stderr)
+        self.assertEqual(["a", "0.1"], self.rows()[0][4:])
+        self.assertEqual("3", self.rows()[0][1])
+
+    def finished_child(self) -> mock.Mock:
+        """A child process that printed nothing and ended with the code 0."""
+        read_end, write_end = os.pipe()
+        os.close(write_end)
+        child = mock.Mock()
+        child.stdout = os.fdopen(read_end, "rb")
+        child.wait.return_value = 0
+        return child
+
+    def test_the_first_word_is_started_as_the_path_which_finds_for_it(self) -> None:
+        # `which` is replaced, since what it finds depends on the platform: it finds the path
+        # C:/tools/npm.CMD for `npm`, and that path, not the word, is started, with the other
+        # words unchanged.
+        with (
+            mock.patch.object(gate_times.shutil, "which", return_value="C:/tools/npm.CMD"),
+            mock.patch.object(
+                gate_times.subprocess, "Popen", return_value=self.finished_child()
+            ) as popen,
+        ):
+            result = self.run_gate_at(NOW, ["npm", "test", "--silent"])
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(["C:/tools/npm.CMD", "test", "--silent"], popen.call_args.args[0])
+
+    def test_a_first_word_that_which_does_not_find_is_started_as_it_is(self) -> None:
+        with (
+            mock.patch.object(gate_times.shutil, "which", return_value=None),
+            mock.patch.object(
+                gate_times.subprocess, "Popen", return_value=self.finished_child()
+            ) as popen,
+        ):
+            result = self.run_gate_at(NOW, ["not-on-the-path", "a b", "--x"])
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(["not-on-the-path", "a b", "--x"], popen.call_args.args[0])
+
     def test_output_is_passed_on_unchanged_with_error_output_joined(self) -> None:
         data = "alpha é\r\n== a\nRan 1 test in 0.1s\n|bar \x00 end\n".encode("utf-8")
         result = self.run_gate(
@@ -975,6 +1025,17 @@ class ErrorTest(GateTimesTest):
     def test_command_that_cannot_start_is_an_error(self) -> None:
         result = self.run_gate(["gate-command-that-does-not-exist-anywhere"])
         self.assertError(result)
+
+    def test_a_first_word_that_names_no_file_to_start_is_an_error_not_a_traceback(self) -> None:
+        # The words come from the declaration of the gate, but a first word that is empty or names
+        # a directory of the folder the script runs in must end as a start failure that the
+        # script reports, as it does for a missing command, after resolving it for the platform.
+        (self.root / "a_directory").mkdir()
+        for word in ("", "a_directory"):
+            with self.subTest(word=word):
+                result = self.run_gate([word, "test"])
+                self.assertError(result)
+                self.assertNotIn(b"Traceback", result.stderr)
 
 
 class TextTest(GateTimesTest):
