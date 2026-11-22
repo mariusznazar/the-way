@@ -3346,7 +3346,8 @@ change, Important and within the task's scope, with no comparison with the base.
 - **Scope:** instruction-files, task-cycle, installation
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares a change with the decision:
+- **Verification:** invariants: installation-agents-md-warnings. An agent compares a change with the
+  part no invariant and no test holds:
   - complies: a change that names a path in an instruction file makes the path exist, or names it
     where the script does not read it, such as a block of code or text the script takes for no
     path; the review of the whole change reads one warning of the script in its run on the head of

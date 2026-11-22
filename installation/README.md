@@ -284,7 +284,8 @@ python -B gate/run_tests.py installation
 
 The tests use temporary Git repositories to check the preview, refusal, exact gitlink, repeated
 run, preservation of existing files, a conflicting wrapper in either skill directory, entry points
-and guidance without a commit, guidance naming only scripts and README sections the pinned commit holds, a moved
+and guidance without a commit, guidance naming only scripts and README sections the pinned commit holds, the root `AGENTS.md` of
+a fresh installation drawing no warning of `instruction-files/check_instructions.py`, a moved
 pin — the gitlink alone where nothing else reads differently, and otherwise the block rewritten in
 place, every entry point rewritten, one created for an added skill and one deleted for a removed
 skill, with the product's own skill kept —, a preview of a move that changes nothing, a move
