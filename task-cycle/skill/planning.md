@@ -13,7 +13,7 @@ returns `reserved`, read `task-cycle/skill/reserved_return.md` and follow it. Re
 plan for coverage of every item of the task, every row of *Settlements to record*, every
 projected entry the task carries and every check the move of the pin carried, fidelity to the
 task's sources, no code, checks that can actually run and a size report in which every slice
-fits.
+fits, by ranges of a file or not.
 Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what the
 slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62), a
 guideline file — then run the size script on the plan again; a slice it now reports too large
