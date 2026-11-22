@@ -333,7 +333,7 @@ The installation command, with its own code, neither writes nor deletes anything
 
 ## installation-agents-md-warnings
 
-In a product made by a full run of the installation command, before any skill of the-way has run in it, the script that checks instruction files, run on the product's root, reports no warning on the root `AGENTS.md`.
+In a product made by a full run of the installation command, before any skill of the-way has run in it, the script that checks instruction files, run on the product's root, reports no warning on the root `AGENTS.md` that the run created.
 
 - **Method:** test
 - **Rests on:** none

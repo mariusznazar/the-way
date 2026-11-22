@@ -450,8 +450,12 @@ class InstallTest(unittest.TestCase):
         self.assertRegex(
             lines[-1] if lines else "", r"^\d+ error, \d+ warn, \d+ info$", result.stdout
         )
-        # A finding reads `LEVEL check file:line message`; only the warnings on the main file count.
-        self.assertEqual([line for line in lines if re.match(r"WARN +\S+ AGENTS\.md:", line)], [])
+        # A finding reads `LEVEL check file:line message`; only the warnings and the errors on the
+        # main file count. An error is the same break in a worse form: it stops the one command of
+        # a product, where a warning stops nothing.
+        self.assertEqual(
+            [line for line in lines if re.match(r"(?:ERROR|WARN) +\S+ AGENTS\.md:", line)], []
+        )
 
     def installed_from_a_remote(self) -> Path:
         """Install from a bare remote of the-way, commit the product and return the remote."""
