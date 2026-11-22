@@ -1,0 +1,29 @@
+Probe of point 5.1 of the task, text with a quotation mark, in instruction-files/check_instructions.py
+at ae37fca3. The input is repo/AGENTS.md beside this file: one line with three texts in backticks
+that hold a quotation mark — the shell idiom '\'' (single quotation marks), "\"" (double) and a path
+between typographic single quotation marks.
+
+Command, from the root of the worktree at ae37fca3:
+
+    python -B instruction-files/check_instructions.py .runs/task-cycles/poprawki-z-przegladu-cykli-22-11/reports/review-whole-probe-quote/repo
+
+Output (exit code 0):
+
+    WARN  dead-path AGENTS.md:1 `'\''` does not exist
+    WARN  dead-path AGENTS.md:1 `‘docs/a.md’` does not exist
+    INFO  size AGENTS.md:0 1 lines, 18 words
+    0 error, 2 warn, 1 info
+
+Only the ASCII double quotation mark takes a text out of the lookup.
+
+The same script, base (2a2f4106) and head, on the product the task's Context point 5 counts
+(the local checkout of loop2 at 4f33f53d, read only):
+
+    python -B <base or head>/instruction-files/check_instructions.py <loop2 checkout>
+
+base: 0 error, 143 warn, 7 info; head: 0 error, 21 warn, 118 info. Of the 17 warnings the task
+counts as text that is no path, the base lists 7 addresses `#/...`, 2 `.css`, 2
+`restrict,command="/usr/local/bin/loop2-deploy"` and 6 `'\''` (loop2-deploy/SKILL.md lines 431,
+503 and 588, in .claude/skills and .agents/skills). The head still warns on the 6 `'\''`, the only
+ones of the 17 that hold no `#`, `=`, `,` or bare extension — so "text with a quotation mark" of
+point 5.1 is the case meant for them.

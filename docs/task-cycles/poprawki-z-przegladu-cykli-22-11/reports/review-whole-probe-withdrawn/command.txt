@@ -1,0 +1,12 @@
+Probe of the reading of the list of withdrawn identifiers by elements/common/decision_index.py
+(WAY-344). The log beside this file, foundations/decisions.md, holds a table "Withdrawn identifiers"
+whose column "Successors" is missing; GAME-00 was merged into GAME-01.
+
+Command, from the root of the worktree at ae37fca3:
+
+    python -B elements/common/decision_index.py --decision GAME-00 --output .runs/review-whole/probe-index.md .runs/task-cycles/poprawki-z-przegladu-cykli-22-11/reports/review-whole-probe-withdrawn
+
+Result: exit code 0, no error; the index holds the line
+"GAME-00 is withdrawn: merged into GAME-01; it has no successor" and lists no decision in full.
+The missing column is read as an empty list of successors, so the script says the number has no
+successor, where WAY-344 asks for exit code 2 and a message that names the file and the field.
