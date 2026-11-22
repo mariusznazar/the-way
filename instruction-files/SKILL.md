@@ -268,7 +268,9 @@ Pitfalls:
 
 The check script settles, without reading the content:
 
-- every path, skill and command pointed to exists;
+- every path, skill and command pointed to exists; an absolute path outside the repository and the
+  home directory, named in a file of the repository, names a place on another machine, such as a
+  server the product deploys to, and is listed as not checked, not as missing;
 - the two pitfalls of the main file, `@path` and `CLAUDE.local.md`;
 - every `.mdc` rule has a YAML header;
 - the pointing line the layout of files loaded with some files gives an `AGENTS.md` in a

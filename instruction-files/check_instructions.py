@@ -9,6 +9,16 @@ of every file. The files whose name ends in `.md` or `.mdc` that the root `AGENT
 names in backticks are checked as well; a file named by its path elsewhere in the text is not
 followed, though the glossary term and the invariant count it.
 
+A path in backticks that names nothing is a warning, and a warning is the change's to fix as an
+error is. Three cases are noted at the level `info` instead, since nothing is shown to be missing: a
+path in a sentence that says it does not load or exist; in a file of the repository, an absolute
+path outside the repository and the home directory, which names a place on another machine, such
+as a server the product deploys to, and is listed as not checked; and a relative path whose first
+part stands as a line of its own in the `.gitignore` at the root, which the product may make while
+it runs. In a file given with --file, absolute paths are checked as in any other. Text that is no
+path is not looked up: text that begins with `#` (an address in an app), holds a quotation mark,
+`=` or `,`, or is an extension alone, such as `.css`.
+
 Usage, from anywhere:
 
     python -B <the-way>/instruction-files/check_instructions.py [ROOT] [--file PATH ...]
@@ -98,6 +108,7 @@ EXTENSIONS = (
     "csv",
 )
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
+BARE_EXTENSION = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
 # Phrases saying that the thing a sentence names does not load, is not read or does not exist,
 # in the languages of the instruction files met so far. A file in another language keeps the
@@ -428,10 +439,12 @@ def says_not_loaded(paragraph):
 
 
 def looks_like_path(token):
-    if not token or token.startswith(("-", "http://", "https://", "$")):
+    if not token or token.startswith(("-", "http://", "https://", "$", "#")):
+        return False  # an address in an app, such as #/konta, is no path
+    if any(c in token for c in '*<>{}|$…"=,') or token.endswith("()"):
         return False
-    if any(c in token for c in "*<>{}|$…") or token.endswith("()"):
-        return False
+    if BARE_EXTENSION.fullmatch(token):
+        return False  # an extension alone, such as .css
     if token.startswith("/") and "/" not in token[1:] and "." not in token:
         return False  # a slash command such as /park
     first = re.split(r"[\\/]", token)[0]
@@ -535,9 +548,80 @@ def resolve(token, bases):
     )
 
 
-def check_dead_paths(text, shown_as, bases, in_repo, findings):
+def elsewhere(token, root):
+    """True when TOKEN is an absolute path outside ROOT and the home directory: it names a place on
+    another machine, such as a server, as far as a file of the repository says. The path is only
+    compared with the two directories as text; no file system is asked."""
+    if is_relative(token) or token.startswith("~"):
+        return False
+    path = os.path.normpath(bare_path(token))
+    home = os.path.normpath(os.path.expanduser("~"))
+    return not inside(path, os.path.normpath(root)) and not inside(path, home)
+
+
+def ignored_names(root, findings):
+    """The names that stand alone on a line of the `.gitignore` at ROOT, as a set: a name, a name
+    with a slash before or after it. A comment, a negation, a pattern and a line that holds a
+    slash inside name no part. The file is read as any file of the repository is read: a link that
+    leads out of ROOT is not followed, and what is no regular UTF-8 text names nothing."""
+    path = os.path.join(root, ".gitignore")
+    if not os.path.isfile(path):
+        return frozenset()
+    if os.path.islink(path) and leads_out(path, root):
+        findings.append(
+            Finding("info", "read", ".gitignore", 0, "a link out of the repository, not read")
+        )
+        return frozenset()
+    text = read_text(path, ".gitignore", findings)
+    names = set()
+    for line in (text or "").splitlines():
+        name = line.strip().removeprefix("/").removesuffix("/")
+        if name and not name.startswith(("#", "!")) and not any(c in name for c in "/*?[\\"):
+            names.add(name)
+    return frozenset(names)
+
+
+@dataclass(frozen=True)
+class Repository:
+    """What a check of a file of the repository knows of it: its root and the names its root
+    `.gitignore` gives alone on a line."""
+
+    root: str
+    ignored: frozenset
+
+
+def dead_path_note(token, repository, said_not_loaded):
+    """(level, message) of a path in backticks that names nothing. Only a path that is shown to be
+    missing is a warning: the others are noted. SAID_NOT_LOADED is whether its sentence says that
+    it does not load or exist."""
+    text = shown(token)
+    parts = segments(token)
+    if said_not_loaded:
+        return "info", f"`{text}` is named in a sentence saying it does not load or exist"
+    if repository is None and is_relative(token) and len(parts) == 1:
+        return "info", (
+            f"`{text}` is a name relative to a place the sentence gives, and "
+            "does not resolve from the file, the repository or the home directory"
+        )
+    if repository is not None and elsewhere(token, repository.root):
+        return "info", (
+            f"`{text}` is an absolute path outside the repository and the home directory, "
+            "a place on another machine, not checked"
+        )
+    if repository is not None and is_relative(token) and parts and parts[0] in repository.ignored:
+        return "info", (
+            f"`{text}` stands under a name the .gitignore at the root gives alone, which the "
+            "product may make while it runs, not checked"
+        )
+    return "warn", f"`{text}` does not exist"
+
+
+def check_dead_paths(text, shown_as, bases, repository, findings):
     """The paths in backticks of TEXT that name nothing, as findings. A network path is only
-    noted, and a sentence that says the path does not load lowers the level."""
+    noted, and a sentence that says the path does not load lowers the level. REPOSITORY is None for
+    a file outside the repository; for a file of it, an absolute path outside the repository and
+    the home directory is noted as not checked, and so is a relative path under a name its
+    `.gitignore` gives alone."""
     for paragraph in paragraphs(text):
         not_loaded = None
         for number, line in paragraph:
@@ -560,38 +644,10 @@ def check_dead_paths(text, shown_as, bases, in_repo, findings):
                     continue
                 if not_loaded is None:
                     not_loaded = says_not_loaded(paragraph)
-                if not_loaded(number, match.start()):
-                    findings.append(
-                        Finding(
-                            "info",
-                            "dead-path",
-                            shown_as,
-                            number,
-                            f"`{shown(token)}` is named in a sentence saying it does not load or "
-                            "exist",
-                        )
-                    )
-                elif not in_repo and is_relative(token) and len(segments(token)) == 1:
-                    findings.append(
-                        Finding(
-                            "info",
-                            "dead-path",
-                            shown_as,
-                            number,
-                            f"`{shown(token)}` is a name relative to a place the sentence gives, and "
-                            "does not resolve from the file, the repository or the home directory",
-                        )
-                    )
-                else:
-                    findings.append(
-                        Finding(
-                            "warn",
-                            "dead-path",
-                            shown_as,
-                            number,
-                            f"`{shown(token)}` does not exist",
-                        )
-                    )
+                level, message = dead_path_note(
+                    token, repository, not_loaded(number, match.start())
+                )
+                findings.append(Finding(level, "dead-path", shown_as, number, message))
 
 
 def check_at_imports(text, shown_as, name, file_dir, agents_beside, findings):
@@ -664,7 +720,7 @@ def check_emphasis(text, shown_as, findings):
         )
 
 
-def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False):
+def check_file(path, shown_as, root, findings, repository=None, agents_beside=False):
     """The per-file checks of one instruction file; returns its text, or None when it was not
     read."""
     text = read_text(path, shown_as, findings)
@@ -672,8 +728,10 @@ def check_file(path, shown_as, root, findings, in_repo=True, agents_beside=False
         return None
     name = os.path.basename(path)
     file_dir = os.path.dirname(path)
-    bases = [file_dir, root] if in_repo else [file_dir, root, os.path.expanduser("~")]
-    check_dead_paths(text, shown_as, bases, in_repo, findings)
+    bases = (
+        [file_dir, root] if repository is not None else [file_dir, root, os.path.expanduser("~")]
+    )
+    check_dead_paths(text, shown_as, bases, repository, findings)
     check_at_imports(text, shown_as, name, file_dir, agents_beside, findings)
     check_emphasis(text, shown_as, findings)
     if name != "SKILL.md":
@@ -866,10 +924,11 @@ def check(root, extra=()):
     findings = []
     if root is None:
         for path in extra:
-            check_file(path, path, None, findings, in_repo=False)
+            check_file(path, path, None, findings)
         return findings
     root = os.path.abspath(root)
     files = instruction_files(root, findings)
+    repository = Repository(root, ignored_names(root, findings))
     present = set(files)
     texts = {}
     seen = set()
@@ -878,17 +937,17 @@ def check(root, extra=()):
         seen.add(os.path.realpath(path))
         folder = rel[: -len(os.path.basename(rel))]
         texts[rel] = check_file(
-            path, rel, root, findings, agents_beside=folder + "AGENTS.md" in present
+            path, rel, root, findings, repository, agents_beside=folder + "AGENTS.md" in present
         )
         if rel.startswith(".cursor/rules/") or "/.cursor/rules/" in rel:
             check_cursor_rule(rel, texts[rel], findings)
     for real, rel in pointed_files(root, texts, files):
         seen.add(real)
-        check_file(real, rel, root, findings)
+        check_file(real, rel, root, findings, repository)
     for path in extra:
         if os.path.realpath(path) in seen:
             continue
-        check_file(path, path, root, findings, in_repo=False)
+        check_file(path, path, root, findings)
     check_layout(root, files, texts, findings)
     return findings
 
