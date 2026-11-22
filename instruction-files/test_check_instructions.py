@@ -332,6 +332,38 @@ class TextThatIsNoPath(CheckTestCase):
         )
         self.assertEqual(dead(repo.findings()), [])
 
+    def test_text_in_apostrophes_or_in_typographic_quotation_marks_is_no_path(self):
+        # The shell idiom that closes a single-quoted text and opens it again is a quote, a
+        # backslash and two quotes; the typographic marks are written as escapes.
+        idiom = "'" + chr(92) + "''"
+        tokens = [
+            idiom,
+            "‘docs/gone.md’",
+            "“docs/gone.md”",
+            "„docs/gone.md”",
+            "«docs/gone.md»",
+            "'docs/gone.md",
+            "docs/gone.md'",
+        ]
+        repo = self.repo(
+            {"AGENTS.md": "Write " + ", ".join(f"`{token}`" for token in tokens) + ".\n"}
+        )
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_an_apostrophe_inside_a_name_leaves_it_a_path(self):
+        # `O'Brien/gone.md` names nothing, and a name with an apostrophe inside is looked up like
+        # any other: a warning where it is missing, sound where it exists.
+        repo = self.repo(
+            {
+                "AGENTS.md": "Read `O'Brien/gone.md` and `O'Brien/here.md`.\n",
+                "O'Brien/here.md": "x\n",
+            }
+        )
+        self.assertEqual(
+            [(f.level, f.line) for f in dead(repo.findings())],
+            [("warn", 1)],
+        )
+
     def test_a_path_that_names_nothing_is_still_reported_beside_them(self):
         repo = self.repo({"AGENTS.md": "Open `#/konta` and `docs/gone.md` and `.css`.\n"})
         self.assertEqual(

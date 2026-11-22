@@ -16,8 +16,10 @@ path outside the repository and the home directory, which names a place on anoth
 as a server the product deploys to, and is listed as not checked; and a relative path whose first
 part stands as a line of its own in the `.gitignore` at the root, which the product may make while
 it runs. In a file given with --file, absolute paths are checked as in any other. Text that is no
-path is not looked up: text that begins with `#` (an address in an app), holds a quotation mark,
-`=` or `,`, or is an extension alone, such as `.css`.
+path is not looked up: text that begins with `#` (an address in an app), holds `"`, a typographic
+quotation mark (`“ ” „ ‘ ’ ‚ « »`), `=` or `,`, begins or ends with an apostrophe (as the `'\\''`
+of a shell does), or is an extension alone, such as `.css`; an apostrophe inside a name, as in
+`O'Brien/notes.md`, leaves it a path.
 
 Usage, from anywhere:
 
@@ -108,6 +110,11 @@ EXTENSIONS = (
     "csv",
 )
 FILE_LIKE = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")$", re.IGNORECASE)
+# The quotation marks that take a token out of the lookup wherever they stand: the typographic ones
+# of the languages of the instruction files met so far, the ASCII `"` being in the list of
+# characters above. The ASCII apostrophe does so only at either end of the token, since a name
+# such as `O'Brien/notes.md` is a path.
+QUOTES = "“”„‚‘’«»"
 BARE_EXTENSION = re.compile(r"\.(" + "|".join(EXTENSIONS) + r")", re.IGNORECASE)
 LINE_SUFFIX = re.compile(r":\d+(:\d+)?$")
 # Phrases saying that the thing a sentence names does not load, is not read or does not exist,
@@ -443,6 +450,8 @@ def looks_like_path(token):
         return False  # an address in an app, such as #/konta, is no path
     if any(c in token for c in '*<>{}|$…"=,') or token.endswith("()"):
         return False
+    if any(c in token for c in QUOTES) or token.startswith("'") or token.endswith("'"):
+        return False  # text in quotation marks, such as ''' of a shell, is no path
     if BARE_EXTENSION.fullmatch(token):
         return False  # an extension alone, such as .css
     if token.startswith("/") and "/" not in token[1:] and "." not in token:
