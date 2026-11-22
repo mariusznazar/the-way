@@ -41,8 +41,10 @@ a part no decision names yet is no error.
 Exit code: 0 when it has written the file. 2 with `Error: <message>` on stderr and nothing written
 for a log it cannot read, a section the log does not hold, a number the log holds neither as a
 decision nor as a withdrawn identifier, a selection given no switch, a decision that lacks *Scope* or a heading of the form
-`### NUMBER — question`, and a section that lacks its sentence in the list of sections; the message
-names the file, the entry and the field.
+`### NUMBER — question`, a section that lacks its sentence in the list of sections and, where
+`--decision` is given, a list of withdrawn identifiers that lacks the column Identifier, Why or
+Successors, a row of it with no value in Why or Successors, or a successor that is neither a decision
+nor a withdrawn identifier nor `none`; the message names the file, the entry and the field.
 """
 
 import argparse
@@ -57,6 +59,7 @@ sys.dont_write_bytecode = True
 
 DECISIONS = "foundations/decisions.md"
 WITHDRAWN = "Withdrawn identifiers"
+WITHDRAWN_COLUMNS = ("Identifier", "Why", "Successors")
 TITLE = "# decision_index.py: index of the decisions of the log"
 TITLE_SECTIONS = "# decision_index.py: list of the sections of the log"
 SWITCHES = "--part, --section, --decision or --sections"
@@ -132,27 +135,54 @@ def number_value(text):
 
 
 def withdrawn_numbers(lines):
-    """{value of the number: Withdrawn} of the log's list of withdrawn identifiers; a row whose
-    identifier is no number is left out, as the check of the foundation reports it."""
+    """{value of the number: Withdrawn} of the log's list of withdrawn identifiers, read by the
+    names of its columns. A list that lacks the column Identifier, Why or Successors, a row that
+    has no cell in one of them, and a row whose Why or Successors cell is empty stop the script,
+    with a message that names the file and the field; a row whose identifier is no number is left
+    out, as the check of the foundation reports it. A log with no such list gives {}."""
     found = {}
     for _, heading, body in blocks(lines, "## "):
         if heading[3:].strip() != WITHDRAWN:
             continue
-        for _, line in body:
-            if not line.strip().startswith("|"):
+        rows = [
+            [cell.strip() for cell in line.strip().strip("|").split("|")]
+            for _, line in body
+            if line.strip().startswith("|")
+        ]
+        header = rows[0] if rows else []
+        place = {}
+        for column in WITHDRAWN_COLUMNS:
+            if column not in header:
+                raise Failure(
+                    "%s: the list of withdrawn identifiers has no column %s" % (DECISIONS, column)
+                )
+            place[column] = header.index(column)
+        for cells in rows[1:]:
+            if all(re.fullmatch(r":?-+:?", cell) for cell in cells):
                 continue
-            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-            value = number_value(cells[0])
-            if value is not None and value not in found:
-                why, successors = (cells + ["", ""])[1:3]
-                found[value] = Withdrawn(cells[0], why, items(successors))
+            value = (
+                number_value(cells[place["Identifier"]])
+                if len(cells) > place["Identifier"]
+                else None
+            )
+            if value is None or value in found:
+                continue
+            row = cells[place["Identifier"]]
+            for column in ("Why", "Successors"):
+                if len(cells) <= place[column] or not cells[place[column]]:
+                    raise Failure(
+                        "%s: the withdrawn identifier %s has no value in the column %s"
+                        % (DECISIONS, row, column)
+                    )
+            found[value] = Withdrawn(row, cells[place["Why"]], items(cells[place["Successors"]]))
     return found
 
 
 def chain(value, withdrawn, living):
     """(the withdrawn entries met from the withdrawn number VALUE on, in the order met, each once;
-    the numbers of the decisions that live at the end of the chain). A successor that is neither a
-    decision nor withdrawn, or `none`, ends its branch."""
+    the numbers of the decisions that live at the end of the chain). The successor `none` ends its
+    branch; any other successor that is neither a decision nor withdrawn stops the script, since
+    reading it as no successor would say that no decision took the place of the number."""
     met, reached, seen, stack = [], [], set(), [value]
     while stack:
         current = stack.pop()
@@ -167,6 +197,12 @@ def chain(value, withdrawn, living):
                     reached.append(living[following])
             elif following in withdrawn:
                 stack.append(following)
+            elif successor != "none":
+                raise Failure(
+                    "%s: the successor %s of the withdrawn identifier %s is neither a decision "
+                    "nor a withdrawn identifier"
+                    % (DECISIONS, successor, withdrawn[current].identifier)
+                )
     return met, reached
 
 
@@ -271,7 +307,8 @@ def run(args):
     sections, decisions = parse_log(lines)
     if args.sections:
         return sections_text(sections, decisions)
-    numbers, withdrawn = resolve_decisions(args.decision, decisions, withdrawn_numbers(lines))
+    listed = withdrawn_numbers(lines) if args.decision else {}
+    numbers, withdrawn = resolve_decisions(args.decision, decisions, listed)
     full, alone = select(sections, decisions, args.part, args.section, numbers)
     return selection_text(full, alone, unnamed_parts(decisions, args.part), withdrawn)
 

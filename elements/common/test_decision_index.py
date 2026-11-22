@@ -374,6 +374,84 @@ class DecisionIndexTest(unittest.TestCase):
             read_text(self.out),
         )
 
+    def withdrawn_table_error(self, header, row, *names):
+        """The log with the list of withdrawn identifiers given a header and a row, and the error
+        that `--decision GAME-00` ends with."""
+        table = TWO_SECTIONS.replace(
+            "| Identifier | Why | Successors |\n|---|---|---|\n", header, 1
+        )
+        table = table.replace("| GAME-00 | old | GAME-01 |\n", row, 1)
+        self.assertNotEqual(table, TWO_SECTIONS)
+        self.write_log(table)
+        self.assert_error(self.index("--decision", "GAME-00"), "foundations/decisions.md", *names)
+
+    # decision: WAY-344 "Each reading of a file that the rule covers has one test"
+    def test_a_list_of_withdrawn_identifiers_without_the_column_successors_is_an_error(self):
+        self.withdrawn_table_error(
+            "| Identifier | Why |\n|---|---|\n", "| GAME-00 | old |\n", "Successors"
+        )
+
+    # decision: WAY-344 "A script of the-way that reads a file an agent or a human writes checks"
+    def test_a_column_under_another_name_is_a_missing_column(self):
+        self.withdrawn_table_error(
+            "| Identifier | Reason | Successors |\n|---|---|---|\n",
+            "| GAME-00 | old | GAME-01 |\n",
+            "Why",
+        )
+        self.withdrawn_table_error(
+            "| Identifier | Why | Replaced by |\n|---|---|---|\n",
+            "| GAME-00 | old | GAME-01 |\n",
+            "Successors",
+        )
+
+    def test_a_row_with_no_cell_or_an_empty_cell_in_a_needed_column_is_an_error(self):
+        # An absent value is no empty list of successors and no empty reason.
+        self.withdrawn_table_error(
+            "| Identifier | Why | Successors |\n|---|---|---|\n",
+            "| GAME-00 | old |\n",
+            "GAME-00",
+            "Successors",
+        )
+        self.withdrawn_table_error(
+            "| Identifier | Why | Successors |\n|---|---|---|\n",
+            "| GAME-00 | old | |\n",
+            "GAME-00",
+            "Successors",
+        )
+        self.withdrawn_table_error(
+            "| Identifier | Why | Successors |\n|---|---|---|\n",
+            "| GAME-00 | | GAME-01 |\n",
+            "GAME-00",
+            "Why",
+        )
+
+    def test_a_successor_that_names_nothing_the_log_holds_is_an_error(self):
+        self.withdrawn_table_error(
+            "| Identifier | Why | Successors |\n|---|---|---|\n",
+            "| GAME-00 | old | GAME-77 |\n",
+            "GAME-77",
+            "GAME-00",
+        )
+
+    def test_the_columns_are_found_by_their_names_wherever_they_stand(self):
+        log = TWO_SECTIONS.replace(
+            "| Identifier | Why | Successors |\n|---|---|---|\n| GAME-00 | old | GAME-01 |\n",
+            "| Successors | Identifier | Why |\n|---|---|---|\n| GAME-01 | GAME-00 | old |\n",
+            1,
+        )
+        self.assertNotEqual(log, TWO_SECTIONS)
+        self.write_log(log)
+        result = self.index("--decision", "GAME-00")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(
+            "GAME-00 is withdrawn: old; its successors are listed in full\n", read_text(self.out)
+        )
+
+    def test_a_list_that_other_switches_do_not_need_is_not_read(self):
+        log = TWO_SECTIONS.replace("| Identifier | Why | Successors |", "| Identifier | Why |", 1)
+        self.write_log(log)
+        self.assertEqual(self.index("--section", "Saving").returncode, 0)
+
     def test_sections_lists_each_section_with_its_sentence_and_entries(self):
         self.write_log(TWO_SECTIONS)
         result = self.index("--sections")
