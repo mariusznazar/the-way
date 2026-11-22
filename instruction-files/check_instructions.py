@@ -10,13 +10,15 @@ names in backticks are checked as well; a file named by its path elsewhere in th
 followed, though the glossary term and the invariant count it.
 
 A path in backticks that names nothing is a warning, and a warning is the change's to fix as an
-error is. Three cases are noted at the level `info` instead, since nothing is shown to be missing: a
-path in a sentence that says it does not load or exist; in a file of the repository, an absolute
-path outside the repository and the home directory, which names a place on another machine, such
-as a server the product deploys to, and is listed as not checked; and a relative path whose first
-part stands as a line of its own in the `.gitignore` at the root, which the product may make while
-it runs. In a file given with --file, absolute paths are checked as in any other. Text that is no
-path is not looked up: text that begins with `#` (an address in an app), holds `"`, a typographic
+error is. Four cases are noted at the level `info` instead, since nothing is shown to be missing: a
+path in a sentence that says it does not load or exist; in a file given with --file, a name of one
+part that does not resolve from the file, the repository or the home directory, as it is relative
+to a place the sentence gives; in a file of the repository, an absolute path outside the repository
+and the home directory, which names a place on another machine, such as a server the product
+deploys to, and is listed as not checked; and, in a file of the repository, a relative path whose
+first part stands as a line of its own in the `.gitignore` at the root, which the product may make
+while it runs. In a file given with --file, absolute paths are checked as in any other. Text that
+is no path is not looked up: text that begins with `#` (an address in an app), holds `"`, a typographic
 quotation mark (`“ ” „ ‘ ’ ‚ « »`), `=` or `,`, begins or ends with an apostrophe (as the `'\\''`
 of a shell does), or is an extension alone, such as `.css`; an apostrophe inside a name, as in
 `O'Brien/notes.md`, leaves it a path.
@@ -451,7 +453,7 @@ def looks_like_path(token):
     if any(c in token for c in '*<>{}|$…"=,') or token.endswith("()"):
         return False
     if any(c in token for c in QUOTES) or token.startswith("'") or token.endswith("'"):
-        return False  # text in quotation marks, such as ''' of a shell, is no path
+        return False  # text in quotation marks, such as '\'' of a shell, is no path
     if BARE_EXTENSION.fullmatch(token):
         return False  # an extension alone, such as .css
     if token.startswith("/") and "/" not in token[1:] and "." not in token:
