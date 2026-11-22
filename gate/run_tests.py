@@ -15,8 +15,9 @@ tests fail under the load, which can still take a new version of the runner with
 process. Each directory's report is printed whole when its run ends, under a line
 `== <directory>` and never mixed with another's, so the reports stand in the order the
 directories end, not in the order of their names. A last line counts the tests and names each
-directory that failed, in the order of
-their names. Given DIRECTORY, it runs only the tests
+directory that failed, in the order of their names; the tests of a directory are the number on the
+last line `Ran <n> tests` of its report, so that the report of a nested run that a test printed, an
+earlier such line, adds nothing. Given DIRECTORY, it runs only the tests
 `python -m unittest discover -s DIRECTORY -p "test_*.py"` finds there, and `--jobs` changes nothing.
 The report for a person is the one `unittest` prints. A skipped test is named there, with its
 reason, before the closing lines. With `--slowest N`, each directory's report also lists its N
@@ -140,17 +141,19 @@ def run_all(jobs=None, slowest=None, stream=None):
                 if output and not output.endswith(b"\n"):
                     stream.write(b"\n")
                 stream.flush()
-                ran, last = False, b""
+                ran, last = None, b""
                 for line in output.split(b"\n"):
                     counted = RAN.match(line)
                     if counted:
-                        ran = True
-                        count += int(counted.group(1))
+                        # The last such line is the directory's own: an earlier one is the report
+                        # of a nested run that a test printed.
+                        ran = int(counted.group(1))
                     if line.strip():
                         last = line.strip()
+                count += ran or 0
                 if code != 0:
                     failed[directory] = "%s (exit code %d)" % (directory, code)
-                elif not ran or not last.startswith(b"OK"):
+                elif ran is None or not last.startswith(b"OK"):
                     # An exit code of 0 counts only beside the report of a run unittest
                     # ended with OK.
                     failed[directory] = "%s (exit code 0 without unittest's OK)" % directory

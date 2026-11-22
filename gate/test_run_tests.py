@@ -279,6 +279,19 @@ class EveryDirectory(RunnerTestCase):
             output.rstrip().endswith("3 tests in 2 directories; every directory passed"), output
         )
 
+    def test_the_tests_of_a_directory_are_the_last_ran_line_of_its_report_not_the_sum(self):
+        # One of the two tests prints the report of a nested run, as the test of a runner does in
+        # its failure message: a line `Ran 5 tests in 0.001s` before the directory's own `Ran 2
+        # tests`. The directory ran 2 tests, so the last line counts 2 and the nested 5 does not.
+        nested = "print('Ran 5 tests in 0.001s', file=__import__('sys').stderr)"
+        self.write("a/test_nested.py", module(nested, "self.assertTrue(True)"))
+        self.track("a/test_nested.py")
+        code, output = self.runner()
+        self.assertEqual(code, 0, output)
+        self.assertTrue(
+            output.rstrip().endswith("2 tests in 1 directories; every directory passed"), output
+        )
+
     def test_a_failing_directory_fails_the_run_and_the_rest_still_run(self):
         # invariant: gate-exit-code
         self.write("a/test_one.py", module("self.assertEqual(1, 2)"))
