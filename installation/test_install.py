@@ -72,9 +72,9 @@ BLOCK = (
     "`python -B .the-way/elements/common/foundation_check.py` checks this repository's "
     "foundation, its guidelines and the part each file git tracks belongs to. The skills of the-way "
     "keep their working files under `.runs/`, which `.gitignore` must keep ignored.\n\n"
-    "Until the part map has its first parts, `foundation_check.py` reports every file git tracks "
-    "as claimed by no part; that is expected, and it is not a pass. The first map is written with "
-    "`the-way-update-part-map`.\n\n"
+    "Until the part map has its first parts, `.the-way/elements/common/foundation_check.py` "
+    "reports every file git tracks as claimed by no part; that is expected, and it is not a pass. "
+    "The first map is written with `the-way-update-part-map`.\n\n"
     "Before a merge, run every test of this repository with its one command, which runs "
     "`python -B .the-way/elements/common/foundation_check.py` too, and report what failed and what "
     "stayed unchecked. The one command runs "
@@ -430,6 +430,28 @@ class InstallTest(unittest.TestCase):
                 shown.stdout.replace("\r\n", "\n"),
                 f"{path} holds no section {section}",
             )
+
+    def test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning(self) -> None:
+        # invariant: installation-agents-md-warnings
+        # Source: WAY-418 (a product keeps the script that checks its instruction files at no
+        # warning) and the task installer-foundation-check-full-path, To do item 2 and question 1
+        # (a human's judgement): the product comes from a full installation and no skill has run
+        # in it, so it has no `.runs/` directory. Break caught: a sentence of the block that names
+        # a path the product does not hold, or an installation that leaves `.runs/` out of
+        # `.gitignore`; either gives a warning on AGENTS.md.
+        applied = self.install("--apply", input_text="y\n")
+        self.assertEqual(applied.returncode, 0, applied.stderr)
+        self.assertFalse((self.product / ".runs").exists())  # precondition: no skill has run
+        check = self.product / ".the-way" / "instruction-files" / "check_instructions.py"
+        result = command(sys.executable, "-B", str(check), str(self.product), cwd=self.product)
+        lines = result.stdout.splitlines()
+        # The last line counts the findings (the description at the head of the script), so a run
+        # that stopped early or printed nothing does not pass for a run with no warning.
+        self.assertRegex(
+            lines[-1] if lines else "", r"^\d+ error, \d+ warn, \d+ info$", result.stdout
+        )
+        # A finding reads `LEVEL check file:line message`; only the warnings on the main file count.
+        self.assertEqual([line for line in lines if re.match(r"WARN +\S+ AGENTS\.md:", line)], [])
 
     def installed_from_a_remote(self) -> Path:
         """Install from a bare remote of the-way, commit the product and return the remote."""

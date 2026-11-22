@@ -331,6 +331,16 @@ The installation command, with its own code, neither writes nor deletes anything
 - **Part:** installation
 - **Violated:** no
 
+## installation-agents-md-warnings
+
+In a product made by a full run of the installation command, before any skill of the-way has run in it, the script that checks instruction files, run on the product's root, reports no warning on the root `AGENTS.md`.
+
+- **Method:** test
+- **Rests on:** none
+- **Derives from:** WAY-418
+- **Part:** installation · instruction-files
+- **Violated:** no
+
 ## project-plan-state-evidence
 
 For each task of a valid handed-over plan with an approved definition, the plan-state reader
