@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning (test_install.InstallTest.test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs/review-fix-1/head/installation/test_install.py", line 456, in test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        [line for line in lines if re.match(r"(?:ERROR|WARN) +\S+ AGENTS\.md:", line)], []
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: ['ERROR at-import AGENTS.md:10 @docs/rules[96 chars]ing'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'ERROR at-import AGENTS.md:10 @docs/rules.md. — a punctuation mark right after the path stops Claude Code from loading it, without a warning'
+
++ []
+- ['ERROR at-import AGENTS.md:10 @docs/rules.md. — a punctuation mark right '
+-  'after the path stops Claude Code from loading it, without a warning']
+
+----------------------------------------------------------------------
+Ran 1 test in 9.081s
+
+FAILED (failures=1)

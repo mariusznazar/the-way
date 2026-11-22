@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning (test_install.InstallTest.test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File ".runs/review-whole/head/installation/test_install.py", line 454, in test_a_fresh_installation_leaves_the_main_agents_md_without_a_warning
+    self.assertEqual([line for line in lines if re.match(r"WARN +\S+ AGENTS\.md:", line)], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['WARN  dead-path AGENTS.md:10 `.the-way/e[48 chars]ist'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'WARN  dead-path AGENTS.md:10 `.the-way/elements/common/foundation_checks.py` does not exist'
+
++ []
+- ['WARN  dead-path AGENTS.md:10 `.the-way/elements/common/foundation_checks.py` '
+-  'does not exist']
+
+----------------------------------------------------------------------
+Ran 1 test in 8.104s
+
+FAILED (failures=1)
