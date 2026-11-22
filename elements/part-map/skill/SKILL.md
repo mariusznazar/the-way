@@ -37,8 +37,9 @@ the search of the foundation adds for this element.
   directory or for one kind of file, as the template's "Assigning files" says, and propose it
   together with the files it claims and the files it takes from another part.
 - *Depends on*: write what the part may depend on, not what the code reaches for today, and never
-  rewrite it to fit the code (WAY-225). Where the two differ, the difference goes to the human in
-  step 4; a dependency of a part the human accepts as it stands is written through
+  rewrite it to fit the code (WAY-225). A dependency a settlement of the task names, or the human
+  allows, is written into it, as the template's "Allowed dependencies" says. Where the two differ,
+  the difference goes to the human in step 4; a dependency of a part the human accepts as it stands is written through
   `record-invariant` as an invariant that the one part does not depend on the other, marked
   violated, as the template's "Allowed dependencies" says.
 - *Trust boundary*: only files that take in what the template's "Trust boundary" names — data from

@@ -113,7 +113,9 @@ scope are yours.
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
   about four minutes, reading its output between them, and you end your turn only after it has
-  ended and you have read its result (WAY-255).
+  ended and you have read its result (WAY-255). A run that has not ended 30 minutes after it
+  started you stop and report as unfinished, with its command and the last lines of its output, in
+  place of waiting on; the check it stood for is unverified, and says why (WAY-255, WAY-160).
 - Do the whole review yourself. Never dispatch a subagent.
 
 ## 3. Grade
@@ -162,7 +164,8 @@ List under **Declined to judge** each behaviour you considered and set aside as 
 one line each with the reason; an empty list means you set nothing aside. A finding that goes
 beyond the task says so in its own words and counts as out of scope, whatever its grade; so does
 each line of Declined to judge. Each finding carries its place in the code, what is wrong, why it
-matters and the evidence: the test, check or line that shows it.
+matters and the evidence: the test, check or line that shows it, or the path in `reports/` of the
+probe that shows it.
 
 Each blocking finding also carries its mark of contradiction with the settlements, written under the
 finding as `Contradiction: yes — <the entry or the settlement>` or as `Contradiction: no`. It is

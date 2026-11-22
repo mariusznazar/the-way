@@ -319,6 +319,173 @@ class OutsideRepository(CheckTestCase):
         self.assertEqual([f.level for f in dead(found)], ["warn"])
 
 
+class TextThatIsNoPath(CheckTestCase):
+    def test_an_address_in_the_app_a_quoted_text_an_assignment_and_a_list_are_no_paths(self):
+        # Each token in backticks is made of an address of the app, text with a quotation mark, a
+        # `=` or a `,`, or an extension alone, with a `/` or a file extension that would
+        # make a path of it.
+        repo = self.repo(
+            {
+                "AGENTS.md": 'Open `#/konta`, `"docs/gone.md"`, `docs/gone.md=1`, '
+                "`docs/a.md,docs/b.md` and style it in `.css`.\n"
+            }
+        )
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_text_in_apostrophes_or_in_typographic_quotation_marks_is_no_path(self):
+        # The shell idiom that closes a single-quoted text and opens it again is a quote, a
+        # backslash and two quotes; the typographic marks are written as escapes.
+        idiom = "'" + chr(92) + "''"
+        tokens = [
+            idiom,
+            "‘docs/gone.md’",
+            "“docs/gone.md”",
+            "„docs/gone.md”",
+            "«docs/gone.md»",
+            "'docs/gone.md",
+            "docs/gone.md'",
+        ]
+        repo = self.repo(
+            {"AGENTS.md": "Write " + ", ".join(f"`{token}`" for token in tokens) + ".\n"}
+        )
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_an_apostrophe_inside_a_name_leaves_it_a_path(self):
+        # `O'Brien/gone.md` names nothing, and a name with an apostrophe inside is looked up like
+        # any other: a warning where it is missing, sound where it exists.
+        repo = self.repo(
+            {
+                "AGENTS.md": "Read `O'Brien/gone.md` and `O'Brien/here.md`.\n",
+                "O'Brien/here.md": "x\n",
+            }
+        )
+        self.assertEqual(
+            [(f.level, f.line) for f in dead(repo.findings())],
+            [("warn", 1)],
+        )
+
+    def test_a_path_that_names_nothing_is_still_reported_beside_them(self):
+        repo = self.repo({"AGENTS.md": "Open `#/konta` and `docs/gone.md` and `.css`.\n"})
+        self.assertEqual(
+            [(f.level, f.line) for f in dead(repo.findings())],
+            [("warn", 1)],
+        )
+
+
+class AbsolutePathsElsewhere(CheckTestCase):
+    """An absolute path outside the repository and the home directory, in a file of the
+    repository, names a place on another machine: noted as not checked, never as missing."""
+
+    def test_a_missing_absolute_path_outside_both_is_noted_as_not_checked(self):
+        repo = self.repo({"AGENTS.md": "Deploy with `/srv/app/deploy.sh` and `C:/srv/app/x.md`.\n"})
+        found = dead(repo.findings())
+        self.assertEqual([(f.level, f.line) for f in found], [("info", 1), ("info", 1)])
+        for finding in found:
+            self.assertIn("not checked", finding.message)
+            self.assertNotIn("does not exist", finding.message)
+
+    def test_an_absolute_path_that_exists_is_sound(self):
+        repo = self.repo({"AGENTS.md": "x\n"}, outside={"elsewhere/x.md": "x\n"})
+        write(repo.root, "AGENTS.md", f"Read `{repo.base.replace(os.sep, '/')}/elsewhere/x.md`.\n")
+        self.assertEqual(dead(repo.findings()), [])
+
+    def test_a_missing_absolute_path_inside_the_repository_stays_a_warning(self):
+        repo = self.repo({"AGENTS.md": "x\n"})
+        write(repo.root, "AGENTS.md", f"Read `{repo.root.replace(os.sep, '/')}/docs/gone.md`.\n")
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_a_missing_absolute_path_inside_the_home_directory_stays_a_warning(self):
+        repo = self.repo({"AGENTS.md": "x\n"})
+        write(repo.root, "AGENTS.md", f"Read `{self.home.replace(os.sep, '/')}/gone/a.md`.\n")
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_a_missing_path_of_the_home_directory_written_with_a_tilde_stays_a_warning(self):
+        repo = self.repo({"AGENTS.md": "Add the key to `~/.ssh/authorized_keys`.\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_a_missing_relative_path_stays_a_warning(self):
+        repo = self.repo({"AGENTS.md": "Read `srv/app/deploy.sh`.\n"})
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+    def test_in_a_file_given_with_file_an_absolute_path_is_checked_as_before(self):
+        repo = self.repo({"AGENTS.md": "x\n"}, outside={"g/CLAUDE.md": "Read `/srv/app/x.md`.\n"})
+        found = dead(repo.findings(extra=[os.path.join(repo.base, "g", "CLAUDE.md")]))
+        self.assertEqual([f.level for f in found], ["warn"])
+
+
+class NamesInTheIgnoreFile(CheckTestCase):
+    """A relative path whose first part stands alone on a line of the root .gitignore may be made
+    while the product runs: noted, never reported as missing."""
+
+    def levels(self, repo):
+        return [(f.level, f.message.split("`")[1]) for f in dead(repo.findings())]
+
+    def test_a_path_under_a_name_that_stands_alone_in_the_ignore_file_is_noted(self):
+        repo = self.repo(
+            {
+                ".gitignore": "# made at run time\nscreenshots/\n/frames.json\nsaved-game.js\n",
+                "AGENTS.md": "See `screenshots/a.png`, `frames.json`, `saved-game.js`, "
+                "`other/b.md`.\n",
+            }
+        )
+        self.assertEqual(
+            self.levels(repo),
+            [
+                ("info", "screenshots/a.png"),
+                ("info", "frames.json"),
+                ("info", "saved-game.js"),
+                ("warn", "other/b.md"),
+            ],
+        )
+
+    def test_a_line_that_is_a_path_a_pattern_a_comment_or_a_negation_names_no_first_part(self):
+        repo = self.repo(
+            {
+                ".gitignore": "docs/generated/\n*.md\n# docs\n!docs\n",
+                "AGENTS.md": "See `docs/gone.md`.\n",
+            }
+        )
+        self.assertEqual(self.levels(repo), [("warn", "docs/gone.md")])
+
+    def test_only_the_ignore_file_at_the_root_counts(self):
+        repo = self.repo(
+            {
+                "sub/.gitignore": "docs\n",
+                "AGENTS.md": "See `docs/gone.md`.\n",
+            }
+        )
+        self.assertEqual(self.levels(repo), [("warn", "docs/gone.md")])
+
+    # invariant: check-instructions-refuses-outside-links
+    def test_an_ignore_file_that_is_a_link_out_of_the_repository_is_not_read(self):
+        repo = self.repo({"AGENTS.md": "See `docs/gone.md`.\n"}, outside={"ignore": "docs\n"})
+        make_file_link(
+            self, os.path.join(repo.base, "ignore"), os.path.join(repo.root, ".gitignore")
+        )
+        self.assertEqual(self.levels(repo), [("warn", "docs/gone.md")])
+        reported = [f for f in repo.findings() if f.file == ".gitignore"]
+        self.assertEqual(
+            [(f.level, f.message) for f in reported],
+            [("info", "a link out of the repository, not read")],
+        )
+
+    def test_an_ignore_file_that_is_a_directory_or_no_text_stops_nothing(self):
+        for name, content in (("dir", None), ("utf16", b"\xff\xfed\x00o\x00c\x00s\x00\n\x00")):
+            with self.subTest(name=name):
+                files = {"AGENTS.md": "See `docs/gone.md`.\n"}
+                if content is not None:
+                    files[".gitignore"] = content
+                repo = self.repo(files)
+                if content is None:
+                    os.makedirs(os.path.join(repo.root, ".gitignore"))
+                self.assertEqual(self.levels(repo), [("warn", "docs/gone.md")])
+
+    def test_a_name_from_the_ignore_file_does_not_lower_an_absolute_or_a_home_path(self):
+        repo = self.repo({".gitignore": "docs\n", "AGENTS.md": "x\n"})
+        write(repo.root, "AGENTS.md", f"Read `{repo.root.replace(os.sep, '/')}/docs/gone.md`.\n")
+        self.assertEqual([f.level for f in dead(repo.findings())], ["warn"])
+
+
 class CursorRules(CheckTestCase):
     def test_mdc_without_header_is_an_error(self):
         repo = self.repo({".cursor/rules/a.mdc": "Rule text.\n"})
@@ -658,7 +825,9 @@ class NetworkShapesOffWindows(CheckTestCase):
         calls = self.stub_lookup()
         for token, trace in (("///host/x.md", "host"), ("/host/x.md", "host")):
             calls.clear()
-            self.assertEqual([level for level, _ in self.levels(token)], ["warn"], token)
+            # Looked up, and found missing: the path is absolute and outside the repository and the
+            # home directory, so the level is `info` (task point 5.2), not `warn` as it was.
+            self.assertEqual([level for level, _ in self.levels(token)], ["info"], token)
             self.assertTrue(any(trace in call and "x.md" in call for call in calls), token)
 
     def test_cygwin_and_msys_are_judged_like_windows(self):
@@ -677,7 +846,8 @@ class NetworkShapesOffWindows(CheckTestCase):
         # that of macOS would flag the lookup this test expects.
         self.platform("linux")
         calls = self.stub_lookup()  # on Linux this path is looked up like any other
-        self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["warn"])
+        # Absolute and outside the repository and the home directory: `info` (task point 5.2).
+        self.assertEqual([level for level, _ in self.levels("/net/host/x.md")], ["info"])
         self.assertTrue(any("host" in call and "x.md" in call for call in calls))
 
     def test_a_network_shaped_root_or_file_is_a_usage_error(self):
@@ -694,7 +864,8 @@ class NetworkShapesOffWindows(CheckTestCase):
     def test_a_mapped_drive_letter_is_looked_up(self):
         self.platform("linux")
         calls = self.stub_lookup()
-        self.assertEqual([level for level, _ in self.levels("Z:/share/x.md")], ["warn"])
+        # Absolute and outside the repository and the home directory: `info` (task point 5.2).
+        self.assertEqual([level for level, _ in self.levels("Z:/share/x.md")], ["info"])
         self.assertTrue(any("share" in call and "x.md" in call for call in calls))
 
 

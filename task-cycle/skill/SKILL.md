@@ -186,9 +186,9 @@ request link and set the task's state.
    its local run: it goes through
    `task-cycle/gate_times.py` from that checkout, with
    `--output ../task-cycles/<task-slug>/gate_times.md`, which reaches the worktree's record
-   directory from a checkout directly under its `.runs/`. In a product that
-   checkout gets its dependencies installed, as the product's own rules give, and its `.the-way`
-   populated before the checks run; otherwise they fail for that reason and not on the base. Where
+   directory from a checkout directly under its `.runs/`. In a product that checkout is made as
+   "Working copies" below gives for a checkout that runs checks, so that they fail on the base and
+   not for a missing `.the-way` or dependency. Where
    the cycle took the list and did not run the gate on the base, and its final gate (step 10, or
    the CI run of step 12) fails on a test outside the list, run the failing tests on the base in such a checkout to tell a fault
    of the change from a fault already there, and write the result into *Verification*; the run
@@ -287,7 +287,10 @@ runs no test or other check and returns no check result), and the report's path;
 questions and concerns, each reach beyond its handoff, its **Unread material** — what its handoff
 names, or for the reviewer of the whole change its own selection, that stayed unread or was read in
 part, or `none` — and **Searches not found or unclear** — each thing looked for and not found or
-unclear, or `none` — stand in the report (WAY-148, WAY-260). In every report read
+unclear, or `none` — stand in the report (WAY-148, WAY-260). A run that a report says its agent
+stopped as unfinished 30 minutes after it started (WAY-255) goes into the record's Events with its
+command, and the check it stood for is entered as one that did not run, which the request names and
+never reads as passed (WAY-160). In every report read
 its checks, reaches, unread material, searches and working copies; read the rest of it where the
 status is other than `done`. A reach shows where your selection fell short: add what it found to the
 handoffs that follow. Where a report says that something its handoff names stayed unread or was read
@@ -355,14 +358,17 @@ An agent of the cycle that makes a working copy to check something — a worktre
 clone, a script, a screenshot, a prepared input of a test — makes it in a directory of its own
 directly under the ignored `.runs/` of the task's worktree, the directory its handoff names; never
 in the system's temporary directory, in the scratch directory of a session or in the main checkout
-of the repository. The screenshot that a screenshot tool, such as the Playwright server, saves by
+of the repository. In a product, a worktree or checkout made to run checks gets its `.the-way`
+populated, and the dependencies those checks need installed as the product's own rules give,
+before they run; otherwise they fail for that reason. The screenshot that a screenshot tool, such as the Playwright server, saves by
 itself under its session's directory is moved into the agent's directory and the original removed,
 except a screenshot that is shown to the human: that one goes where `task-cycle/change/ui_check.md`
 says, to the place the product's foundation settles for screenshots, and into the agent's directory
 only where no such place is settled. The files that a product's own tools and tests make by
 themselves are no working copy of the agent and stay outside this rule. Before the agent returns,
 each time it returns, it removes its copy — a worktree with `git worktree remove --force`, then
-`git worktree prune` — keeps in `reports/` beside its report what the report needs, and states in
+`git worktree prune` — keeps in `reports/` beside its report what the report needs, the input and
+command of a probe that shows a finding among them, and states in
 the report where each copy stood and that it was removed. Where a removal fails, the agent finishes
 all the same and names in the report the remainder, with its full path and the reason it stayed. It
 removes a copy, as any directory, by its path written out in full in the command, never through a
@@ -459,21 +465,24 @@ contradicts a decision.
         the harness's model closest to it, recorded in the slice's row; where yours is the
         strongest, `same` and `strongest` are one class; where the harness cannot choose a model,
         dispatch as it allows and record that the class was not applied — with the slice's
-        section of the plan copied word for word and what its *Read* names, as the handoff
-        paragraph above and `task-cycle/skill/planning.md` give;
+        section of the plan copied word for word, what its *Read* names and the tests the plan
+        leaves failing at its base with their owners, as the handoff paragraph above and
+        `task-cycle/skill/planning.md` give;
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
         (each path pattern there covers every changed file it matches)
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
-        command and exit code, its **Unread material**, its **Searches not found or unclear** and
-        its own-work check. Uncommitted work returns to the executor to commit, and a check without
+        command and exit code, and the failures its report names against those the plan lists, its
+        **Unread material**, its **Searches not found or unclear** and its own-work check. Uncommitted work returns to the executor to commit, and a check without
         its command or exit code, or a report missing one of these sections, returns the report for
         repair (WAY-148, WAY-164, WAY-260); any other mismatch goes as
-        information to the review that judges the slice and does not return it.
+        information to the review that judges the slice and does not return it; a failing test that
+        its report names and no *Goal* names is handled as `task-cycle/skill/planning.md` gives.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a
-        failing check of its slice, or fails the mechanical check gets one retry (WAY-229): record
+        failing check of its slice — a listed test that fails as the plan says is none (WAY-136) — or
+        fails the mechanical check gets one retry (WAY-229): record
         its last commit, reset the branch to the slice's base and dispatch a fresh executor one
         class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
         report and what failed. The retry goes through sub-steps 3 and 5 as any executor does.

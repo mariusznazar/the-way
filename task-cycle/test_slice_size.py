@@ -86,6 +86,68 @@ class SliceSizeTest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(self.row(output, "1")[1:6], ["1", "29", "12", "fits", "—"])
 
+    def test_a_slice_too_large_only_for_one_changed_file_fits_by_its_ranges(self) -> None:
+        # The changed code file is "one\n" (4 characters) and a line of 400 000: counted whole it
+        # is 160 002 tokens (400 005 / 2.5 = 160 002), over the limit; its range 1-1 is 4
+        # characters. The guide is 50 characters, so the slice reads 54 characters by ranges,
+        # 22 tokens (54 / 2.5 = 21.6, rounded up).
+        self.file("task-cycle/big.py", "one\n" + "x" * 400_000 + "\n")
+        self.file("docs/guide.md", "g" * 50)
+        code, output, _ = self.run_plan(
+            "### Slice 1 — Change a line of a big file\n"
+            "- **Change:** `task-cycle/big.py`\n"
+            "- **Read:** `task-cycle/big.py:1-1` · `docs/guide.md`\n"
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            self.row(output, "1")[1:6],
+            [
+                "1",
+                "54",
+                "22",
+                "fits by ranges of task-cycle/big.py",
+                "counted whole it reads about 160022 tokens, more than 150000",
+            ],
+        )
+
+    def test_a_slice_still_too_large_by_the_ranges_of_the_changed_file_is_too_large(self) -> None:
+        # The range 2-2 is the line of 400 000 characters: 160 000 tokens even by ranges.
+        self.file("task-cycle/big.py", "one\n" + "x" * 400_000 + "\n")
+        code, output, _ = self.run_plan(
+            "### Slice 1\n- **Change:** `task-cycle/big.py`\n- **Read:** `task-cycle/big.py:2-2`\n"
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4], "too large")
+
+    def test_a_slice_too_large_for_two_changed_files_is_too_large(self) -> None:
+        # Each file is 160 002 tokens whole, so ranging either alone leaves the slice over the limit.
+        for name in ("a.py", "b.py"):
+            self.file(name, "one\n" + "x" * 400_000 + "\n")
+        code, output, _ = self.run_plan(
+            "### Slice 1\n- **Change:** `a.py` · `b.py`\n- **Read:** `a.py:1-1` · `b.py:1-1`\n"
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4], "too large")
+
+    def test_a_changed_file_that_read_names_whole_is_not_counted_by_ranges(self) -> None:
+        self.file("big.py", "one\n" + "x" * 400_000 + "\n")
+        code, output, _ = self.run_plan(
+            "### Slice 1\n- **Change:** `big.py`\n- **Read:** `big.py` · `big.py:1-1`\n"
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4], "too large")
+
+    def test_a_slice_over_the_limit_of_files_stays_too_large_where_ranges_fit_the_reading(
+        self,
+    ) -> None:
+        self.file("big.py", "one\n" + "x" * 400_000 + "\n")
+        others = " · ".join(f"`f{number}.py`" for number in range(10))
+        code, output, _ = self.run_plan(
+            f"### Slice 1\n- **Change:** `big.py` · {others}\n- **Read:** `big.py:1-1`\n"
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(self.row(output, "1")[4], "too large")
+
     def test_changed_file_that_read_names_whole_and_by_ranges_counts_whole(self) -> None:
         # "one\ntwo\nthree\n" is 14 characters; the range 2-2 would count 4.
         self.file("foundations/decisions.md", "one\ntwo\nthree\n")

@@ -7,8 +7,11 @@ Usage, from the root of the repository:
     python -B task-cycle/gate_times.py --output PATH [--registry DIR] -- COMMAND [ARG ...]
 
 COMMAND is the gate the product declares, run with no shell in the current directory, its error output
-joined to its output. Everything it prints goes to stdout unchanged and as it comes; the script keeps
-only the lines it reads for the times. The exit code is the command's own.
+joined to its output. Its first word is resolved first by `shutil.which`, which on Windows finds a
+`.cmd` or `.bat` file by its bare name, so that `npm` of a declaration runs `npm.cmd` (Windows starts
+such a file through its command interpreter); the word stays as it is where `which` finds nothing.
+Everything it prints goes to stdout unchanged and as it comes; the script keeps only the lines it
+reads for the times. The exit code is the command's own.
 
 The times: the total wall time of the run, in seconds to three decimals; and for each block that
 `gate/run_tests.py` opens with a line `== <directory>`, the time of the first line `Ran <n> tests in
@@ -59,6 +62,7 @@ import argparse
 import os
 import re
 import secrets
+import shutil
 import subprocess
 import sys
 import time
@@ -401,6 +405,14 @@ def rows(started: str, code: int, total: str, others: str, times: Times) -> list
     return ["| " + " | ".join(head + pair) + " |" for pair in listed]
 
 
+def resolve(command: list[str]) -> list[str]:
+    """The command with its first word replaced by the path `shutil.which` finds for it, so that
+    on Windows, which starts no `.cmd` or `.bat` file by its bare name, `npm` runs `npm.cmd`; the
+    command as it is where `which` finds nothing, so that the failure to start stays the system's."""
+    found = shutil.which(command[0])
+    return [found, *command[1:]] if found else command
+
+
 def exit_code(code: int) -> int:
     return code if code >= 0 else 128 - code
 
@@ -432,7 +444,7 @@ def main(argv: list[str] | None = None) -> int:
 
     clock = time.perf_counter()
     try:
-        child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        child = subprocess.Popen(resolve(command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     except OSError as error:
         if own is not None:
             own.unlink(missing_ok=True)

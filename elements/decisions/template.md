@@ -221,6 +221,11 @@ A field stays in the template only while someone or something reads it (WAY-05).
   to the new decision, and the older one loses it in the same change (WAY-19).
 - A decision no longer needed leaves the log in the change that ends it: its number goes to the
   list of withdrawn numbers, and that change rewrites every reference to it (WAY-02, WAY-18).
+- A decision that narrows another — named `narrows` in its *Relations*, or one whose binding
+  sentences go against a decision it derives from in a narrower area, which is a `narrows` left
+  unrecorded — leaves the log only with the area where it prevails carried into that other decision
+  or into the skill or template that takes the rule, or it stays. A decision whose *Rejected*
+  refuses the move that would withdraw it stays.
 
 ## Withdrawn numbers
 
@@ -274,7 +279,8 @@ A field stays in the template only while someone or something reads it (WAY-05).
   space, the full stop not standing inside a passage between quotation marks, `"…"`, `“…”` or `„…”`,
   which is no end of a sentence — and holds at least three words; it stands in the binding sentences once every run of
   spaces and line breaks is replaced by a single space. The line stands at the test that holds the
-  sentence (WAY-02).
+  sentence; each test that holds a part of the sentences carries a line of its own, and a test that
+  holds sentences of several decisions carries one line for each (WAY-02).
 - *Verification* names the tests that hold the sentences of the decision by the clause
   `tests: <the parts of the sentences they hold, in words>`, with no path, no test name and no
   number: the lines `decision:` find the tests, so the clause is no second copy of the link, and

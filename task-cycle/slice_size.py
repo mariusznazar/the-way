@@ -22,9 +22,15 @@ foundation, one under `foundations/` of DIR: the five files that the part map li
 files of its parts and WAY-04 names as the foundation's elements — the decision log, the
 invariants, the glossary, the environment facts and the part map — which a slice changes entry by
 entry and reads by the ranges of its entries. A file of *Change* that is no file of the foundation
-counts whole, as its agent reads it, whatever ranges of it *Read* names. Any other file counts
-whole where either field names it whole, otherwise the lines its ranges name; a file that *Read*
-names whole counts whole, whatever ranges of it *Read* names beside. Its size to read is the number
+counts whole, as its agent reads it, whatever ranges of it *Read* names, with one exception: a
+slice too large only because one file of *Change* counts whole — one that would fit were that file
+counted by the ranges *Read* names of it — is reported `fits by ranges of <file>`, the first such
+file in *Change*, instead of `too large`; its agent changes that file by search, and the characters
+and tokens of its row are those with that file counted by its ranges. A slice over the limit of
+files, or one that no single file counted by ranges brings under the limit of reading, stays `too
+large`. Any other file counts whole where either field names it whole, otherwise the lines its
+ranges name; a file that *Read* names whole counts whole, whatever ranges of it *Read* names beside.
+Its size to read is the number
 of characters of that text, and its tokens are estimated from them as the source below gives, never
 counted by a tokenizer: the estimate is rough, and how many steps an agent takes is not in it. A
 slice is too large when its estimated tokens exceed READ_LIMIT_TOKENS or it changes more than
@@ -47,10 +53,10 @@ The limits are corrected as cycles bring data:
 - CHANGE_LIMIT is a starting value with no source.
 
 The report is Markdown, printed: a row for each slice with the files it changes, the characters
-and estimated tokens it reads, its verdict — `fits`, `too large` or `unchecked` — and why. Exit
-code: 0 when every slice fits; 1 when a slice is too large or unchecked; 2 with `Error: <message>`
-on stderr when the plan cannot be read, holds no slice, names two slices alike, or holds a heading
-`### Slice` in another form.
+and estimated tokens it reads, its verdict — `fits`, `fits by ranges of <file>`, `too large` or
+`unchecked` — and why. Exit code: 0 when every slice fits, by ranges of a file or not; 1 when a
+slice is too large or unchecked; 2 with `Error: <message>` on stderr when the plan cannot be read,
+holds no slice, names two slices alike, or holds a heading `### Slice` in another form.
 
 Standard library only.
 """
@@ -95,6 +101,8 @@ class Size:
     changed: int
     characters: int | None
     problems: list[str]
+    ranged: str | None = None  # the file of *Change* counted by its ranges for the slice to fit
+    whole_tokens: int | None = None  # the tokens of the reading with every file counted whole
 
     @property
     def tokens(self) -> int | None:
@@ -113,6 +121,11 @@ class Size:
             return "too large", reasons + self.problems
         if self.problems:
             return "unchecked", self.problems
+        if self.ranged is not None:
+            return f"fits by ranges of {self.ranged}", [
+                f"counted whole it reads about {self.whole_tokens} tokens, "
+                f"more than {READ_LIMIT_TOKENS}"
+            ]
         return "fits", []
 
 
@@ -165,7 +178,9 @@ def locate(root: Path, written: str) -> Path | None:
     return candidate
 
 
-def measure(item: Slice, root: Path) -> Size:
+def measure(item: Slice, root: Path, ranged: frozenset[Path] = frozenset()) -> Size:
+    """The size of a slice; a file of RANGED that is no file of the foundation is counted by the
+    ranges *Read* names of it, as a file of the foundation is."""
     problems: list[str] = []
     if not item.fields:
         problems.append("the slice has neither *Change* nor *Read*")
@@ -198,7 +213,8 @@ def measure(item: Slice, root: Path) -> Size:
         else:
             whole.add(found)
     for found in existing:
-        if found not in ranges or found.relative_to(root).parts[0] != FOUNDATION_DIRECTORY:
+        by_ranges = found.relative_to(root).parts[0] == FOUNDATION_DIRECTORY or found in ranged
+        if found not in ranges or not by_ranges:
             whole.add(found)
     characters = 0
     for path in whole:
@@ -215,6 +231,22 @@ def measure(item: Slice, root: Path) -> Size:
             counted.update(range(first - 1, last))
         characters += sum(len(lines[index]) for index in counted)
     return Size(item.ident, len(changed), None if problems else characters, problems)
+
+
+def fitted_by_ranges(item: Slice, root: Path, size: Size) -> Size:
+    """The size of a slice that is too large only by its reading, as it is where the first file of
+    *Change* whose ranges *Read* names and whose counting by them brings the reading under the
+    limit is counted by those ranges; the size as it stands where there is no such file."""
+    if size.problems or size.changed > CHANGE_LIMIT or size.tokens <= READ_LIMIT_TOKENS:
+        return size
+    for written in dict.fromkeys(item.change):
+        found = locate(root, written)
+        if found is None:
+            continue
+        trial = measure(item, root, frozenset({found}))
+        if trial.characters < size.characters and trial.tokens <= READ_LIMIT_TOKENS:
+            return Size(trial.ident, trial.changed, trial.characters, [], written, size.tokens)
+    return size
 
 
 def report(sizes: list[Size]) -> str:
@@ -251,14 +283,14 @@ def main(argv: list[str] | None = None) -> int:
         root = args.root.resolve()
         if not root.is_dir():
             raise SliceSizeError(f"{args.root} is not a directory")
-        sizes = [measure(item, root) for item in parse_plan(text)]
+        sizes = [fitted_by_ranges(item, root, measure(item, root)) for item in parse_plan(text)]
     except SliceSizeError as error:
         print(f"Error: {error}", file=sys.stderr)
         return 2
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     sys.stdout.write(report(sizes))
-    return 0 if all(size.verdict[0] == "fits" for size in sizes) else 1
+    return 0 if all(size.verdict[0].startswith("fits") for size in sizes) else 1
 
 
 if __name__ == "__main__":

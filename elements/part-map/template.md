@@ -110,6 +110,11 @@ reading `Violated: yes` says it depends on today:
 This is a duty rather than advice, since a step nothing enforces is the step an agent leaves out,
 and an import from outside the map then passes merge after merge unseen.
 
+A dependency that a settlement of the task names, or that the human allows, is written into
+*Depends on* by the change, its source named in the commit message, since the map holds no field
+for it; a settlement that asks only for a behaviour allows no dependency. The route below is for a
+dependency the human accepts as it stands without allowing it.
+
 A dependency of a part that the code holds and *Depends on* does not allow goes to the human. Where
 the human accepts it as it stands, it is written as an invariant — "the part `<part>` does not
 depend on `<part>`" — that reads `Violated: yes`, its test standing as an expected failure until the

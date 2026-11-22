@@ -76,6 +76,9 @@ of this applies.
   should make it fail, and whether that change would be a bug or a deliberate decision. A test only
   a deliberate decision can fail — a constant's value, a message's wording — checks nothing worth
   keeping; test the behaviour that depends on the decision.
+- A test whose break is code going against a sentence of a recorded decision holds that sentence,
+  and carries the line `decision:` that `elements/decisions/template.md` gives in "Verification"; a
+  test that only stands on the sentence — a precondition it asserts, a fixture — holds nothing of it.
 - **Derive expected values without the code under test**: literals and hand-checked examples, the
   input and expected value written out. An expectation the code or its helpers compute passes
   whatever the code does.
@@ -114,13 +117,17 @@ of this applies.
   stands in your directory for working copies that the dispatch names, and goes before you return,
   as the dispatch's paragraph on working copies gives.
 - Run the focused checks of your change: the slice's *Checks*, the tests you wrote and the tests of
-  the code you touched. The full suite is the cycle's run, its own before the request or CI's on
-  the request; do not run it, also
+  the code you touched. Run them after `git add` of every file your change creates: many checks,
+  the foundation check among them, list only the files git tracks, and a run before that passes
+  without seeing the new file. The full suite is the cycle's run, its own before the request or CI's
+  on the request; do not run it, also
   where a plan's *Checks* or your handoff names it — report that as a mismatch (WAY-160).
 - A command that may run longer than your harness keeps its prompt cache — five minutes by default
   for a subagent in Claude Code — runs in the background, and you wait for it in stretches of under
   about four minutes, reading its output between them, and you end your turn only after it has
-  ended and you have read its result (WAY-255).
+  ended and you have read its result (WAY-255). A run that has not ended 30 minutes after it
+  started you stop and report as unfinished, with its command and the last lines of its output, in
+  place of waiting on; the check it stood for is a check that did not run (WAY-255, WAY-160).
 
 ## 4. When the plan and the code disagree
 

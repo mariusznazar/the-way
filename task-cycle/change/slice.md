@@ -11,6 +11,9 @@ What a slice, or the retry of a slice, reads, and what it does when the plan and
 - The dispatch gives the ranges of lines beside the copied passages and files, as they stand in the
   worktree when it is made. Where a range differs from the plan's, the dispatch's current range holds,
   as `task-cycle/skill/planning.md` ("A slice's handoff") gives the orchestrator.
+- The dispatch lists the tests the plan leaves failing at your slice's base, with their owners: report
+  a listed test that fails as expected, not as a failing check of your slice, and do not make it pass
+  outside your slice's *Change*.
 - For the retry of a slice, the failed executor's report and what failed; the branch is back at the
   slice's base, so its commits are not yours to continue.
 

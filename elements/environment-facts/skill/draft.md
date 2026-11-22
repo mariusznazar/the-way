@@ -9,4 +9,5 @@
   the answer holds before it is quoted: an answer that carries a token or a password beside those
   fields is not quoted, and where you find no narrower call, that is a question in step 4. For a
   page without editions, find the archived copy through the archive's CDX index of captures, not
-  its availability lookup, which misses captures that exist.
+  its availability lookup, which misses captures that exist; open the copy and find the passage in
+  it — a redirect or a page without the text holds none.

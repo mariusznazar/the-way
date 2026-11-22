@@ -106,11 +106,14 @@ identifiers.
     for word, and the date read. An address the publisher moves to newer text is no edition,
     whatever version its path names: cite the frozen address, and where there is none, the page is
     one without editions;
-  - a page without editions, with the closest archived copy that already exists and its date — never
-    one made for the entry, since that writes to someone else's service; where none exists,
-    `no archived copy exists in the Internet Archive's CDX index, checked <date>` — and the place, the
-    passage and the date read. A service's public API address is such a page, and its answer is the
-    passage;
+  - a page without editions, with the closest archived copy that already exists and holds the
+    passage, and its date — never one made for the entry, since that writes to someone else's
+    service; where none exists,
+    `no archived copy exists in the Internet Archive's CDX index, checked <date>`, and where those
+    that exist do not hold it,
+    `no archived copy in the Internet Archive's CDX index holds the passage, checked <date>` — and
+    the place, the passage and the date read. A service's public API address is such a page, and its
+    answer is the passage;
   - a reading, only for a state of a host the product's people run, or of a setting they set on
     another's service, that no page open without their access shows and only those with that access
     can read — a file on a server, a key's forced command, the swap a host reports, the protection
