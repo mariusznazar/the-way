@@ -826,17 +826,17 @@ class PassThroughTest(GateTimesTest):
 
     def test_the_first_word_is_started_as_the_path_which_finds_for_it(self) -> None:
         # `which` is replaced, since what it finds depends on the platform: it finds the path
-        # C:/tools/npm.CMD for `npm`, and that path, not the word, is started, with the other
+        # tools/npm.CMD for `npm`, and that path, not the word, is started, with the other
         # words unchanged.
         with (
-            mock.patch.object(gate_times.shutil, "which", return_value="C:/tools/npm.CMD"),
+            mock.patch.object(gate_times.shutil, "which", return_value="tools/npm.CMD"),
             mock.patch.object(
                 gate_times.subprocess, "Popen", return_value=self.finished_child()
             ) as popen,
         ):
             result = self.run_gate_at(NOW, ["npm", "test", "--silent"])
         self.assertEqual(0, result.returncode, result.stderr)
-        self.assertEqual(["C:/tools/npm.CMD", "test", "--silent"], popen.call_args.args[0])
+        self.assertEqual(["tools/npm.CMD", "test", "--silent"], popen.call_args.args[0])
 
     def test_a_first_word_that_which_does_not_find_is_started_as_it_is(self) -> None:
         with (
