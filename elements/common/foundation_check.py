@@ -333,16 +333,16 @@ def excess(paragraph):
     return ["%d %s (at most %d)" % (n, name, limit) for n, name, limit in measures if n > limit]
 
 
-def entry_texts(lines, level, heading):
+def entry_texts(lines, level, heading, key=str):
     """{identifier: the entry's heading and lines as one text} of each entry that a heading of
-    `level` opens and the pattern `heading` matches, its identifier the pattern's first group, every
-    run of spaces and line breaks made one space; the first of two is kept."""
+    `level` opens and the pattern `heading` matches, its identifier `key` of the pattern's first
+    group, every run of spaces and line breaks made one space; the first of two is kept."""
     found = {}
     for _, title, body in blocks(lines, level):
         match = heading.match(title)
         if match:
             found.setdefault(
-                match.group(1), " ".join(" ".join([title] + [x for _, x in body]).split())
+                key(match.group(1)), " ".join(" ".join([title] + [x for _, x in body]).split())
             )
     return found
 
@@ -810,8 +810,8 @@ class Foundation:
         if not self.prefix:
             return
         kinds = {
-            DECISIONS: ("### ", re.compile(r"^### (%s-[0-9]+) — " % re.escape(self.prefix))),
-            INVARIANTS: ("## ", re.compile(r"^## (%s)\s*$" % WORDS)),
+            DECISIONS: ("### ", re.compile(r"^### %s-([0-9]+) — " % re.escape(self.prefix)), int),
+            INVARIANTS: ("## ", re.compile(r"^## (%s)\s*$" % WORDS), str),
         }
         now = {path: entry_texts(self.files[path], *kind) for path, kind in kinds.items()}
         before = {
@@ -821,7 +821,7 @@ class Foundation:
             for path, kind in kinds.items()
         }
         for name, (_, found) in self.entries[INVARIANTS].items():
-            if EARLIER & set(found):
+            if EARLIER & set(found) or name not in now[INVARIANTS]:
                 continue
             known = self.known_part(INVARIANTS, found, "Derives from")
             numbers = {
@@ -842,7 +842,7 @@ class Foundation:
                     continue
                 changed = any(
                     before[path] is not None and before[path].get(entry) != now[path].get(entry)
-                    for path, entry in ((DECISIONS, label), (INVARIANTS, name))
+                    for path, entry in ((DECISIONS, key), (INVARIANTS, name))
                 )
                 message = "`%s` derives from `%s`, whose *Verification* does not name it" % (
                     name,

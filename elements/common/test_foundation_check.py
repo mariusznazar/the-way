@@ -2495,6 +2495,23 @@ class FoundationCheckTest(unittest.TestCase):
         product = self.derived(gap, reworded, base={"invariants": gap})
         self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
 
+    def test_decision_whose_number_is_written_without_a_leading_zero_is_compared_as_changed(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        gap = self.with_new_rule()
+        plain = DECISIONS.replace("### ABC-01 —", "### ABC-1 —")
+        reworded = self.edit(plain, "one file is easy to copy.", "one file is easy to find.")
+        product = self.derived(gap, reworded, base={"invariants": gap, "decisions": plain})
+        self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
+
+    def test_invariant_of_the_earlier_form_with_a_version_is_left_to_the_check_of_fields(self):
+        # decision: WAY-12 "Any other such invariant stands in the list the check prints"
+        versioned = self.with_new_rule().replace("## save-keeps-name\n", "## save-keeps-name/2\n")
+        code, report = self.derived(versioned).check()
+        self.assertEqual(code, 1, report)
+        self.assertIn("`save-keeps-name/2` stands in the earlier form", report)
+        self.assertIn("1 error", report)
+        self.assertNotIn("derives from", report)
+
     def test_invariant_altered_in_a_field_makes_an_old_gap_an_error(self):
         # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
         gap = self.with_new_rule()

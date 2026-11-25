@@ -831,12 +831,9 @@ unchecked; a level of verification named in every decision, a human's assessment
 reaches a human before it binds (WAY-14); the behaviour of a product left out of the log
 altogether — the variants tried and rejected are lost; an error for every decision that nothing
 holds — no change to a product passes until all the older ones are brought up; only a list, with
-no stop — decisions that nothing holds keep arriving and the list grows; the link of an invariant
-to its decision left to the skill that writes the invariant, with no check — a sentence an author can
-read past leaves the gap unseen until a reviewer finds it; an error only where the *Derives from*
-of the invariant or the *Verification* of the decision changes — it leaves the gap where someone
-changes the decision and should see what stands on it; an error for every such invariant — no
-change passes until all the older gaps are closed.
+no stop — decisions that nothing holds keep arriving and the list grows; an error only where the
+*Derives from* of the invariant or the *Verification* of the decision changes — it leaves the gap
+where someone changes the decision and should see what stands on it.
 
 ### WAY-18 — How is a product's decision log kept?
 
@@ -1304,7 +1301,7 @@ cycle record.
 A change to a decision's *Verification* that adds, removes or renames the identifier of an invariant
 derived from it, and alters none of its binding sentences, needs no approval before the code. The
 human who accepts decisions accepts it at the merge, with the list of the request's entries
-(WAY-114), and the agent making it asks that human no question.
+(WAY-114), and the agent making it asks that human no question about it.
 
 - **Scope:** decisions, task-cycle
 - **Based on:** none
@@ -1341,8 +1338,7 @@ exception takes the whole decision with it; repeated approval of the same meanin
 answers a question already settled; an implied exception to WAY-114 — competing instructions leave
 the entry writer to choose which one governs; approval before the code for each line that names a
 derived invariant in a decision's *Verification* — a cycle without a plan stops at every new rule
-derived from an existing decision, for one mechanical line; the approval left to the merge with no
-sentence saying so — cycles then stop or settle each in their own way.
+derived from an existing decision, for one mechanical line.
 
 ### WAY-114 — What does a human accept of an entry, and when?
 
