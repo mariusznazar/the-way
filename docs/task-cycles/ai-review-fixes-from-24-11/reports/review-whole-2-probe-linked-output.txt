@@ -1,0 +1,15 @@
+--- single-digit heading, decision altered:
+foundations/decisions.md:10: listed: `save-keeps-name` derives from `ABC-01`, whose *Verification* does not name it: add `save-keeps-name` to the *Verification* of `ABC-01`, after `invariants:`
+0 errors
+
+
+--- two-digit heading, decision altered:
+foundations/decisions.md:10: `save-keeps-name` derives from `ABC-01`, whose *Verification* does not name it, and this change adds or alters one of the two entries: add `save-keeps-name` to the *Verification* of `ABC-01`, after `invariants:`
+1 error
+
+
+--- versioned invariant heading (earlier form):
+foundations/invariants.md:23: `save-keeps-name/2` stands in the earlier form of its element; bring the foundation to the current form with elements/common/migrate_foundation.py
+foundations/decisions.md:10: listed: `save-keeps-name` derives from `ABC-01`, whose *Verification* does not name it: add `save-keeps-name` to the *Verification* of `ABC-01`, after `invariants:`
+1 error
+
