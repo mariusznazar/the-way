@@ -91,8 +91,8 @@ division of them into paragraphs included, and each invariant whose *Derives fro
 whose *Verification* does not name it, where a change adds or alters either of the two entries. It
 lists, without failing, the other decisions that nothing holds, the other decisions over those
 limits, the other invariants that a decision does not name and each invariant that reads `test`
-whose sentence a change rewords while no file citing it changes. All of these compare the change with the
-commit the branch left the main branch from.
+whose sentence a change rewords while no file citing it changes. All of these compare the change
+with the commit the branch left the main branch from.
 
 ## What else is here
 

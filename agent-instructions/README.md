@@ -21,8 +21,8 @@ commit the branch left the main branch from; an invariant that reads `test` whos
 rewords and whose copy at that commit lacks *Method* or *Part* it lists too, naming the field,
 whether or not a file citing it changes. It reports as an error, too, an invariant whose *Derives
 from* names a decision whose *Verification* does not name it, where a change adds or alters either
-of the two entries as a whole, and lists any other such invariant. The script `elements/common/migrate_foundation.py` brings a
-foundation of the earlier form to the current one.
+of the two entries as a whole, and lists any other such invariant. The script
+`elements/common/migrate_foundation.py` brings a foundation of the earlier form to the current one.
 
 ## Start a change
 
