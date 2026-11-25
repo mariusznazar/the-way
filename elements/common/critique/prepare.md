@@ -7,8 +7,8 @@ intended for collective human review must then wait for an independent critic.
 Give the fresh agent the complete proposal or set, its intended moment of use, the full relevant
 sources and applicable rules, and the target file or directory. Where the proposal or the set holds
 a question of decision to a human, the rules given always include "How a skill asks" in
-`elements/common/way_of_working.md`. Ask it to read the target in full
-and inspect the history of an existing knowledge rule before proposing another layer. Do not give
-it the author's defense or a preferred verdict. Ask for each observation to name what it checked,
-where the evidence stands and what would have to change. Ask it to state explicitly when a check
-finds no concern. The critic reports observations; the author makes the verdict.
+`elements/common/way_of_working.md`. Ask it to read the target in full and inspect the history of an
+existing knowledge rule before proposing another layer. Do not give it the author's defense or a
+preferred verdict. Ask for each observation to name what it checked, where the evidence stands and
+what would have to change. Ask it to state explicitly when a check finds no concern. The critic
+reports observations; the author makes the verdict.

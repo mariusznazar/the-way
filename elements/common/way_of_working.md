@@ -38,7 +38,8 @@ Every skill of the-way that asks the human asks this way
   recommends none and says so. An agent that holds the goal not worth its cost asks that as a
   question of decision of its own — whether to change the goal, also where no way reaches it —
   settled where the goal stands: a plan with its owner, a project definition by the approval of its
-  readiness (WAY-118), the goal of an independent task with the human in the same refinement.
+  readiness (WAY-118), the goal of an independent task with the human in the same refinement, or in
+  its cycle through a blocked draft request (WAY-227).
 - Once the human has chosen, and the choice enters the binding part of an entry, ask one question
   against the answer given: its anchor quoted from a sentence of the human or of the material the
   work starts from, asking whether the choice still holds against it. A choice that ends with the

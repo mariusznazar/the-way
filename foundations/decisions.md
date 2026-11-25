@@ -1597,7 +1597,8 @@ line, and is never recommended; where no way reaches the goal, the question reco
 says so. An agent that holds the goal not worth its cost asks that as a question of decision of
 its own — whether to change the goal, also where no way reaches it — settled where the goal
 stands: a plan with its owner, a project definition by the approval of its readiness (WAY-118),
-the goal of an independent task with the human in the same refinement.
+the goal of an independent task with the human in the same refinement, or in its cycle through a
+blocked draft request (WAY-227).
 
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, task-cycle, foundation-review, process-audit, product-guidelines
