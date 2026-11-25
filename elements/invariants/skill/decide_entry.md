@@ -16,6 +16,6 @@
 - Search the file, including its withdrawn identifiers, for an entry this rule would change:
   found — a change, split, merge or withdrawal, or an entry of its own where the template's "Where
   entries go" gives one; not found — a new identifier.
-- The search of the foundation also looks for a decision whose level 1 verification calls for this
-  rule, and an entry it names whose binding part has changed, to check it against that part again
-  (WAY-33).
+- The search of the foundation also looks for each decision this rule derives from, which its
+  *Derives from* names, and an entry it names whose binding part has changed, to check it against
+  that part again (WAY-33).

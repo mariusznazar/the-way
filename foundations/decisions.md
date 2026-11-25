@@ -782,13 +782,21 @@ the foundation reports as an error a decision that a change adds, or whose bindi
 change alters, and that nothing holds. Any other decision that nothing holds stands in a list the
 check prints, and the list stops no change.
 
+The check of the foundation reports as an error an invariant whose *Derives from* names a decision
+whose *Verification* does not name that invariant, where a change adds or alters either of the two
+entries as a whole, and its message gives the identifier to add to the *Verification* of which
+decision, after `invariants:`. Any other such invariant stands in the list the check prints, and the
+list stops no change.
+
 - **Scope:** decisions, invariants
 - **Based on:** llm-decision-violation-detection
 - **Relations:** none
 - **Verification:** tests: that a line `decision:` of a test names a decision of the log and quotes
   the start of one of its binding sentences; which decisions the check counts as held; the error
-  for a decision a change adds or alters that nothing holds, and the list of any other. An agent
-  compares a change with the part no invariant and no test holds:
+  for a decision a change adds or alters that nothing holds, and the list of any other; the error
+  for an invariant whose *Derives from* names a decision that does not name it, where a change
+  adds or alters either entry as a whole, with the identifier and the decision in its message, and
+  the list of any other. An agent compares a change with the part no invariant and no test holds:
   - complies: a decision on the product's direction carries a complying and a violating example
     and names no invariant; a decision with a derived invariant names it after `invariants:`; a
     decision whose sentence a test holds is named at that test by a line `decision:`, names such
@@ -812,14 +820,20 @@ no second copy of the link that breaks when a file moves. Where a test holds a s
 examples says nothing more, but the reasoning and the rejected options stay, since a test cannot
 say why. A decision that nothing holds is a rule nobody can tell is followed, so a change that adds
 or alters one holds it before it merges, while the older ones are listed and wait, because a gate
-that stopped every change until each of them was held would stop all work.
+that stopped every change until each of them was held would stop all work. The same holds for the
+link from a decision to its invariants, which is written at both ends: the end that is not checked
+goes missing, and whoever changes the decision then cannot see the rules and tests that stand on
+it. A change that adds or alters either entry is the moment the reader looks at the link, so the
+error stands there, with the line to add in the message, and the older gaps wait in the list.
 *Rejected:* a rule in code as the only check — decisions that cannot be written as a rule go
 unchecked; a level of verification named in every decision, a human's assessment among the levels
 — the level adds nothing to the invariants named and the examples given, and every change already
 reaches a human before it binds (WAY-14); the behaviour of a product left out of the log
 altogether — the variants tried and rejected are lost; an error for every decision that nothing
 holds — no change to a product passes until all the older ones are brought up; only a list, with
-no stop — decisions that nothing holds keep arriving and the list grows.
+no stop — decisions that nothing holds keep arriving and the list grows; an error only where the
+*Derives from* of the invariant or the *Verification* of the decision changes — it leaves the gap
+where someone changes the decision and should see what stands on it.
 
 ### WAY-18 — How is a product's decision log kept?
 
@@ -1284,6 +1298,11 @@ and the code that needs it waits for that human. An exception written in advance
 binding sentences is not a contradiction, and no exception lives only in a task document, plan or
 cycle record.
 
+A change to a decision's *Verification* that adds, removes or renames the identifier of an invariant
+derived from it, and alters none of its binding sentences, needs no approval before the code. The
+human who accepts decisions accepts it at the merge, with the list of the request's entries
+(WAY-114), and the agent making it asks that human no question about it.
+
 - **Scope:** decisions, task-cycle
 - **Based on:** none
 - **Relations:** derives from WAY-01 · narrows WAY-114
@@ -1291,23 +1310,35 @@ cycle record.
   - complies: a task branch whose code goes against a decision carries a proposed narrowing, and
     the merge waits for the human who accepts it; a task without a plan carries the known decision
     revision in its task document, accepted by that human before dependent code, and the entry's
-    author records that meaning without asking again; a further meaning goes to that human;
+    author records that meaning without asking again; a further meaning goes to that human; a task
+    that writes an invariant derived from a decision adds its identifier to that decision's
+    *Verification* with no question, the line standing in the request's list of entries for the
+    merge;
   - violates: a task branch whose code contradicts a decision that stays unchanged; a task's plan
     that records a "justified violation" of a decision; a task without a plan treats the
     orchestrator's go-ahead as approval of a decision revision; the entry's author asks again about
-    an accepted settlement, or extends its meaning without asking.
+    an accepted settlement, or extends its meaning without asking; a cycle stops with a question
+    for that human before the code only to add an invariant's identifier to a decision's
+    *Verification*; a change rewrites a binding sentence of a decision under the cover of such a
+    line.
 - **Origin:** none
 
 *Rationale:* an exception kept only with the work leaves the foundation describing what the code no
 longer does (WAY-01); stopping shows the contradiction when it is found. Aligning or dropping the
 change leaves the decision intact, so the agent may do either; changing the decision is the
 human's. Asking again about the meaning already approved spends attention without presenting
-a new choice; a meaning beyond it still needs that choice.
+a new choice; a meaning beyond it still needs that choice. A line in *Verification* that names an
+invariant derived from the decision leaves what the decision requires as it stood, so it presents no
+choice to the human, who sees it at the merge among the request's entries; a stop before the code
+for each such line would halt a cycle without a plan at every new rule derived from an existing
+decision, for one mechanical line.
 *Rejected:* a justified violation recorded in the plan, the decision unchanged — the foundation
 stops matching the code; a whole new answer as the only way to change a decision — a narrow
 exception takes the whole decision with it; repeated approval of the same meaning — the human
 answers a question already settled; an implied exception to WAY-114 — competing instructions leave
-the entry writer to choose which one governs.
+the entry writer to choose which one governs; approval before the code for each line that names a
+derived invariant in a decision's *Verification* — a cycle without a plan stops at every new rule
+derived from an existing decision, for one mechanical line.
 
 ### WAY-114 — What does a human accept of an entry, and when?
 
@@ -2625,7 +2656,11 @@ crafted input, and its review is aimed at that risk.
 - **Scope:** part-map, task-cycle
 - **Based on:** none
 - **Relations:** none
-- **Verification:** an agent compares the change with the decision:
+- **Verification:** invariants: audit-count-refuses-record-links ·
+  check-instructions-refuses-outside-links · cycle-measures-refuses-nested-line ·
+  cycle-stages-refuses-crafted-names · gate-times-refuses-impossible-entry ·
+  installation-paths-through-links · readiness-check-refuses-non-utf-8.
+  For the rest, an agent compares the change with the decision:
   - complies: the file that parses requests from the network and the file that reads a user's saved
     game are the boundaries of their parts; a change to a workflow holding a deployment key gets a
     review aimed at that key;
@@ -3634,7 +3669,8 @@ starts an agent without them.
 - **Based on:** claude-code-subagent-skills-denied · claude-code-subagent-cache-ttl ·
   claude-code-subagent-agent-directories · claude-code-subagent-instruction-files
 - **Relations:** derives from WAY-125 · derives from WAY-127 · derives from WAY-34
-- **Verification:** an agent compares a change with the decision:
+- **Verification:** invariants: installation-paths-through-links. For the rest, an agent
+  compares a change with the decision:
   - complies: in Claude Code the orchestrator dispatches the one author with the type
     `the-way-author` and the planner, an executor of a slice and a reviewer with `the-way-stage`;
     each handoff gives the path of the method's file; a definition names no tool of the session and
@@ -10482,7 +10518,11 @@ its test checks the product's behaviour rather than a convention of the product'
   GitLab CI)."; read 2026-10-25
 - **Relations:** derives from WAY-173 · derives from WAY-48 · derives from WAY-08 · derives from
   WAY-51 · narrows WAY-168
-- **Verification:** an agent compares the work with the decision:
+- **Verification:** invariants: audit-count-refuses-record-links ·
+  check-instructions-refuses-outside-links · cycle-measures-refuses-nested-line ·
+  cycle-stages-refuses-crafted-names · gate-times-refuses-impossible-entry ·
+  installation-paths-through-links · readiness-check-refuses-non-utf-8.
+  For the rest, an agent compares the work with the decision:
   - complies: the server of a game, the trust boundary of its part `api`, gets the invariant that a
     player cannot read another player's saved game, whose test sends that request with another
     player's token, expects the refusal the decision on permissions gives and is seen failing once;

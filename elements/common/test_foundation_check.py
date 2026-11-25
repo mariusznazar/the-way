@@ -2434,6 +2434,152 @@ class FoundationCheckTest(unittest.TestCase):
         product = self.reworded(INVARIANTS, base={"foundations__invariants_dot_md": text})
         self.assertEqual(self.listed_lines(product), [])
 
+    # --- an invariant whose decision does not name it -----------------------------------------
+
+    # ABC-01 stands at line 3 of the log of the good product, its *Verification* at line 10.
+    NEW_RULE = (
+        "## save-keeps-name\n\nA saved game keeps its name.\n\n- **Method:** review\n"
+        "- **Rests on:** none\n- **Derives from:** ABC-01\n- **Part:** core\n- **Violated:** no\n\n"
+    )
+    NOT_NAMED = "`save-keeps-name` derives from `ABC-01`, whose *Verification* does not name it"
+    ADD_IT = "add `save-keeps-name` to the *Verification* of `ABC-01`, after `invariants:`"
+    ERROR_LINE = (
+        "foundations/decisions.md:10: %s, and this change adds or alters one of the two entries: %s"
+        % (
+            NOT_NAMED,
+            ADD_IT,
+        )
+    )
+    LISTED_LINE = "foundations/decisions.md:10: listed: %s: %s" % (NOT_NAMED, ADD_IT)
+
+    def with_new_rule(self, invariants=INVARIANTS):
+        """The invariants given, with the entry `save-keeps-name` before the withdrawn ones."""
+        return invariants.replace(
+            "## Withdrawn identifiers", self.NEW_RULE + "## Withdrawn identifiers"
+        )
+
+    def derived(self, invariants, decisions=DECISIONS, base=None):
+        """The good product committed on `main` with the files of `base` (`decisions` and
+        `invariants`, the good product's by default), then a branch `topic` that left it, with the
+        log and the invariants given written, not committed."""
+        base = {"decisions": DECISIONS, "invariants": INVARIANTS, **(base or {})}
+        product = self.committed(
+            "main",
+            foundations__decisions_dot_md=base["decisions"],
+            foundations__invariants_dot_md=base["invariants"],
+        )
+        git(product.root, "checkout", "-q", "-b", "topic")
+        product.write("foundations/decisions.md", decisions)
+        product.write("foundations/invariants.md", invariants)
+        return product
+
+    def test_invariant_added_that_its_decision_does_not_name_is_an_error(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        product = self.derived(self.with_new_rule())
+        self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
+
+    def test_invariant_added_and_named_by_its_decision_in_the_change_passes(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        named = self.edit(
+            DECISIONS,
+            "invariants: save-round-trip.",
+            "invariants: save-round-trip · save-keeps-name.",
+        )
+        product = self.derived(self.with_new_rule(), named)
+        self.assertEqual(self.lines(product.check()), ["0 errors"])
+
+    def test_decision_altered_in_its_rationale_makes_an_old_gap_an_error(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        gap = self.with_new_rule()
+        reworded = self.edit(DECISIONS, "one file is easy to copy.", "one file is easy to find.")
+        product = self.derived(gap, reworded, base={"invariants": gap})
+        self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
+
+    def test_decision_whose_number_is_written_without_a_leading_zero_is_compared_as_changed(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        gap = self.with_new_rule()
+        plain = DECISIONS.replace("### ABC-01 —", "### ABC-1 —")
+        reworded = self.edit(plain, "one file is easy to copy.", "one file is easy to find.")
+        product = self.derived(gap, reworded, base={"invariants": gap, "decisions": plain})
+        self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
+
+    def test_invariant_of_the_earlier_form_with_a_version_is_left_to_the_check_of_fields(self):
+        # decision: WAY-12 "Any other such invariant stands in the list the check prints"
+        versioned = self.with_new_rule().replace("## save-keeps-name\n", "## save-keeps-name/2\n")
+        code, report = self.derived(versioned).check()
+        self.assertEqual(code, 1, report)
+        self.assertIn("`save-keeps-name/2` stands in the earlier form", report)
+        self.assertIn("1 error", report)
+        self.assertNotIn("derives from", report)
+
+    def test_invariant_altered_in_a_field_makes_an_old_gap_an_error(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        gap = self.with_new_rule()
+        altered = self.edit(gap, "- **Part:** core\n", "- **Part:** core · shell\n")
+        product = self.derived(altered, base={"invariants": gap})
+        self.assertEqual(self.lines(product.check(), 1), [self.ERROR_LINE, "1 error"])
+
+    def test_old_gap_that_the_change_does_not_touch_is_only_listed(self):
+        # decision: WAY-12 "Any other such invariant stands in the list the check prints"
+        gap = self.with_new_rule()
+        product = self.derived(gap, base={"invariants": gap})
+        self.assertEqual(self.lines(product.check()), [self.LISTED_LINE, "0 errors"])
+
+    def test_old_gap_whose_invariant_changed_in_spacing_only_is_only_listed(self):
+        # decision: WAY-12 "Any other such invariant stands in the list the check prints"
+        gap = self.with_new_rule()
+        spaced = self.edit(gap, "A saved game keeps its name.", "A saved   game keeps\nits name.")
+        product = self.derived(spaced, base={"invariants": gap})
+        self.assertEqual(self.lines(product.check()), [self.LISTED_LINE, "0 errors"])
+
+    def test_gap_where_the_base_is_unknown_is_only_listed(self):
+        # decision: WAY-12 "Any other such invariant stands in the list the check prints"
+        code, report = self.run_on(foundations__invariants_dot_md=self.with_new_rule())
+        self.assertEqual(code, 0, report)
+        self.assertIn(self.LISTED_LINE, report)
+        self.assertIn("0 errors", report)
+
+    def test_invariant_deriving_from_two_decisions_gets_a_line_for_each_one_that_lacks_it(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        both = self.edit(
+            self.with_new_rule(),
+            "- **Derives from:** ABC-01\n",
+            "- **Derives from:** ABC-01 · ABC-02\n",
+        )
+        result = self.derived(both).check()
+        self.assertFails(result, "2 errors")
+        for number, line in (("ABC-01", 10), ("ABC-02", 23)):
+            self.assertIn(
+                "foundations/decisions.md:%d: `save-keeps-name` derives from `%s`" % (line, number),
+                result[1],
+            )
+            self.assertIn(
+                "add `save-keeps-name` to the *Verification* of `%s`, after `invariants:`" % number,
+                result[1],
+            )
+
+    def test_decision_a_quoted_source_names_is_no_link(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        quoted = self.edit(
+            self.with_new_rule(),
+            "- **Derives from:** ABC-01\n",
+            '- **Derives from:** https://example.org/saves § Names — "ABC-01 keeps a name"; read 2026-10-01\n',
+        )
+        self.assertEqual(self.lines(self.derived(quoted).check()), ["0 errors"])
+
+    def test_decision_lacking_its_verification_is_left_to_the_check_of_fields(self):
+        # decision: WAY-12 "The check of the foundation reports as an error an invariant whose"
+        lacking = self.edit(
+            DECISIONS,
+            "- **Verification:** level 1 — invariants: save-round-trip. Level 2 for the rest.\n",
+            "",
+        )
+        product = self.derived(self.with_new_rule(), lacking)
+        self.assertEqual(
+            self.lines(product.check(), 1),
+            ["foundations/decisions.md:3: the entry lacks *Verification*", "1 error"],
+        )
+
     # --- a log divided into topical sections --------------------------------------------------
 
     def sectioned(self, text):

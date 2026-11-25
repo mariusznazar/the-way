@@ -92,6 +92,14 @@ What it reports, each as `path:line: message`, a path alone where a line has no 
   below, at its heading line. Where the base is unknown no decision is added or changed. An entry of
   the earlier form and one that lacks *Verification* are left to the report of fields above, with no
   second report. The switch `--skip-test-citations` skips none of this;
+- an invariant whose *Derives from* names a decision whose *Verification* does not name the
+  invariant after `invariants:` (WAY-12), at the *Verification* of that decision, with the
+  identifier to add to which decision. It is an error where the change adds or alters, as a whole
+  entry, the invariant or the decision, once every run of spaces and line breaks is made one space
+  — a heading, a field, the sentence or the rationale alike — and a line of the second kind below
+  otherwise; an entry of a file whose base is unknown counts as unchanged. A reference to a
+  decision the log does not hold, a decision that lacks *Verification* and an entry of the earlier
+  form are left to the reports above. The switch `--skip-test-citations` skips none of this;
 - a paragraph of the binding sentences of a decision with more than 3 sentences or more than 300
   words, and binding sentences with more than 600 words in all their paragraphs together (WAY-05):
   sentences are counted as above, and a word is a run of characters between spaces. In a decision
@@ -323,6 +331,20 @@ def excess(paragraph):
         (len(paragraph.split()), "words", WORD_LIMIT),
     )
     return ["%d %s (at most %d)" % (n, name, limit) for n, name, limit in measures if n > limit]
+
+
+def entry_texts(lines, level, heading, key=str):
+    """{identifier: the entry's heading and lines as one text} of each entry that a heading of
+    `level` opens and the pattern `heading` matches, its identifier `key` of the pattern's first
+    group, every run of spaces and line breaks made one space; the first of two is kept."""
+    found = {}
+    for _, title, body in blocks(lines, level):
+        match = heading.match(title)
+        if match:
+            found.setdefault(
+                key(match.group(1)), " ".join(" ".join([title] + [x for _, x in body]).split())
+            )
+    return found
 
 
 class Foundation:
@@ -779,6 +801,61 @@ class Foundation:
                     DECISIONS, self.headings[key], "`%s` is held by nothing: %s" % (label, nothing)
                 )
 
+    def check_linked(self):
+        """Report each invariant whose *Derives from* names a decision whose *Verification* does not
+        name it after `invariants:` (WAY-12), as the identifier to add to which decision. It is an
+        error where the change adds or alters, as a whole entry, the invariant or the decision,
+        and any other is listed; an entry of a file whose base is unknown counts as unchanged. The
+        line stands at the *Verification* of the decision."""
+        if not self.prefix:
+            return
+        kinds = {
+            DECISIONS: ("### ", re.compile(r"^### %s-([0-9]+) — " % re.escape(self.prefix)), int),
+            INVARIANTS: ("## ", re.compile(r"^## (%s)\s*$" % WORDS), str),
+        }
+        now = {path: entry_texts(self.files[path], *kind) for path, kind in kinds.items()}
+        before = {
+            path: None
+            if self.base_files[path] is None
+            else entry_texts(self.base_files[path], *kind)
+            for path, kind in kinds.items()
+        }
+        for name, (_, found) in self.entries[INVARIANTS].items():
+            if EARLIER & set(found) or name not in now[INVARIANTS]:
+                continue
+            known = self.known_part(INVARIANTS, found, "Derives from")
+            numbers = {
+                int(match.group(1))
+                for _, text in unquoted(known, "Derives from")
+                for match in self.number.finditer(text)
+            }
+            for key in sorted(numbers & set(self.bodies)):
+                decision, label = fields(self.bodies[key]), "%s-%02d" % (self.prefix, key)
+                if "Verification" not in decision:
+                    continue
+                named = {
+                    match.group(1)
+                    for word, _ in located(decision, "Verification", VERIFIED)
+                    if (match := NAMED.fullmatch(word))
+                }
+                if name in named:
+                    continue
+                changed = any(
+                    before[path] is not None and before[path].get(entry) != now[path].get(entry)
+                    for path, entry in ((DECISIONS, key), (INVARIANTS, name))
+                )
+                message = "`%s` derives from `%s`, whose *Verification* does not name it" % (
+                    name,
+                    label,
+                )
+                cure = "add `%s` to the *Verification* of `%s`, after `invariants:`" % (name, label)
+                line = decision["Verification"][1][0]
+                if changed:
+                    message += ", and this change adds or alters one of the two entries"
+                    self.report.error(DECISIONS, line, "%s: %s" % (message, cure))
+                else:
+                    self.report.note(DECISIONS, line, "%s: %s" % (message, cure))
+
     def check_length(self):
         """Report each paragraph of the binding sentences of a decision over the limits of
         SENTENCE_LIMIT and WORD_LIMIT, and the binding sentences of a decision over ENTRY_LIMIT
@@ -1083,6 +1160,7 @@ def run(root, skip_test_citations=False):
         if GUIDELINES.match(path):
             foundation.check_guidelines(path, lines)
     foundation.check_held()
+    foundation.check_linked()
     foundation.check_length()
     foundation.list_invariants(tracked)
     if not skip_test_citations:
