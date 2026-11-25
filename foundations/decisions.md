@@ -1589,6 +1589,17 @@ takes the move of implication, "you wrote X; from X follows Y — does Y hold?",
 sentence of the human, or asks the reason of a decision that is costly to reverse, where neither
 the human's words nor the material give it; the refinement of a task keeps the rule above.
 
+The way recommended gives no less than the goal the material sets to the work — a task's goal in
+a plan, the need in a task document, the goal and the measure of success of a project definition —
+and where the goal compares the result with a model, no less than the model gives, feature by
+feature. A way that gives less stands among the ways, with what it lacks of the goal on its own
+line, and is never recommended; where no way reaches the goal, the question recommends none and
+says so. An agent that holds the goal not worth its cost asks that as a question of decision of
+its own — whether to change the goal, also where no way reaches it — settled where the goal
+stands: a plan with its owner, a project definition by the approval of its readiness (WAY-118),
+the goal of an independent task with the human in the same refinement, or in its cycle through a
+blocked draft request (WAY-227).
+
 - **Scope:** decisions, invariants, glossary, part-map, environment-facts, elements-common,
   project-level, task-cycle, foundation-review, process-audit, product-guidelines
 - **Based on:** none
@@ -1605,7 +1616,11 @@ the human's words nor the material give it; the refinement of a task keeps the r
     the rounds of a project definition an answer from which a consequence follows draws one
     question that quotes the person's sentence and asks whether the consequence holds, and a
     decision that is costly to reverse, whose reason neither the person's words nor the material
-    give, draws one question asking the reason;
+    give, draws one question asking the reason; the way recommended gives no less than the goal the
+    material sets to the work, and no less than the model the goal names, feature by feature, while
+    a way that gives less stands with what it lacks of the goal and is not recommended, and where no
+    way reaches the goal the question says it recommends none; a goal held not worth its cost is
+    asked as a question of its own, whether to change it;
   - violates: the choice appears only in a separate option panel, a decision question recommends a
     way and names no weak point of it, or names for a shortcut a weak point that leaves out the right
     way; an agent asks a generic challenge unrelated to the person's answer, or an agent asks against
@@ -1614,7 +1629,11 @@ the human's words nor the material give it; the refinement of a task keeps the r
     against an answer, for an entry written during it too, because it changes a decision or follows a
     loose remark, with no earlier sentence of the person that the answer contradicts; in the
     refinement of a task, an agent asks a question of implication or of the reason of a decision
-    after an answer.
+    after an answer; a decision question recommends a way that gives less than the goal the
+    material sets to the work, or leaves out a feature of the model the goal names, and says so
+    only in the weak point; a question where no way reaches the goal still recommends one; a goal
+    held not worth its cost is put as the weak point of a recommended way, or changed by the agent
+    that asks, instead of being asked as a question of its own.
 - **Origin:** none
 
 *Rationale:* the person sees the trade-off where they make the choice. The weak point puts the
@@ -1647,7 +1666,16 @@ note, and no sentence of the person, passes with no question. A project definiti
 a task document, since it settles scope, success and risks, where a counter-argument after the
 answer is worth more than the further question it costs, and the move of implication is the only
 move that follows an answer; the price is more questions after answers, longer rounds, and no
-evidence that the move ever caught anything.
+evidence that the move ever caught anything. A recommendation is the way the agent would take; one
+that gives less than the goal of the work decides, in the person's name, that the goal is smaller,
+and the weak point alone does not stop it, since a way short of the goal names its lack there and
+still stands as recommended. The goal the material sets is what the person asked for, so a way short
+of it is shown with its lack and the person may take it knowingly, but the agent does not put it
+forward as the better choice. That a goal is not worth its cost is another question, one for whoever
+owns the goal, and asked on its own it also covers the case where no way reaches the goal, which
+then needs neither a recommended way nor a second answer. The price is a question that may
+recommend none, so that the person chooses with no hint from the agent, and one question more
+whenever an agent holds a goal too dear.
 *Rejected:* a panel of options separate from the conversation — its context is detached from the
 material; a challenge to every choice, including one that ends with the work — repeated questions
 would add no later protection; a challenge to every choice entering a binding entry, even a way
@@ -1674,7 +1702,13 @@ changes alone — nothing to undo beyond the rule itself, but the answers on sco
 fall in the rounds, where no counter-argument would follow an answer; the two moves for the whole
 refinement of a definition with the rounds left as they were — nothing to undo today, but the
 decision would allow what no instruction asks for, and an agent of the rounds that asked such a
-question would comply with the decision though its own instructions foresee none.
+question would comply with the decision though its own instructions foresee none; the rule on the
+goal for a goal that names an explicit model alone — easy to check, but a way that falls short of
+a goal with no model can still be recommended; a way below the goal recommended where its weak
+point says so and why — that is the rule of the weak point, which leaves such a way recommended;
+the rule on the goal with no word on the case where no way reaches it — the agent holds two
+sentences that contradict, a way never recommended and a decision question that gives a
+recommendation, and settles both cases without the person.
 
 ### WAY-120 — How does the-way critique an agent's proposal?
 
@@ -4813,11 +4847,15 @@ consequence for the product: an option an agent cannot use stays in the comparis
 said as "an agent does not check the running product this way", and the recommendation passes over
 it. Where no option can be used by an agent, the recommendation goes by the other consequences and
 says in one sentence that no option lets an agent check the running product this way, so the check
-stays with the human.
+stays with the human. Where the goal the material sets is that an agent checks the running product,
+that sentence narrows the goal openly, in the same question, to the check by the human, and the
+recommendation goes against the goal so narrowed; it is the answer, accepted in advance, to the
+question of changing the goal that WAY-113 asks where no way reaches the goal, and it prevails in
+this area over WAY-113's rule that such a question recommends none.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121 · narrows WAY-123
+- **Relations:** derives from WAY-121 · narrows WAY-123 · narrows WAY-113
 - **Verification:** an agent compares the work with the decision:
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
@@ -4825,12 +4863,17 @@ stays with the human.
     server's container, kept in a store that outlives a redeployment; a host whose every option for
     the logs is a panel behind the human's login has the options compared by their cost and upkeep,
     the one that wins recommended, and the message says in one sentence that no option lets an agent
-    check the running product this way, so the check stays with the human;
+    check the running product this way, so the check stays with the human; where a task's need is
+    that an agent reads the logs and every option for them is such a panel, the same sentence
+    narrows that need to the human's reading and the option recommended is the one that wins by
+    cost and upkeep against it;
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
     read its logs; the message shows the service with no word on whether an agent can use it; on a
     host where no option can be used by an agent, the step recommends nothing, or recommends by
-    cost and upkeep with no word that the check stays with the human.
+    cost and upkeep with no word that the check stays with the human, or, where the material's goal
+    is that an agent checks the running product, leaves that goal as it stands beside the option
+    recommended.
 - **Origin:** none
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
@@ -4840,9 +4883,13 @@ rather than the agent's convenience. Kept in the comparison with its lack, the o
 the human, who chooses between consequences (WAY-123). Where every option is one an agent cannot
 use, passing over them all would leave the step with nothing to recommend, though the human is owed
 a recommendation (WAY-113); the step recommends by the other consequences and says in one sentence
-that the check stays with the human, so that the lack reaches the human at the choice. The price is
-that the step does not look again for an option an agent can use: the lack comes out before the
-choice, and the human answers it. For a place to run, how well an agent works
+that the check stays with the human, so that the lack reaches the human at the choice. Where the
+material's goal is that an agent checks the running product, the sentence is also the change of that
+goal, made openly in the same question and not by a recommendation that falls below the goal in
+silence: WAY-113 asks the question of changing a goal where no way reaches it, and this decision
+answers it in advance for this area, so that the recommendation is made against the goal so
+narrowed. The price is that the step does not look again for an option an agent can use: the lack
+comes out before the choice, and the human answers it. For a place to run, how well an agent works
 with an option still decides only a tie (WAY-137): there the agent's convenience is not what the
 product needs from the choice, while here the agent's use of an option is what the choice is for.
 *Rejected:* nothing added to the usual weighing of consequences — the step could recommend a
@@ -4851,9 +4898,9 @@ tie, and the choice would pass with an answer that gives the agent nothing; the 
 further first for an option an agent can use, such as sending the logs to a place an agent reads,
 and going the way chosen only when that yields nothing — a longer research on every such matter,
 often one more service to pay for, while the options already come from research (WAY-122); the step
-recommending nothing where no option can be used by an agent — an exception to WAY-113, and the
-human answers with no hint; the case left unsaid — it shows at the first product with such hosting,
-and each agent resolves it in its own way.
+recommending nothing where no option can be used by an agent — the human answers with no hint;
+the case left unsaid — it shows at the first product with such hosting, and each agent resolves it
+in its own way.
 
 ### WAY-273 — May a product hide a failure?
 

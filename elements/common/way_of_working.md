@@ -30,7 +30,16 @@ Every skill of the-way that asks the human asks this way
   recommendation with its weak point: the strongest argument against the way recommended, anchored
   in the material where the material gives one. Where that way is a shortcut and another would be
   right were cost no matter, the weak point names the other way and says why it is not
-  recommended.
+  recommended. The way recommended gives no less than the goal the material sets to the work — a
+  task's goal in a plan, the need in a task document, the goal and the measure of success of a
+  project definition — and where the goal compares the result with a model, no less than the model
+  gives, feature by feature. A way that gives less stands among the ways, with what it lacks of the
+  goal on its own line, and is never recommended; where no way reaches the goal, the question
+  recommends none and says so. An agent that holds the goal not worth its cost asks that as a
+  question of decision of its own — whether to change the goal, also where no way reaches it —
+  settled where the goal stands: a plan with its owner, a project definition by the approval of its
+  readiness (WAY-118), the goal of an independent task with the human in the same refinement, or in
+  its cycle through a blocked draft request (WAY-227).
 - Once the human has chosen, and the choice enters the binding part of an entry, ask one question
   against the answer given: its anchor quoted from a sentence of the human or of the material the
   work starts from, asking whether the choice still holds against it. A choice that ends with the
