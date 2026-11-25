@@ -48,7 +48,10 @@ it without reading the rest.
    record's link also fills in *Checks* with the runs of the three checks on the copy of the record,
    which did not exist when the description was first written. Record the last run of
    each, command and exit code, with the number of runs, in the record's *Request handoff*
-   (*Description*).
+   (*Description*). Make each later edit as an edit of the part that changes, not a rewrite of the
+   whole file. Where a script or a command has changed `request.md` since your harness last read
+   it, read the file again before you edit it — your harness can refuse a write to a file changed
+   outside it.
 
 **An error you hold wrong.** The language measure can read a correct block, or a task document
 full of quoted English names, as English, and the script itself can err. Where you hold a reported

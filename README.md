@@ -87,9 +87,11 @@ every file belongs to one part. It reports as an error each decision that a chan
 binding sentences it alters and that nothing holds. It reports as an error too each paragraph of
 binding sentences over three sentences or 300 words, and binding sentences over 600 words in all
 their paragraphs, in a decision that a change adds or whose binding sentences it alters, a different
-division of them into paragraphs included. It lists, without failing, the other decisions that
-nothing holds, the other decisions over those limits and each invariant that reads `test` whose
-sentence a change rewords while no file citing it changes. All of these compare the change with the
+division of them into paragraphs included, and each invariant whose *Derives from* names a decision
+whose *Verification* does not name it, where a change adds or alters either of the two entries. It
+lists, without failing, the other decisions that nothing holds, the other decisions over those
+limits, the other invariants that a decision does not name and each invariant that reads `test`
+whose sentence a change rewords while no file citing it changes. All of these compare the change with the
 commit the branch left the main branch from.
 
 ## What else is here
