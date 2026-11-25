@@ -4847,11 +4847,15 @@ consequence for the product: an option an agent cannot use stays in the comparis
 said as "an agent does not check the running product this way", and the recommendation passes over
 it. Where no option can be used by an agent, the recommendation goes by the other consequences and
 says in one sentence that no option lets an agent check the running product this way, so the check
-stays with the human.
+stays with the human. Where the goal the material sets is that an agent checks the running product,
+that sentence narrows the goal openly, in the same question, to the check by the human, and the
+recommendation goes against the goal so narrowed; it is the answer, accepted in advance, to the
+question of changing the goal that WAY-113 asks where no way reaches the goal, and it prevails in
+this area over WAY-113's rule that such a question recommends none.
 
 - **Scope:** project-level, decisions
 - **Based on:** none
-- **Relations:** derives from WAY-121 · narrows WAY-123
+- **Relations:** derives from WAY-121 · narrows WAY-123 · narrows WAY-113
 - **Verification:** an agent compares the work with the decision:
   - complies: a log service cheaper than the others, whose logs only a human can read, in a panel
     behind the human's login, stays in the comparison of the logs with the lack "an agent does not
@@ -4859,12 +4863,17 @@ stays with the human.
     server's container, kept in a store that outlives a redeployment; a host whose every option for
     the logs is a panel behind the human's login has the options compared by their cost and upkeep,
     the one that wins recommended, and the message says in one sentence that no option lets an agent
-    check the running product this way, so the check stays with the human;
+    check the running product this way, so the check stays with the human; where a task's need is
+    that an agent reads the logs and every option for them is such a panel, the same sentence
+    narrows that need to the human's reading and the option recommended is the one that wins by
+    cost and upkeep against it;
   - violates: the step recommends the cheaper service because how well an agent works with an
     option decides only a tie; the service is left out of the comparison because an agent cannot
     read its logs; the message shows the service with no word on whether an agent can use it; on a
     host where no option can be used by an agent, the step recommends nothing, or recommends by
-    cost and upkeep with no word that the check stays with the human.
+    cost and upkeep with no word that the check stays with the human, or, where the material's goal
+    is that an agent checks the running product, leaves that goal as it stands beside the option
+    recommended.
 - **Origin:** none
 
 *Rationale:* a choice of an agent's way to the running product exists so that an agent can check
@@ -4874,9 +4883,13 @@ rather than the agent's convenience. Kept in the comparison with its lack, the o
 the human, who chooses between consequences (WAY-123). Where every option is one an agent cannot
 use, passing over them all would leave the step with nothing to recommend, though the human is owed
 a recommendation (WAY-113); the step recommends by the other consequences and says in one sentence
-that the check stays with the human, so that the lack reaches the human at the choice. The price is
-that the step does not look again for an option an agent can use: the lack comes out before the
-choice, and the human answers it. For a place to run, how well an agent works
+that the check stays with the human, so that the lack reaches the human at the choice. Where the
+material's goal is that an agent checks the running product, the sentence is also the change of that
+goal, made openly in the same question and not by a recommendation that falls below the goal in
+silence: WAY-113 asks the question of changing a goal where no way reaches it, and this decision
+answers it in advance for this area, so that the recommendation is made against the goal so
+narrowed. The price is that the step does not look again for an option an agent can use: the lack
+comes out before the choice, and the human answers it. For a place to run, how well an agent works
 with an option still decides only a tie (WAY-137): there the agent's convenience is not what the
 product needs from the choice, while here the agent's use of an option is what the choice is for.
 *Rejected:* nothing added to the usual weighing of consequences — the step could recommend a
@@ -4885,9 +4898,9 @@ tie, and the choice would pass with an answer that gives the agent nothing; the 
 further first for an option an agent can use, such as sending the logs to a place an agent reads,
 and going the way chosen only when that yields nothing — a longer research on every such matter,
 often one more service to pay for, while the options already come from research (WAY-122); the step
-recommending nothing where no option can be used by an agent — an exception to WAY-113, and the
-human answers with no hint; the case left unsaid — it shows at the first product with such hosting,
-and each agent resolves it in its own way.
+recommending nothing where no option can be used by an agent — the human answers with no hint;
+the case left unsaid — it shows at the first product with such hosting, and each agent resolves it
+in its own way.
 
 ### WAY-273 — May a product hide a failure?
 
