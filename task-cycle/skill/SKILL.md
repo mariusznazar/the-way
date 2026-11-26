@@ -325,8 +325,8 @@ the sentence of an invariant, quoting the passage that settles it in the answer 
 the smallest reversible reading never answers it. Where none of the four settles it, the code
 cannot proceed without the human: open a blocked draft request that holds the question under
 *Needed from you*, as sub-step 4 of step 9 gives the stop of a slice that failed twice — the gate on
-your own system, `task-cycle/cycle_stages.py` and `task-cycle/cycle_measures.py`, the record's copy
-and its commits, the description, the draft marked `blocked` and no wait for CI — with these
+your own system, `task-cycle/cycle_stages.py` and `task-cycle/cycle_measures.py` with the models of
+the record's rows set from `stages.md` as step 12 gives, the record's copy and its commits, the description, the draft marked `blocked` and no wait for CI — with these
 differences. The branch is not reset, so the agent's commits stand in the request, and no attempt is
 discarded, so *Discarded attempt* stays as it was. The record's copy reads, in *Request URL and
 status*, the wording `task-cycle/skill/blocked_finding.md` gives. The description takes the variant
@@ -445,23 +445,27 @@ gives: its agent — the one author with its code, or on the planned route the a
 returns `blocked` with a question for the human, and at step 7 for a finding that the spec
 contradicts a decision.
 
-The strongest class available is the model a probe fixes in every cycle, before the first dispatch
-of the strongest class — the one author, an executor or the retry of one on that class, or the
-review of the whole change, whichever comes first (WAY-229). Dispatch a small agent of the type
-`the-way-stage`, with the description `model probe <n>`, asking it only to answer `ready`, on the
-candidate model, and run `python -B task-cycle/cycle_stages.py` of the pinned the-way, naming your
-session as step 12 gives, with no `--output`: the row of its table named by that description gives,
-in its column *Subagent model*, the model that agent worked on. The first candidate is the model the
+The strongest class available is the model a probe fixes, in every cycle and again in every later
+session of its orchestrator, a correction's included, before that session's first dispatch of the
+strongest class — the one author, an executor or the retry of one on that class, or a review on it,
+whichever comes first (WAY-229). Dispatch a small agent of the type `the-way-stage`, with the
+description `model probe <n>`, asking it only to answer `ready`, on the candidate model, and run
+`python -B task-cycle/cycle_stages.py` of the pinned the-way, naming your session as step 12 gives,
+with no `--output`: the row of its table named by that description gives, in its column *Subagent
+model*, the model that agent worked on. Where your tool does not name a subagent's row by the
+description, the row of the probe's agent is the one whose start in the table's section of start
+times is that of its dispatch. The row gives a model, and it matches the candidate where it is a model
+of the candidate's family, an older version of it included. The first candidate is the model the
 human named at the start of the cycle, in the arguments of the entry point that started it, which
 the probe checks like any other; where none was named, the strongest model your tool for dispatching
-agents offers. Where the row gives another model than the candidate, the harness substituted one:
-dispatch a new probe on the next model down that your tool offers, and go on so. The first
-candidate that a probe's agent worked on as asked is the model fixed, and every dispatch of the
-strongest class in the cycle asks for it. Never take it from the list of allowed models in the
-session's settings, which you do not see, or from the name of the strongest model of the family, and
-ask the human nothing (WAY-227). Before the first dispatch of the class, write under *Strongest
-class* of the record each try, with the model asked for and the model the row gives, and the model
-fixed; a session that continues the cycle, a correction's, reads them there. Where the harness
+agents offers. Where the row gives a model of another family than the candidate, the harness
+substituted one: dispatch a new probe on the next model down that your tool offers, and go on so. The
+first candidate that a probe's agent worked on as asked is the model fixed, and every dispatch of the
+strongest class in the session asks for it. Never take it from the list of allowed models in the
+session's settings, which you do not see, from the name of the strongest model of the family, or
+from the model an earlier session fixed, and ask the human nothing (WAY-227). Before the first
+dispatch of the class in the session, write under *Strongest class* of the record each try of the
+session, with the model asked for and the model the row gives, and the model fixed. Where the harness
 cannot choose a model, dispatch as it allows and record that the class was not applied.
 
 9. Make the change and have it reviewed.
@@ -505,7 +509,8 @@ cannot choose a model, dispatch as it allows and record that the class was not a
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a
         failing check of its slice — by the measure of `task-cycle/change/slice.md`, a test that
-        fails on the slice's base too is none, save a test of the slice's *Checks* (WAY-136) — or
+        fails on the slice's base too is none, save a test that an earlier slice's *Goal* announces and the
+        slice's own *Checks* hold (WAY-136) — or
         fails the mechanical check gets one retry (WAY-229): record
         its last commit, reset the branch to the slice's base and dispatch a fresh executor one
         class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
@@ -522,7 +527,8 @@ cannot choose a model, dispatch as it allows and record that the class was not a
         change on your own system as step 10 gives its local run (at once, since no return step
         runs and the request is blocked), run
         `task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py` naming the same
-        sessions, prepare the record's copy as
+        sessions, set the models of the record's rows from `stages.md` as step 12 gives, prepare
+        the record's copy as
         "The record before it is committed" gives and commit it and its removal as step 12 gives,
         then write the description by
         `task-cycle/skill/request_template.md` as step 13 gives, in its variant for a slice failed
@@ -693,8 +699,8 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     under *Verification* of the record and, in the request's *Checks*, as a check that did not run;
     fix the call where the call was wrong and run it again; never write the file by hand. A cycle
     whose file stays missing stays missing, and the record's *Verification* tells it from an earlier
-    cycle. Where `stages.md` stands, set in the record, from its table, the model each agent
-    actually worked on: in the rows of *Events*, in the rows of *Slices*, and under *Author*, the
+    cycle. Where `stages.md` stands, set in the record, from its table, here and in each stop that
+    runs the script, the model each agent actually worked on: in the rows of *Events*, in the rows of *Slices*, and under *Author*, the
     model the row names is the one the table gives for that agent's stage, never the name asked
     for, and where the two differ the row gives both, as `asked for <model>, worked on <model>`
     (WAY-229); where the file stays missing, the rows keep the model asked for, marked so. Run the

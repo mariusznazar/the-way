@@ -22,8 +22,9 @@ that fails after your change is the fault of your slice (WAY-136). Run on the ba
 copy of it in your directory for working copies, only the tests that failed for you.
 
 - A test that fails on the base too is no failing check of your slice: report it, and do not make
-  it pass outside your slice's *Change*. The exception is a test of your slice's *Checks*, which your
-  slice owns: it is a failing check of your slice, though it failed on the base too.
+  it pass outside your slice's *Change*. The exception is a test that an earlier slice's *Goal*
+  announced as left failing, with your slice as the one that repairs it, and that your slice's
+  *Checks* hold: it is a failing check of your slice, though it failed on the base too.
 - A test that passes on the base and fails after your change is a failing check of your slice,
   unless your slice's own *Goal* announces that the slice leaves it failing and names the slice that
   repairs it.

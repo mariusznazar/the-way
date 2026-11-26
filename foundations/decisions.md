@@ -6397,12 +6397,13 @@ grouping and its reason.
 
 A slice of a plan may leave tests of the product failing that a later slice of the same plan makes
 pass, where its *Goal* names each such test file and the slice that makes it pass and the *Checks* of
-that slice hold the same test. The executor of a slice decides whether a failing test is the fault
-of its slice by a measure on the slice's base, running there only the tests that failed for it: a
-test that fails on the base too is no failing check of the slice, save a test of the slice's own
-*Checks*, and a test that passes on the base and fails after the slice is a failing check of the
-slice, save one that the slice's own *Goal* announces it leaves failing with the slice that makes it
-pass; its report gives the base result of each such test.
+that slice hold the tests of that file. The executor of a slice decides whether a failing test is the
+fault of its slice by a measure on the slice's base, running there only the tests that failed for
+it: a test that fails on the base too is no failing check of the slice, save a test that an earlier
+slice's *Goal* announces and the slice's own *Checks* hold, and a test that passes on the base and
+fails after the slice is a failing check of the slice, save one that the slice's own *Goal*
+announces it leaves failing with the slice that makes it pass; its report gives the base result of
+each such test.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -6426,12 +6427,12 @@ pass; its report gives the base result of each such test.
     planner; a change that rewrites many entries of the foundation from many notes has the slices
     without a review of their own reviewed in groups, in the plan's order, the grouping and its
     reason recorded; a slice leaves a test file failing that a later slice makes pass, its *Goal*
-    names the file and that slice and the *Checks* of that slice hold the file's tests; the executor
-    of a slice runs on its base the tests that failed for it, reports a test that fails there too as
-    no failing check of its slice, reports a test that passes there and fails after its change as
-    one, save a test its own *Goal* announces it leaves failing, and reports a test of its own
-    *Checks* that fails after its change as a failing check although it failed on the base too,
-    giving the base result of each;
+    names the file and that slice and the *Checks* of that slice hold the tests of that file; the
+    executor of a slice runs on its base the tests that failed for it, reports a test that fails
+    there too as no failing check of its slice, reports a test that passes there and fails after its change as
+    one, save a test its own *Goal* announces it leaves failing, and reports a test that an earlier
+    slice's *Goal* announced and its own *Checks* hold, which fails after its change, as a failing
+    check although it failed on the base too, giving the base result of each;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -6443,10 +6444,10 @@ pass; its report gives the base result of each such test.
     grouping and reason recorded, or by a measure in place of the orchestrator's judgment; a slice
     leaves a test failing that no *Goal* of the plan names, or a *Goal* names a test that the
     *Checks* of the slice that makes it pass lack; the executor of a slice takes a test that fails
-    on its base too for a failing check of its slice, save a test of its own *Checks*, and is
-    retried for it, or takes a test that passes on its base and fails after its change, which no
-    *Goal* of its own slice announces, for no failing check; its report gives no base result of a
-    test it excuses; the dispatch of a slice carries a list of the tests the plan leaves failing.
+    on its base too for a failing check of its slice, save a test that an earlier slice's *Goal*
+    announces and its own *Checks* hold, and is retried for it, or takes a test that passes on its
+    base and fails after its change, which no *Goal* of its own slice announces, for no failing
+    check; its report gives no base result of a test it excuses; the dispatch of a slice carries a list of the tests the plan leaves failing.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -6621,14 +6622,14 @@ orchestrator sets the one author's when it selects that route (WAY-136), by the 
 records it with its reason. The one author writes its foundation entries, takes its return step and
 fixes its findings on its own class.
 
-In every cycle, before its first dispatch of the strongest class, the orchestrator fixes that model
-by a probe: it dispatches a small agent on the candidate model and reads from the session record the
-model that agent worked on, the first candidate being the model the human named at the start of the
-cycle, which the probe checks like any other, or, where none was named, the strongest model the tool
-that dispatches agents offers, and the next candidate, where the agent worked on another model, the
-next model down. Every dispatch of the strongest class in the cycle runs on the model so fixed, the
-probe asks the human nothing (WAY-227), and the cycle's record gives the tries and the model each
-agent worked on.
+In every cycle, and again in every later session of its orchestrator, before that session's first
+dispatch of the strongest class, the orchestrator fixes that model by a probe: it dispatches a small
+agent on the candidate model and reads from the session record the model that agent worked on, the
+first candidate being the model the human named at the start of the cycle, which the probe checks
+like any other, or, where none was named, the strongest model the tool that dispatches agents
+offers, and the next candidate, where the agent worked on another model, the next model down. Every
+dispatch of the strongest class in the session runs on the model so fixed, the probe asks the human
+nothing (WAY-227), and the cycle's record gives the tries and the model each agent worked on.
 
 An executor that returns `blocked` for a fact or permission no source supplies, reports a failing
 check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
@@ -6669,19 +6670,21 @@ step work on the strongest class available.
     slice's finding runs on the class of the executor whose work stands; the review of the whole
     change and the review of the return step run on the strongest class available, whatever the
     class of the orchestrator, that class being the model a probe fixed before the first dispatch of
-    it — a small agent asked for the model the human named at the start of the cycle, or the
-    strongest the dispatch tool offers, the model it worked on read from the session record, the next
-    model down tried where it worked on another — and the record giving each try with the model its
-    agent worked on, and for each other agent the model it worked on;
+    it in the session, a later session of the cycle, a correction's, probing again — a small agent
+    asked for the model the human named at the start of the cycle, or the strongest the dispatch tool
+    offers, the model it worked on read from the session record, the next model down tried where it
+    worked on another — and the record giving each try with the model its agent worked on, and for
+    each other agent the model it worked on;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
     executor of the strongest class available gets a retry; a review or the spec runs on a class
     cheaper than the orchestrator's; the review of the whole change or of the return step runs on a
     class below the strongest available; the strongest class is dispatched with no probe before it,
     its model taken from a list of allowed models, from the name of the strongest model of the
-    family or from the model named at the start of the cycle with no probe of it; a model that a
-    probe's agent did not work on stands as the model fixed; the probe asks the human which model to
-    use; the record names only the model asked for where the agent worked on another; the one author
+    family or from the model named at the start of the cycle with no probe of it; a later session of
+    the cycle dispatches the class on the model an earlier session fixed, with no probe of its own;
+    a model that a probe's agent did not work on stands as the model fixed; the probe asks the human
+    which model to use; the record names only the model asked for where the agent worked on another; the one author
     works on the orchestrator's model with no class recorded.
 - **Origin:** none
 

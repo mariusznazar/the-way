@@ -37,7 +37,7 @@ not authorize running it.
   its resumptions; any replacement during a fix and its reason; planned executors appear in Slices>
 - Strongest class: <each try of the probe that fixes the strongest class (WAY-229), in order, as the
   model asked for and the model the probe's agent worked on, read from the session record, then the
-  model fixed; `not applied` where the harness cannot choose a model; `none` where the cycle ended
+  model fixed, for each session of the orchestrator that probed, a correction's included; `not applied` where the harness cannot choose a model; `none` where the cycle ended
   before any dispatch of the class>
 - Plan: <none on the one-author route | number of slices and size-report verdicts>
 - Discarded attempt: <`none`, or `reason: ` and the reason in backticks — one of `open design
