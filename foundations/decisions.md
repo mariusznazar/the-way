@@ -6380,9 +6380,7 @@ without code, its attempt is discarded with the foundation entries it wrote, and
 the change. Every other change gets a plan written with the-way's skill `plan-task`, which divides
 it into slices and holds no code; the slices are made one after another in the plan's order, each by
 an agent of its own, and a slice that proves too large for it is discarded with its code and goes
-back to the planner to be split. A slice of a plan may leave tests of the product failing that a
-later slice of the same plan makes pass, where its *Goal* names each such test file and the slice
-that makes it pass, and the failure of a test so named is no failing check of the slice that meets it.
+back to the planner to be split.
 
 A one-author change is reviewed by an agent that did not make it; of a plan's slices, only one that
 touches a trust boundary or holds an operation that cannot be undone, as the plan marks it, gets a
@@ -6396,6 +6394,15 @@ slices that have no review of their own are more than one reviewer of the whole 
 with their sources, the orchestrator may, by its own judgment and not by a measure, dispatch reviews
 of groups of them in the plan's order, as for a slice with a review of its own, and it records the
 grouping and its reason.
+
+A slice of a plan may leave tests of the product failing that a later slice of the same plan makes
+pass, where its *Goal* names each such test file and the slice that makes it pass and the *Checks* of
+that slice hold the same test. The executor of a slice decides whether a failing test is the fault
+of its slice by a measure on the slice's base, running there only the tests that failed for it: a
+test that fails on the base too is no failing check of the slice, save a test of the slice's own
+*Checks*, and a test that passes on the base and fails after the slice is a failing check of the
+slice, save one that the slice's own *Goal* announces it leaves failing with the slice that makes it
+pass; its report gives the base result of each such test.
 
 - **Scope:** task-cycle
 - **Based on:**
@@ -6418,9 +6425,13 @@ grouping and its reason.
     has the checks the move breaks counted in the route judgment and handed to its author or
     planner; a change that rewrites many entries of the foundation from many notes has the slices
     without a review of their own reviewed in groups, in the plan's order, the grouping and its
-    reason recorded; a slice leaves a test file failing that a later slice makes pass, and its
-    *Goal* names the file and that slice, and the executor of a later slice reports the test as
-    failing as expected, not as a failing check of its slice;
+    reason recorded; a slice leaves a test file failing that a later slice makes pass, its *Goal*
+    names the file and that slice and the *Checks* of that slice hold the file's tests; the executor
+    of a slice runs on its base the tests that failed for it, reports a test that fails there too as
+    no failing check of its slice, reports a test that passes there and fails after its change as
+    one, save a test its own *Goal* announces it leaves failing, and reports a test of its own
+    *Checks* that fails after its change as a failing check although it failed on the base too,
+    giving the base result of each;
   - violates: a small task needs a plan merely because it writes foundation entries or follows a
     spec; the orchestrator writes a plan to decide whether to omit it; an author reviews its own
     work, or its whole-change review omits the coverage checks because there was no plan; an
@@ -6430,8 +6441,12 @@ grouping and its reason.
     whether it comes from a slice; the route of a task that moves the pin is judged before the
     move, or without the checks it breaks; reviews of groups of slices are dispatched with no
     grouping and reason recorded, or by a measure in place of the orchestrator's judgment; a slice
-    leaves a test failing that no *Goal* of the plan names; the executor of a slice takes a test
-    that the plan lists as failing for a failing check of its slice and is retried for it.
+    leaves a test failing that no *Goal* of the plan names, or a *Goal* names a test that the
+    *Checks* of the slice that makes it pass lack; the executor of a slice takes a test that fails
+    on its base too for a failing check of its slice, save a test of its own *Checks*, and is
+    retried for it, or takes a test that passes on its base and fails after its change, which no
+    *Goal* of its own slice announces, for no failing check; its report gives no base result of a
+    test it excuses; the dispatch of a slice carries a list of the tests the plan leaves failing.
 - **Origin:** none
 
 *Rationale:* a plan earns its cost by dividing a change into work an agent can hold and a reviewer
@@ -6449,8 +6464,16 @@ it, and reviews of groups of the slices give each reviewer a part it can compare
 reviews added. The price is that a defect of an early slice is found only after
 later slices were built on it, and its fix may reach them; naming the slice of each blocking finding
 shows what that price is. A plan that must leave every slice green joins slices that cannot be made
-apart; a failure that a *Goal* names and an owner takes keeps the red state planned, so that the
-executor of a later slice tells a test that fails as the plan says from a failure of its own. The checks a move of the pin breaks are work of the task that its
+apart; a failure that a *Goal* names and an owner takes keeps the red state planned. The
+executor of a later slice tells a failure of its own from one it did not make by running the failing
+test on its base, which is a fact about the branch, where a list written by a planner who runs no
+tests describes a branch not yet made and can disagree with it, so that an executor spends its steps
+on the disagreement; and the *Checks* of the slice that
+makes a test pass hold it, so that a repair left undone shows in the slice that was to make it and
+not only in the gate after the last slice, where the cost of the fix has grown with each slice built
+on the red test. The price is a run of the failing tests on the base for each slice that meets
+one, and a test that fails on the base and fails again for a new reason of the slice, which the
+measure cannot tell from the first failure, is left to the reviews and the gate. The checks a move of the pin breaks are work of the task that its
 document cannot name in advance, so a judgment without them misjudges the change's size.
 *Rejected:* a plan for every change, including a small plan used only to choose the route — it
 charges for division where none is needed; lighter preparation only for changes leaving the
@@ -6475,7 +6498,18 @@ each route, a whole cycle with a plan cost 0.0182 USD per changed line (median c
 cycle with one author 0.0157 USD (median 24 USD; the measurement is this product's own, and its
 record is not open to a reader of this repository), because the plan adds the planner, the reviews
 of its slices and a return step taken by an agent of its own, so the judgment from the task document
-stays the choice.
+stays the choice; the measure on the base with the plan's list of the failing tests in the dispatch
+as a hint — the orchestrator still builds the list, which can be wrong, and an executor that finds its
+test on it may not run it on the base; the measure on the base alone, with no exception for a test
+the slice's own *Goal* announces it leaves failing — a slice that the plan has leave a test red gets
+a retry on a stronger class, and the planner must join slices that cannot be made apart, which undoes
+the ground of this decision; the plan's list kept, with a sentence that has the orchestrator build it
+anew for each slice and never copy it — again text for the orchestrator, which the same cause passed
+once; four conditions in the planning rules for a test to join the list — they add text to a rule
+that went unapplied, and the condition that a test was not run would be met almost always; a repair
+of an announced test left to the final gate, with no change of the text — an unfinished repair then
+shows only after all the slices, with no slice named, and the cost of the fix grows with each slice
+built on the red test.
 
 ### WAY-148 — How do task-cycle stages pass their work to the orchestrator?
 
@@ -6580,14 +6614,21 @@ The executor of a slice, and the one author of a change without a plan, work on 
 set for them, named in general terms and never by the name of a model: by default a class cheaper
 than the orchestrator's, for code that carries settled matters into the product, ordinary
 implementation that takes decisions of its own included; the orchestrator's class, for a change
-across many parts; or the strongest class available, which is the strongest of the models that the
-session's settings allow, which the orchestrator takes from the list of allowed models (in Claude
-Code the setting `availableModels`; where the session has no such list, every model it offers) and
-never from the name of the strongest model of the family, for one that needs design — each class other than the default with one sentence of its reason. The planner sets each
-slice's class in the plan; the orchestrator sets the
-one author's when it selects that route (WAY-136), by the same measure, and records it with its
-reason. The one author writes its foundation entries, takes its return step and fixes its findings
-on its own class.
+across many parts; or the strongest class available, which is the strongest model the session
+actually gives, fixed as the next paragraph says, for one that needs design — each class other than
+the default with one sentence of its reason. The planner sets each slice's class in the plan; the
+orchestrator sets the one author's when it selects that route (WAY-136), by the same measure, and
+records it with its reason. The one author writes its foundation entries, takes its return step and
+fixes its findings on its own class.
+
+In every cycle, before its first dispatch of the strongest class, the orchestrator fixes that model
+by a probe: it dispatches a small agent on the candidate model and reads from the session record the
+model that agent worked on, the first candidate being the model the human named at the start of the
+cycle, which the probe checks like any other, or, where none was named, the strongest model the tool
+that dispatches agents offers, and the next candidate, where the agent worked on another model, the
+next model down. Every dispatch of the strongest class in the cycle runs on the model so fixed, the
+probe asks the human nothing (WAY-227), and the cycle's record gives the tries and the model each
+agent worked on.
 
 An executor that returns `blocked` for a fact or permission no source supplies, reports a failing
 check of its slice, or fails the orchestrator's mechanical check (no commit in its range, or a
@@ -6614,7 +6655,8 @@ step work on the strongest class available.
   the failed one (`cheap` → `standard`, `standard` → `capable`), with the failed executor's report
   and the concrete failure appended to its prompt." · § "Escalation before the stop" — "Escalation
   is bounded: one rescue per Step, never above `capable`"; read 2026-10-23
-- **Relations:** derives from WAY-136 · derives from WAY-148 · derives from WAY-100
+- **Relations:** derives from WAY-136 · derives from WAY-148 · derives from WAY-100 · derives from
+  WAY-227
 - **Verification:** an agent compares the plan, the record of slices and the dispatches with the
   decision:
   - complies: the plan sets the default class for a slice that applies a pattern the spec settles
@@ -6626,15 +6668,21 @@ step work on the strongest class available.
     base, by one of the orchestrator's class given its report and the failure; the fix of a reviewed
     slice's finding runs on the class of the executor whose work stands; the review of the whole
     change and the review of the return step run on the strongest class available, whatever the
-    class of the orchestrator, the orchestrator taking it from the models the session's settings
-    allow;
+    class of the orchestrator, that class being the model a probe fixed before the first dispatch of
+    it — a small agent asked for the model the human named at the start of the cycle, or the
+    strongest the dispatch tool offers, the model it worked on read from the session record, the next
+    model down tried where it worked on another — and the record giving each try with the model its
+    agent worked on, and for each other agent the model it worked on;
   - violates: a plan names a model by its product name; a class other than the default stands
     without its reason; a failed executor is retried on the same class or a second time; an
     executor of the strongest class available gets a retry; a review or the spec runs on a class
     cheaper than the orchestrator's; the review of the whole change or of the return step runs on a
-    class below the strongest available; a review is asked for on the strongest model of the family
-    while the session's settings keep that model out; the one author works on the orchestrator's
-    model with no class recorded.
+    class below the strongest available; the strongest class is dispatched with no probe before it,
+    its model taken from a list of allowed models, from the name of the strongest model of the
+    family or from the model named at the start of the cycle with no probe of it; a model that a
+    probe's agent did not work on stands as the model fixed; the probe asks the human which model to
+    use; the record names only the model asked for where the agent worked on another; the one author
+    works on the orchestrator's model with no class recorded.
 - **Origin:** none
 
 *Rationale:* a slice's handoff carries its settled requirement word for word, so much of a planned
@@ -6660,12 +6708,17 @@ so a review that follows it lets a flaw through in about half the runs of that m
 reviews of the whole change and of the return step therefore follow no class of the session and run
 on the strongest class available. That costs more, the price taken: fewer fixes after review are
 counted to repay part of it, and the audit of the process shows what it costs (WAY-337, WAY-339).
-What is available is the human's choice when a session starts, never a sentence of this log: a cycle
-started with every model allowed takes the strongest it has, the review included, and a session that
-leaves a model out takes the strongest of the rest, read from the list the settings give. A request
-for a model outside that list got another model, in the one session observed the session's own, so a
-review asked for on the strongest model of the family ran on a cheaper one where the session kept
-that model out; the log names no model.
+What the session gives is the human's choice when a session starts, never a sentence of this log: a
+cycle started with every model allowed takes the strongest it has, the review included, and a session
+that leaves a model out takes the strongest of the rest. The orchestrator does not see that choice
+where it stands, and a request for a model the session keeps out is answered with another model, in
+the sessions observed the session's own, with no error to the agent, so that a review asked for on
+the strongest model ran on a cheaper one while the record named the model asked for (an observation
+of this product's own cycles, whose record is not open to a reader of this repository). The probe
+reads what the session answers with, in every cycle and by one path whether a model was named or not,
+so that a path used rarely does not decay unseen and a named model the session no longer allows is
+caught; it costs a small agent's tokens, small beside a cycle's, and no turn of the human. The log
+names no model.
 Classes in general terms survive the release of new models and fit any harness. The decision takes
 from the skills of Open Mercato for planning and dispatching an executor a class of model for each
 step of the work and one retry a class higher before the stop (WAY-100).
@@ -6692,12 +6745,25 @@ rationale counts on then depends on the model of the session that leads the cycl
 in general terms with no criterion that tells the classes apart without a name — an agent reads a
 general word as it pleases; the strongest class of the family the cycle runs on — a model of that
 family that the human keeps out of cycles would take the reviews and the slices that need design, and
-a request for it got another model; a
+a request for it with no probe of the model that answers got another model; a
 review one class above the session that leads the cycle, never above a model the human names — with
 the session on the cheapest class the review would run on the middle class, which let a flaw through
 in 4 of the 8 runs of the measurement, and a line that keeps a model out of the cycle's work has to
 be drawn somewhere all the same; a restriction of models on the human's whole account — the model
-leaves every session of the human, and each work on it would need a change of that restriction.
+leaves every session of the human, and each work on it would need a change of that restriction; a
+probe only where nobody named a model at the start, a named model taken as given — a path used
+rarely decays unseen, and it does not catch a named model the session no longer allows; a request for
+the model of the session, which is surely available — a cycle started on a cheaper model gets its
+review on that model, which let a flaw through in 4 of the 8 runs of the measurement; a request for
+the strongest model with the model that answered only recorded, and no probe — the review is still
+at times weaker, only openly, and whether to repeat it is left to the human at the request; a stop of
+the cycle to ask the human for a model where none was named — each manual start with no list in the
+settings would stop so, since the orchestrator cannot tell an absent list from one it cannot see, and
+each costs a turn of the human; a setting of the session that sends every subagent called with no
+model name to one model — it moves to that model every such subagent, the executors of the class
+`same` among them, and the record would then give the class of the session; a check of the model
+after a review and a repeat of the review — it treats the effect and adds steps to the orchestrator,
+where the cause is what the cycle asks for.
 
 ### WAY-403 — How does a task's branch give new numbers to its decisions that the target branch has taken?
 

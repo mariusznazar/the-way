@@ -445,6 +445,25 @@ gives: its agent — the one author with its code, or on the planned route the a
 returns `blocked` with a question for the human, and at step 7 for a finding that the spec
 contradicts a decision.
 
+The strongest class available is the model a probe fixes in every cycle, before the first dispatch
+of the strongest class — the one author, an executor or the retry of one on that class, or the
+review of the whole change, whichever comes first (WAY-229). Dispatch a small agent of the type
+`the-way-stage`, with the description `model probe <n>`, asking it only to answer `ready`, on the
+candidate model, and run `python -B task-cycle/cycle_stages.py` of the pinned the-way, naming your
+session as step 12 gives, with no `--output`: the row of its table named by that description gives,
+in its column *Subagent model*, the model that agent worked on. The first candidate is the model the
+human named at the start of the cycle, in the arguments of the entry point that started it, which
+the probe checks like any other; where none was named, the strongest model your tool for dispatching
+agents offers. Where the row gives another model than the candidate, the harness substituted one:
+dispatch a new probe on the next model down that your tool offers, and go on so. The first
+candidate that a probe's agent worked on as asked is the model fixed, and every dispatch of the
+strongest class in the cycle asks for it. Never take it from the list of allowed models in the
+session's settings, which you do not see, or from the name of the strongest model of the family, and
+ask the human nothing (WAY-227). Before the first dispatch of the class, write under *Strongest
+class* of the record each try, with the model asked for and the model the row gives, and the model
+fixed; a session that continues the cycle, a correction's, reads them there. Where the harness
+cannot choose a model, dispatch as it allows and record that the class was not applied.
+
 9. Make the change and have it reviewed.
    - **One author.** Dispatch a fresh author of the type `the-way-author` with `make-change`, on
      the class of model you set
@@ -462,26 +481,31 @@ contradicts a decision.
      1. write its base, from `git rev-parse HEAD`, in its row of *Slices* before you dispatch it;
      2. dispatch a fresh executor with `make-change`, on the class of model the slice's *Model*
         sets (WAY-229) — `cheaper` than yours, `same` as yours or the `strongest` available, on
-        the harness's model closest to it, recorded in the slice's row; where yours is the
-        strongest, `same` and `strongest` are one class; where the harness cannot choose a model,
-        dispatch as it allows and record that the class was not applied — with the slice's
-        section of the plan copied word for word, what its *Read* names and the tests the plan
-        leaves failing at its base with their owners, as the handoff paragraph above and
-        `task-cycle/skill/planning.md` give;
+        the harness's model closest to it, and for `strongest` on the model the probe fixed,
+        recorded in the slice's row; where yours is the strongest, `same` and `strongest` are one
+        class; where the harness cannot choose a model, dispatch as it allows and record that the
+        class was not applied — with the slice's section of the plan copied word for word and what
+        its *Read* names, as the handoff paragraph above and `task-cycle/skill/planning.md` give;
+        the handoff lists no failing test, since the executor measures each test that fails for
+        it on its slice's base (`task-cycle/change/slice.md`);
      3. when it returns `done` or `done with concerns`, check mechanically: a clean worktree, a
         non-empty range from the base to its head, the changed files against the slice's *Change*
         (each path pattern there covers every changed file it matches)
         and, for slice 1, the plan's *Foundation entries*, and each check of the report with its
-        command and exit code, and the failures its report names against those the plan lists, its
-        **Unread material**, its **Searches not found or unclear** and its own-work check. Uncommitted work returns to the executor to commit, and a check without
-        its command or exit code, or a report missing one of these sections, returns the report for
+        command and exit code, and for each failing test it names the result on the slice's base,
+        its **Unread material**, its **Searches not found or unclear** and its own-work check.
+        Uncommitted work returns to the executor to commit, and a check without
+        its command or exit code, a failing test named without its result on the base, or a report
+        missing one of these sections, returns the report for
         repair (WAY-148, WAY-164, WAY-260); any other mismatch goes as
-        information to the review that judges the slice and does not return it; a failing test that
-        its report names and no *Goal* names is handled as `task-cycle/skill/planning.md` gives.
+        information to the review that judges the slice and does not return it; a test that its
+        report shows failing on the base too, and that no *Goal* names, is handled as
+        `task-cycle/skill/planning.md` gives.
         The mechanical check fails where the range holds no commit, or where a repair the
         executor was sent back for is left undone;
      4. an executor that returns `blocked` for a fact or permission no source supplies, reports a
-        failing check of its slice — a listed test that fails as the plan says is none (WAY-136) — or
+        failing check of its slice — by the measure of `task-cycle/change/slice.md`, a test that
+        fails on the slice's base too is none, save a test of the slice's *Checks* (WAY-136) — or
         fails the mechanical check gets one retry (WAY-229): record
         its last commit, reset the branch to the slice's base and dispatch a fresh executor one
         class higher — `cheaper` to `same`, `same` to `strongest` — with the failed executor's
@@ -521,9 +545,7 @@ contradicts a decision.
      A plan of one slice skips the review of the slice: the review of the whole change is its one.
 
    Then the review of the whole change: a fresh reviewer that made none of it, on the strongest
-   class available — the strongest of the models the session's settings allow, from the list
-   `availableModels` in Claude Code or, with no such list, every model the session offers, never the
-   name of the strongest model of the family (WAY-229), with
+   class available, the model the probe fixed (WAY-229), with
    `review-change`, on the range from the task's base to the head, with the frozen task, any spec
    and plan, each slice's range and whether it had a review of its
    own, the report of each executor whose slice had none with any mismatch its mechanical check
@@ -587,10 +609,8 @@ contradicts a decision.
 11. Take the return step: the author resumes for it, on its class (WAY-229), or on the planned route
     a fresh agent with `make-change` takes it, on no class cheaper than yours. What it compares and
     writes stands in `task-cycle/skill/return_step.md`, which its handoff names. Where the
-    return step commits anything, a fresh reviewer on the strongest class available — the strongest of
-    the models the session's settings allow, from the list `availableModels` in Claude Code or, with
-    no such list, every model the session offers, never the name of the strongest model of the family
-    (WAY-229) — reviews its range with `review-change`, against the
+    return step commits anything, a fresh reviewer on the strongest class available, the model the
+    probe fixed (WAY-229), reviews its range with `review-change`, against the
     task and the entries the return step writes or corrects. Record the result under *Return
     step*.
 
@@ -673,7 +693,12 @@ included — read `task-cycle/skill/blocked_finding.md` and follow it.
     under *Verification* of the record and, in the request's *Checks*, as a check that did not run;
     fix the call where the call was wrong and run it again; never write the file by hand. A cycle
     whose file stays missing stays missing, and the record's *Verification* tells it from an earlier
-    cycle. Run the process remarks check on
+    cycle. Where `stages.md` stands, set in the record, from its table, the model each agent
+    actually worked on: in the rows of *Events*, in the rows of *Slices*, and under *Author*, the
+    model the row names is the one the table gives for that agent's stage, never the name asked
+    for, and where the two differ the row gives both, as `asked for <model>, worked on <model>`
+    (WAY-229); where the file stays missing, the rows keep the model asked for, marked so. Run the
+    process remarks check on
     the record as "The process remarks check" gives, before the description is written, so that a
     listing you hold wrong reaches the description. Write and check the description by
     `task-cycle/skill/request_template.md` as step 13 gives, and open the request from it as a draft by the pull or merge request route the

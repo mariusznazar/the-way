@@ -32,8 +32,13 @@ not authorize running it.
 - Execution route and reason: <one author without a plan | planned slices; orchestrator's
   judgment from the task at the start, and repeated after any reviewed spec>
 - Author: <agent, agent type, class and model of the one author, for its code, foundation entries
-  and return step, a class other than `cheaper` with its reason; its resumptions; any replacement
-  during a fix and its reason; planned executors appear in Slices>
+  and return step, a class other than `cheaper` with its reason; the model is the one the author
+  worked on, read from the session record, and where it differs from the model asked for, both;
+  its resumptions; any replacement during a fix and its reason; planned executors appear in Slices>
+- Strongest class: <each try of the probe that fixes the strongest class (WAY-229), in order, as the
+  model asked for and the model the probe's agent worked on, read from the session record, then the
+  model fixed; `not applied` where the harness cannot choose a model; `none` where the cycle ended
+  before any dispatch of the class>
 - Plan: <none on the one-author route | number of slices and size-report verdicts>
 - Discarded attempt: <`none`, or `reason: ` and the reason in backticks — one of `open design
   choice`, `reserved choice` and `size` — opening the text, and after it the time, report, last
@@ -96,7 +101,9 @@ the entries. Write each base before the slice's executor is dispatched. The clas
 plan's *Model* sets, and *Risk* the plan's mark, which decides whether the slice gets a review of
 its own. The mechanical check is the orchestrator's after the executor returns: what it compared and
 any mismatch it passed to the review that judges the slice; a retry one class higher names the
-failed executor's last commit, the failure and the retry's class (WAY-229). A slice without a review
+failed executor's last commit, the failure and the retry's class (WAY-229). The model in the third
+column is the one the executor worked on, read from the session record, and where it differs from
+the model asked for, the column gives both. A slice without a review
 of its own reads `judged by the whole-change review` in the last column.
 
 ## Events
@@ -106,7 +113,10 @@ of its own reads `judged by the whole-change review` in the last column.
 
 Append one row for every dispatch, handoff, failed attempt, rerun, review and fix before the
 dispatch that depends on it. In a dispatch's row the actor names the agent type the stage ran
-with, `the-way-author` or `the-way-stage`, or says that it ran without its type and why.
+with, `the-way-author` or `the-way-stage`, or says that it ran without its type and why, and the
+model the agent worked on, read from the session record (`task-cycle/cycle_stages.py`); where it
+differs from the model asked for, the row gives both. Written before the dispatch, the row holds the
+model asked for, marked so, until the model the agent worked on is read.
 Name handoff and report paths and input and output commits, so work
 resumes from these files and commits without the conversation. Keep each complete handoff and
 report, with secrets and personal data removed, in `reports/`; a short return routes the work and

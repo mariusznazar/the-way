@@ -187,12 +187,13 @@ Write the plan in this form; the script reads the slice headings and the fields 
   exempts, never a test or a command that runs it without the switch, which in the-way is
   `test_the_way_foundation_passes`, as the compliance example of WAY-321 gives it.
 - A slice may leave tests of the product failing that a later slice of the same plan makes pass; its
-  *Goal* names each such test file and the slice that makes it pass, and no slice's *Checks* holds a
-  test an earlier slice leaves failing until its owner has passed. The handoff of each later slice
-  lists the tests the plan leaves failing at its base, with their owners, and its executor reports a
-  listed test that fails as expected, not as a failing check of its slice; a test that fails after a
-  slice and that no *Goal* names goes into the slice's report, and the orchestrator gives it an
-  owner by editing the plan before the next slice is dispatched.
+  *Goal* names each such test file and the slice that makes it pass, and writes the same test into
+  the *Checks* of that slice, which holds it and no earlier slice's *Checks* does. A test of the
+  *Checks* of that slice that still fails after its change is that slice's failed check, though it
+  failed on its base too. The executor of a slice decides by a measure on its slice's base whether a
+  failing test is its slice's fault (`task-cycle/change/slice.md`), so the handoff lists no failing
+  test; a test that fails on the base and that no *Goal* names goes into the slice's report, and the
+  orchestrator gives it an owner by editing the plan before the next slice is dispatched.
 - Where a slice adds to a function or a file that stands over the threshold of the rule of size in
   the product's coding guidelines (WAY-365), the plan begins with a slice that moves a part of that
   function or file out without a change of behaviour, and the slice that adds depends on it. Read
