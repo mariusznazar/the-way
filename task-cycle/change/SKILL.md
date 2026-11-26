@@ -21,7 +21,7 @@ Your dispatch says which of these you make; read for it as its row gives.
 | You make | Read |
 |---|---|
 | the whole change as the one author | As the one author of a change without a plan, the frozen task document whole, and the spec where the cycle wrote one: you make the whole change. |
-| a slice, or the retry of a slice | `slice.md`, for how to read the plan and the task, how to read the failed executor's report, and what to do when the plan and the code disagree. |
+| a slice, or the retry of a slice | `slice.md`, for how to read the plan and the task, how to read the failed executor's report, how to decide by a measure on the slice's base whether a failing test is the slice's fault, and what to do when the plan and the code disagree. |
 | the fix of a review's findings | `fix.md`, for the findings file, what is not yours to fix, a finding of a reserved choice, and what the report of a fix holds. |
 | a correction for the human's remarks | For a correction, the human's remarks on the request; each remark binds. For a correction, the report holds each remark as made, and how. |
 

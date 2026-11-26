@@ -1,6 +1,7 @@
 # Making a slice
 
-What a slice, or the retry of a slice, reads, and what it does when the plan and the code disagree.
+What a slice, or the retry of a slice, reads, how it decides whether a failing test is its fault,
+and what it does when the plan and the code disagree.
 
 ## Read
 
@@ -11,11 +12,23 @@ What a slice, or the retry of a slice, reads, and what it does when the plan and
 - The dispatch gives the ranges of lines beside the copied passages and files, as they stand in the
   worktree when it is made. Where a range differs from the plan's, the dispatch's current range holds,
   as `task-cycle/skill/planning.md` ("A slice's handoff") gives the orchestrator.
-- The dispatch lists the tests the plan leaves failing at your slice's base, with their owners: report
-  a listed test that fails as expected, not as a failing check of your slice, and do not make it pass
-  outside your slice's *Change*.
 - For the retry of a slice, the failed executor's report and what failed; the branch is back at the
   slice's base, so its commits are not yours to continue.
+
+## A failing test
+
+The dispatch lists no failing tests: you decide by a measure on your slice's base whether a test
+that fails after your change is the fault of your slice (WAY-136). Run on the base, in a working
+copy of it in your directory for working copies, only the tests that failed for you.
+
+- A test that fails on the base too is no failing check of your slice: report it, and do not make
+  it pass outside your slice's *Change*. The exception is a test that an earlier slice's *Goal*
+  announced as left failing, with your slice as the one that repairs it, and that your slice's
+  *Checks* hold: it is a failing check of your slice, though it failed on the base too.
+- A test that passes on the base and fails after your change is a failing check of your slice,
+  unless your slice's own *Goal* announces that the slice leaves it failing and names the slice that
+  repairs it.
+- Your report gives, for each such test, its result on the base.
 
 ## When the plan and the code disagree
 

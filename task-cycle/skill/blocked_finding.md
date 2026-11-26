@@ -12,8 +12,9 @@ has not accepted. The request names each of these that has not run on that code.
 code its review has not accepted is done again once the fix the human's decision calls for is made,
 while a run of the gate costs little and shows the human where the code stands against the rest of
 the product's checks. Run
-`task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py`, as step 12 gives, write the record, prepare its copy as "The record
-before it is committed" of `implement-task` gives and commit the copy and its removal as step 12
+`task-cycle/cycle_stages.py`, and beside it `task-cycle/cycle_measures.py`, set the models of the
+record's rows from `stages.md`, as step 12 gives each, write the record, prepare its copy as "The
+record before it is committed" of `implement-task` gives and commit the copy and its removal as step 12
 gives them, then write the description by `task-cycle/skill/request_template.md` as
 step 13 gives, in its variant for a remaining blocking finding, linking the record by the SHA of the
 commit that adds it, and open the request from it as a draft marked `blocked`. The cycle does not

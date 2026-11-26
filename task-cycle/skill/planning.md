@@ -12,8 +12,9 @@ where it returns an open design choice instead, continue at step 6 with its repo
 returns `reserved`, read `task-cycle/skill/reserved_return.md` and follow it. Review the
 plan for coverage of every item of the task, every row of *Settlements to record*, every
 projected entry the task carries and every check the move of the pin carried, fidelity to the
-task's sources, no code, checks that can actually run and a size report in which every slice
-fits, by ranges of a file or not.
+task's sources, no code, checks that can actually run, a test that a slice's *Goal* announces it
+leaves failing standing in the *Checks* of the slice that makes it pass (WAY-136), and a size
+report in which every slice fits, by ranges of a file or not.
 Check each slice's *Read* against your own reading of step 2 and add to it in `plan.md` what the
 slice needs and misses — a decision of a part it touches, an invariant it reaches (WAY-62), a
 guideline file — then run the size script on the plan again; a slice it now reports too large
@@ -36,7 +37,7 @@ of the plan again by its heading where the plan changed, and a range of code or 
 earlier slice changed its file. Give the current ranges beside the copied section; where they differ
 from the plan's, the current ones hold.
 
-The handoff of each later slice also lists the tests the plan leaves failing at its base, with their
-owners, as the *Goal* of each earlier slice names them, so that its executor reports a listed test
-that fails as expected. Where a report names a failing test that no *Goal* names, give it an owner by
-editing the plan before the next slice is dispatched.
+The handoff of a slice lists no failing test: its executor measures each test that fails for it on
+its slice's base (`task-cycle/change/slice.md`). Where a report shows a test failing on the base
+too, and no *Goal* names it, give it an owner by editing the plan before the next slice is
+dispatched.
